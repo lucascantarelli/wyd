@@ -177,44 +177,45 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
         cena.extend(bot.read_scene(500).expect("cena do passo"));
         (x, y) = proximo;
     }
-    let primeira = bot.read_scene(1_200).expect("cena A");
-    std::thread::sleep(Duration::from_millis(1_200));
-    let segunda = bot.read_scene(1_200).expect("cena B");
-    let chao: Vec<&SceneMob> = primeira
+    // Candidatos: monstros vistos na caminhada (a cena é delta), do mais fraco para o mais
+    // forte. A posição é reconferida na cena imediatamente antes do golpe — monstro que anda
+    // muda de tile e o `_MSG_Attack` é resolvido por coordenada.
+    let mut chao: Vec<SceneMob> = cena
         .iter()
-        .filter(|mob| {
-            mob.max_hp > 0
-                && mob.max_hp <= 200
-                && mob.name != "QANIVEL3"
-                && segunda
-                    .iter()
-                    .any(|par| par.id == mob.id && par.x == mob.x && par.y == mob.y)
-        })
+        .filter(|mob| mob.max_hp > 0 && mob.max_hp <= 200 && mob.name != "QANIVEL3")
+        .cloned()
         .collect();
+    chao.sort_by_key(|mob| mob.max_hp);
+    chao.dedup_by_key(|mob| mob.id);
     assert!(
         !chao.is_empty(),
-        "nenhum monstro parado e fraco na vista: A={:?} B={:?}",
-        primeira
-            .iter()
-            .map(|mob| (mob.name.clone(), mob.x, mob.y, mob.max_hp))
-            .collect::<Vec<_>>(),
-        segunda
-            .iter()
+        "nenhum monstro fraco na cena caminhada: {:?}",
+        cena.iter()
             .map(|mob| (mob.name.clone(), mob.x, mob.y, mob.max_hp))
             .collect::<Vec<_>>()
     );
     let mut posicao = (x, y);
     let mut nivel_depois = 1;
     for alvo in chao.iter().take(3) {
-        eprintln!(
-            "ALVO {} id={} ({},{}) hp={}",
-            alvo.name, alvo.id, alvo.x, alvo.y, alvo.max_hp
-        );
         posicao = bot
             .walk_to(posicao, (alvo.x, alvo.y + 1))
             .expect("caminhada até o alvo");
+        let agora = bot.read_scene(800).expect("cena do alvo");
+        let Some(fresco) = agora
+            .iter()
+            .filter(|mob| mob.id == alvo.id)
+            .next_back()
+            .cloned()
+        else {
+            eprintln!("ALVO {} id={} saiu da vista", alvo.name, alvo.id);
+            continue;
+        };
+        eprintln!(
+            "ALVO {} id={} ({},{}) hp={}",
+            fresco.name, fresco.id, fresco.x, fresco.y, fresco.max_hp
+        );
         for _ in 0..3 {
-            if bot.kill_at(alvo.id, alvo.x, alvo.y).is_ok() {
+            if bot.kill_at(fresco.id, fresco.x, fresco.y).is_ok() {
                 break;
             }
         }
@@ -267,9 +268,15 @@ fn medir(bot: &Bot, slot: i32, caminho: &str, nome: &str) -> Medido {
         + SCORE_LEVEL_LEGADO;
     let login_off = MOB_AT_LOGIN_LEGADO + MOB_CURRENT_SCORE_LEGADO + SCORE_LEVEL_LEGADO;
 
-    let roster = corpo_de(bot, Opcode::CNFAccountLogin)
-        .or_else(|| corpo_de(bot, Opcode::CNFNewCharacter))
-        .expect("roster cru (CNFAccountLogin/CNFNewCharacter)");
+    // Criação: o roster que interessa é o `CNFNewCharacter` (o `CNFAccountLogin` anterior à
+    // criação ainda não tem o personagem). Login: o `CNFAccountLogin`.
+    let roster = match caminho {
+        "criacao" => corpo_de(bot, Opcode::CNFNewCharacter)
+            .or_else(|| corpo_de(bot, Opcode::CNFAccountLogin)),
+        _ => corpo_de(bot, Opcode::CNFAccountLogin)
+            .or_else(|| corpo_de(bot, Opcode::CNFNewCharacter)),
+    }
+    .expect("roster cru (CNFAccountLogin/CNFNewCharacter)");
     let login = corpo_de(bot, Opcode::CNFCharacterLogin).expect("CNFCharacterLogin cru");
     let proprio = corpo_create_mob(bot, nome).expect("CreateMob do próprio personagem");
 
