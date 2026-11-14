@@ -51,10 +51,10 @@ Saída esperada: `ok: status do índice e do painel batem`.
 
 ## Subtasks
 
-- [x] Matriz caminho × desbloqueio publicada (fila + grafo no índice)
+- [ ] Matriz caminho × desbloqueio publicada (fila + grafo no índice)
 - [ ] Ondas 1–4 com DoD por onda
-- [x] `CLIENT-06/CLIENT-10` congeladas com critério de desbloqueio
-- [x] Índice + painel reconciliados (27 ativas, `check-issue-status` verde)
+- [ ] `CLIENT-06/CLIENT-10` congeladas com critério de desbloqueio
+- [ ] Índice + painel reconciliados (27 ativas, `check-issue-status` verde)
 
 ## Critérios de aceite
 

@@ -70,19 +70,19 @@ rajada de `CreateMob` e diálogo de NPC respondendo.
 
 ## Subtasks
 
-- [x] Reproduzir a recusa no log do canal vivo (`seleção antes da senha numérica`)
-- [x] PIN opcional quando a conta não tem PIN; seleção antes do PIN devolve o frame
-- [x] `_MSG_AccountSecure` tardio confirmado sem abrir segunda sessão
-- [x] `clippy -D warnings` 0, `wyd-server` 43/43, teste vivo com PIN ok
+- [ ] Reproduzir a recusa no log do canal vivo (`seleção antes da senha numérica`)
+- [ ] PIN opcional quando a conta não tem PIN; seleção antes do PIN devolve o frame
+- [ ] `_MSG_AccountSecure` tardio confirmado sem abrir segunda sessão
+- [ ] `clippy -D warnings` 0, `wyd-server` 43/43, teste vivo com PIN ok
 - [ ] Prova viva sem PIN (`WYD_LIVE_SKIP_PIN=1`)
 - [ ] Prova visual no cliente 7662 (entrar no mundo com o personagem)
 - [ ] Versionar, mergear e fechar
 
 ## Critérios de aceite
 
-- [x] Conta sem PIN entra sem receber `AccountSecureFail`.
-- [x] Seleção antes do PIN não encerra a conexão; o personagem é selecionado.
-- [x] PIN informado continua sendo verificado (recusa com `PinIncorreto`/`PinBloqueado`).
+- [ ] Conta sem PIN entra sem receber `AccountSecureFail`.
+- [ ] Seleção antes do PIN não encerra a conexão; o personagem é selecionado.
+- [ ] PIN informado continua sendo verificado (recusa com `PinIncorreto`/`PinBloqueado`).
 - [ ] Cliente 7662 entra no mundo sem “Falha ao conectar”.
 
 ## Revisão de prova (2026-11-12)

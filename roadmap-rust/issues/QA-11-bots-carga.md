@@ -73,9 +73,9 @@ nenhuma dependência do servidor em `wyd-bots`.
 
 ## Subtasks
 
-- [x] Sessão de protocolo real (`INITCODE` → `AccountLogin` → `AccountSecure` → `CharacterLogin`) em `crates/wyd-bots`.
-- [x] Ações jogáveis: `walk_to`/`action_at`, `attack_at`/`kill`, `open_shop`/`buy`, `quest`/`campaign`.
-- [x] Sem dependência de `wyd-core`/`wyd-db` no `Cargo.toml` do bot.
+- [ ] Sessão de protocolo real (`INITCODE` → `AccountLogin` → `AccountSecure` → `CharacterLogin`) em `crates/wyd-bots`.
+- [ ] Ações jogáveis: `walk_to`/`action_at`, `attack_at`/`kill`, `open_shop`/`buy`, `quest`/`campaign`.
+- [ ] Sem dependência de `wyd-core`/`wyd-db` no `Cargo.toml` do bot.
 - [ ] Política determinística por seed com golden em `wyd-sim`.
 - [ ] Carga de 200 bots + relatório P50/P99/rejeições.
 - [ ] Prova viva de dois bots em loopback (login → movimento → saída).
@@ -85,7 +85,7 @@ nenhuma dependência do servidor em `wyd-bots`.
 - [ ] Bot conecta, autentica, move e sai por protocolo real (sem função interna do servidor).
 - [ ] Política determinística por seed, com golden em `wyd-sim`.
 - [ ] Carga de 200 bots com P99 e rejeições anexados.
-- [x] `cargo tree -p wyd-bots` sem dependência de `wyd-core`/`wyd-db`.
+- [ ] `cargo tree -p wyd-bots` sem dependência de `wyd-core`/`wyd-db`.
 
 ## Riscos / rollback
 

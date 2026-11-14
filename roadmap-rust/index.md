@@ -303,3 +303,20 @@ O ID antigo não é usado como identificador de trabalho; serve apenas para loca
 | `ROAD-01` | `PROC-24` | [`PROC-24-curva-crescimento.md`](issues/PROC-24-curva-crescimento.md) |
 
 </details>
+
+## Reestruturação 2026-11-14
+
+> Todos os checkboxes de aceite foram **desmarcados** em 2026-11-14 (`PROC-25`): nada é
+> "concluído/testado" sem reexecução no commit atual.
+
+Issues abertas para cobrir o restante do prompt master (cobertura/gate, paridade comparativa,
+revalidação, sistemas sociais e clientes alternativos). Todas entram como ⬜ e sem aceite marcado.
+
+| ID | Issue | Status |
+|---|---|---|
+| `QA-15` | [Cobertura mínima com gate (95% unit / 80% integração)](issues/QA-15-cobertura-minima-e-gate.md) | ⬜ |
+| `QA-16` | [Testes comparativos OpenWYD × Rust](issues/QA-16-testes-de-paridade-openwyd-rust.md) | ⬜ |
+| `PROC-25` | [Revalidação e rebaixamento de status](issues/PROC-25-revalidacao-e-rebaixamento.md) | ⬜ |
+| `GAME-24` | [Eventos e guildas](issues/GAME-24-eventos-e-guildas.md) | ⬜ |
+| `GAME-25` | [Chat e comunicação](issues/GAME-25-chat-e-comunicacao.md) | ⬜ |
+| `CLIENT-13` | [Clientes alternativos e gerações visuais](issues/CLIENT-13-clientes-alternativos-e-geracoes.md) | ⬜ |

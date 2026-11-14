@@ -142,8 +142,8 @@ cancelamento não move nada; concorrência não duplica.
 
 ## Subtasks
 
-- [x] Investigar layout no fonte C++ e no projeto legado (156 × 154).
-- [x] Criar verificador de captura (`trade-layout.mjs --self-test`).
+- [ ] Investigar layout no fonte C++ e no projeto legado (156 × 154).
+- [ ] Criar verificador de captura (`trade-layout.mjs --self-test`).
 - [ ] Capturar `MSG_Trade` real e anexar o JSON da ferramenta.
 - [ ] Promover o codec `Trade` com os offsets confirmados.
 - [ ] Implementar swap atômico + `QuitTrade` + rollback.

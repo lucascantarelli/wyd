@@ -47,16 +47,16 @@ cd wyd-portal && npx tsc --noEmit && npx vitest run
 
 ## Subtasks
 
-- [x] Eventos de mundo: grade com horários + liga/desliga auditado (`world_event_admin/*`, revisão devolvida)
-- [x] Validação portal-side (código 1..60, inteiros ≥ 0 nos formulários) + confirmação por revisão
+- [ ] Eventos de mundo: grade com horários + liga/desliga auditado (`world_event_admin/*`, revisão devolvida)
+- [ ] Validação portal-side (código 1..60, inteiros ≥ 0 nos formulários) + confirmação por revisão
 - [ ] Rollback 1-clique para revisão anterior — BLOQUEADO: sem rota de histórico de revisões no gateway; `reset_*` por chave continua sendo o retorno ao default
 - [ ] Inventário setting × constante — segue aberto (fora do escopo portal: exige varredura no `wyd-server`)
 
 ## Critérios de aceite
 
-- [x] Mudança no portal reflete no jogo sem restart (log `config_reload`) — exige stack viva (E2E `multiplier:exp` 1→3 existe, roda com gateway+canal)
-- [x] Valor inválido nunca derruba snapshot bom (`config_gameplay` 9/9: SancRate 101 recusado, revisão 3 segue valendo; `config_recarga` 6/6: `escrita_invalida_e_falha_de_leitura_mantem_o_ultimo_snapshot_bom`)
-- [x] Toda alteração auditada com autor real (`taxa_valida_grava_e_audita` agora confere `actor_id == 7` da sessão; `moderator_id` nunca vem do corpo — `adminCall.withoutModerator`)
+- [ ] Mudança no portal reflete no jogo sem restart (log `config_reload`) — exige stack viva (E2E `multiplier:exp` 1→3 existe, roda com gateway+canal)
+- [ ] Valor inválido nunca derruba snapshot bom (`config_gameplay` 9/9: SancRate 101 recusado, revisão 3 segue valendo; `config_recarga` 6/6: `escrita_invalida_e_falha_de_leitura_mantem_o_ultimo_snapshot_bom`)
+- [ ] Toda alteração auditada com autor real (`taxa_valida_grava_e_audita` agora confere `actor_id == 7` da sessão; `moderator_id` nunca vem do corpo — `adminCall.withoutModerator`)
 
 ## Riscos / rollback
 

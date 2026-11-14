@@ -77,8 +77,8 @@ Saída esperada: 4/4 bots concluem 0→4 e o relatório mostra a recompensa esco
 
 ## Subtasks
 
-- [x] Codificar cliente-bot jogável (protocolo real, cena, combate, loja, portão).
-- [x] Ler os 10 NPCs do Campo no seed `0046` pelo teste vivo de proximidade.
+- [ ] Codificar cliente-bot jogável (protocolo real, cena, combate, loja, portão).
+- [ ] Ler os 10 NPCs do Campo no seed `0046` pelo teste vivo de proximidade.
 - [ ] Roteiro da quest por raça (quatro raças, drops reais, sem `--npc` preparado).
 - [ ] Rodar 4 em paralelo e comparar relatórios.
 - [ ] Documentar e fechar issue
@@ -86,7 +86,7 @@ Saída esperada: 4/4 bots concluem 0→4 e o relatório mostra a recompensa esco
 ## Critérios de aceite
 
 - [ ] 4 bots, 4 raças, cada um conclui a quest sem intervenção.
-- [x] Nenhum bot usa atalho interno (tudo pelo fio).
+- [ ] Nenhum bot usa atalho interno (tudo pelo fio).
 - [ ] Relatório por etapa disponível para regressão.
 
 ## Riscos / rollback

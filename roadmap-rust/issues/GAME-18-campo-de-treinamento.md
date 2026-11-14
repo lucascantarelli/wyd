@@ -309,14 +309,14 @@ cargo test -p wyd-server --test sistema_campo_vivo
 node tools/content/check-migrations.mjs
 ```
 
-- [x] Quatro etapas, teto 35, ordem, recusa sem prova e recompensa única
-- [x] Portões: `EF_KEYID` distinto, consumo da chave, abertura e fechamento por tempo
-- [x] Loot no inventário: empilhamento até 120 e recusa quando não há slot
-- [x] `GremlinDecoy`/451 no fio vivo (`sistema_campo_vivo`)
-- [x] `GiantCrill`/452, `OrcSniper`/453 e `OrcWarrior`/524 no pipeline real de morte/loot
-- [x] NPC `Sephira +9` (`0049`, id 6311 em 2133,2040) e refino `+8 → +9`
-- [x] `ReqLvl` do catálogo no bônus e na validação de equipagem
-- [x] Migration `0049` aplicada; `/health` local em `schema:50` (após a `0050`)
+- [ ] Quatro etapas, teto 35, ordem, recusa sem prova e recompensa única
+- [ ] Portões: `EF_KEYID` distinto, consumo da chave, abertura e fechamento por tempo
+- [ ] Loot no inventário: empilhamento até 120 e recusa quando não há slot
+- [ ] `GremlinDecoy`/451 no fio vivo (`sistema_campo_vivo`)
+- [ ] `GiantCrill`/452, `OrcSniper`/453 e `OrcWarrior`/524 no pipeline real de morte/loot
+- [ ] NPC `Sephira +9` (`0049`, id 6311 em 2133,2040) e refino `+8 → +9`
+- [ ] `ReqLvl` do catálogo no bônus e na validação de equipagem
+- [ ] Migration `0049` aplicada; `/health` local em `schema:50` (após a `0050`)
 
 ### B. Roteiro visual no cliente (campo)
 
@@ -357,33 +357,33 @@ dano/equipamento e não simular a morte no cliente.
 
 ## Subtasks
 
-- [x] Decidir D-1 (nível 35), D-2 (sequência A) e D-6 (Unicorn)
-- [x] Codificar `_MSG_Quest` + `character_quest` + motor/recompensas
-- [x] Testar (fluxo + recusas) e documentar o estado real
-- [x] Seed dos NPCs/drops no snapshot (`0046`; 10 NPCs, um por coordenada)
-- [x] `GremlinDecoy` dropa a chave 451 no combate real (`campo_vivo`)
-- [x] GiantCrill/OrcSniper/OrcWarrior no fluxo completo de combate/drop (`integracao_campo_drops`)
+- [ ] Decidir D-1 (nível 35), D-2 (sequência A) e D-6 (Unicorn)
+- [ ] Codificar `_MSG_Quest` + `character_quest` + motor/recompensas
+- [ ] Testar (fluxo + recusas) e documentar o estado real
+- [ ] Seed dos NPCs/drops no snapshot (`0046`; 10 NPCs, um por coordenada)
+- [ ] `GremlinDecoy` dropa a chave 451 no combate real (`campo_vivo`)
+- [ ] GiantCrill/OrcSniper/OrcWarrior no fluxo completo de combate/drop (`integracao_campo_drops`)
 - [ ] Portões como objeto de mundo (`_MSG_UpdateItem` + `EF_KEYID`) — **bloqueado por captura**
-- [x] Chave consumida no uso; portão abre e fecha (testes de `gameplay`)
-- [x] NPC `Sephira +9` no seed (`0049`, id 6311 em 2133,2040) e refino do +9 no teste
-- [x] `ReqLvl` do catálogo usado no bônus `50 + ReqLvl` e na validação de equipagem
+- [ ] Chave consumida no uso; portão abre e fecha (testes de `gameplay`)
+- [ ] NPC `Sephira +9` no seed (`0049`, id 6311 em 2133,2040) e refino do +9 no teste
+- [ ] `ReqLvl` do catálogo usado no bônus `50 + ReqLvl` e na validação de equipagem
 - [ ] Buff do `Cabuncle` aplicado e reaplicável — **bloqueado por captura**
 - [ ] Provar com o cliente 7662 aberto — **bloqueado por captura**
 
 ## Critérios de aceite
 
-- [x] Personagem novo (nível 1..=35) conclui as 4 etapas no motor e recebe cada recompensa.
-- [x] A recompensa de cada etapa é exatamente a da sequência A; nível 36 é recusado.
-- [x] NPCs/guardiões/boss existem no snapshot e na cena (`0046` + `cena_campo`).
-- [x] `GremlinDecoy` dropa a chave 451 no combate real e a entrega no inventário (`campo_vivo`).
-- [x] GiantCrill/OrcSniper/OrcWarrior dropam no fluxo completo de combate (`integracao_campo_drops`; HP do alvo reduzido só no fixture).
-- [x] Chave consumida no uso; portão abre e fecha (testes de `gameplay`).
-- [x] Chave volta a dropar se perdida no combate dos demais guardiões (tabela do seed, um drop por abate).
+- [ ] Personagem novo (nível 1..=35) conclui as 4 etapas no motor e recebe cada recompensa.
+- [ ] A recompensa de cada etapa é exatamente a da sequência A; nível 36 é recusado.
+- [ ] NPCs/guardiões/boss existem no snapshot e na cena (`0046` + `cena_campo`).
+- [ ] `GremlinDecoy` dropa a chave 451 no combate real e a entrega no inventário (`campo_vivo`).
+- [ ] GiantCrill/OrcSniper/OrcWarrior dropam no fluxo completo de combate (`integracao_campo_drops`; HP do alvo reduzido só no fixture).
+- [ ] Chave consumida no uso; portão abre e fecha (testes de `gameplay`).
+- [ ] Chave volta a dropar se perdida no combate dos demais guardiões (tabela do seed, um drop por abate).
 - [ ] Buff do `Cabuncle` aplicado e reaplicável — **bloqueado por captura**.
-- [x] Boss dropa Emblema; recompensa final uma vez por personagem (`integracao_campo_drops`).
-- [x] NPC `Sephira +9` no seed (`0049`) e refino do +9 encontrando a coordenada.
-- [x] `ReqLvl` do catálogo usado no bônus e na validação de equipagem.
-- [x] Nenhum pacote inventado na entrega atual; valores de balanceamento vêm do snapshot.
+- [ ] Boss dropa Emblema; recompensa final uma vez por personagem (`integracao_campo_drops`).
+- [ ] NPC `Sephira +9` no seed (`0049`) e refino do +9 encontrando a coordenada.
+- [ ] `ReqLvl` do catálogo usado no bônus e na validação de equipagem.
+- [ ] Nenhum pacote inventado na entrega atual; valores de balanceamento vêm do snapshot.
 
 ## Riscos / rollback
 

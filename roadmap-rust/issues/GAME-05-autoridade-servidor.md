@@ -70,9 +70,9 @@ inalterado após ação forjada).
 
 ## Subtasks
 
-- [x] Codificar issue
-- [x] Testar issue
-- [x] Documentar issue
+- [ ] Codificar issue
+- [ ] Testar issue
+- [ ] Documentar issue
 
 ## Critérios de aceite
 

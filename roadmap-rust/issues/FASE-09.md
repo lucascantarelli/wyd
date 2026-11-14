@@ -67,9 +67,9 @@ como vigente).
 
 ## Critérios de aceite
 
-- [x] Toda skill Go tem sucessora ou nota de sucessão (tabela nesta issue).
-- [x] Zero conflito Go↔Rust nas skills vigentes (grep acima limpo).
-- [x] Evidência anexada em `docs/rust/evidencias/AUDIT-IA-2026-11-12.md`.
+- [ ] Toda skill Go tem sucessora ou nota de sucessão (tabela nesta issue).
+- [ ] Zero conflito Go↔Rust nas skills vigentes (grep acima limpo).
+- [ ] Evidência anexada em `docs/rust/evidencias/AUDIT-IA-2026-11-12.md`.
 
 ## Riscos / rollback
 

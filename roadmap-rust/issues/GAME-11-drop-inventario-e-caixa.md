@@ -23,8 +23,8 @@ exclusiva de 30 s, liberação para qualquer jogador e remoção em 3 min.
 
 ## Estado real (2026-11-12)
 
-- [x] Abate entrega o item no inventário do matador pelo `Gameplay::loot_at_death` → `inventory::deposit` (teto de pilha vindo de `item_stack_cap`); provado no Campo (`integracao_campo_drops`, 3/3).
-- [x] Regra pura da caixa (`GroundLoot`/`LootAccess`, 30 s exclusivo/3 min) com testes em `wyd-sim`.
+- [ ] Abate entrega o item no inventário do matador pelo `Gameplay::loot_at_death` → `inventory::deposit` (teto de pilha vindo de `item_stack_cap`); provado no Campo (`integracao_campo_drops`, 3/3).
+- [ ] Regra pura da caixa (`GroundLoot`/`LootAccess`, 30 s exclusivo/3 min) com testes em `wyd-sim`.
 - [ ] Handler/tabela `CreateItem`/`GetItem`/`DecayItem` por canal; o `gameplay/service.rs` ainda declara que caixa e pickup não têm handler.
 - [ ] Faixa de ids de item no chão do 7662 (UNVERIFIED) — captura CLIENT-06.
 
@@ -47,7 +47,7 @@ exclusiva de 30 s, liberação para qualquer jogador e remoção em 3 min.
 
 ## DoD
 
-- [x] Depósito no inventário no abate, com teto de pilha e prova no pipeline real.
+- [ ] Depósito no inventário no abate, com teto de pilha e prova no pipeline real.
 - [ ] Teste de integração com dois personagens: durante 30 s o segundo recebe recusa; aos 30 s o
   segundo consegue; aos 180 s a caixa não existe mais.
 - [ ] Round-trip `CreateItem`/`GetItem` contra os layouts de `docs/cliente/pacotes.md`.

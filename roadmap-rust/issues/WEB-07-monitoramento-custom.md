@@ -50,7 +50,7 @@ Saída esperada: typecheck 0, vitest verde; páginas com fonte fora degradam par
 
 ## Subtasks
 
-- [x] Export de logs (`/api/logs/export`, staff, NDJSON, janela limitada) e página de logs com filtros.
+- [ ] Export de logs (`/api/logs/export`, staff, NDJSON, janela limitada) e página de logs com filtros.
 - [ ] SSE de logs ao vivo (`/api/logs/stream`) + filtros + export
 - [ ] Players × mobs + CPU/mem/rede + histórico
 - [ ] Saúde do DB via gateway

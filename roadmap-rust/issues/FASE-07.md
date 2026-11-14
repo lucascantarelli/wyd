@@ -66,9 +66,9 @@ ação admin sem sessão retorna 401 (teste dedicado).
 
 ## Subtasks
 
-- [x] Codificar issue (núcleo Rust: contrato + auditoria + grants)
-- [x] Testar issue (núcleo Rust)
-- [x] Revisar issue
+- [ ] Codificar issue (núcleo Rust: contrato + auditoria + grants)
+- [ ] Testar issue (núcleo Rust)
+- [ ] Revisar issue
 - [ ] Documentar issue (portal + E2E pendentes de transporte)
 - [ ] Versionar issue, mergear branch e fechar issue
 - [ ] Limpar branch (se aplicável)
@@ -76,7 +76,7 @@ ação admin sem sessão retorna 401 (teste dedicado).
 ## Critérios de aceite
 
 - [ ] Portal opera contra `wyd-admin` sem falar com Go.
-- [x] Auditoria registra toda ação admin com autor e timestamp.
+- [ ] Auditoria registra toda ação admin com autor e timestamp.
 - [ ] E2E (auth, admin, loja) verde; evidência anexada.
 
 **Status:** 🚧 (2026-11-07) — núcleo Rust entregue e verde; contrato/transporte

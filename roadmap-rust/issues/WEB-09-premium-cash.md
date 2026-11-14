@@ -51,15 +51,15 @@ Saída esperada: claim idempotente (replay = uma linha, sem duplicar item/gold);
 
 ## Subtasks
 
-- [x] Correio staff: conceder item (`character_admin/grant_item`) + fila com status/histórico (`/correio`) + replay de item provado (`item_grant_is_idempotent_across_calls`, mesma chave → mesmo `grant_id`)
-- [x] Financeiro staff: vitrine CRUD + crédito idempotente (`donate_admin/*`, `/financeiro`)
+- [ ] Correio staff: conceder item (`character_admin/grant_item`) + fila com status/histórico (`/correio`) + replay de item provado (`item_grant_is_idempotent_across_calls`, mesma chave → mesmo `grant_id`)
+- [ ] Financeiro staff: vitrine CRUD + crédito idempotente (`donate_admin/*`, `/financeiro`)
 - [ ] Inbox do jogador — BLOQUEADO: fila só legível por staff (`character_admin/*` exige staff); sem rota nova no gateway não há inbox honesto
 - [ ] Remover `/entregas` — ADIADO de propósito: E2E (`entregas.spec`, `idempotencia.spec`, `login.spec`) prova o fluxo de ouro nela; ouro fica em `/entregas`, item no `/correio`
 - [ ] Extrato/receita por comprador — BLOQUEADO: `donate_revenue_*` declarado sem handler (501); tela avisa o que não é servido
 
 ## Critérios de aceite
 
-- [x] Replay com mesma chave não duplica item/gold (teste dedicado).
+- [ ] Replay com mesma chave não duplica item/gold (teste dedicado).
 - [ ] Item de premium preserva origem após troca/armazenamento.
 - [ ] `/entregas` antiga removida ou redirecionada sem quebrar E2E (atualizar spec).
 

@@ -56,18 +56,18 @@ Saída esperada: build strict exit 0; sem divergência de status.
 
 ## Subtasks
 
-- [x] Esqueleto MkDocs (`mkdocs.yml` + `docs/index.md`)
-- [x] Inventário com sobreposição por arquivo (`docs/rust/09-duplicidades.md`)
+- [ ] Esqueleto MkDocs (`mkdocs.yml` + `docs/index.md`)
+- [ ] Inventário com sobreposição por arquivo (`docs/rust/09-duplicidades.md`)
 - [ ] Fusões com tabela de fontes preservada — refino e pesquisas datadas ainda têm rodada pendente
-- [x] `mkdocs build --strict` verde — reexecutado em 2026-11-12 via imagem oficial `squidfunk/mkdocs-material`, exit 0; as 29 páginas que estavam fora do `nav` foram incluídas
-- [x] Skills alinhadas sem mudar norma de código (18 skills, `skills-check` 0)
+- [ ] `mkdocs build --strict` verde — reexecutado em 2026-11-12 via imagem oficial `squidfunk/mkdocs-material`, exit 0; as 29 páginas que estavam fora do `nav` foram incluídas
+- [ ] Skills alinhadas sem mudar norma de código (18 skills, `skills-check` 0)
 
 ## Critérios de aceite
 
-- [x] `docs/` abre em `mkdocs serve` para dev/admin (sem perfis) — 136 links internos do `nav` responderam 200, 0 falhas; jogadores usam a documentação publicada no portal.
+- [ ] `docs/` abre em `mkdocs serve` para dev/admin (sem perfis) — 136 links internos do `nav` responderam 200, 0 falhas; jogadores usam a documentação publicada no portal.
 - [ ] Zero duplicidade conhecida sem registro de fusão — o inventário existe; refino e pesquisas datadas ainda têm fusão pendente.
-- [x] Nenhum número de servidor privado virou regra sem `game_setting` + teste.
-- [x] Gate `make check` continua verde (execução desta rodada).
+- [ ] Nenhum número de servidor privado virou regra sem `game_setting` + teste.
+- [ ] Gate `make check` continua verde (execução desta rodada).
 
 ## Evidência — `mkdocs serve` (2026-11-12)
 

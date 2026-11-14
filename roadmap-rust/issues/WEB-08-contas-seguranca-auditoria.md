@@ -51,17 +51,17 @@ Saída esperada: typecheck 0, vitest verde, contrato 11/11 + novos testes de 2FA
 
 ## Subtasks
 
-- [x] Contas paginadas + ficha com histórico (`account_admin/list_accounts`, `get_account`; `auth.login` filtrado da trilha na ficha)
+- [ ] Contas paginadas + ficha com histórico (`account_admin/list_accounts`, `get_account`; `auth.login` filtrado da trilha na ficha)
 - [ ] 2FA staff + recuperação por e-mail + bloqueio automático — BLOQUEADO: sem rota no gateway (sem TOTP, sem envio de e-mail, `accounts/recovery` só registra sem emitir token)
-- [x] Auditoria com filtros/export/relatórios (filtro ator/ação/alvo/período, CSV, resumo por ação + contagem de recusas)
-- [x] Home pública + descoberta de admin (`/` pública sem link de staff; guarda real segue no proxy/layout/gateway)
-- [x] Área do jogador: sessões (`character_session`) e histórico de acesso (`auth.login`) em `/conta`, rota `panel/history` (2026-11-11)
-- [x] Downloads reais: `manifest.txt` + pacote do launcher servidos pelo portal (`/api/launcher/manifesto`, `/api/launcher/pacote`), pasta `LAUNCHER_DIST_DIR`
+- [ ] Auditoria com filtros/export/relatórios (filtro ator/ação/alvo/período, CSV, resumo por ação + contagem de recusas)
+- [ ] Home pública + descoberta de admin (`/` pública sem link de staff; guarda real segue no proxy/layout/gateway)
+- [ ] Área do jogador: sessões (`character_session`) e histórico de acesso (`auth.login`) em `/conta`, rota `panel/history` (2026-11-11)
+- [ ] Downloads reais: `manifest.txt` + pacote do launcher servidos pelo portal (`/api/launcher/manifesto`, `/api/launcher/pacote`), pasta `LAUNCHER_DIST_DIR`
 
 ## Critérios de aceite
 
 - [ ] Staff sem 2FA não acessa admin (quando habilitado); recuperação não enumera contas.
-- [x] Toda ação admin auditada com autor real (moderator_id da sessão).
+- [ ] Toda ação admin auditada com autor real (moderator_id da sessão).
 - [ ] Área pública completa para jogador (história, drops, classes, guias, downloads) sem vazar admin.
 
 ## Riscos / rollback

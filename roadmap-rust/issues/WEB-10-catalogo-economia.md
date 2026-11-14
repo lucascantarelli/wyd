@@ -48,15 +48,15 @@ cargo test -p wyd-admin --test contract
 
 ## Subtasks
 
-- [x] Ficha de item (`?item=`, link no índice) + auditoria da leitura via `adminCall`
-- [x] Relatórios de economia (CSV) + alertas (ouro ≥ 1M, cidade zerada) + barras por cidade
-- [x] Integração catálogo → correio (link da ficha para `/correio`; concessão com chave rastreável)
-- [x] Preço de loja por (item, mercador): `npc_admin/list_item_prices` + `set_item_price` no gateway, tabela `item_price`, ficha com tabela de preços e editor em `/configuracoes?aba=precos`; sem preço = ausência, nunca zero
+- [ ] Ficha de item (`?item=`, link no índice) + auditoria da leitura via `adminCall`
+- [ ] Relatórios de economia (CSV) + alertas (ouro ≥ 1M, cidade zerada) + barras por cidade
+- [ ] Integração catálogo → correio (link da ficha para `/correio`; concessão com chave rastreável)
+- [ ] Preço de loja por (item, mercador): `npc_admin/list_item_prices` + `set_item_price` no gateway, tabela `item_price`, ficha com tabela de preços e editor em `/configuracoes?aba=precos`; sem preço = ausência, nunca zero
 - [ ] Atributos e requisitos na ficha — BLOQUEADO: `item_catalog/list_items` não devolve essas colunas; sem número inventado
 
 ## Critérios de aceite
 
-- [x] Nenhum preço inventado: preço só existe em `item_price`, com procedência (`portal#<conta>`) e auditoria.
+- [ ] Nenhum preço inventado: preço só existe em `item_price`, com procedência (`portal#<conta>`) e auditoria.
 - [ ] Nenhum item sem fonte no catálogo.
 - [ ] Relatórios reproduzíveis do banco (queries nomeadas).
 

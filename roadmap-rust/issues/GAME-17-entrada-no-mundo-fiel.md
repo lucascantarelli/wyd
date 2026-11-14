@@ -83,20 +83,20 @@ WYD_LIVE_CPSOCK=... WYD_LIVE_ACCOUNT=... WYD_LIVE_PASSWORD=... \
 
 ## Subtasks
 
-- [x] Codificar issue
-- [x] Testar issue
-- [x] Revisar issue
-- [x] Documentar issue
-- [x] Provar no fio com o canal real (`cena_mobs` vivo: 1281 `CreateMob`, `UpdateScore`, `client_id=1`)
+- [ ] Codificar issue
+- [ ] Testar issue
+- [ ] Revisar issue
+- [ ] Documentar issue
+- [ ] Provar no fio com o canal real (`cena_mobs` vivo: 1281 `CreateMob`, `UpdateScore`, `client_id=1`)
 - [ ] Provar com o cliente 7662 aberto (render da entrada)
 
 ## Critérios de aceite
 
-- [x] `ClientID`/`MobID` do jogador em `1..MAX_USER` e das criaturas em `MAX_USER..MAX_MOB`.
-- [x] `UpdateScore` do dono sai depois do `CNF` e antes da cena.
-- [x] `CreateType` 2 só para o dono da sessão.
-- [x] Id liberado na saída e reusado no mesmo espaço (sem esgotar após 999 logins).
-- [x] Canal real entrega o jogador com `client_id` na faixa `< MAX_USER` (log: `entity=6100 client_id=1`).
+- [ ] `ClientID`/`MobID` do jogador em `1..MAX_USER` e das criaturas em `MAX_USER..MAX_MOB`.
+- [ ] `UpdateScore` do dono sai depois do `CNF` e antes da cena.
+- [ ] `CreateType` 2 só para o dono da sessão.
+- [ ] Id liberado na saída e reusado no mesmo espaço (sem esgotar após 999 logins).
+- [ ] Canal real entrega o jogador com `client_id` na faixa `< MAX_USER` (log: `entity=6100 client_id=1`).
 - [ ] Cliente 7662 entra no mundo sem “Falha ao conectar” (prova visual pendente).
 
 ## Evidência (2026-11-10, sem commit)
@@ -142,10 +142,10 @@ cargo test -p wyd-server --test sistema_cena_mobs -- --nocapture
 Com canal real e conta de teste, o teste `sistema_cena_mobs` deve exigir `UpdateScore`, jogador
 em `1..MAX_USER`, criaturas em `MAX_USER..MAX_MOB` e `CreateType=2` apenas no self.
 
-- [x] Faixa de `ClientID`/`MobID` provada no fio (`client_id=1`, criaturas `>= 1000`)
-- [x] `UpdateScore` do dono depois do `CNFCharacterLogin` e antes da cena
-- [x] `CreateType=2` só no personagem do dono; NPCs com `CreateType=0`
-- [x] Rajada real observada na época (1281 frames de 232 B); após o corte por proximidade, a
+- [ ] Faixa de `ClientID`/`MobID` provada no fio (`client_id=1`, criaturas `>= 1000`)
+- [ ] `UpdateScore` do dono depois do `CNFCharacterLogin` e antes da cena
+- [ ] `CreateType=2` só no personagem do dono; NPCs com `CreateType=0`
+- [ ] Rajada real observada na época (1281 frames de 232 B); após o corte por proximidade, a
   cena esperada é ~33 mobs, não o mapa inteiro
 - [ ] Rerun do teste vivo antes da captura visual, com o binário atual
 

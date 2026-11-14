@@ -66,19 +66,19 @@ Saída esperada: `test result: ok` em todos os targets de `wyd-core`; `make chec
 
 ## Subtasks
 
-- [x] Codificar issue
-- [x] Testar issue
-- [x] Revisar issue
-- [x] Documentar issue
+- [ ] Codificar issue
+- [ ] Testar issue
+- [ ] Revisar issue
+- [ ] Documentar issue
 - [ ] Versionar issue, mergear branch e fechar issue
 - [ ] Limpar branch (se aplicável)
 
 ## Critérios de aceite
 
-- [x] Tick 20–50 Hz determinístico; teste de determinismo verde.
-- [x] Zero `unsafe` fora de interop comprovada; `clippy -D warnings` limpo.
-- [x] Nenhum I/O bloqueante, lock global ou alocação no caminho quente.
-- [x] Evidência (saída de `cargo test -p wyd-core`) anexada.
+- [ ] Tick 20–50 Hz determinístico; teste de determinismo verde.
+- [ ] Zero `unsafe` fora de interop comprovada; `clippy -D warnings` limpo.
+- [ ] Nenhum I/O bloqueante, lock global ou alocação no caminho quente.
+- [ ] Evidência (saída de `cargo test -p wyd-core`) anexada.
 
 **Status:** ✅ (2026-11-07)
 

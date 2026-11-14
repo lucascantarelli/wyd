@@ -62,18 +62,18 @@ Saída esperada: `test result: ok`; migrations aplicam do zero e rollback funcio
 
 ## Subtasks
 
-- [x] Codificar issue
-- [x] Testar issue
-- [x] Revisar issue
-- [x] Documentar issue
+- [ ] Codificar issue
+- [ ] Testar issue
+- [ ] Revisar issue
+- [ ] Documentar issue
 - [ ] Versionar issue, mergear branch e fechar issue
 - [ ] Limpar branch (se aplicável)
 
 ## Critérios de aceite
 
-- [x] Migrations sobem do zero e revertem sem perda (evidência anexada).
-- [x] FKs/CHECKs validados por teste (violação falha como esperado).
-- [x] Nenhum acesso a banco dentro do tick; DSN real nunca versionado.
+- [ ] Migrations sobem do zero e revertem sem perda (evidência anexada).
+- [ ] FKs/CHECKs validados por teste (violação falha como esperado).
+- [ ] Nenhum acesso a banco dentro do tick; DSN real nunca versionado.
 
 **Status:** ✅ (2026-11-07)
 

@@ -140,15 +140,15 @@ cargo test --workspace && cargo clippy --workspace -- -D warnings && cargo fmt -
 
 ## Subtasks
 
-- [x] Codificar issue (roteiro + pipeline de goldens)
-- [x] Testar issue (`--gen`/`--check` + gate)
-- [x] Documentar issue
+- [ ] Codificar issue (roteiro + pipeline de goldens)
+- [ ] Testar issue (`--gen`/`--check` + gate)
+- [ ] Documentar issue
 - [ ] Captura ao vivo (bloqueada: VM + cliente; o servidor Rust já atende login → campo)
 
 ## Critérios de aceite
 
-- [x] Roteiro executável por terceiros sem dedução (VAs, fases, comandos, higiene).
-- [x] Goldens gerados do C→S com validação automática e determinismo.
+- [ ] Roteiro executável por terceiros sem dedução (VAs, fases, comandos, higiene).
+- [ ] Goldens gerados do C→S com validação automática e determinismo.
 - [ ] Login → seleção → campo capturado e reproduzido pelo servidor Rust (ao vivo).
 - [ ] Cada pacote S→C com golden e status (CONFIRMADO/UNVERIFIED).
 - [ ] Causa do freeze identificada ou reduzida a hipótese com trace.

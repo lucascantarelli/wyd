@@ -61,7 +61,7 @@ Saída esperada: cada recusa com motivo distinto no log; admin entra, aparece na
 
 - [ ] Senha/PIN errados exibem recusa visível ou motivo documentado como limitação do 7662 com evidência.
 - [ ] Admin entra no mundo, vê cena, sai e reloga imediatamente.
-- [x] Nenhum `panic!` em byte de rede (Strict).
+- [ ] Nenhum `panic!` em byte de rede (Strict).
 
 ## Revisão de prova (2026-11-12)
 
