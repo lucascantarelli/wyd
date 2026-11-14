@@ -11,6 +11,7 @@
 use wyd_db::{Account, AccountListRow, Accounts, Role};
 
 use crate::audit::{log_action, log_denied, AuditSink};
+use crate::auth::{hash_password, valid_game_password};
 use crate::auth::{may_change_role, Session, StaffSession};
 use crate::error::AdminError;
 use crate::transport::json;
@@ -69,6 +70,7 @@ pub async fn find_account(
 pub async fn create_account(
     session: Option<Session>,
     login: &str,
+    password: &str,
     role: Role,
     repo: &impl Accounts,
     sink: &impl AuditSink,
@@ -87,7 +89,23 @@ pub async fn create_account(
         });
     }
     Account::validate_login(login).map_err(AdminError::from)?;
+    // A senha nasce junto com a conta: é o único cadastro do jogador. O teto de 12
+    // bytes é o campo `char[12]` do login CPSock — o mesmo hash vale no portal e no
+    // cliente, então senha de jogador maior deixaria a conta inacessível no jogo.
+    // Staff não digita senha no cliente, então mantém só o mínimo.
+    if role == Role::Player && !valid_game_password(password) {
+        return Err(AdminError::InvalidInput {
+            reason: "senha deve ter de 8 a 12 bytes (limite do cliente)",
+        });
+    }
+    let hash = hash_password(password).map_err(|_| AdminError::InvalidInput {
+        reason: "não foi possível gerar o hash da senha",
+    })?;
     let account = repo.create_account(login, role).await?;
+    let account = repo
+        .set_credentials(login, &hash, role)
+        .await
+        .map(|_| account)?;
     log_action(
         sink,
         &staff,
@@ -181,6 +199,7 @@ mod tests {
     pub struct FakeAccounts {
         next: Mutex<i64>,
         by_login: Mutex<HashMap<String, Account>>,
+        hashes: Mutex<HashMap<String, String>>,
     }
 
     impl FakeAccounts {
@@ -188,7 +207,16 @@ mod tests {
             Self {
                 next: Mutex::new(1),
                 by_login: Mutex::new(HashMap::new()),
+                hashes: Mutex::new(HashMap::new()),
             }
+        }
+
+        fn hash_de(&self, login: &str) -> Option<String> {
+            self.hashes
+                .lock()
+                .expect("fake acessível")
+                .get(login)
+                .cloned()
         }
     }
 
@@ -240,6 +268,31 @@ mod tests {
             by_login.insert(login.to_string(), account.clone());
             Ok(account)
         }
+
+        async fn set_credentials(
+            &self,
+            login: &str,
+            password_hash: &str,
+            role: Role,
+        ) -> Result<Account, wyd_db::DbError> {
+            self.hashes
+                .lock()
+                .expect("fake acessível")
+                .insert(login.to_string(), password_hash.to_string());
+            self.by_login
+                .lock()
+                .expect("fake acessível")
+                .get(login)
+                .cloned()
+                .ok_or(wyd_db::DbError::NotFound {
+                    entity: "account",
+                    id: 0,
+                })
+                .map(|mut account| {
+                    account.role = role;
+                    account
+                })
+        }
     }
 
     fn staff(role: Role) -> Option<Session> {
@@ -258,15 +311,19 @@ mod tests {
         let created = block_on(create_account(
             staff(Role::Moderator),
             "novo",
+            "senha123",
             Role::Player,
             &repo,
             &sink,
         ))
         .expect("moderador cria jogador");
         assert_eq!(created.login, "novo");
+        let hash = repo.hash_de("novo").expect("hash gravado");
+        assert!(hash.starts_with("$argon2id$"), "hash Argon2id: {hash}");
         let denied = block_on(create_account(
             staff(Role::Moderator),
             "outro",
+            "senha123",
             Role::Moderator,
             &repo,
             &sink,
@@ -290,6 +347,7 @@ mod tests {
         block_on(create_account(
             staff(Role::Admin),
             "dup",
+            "senha123",
             Role::Player,
             &repo,
             &sink,
@@ -298,6 +356,7 @@ mod tests {
         let again = block_on(create_account(
             staff(Role::Admin),
             "dup",
+            "senha123",
             Role::Player,
             &repo,
             &sink,
@@ -308,5 +367,55 @@ mod tests {
                 reason: "dados conflitam com as regras"
             })
         );
+    }
+
+    #[test]
+    fn senha_do_jogo_cabe_em_doze_bytes() {
+        let repo = FakeAccounts::new();
+        let sink = crate::audit::VecSink::default();
+        // 12 bytes passa; 13 não pode nem criar a conta (o cliente truncaria).
+        block_on(create_account(
+            staff(Role::Admin),
+            "doze",
+            "abcdefghijkl",
+            Role::Player,
+            &repo,
+            &sink,
+        ))
+        .expect("12 bytes cabem no campo do login");
+        let longa = block_on(create_account(
+            staff(Role::Admin),
+            "treze",
+            "abcdefghijklm",
+            Role::Player,
+            &repo,
+            &sink,
+        ));
+        assert_eq!(
+            longa,
+            Err(AdminError::InvalidInput {
+                reason: "senha deve ter de 8 a 12 bytes (limite do cliente)"
+            })
+        );
+        assert!(
+            repo.hash_de("treze").is_none(),
+            "senha recusada não grava hash"
+        );
+    }
+
+    #[test]
+    fn teto_de_doze_bytes_vale_so_para_jogador() {
+        let repo = FakeAccounts::new();
+        let sink = crate::audit::VecSink::default();
+        // Staff nunca digita a senha no cliente; o teto do fio não se aplica.
+        block_on(create_account(
+            staff(Role::Admin),
+            "staff",
+            "abcdefghijklm",
+            Role::Moderator,
+            &repo,
+            &sink,
+        ))
+        .expect("staff aceita senha acima de 12 bytes");
     }
 }

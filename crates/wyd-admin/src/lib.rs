@@ -36,8 +36,8 @@ pub use api::{
 };
 pub use audit::{log_action, log_denied, AuditEntry, AuditSink, VecSink};
 pub use auth::{
-    hash_password, may_change_role, may_target, verify_password, PasswordError, Session,
-    StaffSession, MIN_PASSWORD_LEN,
+    hash_password, may_change_role, may_target, valid_game_password, verify_password,
+    PasswordError, Session, StaffSession, MAX_GAME_PASSWORD_BYTES, MIN_PASSWORD_LEN,
 };
 pub use error::AdminError;
 pub use service::{GrantQueue, GrantService, GrantTrail, MemoryGrantQueue};

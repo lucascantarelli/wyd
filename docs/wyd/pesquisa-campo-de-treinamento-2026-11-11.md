@@ -148,10 +148,30 @@ mapa e registra os drops 451/452/453/524, sem criar blob nem tabela de conteúdo
   ids 1080..6941; unitário `cena_por_proximidade_corta_o_que_esta_longe`.
 - **Aberto — distribuir pontos:** `_MSG_UpdateScore` só existe J→C.
 - **Aberto — baú de XP:** `_MSG_UseItem` cobre refino/pó; sem affect/efeito visual.
-- **Aberto — lojas de NPC:** `npc_shop_item` já tem 6 706 linhas / 718 itens no snapshot; faltam
-  `_MSG_REQShopList` (0x027B) e `_MSG_ShopList` (0x017C), catalogados mas não portados.
-- **Aberto — dano do personagem no Campo:** `event=attack damage=1 hp_left=597`; o ataque usa o
-  `Damage` do template da classe, sem equipamento (é o papel da arma Sephira +9).
+- **Corrigido — lojas de NPC (2026-11-14, prova viva):** `_MSG_REQShopList` (0x027B) e
+  `_MSG_ShopList` (0x017C) respondem: 58 mercadores em Armia devolveram catálogo e a compra
+  entregou o item com o ouro debitado (`event=shop result=bought ... pos=7 coin=25500`,
+  `5 000 000 → 4 974 500`). Prova: `tests/sistema/loja_viva.rs` e
+  `docs/rust/evidencias/combate-e-loja-vivo-2026-11-14.md` §3.
+- **Corrigido — dano do personagem no Campo (2026-11-14, prova viva):** era `damage=1
+  hp_left=597` porque o canal subtraía o AC **inteiro**. Agora `world::combat::legacy_damage`
+  aplica `BASE_GetDamage` (`Basedef.cpp:1265`: `dam - ac/2` + escada de pisos) e o nível 1 tira
+  **5** do `GremlinDecoy` (AC 40) e **12** de um `Porco` (AC 2). A quest do Campo fecha ponta a
+  ponta: HP chega a 0, `exp_base=1313 exp_granted=1313`, `loot result=resolved ... item 451` e a
+  entrega avança para `step=2`. Prova: `tests/sistema/campo_vivo.rs`, `tests/sistema/combate_vivo.rs`.
+- **Corrigido — equipamento no dano (2026-11-14):** o login soma `EF_DAMAGE`/`EF_AC` de todo o
+  `Equip[16]` ao `CurrentScore` (`BASE_GetCurrentScore`, `Basedef.cpp:3028`), com os pares do
+  catálogo vindo de `item_catalog.effects` e refino escalando `(sanc+10)/10`. Medido: nível 1 com
+  `Adaga` (2) + `Botas_de_Couro(A)` (5) ataca com 12 e tira **20** de um `Porco` (AC 2) — antes
+  eram 12. Prova: `tests/sistema/combate_vivo.rs` e
+  `docs/rust/evidencias/combate-e-loja-vivo-2026-11-14.md` §4.
+- **Aberto — bônus por atributo:** `Dex*k + Str*k` por classe×arma (`Basedef.cpp:3245+`) só vale
+  com a maestria da arma (`LearnedSkill`), que ainda não é modelada; sem skill o legado também não
+  soma. Continua FASE-10.
+- **Aberto — equipar/desequipar:** não existe caminho no jogo (`_MSG_UpdateItem` 0x0374 sem
+  layout confirmado nem handler em `crates/`).
+- **Aberto — respawn de criatura:** NPC abatido não volta; o `GremlinDecoy` só reaparece com
+  restart do canal, então o segundo jogador não consegue fazer a etapa 1 até lá.
 
 - **Corrigido — clique de movimento/NPC (2026-11-11, teste manual):** todo `_MSG_Action`
   apontando mais de 4 tiles do personagem era **recusado**

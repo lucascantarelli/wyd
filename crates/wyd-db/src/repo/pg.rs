@@ -279,10 +279,12 @@ impl Accounts for PgBackend {
     }
 
     async fn vault_items(&self, account_id: i64) -> Result<Vec<ItemRow>, DbError> {
-        let rows = sqlx::query(
-            "SELECT slot, item_id, qty, flags, refine, ancient, gem_effect, gem_value \
-             FROM vault_items WHERE account_id = $1 ORDER BY slot",
-        )
+        let rows = sqlx::query(&format!(
+            "SELECT v.slot, v.item_id, v.qty, v.flags, v.refine, v.ancient, v.gem_effect, \
+             v.gem_value, {ITEM_EFFECT_COLUMNS} \
+             FROM vault_items v LEFT JOIN item_catalog c ON c.item_index = v.item_id \
+             WHERE v.account_id = $1 ORDER BY v.slot"
+        ))
         .bind(account_id)
         .fetch_all(self.pool())
         .await
@@ -644,10 +646,12 @@ impl Characters for PgBackend {
     }
 
     async fn items(&self, character_id: i64) -> Result<Vec<ItemRow>, DbError> {
-        let rows = sqlx::query(
-            "SELECT slot, item_id, qty, flags, refine, ancient, gem_effect, gem_value \
-             FROM character_items WHERE character_id = $1 ORDER BY slot",
-        )
+        let rows = sqlx::query(&format!(
+            "SELECT i.slot, i.item_id, i.qty, i.flags, i.refine, i.ancient, i.gem_effect, \
+             i.gem_value, {ITEM_EFFECT_COLUMNS} \
+             FROM character_items i LEFT JOIN item_catalog c ON c.item_index = i.item_id \
+             WHERE i.character_id = $1 ORDER BY i.slot"
+        ))
         .bind(character_id)
         .fetch_all(self.pool())
         .await
@@ -1080,6 +1084,18 @@ fn character_row(row: &PgRow) -> Result<Character, DbError> {
     })
 }
 
+/// Os três pares de efeito do catálogo, na ordem do `jsonb` (`item_catalog.effects`).
+///
+/// O `STRUCT_ITEM` do legado tem exatamente três pares (`sIndex` + 3 × `eff/value`); o que
+/// passar disso fica fora, como no fio.
+const ITEM_EFFECT_COLUMNS: &str = "\
+     COALESCE((c.effects->0->>'eff')::int, 0)::smallint AS eff1, \
+     COALESCE((c.effects->0->>'val')::int, 0)::bigint AS val1, \
+     COALESCE((c.effects->1->>'eff')::int, 0)::smallint AS eff2, \
+     COALESCE((c.effects->1->>'val')::int, 0)::bigint AS val2, \
+     COALESCE((c.effects->2->>'eff')::int, 0)::smallint AS eff3, \
+     COALESCE((c.effects->2->>'val')::int, 0)::bigint AS val3";
+
 /// Linha de item de `character_items`/`vault_items` (colunas idênticas).
 fn item_row(row: &PgRow) -> Result<ItemRow, DbError> {
     let op = "items.decode";
@@ -1093,7 +1109,28 @@ fn item_row(row: &PgRow) -> Result<ItemRow, DbError> {
         ancient: row.try_get("ancient").map_err(decode)?,
         gem_effect: i64::from(row.try_get::<i16, _>("gem_effect").map_err(decode)?),
         gem_value: i64::from(row.try_get::<i16, _>("gem_value").map_err(decode)?),
+        effects: [
+            par_de_efeito(row, "eff1", "val1"),
+            par_de_efeito(row, "eff2", "val2"),
+            par_de_efeito(row, "eff3", "val3"),
+        ],
     })
+}
+
+/// Um par `EF_*` do catálogo, cortado no byte do `STRUCT_ITEM` (o fio tem 1 byte por valor).
+fn par_de_efeito(row: &PgRow, eff: &str, val: &str) -> [u8; 2] {
+    let efeito = row
+        .try_get::<i16, _>(eff)
+        .ok()
+        .and_then(|valor| u8::try_from(valor).ok())
+        .unwrap_or(0);
+    let valor = row
+        .try_get::<i64, _>(val)
+        .ok()
+        .map(|numero| numero.clamp(0, i64::from(u8::MAX)))
+        .and_then(|numero| u8::try_from(numero).ok())
+        .unwrap_or(0);
+    [efeito, valor]
 }
 
 impl Grants for PgBackend {

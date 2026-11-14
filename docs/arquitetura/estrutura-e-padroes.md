@@ -16,7 +16,7 @@ wyd-launcher ──► wyd-bots ──► wyd-protocol
 wyd-server   ──► wyd-protocol, wyd-core, wyd-net, wyd-db, wyd-sim, wyd-admin   # raiz de composição (§16, ADR-0022)
 wyd-admin    ──► wyd-db, wyd-protocol
 wyd-db       ──► wyd-core                 # ADR-0009: entrega os tipos da porta de conteúdo
-wyd-core     ──► wyd-protocol
+wyd-core     ──► wyd-protocol, wyd-sim   # ADR-0029: só funções puras (gema)
 wyd-net      ──► wyd-protocol
 wyd-sim      ──► (independente; não usa protocol)
 wyd-bots     ──► wyd-protocol             # wyd-sim/wyd-net seguem PLANEJADOS (ADR-0010, QA-11)
@@ -39,6 +39,9 @@ Regras:
    exige ADR.
 6. `wyd-sim` é independente de `wyd-protocol` hoje; a aresta para o protocolo era plano e
    foi removida. `wyd-bots → wyd-sim/wyd-net` continua **planejada** (ADR-0010/QA-11).
+   A aresta `wyd-core → wyd-sim` existe desde a ADR-0029 e é **estreita**: o core só consome
+   funções puras (a regra da gema); `wyd-sim` continua sem `wyd-core`, `wyd-protocol`,
+   `wyd-db` ou `wyd-net`, então não há ciclo.
 
 ## 2. Estrutura canônica de uma crate
 

@@ -72,6 +72,40 @@ describe("POST /api/panel/pin", () => {
     expect(state.calls).toHaveLength(0);
   });
 
+  it("senha acima de 12 bytes devolve 413 antes do backend", async () => {
+    state.session = { accountId: 7, role: "player" };
+
+    const res = await POST(req({ ...valido, password: "a".repeat(13) }));
+
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: TEXTO.pin.senhaLonga });
+    expect(state.calls).toHaveLength(0);
+  });
+
+  it("conta bytes, não caracteres: 7 acentos passam de 12 bytes", async () => {
+    state.session = { accountId: 7, role: "player" };
+    expect("á".repeat(7)).toHaveLength(7);
+
+    const res = await POST(req({ ...valido, password: "á".repeat(7) }));
+
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: TEXTO.pin.senhaLonga });
+    expect(state.calls).toHaveLength(0);
+  });
+
+  it("senha de 12 bytes (6 acentos) chega intacta ao gateway", async () => {
+    state.session = { accountId: 7, role: "player" };
+    const senha = "á".repeat(6);
+    expect(new TextEncoder().encode(senha)).toHaveLength(12);
+
+    const res = await POST(req({ ...valido, password: senha }));
+
+    expect(res.status).toBe(200);
+    expect(state.calls).toEqual([
+      { login: "jogador", body: { password: senha, currentPin: "1357", newPin: "8642" } },
+    ]);
+  });
+
   it("PIN novo igual ao atual devolve 422", async () => {
     state.session = { accountId: 7, role: "player" };
 

@@ -254,10 +254,16 @@ fn initcode_errado_nao_entra_no_handshake() {
     stream
         .set_read_timeout(Some(Duration::from_secs(5)))
         .expect("timeout");
-    stream
-        .write_all(&0xDEAD_BEEFu32.to_le_bytes())
-        .expect("lixo");
+    // Lixo no lugar do INITCODE **e** um frame de login bem formado logo depois: se o gate de
+    // INITCODE sumir, o servidor processa o frame e responde `CNFAccountLogin` — é isso que a
+    // asserção precisa pegar (só o lixo de 4 B fecharia por timeout, não por validação).
+    let mut lixo = Vec::from(0xDEAD_BEEFu32.to_le_bytes());
+    lixo.extend_from_slice(&login_frame(12_000, 1, &conta_unica("i"), ""));
+    stream.write_all(&lixo).expect("lixo + login");
     let mut buf = Vec::new();
     let lido = stream.read_to_end(&mut buf).unwrap_or(0);
-    assert_eq!(lido, 0, "conexão sem INITCODE é descartada");
+    assert_eq!(
+        lido, 0,
+        "conexão sem INITCODE correto é descartada sem resposta"
+    );
 }

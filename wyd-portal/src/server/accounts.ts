@@ -171,11 +171,12 @@ export async function findAccount(login: string): Promise<AccountSummary | null>
 /** Cria a conta com papel explícito. O `moderator_id` vem da sessão. */
 export async function createAccount(input: {
   login: string;
+  password: string;
   role: Role;
 }): Promise<AccountSummary> {
-  const res = await adminCall<{ login: string; role: string }, CreateAccountResponse>(
+  const res = await adminCall<{ login: string; password: string; role: string }, CreateAccountResponse>(
     accountsAdmin.create.bind(accountsAdmin),
-    { login: input.login, role: input.role },
+    { login: input.login, password: input.password, role: input.role },
     { action: "accounts.create", target: `login:${input.login.slice(0, 16)}` },
   );
   if (!res.account) throw new Error("resposta sem a conta criada");

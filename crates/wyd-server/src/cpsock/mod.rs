@@ -31,7 +31,7 @@ use std::time::{Duration, Instant};
 use wyd_net::{VersionGate, NET};
 use wyd_protocol::codec::checksum::{self, ChecksumPolicy};
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
-use wyd_protocol::payload::combat::Attack;
+use wyd_protocol::payload::combat::{Attack, AttackOne, TargetDamage};
 use wyd_protocol::payload::commerce::{ReqShopList, ShopList, MAX_SHOPLIST};
 use wyd_protocol::payload::movement::Action;
 use wyd_protocol::payload::quest::Quest;
@@ -56,7 +56,7 @@ use crate::channels::World;
 use crate::characters::{LoginSnapshot, Selected, SelectionError, SelectionStore};
 use crate::gameplay::UseItemRolls;
 use crate::session::{SessionError, SessionGate, SessionLease};
-use crate::world::{plan_scene, SceneMob};
+use crate::world::{plan_scene, SceneMob, SentMob};
 use wyd_sim::XorShift64;
 
 mod action;
@@ -85,6 +85,13 @@ const MAX_IDLE_ROUNDS: u32 = 10;
 /// Período de leitura em jogo: a recarga de configuração chega ao cliente em ~1 s, e não no
 /// timeout de ociosidade da sessão (que continua sendo `idle × MAX_IDLE_ROUNDS`).
 const SCENE_POLL: Duration = Duration::from_secs(1);
+
+/// Intervalo mínimo entre deltas de cena **no fluxo contínuo**.
+///
+/// O delta só saía no timeout de leitura: um jogador que anda sem parar nunca recebia o
+/// `CreateMob` dos NPCs que entravam na vista (só depois de ficar parado > `SCENE_POLL`).
+/// Quatro varreduras por segundo cabem no orçamento e não transformam o jogo em rajada.
+const SCENE_REFRESH_EVERY: Duration = Duration::from_millis(250);
 
 /// Renovação do sinal de vida da sessão. Um `UPDATE` por segundo no banco seria desperdício;
 /// o TTL da cerca é de minutos.
@@ -116,8 +123,8 @@ enum Stage {
 #[derive(Debug, Clone, Default)]
 struct Scene {
     generation: u64,
-    /// Id de cena → é personagem? O `RemoveType` da saída depende disso (logout × fora de vista).
-    mobs: std::collections::BTreeMap<u16, bool>,
+    /// Id de cena → papel na saída + versão emitida (base do refresh sem relogin).
+    mobs: std::collections::BTreeMap<u16, SentMob>,
 }
 
 impl Stage {
@@ -393,7 +400,9 @@ fn log(level: &str, event: &str, fields: &str) {
 
 #[cfg(test)]
 mod tests {
-    use super::action::{cp_panel, drain_chat, send_create_mob, send_remove_mob};
+    use super::action::{
+        cp_panel, drain_chat, reply_panel, send_attack_echo, send_create_mob, send_remove_mob,
+    };
     use super::*;
     use std::net::{TcpListener, TcpStream};
     use wyd_protocol::payload::scene::{CreateMob, RemoveMob};
@@ -451,6 +460,63 @@ mod tests {
     }
 
     #[test]
+    fn reply_panel_escreve_o_texto_no_offset_do_cliente() {
+        let (mut servidor, mut cliente) = par();
+        assert!(reply_panel(&mut servidor, 0, "Senha ou conta incorreta"));
+        let (cabecalho, frame) = ler_frame(&mut cliente);
+        assert_eq!(cabecalho.message_type, Opcode::MessagePanel.wire());
+        // O texto de `_MSG_MessagePanel` começa no `+12` absoluto do pacote — isto é,
+        // `body[0..128]` depois do cabeçalho de 12 B.
+        assert_eq!(
+            &frame[HEADER_SIZE..HEADER_SIZE + 5],
+            b"Senha",
+            "texto no +12 do pacote"
+        );
+    }
+
+    #[test]
+    fn eco_do_ataque_leva_o_dano_do_servidor() {
+        let (mut servidor, mut cliente) = par();
+        let pedido = AttackOne {
+            unk_1: [0; 4],
+            current_hp: 83,
+            unk_2: [0; 4],
+            current_exp: 0,
+            unk_0: 0,
+            pos_x: 2103,
+            pos_y: 2104,
+            target_x: 2110,
+            target_y: 2102,
+            attacker_id: 7,
+            progress: 1,
+            motion: 1,
+            skill_parm: 0,
+            double_critical: 0,
+            flag_local: 0,
+            rsv: 0,
+            current_mp: 46,
+            skill_index: 0,
+            req_mp: 0,
+            dam: [TargetDamage {
+                target_id: 6111,
+                damage: 0,
+            }],
+        };
+        assert!(send_attack_echo(&mut servidor, 0, &pedido, 42, 30000, 7));
+        let (cabecalho, frame) = ler_frame(&mut cliente);
+        assert_eq!(cabecalho.message_type, Opcode::AttackOne.wire());
+        assert_eq!(
+            frame.len(),
+            AttackOne::WIRE_LEN,
+            "68 B no fio, cabeçalho incluso"
+        );
+        let eco = AttackOne::decode(&frame).expect("eco decodifica");
+        assert_eq!(eco.attacker_id, 42, "quem atacou é o id da sessão");
+        assert_eq!(eco.dam[0].target_id, 30000);
+        assert_eq!(eco.dam[0].damage, 7, "dano do servidor, não o do cliente");
+    }
+
+    #[test]
     fn cp_panel_cabe_no_painel_e_descreve_o_efeito() {
         let texto = cp_panel(0);
         assert!(texto.contains("neutro"), "{texto}");
@@ -479,12 +545,19 @@ mod tests {
             max_hp: 90,
             attack: 12,
             defense: 5,
+            mp: 46,
+            max_mp: 46,
+            strength: 8,
+            intelligence: 4,
+            dexterity: 7,
+            constitution: 6,
             merchant: 0,
             chaos_rate: crate::personagens::CP_NEUTRO,
             attack_run: 82,
             direction: 3,
             equip,
             guild: 4,
+            revision: 0,
         }
     }
 
@@ -516,6 +589,18 @@ mod tests {
         assert_eq!(pacote.equip[0], 831, "aparece pelo s_Index do equipamento");
         assert_eq!(pacote.guild, 4);
         assert_eq!((pacote.level, pacote.max_hp, pacote.hp), (42, 90, 90));
+        // MP e atributos do jogador vão no `CreateMob`, não zerados: é o mesmo
+        // `STRUCT_SCORE` que o `CNFCharacterLogin`/`UpdateScore` mandam.
+        assert_eq!((pacote.mp, pacote.max_mp), (46, 46));
+        assert_eq!(
+            (
+                pacote.strength,
+                pacote.intelligence,
+                pacote.dexterity,
+                pacote.constitution
+            ),
+            (8, 4, 7, 6)
+        );
         assert_eq!(pacote.merchant, 0, "jogador não é NPC de loja");
         assert_eq!(
             pacote.create_type,

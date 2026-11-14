@@ -8,15 +8,16 @@ import { Dialog } from "@/components/Dialog";
 import { Field } from "@/components/Field";
 import { useToast } from "@/components/Toast";
 import { ROLES, roleLabel, type Role } from "@/lib/role";
+import { erroSenhaConta, senhaJogoBytes } from "@/lib/senha";
 
 import { createAccountAction } from "./actions";
 
 /**
  * Criação de conta pelo painel.
  *
- * A conta nasce **sem credencial**: a senha de jogo é definida no primeiro
- * acesso, e a senha numérica na tela de personagem do cliente. Aqui se escolhe
- * só o login e o papel — o resto é do fluxo de entrada.
+ * A senha nasce junto com a conta: é o único cadastro do jogador e a mesma
+ * credencial serve ao portal e ao cliente (8 a 12 **bytes**). A senha numérica
+ * (PIN) continua sendo criada no primeiro acesso do cliente.
  */
 export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolean }) {
   const router = useRouter();
@@ -25,6 +26,7 @@ export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolea
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState<Role>("player");
 
   async function submit() {
@@ -32,8 +34,13 @@ export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolea
       setError("informe o login");
       return;
     }
+    const senhaInvalida = erroSenhaConta(password, role);
+    if (senhaInvalida) {
+      setError(senhaInvalida);
+      return;
+    }
     setPending(true);
-    const result = await createAccountAction({ login, role });
+    const result = await createAccountAction({ login, password, role });
     setPending(false);
     if (!result.ok) {
       setError(result.error);
@@ -43,6 +50,7 @@ export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolea
     setOpen(false);
     setError(null);
     setLogin("");
+    setPassword("");
     setRole("player");
     router.refresh();
   }
@@ -57,11 +65,15 @@ export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolea
       <Dialog
         open={open}
         title="Criar conta"
-        description="A conta nasce sem senha de jogo; o jogador define as credenciais no primeiro acesso."
+        description="A senha é a mesma do portal e do jogo: o jogador entra no cliente com ela. O PIN é criado no primeiro login do personagem."
         onClose={() => setOpen(false)}
         footer={
           <>
-            <button className="ui-btn ui-btn--ghost" onClick={() => setOpen(false)} disabled={pending}>
+            <button
+              className="ui-btn ui-btn--ghost"
+              onClick={() => setOpen(false)}
+              disabled={pending}
+            >
               Cancelar
             </button>
             <button className="ui-btn ui-btn--primary" onClick={submit} disabled={pending}>
@@ -79,6 +91,23 @@ export function CreateAccountDialog({ canCreateStaff }: { canCreateStaff: boolea
               autoComplete="off"
               autoFocus
               onChange={(event) => setLogin(event.target.value)}
+            />
+          </Field>
+
+          <Field
+            label="Senha"
+            hint={
+              role === "player"
+                ? `8 a 12 bytes — a mesma senha do portal e do jogo (${senhaJogoBytes(password)}/12)`
+                : "mínimo 8 bytes — staff não digita senha no cliente"
+            }
+          >
+            <input
+              className="ui-input"
+              type="password"
+              value={password}
+              autoComplete="new-password"
+              onChange={(event) => setPassword(event.target.value)}
             />
           </Field>
 

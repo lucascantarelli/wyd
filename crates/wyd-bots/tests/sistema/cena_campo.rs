@@ -11,19 +11,23 @@ use std::collections::BTreeMap;
 
 use wyd_bots::{Bot, BotConfig, Race, SceneMob};
 
-/// `(nome, x, y)` do seed 0046 — as coordenadas são as do guia oficial do Campo.
+/// `(nome, x, y)` do Campo **depois** da `0051`: treinadores, chefe, unicórnio e ajudante vêm
+/// do dump herdado (as cópias `campo-*` saíram) e só as criaturas de prova são nossas.
 const CAMPOS: [(&str, i32, i32); 10] = [
-    ("PrimeiroTreinador", 2077, 2017),
-    ("SegundoTreinador", 2144, 1989),
-    ("TerceiroTreinador", 2082, 1966),
-    ("ChefeTreinador", 2122, 2041),
-    ("Unicorn", 2130, 2040),
-    ("Cabuncle", 2131, 2033),
+    ("Prim. Treinador", 2080, 2018),
+    ("Seg. Treinador", 2142, 1990),
+    ("Terc. Treinador", 2078, 1966),
+    ("Chefe de Treino", 2121, 2040),
+    ("Unicornio Puro", 2121, 2047),
+    ("Ajudante", 2130, 2035),
     ("GremlinDecoy", 2076, 2022),
     ("GiantCrill", 2146, 1997),
     ("OrcSniper", 2078, 1971),
     ("OrcWarrior", 2135, 1948),
 ];
+
+/// Nomes das cópias removidas pela `0051`: nenhuma pode aparecer na cena.
+const COPIES: [&str; 2] = ["Unicorn", "Cabuncle Wind"];
 
 /// Posições das fixtures removidas pela `0047`: não pode sobrar criatura aqui.
 const FIXTURES: [(i32, i32); 8] = [
@@ -40,11 +44,11 @@ const FIXTURES: [(i32, i32); 8] = [
 /// Pontos por onde o personagem passa: o raio de 24 tiles cobre o Campo inteiro em quatro
 /// paradas (2076..2146 × 1948..2041), incluindo o Chefe em (2122,2041).
 const ROTA: [(i32, i32); 5] = [
-    (2077, 2017),
+    (2080, 2018),
     (2078, 1971),
     (2146, 1997),
     (2135, 1948),
-    (2122, 2041),
+    (2121, 2040),
 ];
 
 /// Lê a cena por 400 ms e acumula por `MobID` (o mesmo NPC pode ser reenviado ao voltar).
@@ -120,6 +124,13 @@ fn imprime_os_npcs_do_campo_com_mobid_da_cena() {
         eprintln!(
             "CAMPO nome={} pos=({cx},{cy}) cena_mob_id={} cena_nome={}",
             nome, instancias[0].id, instancias[0].name
+        );
+    }
+    for copia in COPIES {
+        assert_eq!(
+            vistos.values().filter(|mob| mob.name == copia).count(),
+            0,
+            "cópia do seed 0046 continua na cena: {copia}"
         );
     }
     for (fx, fy) in FIXTURES {

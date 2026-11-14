@@ -32,7 +32,7 @@ test: ## testes do workspace (skill: wyd-rust-toolchain)
 test-all: ## unitários + integração + doc-tests + alvos de bench (espelho do CI)
 	$(CARGO) test --workspace --all-targets
 
-check: fmt clippy build test migrations-check issue-status-check docs-check skills-check versao-check tools-test portal-test actions-pin-check ## gate completo — exigido por toda issue
+check: fmt clippy build test migrations-check issue-status-check audit-coverage-check docs-check skills-check versao-check tools-test portal-test actions-pin-check ## gate completo — exigido por toda issue
 
 versao-check: ## fonte única de versão (Cargo workspace × portal) — DEVOPS-10
 	node tools/dev/check-versao.mjs
@@ -63,6 +63,9 @@ migrations-check: ## ordem/FK/down das migrations, sem Postgres (tools/content/c
 
 issue-status-check: ## status de issue igual no índice e no painel (tools/content/check-issue-status.mjs)
 	node tools/content/check-issue-status.mjs
+
+audit-coverage-check: ## todo item de docs/audit tem issue rastreável (tools/content/check-audit-coverage.mjs)
+	node tools/content/check-audit-coverage.mjs
 
 docs-check: ## links de README/AGENTS e contagem de crates (tools/dev/check-docs-consistency.mjs)
 	node tools/dev/check-docs-consistency.mjs

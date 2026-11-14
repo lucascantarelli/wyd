@@ -140,3 +140,25 @@ duas etapas do `0x0FDE` descritas acima (`crates/wyd-admin/src/service/pin.rs`).
 - Prova: `crates/wyd-server/tests/sistema/portal_pin.rs::troca_de_pin_pelo_portal_funciona_e_invalida_o_antigo`
   (troca pelo caminho do portal, PIN antigo recusado e novo aceito no fio, hash conferindo só
   o novo) e `wyd-portal/src/app/api/panel/pin/route.test.ts` (sessão, validação e recusa).
+
+## Senha de login definida no cadastro do portal (2026-11-14)
+
+Não existe um "primeiro acesso" separado para a senha de login: ela é definida **quando a conta é
+criada** em `/contas`. O formulário pede login, senha e papel; a senha vale para o portal e para o
+cliente, porque as duas bordas comparam o mesmo `accounts.password_hash` (Argon2id).
+
+- Limite do **jogador**: 8 a 12 **bytes** UTF-8 — o campo `account_password[12]` do
+  `_MSG_AccountLogin`. Acento conta dois; medir caractere aceitaria senha que o cliente trunca.
+- O portal recusa antes de chamar o gateway (`src/lib/senha.ts`), o gateway revalida
+  (`create_account` → `valid_game_password`) e a conta só é gravada com o hash já calculado.
+  Não há truncamento em nenhum ponto.
+- **Staff** (moderador/admin) mantém o mínimo de 8 bytes e **não** tem o teto de 12: essa senha
+  nunca é digitada no cliente.
+- O **PIN** continua sendo cadastrado no primeiro login do cliente (seções acima); não é
+  coletado no portal.
+- Conta criada fora do portal (seed de staff, import) continua passando por `set_credentials`.
+
+Provas: `crates/wyd-admin/src/api/accounts.rs`
+(`senha_do_jogo_cabe_em_doze_bytes`, `teto_de_doze_bytes_vale_so_para_jogador`),
+`crates/wyd-admin/tests/contrato/transporte.rs::moderator_cannot_create_staff` e
+`wyd-portal/tests/unidade/lib/senha.test.ts`.

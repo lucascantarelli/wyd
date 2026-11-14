@@ -73,21 +73,23 @@ crates/wyd-sim/
 ⛔ = **não implementar sem prova**: o módulo existe no plano para ninguém "resolver" por
 chute; `scenario/` pode explorar hipótese, `formula/` não.
 
-## 4. Dívida consciente: regra duplicada em `core` e `sim`
+## 4. Regra única em `wyd-sim`, transação no `core`
 
-`apply_gem` (política da gema) existe nos dois lados por direção de dependência: `wyd-core`
-não pode depender de `wyd-sim` (laboratório offline não entra no binário do servidor) e
-`wyd-sim` não depende de `wyd-core`.
+A política da gema (`apply_gem`, `gem_effect_value`, piso de +10 do Anct, efeito por
+`item_index`) existe **só** em `crates/wyd-sim/src/formula/refine.rs`. O `wyd-core` depende
+dessa crate desde a ADR-0029 e consome apenas funções puras; `wyd-sim` continua sem
+dependências internas (não conhece `wyd-core`, `wyd-protocol`, `wyd-db` nem `wyd-net`), então
+não há ciclo.
 
-Mitigação aplicada:
+Antes da ADR-0029 havia duas cópias. A mutação de 2026-11-14 provou o risco: alterar a cópia
+de `wyd-sim` não derrubava o teste de integração do core, porque o teste passava pela cópia
+do core. Hoje a mesma mutação derruba **os dois**: o golden da simulação
+(`crates/wyd-sim/tests/golden/formulas.rs`) e a integração do core
+(`crates/wyd-core/tests/integracao/gem.rs`).
 
-- os **números** são os mesmos e estão presos por golden nos dois crates;
-- a **fonte** é o manual (`docs/wyd/sistemas/refino.md` §3) e o banco (`refine_gem_effect`);
-- a unificação (enum/contrato em `wyd-protocol`) é dívida registrada no changelog da GAME-19;
-  a ordem de combate fecha com o trace da `CLIENT-06`, e o contrato de efeito estabiliza depois.
-
-Estado atual da dívida: a **regra** existe só como tabela duplicada; a **transação** existe
-só no core. `ComponentStore::apply_gem` é o caminho único de aplicação — valida sem escrever,
+A **fonte** continua sendo o manual (`docs/wyd/sistemas/refino.md` §3) e o banco
+(`refine_gem_effect`); a **transação** existe só no core. `ComponentStore::apply_gem` é o
+caminho único de aplicação — valida sem escrever,
 consome uma unidade da mochila, publica o evento e só então grava o efeito. Recusa é erro
 tipado e o inventário fica idêntico (`crates/wyd-core/tests/integracao/gem.rs`). `Inventory::{plan_gem,
 consume_gem, commit_gem, apply_gem_from_bag}` são `pub(crate)`: de fora do crate não há como

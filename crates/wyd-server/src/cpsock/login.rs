@@ -14,19 +14,13 @@ pub(super) fn authorize_pin(
     let Some(auth) = auth else {
         return Ok((open_session(account, sessions, version)?, None));
     };
-    // PIN é segunda senha, não cadastro obrigatório: conta sem PIN cadastrado vai direto
-    // para a seleção, porque o cliente 7662 não manda `_MSG_AccountSecure` nesse caso.
-    // Exigir a etapa aqui recusava todo personagem novo com "Falha ao conectar".
-    match auth.pin_registered(account) {
-        Ok(true) => {}
-        Ok(false) => {
-            log(
-                "info",
-                "pin",
-                &format!("result=skip account={account} reason=not_registered"),
-            );
-            return Ok((open_session(account, sessions, version)?, None));
-        }
+    // PIN é a segunda senha, e o `pin::secure` já sabe cadastrar o primeiro: se a conta ainda
+    // não tem PIN, o valor digitado **grava** o PIN e os logins seguintes só passam com ele.
+    // Aqui não se recusa mais a etapa por "não cadastrado" (isso aceitava qualquer coisa) nem
+    // se exige o pacote de quem nunca viu o campo — o cliente 7662 pode mandar `_MSG_AccountSecure`
+    // ou seguir direto para a seleção (ver o braço `CharacterLogin` mais abaixo).
+    let registrado = match auth.pin_registered(account) {
+        Ok(registrado) => registrado,
         Err(error) => {
             log(
                 "warn",
@@ -35,6 +29,13 @@ pub(super) fn authorize_pin(
             );
             return Err(HandshakeError::Pin(error.to_string()));
         }
+    };
+    if !registrado {
+        log(
+            "info",
+            "pin",
+            &format!("result=awaiting_first_pin account={account}"),
+        );
     }
     let _ = stream.set_read_timeout(Some(HANDSHAKE_TIMEOUT));
     // Passo 1 da troca de PIN aceito nesta conexão; o 2 só vale com ele armado.
@@ -196,7 +197,9 @@ pub(super) fn authorize_pin(
                 log(
                     "info",
                     "pin",
-                    &format!("result=deferred account={account} reason=selection_first"),
+                    &format!(
+                        "result=deferred account={account} reason=selection_first registered={registrado}"
+                    ),
                 );
                 return Ok((lease, Some((frame.to_vec(), head[2]))));
             }

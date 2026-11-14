@@ -8,8 +8,8 @@
 | ID | Item | O que diz uma fonte | O que diz a outra | Classificação | Impacto | Ação |
 |---|---|---|---|---|---|---|
 | `DIV-01` | Erro de senha invisível | C++/catálogo têm `0x0117 NewAccountFail` | o roteador do 7662 **não** compara `0x0117` (zero ocorrências) | **Confirmado** | jogador não vê motivo da recusa (`BUG-01`) | emitir `0x0101` com layout provado |
-| `DIV-02` | Direção do `CreateItem` | `opcode_table.rs` marca `Flow::Client2Game` | binário: `0x495dc5 cmp edx,0x26e` → handler de **recebimento** (S→C) | **Confirmado** | contrato e dispatch errados para item no chão | corrigir tabela congelada em rito próprio |
-| `DIV-03` | Tamanho do `CharacterLogin` | `Basedef.h`: 20 B | 7662 envia **36 B** | **Confirmado** | leitura de 16 B a mais | já tratado no crate; documentar |
+| `DIV-02` | Direção do `CreateItem` | `opcode_table.rs` marcava `Flow::Client2Game` | binário: `0x495dc5 cmp edx,0x26e` → handler de **recebimento** (S→C) | **Confirmado — corrigido em 2026-11-14 (`AUD-02`)** | contrato e dispatch errados para item no chão | tabela congelada passou a `Flow::Game2Client` com o valor de fio `0x026e` intacto; teste `create_item_e_recebido_pelo_cliente_com_o_mesmo_valor_de_fio` + `DIRECTION_OVERRIDES` no gerador. Prova por mutação em [`docs/rust/evidencias/AUD-02-createitem-2026-11-14.md`](../rust/evidencias/AUD-02-createitem-2026-11-14.md) |
+| `DIV-03` | Tamanho do `CharacterLogin` | `Basedef.h`: 20 B | 7662 envia **36 B** | **Confirmado** | leitura de 16 B a mais | **documentado** em `docs/cliente/pacotes.md` (`20 (cliente 7662: 36)`) e travado por `WIRE_LEN = 36` em `crates/wyd-protocol/src/payload/character.rs` |
 | `DIV-04` | Layout de `MSG_Trade` | natural: 156 B (`Basedef.h:2435-2445`) | Go `pack(1)`: 154 B | **Divergente** | trade não pode ser implementado às cegas | captura (`CLIENT-10`) |
 | `DIV-05` | Modelo de drop | legado: taxa/bônus **por slot do `Carry`** | Rust: **um roll por item** da tabela do snapshot | **Divergente** | distribuição de loot muda | comparar curvas no `wyd-sim` e decidir com dado |
 | `DIV-06` | Piedade de refino | legado: `g_pSuccessRate` | Rust: `0043_refine_pity` com regra nossa | **Fortemente indicado** | taxa efetiva pode divergir | documentar como decisão + comparar |
@@ -21,6 +21,10 @@
 | `DIV-12` | Tamanho das tabelas do cliente | `ItemList` 140 B / `SkillData` 96 B (este build) | 7.69+: 164 B / 104 B | **Fortemente indicado** | build é de geração anterior | registrar no dossiê; não copiar layout |
 | `DIV-13` | Chaos/PK | doc oficial EN: “less than **−65**” | doc oficial PT: “**−75**” | **Divergente (externo)** | regra de PK ambígua | escolher e registrar fonte ao implementar |
 | `DIV-14` | “Familiares” | projeto tem `GAME-13` e `docs/wyd/sistemas/familiares.md` | documentação oficial não tem sistema com esse nome (há montarias e animais do BeastMaster) | **Fortemente indicado** | pode ser nomenclatura de servidor privado | tratar como sistema nosso, não “oficial” |
+
+> **Donos no roadmap (2026-11-14):** as decisões de modelo `DIV-05`/`DIV-06`/`DIV-13` são a
+> `AUD-20`; os itens documentais `DIV-03/07/08/09/12/14` e os achados `N-1`…`N-10` sem issue são a
+> `AUD-21`. `DIV-02` foi fechado em `AUD-02`.
 
 ## 2. Bugs conhecidos (issues abertas)
 
@@ -36,6 +40,9 @@
 | `PAR-MOV-02` | Sem colisão de jogador | ausente (`DIV-10`) | **Alta** | — | derivar de `AttributeMap` |
 
 ## 3. Achados desta auditoria (sem issue ainda)
+
+> **Atualização 2026-11-14:** os itens abaixo ganharam dono na `AUD-21` (exceto `N-4`/`N-5` em
+> `AUD-05`, `N-7` em `GAME-05` e `N-10` em `AUD-19`). A tabela abaixo é a fotografia da auditoria.
 
 | ID | Achado | Evidência | Sev | Ação |
 |---|---|---|---|---|

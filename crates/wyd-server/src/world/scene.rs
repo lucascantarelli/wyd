@@ -73,6 +73,8 @@ impl Engine {
         }
         // Entidade viva = mudança de cena (o cliente precisa de `_MSG_CreateMob`).
         self.scene_generation = self.scene_generation.wrapping_add(1);
+        // Entidade nova nasce na versão 0 (nenhuma sessão a viu ainda).
+        self.revisions.remove(&entity.index);
         Ok(entity)
     }
 
@@ -85,6 +87,7 @@ impl Engine {
         self.by_character.retain(|_, atual| *atual != entity);
         self.npcs.retain(|_, npc| npc.entity != entity);
         self.skins.remove(&entity.index);
+        self.revisions.remove(&entity.index);
         self.release_scene_id(entity);
         let saiu = self.store.despawn(entity);
         if saiu {
@@ -135,12 +138,21 @@ impl Engine {
                 max_hp: npc.spec.stats.max_hp,
                 attack: npc.spec.stats.attack,
                 defense: npc.spec.stats.defense,
+                // NPC do mapa não tem mana nem atributos de personagem no snapshot.
+                mp: 0,
+                max_mp: 0,
+                strength: 0,
+                intelligence: 0,
+                dexterity: 0,
+                constitution: 0,
                 merchant: u8::try_from(npc.spec.merchant).unwrap_or(0),
                 chaos_rate: crate::personagens::CP_NEUTRO,
                 attack_run: npc.spec.attack_run,
                 direction: npc.spec.direction,
                 equip: npc.spec.equip,
                 guild: 0,
+                // NPC não muda de nível/atributo em jogo: nunca pede refresh.
+                revision: 0,
             });
         }
         for (indice, estado) in &self.live {
@@ -163,17 +175,31 @@ impl Engine {
                     x: estado.x,
                     y: estado.y,
                 },
-                level: estado.level,
+                // `CreateMob` é fio, e no fio o `Level` é 0-based (`wire_level`: banco 1 → 0)
+                // como no `CNFCharacterLogin`; `LiveState.level` guarda o nível do banco.
+                // Sem esta conversão o cliente desenhava "Nv 2" para personagem nível 1.
+                level: estado.level.saturating_sub(1),
                 hp: estado.hp,
                 max_hp: stats.map_or(estado.hp, |stats| stats.max_hp),
                 attack: stats.map_or(0, |stats| stats.attack),
                 defense: stats.map_or(0, |stats| stats.defense),
+                // MP corrente vem do estado vivo (gasto no mundo); máximo e atributos do
+                // snapshot do login, que é o mesmo `STRUCT_SCORE` do `CNFCharacterLogin`.
+                mp: i32::try_from(estado.mp).unwrap_or(i32::MAX),
+                max_mp: stats.map_or(skin.max_mp, |stats| {
+                    i32::try_from(stats.max_mp).unwrap_or(i32::MAX)
+                }),
+                strength: skin.strength,
+                intelligence: skin.intelligence,
+                dexterity: skin.dexterity,
+                constitution: skin.constitution,
                 merchant: 0,
                 chaos_rate: wyd_sim::chaos_rate(estado.cp),
                 attack_run: skin.attack_run,
                 direction: skin.direction,
                 equip: skin.equip,
                 guild: skin.guild,
+                revision: self.revisions.get(indice).copied().unwrap_or(0),
             });
         }
         mobs.sort_by_key(|mob| mob.id);
@@ -229,7 +255,7 @@ impl Engine {
                 character_id: character.id,
             });
         }
-        let stats = stats_from(character)?;
+        let stats = stats_from(character, &skin)?;
         let x = i32::try_from(character.pos_x)
             .map_err(|_| EnterWorldError::InvalidState(format!("pos_x {}", character.pos_x)))?;
         let y = i32::try_from(character.pos_y)
@@ -262,6 +288,52 @@ impl Engine {
         Ok(Entered { entity, scene_id })
     }
 
+    /// Aplica no mundo vivo o nível/atributos que o banco acabou de gravar.
+    ///
+    /// Não recalcula fórmula: copia o `STRUCT_SCORE` do personagem para o armazém
+    /// (level, HP/MP) e para a aparência (MP e atributos) e sobe a `revision`. Ataque/defesa
+    /// ficam como estão — level up não os altera neste servidor e trocá-los faria o
+    /// `CreateMob` divergir do `CNFCharacterLogin` do próprio dono. As outras sessões
+    /// comparam a versão e reenviam o `CreateMob` — é o level up/ponto de atributo sem
+    /// relogin. `false` = entidade fora do mundo.
+    pub fn refresh_actor(&mut self, entity: Entity, refresh: ActorRefresh) -> bool {
+        if !self.live.contains_key(&entity.index) || !self.skins.contains_key(&entity.index) {
+            return false;
+        }
+        let Some(atual) = self.store.stats_of(entity) else {
+            return false;
+        };
+        let stats = Stats {
+            level: refresh.level,
+            hp: refresh.hp,
+            max_hp: refresh.max_hp,
+            mp: refresh.mp,
+            max_mp: refresh.max_mp,
+            attack: atual.attack,
+            defense: atual.defense,
+        };
+        if stats.validate().is_err() || !self.store.set_stats(entity, stats) {
+            return false;
+        }
+        if let Some(state) = self.live.get_mut(&entity.index) {
+            state.level = refresh.level;
+            state.hp = refresh.hp;
+            state.mp = refresh.mp;
+        }
+        if let Some(skin) = self.skins.get_mut(&entity.index) {
+            skin.mp = i32::try_from(refresh.mp).unwrap_or(i32::MAX);
+            skin.max_mp = i32::try_from(refresh.max_mp).unwrap_or(i32::MAX);
+            skin.strength = refresh.strength;
+            skin.intelligence = refresh.intelligence;
+            skin.dexterity = refresh.dexterity;
+            skin.constitution = refresh.constitution;
+        }
+        let revision = self.next_revision.max(1);
+        self.next_revision = revision.wrapping_add(1);
+        self.revisions.insert(entity.index, revision);
+        true
+    }
+
     /// Tira o personagem do mundo e devolve o estado final (o chamador decide salvar).
     pub fn leave(&mut self, entity: Entity) -> Option<LiveState> {
         let state = self.live.remove(&entity.index);
@@ -273,15 +345,18 @@ impl Engine {
     }
 }
 
-/// Calcula o delta entre o que a sessão já viu (`sent`: id → é personagem) e a foto atual.
+/// Calcula o delta entre o que a sessão já viu (`sent`: id → papel + versão) e a foto atual.
 ///
-/// Só entrada e saída: entidade que **mudou** de posição/HP não é reenviada como `CreateMob`
-/// (o cliente recusaria o id repetido e o pacote de movimento não está provado — resíduo
-/// declarado na GAME-09). Saídas vêm primeiro: liberar o cliente de um fantasma vale mais
-/// que desenhar um novo.
+/// Três casos: entidade nova (`enter`), entidade que saiu (`leave`) e entidade que mudou
+/// nível/atributos (`refresh`). Posição/HP em combate não entram: o pacote de movimento não
+/// está provado (GAME-09), mas o `CreateMob` reemitido **com os dados novos** é a única forma
+/// de outro jogador ver o level up sem relogin — e o cliente recusa `MobID` repetido, então a
+/// sessão manda `RemoveMob` + `CreateMob` (dois pacotes; o teto conta os dois).
+///
+/// Saídas vêm primeiro: liberar o cliente de um fantasma vale mais que desenhar um novo.
 #[must_use]
 pub fn plan_scene(
-    sent: &std::collections::BTreeMap<u16, bool>,
+    sent: &std::collections::BTreeMap<u16, SentMob>,
     snapshot: &SceneSnapshot,
     budget: usize,
 ) -> ScenePlan {
@@ -290,10 +365,10 @@ pub fn plan_scene(
     let mut leave: Vec<(u16, i32)> = sent
         .iter()
         .filter(|(id, _)| !atuais.contains_key(id))
-        .map(|(id, actor)| {
+        .map(|(id, visto)| {
             (
                 *id,
-                if *actor {
+                if visto.actor {
                     REMOVE_LOGOUT
                 } else {
                     REMOVE_OUT_OF_VIEW
@@ -302,22 +377,35 @@ pub fn plan_scene(
         })
         .collect();
     leave.sort_unstable_by_key(|(id, _)| *id);
+    let mut refresh: Vec<SceneMob> = snapshot
+        .mobs
+        .iter()
+        .filter(|mob| {
+            sent.get(&mob.id)
+                .is_some_and(|visto| visto.revision != mob.revision)
+        })
+        .cloned()
+        .collect();
     let mut enter: Vec<SceneMob> = snapshot
         .mobs
         .iter()
         .filter(|mob| !sent.contains_key(&mob.id))
         .cloned()
         .collect();
-    let total = leave.len() + enter.len();
+    let total = leave.len() + enter.len() + refresh.len() * 2;
     let complete = total <= budget;
     if !complete {
-        // Saídas primeiro; o que sobrar do teto vai para entradas.
-        leave.truncate(budget);
-        let restante = budget.saturating_sub(leave.len());
+        // Saídas primeiro, depois atualizações (2 pacotes cada), depois entradas.
+        let mut restante = budget;
+        leave.truncate(restante);
+        restante = restante.saturating_sub(leave.len());
+        refresh.truncate(restante / 2);
+        restante = restante.saturating_sub(refresh.len() * 2);
         enter.truncate(restante);
     }
     ScenePlan {
         enter,
+        refresh,
         leave,
         complete,
     }

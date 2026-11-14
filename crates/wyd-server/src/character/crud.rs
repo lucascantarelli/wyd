@@ -776,6 +776,14 @@ impl SelectionStore {
             }));
         }
         let ganho = self.gain_exp(selected, golpe.exp)?;
+        // Level up sem relogin: o mundo recebe o `STRUCT_SCORE` que acabou de ser gravado
+        // (nível, HP/MP máximos e atributos) e a cena reemite o `CreateMob` de quem subiu.
+        if ganho.levels > 0 {
+            let _ = bridge.handle.refresh_actor(
+                entity,
+                crate::world::ActorRefresh::from_score(&ganho.mob.current_score),
+            );
+        }
         // O abate resolve o loot **agora**: tabela do template no snapshot vigente e os rolls
         // do `die` desta sessão. Sem resolvedor no processo (teste/legado) não há sorteio —
         // nunca um drop inventado.
@@ -803,6 +811,19 @@ impl SelectionStore {
             cp_after: 0,
             cp_delta: 0,
         }))
+    }
+
+    /// Reflete no mundo vivo o nível/atributos recém-gravados (`ApplyBonus`).
+    ///
+    /// Sem isto, o `CreateMob` dos outros jogadores continuaria mostrando o estado do
+    /// login até o personagem sair e voltar. Devolve `false` se ele não está no mundo.
+    pub fn refresh_actor(&self, entity: Entity, mob: &Mob) -> bool {
+        self.world.as_ref().is_some_and(|bridge| {
+            bridge.handle.refresh_actor(
+                entity,
+                crate::world::ActorRefresh::from_score(&mob.current_score),
+            )
+        })
     }
 
     /// `_MSG_Action` de diálogo: quem está no ponto clicado, do snapshot de `npc_definition`.

@@ -146,7 +146,7 @@ export interface ModerationResponse extends AdminEnvelope {
  */
 export const accountsAdmin = svc<{
   find: Unary<{ login: string }, FindAccountResponse>;
-  create: Unary<{ login: string; role: string }, CreateAccountResponse>;
+  create: Unary<{ login: string; password: string; role: string }, CreateAccountResponse>;
   getModeration: Unary<{ login: string }, ModerationResponse>;
   setRole: Unary<{ login: string; role: string }, ModerationResponse>;
   setBlocked: Unary<{ login: string; blocked: boolean; reason: string }, ModerationResponse>;

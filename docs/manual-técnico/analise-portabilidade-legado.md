@@ -35,7 +35,7 @@ O legado é **fonte de conhecimento**, nunca de código (`AGENTS.md` §0).
 | C++ (`Source/**/*.cpp|*.h`) | 116 | **70.987** |
 | Go (`tmserver/` + `internal/`, total) | 484 | **99.606** |
 | Go sem testes | 484 − `_test.go` | **51.582** |
-| Rust hoje (`crates/*/src/*.rs`, 7 crates) | 112 | **18.242** |
+| Rust hoje (`crates/*/src/*.rs`, 9 crates) | 203 | **57.841** |
 
 Os maiores arquivos C++ mostram onde mora a regra de jogo: `TMSrv/Server.cpp` (10.553),
 `Basedef.cpp` (7.468), `_MSG_UseItem.cpp` (6.686), `MobKilled.cpp` (3.506),
@@ -63,7 +63,7 @@ Legenda: ✅ existe · 🚧 parcial · ❌ ausente.
 
 | Domínio | Legado (evidência) | Destino Rust | Estado |
 |---|---|---|---|
-| Transporte CPSock (TCP 8281, framing, sessão) | `CPSock.cpp/h`, Go `internal/protocol/{framing,header,keytable,checksum}.go` | `crates/wyd-net/` (framing/sessão) | ❌ só `limits/` + `metrics.rs` (458 linhas) |
+| Transporte CPSock (TCP 8281, framing, sessão) | `CPSock.cpp/h`, Go `internal/protocol/{framing,header,keytable,checksum}.go` | `crates/wyd-net/` (framing/sessão) | 🚧 `limits/` + `metrics.rs` + sessão (833 linhas) |
 | Contrato de wire (HEADER, ofuscação, opcodes, payloads) | `Basedef.h`, `protocol-spec.md`, 198 Types | `crates/wyd-protocol/` (199 opcodes no `opcode_table.rs`; 7 domínios de payload) | ✅ (goldens sintéticos) |
 | Login / seleção / sessão de personagem | `_MSG_AccountLogin.cpp`, `_MSG_CharacterLogin.cpp`, Go `login.go`, `character.go` | `payload/auth.rs` ✅ código; máquina de sessão ❌ | 🚧 |
 | Mundo: tick, grade, spawn, respawn, teleporte, cidade | `ProcessSecMinTimer.cpp`, Go `world/{tick,grid,spawn,respawn,teleport,city}.go` | `core/{tick,spatial}` ✅; `systems/movement.rs` ✅; spawn/respawn/teleporte/cidade ❌ | 🚧 |
@@ -89,14 +89,20 @@ Legenda: ✅ existe · 🚧 parcial · ❌ ausente.
 
 | Crate | Arquivos `src` | Linhas | Arquivos de teste em `tests/` |
 |---|---:|---:|---:|
-| `wyd-protocol` | 21 | 3.145 | 3 |
-| `wyd-core` | 29 | 6.754 | 8 |
-| `wyd-net` | 4 | 458 | 2 |
-| `wyd-db` | 15 | 618 | 2 |
-| `wyd-admin` | 16 | 2.463 | 3 |
-| `wyd-sim` | 20 | 3.276 | 3 |
-| `wyd-launcher` | 7 | 1.528 | 0 (testes unitários in-crate) |
-| **Total** | **112** | **18.242** | **21** |
+| `wyd-protocol` | 23 | 3.705 | 4 |
+| `wyd-core` | 30 | 7.771 | 8 |
+| `wyd-net` | 7 | 833 | 2 |
+| `wyd-db` | 24 | 7.081 | 3 |
+| `wyd-admin` | 33 | 10.176 | 4 |
+| `wyd-sim` | 22 | 3.841 | 3 |
+| `wyd-launcher` | 18 | 8.104 | 3 (mais unitários in-crate) |
+| `wyd-server` | 35 | 15.133 | 21 |
+| `wyd-bots` | 11 | 1.197 | 2 |
+| **Total** | **203** | **57.841** | **65** |
+
+> Medido em 2026-11-14 com `find crates/*/src -name '*.rs' | xargs wc -l` e
+> `find crates -path '*/tests/*' -name '*.rs' | wc -l`; a tabela anterior (7 crates, 18.242 linhas)
+> era de 2026-11-12 e estava atrás do código (`DIV-08`).
 
 O desequilíbrio é a informação: `wyd-protocol` + `wyd-core` + `wyd-sim` concentram 72% das linhas,
 enquanto `wyd-net` (transporte) e `wyd-db` (persistência real) somam 6%.

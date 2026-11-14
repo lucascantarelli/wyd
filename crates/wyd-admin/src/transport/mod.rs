@@ -693,6 +693,11 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
             Err(PinError::InvalidPin) => {
                 Reply::transport(422, trace, "PIN deve ter de 4 a 6 dígitos")
             }
+            Err(PinError::PasswordTooLong) => Reply::transport(
+                422,
+                trace,
+                "senha da conta maior que o limite de 12 bytes do cliente",
+            ),
             Err(PinError::Rejected) => Reply::transport(
                 400,
                 trace,
@@ -2014,6 +2019,9 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
         let Some(login) = params.get("login").and_then(json::Json::as_str) else {
             return Reply::business(trace, RESULT_INVALID, "campo login obrigatório");
         };
+        let Some(password) = params.get("password").and_then(json::Json::as_str) else {
+            return Reply::business(trace, RESULT_INVALID, "campo password obrigatório");
+        };
         let Some(role) = params.get("role").and_then(json::Json::as_str) else {
             return Reply::business(trace, RESULT_INVALID, "campo role obrigatório");
         };
@@ -2023,6 +2031,7 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
         match poll_once(create_account(
             Some(session),
             login,
+            password,
             role,
             &self.accounts,
             &self.audit,

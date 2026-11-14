@@ -35,6 +35,8 @@ export const TEXTO = {
     atualInvalido:
       "A segunda senha atual não confere. Depois de 5 tentativas, a conta fica bloqueada por 10 minutos.",
     senhaInvalida: "Informe a senha da conta.",
+    senhaLonga:
+      "A senha do jogo tem limite de 12 bytes — acentos contam mais de um. Encurte a senha da conta.",
     indisponivel: "Não foi possível falar com o servidor agora. Tente de novo em instantes.",
     invalido: "Não foi possível alterar a segunda senha. Confira os dados e tente de novo.",
     igualAoAtual: "A nova segunda senha precisa ser diferente da atual.",

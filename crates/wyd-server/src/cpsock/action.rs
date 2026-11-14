@@ -134,12 +134,33 @@ pub(super) fn dispatch(
                     // Atributos, pontos e `LearnedSkill` vêm do banco (`character_scores`
                     // + `character_learned_skill`), não do template da classe.
                     crate::characters::apply_progression(&mut mob, &selected.progression);
+                    // `BASE_GetCurrentScore` (`Basedef.cpp:3028-3030`): o dano e o AC correntes
+                    // são os do template da classe **mais** `EF_DAMAGE`/`EF_AC` somados de todo
+                    // o equipamento. Sem esta soma o mundo atacava com o `Damage` do template
+                    // (5) e ignorava arma/armadura compradas ou de fábrica.
+                    let (dano_equip, ac_equip) = crate::world::bonus_de_equipamento(&mob.equip);
+                    mob.current_score.damage = mob
+                        .current_score
+                        .damage
+                        .saturating_add(i32::try_from(dano_equip).unwrap_or(i32::MAX));
+                    mob.current_score.ac = mob
+                        .current_score
+                        .ac
+                        .saturating_add(i32::try_from(ac_equip).unwrap_or(i32::MAX));
                     let skin = crate::world::ActorSkin {
                         name: mob.name,
                         equip: mob.equip.map(|item| u16::try_from(item.index).unwrap_or(0)),
                         guild: mob.guild,
                         attack_run: mob.current_score.attack_run,
                         direction: mob.current_score.direction,
+                        mp: mob.current_score.mp,
+                        max_mp: mob.current_score.max_mp,
+                        strength: mob.current_score.strength,
+                        intelligence: mob.current_score.intelligence,
+                        dexterity: mob.current_score.dexterity,
+                        constitution: mob.current_score.constitution,
+                        attack: u32::try_from(mob.current_score.damage.max(0)).unwrap_or(0),
+                        defense: u32::try_from(mob.current_score.ac.max(0)).unwrap_or(0),
                     };
                     // Encarna no mundo **antes** de confirmar: recusa do motor vira
                     // `CharacterLoginFail` e o personagem não fica pela metade. A cena de quem
@@ -382,11 +403,12 @@ pub(super) fn dispatch(
         // `_MSG_ApplyBonus`: distribuir ponto de atributo/skill. Responde `UpdateEtc` + `UpdateScore`
         // (o `SendEtc`/`SendScore` do legado) com o estado gravado no banco.
         Opcode::ApplyBonus => {
-            let (client_id, aplicado) = match (&*stage, selection) {
+            let (client_id, entity, aplicado) = match (&*stage, selection) {
                 (
                     Stage::InGame {
                         selected,
                         client_id,
+                        entity,
                         ..
                     },
                     Some(store),
@@ -405,7 +427,7 @@ pub(super) fn dispatch(
                                     aplicado.progression.learned_skill
                                 ),
                             );
-                            (*client_id, aplicado)
+                            (*client_id, *entity, aplicado)
                         }
                         Err(error) => {
                             log(
@@ -437,6 +459,12 @@ pub(super) fn dispatch(
                     return true;
                 }
             };
+            // O mundo passa a enxergar o `STRUCT_SCORE` gravado: a cena reemite o
+            // `CreateMob` de quem mudou, então outro jogador vê o ponto aplicado sem relogin.
+            // Processo sem mundo (harness de teste) tem `entity = None` e só responde o frame.
+            if let (Some(store), Some(entity)) = (selection, entity) {
+                store.refresh_actor(entity, &aplicado.mob);
+            }
             send_progress(stream, key_word, client_id, &aplicado.mob)
         }
         // `_MSG_Attack`/`_MSG_AttackOne`/`_MSG_AttackTwo`: mesmo corpo, aridade diferente.
@@ -552,6 +580,19 @@ pub(super) fn handle_attack<const N: usize>(
                 None => true,
             };
             if !enviado {
+                return false;
+            }
+            // Eco do golpe com o dano **do servidor**: o cliente só desenha o número de dano e
+            // a animação de impacto quando recebe `_MSG_Attack*` (J→C). Sem este pacote o
+            // ataque era processado no motor (HP caindo no banco) e a tela não mostrava nada.
+            if !send_attack_echo(
+                stream,
+                key_word,
+                &packet,
+                *client_id,
+                report.target_scene,
+                report.damage,
+            ) {
                 return false;
             }
             // PvP: a vítima continua viva (o motor restaurou o HP) e não há loot/EXP.
@@ -698,6 +739,18 @@ pub(super) fn handle_attack<const N: usize>(
 /// `Target` é o `MobID` da cena; o id de `npc_definition` sai do mundo vivo. A resposta é o
 /// `_MSG_ShopList` (236 B) com `HEADER.ID = ESCENE_FIELD`, `ShopType = 0` e `Tax = 0`
 /// (imposto de cidade não existe neste servidor — valor explícito, não estimado).
+/// ShopType do `_MSG_ShopList` para o `Merchant` do NPC (`_MSG_REQShopList.cpp:50-56`).
+///
+/// `1` → loja comum (ShopType 1); `19` → loja de skills (ShopType 3); `None` = NPC que o
+/// legado **não** trata como loja.
+fn shop_type_do_merchant(merchant: i16) -> Option<i32> {
+    match merchant {
+        1 => Some(1),
+        19 => Some(3),
+        _ => None,
+    }
+}
+
 pub(super) fn handle_shop_list(
     stream: &mut TcpStream,
     frame: &[u8],
@@ -746,9 +799,24 @@ pub(super) fn handle_shop_list(
         );
         return true;
     }
+    // `_MSG_REQShopList.cpp:50-56`: só `Merchant` 1 (loja comum, ShopType 1) e 19 (loja de
+    // skills, ShopType 3) recebem `_MSG_ShopList`. Qualquer outro valor — monstro com
+    // `Carry` de drop (16/64), guarda ou NPC de quest (36/100/110/120) — não abre loja; o
+    // legado não responde nada.
+    let Some(shop_type) = shop_type_do_merchant(merchant) else {
+        log(
+            "warn",
+            "shop",
+            &format!(
+                "result=refused account={account} npc={npc_id} name={nome} merchant={merchant} \
+                 reason=not_shop_merchant"
+            ),
+        );
+        return true;
+    };
     let catalogo = store.shop_items(npc_id).unwrap_or_default();
     let mut lista = ShopList {
-        shop_type: 0,
+        shop_type,
         items: [[0u8; 8]; MAX_SHOPLIST],
         tax: 0,
     };
@@ -833,6 +901,22 @@ pub(super) fn handle_buy(
             return true;
         }
     };
+    // A compra segue a mesma regra da lista: só NPC com `Merchant` 1 ou 19 vende. Sem isso,
+    // um monstro com `Carry` de drop (merchant 16/64) entregaria item por `_MSG_Buy` mesmo
+    // sem nunca abrir loja.
+    if let Some((npc_id, merchant, nome)) = store.npc_shop(packet.target_id) {
+        if shop_type_do_merchant(merchant).is_none() {
+            log(
+                "warn",
+                "shop",
+                &format!(
+                    "result=refused account={account} npc={npc_id} name={nome} \
+                     merchant={merchant} reason=not_shop_merchant"
+                ),
+            );
+            return true;
+        }
+    }
     match store.buy(
         selected.as_mut(),
         packet.target_id,
@@ -887,6 +971,7 @@ pub(super) fn handle_quest(
         Stage::InGame {
             selected,
             client_id,
+            entity: Some(entity),
             ..
         },
         Some(store),
@@ -953,6 +1038,9 @@ pub(super) fn handle_quest(
             let bytes = texto.as_bytes();
             let limite = bytes.len().min(painel.len() - 1);
             painel[..limite].copy_from_slice(&bytes[..limite]);
+            // Recompensa de quest pode subir nível: o mundo passa a enxergar o `STRUCT_SCORE`
+            // gravado e a cena reemite o `CreateMob` de quem subiu.
+            store.refresh_actor(*entity, &resultado.mob);
             reply_with_body(stream, key_word, ID_SCENE, Opcode::MessagePanel, &painel)
                 && send_progress(stream, key_word, *client_id, &resultado.mob)
         }
@@ -1278,6 +1366,10 @@ pub(super) fn cp_panel(cp: i16) -> String {
 }
 
 /// `_MSG_MessagePanel` com texto curto (resposta de portão/recusa ao cliente).
+///
+/// `MessagePanel` é um recorte de 140 B **contando o cabeçalho**: o texto ocupa `body[0..128]`
+/// e cai no `+12` absoluto do pacote, que é onde o cliente lê. Por isso o corpo aqui é o
+/// buffer de 128 B inteiro, sem deslocamento.
 pub(super) fn reply_panel(stream: &mut TcpStream, key_word: u8, texto: &str) -> bool {
     let mut painel = [0u8; MessagePanel::WIRE_LEN - HEADER_SIZE];
     let bytes = texto.as_bytes();
@@ -1286,11 +1378,12 @@ pub(super) fn reply_panel(stream: &mut TcpStream, key_word: u8, texto: &str) -> 
     reply_with_body(stream, key_word, ID_SCENE, Opcode::MessagePanel, &painel)
 }
 
-/// Emite o delta da cena de NPCs desde o último envio desta sessão.
+/// Emite o delta da cena desde o último envio desta sessão.
 ///
-/// Só busca a foto quando a **geração** do motor mudou (recarga de configuração mexeu em
-/// `npc_definition`). Sai do snapshot do mundo, então a posição é a autoritativa: o cliente
-/// não vê NPC onde o servidor não o tem.
+/// Uma varredura por poll: entradas (`CreateMob`), saídas (`RemoveMob`) e **atualizações**
+/// (entidade com `revision` nova — level up/ponto de atributo de outro jogador — leva
+/// `RemoveMob` + `CreateMob`, porque o cliente recusa `MobID` repetido). Sai do snapshot do
+/// mundo, então a posição é a autoritativa: o cliente não vê NPC onde o servidor não o tem.
 pub(super) fn refresh_scene(
     stream: &mut TcpStream,
     key_word: u8,
@@ -1335,6 +1428,37 @@ pub(super) fn refresh_scene(
         scene.mobs.remove(id);
         removidos += 1;
     }
+    // Atualização sem relogin: level up/ponto de atributo de outro jogador. O cliente
+    // recusa `MobID` repetido, então sai da vista (`RemoveMob`) e volta com os dados
+    // novos (`CreateMob`). O dono da sessão não é reemitido: o `UpdateScore` já o cobre
+    // e remover o próprio personagem no meio do jogo piscaria a tela dele.
+    let mut atualizados = 0usize;
+    for mob in &plano.refresh {
+        if mob.id == *client_id {
+            scene.mobs.insert(
+                mob.id,
+                SentMob {
+                    actor: mob.actor,
+                    revision: mob.revision,
+                },
+            );
+            continue;
+        }
+        if !send_remove_mob(stream, key_word, mob.id, RemoveMob::OUT_OF_VIEW) {
+            return false;
+        }
+        if !send_create_mob(stream, key_word, mob, CreateMob::CREATE_NORMAL) {
+            return false;
+        }
+        scene.mobs.insert(
+            mob.id,
+            SentMob {
+                actor: mob.actor,
+                revision: mob.revision,
+            },
+        );
+        atualizados += 1;
+    }
     let mut criados = 0usize;
     for mob in &plano.enter {
         // `CreateType` 2 ("acabou de entrar") só para o dono da sessão; os demais
@@ -1347,10 +1471,16 @@ pub(super) fn refresh_scene(
         if !send_create_mob(stream, key_word, mob, create_type) {
             return false;
         }
-        scene.mobs.insert(mob.id, mob.actor);
+        scene.mobs.insert(
+            mob.id,
+            SentMob {
+                actor: mob.actor,
+                revision: mob.revision,
+            },
+        );
         criados += 1;
     }
-    if criados == 0 && removidos == 0 {
+    if criados == 0 && removidos == 0 && atualizados == 0 {
         // Nada mudou na vista: nenhum pacote, nenhuma linha de log por segundo.
         return true;
     }
@@ -1362,7 +1492,7 @@ pub(super) fn refresh_scene(
             "warn",
             "scene",
             &format!(
-                "result=budget limit={} created={criados} removed={removidos} pending=1",
+                "result=budget limit={} created={criados} removed={removidos} refreshed={atualizados} pending=1",
                 scene_budget()
             ),
         );
@@ -1372,7 +1502,7 @@ pub(super) fn refresh_scene(
         "info",
         "scene",
         &format!(
-            "result=applied generation={} mobs={} created={criados} removed={removidos}",
+            "result=applied generation={} mobs={} created={criados} removed={removidos} refreshed={atualizados}",
             scene.generation,
             scene.mobs.len()
         ),
@@ -1432,13 +1562,13 @@ pub(super) fn send_create_mob(
         // CP + 75 do personagem: é este byte que o cliente usa para a cor do nome.
         chaos_rate: mob.chaos_rate,
         max_hp: i32::try_from(mob.max_hp).unwrap_or(i32::MAX),
-        max_mp: 0,
+        max_mp: mob.max_mp,
         hp: i32::try_from(mob.hp).unwrap_or(i32::MAX),
-        mp: 0,
-        strength: 0,
-        intelligence: 0,
-        dexterity: 0,
-        constitution: 0,
+        mp: mob.mp,
+        strength: mob.strength,
+        intelligence: mob.intelligence,
+        dexterity: mob.dexterity,
+        constitution: mob.constitution,
         create_type,
         anct_code: [0; 16],
         tab: [0; 26],
@@ -1453,6 +1583,59 @@ pub(super) fn send_create_mob(
         key_word,
         ID_SCENE,
         Opcode::CreateMob,
+        &frame[HEADER_SIZE..],
+    )
+}
+
+/// Eco do `_MSG_Attack*` (J→C) com o dano calculado no servidor.
+///
+/// O cliente 7662 só anima o impacto e imprime o número de dano ao receber o ataque de volta;
+/// o valor do pacote de ida (`Dam[].Damage`) é ignorado de propósito (cliente não é
+/// autoridade). `Dam[0].TargetID` é o `MobID` da cena do alvo e `Dam[0].Damage` o dano real.
+pub(super) fn send_attack_echo<const N: usize>(
+    stream: &mut TcpStream,
+    key_word: u8,
+    packet: &Attack<N>,
+    client_id: u16,
+    target_scene: u16,
+    damage: u32,
+) -> bool {
+    let eco = AttackOne {
+        unk_1: [0; 4],
+        current_hp: packet.current_hp,
+        unk_2: [0; 4],
+        current_exp: packet.current_exp,
+        unk_0: 0,
+        pos_x: packet.pos_x,
+        pos_y: packet.pos_y,
+        target_x: packet.target_x,
+        target_y: packet.target_y,
+        attacker_id: client_id,
+        progress: packet.progress,
+        motion: packet.motion,
+        skill_parm: packet.skill_parm,
+        double_critical: packet.double_critical,
+        flag_local: packet.flag_local,
+        rsv: 0,
+        current_mp: packet.current_mp,
+        skill_index: packet.skill_index,
+        req_mp: packet.req_mp,
+        dam: [TargetDamage {
+            target_id: i32::from(target_scene),
+            damage: i32::try_from(damage).unwrap_or(i32::MAX),
+        }],
+    };
+    // O buffer de `AttackOne` é o pacote inteiro (68 B, cabeçalho incluso): o corpo vai de
+    // `HEADER_SIZE..` e o `reply_with_body` recoloca os 12 B de cabeçalho.
+    let mut frame = vec![0u8; AttackOne::WIRE_LEN];
+    if eco.encode_into(&mut frame).is_err() {
+        return false;
+    }
+    reply_with_body(
+        stream,
+        key_word,
+        ID_SCENE,
+        Opcode::AttackOne,
         &frame[HEADER_SIZE..],
     )
 }

@@ -181,7 +181,7 @@ pub trait Accounts {
         async { Ok(()) }
     }
 
-    /// Define/atualiza a credencial de uma conta (seed de staff, troca de senha).
+    /// Define/atualiza a credencial de uma conta (criação pelo portal, seed, troca).
     ///
     /// `password_hash` já vem calculado (argon2id); a porta não decide algoritmo.
     fn set_credentials(

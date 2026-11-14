@@ -88,12 +88,17 @@ Leitura:
 - **MP e atributos do `CNFCharacterLogin`/`UpdateScore` chegam corretos** para um personagem com
   `character_scores`: `mp=50/50` e `curr_mp=50`, atributos iguais ao banco. O `mp=0/0` e os
   `FOR/INT/DES/CON=0` do print **não se reproduzem** nesse caminho — resta comparar com o
-  personagem exato do print (há seis linhas vivas `Cantarelli`, ids 57/137/150/151/152/164) e
+  personagem exato do print (há seis linhas `Cantarelli` — ids 57/137/150/151/152/164 —, cinco
+  soft-deleted e só a **164** viva; ver `docs/rust/evidencias/personagens-soft-delete-2026-11-14.md`) e
   capturar o mesmo login no 7662 para saber se o cliente lê outros offsets.
 - Nível no fio é 0-based (`nível 10` → `9`), como o `wire_level` documenta.
-- `CreateMob` do jogador continua com `mp=0/0` e atributos 0 porque `SceneMob` não carrega esses
-  campos (o painel do próprio personagem vem do `CNF`/`UpdateScore`); fica registrado como
-  limitação separada, não como causa do print.
+- `CreateMob` do jogador saía com `mp=0/0` e atributos 0 porque `SceneMob` não carregava esses
+  campos. **Corrigido em 2026-11-14**: `ActorSkin` leva `CurrentScore` do login e o
+  `SceneMob`/`CreateMob` do jogador passa a sair com `mp`/`max_mp` (MP vivo + máximo do banco) e
+  FOR/INT/DES/CON; NPC continua 0/0. Provas: `world::tests::personagem_entra_na_cena_com_nome_equip_e_id_proprio`
+  (40/50 e 8/4/7/6 no ator, 0 no NPC), `cpsock::tests::create_mob_de_personagem_traz_escene_field_e_a_aparencia_do_login`
+  e `sistema_cena_mobs` contra o canal reconstruído (asserção `mob.mp > 0 && mob.max_mp > 0` no
+  `CreateMob` do próprio jogador; log `character result=ok ... client_id=1`).
 
 Depois da correção, a mesma captura (novo login pelo proxy, canal 1 reconstruído) mostra:
 
@@ -106,6 +111,40 @@ Arquivos: `tmp/cliente/captura-bot.jsonl` (antes) e `tmp/cliente/captura-bot2.js
 fora do git. Evidência de teste: `cargo test -p wyd-server --lib snapshot` 14/14.
 
 O aceite visual do 7662 continua pendente (print + log do mesmo login) e a issue segue **⬜**.
+
+### Identificação do personagem do print (2026-11-14)
+
+O print do dono (2026-11-13) é do personagem **id `164`**, slot 0, conta `admin`, classe 0
+(TransKnight):
+
+- `character_session` **336** (`account_login=admin`, canal 1) abriu `2026-11-13 23:38:43 UTC` e
+  fechou `23:50:19 UTC`; dentro dela a linha **152** foi soft-deleted (`23:38:58`) e a **164**
+  criada (`23:39:05`). É o personagem em tela nessa sessão; a 152 é a anterior imediata, apagada
+  para recriar (o relato “não cria o char direito” é sobre a recém-criada).
+- Banco da 164: nível 1, HP 83/83, MP 46/46, FOR/INT/DES/CON **8/4/7/6**, `cp` **0**, 12 itens —
+  exatamente os valores que o print reporta (o nível desenhado 2 é o banco + 1).
+
+**Captura do login pelo proxy: bloqueada pela credencial.** Executei o caminho real:
+
+```bash
+node tools/cliente-harness/proxy.mjs --listen 127.0.0.3:8281 \
+  --target 127.0.0.1:8281 --out tmp/cliente/cantarelli-164.jsonl
+WYD_LIVE_CPSOCK=127.0.0.3:8281 WYD_LIVE_ACCOUNT=admin WYD_LIVE_PASSWORD="$PORTAL_ADMIN_PASSWORD" \
+  WYD_LIVE_CHARACTER_SLOT=0 WYD_LIVE_SKIP_PIN=1 \
+  cargo test -p wyd-server --test sistema_cena_mobs -- --nocapture
+```
+
+O teste aborta em `senha cabe em char[12]` (`cena_mobs.rs:79`): a credencial vigente da conta
+`admin` tem **125 bytes** (medida no env do gateway; `staff_seed changed=false verified=true`
+confirma que é a do banco) e o campo do `_MSG_AccountLogin` tem **12**. O JSONL ficou com
+`INITCODE` + `FIM` (84 B) — nenhum login saiu, então **não há `CNFCharacterLogin` para comparar**
+ainda. Consequência operacional: com essa senha, a conta não entra no 7662; é o mesmo limite de
+12 bytes que o portal/gateway passaram a validar sem truncar (ver `docs/cliente/pacotes.md`).
+
+Para fechar a comparação, sem mudar código: usar uma credencial de **≤12 bytes** para a conta do
+personagem 164 (decisão do dono) e repetir o comando acima; o `decode-captura --dsn` já compara
+nível/HP/MP/atributos/CP do `CNF` e do `UpdateScore` com `characters` + `character_scores` +
+`character_chaos`.
 
 ### Comparação com o banco (2026-11-14)
 

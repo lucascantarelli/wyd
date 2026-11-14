@@ -878,7 +878,10 @@ impl Opcode {
             Opcode::DeleteCharacter => &[Flow::Client2Game],
             Opcode::CharacterLogin => &[Flow::Client2Game],
             Opcode::CharacterLogout => &[Flow::Client2Game],
-            Opcode::CreateItem => &[Flow::Client2Game],
+            // AUD-02/DIV-02: o `Basedef.h` declara `FLAG_CLIENT2GAME`, mas o dispatcher de
+            // recebimento do 7662 compara `0x026e` (`0x495dc5 cmp edx,0x26e` → `call 0x486c25`).
+            // O valor de fio continua `0x026e` (não muda byte); só a direção está corrigida.
+            Opcode::CreateItem => &[Flow::Game2Client],
             Opcode::GetItem => &[Flow::Client2Game],
             Opcode::DropItem => &[Flow::Client2Game],
             Opcode::ApplyBonus => &[Flow::Client2Game],

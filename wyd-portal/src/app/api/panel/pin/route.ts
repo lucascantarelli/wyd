@@ -13,6 +13,15 @@ const NO_STORE = { "cache-control": "no-store" } as const;
 const PIN = z.string().regex(/^\d{4,6}$/, TEXTO.pin.regras);
 
 /**
+ * Campo de senha do `0x0FDB`, em **bytes**: o cliente não envia além disso.
+ *
+ * Contar caracteres aceitaria 7 acentos (14 bytes) e o gateway mandaria ao
+ * `AccountLogin` uma senha truncada — o jogador veria "PIN atual inválido" sem
+ * nunca ter errado o PIN.
+ */
+const GAME_PASSWORD_MAX_BYTES = 12;
+
+/**
  * Corpo aceito: o `login` vem da sessão, não deste JSON.
  *
  * `password` é exigida porque o `0x0FDE` só existe depois do `AccountLogin` no
@@ -20,7 +29,8 @@ const PIN = z.string().regex(/^\d{4,6}$/, TEXTO.pin.regras);
  * etapas. Ela não é guardada em lugar nenhum.
  */
 const Body = z.object({
-  password: z.string().min(1).max(12),
+  // O limite de 12 bytes é conferido antes do parse, em bytes UTF-8.
+  password: z.string().min(1),
   current_pin: PIN,
   new_pin: PIN,
 });
@@ -38,9 +48,26 @@ export async function POST(req: Request) {
     return Response.json({ error: TEXTO.pin.sessaoExpirada }, { status: 401, headers: NO_STORE });
   }
 
+  let raw: unknown;
+  try {
+    raw = await req.json();
+  } catch {
+    return Response.json({ error: TEXTO.pin.regras }, { status: 422, headers: NO_STORE });
+  }
+
+  const senha = (raw as { password?: unknown } | null)?.password;
+  if (
+    typeof senha === "string" &&
+    new TextEncoder().encode(senha).length > GAME_PASSWORD_MAX_BYTES
+  ) {
+    // 413 e não 422: a tela já usa 422 para "PIN atual não confere" e não pode
+    // confundir senha longa com PIN errado.
+    return Response.json({ error: TEXTO.pin.senhaLonga }, { status: 413, headers: NO_STORE });
+  }
+
   let parsed: z.infer<typeof Body>;
   try {
-    parsed = Body.parse(await req.json());
+    parsed = Body.parse(raw);
   } catch {
     return Response.json({ error: TEXTO.pin.regras }, { status: 422, headers: NO_STORE });
   }

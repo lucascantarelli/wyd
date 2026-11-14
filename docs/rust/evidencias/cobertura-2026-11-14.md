@@ -51,3 +51,34 @@ cd wyd-portal && npm run test:cobertura                   # portal (vitest + v8)
 2. Fechar `wyd-server` e `wyd-admin` (maior ganho absoluto) antes de perseguir décimos.
 3. Suíte própria para `wyd-db`/`wyd-bots` (hoje quase sem alvo de teste).
 4. Portal: cobrir `src/app/**` e os Route Handlers que não aparecem no relatório.
+
+## Atualização — testes de unidade do `wyd-server`
+
+Primeira leva de testes de unidade nos módulos que estavam a 0% e não precisam de banco nem de
+socket. Medição: `cargo llvm-cov -p wyd-server --lib --lcov --output-path tmp/cov-server-*.info`,
+com resumo por arquivo (linhas `LF`/`LH`) e uma segunda leitura que **descarta o bloco
+`#[cfg(test)]`**, porque o código de teste conta como linha instrumentada e coberta e infla o
+percentual.
+
+| Módulo | Antes | Depois (produção) | Depois (bruto, com testes) |
+|---|---:|---:|---:|
+| `config/service.rs` | 0,0% (0/652) | 60,1% (381/634) | 72,0% (683/948) |
+| `gameplay/service.rs` | 0,0% (0/551) | 31,5% (171/542) | 46,3% (327/707) |
+| `cpsock/limits.rs` | 0,0% (0/42) | 97,5% (39/40) | 96,7% (89/92) |
+| `logs.rs` | 0,0% (0/14) | 100,0% (12/12) | 96,1% (49/51) |
+| `boot/env.rs` | 0,0% (0/4) | 100,0% (3/3) | 100,0% (18/18) |
+| **`wyd-server` unit (total)** | **25,3% (1.714/6.778)** | **34,3% (2.324/6.778)** | 47,0% (4.178/8.888) |
+
+Suíte: 58 → 80 testes de biblioteca, todos verdes; `cargo clippy -p wyd-server --all-targets
+-- -D warnings` limpo.
+
+Coberto agora: snapshot mínimo e erros tipados de `GameConfig::from_rows` (revisão, família
+vazia, passo/célula ausente, chave/valor fora da faixa), multiplicador e bônus de cidadania,
+overrides de drop, NPC (template, mapa, loja, template corrompido), rotas, acessórios; refino
+(sucesso, falha `Kept`, nível/sorteio/célula inválidos), EXP com multiplicador, loot com peso do
+snapshot e roll por item, recusas de `use_item`, conversão de slot e identificação de pó/selado;
+limite por IP (reserva, recusa, `Drop`, `0` desliga); anel de log (capacidade e ordem); `bind`
+com e sem variável.
+
+Fora do alvo (exigem Postgres ou socket, ficam para a suíte de integração): `auth/password`,
+`cpsock/handshake`, `cpsock/login`, `cpsock/selection`, `boot/mod` e `auth/mod`.

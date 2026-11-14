@@ -17,3 +17,28 @@ pub(crate) const DEFAULT_HEALTHCHECK: &str = "127.0.0.1:8080";
 pub(crate) fn bind(var: &str, default: &str) -> Result<String, String> {
     Ok(std::env::var(var).unwrap_or_else(|_| default.to_string()))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bind_usa_o_default_sem_variavel() {
+        let var = "WYD_TEST_BIND_SEM_VARIAVEL";
+        std::env::remove_var(var);
+        assert_eq!(bind(var, DEFAULT_CPSOCK), Ok(DEFAULT_CPSOCK.to_string()));
+    }
+
+    #[test]
+    fn bind_prefere_a_variavel_do_ambiente() {
+        let var = "WYD_TEST_BIND_COM_VARIAVEL";
+        std::env::set_var(var, "127.0.0.1:9999");
+        assert_eq!(bind(var, DEFAULT_CPSOCK), Ok("127.0.0.1:9999".to_string()));
+        std::env::remove_var(var);
+        assert_eq!(
+            bind(var, DEFAULT_HEALTHCHECK),
+            Ok(DEFAULT_HEALTHCHECK.to_string()),
+            "remover a variável volta ao default"
+        );
+    }
+}

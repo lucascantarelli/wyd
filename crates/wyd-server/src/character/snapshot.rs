@@ -68,6 +68,10 @@ pub const KILL_MARK_SLOT: usize = 63;
 pub const KILL_MARK_ITEM: i16 = 547;
 /// `EF_AMOUNT` (`ItemEffect.h:118`): quantidade da pilha em `stEffect[0]`.
 pub const EF_AMOUNT: u8 = 61;
+/// `EF_DAMAGE` (`ItemEffect.h`): dano somado ao `CurrentScore.Damage` do dono.
+pub const EF_DAMAGE: u8 = 2;
+/// `EF_AC` (`ItemEffect.h`): defesa somada ao `CurrentScore.Ac` do dono.
+pub const EF_AC: u8 = 3;
 /// `EF_CURKILL`/`EF_LTOTKILL`/`EF_HTOTKILL` (`ItemEffect.h:135-137`), sem valor.
 const KILL_MARK_EFFECTS: [u8; 3] = [75, 76, 77];
 
@@ -348,6 +352,10 @@ impl Item {
                 ],
             };
         }
+        // Os pares vêm do catálogo (`item_catalog.effects`) e são **escalados pelo refino** como
+        // no legado: `BASE_GetItemAbility` (Basedef.cpp:1687) multiplica por `(sanc+10)/10`, ou
+        // seja +1 vale +10%. Item +9 vale 1,9×; item sem refino fica idêntico ao catálogo.
+        let escala = u32::try_from(row.refine.clamp(0, 15)).unwrap_or(0) + 10;
         let mut effects = if row.qty > 1 {
             [
                 [EF_AMOUNT, u8::try_from(row.qty).unwrap_or(u8::MAX)],
@@ -355,7 +363,10 @@ impl Item {
                 [0, 0],
             ]
         } else {
-            [[0, 0], [0, 0], [0, 0]]
+            row.effects.map(|[eff, val]| {
+                let valor = u32::from(val) * escala / 10;
+                [eff, u8::try_from(valor).unwrap_or(u8::MAX)]
+            })
         };
         let level = row.refine.clamp(0, 15) as u8;
         if level > 0 || pity > 0 {
@@ -1032,6 +1043,24 @@ mod tests {
             100,
             "CP 25 deslocado em 75"
         );
+    }
+
+    #[test]
+    fn nivel_do_banco_vira_nivel_menos_um_em_todo_pacote() {
+        // O banco é 1-based e o cliente 7662 desenha `Level + 1`: o fio (Selchar, login e
+        // CreateMob) tem de levar sempre `banco - 1`. Antes deste teste o `CreateMob` do
+        // personagem mandava o nível do banco e o cliente pintava "Nv 2" para nível 1.
+        let vazio: Vec<ItemRow> = Vec::new();
+        for (banco, fio) in [(1_i64, 0_i32), (200, 199), (399, 398)] {
+            let mut base = personagem(0, "Nivel", 0);
+            base.level = banco;
+            let mob = Mob::from_persisted(&base, &vazio);
+            assert_eq!(mob.current_score.level, fio, "CurrentScore banco {banco}");
+            assert_eq!(mob.base_score.level, fio, "BaseScore banco {banco}");
+            assert_eq!(wire_level(banco), fio, "wire_level banco {banco}");
+            let sel = Selchar::from_roster(&[(base, Vec::new())]);
+            assert_eq!(sel.score[0].level, fio, "Selchar banco {banco}");
+        }
     }
 
     #[test]

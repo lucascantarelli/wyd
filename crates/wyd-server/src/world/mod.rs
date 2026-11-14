@@ -38,7 +38,6 @@ use wyd_core::{
     Scheduler, SchedulerConfig, SpawnSpec, Stats, Tick,
 };
 use wyd_db::{Character, SaveQueue, SaveRequest};
-use wyd_sim::formula::damage::{damage_chain, DamageInput};
 
 use crate::config::GameConfig;
 
@@ -133,7 +132,7 @@ pub const ENV_SCENE_MAX_PER_REFRESH: &str = "WYD_SCENE_MAX_PER_REFRESH";
 ///
 /// Era 64 e isso deixava a cena incompleta por ~95 s (6 100 NPCs a 1 varredura/s): o cliente
 /// que entrava e olhava a área recebia só os primeiros ids e nunca os NPCs criados por último
-/// (caso do Campo, ids 6301..6310). O teto continua existindo para a recarga não virar rajada,
+/// (caso do Campo, ids `campo-*` acima de 6100). O teto continua existindo para a recarga não virar rajada,
 /// mas agora cabe o mapa inteiro em duas varreduras.
 pub const DEFAULT_SCENE_MAX_PER_REFRESH: usize = 4_096;
 
@@ -304,6 +303,44 @@ pub struct ActorSkin {
     pub attack_run: u8,
     /// `CurrentScore.Direction`.
     pub direction: u8,
+    /// `CurrentScore.Mp`/`MaxMp` do login: o `_MSG_CreateMob` do jogador leva os dois, senão o
+    /// cliente desenha o personagem na cena com 0/0 enquanto o painel mostra o valor certo.
+    pub mp: i32,
+    pub max_mp: i32,
+    /// `CurrentScore.Strength/Intelligence/Dexterity/Constitution` — os quatro atributos que o
+    /// painel do cliente lê do `STRUCT_SCORE`. Vêm do snapshot do login (banco), não do template.
+    pub strength: i16,
+    pub intelligence: i16,
+    pub dexterity: i16,
+    pub constitution: i16,
+    /// `CurrentScore.Damage` do login: template da classe **+ `EF_DAMAGE`** de todo o
+    /// equipamento (`BASE_GetCurrentScore`, `Basedef.cpp:3028`). É o ataque que o golpe usa.
+    pub attack: u32,
+    /// `CurrentScore.Ac` do login: template da classe **+ `EF_AC`** do equipamento
+    /// (`Basedef.cpp:3029`).
+    pub defense: u32,
+}
+
+/// Soma `EF_DAMAGE`/`EF_AC` de todo o `Equip[16]` do `STRUCT_MOB`.
+///
+/// Fonte: `BASE_GetMobAbility` (`Basedef.cpp:2960`) sobre os pares do `STRUCT_ITEM` — é o que
+/// `BASE_GetCurrentScore` soma ao `CurrentScore` (`Basedef.cpp:3028-3030`). Arma, armadura, elmo,
+/// luvas e botas entram todos; o que não é `EF_DAMAGE`/`EF_AC` fica fora.
+#[must_use]
+pub fn bonus_de_equipamento(equip: &[crate::character::Item; 16]) -> (u32, u32) {
+    let mut dano = 0u32;
+    let mut ac = 0u32;
+    for item in equip {
+        for par in item.effects {
+            let valor = u32::from(par[1]);
+            match par[0] {
+                crate::character::EF_DAMAGE => dano = dano.saturating_add(valor),
+                crate::character::EF_AC => ac = ac.saturating_add(valor),
+                _ => {}
+            }
+        }
+    }
+    (dano, ac)
 }
 
 /// Uma entidade na vista do cliente: NPC/monstro **ou** personagem.
@@ -330,6 +367,14 @@ pub struct SceneMob {
     pub max_hp: u32,
     pub attack: u32,
     pub defense: u32,
+    /// `STRUCT_SCORE.Mp`/`MaxMp` (NPC sem mana = 0).
+    pub mp: i32,
+    pub max_mp: i32,
+    /// `STRUCT_SCORE.Strength/Intelligence/Dexterity/Constitution` (NPC = 0).
+    pub strength: i16,
+    pub intelligence: i16,
+    pub dexterity: i16,
+    pub constitution: i16,
     /// `STRUCT_SCORE.Merchant`: NPC de loja tem nome sempre visível; jogador é 0.
     pub merchant: u8,
     /// `STRUCT_SCORE.ChaosRate` = CP + 75: é o byte que o cliente lê para a cor do nome.
@@ -339,6 +384,11 @@ pub struct SceneMob {
     pub equip: [u16; 16],
     /// `STRUCT_MOB.Guild` (0 = sem guilda).
     pub guild: u16,
+    /// Versão dos dados vivos desta entidade (0 = nunca atualizada).
+    ///
+    /// Sobe quando nível/atributos mudam no mundo: a sessão compara com o que já
+    /// emitiu e reenvia o `CreateMob` de quem mudou, sem exigir relogin.
+    pub revision: u64,
 }
 
 impl SceneMob {
@@ -372,9 +422,61 @@ pub struct SceneSnapshot {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ScenePlan {
     pub enter: Vec<SceneMob>,
+    /// Entidades já emitidas cuja `revision` mudou: saem e voltam com os dados novos.
+    pub refresh: Vec<SceneMob>,
     /// `(id, RemoveType)`: `0` fora de vista, `2` logout (`ADR-0025`).
     pub leave: Vec<(u16, i32)>,
     pub complete: bool,
+}
+
+/// O que a sessão já emitiu de uma entidade: papel na saída e versão dos dados.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SentMob {
+    /// `true` = personagem (muda o `RemoveType` da saída e o `Merchant`).
+    pub actor: bool,
+    /// `revision` do `SceneMob` no momento do envio.
+    pub revision: u64,
+}
+
+/// Estado de personagem que muda **sem relogin** (level up, ponto de atributo).
+///
+/// Vem do `STRUCT_SCORE` já persistido (o mesmo que o `CNFCharacterLogin` do dono leva);
+/// o motor só aplica no armazém e na aparência, sem recalcular fórmula no tick.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ActorRefresh {
+    pub level: u16,
+    pub hp: u32,
+    pub max_hp: u32,
+    pub mp: u32,
+    pub max_mp: u32,
+    pub strength: i16,
+    pub intelligence: i16,
+    pub dexterity: i16,
+    pub constitution: i16,
+}
+
+impl ActorRefresh {
+    /// Lê o `CurrentScore` do personagem gravado (level up/`ApplyBonus`).
+    ///
+    /// `Score.Level` é **0-based no fio** (`wire_level` = banco − 1); o mundo guarda o
+    /// nível do banco, que é o que o `SceneMob`/`CNFCharacterLogin` representam aqui.
+    #[must_use]
+    pub fn from_score(score: &crate::character::snapshot::Score) -> Self {
+        let nao_negativo = |valor: i32| u32::try_from(valor.max(0)).unwrap_or(0);
+        Self {
+            level: u16::try_from(score.level.max(0))
+                .unwrap_or(u16::MAX - 1)
+                .saturating_add(1),
+            hp: nao_negativo(score.hp),
+            max_hp: nao_negativo(score.max_hp).max(nao_negativo(score.hp)),
+            mp: nao_negativo(score.mp),
+            max_mp: nao_negativo(score.max_mp).max(nao_negativo(score.mp)),
+            strength: score.strength,
+            intelligence: score.intelligence,
+            dexterity: score.dexterity,
+            constitution: score.constitution,
+        }
+    }
 }
 
 /// `RemoveType` do `_MSG_RemoveMob` (`ADR-0025`): saiu da vista.
@@ -462,6 +564,12 @@ pub enum Command {
         radius: u32,
         reply: SyncSender<Option<SceneSnapshot>>,
     },
+    /// Nível/atributos gravados que o mundo deve passar a enxergar (sem relogin).
+    RefreshActor {
+        entity: Entity,
+        refresh: ActorRefresh,
+        reply: SyncSender<bool>,
+    },
     /// Golpe corpo a corpo contra o NPC/monstro mais próximo do ponto clicado.
     Attack {
         attacker: Entity,
@@ -526,6 +634,10 @@ pub struct Engine {
     next_mob_scene: u16,
     /// Sobe a cada entidade que nasce ou sai do mundo: a borda difunde o delta.
     scene_generation: u64,
+    /// Versão dos dados vivos por índice de entidade (nível/atributos atualizados).
+    revisions: HashMap<u32, u64>,
+    /// Próxima versão a distribuir (começa em 1: 0 = nunca atualizado).
+    next_revision: u64,
     /// Portões abertos por chave (`EF_KEYID`), com fechamento por tempo (GAME-18).
     gates: crate::gameplay::GateBook,
     /// PvP ligado neste canal/mapa (papel do canal × mapa, decidido na borda).
@@ -568,7 +680,7 @@ fn fixed_name(nome: &str) -> [u8; 16] {
     out
 }
 
-fn stats_from(character: &Character) -> Result<Stats, EnterWorldError> {
+fn stats_from(character: &Character, skin: &ActorSkin) -> Result<Stats, EnterWorldError> {
     let nivel = u16::try_from(character.level).map_err(|_| {
         EnterWorldError::InvalidState(format!("nível {} fora de u16", character.level))
     })?;
@@ -580,18 +692,29 @@ fn stats_from(character: &Character) -> Result<Stats, EnterWorldError> {
         .map_err(|_| EnterWorldError::InvalidState(format!("hp_max {}", character.hp_max)))?;
     let max_mp = u32::try_from(character.mp_max)
         .map_err(|_| EnterWorldError::InvalidState(format!("mp_max {}", character.mp_max)))?;
-    // Ataque/defesa correntes do `STRUCT_MOB` da classe (`CurrentScore.Damage`/`Ac`): é o
-    // valor que o próprio login envia ao cliente, não uma fórmula nova. Equipamento e bônus
-    // entram na FASE-10.
+    // Ataque/defesa correntes vêm do `CurrentScore` do login (`BASE_GetCurrentScore`): template
+    // da classe + `EF_DAMAGE`/`EF_AC` do equipamento, medida em `bonus_de_equipamento` e
+    // carregada na `ActorSkin`. O template só é fallback quando a skin é sintética (tests), que
+    // é o único caso de `attack == 0`; o login nunca produz zero.
     let modelo = crate::personagens::template_mob(character.class);
+    let ataque_template = u32::try_from(modelo.current_score.damage.max(0)).unwrap_or(0);
+    let defesa_template = u32::try_from(modelo.current_score.ac.max(0)).unwrap_or(0);
     let stats = Stats {
         level: nivel,
         hp,
         max_hp,
         mp,
         max_mp,
-        attack: u32::try_from(modelo.current_score.damage.max(0)).unwrap_or(0),
-        defense: u32::try_from(modelo.current_score.ac.max(0)).unwrap_or(0),
+        attack: if skin.attack > 0 {
+            skin.attack
+        } else {
+            ataque_template
+        },
+        defense: if skin.defense > 0 {
+            skin.defense
+        } else {
+            defesa_template
+        },
     };
     stats
         .validate()
@@ -666,6 +789,22 @@ impl EngineHandle {
     pub fn sync_npcs(&self, specs: Vec<NpcSpec>) -> NpcSync {
         self.call(|reply| Command::SyncNpcs { specs, reply }, COMMAND_TIMEOUT)
             .unwrap_or_default()
+    }
+
+    /// Reflete nível/atributos recém-gravados no mundo vivo.
+    ///
+    /// Devolve `false` se a entidade não está no mundo (sessão que já saiu).
+    #[must_use]
+    pub fn refresh_actor(&self, entity: Entity, refresh: ActorRefresh) -> bool {
+        self.call(
+            |reply| Command::RefreshActor {
+                entity,
+                refresh,
+                reply,
+            },
+            COMMAND_TIMEOUT,
+        )
+        .unwrap_or(false)
     }
 
     /// Cena vigente do motor (NPCs e personagens com posição autoritativa + geração).
@@ -814,6 +953,8 @@ impl Engine {
             next_player_scene: 1,
             next_mob_scene: MAX_USER,
             scene_generation: 0,
+            revisions: HashMap::new(),
+            next_revision: 1,
             gates: crate::gameplay::GateBook::default(),
             pvp: false,
             move_rules: MoveRules::new(
@@ -1242,6 +1383,14 @@ mod tests {
             guild,
             attack_run: 82,
             direction: 3,
+            mp: 46,
+            max_mp: 46,
+            strength: 8,
+            intelligence: 4,
+            dexterity: 7,
+            constitution: 6,
+            attack: 0,
+            defense: 0,
         }
     }
 
@@ -1275,7 +1424,35 @@ mod tests {
         assert_eq!(ator.name_str(), "Buffy");
         assert_eq!(ator.equip[0], 831, "aparência vem do STRUCT_MOB do login");
         assert_eq!(ator.guild, 4);
-        assert_eq!((ator.level, ator.hp, ator.max_hp), (10, 90, 100));
+        // `CreateMob.Level` é 0-based no fio: banco 10 → 9 (o cliente desenha `+1`).
+        assert_eq!((ator.level, ator.hp, ator.max_hp), (9, 90, 100));
+        // MP e atributos do jogador vão no `CreateMob`: o cliente desenha a barra e o painel
+        // a partir do mesmo `STRUCT_SCORE` do login, não de zero.
+        assert_eq!(
+            (ator.mp, ator.max_mp),
+            (40, 50),
+            "MP vivo e máximo do banco"
+        );
+        assert_eq!(
+            (
+                ator.strength,
+                ator.intelligence,
+                ator.dexterity,
+                ator.constitution
+            ),
+            (8, 4, 7, 6),
+            "atributos vêm do snapshot do login"
+        );
+        let npc = cena
+            .mobs
+            .iter()
+            .find(|mob| !mob.actor)
+            .expect("NPC na cena");
+        assert_eq!(
+            (npc.mp, npc.max_mp, npc.strength, npc.constitution),
+            (0, 0, 0, 0),
+            "NPC não herda mana nem atributos de personagem"
+        );
         assert_eq!((ator.position.x, ator.position.y), (42, 40));
         assert_eq!(ator.merchant, 0, "jogador não é NPC de loja");
 
@@ -1322,16 +1499,39 @@ mod tests {
         assert!(plano.complete);
 
         // Sessão que já viu tudo: delta vazio (nada é reenviado).
-        let vistos: std::collections::BTreeMap<u16, bool> =
-            ids.iter().map(|id| (*id, false)).collect();
+        let vistos: std::collections::BTreeMap<u16, SentMob> = ids
+            .iter()
+            .map(|id| {
+                (
+                    *id,
+                    SentMob {
+                        actor: false,
+                        revision: 0,
+                    },
+                )
+            })
+            .collect();
         let plano = plan_scene(&vistos, &cena, 64);
         assert!(plano.enter.is_empty() && plano.leave.is_empty());
+        assert!(plano.refresh.is_empty(), "versão igual não reenvia nada");
         assert!(plano.complete);
 
         // Id que sumiu do mundo vira `RemoveMob` fora de vista; personagem vira logout.
         let mut antigos = vistos.clone();
-        antigos.insert(9_999, false);
-        antigos.insert(9_998, true);
+        antigos.insert(
+            9_999,
+            SentMob {
+                actor: false,
+                revision: 0,
+            },
+        );
+        antigos.insert(
+            9_998,
+            SentMob {
+                actor: true,
+                revision: 0,
+            },
+        );
         let plano = plan_scene(&antigos, &cena, 64);
         assert_eq!(
             plano.leave,
@@ -1344,6 +1544,98 @@ mod tests {
         assert_eq!(plano.leave.len(), 1);
         assert!(plano.enter.is_empty());
         assert!(!plano.complete, "teto atingido não avança a geração");
+    }
+
+    #[test]
+    fn level_up_e_atributo_atualizam_a_cena_e_pedem_reenvio() {
+        let mut engine = engine();
+        let jogador = engine
+            .enter(&personagem(1, 10, 10), skin(b"Buffy", 0))
+            .expect("entrada");
+        let antes = engine.scene_snapshot();
+        let nivel_antes = antes
+            .mobs
+            .iter()
+            .find(|mob| mob.actor)
+            .expect("personagem na cena")
+            .level;
+        // Banco 10 → fio 9: `CreateMob.Level` é 0-based, igual ao `CNFCharacterLogin`.
+        assert_eq!(
+            nivel_antes, 9,
+            "entra com o nível do banco no fio (0-based)"
+        );
+        let vistos: std::collections::BTreeMap<u16, SentMob> = antes
+            .mobs
+            .iter()
+            .map(|mob| {
+                (
+                    mob.id,
+                    SentMob {
+                        actor: mob.actor,
+                        revision: mob.revision,
+                    },
+                )
+            })
+            .collect();
+        assert!(
+            plan_scene(&vistos, &antes, 64).refresh.is_empty(),
+            "nada mudou ainda"
+        );
+
+        // O banco gravou nível 11 e um ponto de força: o mundo tem de enxergar igual.
+        // `Score.Level` é 0-based no fio (banco 11 → 10), como em `apply_progression`.
+        let score = crate::character::snapshot::Score {
+            level: 10,
+            hp: 120,
+            max_hp: 120,
+            mp: 60,
+            max_mp: 60,
+            strength: 9,
+            ..Default::default()
+        };
+        let refresh = ActorRefresh::from_score(&score);
+        assert!(engine.refresh_actor(jogador.entity, refresh));
+
+        let depois = engine.scene_snapshot();
+        let ator = depois
+            .mobs
+            .iter()
+            .find(|mob| mob.actor)
+            .expect("personagem na cena");
+        assert_eq!(
+            ator.level, 10,
+            "level up refletido no CreateMob (banco 11 → fio 10)"
+        );
+        assert_eq!((ator.hp, ator.max_hp), (120, 120));
+        assert_eq!((ator.mp, ator.max_mp), (60, 60));
+        assert_eq!(ator.strength, 9, "ponto de atributo refletido");
+        assert!(ator.revision > 0, "mudança sobe a versão da entidade");
+
+        let plano = plan_scene(&vistos, &depois, 64);
+        assert_eq!(plano.refresh.len(), 1, "quem mudou é reenviado");
+        assert_eq!(plano.refresh[0].id, ator.id);
+        assert!(plano.enter.is_empty(), "não é entrada nova");
+        assert!(plano.leave.is_empty(), "não é saída");
+    }
+
+    #[test]
+    fn score_do_fio_vira_nivel_do_banco_no_refresh() {
+        // `Score.Level` é 0-based: o personagem de nível 1 tem 0 no fio e não pode
+        // chegar ao armazém como 0 (Stats inválido) nem como 1 se o banco tem 2.
+        let nivel_um = crate::character::snapshot::Score::default();
+        assert_eq!(ActorRefresh::from_score(&nivel_um).level, 1);
+        let nivel_dez = crate::character::snapshot::Score {
+            level: 9,
+            ..Default::default()
+        };
+        assert_eq!(ActorRefresh::from_score(&nivel_dez).level, 10);
+        // Teto do legado: `MAX_LEVEL` 399 é 0-based, então o nível 400 do banco (399 no fio)
+        // volta como 400 sem estourar `u16` nem saltar um.
+        let teto = crate::character::snapshot::Score {
+            level: 398,
+            ..Default::default()
+        };
+        assert_eq!(ActorRefresh::from_score(&teto).level, 399);
     }
 
     #[test]

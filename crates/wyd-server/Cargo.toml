@@ -82,6 +82,10 @@ name = "sistema_campo_vivo"
 path = "tests/sistema/campo_vivo.rs"
 
 [[test]]
+name = "sistema_combate_vivo"
+path = "tests/sistema/combate_vivo.rs"
+
+[[test]]
 name = "sistema_cena_armia"
 path = "tests/sistema/cena_armia.rs"
 
@@ -120,6 +124,10 @@ path = "tests/sistema/loja_viva.rs"
 [[test]]
 name = "sistema_lotacao"
 path = "tests/sistema/lotacao.rs"
+
+[[test]]
+name = "sistema_nivel_wire"
+path = "tests/sistema/nivel_wire.rs"
 
 [[test]]
 name = "sistema_personagens_crud"

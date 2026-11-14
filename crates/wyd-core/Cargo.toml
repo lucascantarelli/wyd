@@ -11,6 +11,8 @@ path = "src/lib.rs"
 
 [dependencies]
 wyd-protocol = { path = "../wyd-protocol", version = "0.1.0" }
+# ADR-0029: regra pura de gema (piso de +10, valor por refino) mora só em `wyd-sim`.
+wyd-sim = { path = "../wyd-sim", version = "0.1.0" }
 # QA-04 / ADR-0018: log estruturado (sem `env-filter`, que arrastaria regex).
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", default-features = false, features = [

@@ -159,6 +159,21 @@ Esperado no log: `pin result=skip reason=not_registered` (conta sem PIN) ou
 - Evidência local em `tmp/prova-visual-7662/` (`19-config-mode7.png`, `25-mode7-fechar.png`,
   `canal.log`, `resumo.md`); runbook §9.5–§10. Issue segue 🟢 sem marcar o aceite visual.
 
+## Tentativa de prova visual 2026-11-14 — BLOQUEADA
+
+Playbook: `docs/cliente/roteiro-prova-visual-7662.md` §3 (A1 senha errada, A2 PIN errado).
+
+- O 7662 abriu (SHA-256 `04c9d2a1…`, janela **806×629**) e renderizou **preto**: `client/WYD.log`
+  grava `Error in Init Render Target Texture`. Não existe tela de login para digitar senha/PIN, e
+  entrada sintética já falhou nas tentativas anteriores — sem tela, não há recusa a fotografar.
+  Print versionado: `docs/rust/evidencias/BUG-02-cliente-7662-preto-2026-11-14.png`.
+- Prova de **fio** no canal 1 real (+ Postgres): `cargo test -p wyd-server --test sistema_autenticacao`
+  → **1/1**. Senha errada → `NewAccountFail` + `MessagePanel` sem `CNFAccountLogin`; PIN errado →
+  `AccountSecureFail` + painel sem sessão; PIN certo → aceito. Log do canal e trecho em
+  `docs/rust/evidencias/BUG-02-prova-visual-2026-11-14.md`.
+- **Nenhum critério visual marcado.** O bloqueio é de ambiente (D3D9/render target em VM), não de
+  código; nenhuma alteração de servidor foi feita nesta tentativa.
+
 ## Riscos / rollback
 
 - Risco: PIN deixa de proteger a entrada → mitigação: a senha argon2id continua obrigatória antes;

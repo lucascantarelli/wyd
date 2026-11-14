@@ -1,6 +1,7 @@
 # Roadmap Rust — índice executável
 
-> **Estado:** 2026-11-13 · **35 issues ativas** + 15 descritores de fase. 64 issues concluídas estão em [`changelog.md`](changelog.md).
+> **Estado:** 2026-11-14 · **61 issues ativas** (41 anteriores + 20 da auditoria) + 15
+> descritores de fase. 64 issues concluídas estão em [`changelog.md`](changelog.md).
 >
 > **Auditoria de DevOps/CI:** das doze issues da análise de pipeline, imagens, compose, testes e
 > monitoramento, **todas as doze estão fechadas** (`DEVOPS-01`…`DEVOPS-13`); o
@@ -199,6 +200,101 @@ isolada por desenho contínuo. Não há fase órfã acidental.
 >
 > **Bloco encerrado em 2026-11-13:** as doze issues (`DEVOPS-01`…`DEVOPS-13`) estão concluídas e
 > registradas em [`changelog.md`](changelog.md); não há issue DevOps/CI ativa.
+
+## Roadmap de paridade — issues abertas pela auditoria (2026-11-14)
+
+> Origem: [`docs/audit/17-priorities-and-roadmap.md`](../docs/audit/17-priorities-and-roadmap.md).
+> Cada entrega da auditoria está mapeada para a issue que a executa. Onde já existia issue, ela
+> foi reusada (ID em `código`, sem link duplicado); onde não existia, nasceu uma `AUD-NN` com
+> objetivo, passos, aceite e testes exigidos. Fase 4 não entra na fila antes de P1 fechar.
+> Medição e método: [`docs/rust/evidencias/auditoria-roadmap-2026-11-14.md`](../docs/rust/evidencias/auditoria-roadmap-2026-11-14.md).
+
+### Fase 0 — destravar o conhecimento
+
+| ID | Entrega | Status | Esforço | Depende de |
+|---|---|---|---|---|
+| `CLIENT-06` | Captura S→C do 7662 (item 0.1) | 🚧 | L | VM + cliente |
+| `AUD-01` | [Dissector CPSock e decisão Frida/XTrap](issues/AUD-01-dissector-cpsock-e-frida.md) | ⬜ | M | `CLIENT-06` |
+| `AUD-19` | [Fechar as 37 incógnitas do audit (`UNK-01`…`UNK-37`)](issues/AUD-19-incognitas-da-auditoria.md) | ⬜ | XL (decompor) | `CLIENT-06` nas de fio |
+
+### Fase 1 — loop jogável fiel
+
+| ID | Entrega | Status | Esforço | Depende de |
+|---|---|---|---|---|
+| `BUG-01` | Senha/recusa visível no cliente (item 1.1) | ⬜ | M | `CLIENT-06` |
+| `AUD-03` | [`SELCHAR`/`MOB` com offsets reais](issues/AUD-03-offsets-reais-selchar-mob.md) | ⬜ | M | `CLIENT-06`, `AUD-01` |
+| `AUD-04` | [Colisão de jogador](issues/AUD-04-colisao-de-jogador.md) | ⬜ | M | `GAME-05` |
+| `GAME-09` | Movimento/cena no fio (item 1.5) | ⬜ | M | `CLIENT-06` |
+| `AUD-05` | [Regen de HP/MP e respawn de NPC](issues/AUD-05-regen-hp-mp-e-respawn-npc.md) | ⬜ | S | tick |
+| `AUD-06` | [Cadência de ataque provada](issues/AUD-06-cadencia-de-ataque-provada.md) | ⬜ | S | `GAME-19`, `GAME-20` |
+| `AUD-21` | [Reconciliação documental e achados sem issue](issues/AUD-21-reconciliacao-documental.md) | 🚧 | M | — |
+
+### Fase 2 — itens, economia e comércio
+
+| ID | Entrega | Status | Esforço | Depende de |
+|---|---|---|---|---|
+| `GAME-11` | Item no chão e pickup (item 2.1) | 🚧 | M | `CLIENT-06` |
+| `GAME-05` | Mover/equipar no fio (item 2.2) | 🚧 | M | layout |
+| `AUD-07` | [Loja de NPC completa](issues/AUD-07-loja-de-npc-completa.md) | ⬜ | M | `GAME-05` |
+| `CLIENT-10` | Trade atômica (item 2.4) | ⛔ | M | `CLIENT-06` |
+| `AUD-08` | [Baú/armazém](issues/AUD-08-bau-e-armazem.md) | ⬜ | M | `GAME-05` |
+| `AUD-09` | [Skill no fio](issues/AUD-09-skill-no-fio.md) | ⬜ | M | `GAME-05` |
+| `AUD-10` | [Mix/compose e cadeia +12…+15/Anct](issues/AUD-10-composicao-e-cadeia-alta.md) | ⬜ | L | `GAME-11` |
+| `AUD-20` | [Decidir modelos divergentes: drop, piedade e PK](issues/AUD-20-decisoes-de-modelo.md) | ⬜ | M | `AUD-10` (simulação) |
+
+### Fase 3 — social e progressão
+
+| ID | Entrega | Status | Esforço | Depende de |
+|---|---|---|---|---|
+| `GAME-25` | Chat, whisper e filtro (item 3.1) | ⬜ | M | — |
+| `AUD-11` | [Party e EXP compartilhada](issues/AUD-11-party-e-exp-compartilhada.md) | ⬜ | L | `GAME-25` |
+| `GAME-24` | Guilda e eventos (itens 3.3 e 3.7) | ⬜ | L | `GAME-25` |
+| `AUD-12` | [`ApplyBonus` no fio](issues/AUD-12-applybonus-no-fio.md) | ⬜ | S | `GAME-05` |
+| `AUD-13` | [Teleporte e portal](issues/AUD-13-teleporte-e-portal.md) | ⬜ | M | `AUD-04` |
+| `AUD-14` | [Quest genérica](issues/AUD-14-quest-generica.md) | ⬜ | L | `AUD-13` |
+| `AUD-15` | [PK/chaos e cor do nome](issues/AUD-15-pk-chaos-e-cor-do-nome.md) | ⬜ | L | `AUD-06` |
+
+### Fase 4 — expansão (bloqueada por desenho)
+
+| ID | Entrega | Status | Esforço | Depende de |
+|---|---|---|---|---|
+| `AUD-16` | [Escritor `.wyt`](issues/AUD-16-escritor-wyt.md) | ⬜ | S | — |
+| `CLIENT-12` | Modo de vídeo e gerações (item 4.2) | ⬜ | S | cliente/GPU |
+| `AUD-17` | [Conversor de malha e editor de mapa](issues/AUD-17-conversor-malha-e-editor-mapa.md) | ⬜ | XL | `AUD-16` (decompor antes) |
+| `AUD-22` | [Decisão de cliente independente (item 4.5)](issues/AUD-22-decisao-cliente-independente.md) | ⛔ | S | `AUD-17`; paridade P1–P3 |
+
+### Cobertura item a item do §17
+
+| Entrega | Issue | Entrega | Issue | Entrega | Issue |
+|---|---|---|---|---|---|
+| 0.1 | `CLIENT-06` | 1.6 | `AUD-05` | 2.8 | `AUD-10` |
+| 0.2 | `AUD-01` | 1.7 | `AUD-05` | 3.1 | `GAME-25` |
+| 0.3 | `AUD-01` | 1.8 | `AUD-06` | 3.2 | `AUD-11` |
+| 0.4 | `AUD-02` ✅ | 2.1 | `GAME-11` | 3.3 | `GAME-24` |
+| 1.1 | `BUG-01` | 2.2 | `GAME-05` | 3.4 | `AUD-12` |
+| 1.2 | `AUD-03` | 2.3 | `AUD-07` | 3.5 | `AUD-13` |
+| 1.3 | `AUD-03` | 2.4 | `CLIENT-10` | 3.6 | `AUD-14` |
+| 1.4 | `AUD-04` | 2.5 | `AUD-08` | 3.7 | `GAME-24` |
+| 1.5 | `GAME-09` | 2.6 | `AUD-09` | 3.8 | `AUD-15` |
+| 4.1 | `AUD-16` | 2.7 | `AUD-10` | 4.4 | `AUD-17` |
+| 4.2 | `CLIENT-12` | 4.3 | `AUD-17` | 4.5 | `AUD-22` |
+
+### Cobertura do audit além do §17
+
+O §17 lista as 24 entregas, mas os outros documentos da auditoria também abrem itens. Todos têm
+dono agora (checado por `node tools/content/check-audit-coverage.mjs`):
+
+| Origem | Itens | Issue |
+|---|---|---|
+| `18-unknown-features.md` | 37 incógnitas `UNK-01`…`UNK-37` | `AUD-19` (tabela por grupo, com método e fase) |
+| `15-bugs-and-divergences.md` §1 | `DIV-03`, `DIV-05`…`DIV-09`, `DIV-12`…`DIV-14` | `AUD-20` (decisões) e `AUD-21` (documental) |
+| `15-bugs-and-divergences.md` §3 | `N-1`…`N-10` | `AUD-21`, exceto `N-4`/`N-5` (`AUD-05`), `N-7` (`GAME-05`) e `N-10` (`AUD-19`) |
+| `17-priorities-and-roadmap.md` §2 | entrega 0.4 (direção do `CreateItem`) | `AUD-02` — **fechada em 2026-11-14** |
+| `17-priorities-and-roadmap.md` §6 | item 4.5 (cliente independente) | `AUD-22` (decisão go/no-go) |
+
+Os itens do §1/§2 e do §3 que já tinham issue continuam mapeados nela: `DIV-01`→`BUG-01`,
+`DIV-02`→`AUD-02` (fechada), `DIV-04`→`CLIENT-10`, `DIV-10`→`AUD-04`, `DIV-11`→`GAME-20`,
+`PAR-MOV-02`→`AUD-04`.
 
 ## Descritores de fase (contexto, não são issues)
 

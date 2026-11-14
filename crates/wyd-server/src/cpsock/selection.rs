@@ -23,6 +23,7 @@ pub(super) fn serve_selection(
     let mut stage = Stage::Selecting;
     let mut ultimo_pacote = Instant::now();
     let mut ultimo_renew = Instant::now();
+    let mut ultimo_scene = Instant::now();
     let mut chave = 0u8;
     // Pacote que o handshake já consumiu (seleção antes do PIN): processa agora, com o
     // frame em claro e o checksum já conferido, antes de esperar o próximo pacote.
@@ -173,6 +174,14 @@ pub(super) fn serve_selection(
             &mut stage,
         ) {
             return stage.entity();
+        }
+        // Delta de cena também com tráfego: sem isto, quem anda sem parar nunca recebia o
+        // `CreateMob` de um NPC que entrou na vista (o timeout nunca chegava).
+        if ultimo_scene.elapsed() >= SCENE_REFRESH_EVERY {
+            ultimo_scene = Instant::now();
+            if !refresh_scene(stream, chave, &mut stage, selection) {
+                return stage.entity();
+            }
         }
     }
 }

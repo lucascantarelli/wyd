@@ -50,6 +50,11 @@ export default function PinForm({ login, defined }: { login: string; defined: bo
       setErro(TEXTO.pin.senhaInvalida);
       return;
     }
+    // O campo do cliente tem 12 bytes: recusar aqui evita uma ida inútil ao servidor.
+    if (new TextEncoder().encode(senha).length > 12) {
+      setErro(TEXTO.pin.senhaLonga);
+      return;
+    }
 
     setPending(true);
     try {
@@ -73,6 +78,9 @@ export default function PinForm({ login, defined }: { login: string; defined: bo
         setConfirmacao("");
       } else if (res.status === 401) {
         setErro(TEXTO.pin.sessaoExpirada);
+      } else if (res.status === 413) {
+        // Senha acima dos 12 bytes do campo do cliente: texto próprio, não o do backend.
+        setErro(TEXTO.pin.senhaLonga);
       } else if (res.status === 422) {
         setErro(TEXTO.pin.atualInvalido);
       } else if (res.status === 503) {

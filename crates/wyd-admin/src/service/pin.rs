@@ -26,14 +26,20 @@ const READ_TIMEOUT: Duration = Duration::from_secs(5);
 const KEY: u8 = 11;
 /// Tamanho máximo aceito de um nome de conta no pacote.
 const LOGIN_MAX: usize = 16;
-/// Tamanho do campo de senha do `0x0FDB`.
-const PASSWORD_MAX: usize = 12;
+/// Tamanho do campo de senha do `0x0FDB`, **em bytes**: é o que o cliente envia.
+///
+/// Senha maior não existe no fio — truncar aqui mandaria ao `AccountLogin` uma
+/// credencial diferente da digitada, e a recusa apareceria como PIN errado. Por
+/// isso o limite é validado antes de abrir a conexão, nunca aplicado por corte.
+pub const PASSWORD_MAX: usize = 12;
 
 /// Falha da troca de PIN, já separada por causa (o portal vira mensagem com isso).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PinError {
     /// PIN fora de 4–6 dígitos: recusado antes de abrir conexão.
     InvalidPin,
+    /// Senha da conta maior que os 12 bytes do campo do `0x0FDB`.
+    PasswordTooLong,
     /// O servidor respondeu `0x0FDF`: PIN atual errado ou conta bloqueada.
     Rejected,
     /// Conexão recusada, timeout ou I/O.
@@ -46,6 +52,7 @@ impl std::fmt::Display for PinError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let texto = match self {
             Self::InvalidPin => "PIN deve ter de 4 a 6 dígitos",
+            Self::PasswordTooLong => "senha da conta maior que o limite de 12 bytes do cliente",
             Self::Rejected => "PIN atual inválido ou conta bloqueada por tentativas",
             Self::Unavailable => "servidor de jogo indisponível",
             Self::Protocol => "resposta inesperada do servidor de jogo",
@@ -81,6 +88,11 @@ pub fn change_pin(
     if login.is_empty() || login.len() > LOGIN_MAX || password.is_empty() {
         return Err(PinError::InvalidPin);
     }
+    // O campo do cliente tem 12 bytes: acima disso a senha não é enviável e o
+    // pedido falharia como "PIN atual inválido" depois de truncar em silêncio.
+    if password.len() > PASSWORD_MAX {
+        return Err(PinError::PasswordTooLong);
+    }
 
     let mut stream = TcpStream::connect(addr).map_err(|_| PinError::Unavailable)?;
     stream
@@ -97,8 +109,7 @@ pub fn change_pin(
     let mut nome = [0u8; LOGIN_MAX];
     nome[..login.len()].copy_from_slice(login.as_bytes());
     let mut senha = [0u8; PASSWORD_MAX];
-    let limite = password.len().min(PASSWORD_MAX);
-    senha[..limite].copy_from_slice(&password.as_bytes()[..limite]);
+    senha[..password.len()].copy_from_slice(password.as_bytes());
     AccountLogin {
         account_password: senha,
         account_name: nome,
@@ -215,6 +226,36 @@ mod tests {
         assert_eq!(
             change_pin("127.0.0.1:1", "conta", "SenhaForte1", "12", "9999"),
             Err(PinError::InvalidPin)
+        );
+    }
+
+    #[test]
+    fn senha_maior_que_doze_bytes_e_recusada_antes_da_conexao() {
+        // 13 ASCII e 7 acentos (14 bytes UTF-8) passam de 12 bytes: recusa antes
+        // do `connect`, senão o erro seria `Unavailable`.
+        assert_eq!(
+            change_pin("127.0.0.1:1", "conta", &"a".repeat(13), "1234", "5678"),
+            Err(PinError::PasswordTooLong)
+        );
+        assert_eq!("á".repeat(7).len(), 14, "acento ocupa dois bytes");
+        assert_eq!(
+            change_pin("127.0.0.1:1", "conta", &"á".repeat(7), "1234", "5678"),
+            Err(PinError::PasswordTooLong)
+        );
+    }
+
+    #[test]
+    fn senha_de_doze_bytes_passa_da_validacao() {
+        // Porta fechada → `Unavailable`: prova que a senha passou da validação e
+        // só falhou ao conectar, sem truncamento.
+        assert_eq!(
+            change_pin("127.0.0.1:1", "conta", &"a".repeat(12), "1234", "5678"),
+            Err(PinError::Unavailable)
+        );
+        assert_eq!("á".repeat(6).len(), 12, "seis acentos cabem nos 12 bytes");
+        assert_eq!(
+            change_pin("127.0.0.1:1", "conta", &"á".repeat(6), "1234", "5678"),
+            Err(PinError::Unavailable)
         );
     }
 }

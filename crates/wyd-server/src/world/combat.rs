@@ -140,20 +140,55 @@ impl Engine {
     }
 }
 
-/// Dano do canal: `attack` do atacante contra o `defense` do alvo na cadeia portada do
-/// `wyd-sim` (`DamageInput`/`damage_chain`), com piso 1 para o golpe nunca ser nulo.
+/// Dano do canal: `attack` do atacante contra o `defense` do alvo pela
+/// `BASE_GetDamage` do legado (`Basedef.cpp:1265`, transcrita em
+/// `docs/wyd/pesquisa-wyd2-missao-fase2-2026-11-10.md` §4.1) — AC mitiga **metade** do valor
+/// e a escada de pisos evita golpe nulo.
 ///
-/// O piso é regra de andamento do canal, não balanceamento: ambos os lados podem nascer com
-/// ataque 0 antes da FASE-10 e um golpe de 0 travaria o combate para sempre.
+/// A variância da arma (`rnd = rand()%delta + combat + 99`) fica de fora porque este modelo é
+/// determinístico: o fator aplicado é 100% (o centro da faixa 99..110). O sorteio entra na
+/// FASE-10, junto com maestria/crítico/perfuração.
 struct TemplateDamage;
 
 impl DamageModel for TemplateDamage {
     fn damage(&self, attacker: Stats, defender: Stats) -> u32 {
-        let entrada = DamageInput {
-            base: attacker.attack,
-            defense: defender.defense,
-            ..DamageInput::new(0)
-        };
-        damage_chain(&entrada).max(1)
+        legacy_damage(attacker.attack, defender.defense)
+    }
+}
+
+/// `BASE_GetDamage(dam, ac, combat)` com fator percentual neutro.
+///
+/// Fonte: `Basedef.cpp:1265-1294` — `tdam = dam - ac/2`; fator da arma em `[combat+99, 110]`%
+/// (aqui 100%); escada de pisos `tdam < -50 → 0`, `-50..0 → (tdam+50)/7`,
+/// `0..=50 → 5*tdam/4 + 7`; dano mínimo 1.
+fn legacy_damage(dam: u32, ac: u32) -> u32 {
+    let mut tdam = i64::from(dam) - i64::from(ac / 2);
+    if tdam < -50 {
+        tdam = 0;
+    } else if tdam < 0 {
+        tdam = (tdam + 50) / 7;
+    } else if tdam <= 50 {
+        tdam = 5 * tdam / 4 + 7;
+    }
+    u32::try_from(tdam.max(1)).unwrap_or(u32::MAX)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::legacy_damage;
+
+    /// `Basedef.cpp:1265`: o AC do alvo entra pela metade e a escada de pisos devolve 5 mesmo
+    /// quando `dam - ac/2` fica negativo — é o que faz um nível 1 arranhar um alvo de AC 40.
+    #[test]
+    fn escada_do_legado_com_ac_pela_metade() {
+        assert_eq!(legacy_damage(5, 40), 5, "5 - 20 = -15 → (35)/7 = 5");
+        assert_eq!(legacy_damage(5, 2), 12, "5 - 1 = 4 → 5*4/4 + 7 = 12");
+        assert_eq!(legacy_damage(10, 0), 19, "10 → 5*10/4 + 7 = 19");
+        assert_eq!(legacy_damage(0, 0), 7, "0 → 7 (piso da faixa 0..=50)");
+        assert_eq!(
+            legacy_damage(1, 200),
+            1,
+            "abaixo de -50 cai em 0 e o mínimo é 1"
+        );
     }
 }

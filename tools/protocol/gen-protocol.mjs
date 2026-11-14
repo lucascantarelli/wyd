@@ -28,6 +28,12 @@ const FLAGS = [
 const flagValue = new Map(FLAGS.map(([, c, v]) => [c, v]));
 const flagName = new Map(FLAGS.map(([n, c]) => [c, n]));
 
+// Correções de direção medidas no binário (DIV-02/AUD-02). O `Basedef.h` marca `CreateItem`
+// como `FLAG_CLIENT2GAME`, mas o dispatcher de recebimento do 7662 compara `0x026e`
+// (`0x495dc5 cmp edx,0x26e` → `call 0x486c25`): a mensagem é S→C. O valor de fio continua
+// `0x026e`; só a direção declarada muda (docs/cliente/pacotes.md §“Caixa de item”).
+const DIRECTION_OVERRIDES = new Map([["_MSG_CreateItem", ["Game2Client"]]]);
+
 function parseOpcodes() {
   const source = fs.readFileSync(BASEDEF, 'utf8');
   const re = /const\s+(?:short|int)\s+(_MSG_\w+)\s*=\s*([^;]+);/g;
@@ -56,7 +62,7 @@ function parseOpcodes() {
         .map((w) => w[0].toUpperCase() + w.slice(1))
         .join(''),
       value,
-      flows: FLAGS.map(([n]) => n).filter((n) => flows.has(n)),
+      flows: DIRECTION_OVERRIDES.get(constName) ?? FLAGS.map(([n]) => n).filter((n) => flows.has(n)),
     });
   }
   entries.sort((a, b) => a.value - b.value || a.constName.localeCompare(b.constName));

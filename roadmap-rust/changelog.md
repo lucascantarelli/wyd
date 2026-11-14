@@ -1,6 +1,28 @@
 # Changelog de issues concluídas
 
 > Issues que cumpriram os critérios de aceite foram removidas de `roadmap-rust/issues/` e registradas aqui. O histórico completo continua no git (arquivos removidos) e o painel vivo é `docs/rust/03-progresso.md`.
+>
+> **Reauditoria de 2026-11-14:** o registro abaixo é histórico. Vinte issues perderam o ✅ no painel
+> por não terem teste que o runner execute e que falhe se o comportamento quebrar: `CLIENT-04`,
+> `DEVOPS-01`, `DEVOPS-04`, `DEVOPS-05`, `DEVOPS-09`, `DEVOPS-11`, `DEVOPS-13`, `PROC-02`,
+> `PROC-05`, `PROC-10`, `PROC-11`, `PROC-12`, `PROC-14`, `PROC-18`, `PROC-19`, `PROC-20`,
+> `PROC-22`, `QA-07`, `QA-08` e `WEB-04` estão agora em 🟢 no painel, com o motivo na linha e o
+> inventário completo em [`../docs/rust/evidencias/auditoria-status-honestidade-2026-11-14.md`](../docs/rust/evidencias/auditoria-status-honestidade-2026-11-14.md).
+
+## AUD-02 — Direção do `_MSG_CreateItem` (0x026E) no catálogo
+
+- **ID:** `AUD-02`
+- **Concluída em:** 2026-11-14
+- **Resumo:** o catálogo congelado declarava `Opcode::CreateItem => &[Flow::Client2Game]`, repetindo o `FLAG_CLIENT2GAME` do `Basedef.h`, enquanto o dispatcher de recebimento do 7662 compara `0x026e` (`0x495dc5 cmp edx,0x26e` → `call 0x486c25`) — a mensagem é **S→C**. A entrada passou a `Flow::Game2Client` com o **valor de fio intacto** (`0x026e`, porque o cliente casa o `Type` inteiro, não o bit de direção); o catálogo `docs/arquitetura/protocolo.md` §4 passou a dizer `J→C` e o gerador congelado recebeu `DIRECTION_OVERRIDES` para não reintroduzir o erro numa regeneração.
+- **Prova:** `crates/wyd-protocol/src/lib.rs::tests::create_item_e_recebido_pelo_cliente_com_o_mesmo_valor_de_fio` (valor de fio + direção + nome). Mutação: voltar a tabela para `Flow::Client2Game` deixa o teste **vermelho** (`assertion left == right failed: left: [Client2Game] / right: [Game2Client]`, `lib.rs:127`); restaurado, `cargo test -p wyd-protocol` → 45 lib + 10 golden + 4 integração verdes. Achado `DIV-02` do `docs/audit/15` marcado como corrigido; evidência em `docs/rust/evidencias/AUD-02-createitem-2026-11-14.md`.
+- **Resíduo:** o layout de 30 B do `CreateItem` continua sem round-trip no fio — emissão e handler ficam com `GAME-11`, e a captura ao vivo segue em `CLIENT-06`.
+
+## AUD-18 — Regra de gema duplicada entre `wyd-core` e `wyd-sim`
+
+- **ID:** `AUD-18`
+- **Concluída em:** 2026-11-14
+- **Resumo:** a política da gema (quais itens são gema, piso de +10 do Anct, valor por refino) existia duas vezes: em `crates/wyd-sim/src/formula/refine.rs` e em `crates/wyd-core/src/ecs/components.rs` (`plan_gem`, `gem_value`, `gem_effect_code`). Agora ela mora **só** em `wyd-sim` e o core consome essa crate (ADR-0029, aresta estreita de funções puras); `plan_gem` ficou só com a validação sem escrita, a transação no inventário, o evento `GemEffectChanged` e a tradução `GemError → CoreError`. `GemEffect::state_code`/`from_state_code` fecham o contrato numérico com os `GEM_EFFECT_*` do estado do item, com teste dos dois lados.
+- **Prova:** mutar o ponto único (`gem_effect_value`, `GEM_PER_LEVEL * steps` → `+ 1`) deixou **vermelhos** `cargo test -p wyd-sim --test golden_formulas ancient_gets_base_value_below_ten` (`value: 41` × `40`) **e** `cargo test -p wyd-core --test integracao_gem anct_e_estritamente_melhor_que_comum_no_efeito_da_gema` (`(2, 41, 10)` × `(2, 40, 10)`); restaurado, `golden_formulas` 6/6 e `integracao_gem` 6/6 verdes, com `golden_gema_seed` 4/4. O caso nasceu da mutação 5 da auditoria de status (`docs/rust/evidencias/auditoria-status-honestidade-2026-11-14.md`), onde mutar a cópia de `wyd-sim` **não** derrubava o teste do core.
 
 ## DEVOPS-10 — Versionamento de release e notas rastreáveis
 

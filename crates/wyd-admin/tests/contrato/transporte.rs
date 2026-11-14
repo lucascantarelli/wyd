@@ -77,6 +77,20 @@ impl Accounts for FakeAccounts {
         };
         async move { Ok(account) }
     }
+
+    fn set_credentials(
+        &self,
+        login: &str,
+        _password_hash: &str,
+        role: Role,
+    ) -> impl Future<Output = Result<Account, DbError>> + Send {
+        let account = Account {
+            id: 99,
+            login: login.to_string(),
+            role,
+        };
+        async move { Ok(account) }
+    }
 }
 
 struct FakeCharacters {
@@ -472,7 +486,7 @@ fn moderator_cannot_create_staff() {
             "POST",
             "/admin/v1/accounts/create",
             Some("staff"),
-            r#"{"login":"novo","role":"admin"}"#,
+            r#"{"login":"novo","password":"senha123","role":"admin"}"#,
         ),
     );
     assert_eq!(status, 200);
@@ -483,7 +497,7 @@ fn moderator_cannot_create_staff() {
             "POST",
             "/admin/v1/accounts/create",
             Some("admin"),
-            r#"{"login":"novo","role":"player"}"#,
+            r#"{"login":"novo","password":"senha123","role":"player"}"#,
         ),
     );
     assert_eq!(result_of(&ok_body), 1);

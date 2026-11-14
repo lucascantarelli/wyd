@@ -1,9 +1,10 @@
 //! Estado da criatura em SoA — dado, não regra.
 //!
 //! `NpcMode` e a tabela de ameaça são a **cópia presa por golden** da matemática de
-//! `crates/wyd-sim/src/formula/threat.rs` (D-IA02): o DAG proíbe `wyd-core → wyd-sim`, e a
-//! unificação exige contrato em `wyd-protocol` (dívida da GAME-19, ADR-0011). O golden de
-//! decisão (`tests/npc.rs`) impede que as duas cópias divirjam em silêncio.
+//! `crates/wyd-sim/src/formula/threat.rs` (D-IA02). Desde a ADR-0029 o core **pode** consumir
+//! funções puras de `wyd-sim` (é assim que a gema tem regra única), mas a ameaça ainda não foi
+//! migrada — a unificação dela segue na GAME-19/ADR-0011. O golden de decisão (`tests/npc.rs`)
+//! impede que as duas cópias divirjam em silêncio enquanto isso.
 //!
 //! Nada aqui consulta banco, relógio de parede ou `HashMap`: o estado é `Copy`, indexado por
 //! `Entity.index` e salvo no snapshot do mundo.

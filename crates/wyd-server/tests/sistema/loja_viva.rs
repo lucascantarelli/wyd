@@ -68,18 +68,25 @@ fn mercador_de_armia_abre_catalogo_e_entrega_item_comprado() {
         .expect("criação + entrada no mundo");
 
     let cena = bot.read_scene(1_500).expect("cena");
+    // Legado (`_MSG_REQShopList.cpp:50-56`): loja é `Merchant` 1 (comum) ou 19 (skills). Os
+    // demais valores — monstro com `Carry` de drop (16/64), guarda/quest (36/100/110/120) —
+    // não respondem `_MSG_ShopList`.
     let mercadores: Vec<_> = cena
         .iter()
-        .filter(|mob| mob.merchant != 0 && mob.name != NOME)
+        .filter(|mob| matches!(mob.merchant, 1 | 19) && mob.name != NOME)
         .collect();
     assert!(
         !mercadores.is_empty(),
-        "nenhum mercador na cena de Armia: {:?}",
+        "nenhum mercador (merchant 1/19) na cena de Armia: {:?}",
         cena.iter()
             .map(|mob| (mob.name.clone(), mob.merchant))
             .collect::<Vec<_>>()
     );
-    eprintln!("PASS(cena): {} mercadores em Armia", mercadores.len());
+    eprintln!(
+        "PASS(cena): {} mercadores com Merchant 1/19 em Armia (de {} NPCs com merchant != 0)",
+        mercadores.len(),
+        cena.iter().filter(|mob| mob.merchant != 0).count()
+    );
 
     let mut comprado = None;
     for mercador in mercadores.iter().take(16) {
@@ -130,4 +137,112 @@ fn mercador_de_armia_abre_catalogo_e_entrega_item_comprado() {
         "compra com preço divergente não pode entregar item"
     );
     eprintln!("PASS(preco): compra com Coin fora do catálogo foi recusada");
+
+    // Compra **com preço**: `Runas_Joias` (npc 3751) tem na posição 7 da lista um item de
+    // **25 500** de catálogo (o preço que o servidor devolve no `_MSG_ShopList`). O `Coin` do
+    // pacote tem de ser exatamente esse; o ouro do personagem cai o mesmo valor e o item entra
+    // na mochila — as duas autoridades são medidas no banco.
+    const NPC_JOIAS: &str = "Runas_Joias";
+    const POS_JADE: i16 = 7;
+    const PRECO_JADE: i32 = 25_500;
+    let joias = mercadores
+        .iter()
+        .find(|mob| mob.name == NPC_JOIAS)
+        .unwrap_or_else(|| panic!("mercador {NPC_JOIAS} fora da cena"));
+    let ouro_antes = rt
+        .block_on(backend.list_by_account(conta.id))
+        .expect("roster")
+        .into_iter()
+        .find(|personagem| personagem.slot == 0)
+        .expect("personagem do bot")
+        .gold;
+    bot.buy(joias.id, POS_JADE, PRECO_JADE)
+        .expect("_MSG_Buy com preço");
+    let pago = bot
+        .read_send_item(1_200)
+        .expect("send item pago")
+        .expect("compra com preço tem de entregar item");
+    let ouro_depois = rt
+        .block_on(backend.list_by_account(conta.id))
+        .expect("roster")
+        .into_iter()
+        .find(|personagem| personagem.slot == 0)
+        .expect("personagem do bot")
+        .gold;
+    assert_eq!(
+        ouro_depois,
+        ouro_antes - i64::from(PRECO_JADE),
+        "ouro tem de cair {PRECO_JADE} (antes {ouro_antes}, depois {ouro_depois})"
+    );
+    eprintln!(
+        "PASS(compra paga): {NPC_JOIAS} entregou item {} (invType {}) na mochila; ouro {ouro_antes} -> {ouro_depois}",
+        i16::from_le_bytes([pago.2[0], pago.2[1]]),
+        pago.0
+    );
+
+    // `Unicornio Puro` (npc_definition 2891, `Merchant` 110 no template do dump): o clique é
+    // comerciante, mas o estoque importado é **vazio** — `npc_shop_item` não tem nenhuma linha
+    // para 2891 (o seed 0020 insere 6 706 posições e nenhuma é dele). O servidor responde
+    // `_MSG_ShopList` com zero itens; nada é inventado aqui. É a diferença entre "clique
+    // quebrado" e "loja sem estoque no dado de origem".
+    const NPC_UNICORNIO: &str = "Unicornio Puro";
+    let unicornio = cena
+        .iter()
+        .find(|mob| mob.name == NPC_UNICORNIO)
+        .unwrap_or_else(|| panic!("{NPC_UNICORNIO} fora da cena de Armia"));
+    let catalogo_unico = bot
+        .open_shop(unicornio.id)
+        .expect("_MSG_ShopList do Unicornio Puro");
+    eprintln!(
+        "PASS(unicornio): clique respondeu _MSG_ShopList em {NPC_UNICORNIO} (mob {}): {} itens",
+        unicornio.id,
+        catalogo_unico.len()
+    );
+    assert!(
+        catalogo_unico.is_empty(),
+        "estoque do Unicornio Puro deveria vir vazio do seed: {:?}",
+        catalogo_unico.first()
+    );
+    // Compra na posição 0 não pode entregar item: o NPC não é loja no legado nem tem estoque.
+    bot.buy(unicornio.id, 0, 0)
+        .expect("_MSG_Buy no Unicornio Puro");
+    assert!(
+        bot.read_send_item(800)
+            .expect("send item do Unicornio Puro")
+            .is_none(),
+        "loja sem estoque não pode entregar item"
+    );
+    eprintln!(
+        "PASS(unicornio): {NPC_UNICORNIO} (Merchant 110) não abriu loja e recusou a compra — \
+         `reason=not_shop_merchant` no log do canal"
+    );
+
+    // Mesma regra para monstro com `Carry` de drop (Merchant 16/64): o inventário do bicho não
+    // é catálogo de loja. Se houver um na cena, ele tem de ser recusado também.
+    if let Some(bicho) = cena
+        .iter()
+        .find(|mob| !matches!(mob.merchant, 0 | 1 | 19) && mob.name != NOME)
+    {
+        let itens = bot.open_shop(bicho.id).expect("loja do NPC não-mercador");
+        assert!(
+            itens.is_empty(),
+            "{} (Merchant {}) não é loja: {:?}",
+            bicho.name,
+            bicho.merchant,
+            itens.first()
+        );
+        bot.buy(bicho.id, 0, 0)
+            .expect("_MSG_Buy no NPC não-mercador");
+        assert!(
+            bot.read_send_item(800)
+                .expect("send item do NPC não-mercador")
+                .is_none(),
+            "NPC com Merchant {} não pode vender",
+            bicho.merchant
+        );
+        eprintln!(
+            "PASS(nao-loja): {} (Merchant {}) não abriu lista nem vendeu",
+            bicho.name, bicho.merchant
+        );
+    }
 }

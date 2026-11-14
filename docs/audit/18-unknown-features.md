@@ -2,6 +2,9 @@
 
 > Cada item tem **pergunta**, **por que está desconhecido**, **como resolver**, **custo** e
 > **impacto**. Nenhum destes pode virar regra de código antes de fechado (`AGENTS.md` §2.4).
+>
+> **Dono no roadmap (2026-11-14):** `AUD-19` cobre os 37 itens, agrupados por método de fechamento
+> e fase; nenhum fica sem issue.
 
 ## 1. Protocolo e cliente
 

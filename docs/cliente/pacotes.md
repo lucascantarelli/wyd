@@ -94,8 +94,12 @@ frame; `STRUCT_ITEM` = 8 B (`short sIndex` + `stEffect[3]`, cada efeito 2 B):
 O roteador de recebimento (`0x495d..`) é uma cadeia de `cmp <Type>,imm` + `call <handler>`: só
 entra ali o que **chega** do servidor. `GetItem` não está nessa cadeia — ele é montado no cliente e
 entregue a `SendPacket`. Consequência para o nosso lado: a entrada `CreateItem` de
-`crates/wyd-protocol/src/wire/generated/opcode_table.rs` está como `Flow::Client2Game`, o oposto do
-binário; corrigir tabela congelada é rito próprio e **não** foi feito nesta entrega.
+`crates/wyd-protocol/src/wire/generated/opcode_table.rs` **estava** como `Flow::Client2Game`, o
+oposto do binário. Corrigido em 2026-11-14 (`AUD-02`): a tabela congelada declara
+`Flow::Game2Client`, o valor de fio continua `0x026e` (o cliente casa o `Type` inteiro, não só o
+bit) e o teste `create_item_e_recebido_pelo_cliente_com_o_mesmo_valor_de_fio` prende as duas
+coisas. O gerador congelado recebeu a mesma correção em `DIRECTION_OVERRIDES`, para que uma
+generação futura não reintroduza a direção do `Basedef.h`.
 
 ### `_MSG_CreateItem` (0x026E, S→C) — 30 B, **packed**
 
@@ -192,6 +196,42 @@ Só `Size` inválido ou falha de I/O encerram a conexão. Os 12 bytes de senha d
 soft-delete: senha errada responde `DeleteCharacterFail` + `MessagePanel` e não apaga nada;
 no sucesso o log grava `password_checked=true`.
 
+### Limite de 12 bytes da senha (2026-11-14)
+
+O campo `account_password` do `_MSG_AccountLogin` tem **12 bytes** (`wire_payload` em
+`crates/wyd-protocol/src/payload/auth.rs`): é o máximo que o cliente consegue enviar. O limite
+vale para toda senha de jogo e é validado, não truncado:
+
+| Borda | Regra | Prova |
+|---|---|---|
+| Gateway → jogo (`service::pin::change_pin`) | senha acima de 12 bytes devolve `PinError::PasswordTooLong` **antes** de abrir a conexão; 12 bytes exatos passam | `senha_maior_que_doze_bytes_e_recusada_antes_da_conexao`, `senha_de_doze_bytes_passa_da_validacao` |
+| Portal (`POST /api/panel/pin`) | conta **bytes UTF-8**, não caracteres; 7 acentos (14 B) é **413** com texto próprio (422 continua sendo “PIN não confere”) | `route.test.ts` (senha >12 B, 7 acentos, 12 B intactos) |
+| Formulário (`pin-form.tsx`) | recusa antes do fetch e mostra o texto devolvido pela rota | teste de componente |
+| Portal, **criar conta** (`/contas`) | jogador: 8..=12 bytes medidos antes do gateway, que revalida e responde 422 sem gravar; staff: só o mínimo de 8 (nunca digita senha no cliente) | `senha_do_jogo_cabe_em_doze_bytes`, `teto_de_doze_bytes_vale_so_para_jogador`, `tests/unidade/lib/senha.test.ts` |
+
+Truncar em silêncio era o bug: o `AccountLogin` saía com uma senha diferente da digitada e a
+recusa aparecia como "PIN atual inválido". O `AccountLogin` do cliente continua sendo a fonte
+do limite; senha de **staff** do portal não passa pelo fio do jogo e não tem esse teto.
+
+### Nível e atributos de outro jogador sem relogin (2026-11-14)
+
+O `_MSG_CreateMob` era emitido só na entrada: quem subia de nível ou gastava ponto de atributo
+continuava aparecendo com o estado do login para os outros jogadores. O mundo agora guarda uma
+`revision` por entidade e a sessão reemite o `CreateMob` de quem mudou:
+
+| Peça | Regra |
+|---|---|
+| `world::ActorRefresh::from_score` | lê o `STRUCT_SCORE` **já gravado**; `Score.Level` do fio é 0-based (banco − 1), o mundo recebe o nível do banco |
+| `Engine::refresh_actor` | aplica nível/HP/MP no armazém e MP/atributos na aparência (ataque/defesa ficam como no login), sobe a `revision`; `false` se a entidade não está no mundo |
+| `plan_scene` | entidade cuja `revision` difere do que a sessão já emitiu entra em `refresh` |
+| `refresh_scene` | emite `RemoveMob` (`RemoveType` 0) + `CreateMob` com os dados novos — o cliente recusa `MobID` repetido; o teto de varredura conta os dois pacotes |
+| Quem dispara | abate com level up (`gain_exp`), `_MSG_ApplyBonus` e recompensa de `_MSG_Quest` |
+| O próprio jogador | **não** é reemitido (o `UpdateScore`/`UpdateEtc` do dono já cobre); a versão é só registrada para não repetir |
+
+Prova: `world::tests::level_up_e_atributo_atualizam_a_cena_e_pedem_reenvio` (banco nível 10 → 11,
+HP/MP máximos, força 9 e `refresh` com o id certo) e o caso de `plan_scene` que não reenvia nada
+quando a versão é igual.
+
 ## Regras
 
 1. Golden gerado nunca vira prova de comportamento do cliente — só de codec.
@@ -200,7 +240,8 @@ no sucesso o log grava `password_checked=true`.
 expectativa a confirmar, não o contrato).
 5. `0x0364`/`0x0165` têm layout **documentado** (não capturado): `MSG_CreateMob` = `_MSG` (12 B)
    + `PosX/PosY`+12, `MobID`+16, `MobName[16]`+18, `Equip[16]`+34, `Affect[32]`+66,
-   `Guild`+130, `GuildMemberType`+132, `Unknow[3]`+133, `STRUCT_SCORE`+136, `CreateType`+184,
+   `Guild`+130, `GuildMemberType`+132, `Unknow[3]`+133, `STRUCT_SCORE`+136 (no jogador leva
+   `Mp`/`MaxMp` reais e FOR/INT/DES/CON do login; NPC sai 0/0), `CreateType`+184,
    `AnctCode[16]`+186, `Tab[26]`+202, `Hold`+228 (232 B), `HEADER.ID = ESCENE_FIELD` (30000);
    `MSG_RemoveMob` = `_MSG` + `RemoveType`+12 (16 B), `HEADER.ID` = id da criatura
    (`RemoveType` 0 = fora de vista, 1 = morte, 2 = logout). Fonte: `Basedef.h` e o porte Go do

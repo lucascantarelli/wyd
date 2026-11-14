@@ -171,6 +171,18 @@ describe("PinForm da tela de conta", () => {
     );
   });
 
+  it("senha acima de 12 bytes para no formulário, sem chamar a rota", async () => {
+    render(<PinForm login="jogador" defined={true} />);
+
+    // 7 caracteres cabem no `maxLength={12}`, mas 14 bytes UTF-8 não cabem no campo
+    // de 12 bytes do cliente: o guard do formulário é por bytes, não por caracteres.
+    await preencher({ senha: "á".repeat(7), atual: "1357", novo: "8642", confirmacao: "8642" });
+    await enviar();
+
+    expect(await screen.findByText(TEXTO.pin.senhaLonga)).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("mostra sessão expirada quando a rota responde 401", async () => {
     fetchMock.mockResolvedValue(resposta(401, { error: "sessão expirada" }));
     render(<PinForm login="jogador" defined={true} />);

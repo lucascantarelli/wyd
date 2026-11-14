@@ -137,6 +137,13 @@ impl Engine {
             Command::SyncNpcs { specs, reply } => {
                 let _ = reply.send(self.sync_npcs(specs));
             }
+            Command::RefreshActor {
+                entity,
+                refresh,
+                reply,
+            } => {
+                let _ = reply.send(self.refresh_actor(entity, refresh));
+            }
             Command::Attack {
                 attacker,
                 x,

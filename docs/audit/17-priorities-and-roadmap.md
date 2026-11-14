@@ -4,6 +4,11 @@
 > `roadmap-rust/index.md`: ele organiza *trabalho* em 27 issues; aqui a ordem é por **paridade**.
 > Nada desta página foi executado.
 
+> **Aberto em 2026-11-14:** as entregas 0.2–4.4 foram mapeadas para as issues `AUD-01`…`AUD-17`
+> (e para as issues existentes quando já havia uma), no índice
+> `roadmap-rust/index.md` §“Roadmap de paridade”. O item 4.5 continua decisão pós-paridade, sem
+> issue. Execução medida: `docs/rust/evidencias/auditoria-roadmap-2026-11-14.md`.
+
 ## 1. Critérios
 
 | Critério | Peso |
@@ -71,7 +76,7 @@
 | 4.2 | Modo de vídeo/resolução correta | — | S | baixo | 1024×768 sem distorção |
 | 4.3 | Conversor de malha/arma | 0.3 | XL | alto | arma nova renderiza |
 | 4.4 | Editor de mapa (licença clara) | 4.3 | XL | alto | campo novo jogável |
-| 4.5 | Cliente independente | 4.3 | XL | muito alto | decisão após paridade |
+| 4.5 | Cliente independente | 4.3 | XL | muito alto | decisão após paridade — dono: `AUD-22` |
 
 ## 7. Separação exigida pelo prompt (§14.3)
 

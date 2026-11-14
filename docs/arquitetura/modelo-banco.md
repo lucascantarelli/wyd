@@ -41,7 +41,7 @@ audit_log (append-only, sem FK para nunca bloquear escrita)
 | Tabela | PK | FKs | CHECKs | Índices quentes |
 |---|---|---|---|---|
 | `accounts` | `id` | — | `role IN ('player','moderator','admin')`, `login` não-vazio | `UNIQUE(login)` |
-| `characters` | `id` | `account_id → accounts` ON DELETE CASCADE | `slot 0–3`, `level ≥ 1`, `exp ≥ 0`, `hp ≥ 0`, `name` não-vazio | `UNIQUE(account_id, slot) WHERE deleted_at IS NULL`, `UNIQUE(name)`, `idx(account_id)` |
+| `characters` | `id` | `account_id → accounts` ON DELETE CASCADE | `slot 0–3`, `level ≥ 1`, `exp ≥ 0`, `hp ≥ 0`, `name` não-vazio | `UNIQUE(account_id, slot) WHERE deleted_at IS NULL`, `UNIQUE(name) WHERE deleted_at IS NULL`, `idx(account_id)` |
 | `character_items` | `(character_id, slot)` | `character_id → characters` ON DELETE CASCADE | `slot 0–127`, `qty ≥ 1` | `idx(character_id)` (= PK) |
 | `vault_items` | `(account_id, slot)` | `account_id → accounts` ON DELETE CASCADE | `slot 0–127`, `qty ≥ 1` | `idx(account_id)` (= PK) |
 | `character_short_skill` | `character_id` | `character_id → characters` CASCADE | `octet_length(short_skill) = 16` | `idx(character_id)` (= PK) |
@@ -67,7 +67,12 @@ over-engineering nesta escala; CHECK documenta o domínio).
 ## 3. Decisões
 
 1. **Soft-delete de personagem** (`deleted_at`): nome e slot liberados via
-   índice parcial — recriação sem violar unicidade, histórico preservado.
+   índice parcial — recriação sem violar unicidade, histórico preservado. É por isso que a
+   tabela guarda várias linhas com o mesmo nome e só uma viva (ver
+   `docs/rust/evidencias/personagens-soft-delete-2026-11-14.md`). Consequência para o Arch:
+   Mortal + Arch são duas linhas com o mesmo nome (`docs/wyd/classes.md` §4), cada uma ocupando
+   um dos quatro slots, e `UNIQUE(name)` entre linhas vivas ainda impede as duas ao mesmo tempo
+   — decisão de produto pendente, não regra implementada.
 2. **Inventário normalizado, não blob**: `character_items`/`vault_items` com
    PK composta permitem conferência item-a-item no boot (anti-dupe) sem ler
    binário opaco. Efeitos de item continuam catálogo (FASE-10/economia).

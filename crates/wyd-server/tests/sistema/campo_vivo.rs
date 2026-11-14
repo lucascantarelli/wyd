@@ -18,8 +18,9 @@ const SENHA: &str = "qa12345678";
 const CONTA: &str = "qacampo01";
 const NOME: &str = "QACAMPO01";
 const QUEST: &str = "campo_de_treinamento";
-/// `MobID` não: a âncora é a coordenada do seed `0046` do Primeiro Treinador.
-const TREINADOR: (i32, i32) = (2077, 2017);
+/// `MobID` não: a âncora é a coordenada do treinador **herdado** do dump, que agora carrega o
+/// `merchant` 36 da etapa 1 (a cópia `campo-treinador-1` do seed 0046 saiu na 0051).
+const TREINADOR: (i32, i32) = (2080, 2018);
 /// Chave da primeira porta (`ItemDropList.txt` do `GremlinDecoy`) e kit pago na etapa 1.
 const CHAVE_451: i64 = 451;
 const QUEST_HEAL_KIT: i64 = 682;
@@ -86,8 +87,51 @@ fn personagem_novo_entra_e_aceita_a_quest_do_campo() {
         let sobra = cena.iter().filter(|mob| mob.x == x && mob.y == y).count();
         assert_eq!(sobra, 0, "fixture removida ainda na cena em ({x},{y})");
     }
-    let treinador = cena
-        .iter()
+    // Sem duplicatas do Campo (0051): o dump já traz o NPC certo e o seed 0046 não repete.
+    for nome in ["Unicorn", "Cabuncle Wind"] {
+        assert_eq!(
+            cena.iter().filter(|mob| mob.name == nome).count(),
+            0,
+            "cópia removida continua na cena: {nome}"
+        );
+    }
+    // O treinador (2080,2018) está a 78 tiles do ponto de save, fora do raio de 56 da cena por
+    // proximidade. Anda-se em passos curtos **lendo a cena a cada passo**: o `CreateMob` do NPC
+    // entra no meio da caminhada e um `read_scene` só no fim não veria o que já foi consumido.
+    let (mut x, mut y) = INICIO;
+    while (x, y) != (TREINADOR.0, TREINADOR.1 + 1) {
+        let proximo = (
+            x + (TREINADOR.0 - x).clamp(-3, 3),
+            y + (TREINADOR.1 + 1 - y).clamp(-3, 3),
+        );
+        bot.action_at((x, y), proximo)
+            .expect("passo até o treinador");
+        std::thread::sleep(std::time::Duration::from_millis(700));
+        cena.extend(bot.read_scene(300).expect("cena do passo"));
+        (x, y) = proximo;
+    }
+    cena.extend(bot.read_scene(1500).expect("cena do treinador"));
+    // Acumula por `MobID`: a cena por proximidade só envia o que entra/sai, e um NPC que já
+    // estava na vista antes da caminhada não é reenviado.
+    let vistos: std::collections::BTreeMap<u16, wyd_bots::SceneMob> =
+        cena.iter().cloned().map(|mob| (mob.id, mob)).collect();
+    // Nomes ≤ 15 bytes: `MobName` é `char[16]` sem espaço para o `NUL` extra.
+    // O Segundo Treinador fica em (2142,1990), 62 tiles a nordeste, fora do raio de 56.
+    for nome in [
+        "Chefe de Treino",
+        "Unicornio Puro",
+        "Ajudante",
+        "Prim. Treinador",
+        "Terc. Treinador",
+    ] {
+        assert_eq!(
+            vistos.values().filter(|mob| mob.name == nome).count(),
+            1,
+            "NPC herdado deve aparecer uma vez só: {nome}"
+        );
+    }
+    let treinador = vistos
+        .values()
         .filter(|mob| mob.x == TREINADOR.0 && mob.y == TREINADOR.1)
         .collect::<Vec<_>>();
     assert_eq!(
@@ -138,15 +182,25 @@ fn personagem_novo_entra_e_aceita_a_quest_do_campo() {
     // entrega o loot no inventário — nada é escrito à mão no banco.
     // O ataque valida a distância **do personagem** (2 tiles): o primeiro objetivo exige
     // andar até o guarda. Cada passo é um `_MSG_Action` validado no tick.
-    let guarda = cena
-        .iter()
+    let guarda = vistos
+        .values()
         .find(|mob| mob.name == "Gremlin Decoy")
         .expect("GremlinDecoy na cena");
     let perto_do_guarda = (guarda.x, guarda.y + 1);
-    bot.walk_to(INICIO, perto_do_guarda)
+    bot.walk_to((TREINADOR.0, TREINADOR.1 + 1), perto_do_guarda)
         .expect("caminhada até o guarda");
-    bot.kill_at(guarda.id, guarda.x, guarda.y)
-        .expect("abate do GremlinDecoy");
+    // O GremlinDecoy do dump tem 600 de HP e AC 40; com a `BASE_GetDamage` do legado
+    // (`dam - ac/2 = -15` → escada de pisos) cada golpe de nível 1 tira **5**. São 120 golpes:
+    // o `kill_at` do bot gasta ~5 s por tentativa (retorno do `_MSG_AttackOne`), então o ataque é
+    // ritmado aqui no cooldown do servidor (800 ms) em vez da janela de 20 s.
+    const GOLPES: usize = 140;
+    for golpe in 0..GOLPES {
+        bot.attack_at(guarda.x, guarda.y).expect("golpe no guarda");
+        if golpe + 1 == GOLPES {
+            break;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(900));
+    }
     eprintln!(
         "PASS(passo 1): GremlinDecoy abatido em ({},{})",
         guarda.x, guarda.y
@@ -163,8 +217,18 @@ fn personagem_novo_entra_e_aceita_a_quest_do_campo() {
     // Anda até o Primeiro Treinador (alcance de conversa) e entrega pelo `_MSG_Quest`.
     bot.walk_to(perto_do_guarda, (TREINADOR.0, TREINADOR.1 + 1))
         .expect("caminhada até o treinador");
+    // Os `MobID` da cena são reciclados quando uma criatura sai (o guarda abatido libera o
+    // índice e o respawn reaproveita): o id lido antes da caminhada pode já ser do decoy que
+    // voltou. O alvo da entrega é resolvido de novo **pela coordenada** na cena acumulada.
+    cena.extend(bot.read_scene(1_500).expect("cena da entrega"));
+    let entrega = cena
+        .iter()
+        .rev()
+        .find(|mob| mob.x == TREINADOR.0 && mob.y == TREINADOR.1 && mob.name.starts_with("Prim."))
+        .cloned()
+        .expect("Primeiro Treinador na cena da entrega");
     let painel = bot
-        .quest(i32::from(treinador.id))
+        .quest(i32::from(entrega.id))
         .expect("entrega da chave 451");
     assert!(
         painel.contains("etapa 1/4"),

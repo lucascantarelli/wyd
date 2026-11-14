@@ -117,6 +117,16 @@ mod tests {
         assert!(Opcode::DBAccountLogin.flows().contains(&Flow::Game2Db));
         assert!(Opcode::ExpMsgPanel.flows().is_empty());
     }
+
+    /// DIV-02/AUD-02: o `Basedef.h` marca `CreateItem` como C→S, mas o dispatcher de recebimento
+    /// do 7662 compara `0x026e` (`0x495dc5 cmp edx,0x26e` → `call 0x486c25`). A direção é S→C e o
+    /// **valor de fio não muda** — o cliente casa o `Type` congelado, não o bit de direção.
+    #[test]
+    fn create_item_e_recebido_pelo_cliente_com_o_mesmo_valor_de_fio() {
+        assert_eq!(Opcode::CreateItem.wire(), 0x026e);
+        assert_eq!(Opcode::CreateItem.flows(), &[Flow::Game2Client]);
+        assert_eq!(Opcode::CreateItem.const_name(), "_MSG_CreateItem");
+    }
 }
 
 /// Códigos de motivo dos pacotes de recusa (`*Fail`), no trailer opcional de 1 byte.

@@ -241,6 +241,14 @@ fn cena_entrega_create_mob_do_snapshot_e_o_npc_responde_ao_dialogo() {
                         mob.create_type, 2,
                         "o próprio jogador entra com CreateType 2 (acabou de entrar)"
                     );
+                    // O `CreateMob` do jogador leva MP real, como o `CNF`/`UpdateScore`:
+                    // antes saía 0/0 e o cliente desenhava a barra zerada na cena.
+                    assert!(
+                        mob.max_mp > 0 && mob.mp > 0,
+                        "CreateMob do jogador com MP zerado (mp={} max_mp={})",
+                        mob.mp,
+                        mob.max_mp
+                    );
                 } else {
                     assert_eq!(
                         mob.create_type, 0,

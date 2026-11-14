@@ -80,7 +80,7 @@
 | `_MSG_DeleteCharacter` | 0x0211 | C→J |
 | `_MSG_CharacterLogin` | 0x0213 | C→J |
 | `_MSG_CharacterLogout` | 0x0215 | C→J |
-| `_MSG_CreateItem` | 0x026E | C→J |
+| `_MSG_CreateItem` | 0x026E | J→C |
 | `_MSG_GetItem` | 0x0270 | C→J |
 | `_MSG_DropItem` | 0x0272 | C→J |
 | `_MSG_ApplyBonus` | 0x0277 | C→J |

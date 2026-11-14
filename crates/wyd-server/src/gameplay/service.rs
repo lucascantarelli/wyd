@@ -1160,3 +1160,202 @@ pub fn add_item(items: &mut Vec<ItemRow>, item_index: i32, qty: i32) -> Option<i
     }
     ultimo
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use wyd_db::{ConfigRateRow, DropConfigRow};
+
+    fn taxa(domain: &str, key: &str, value: i64) -> ConfigRateRow {
+        ConfigRateRow {
+            domain: domain.to_string(),
+            key: key.to_string(),
+            value,
+            unit: "bps".to_string(),
+            source: "teste".to_string(),
+            overridden: false,
+        }
+    }
+
+    /// Snapshot mínimo válido (o mesmo que `config::service` exige) com as taxas pedidas.
+    fn gameplay(
+        sanc_po: i64,
+        drops: Vec<DropConfigRow>,
+        multiplicador_exp: Option<u32>,
+    ) -> Gameplay {
+        let mut rates: Vec<ConfigRateRow> = (1..=15)
+            .map(|passo| taxa("refine", &passo.to_string(), 1_000))
+            .collect();
+        rates.push(taxa("sanc", "PO:1", sanc_po));
+        rates.push(taxa("combine", "Odin.PLUS12_BASE", 7));
+        if let Some(bps) = multiplicador_exp {
+            rates.push(taxa("multiplier", "exp", i64::from(bps)));
+        }
+        let config = GameConfig::from_rows(1, &rates, vec![], drops, vec![], vec![])
+            .expect("snapshot mínimo válido");
+        Gameplay::new(Arc::new(LiveConfig::new(config)))
+    }
+
+    fn pedido(level: u8, roll: u8) -> RefineRequest {
+        RefineRequest {
+            item_index: 1,
+            level,
+            powder: Powder::Ori,
+            sealed: false,
+            pity: 0,
+            roll,
+            pity_roll: 0,
+        }
+    }
+
+    #[test]
+    fn exp_reward_usa_o_multiplicador_e_nao_mexe_em_base_invalida() {
+        let neutro = gameplay(100, vec![], None);
+        assert_eq!(neutro.exp_reward(0), 0);
+        assert_eq!(neutro.exp_reward(-5), -5);
+        assert_eq!(neutro.exp_reward(100), 100);
+        let dobrado = gameplay(100, vec![], Some(20_000));
+        assert_eq!(dobrado.exp_reward(100), 200);
+        assert_eq!(dobrado.revision(), 1);
+    }
+
+    #[test]
+    fn refino_sobe_no_sucesso_e_mantem_o_item_na_falha() {
+        let sucesso = gameplay(100, vec![], None);
+        let resultado = sucesso.refine(&pedido(0, 0)).expect("refino válido");
+        assert!(resultado.success, "célula 100% com roll 0 tem de passar");
+        assert_eq!((resultado.from_level, resultado.to_level), (0, 1));
+        assert_eq!(resultado.failure, None);
+        assert_eq!(resultado.next_pity, 0);
+        assert!(resultado.rate_bps > 0);
+
+        let falha = gameplay(0, vec![], None);
+        let resultado = falha.refine(&pedido(0, 0)).expect("refino válido");
+        assert!(!resultado.success, "taxa zero nunca passa, nem com roll 0");
+        assert_eq!((resultado.from_level, resultado.to_level), (0, 0));
+        assert_eq!(resultado.failure, Some(RefineFailure::Kept));
+        assert_eq!(resultado.next_pity, 1, "falha acumula piedade");
+    }
+
+    #[test]
+    fn refino_recusa_nivel_sorteio_e_celula_ausente() {
+        let cfg = gameplay(100, vec![], None);
+        assert_eq!(
+            cfg.refine(&pedido(REFINE_MAX + 1, 0)),
+            Err(RefineError::LevelOutOfRange {
+                level: REFINE_MAX + 1
+            })
+        );
+        assert_eq!(
+            cfg.refine(&pedido(0, 100)),
+            Err(RefineError::RollOutOfRange { roll: 100 })
+        );
+        // Só existe a célula `PO:1`; o nível +1 lê `PO:2`, que o snapshot não tem.
+        assert_eq!(
+            cfg.refine(&pedido(1, 0)),
+            Err(RefineError::MissingRate {
+                powder: Powder::Ori,
+                level: 1
+            })
+        );
+    }
+
+    fn drop_orc() -> DropConfigRow {
+        DropConfigRow {
+            template_name: "Orc".to_string(),
+            item_index: 10,
+            item_name: "Adaga".to_string(),
+            weight: 500_000,
+            min_qty: 1,
+            max_qty: 2,
+            source: "teste".to_string(),
+        }
+    }
+
+    #[test]
+    fn loot_usa_peso_do_snapshot_e_exige_roll_por_item() {
+        let cfg = gameplay(100, vec![drop_orc()], None);
+        let caiu = cfg.loot("Orc", &[(10, 1)], false).expect("tabela válida");
+        assert_eq!(caiu.len(), 1);
+        assert_eq!((caiu[0].item_index, caiu[0].qty), (10, 1));
+
+        let nao_caiu = cfg
+            .loot("Orc", &[(10, 600_000)], false)
+            .expect("tabela válida");
+        assert!(nao_caiu.is_empty(), "roll acima do peso não dropa");
+
+        assert!(matches!(
+            cfg.loot("Orc", &[], false),
+            Err(LootError::MissingRoll { item_index: 10 })
+        ));
+        assert!(matches!(
+            cfg.loot("Elfo", &[], false),
+            Err(LootError::NoTable { .. })
+        ));
+
+        // Morte de monstro: um roll por linha da tabela, do `die` do chamador.
+        let mut die = XorShift64::from_seed(7);
+        let morte = cfg
+            .loot_at_death("Orc", &mut die, false)
+            .expect("morte resolvida");
+        assert_eq!(morte.template, "Orc");
+        assert_eq!(morte.rolls.len(), 1);
+        assert_eq!(morte.rolls[0].0, 10);
+    }
+
+    #[test]
+    fn use_item_recusa_origem_e_destino_invalidos() {
+        let cfg = gameplay(100, vec![], None);
+        let mut itens: Vec<ItemRow> = Vec::new();
+        let rolls = UseItemRolls {
+            roll: 0,
+            pity_roll: 0,
+        };
+        let mut pacote = UseItem {
+            sour_type: ITEM_PLACE_EQUIP,
+            sour_pos: 0,
+            dest_type: ITEM_PLACE_EQUIP,
+            dest_pos: 0,
+            grid_x: 0,
+            grid_y: 0,
+            warp_id: 0,
+        };
+        assert_eq!(
+            cfg.use_item(&mut itens, &pacote, rolls, 0),
+            Err(UseItemError::SourceNotCarry { place: 0 })
+        );
+        pacote.sour_type = ITEM_PLACE_CARRY;
+        pacote.dest_type = 2;
+        assert_eq!(
+            cfg.use_item(&mut itens, &pacote, rolls, 0),
+            Err(UseItemError::DestinationUnsupported { place: 2 })
+        );
+        assert!(itens.is_empty(), "recusa não mexe no inventário");
+    }
+
+    #[test]
+    fn slot_do_fio_vira_slot_persistido_e_powder_do_legado() {
+        assert_eq!(inventory_slot(ITEM_PLACE_EQUIP, 0), Some(0));
+        assert_eq!(inventory_slot(ITEM_PLACE_EQUIP, EQUIP_SLOTS), None);
+        assert_eq!(
+            inventory_slot(ITEM_PLACE_CARRY, 0),
+            Some(i64::from(CARRY_FIRST))
+        );
+        assert_eq!(
+            inventory_slot(ITEM_PLACE_CARRY, CARRY_SLOTS - 1),
+            Some(i64::from(CARRY_FIRST + CARRY_SLOTS - 1))
+        );
+        assert_eq!(inventory_slot(ITEM_PLACE_CARRY, CARRY_SLOTS), None);
+        assert_eq!(inventory_slot(2, 0), None, "cofre não tem sessão");
+
+        assert_eq!(powder_for(ITEM_POWDER_ORI), Some(Powder::Ori));
+        assert_eq!(powder_for(ITEM_POWDER_LAC), Some(Powder::Lac));
+        assert_eq!(powder_for(ITEM_POWDER_AMAGO), Some(Powder::Amago));
+        assert_eq!(powder_for(999), None);
+
+        assert!(is_sealed(1_234));
+        assert!(is_sealed(1_235), "faixa 1234..=1237 é a mesma família");
+        assert!(is_sealed(1_714));
+        assert!(!is_sealed(1_238));
+    }
+}

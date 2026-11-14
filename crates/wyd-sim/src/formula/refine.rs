@@ -483,6 +483,29 @@ impl GemEffect {
         }
     }
 
+    /// Código numérico persistido no item (`GEM_EFFECT_*` do `wyd-core`).
+    #[must_use]
+    pub const fn state_code(self) -> u8 {
+        match self {
+            Self::Drop => 1,
+            Self::Pierce => 2,
+            Self::Exp => 3,
+            Self::Absorb => 4,
+        }
+    }
+
+    /// Efeito a partir do código numérico (`None` fora de 1..=4).
+    #[must_use]
+    pub const fn from_state_code(code: u8) -> Option<Self> {
+        match code {
+            1 => Some(Self::Drop),
+            2 => Some(Self::Pierce),
+            3 => Some(Self::Exp),
+            4 => Some(Self::Absorb),
+            _ => None,
+        }
+    }
+
     /// Traduz o `item_index` da gema no efeito correspondente.
     #[must_use]
     pub const fn from_item(item_index: u32) -> Option<Self> {
@@ -551,6 +574,25 @@ pub fn apply_gem(gem_item: u32, refine: u8, ancient: bool) -> Result<AppliedGem,
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// O código numérico é o contrato com o estado do item no core: 1..=4, ida e volta.
+    #[test]
+    fn state_code_roundtrips_and_matches_the_four_gems() {
+        for (item, effect) in [
+            (GEM_DIAMOND, GemEffect::Drop),
+            (GEM_EMERALD, GemEffect::Pierce),
+            (GEM_CORAL, GemEffect::Exp),
+            (GEM_GARNET, GemEffect::Absorb),
+        ] {
+            assert_eq!(GemEffect::from_item(item), Some(effect));
+            assert_eq!(
+                GemEffect::from_state_code(effect.state_code()),
+                Some(effect)
+            );
+        }
+        assert_eq!(GemEffect::from_state_code(0), None);
+        assert_eq!(GemEffect::from_state_code(5), None);
+    }
 
     #[test]
     fn ladder_covers_all_fifteen_steps() {

@@ -38,6 +38,15 @@ pub struct Bot {
     stream: TcpStream,
     key_word: u8,
     race: Race,
+    /// Corpo cru do último `_MSG_CNFAccountLogin`/`_MSG_CNFNewCharacter` (o `Selchar`).
+    /// É o pacote que o cliente 7662 usa para desenhar o nível na tela de seleção.
+    roster: Option<Vec<u8>>,
+    /// Corpo cru do último `_MSG_CNFCharacterLogin` (`STRUCT_MOB` a partir do offset 4).
+    login: Option<Vec<u8>>,
+    /// Frames crus (header + corpo, já de-ofuscados) dos pacotes que carregam nível:
+    /// `CNFAccountLogin`, `CNFNewCharacter`, `CNFCharacterLogin` e `CreateMob`. É o byte que
+    /// o cliente 7662 recebe; serve para um parser externo medir o offset do legado.
+    raw: Vec<Vec<u8>>,
 }
 
 impl Bot {
@@ -55,6 +64,9 @@ impl Bot {
             stream,
             key_word: 11,
             race,
+            roster: None,
+            login: None,
+            raw: Vec::new(),
         };
         // Servidor que encerra sem responder (ex.: fail só de cabeçalho já consumido, ou
         // socket fechado na recusa) não pode virar "failed to fill whole buffer": a tela
@@ -115,7 +127,7 @@ impl Bot {
             .encode_into(frame)
             .expect("corpo do AccountLogin");
         })?;
-        self.expect(Opcode::CNFAccountLogin)?;
+        self.roster = Some(self.expect_body(Opcode::CNFAccountLogin)?);
 
         let mut token = [0u8; 6];
         for (indice, digito) in config.pin.bytes().take(6).enumerate() {
@@ -142,7 +154,7 @@ impl Bot {
                 .encode_into(frame)
                 .expect("corpo do CharacterLogin");
         })?;
-        self.expect(Opcode::CNFCharacterLogin)?;
+        self.login = Some(self.expect_body(Opcode::CNFCharacterLogin)?);
         Ok(())
     }
 
@@ -173,6 +185,9 @@ impl Bot {
             stream,
             key_word: 11,
             race,
+            roster: None,
+            login: None,
+            raw: Vec::new(),
         };
         bot.autenticar(config)?;
         bot.create_character(config.slot, nome, class)?;
@@ -204,7 +219,22 @@ impl Bot {
                 .expect("corpo do CreateCharacter");
             },
         )?;
-        self.expect(Opcode::CNFNewCharacter)
+        self.roster = Some(self.expect_body(Opcode::CNFNewCharacter)?);
+        Ok(())
+    }
+
+    /// Corpo cru do último roster recebido (`_MSG_CNFAccountLogin` ou
+    /// `_MSG_CNFNewCharacter`): o teste decodifica o `Selchar` daqui, não de uma conta
+    /// paralela — é o byte que o cliente recebeu.
+    #[must_use]
+    pub fn roster_body(&self) -> Option<&[u8]> {
+        self.roster.as_deref()
+    }
+
+    /// Corpo cru do último `_MSG_CNFCharacterLogin` (`STRUCT_MOB` começa no offset 4).
+    #[must_use]
+    pub fn login_body(&self) -> Option<&[u8]> {
+        self.login.as_deref()
     }
 
     /// Lê a cena por até `millis` e devolve as criaturas dos `_MSG_CreateMob` recebidos.
@@ -305,15 +335,39 @@ impl Bot {
             .map_err(|erro| Error::new(ErrorKind::InvalidData, erro.to_string()))?;
         let header = Header::decode(&frame)
             .map_err(|erro| Error::new(ErrorKind::InvalidData, erro.to_string()))?;
+        if matches!(
+            Opcode::from_wire(header.message_type),
+            Some(
+                Opcode::CNFAccountLogin
+                    | Opcode::CNFNewCharacter
+                    | Opcode::CNFCharacterLogin
+                    | Opcode::CreateMob
+                    | Opcode::UpdateScore
+                    | Opcode::UpdateEtc
+            )
+        ) {
+            self.raw.push(frame.clone());
+        }
         Ok((header, frame))
     }
 
+    /// Frames crus (header + corpo) dos pacotes que carregam nível, na ordem de chegada.
+    #[must_use]
+    pub fn raw_frames(&self) -> &[Vec<u8>] {
+        &self.raw
+    }
+
     fn expect(&mut self, opcode: Opcode) -> std::io::Result<()> {
+        self.expect_body(opcode).map(|_| ())
+    }
+
+    /// Igual a [`Bot::expect`], mas devolve o corpo (sem o header) do frame recebido.
+    fn expect_body(&mut self, opcode: Opcode) -> std::io::Result<Vec<u8>> {
         let (header, frame) = self.recv()?;
         // Trailer opcional de motivo: só existe se o servidor mandou o byte extra.
         let motivo = wyd_protocol::motivo::CodigoRecusa::from_byte(frame.get(HEADER_SIZE).copied());
         match Opcode::from_wire(header.message_type) {
-            Some(visto) if visto == opcode => Ok(()),
+            Some(visto) if visto == opcode => Ok(frame[HEADER_SIZE..].to_vec()),
             Some(visto) => Err(Error::new(
                 ErrorKind::PermissionDenied,
                 format!(

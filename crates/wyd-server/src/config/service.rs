@@ -1089,3 +1089,401 @@ pub fn poll_interval_from_env() -> Result<Duration, String> {
     }
     Ok(Duration::from_millis(millis))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn taxa(domain: &str, key: &str, value: i64) -> ConfigRateRow {
+        ConfigRateRow {
+            domain: domain.to_string(),
+            key: key.to_string(),
+            value,
+            unit: "bps".to_string(),
+            source: "teste".to_string(),
+            overridden: false,
+        }
+    }
+
+    /// Mínimo que o snapshot exige: 15 passos de refino, 1 célula de SancRate e 1 composição.
+    fn taxas_minimas() -> Vec<ConfigRateRow> {
+        let mut rows: Vec<ConfigRateRow> = (1..=15)
+            .map(|passo| taxa("refine", &passo.to_string(), 1_000 + passo))
+            .collect();
+        rows.push(taxa("sanc", "PO:1", 100));
+        rows.push(taxa("combine", "Odin.PLUS12_BASE", 7));
+        rows
+    }
+
+    fn config(rows: Vec<ConfigRateRow>) -> GameConfig {
+        GameConfig::from_rows(3, &rows, vec![], vec![], vec![], vec![])
+            .expect("snapshot mínimo válido")
+    }
+
+    #[test]
+    fn snapshot_minimo_le_refino_sanc_e_composicao() {
+        let cfg = config(taxas_minimas());
+        assert_eq!(cfg.revision(), 3);
+        assert_eq!(cfg.refine_steps(), 15);
+        assert_eq!(cfg.refine_bps(1), Some(1_001));
+        assert_eq!(cfg.refine_bps(16), None, "fora dos 15 passos não existe");
+        assert_eq!(cfg.sanc_percent(Powder::Ori, 1), Some(100));
+        assert_eq!(cfg.sanc_percent(Powder::Lac, 1), None);
+        assert_eq!(cfg.sanc_cells(), 1);
+        assert_eq!(cfg.combine_value("Odin", "PLUS12_BASE"), Some(7));
+        assert_eq!(cfg.combine_value("Odin", "OUTRO"), None);
+        assert_eq!(cfg.combine_values(), 1);
+        // Ausência de multiplicador é o neutro documentado, não zero.
+        assert_eq!(cfg.multiplier_bps("exp"), DEFAULT_MULTIPLIER_BPS);
+        assert_eq!(cfg.apply_multiplier("exp", 150), 150);
+        assert_eq!(cfg.multiplier_rows(), 0);
+        assert_eq!(
+            cfg.setting_int(CITIZEN_BONUS_SECTION, CITIZEN_BONUS_KEY),
+            None
+        );
+        assert_eq!(cfg.citizen_bonus_bps().raw(), 0);
+        assert_eq!(
+            (cfg.npc_count(), cfg.route_count(), cfg.accessory_count()),
+            (0, 0, 0)
+        );
+    }
+
+    #[test]
+    fn multiplicador_e_bonus_de_cidadania_saem_do_snapshot() {
+        let mut rows = taxas_minimas();
+        rows.push(taxa("multiplier", "exp", 15_000));
+        rows.push(taxa("setting", "Channel Settings.citizen_bonus_bps", 500));
+        let cfg = config(rows);
+        assert_eq!(cfg.multiplier_bps("exp"), 15_000);
+        assert_eq!(cfg.apply_multiplier("exp", 100), 150);
+        assert_eq!(cfg.multiplier_rows(), 1);
+        assert_eq!(cfg.citizen_bonus_bps().raw(), 500);
+    }
+
+    #[test]
+    fn snapshot_incompleto_ou_invalido_e_recusado() {
+        assert!(matches!(
+            GameConfig::from_rows(0, &taxas_minimas(), vec![], vec![], vec![], vec![]),
+            Err(ConfigError::Revision(0))
+        ));
+
+        let sem_ultimo: Vec<ConfigRateRow> = taxas_minimas()
+            .into_iter()
+            .filter(|row| !(row.domain == "refine" && row.key == "15"))
+            .collect();
+        assert!(matches!(
+            GameConfig::from_rows(1, &sem_ultimo, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::Missing {
+                family: "refine",
+                ..
+            })
+        ));
+
+        let sem_sanc: Vec<ConfigRateRow> = taxas_minimas()
+            .into_iter()
+            .filter(|row| row.domain != "sanc")
+            .collect();
+        assert!(matches!(
+            GameConfig::from_rows(1, &sem_sanc, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::Empty("sanc"))
+        ));
+
+        let sem_combine: Vec<ConfigRateRow> = taxas_minimas()
+            .into_iter()
+            .filter(|row| row.domain != "combine")
+            .collect();
+        assert!(matches!(
+            GameConfig::from_rows(1, &sem_combine, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::Empty("combine"))
+        ));
+
+        let mut dominio_desconhecido = taxas_minimas();
+        dominio_desconhecido.push(taxa("desconhecido", "x", 1));
+        assert!(matches!(
+            GameConfig::from_rows(1, &dominio_desconhecido, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::InvalidKey { family: "rate", .. })
+        ));
+
+        let mut passo_fora = taxas_minimas();
+        passo_fora.push(taxa("refine", "16", 1));
+        assert!(matches!(
+            GameConfig::from_rows(1, &passo_fora, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::OutOfRange {
+                family: "refine",
+                ..
+            })
+        ));
+
+        let mut multiplicador_invalido = taxas_minimas();
+        multiplicador_invalido.push(taxa("multiplier", "gold_x", 1));
+        assert!(matches!(
+            GameConfig::from_rows(1, &multiplicador_invalido, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::OutOfRange {
+                family: "multiplier",
+                ..
+            })
+        ));
+
+        let mut setting_sem_ponto = taxas_minimas();
+        setting_sem_ponto.push(taxa("setting", "sem_ponto", 1));
+        assert!(matches!(
+            GameConfig::from_rows(1, &setting_sem_ponto, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::InvalidKey {
+                family: "setting",
+                ..
+            })
+        ));
+
+        let mut cidadania_acima_do_teto = taxas_minimas();
+        cidadania_acima_do_teto.push(taxa(
+            "setting",
+            "Channel Settings.citizen_bonus_bps",
+            i64::from(CITIZEN_BONUS_MAX.raw()) + 1,
+        ));
+        assert!(matches!(
+            GameConfig::from_rows(1, &cidadania_acima_do_teto, vec![], vec![], vec![], vec![]),
+            Err(ConfigError::OutOfRange {
+                family: "setting",
+                ..
+            })
+        ));
+    }
+
+    fn drop(template: &str, item: i32, weight: i64) -> DropConfigRow {
+        DropConfigRow {
+            template_name: template.to_string(),
+            item_index: item,
+            item_name: "item".to_string(),
+            weight,
+            min_qty: 1,
+            max_qty: 2,
+            source: "teste".to_string(),
+        }
+    }
+
+    #[test]
+    fn drop_override_alimenta_regra_e_chance() {
+        let drops = vec![drop("Orc", 10, 500_000)];
+        let cfg = GameConfig::from_rows(1, &taxas_minimas(), vec![], drops.clone(), vec![], vec![])
+            .expect("drop válido");
+        assert_eq!(cfg.drop_overrides(), 1);
+        let regra = cfg.drop_rule("Orc", 10).expect("override");
+        assert_eq!(
+            (regra.weight, regra.min_qty, regra.max_qty),
+            (500_000, 1, 2)
+        );
+        assert_eq!(cfg.drops_for("Orc").len(), 1);
+        assert_eq!(cfg.drops_for("Elfo").len(), 0);
+        assert_eq!(cfg.drop_chance_bps("Orc", 10), Some(5_000));
+        assert_eq!(cfg.drop_chance_bps("Orc", 11), None);
+        assert!(matches!(
+            GameConfig::from_rows(
+                1,
+                &taxas_minimas(),
+                vec![],
+                vec![drop("Orc", 10, 0)],
+                vec![],
+                vec![]
+            ),
+            Err(ConfigError::OutOfRange { family: "drop", .. })
+        ));
+    }
+
+    fn npc(id: i32, enabled: bool, merchant: i16) -> NpcConfigRow {
+        let mut mob = crate::personagens::template_mob(0);
+        mob.name[..3].copy_from_slice(b"Orc");
+        mob.exp = 25;
+        mob.current_score.max_hp = 80;
+        mob.current_score.hp = 80;
+        mob.current_score.level = 4;
+        mob.current_score.damage = 12;
+        mob.current_score.ac = 3;
+        NpcConfigRow {
+            id,
+            slug: "orc".to_string(),
+            display_name: "Orc".to_string(),
+            template_name: "Orc".to_string(),
+            template: mob.encode(),
+            map_id: 1,
+            pos_x: 10,
+            pos_y: 20,
+            enabled,
+            merchant,
+        }
+    }
+
+    fn loja(npc_id: i32, slot: i16, item: i32, price: i64, qty: i16) -> ShopItemConfigRow {
+        ShopItemConfigRow {
+            npc_id,
+            slot,
+            item_index: item,
+            price,
+            quantity: qty,
+            effects: [[0, 0]; 3],
+        }
+    }
+
+    #[test]
+    fn npc_carrega_template_mapa_e_loja() {
+        let cfg = GameConfig::from_rows_with_shops(
+            1,
+            &taxas_minimas(),
+            vec![],
+            vec![],
+            vec![npc(7, true, 0)],
+            vec![],
+            vec![
+                loja(7, 1, 5, 100, 0),
+                loja(7, 0, 6, -1, 0),
+                // sIndex 0 é posição vazia do `MSG_ShopList`, não erro de configuração.
+                loja(7, 2, 0, 0, 0),
+            ],
+        )
+        .expect("npc e loja válidos");
+        assert_eq!(cfg.npc_count(), 1);
+        let regra = cfg.npc(7).expect("npc carregado");
+        assert_eq!(
+            (regra.exp, regra.name.as_str(), regra.monster),
+            (25, "Orc", true),
+            "template alimenta EXP, nome e a marca de monstro"
+        );
+        assert_eq!(cfg.npcs().count(), 1);
+        assert_eq!(cfg.npcs_on_map(1).count(), 1);
+        assert_eq!(cfg.npcs_on_map(2).count(), 0);
+
+        let catalogo = cfg.shop(7).expect("loja do mercador 7");
+        assert_eq!(catalogo.len(), 2, "slot com item 0 fica vazio");
+        assert_eq!(catalogo[0].slot, 0);
+        assert_eq!((catalogo[0].price, catalogo[0].quantity), (0, 1));
+        assert_eq!(cfg.shop_count(), 2);
+        assert!(cfg.shop(8).is_none());
+
+        let quebrado = NpcConfigRow {
+            template: vec![0u8; 4],
+            ..npc(9, true, 0)
+        };
+        assert!(matches!(
+            GameConfig::from_rows(1, &taxas_minimas(), vec![], vec![], vec![quebrado], vec![]),
+            Err(ConfigError::BadTemplate { npc_id: 9 })
+        ));
+    }
+
+    #[test]
+    fn npc_desabilitado_nao_entra_no_mapa() {
+        let cfg = GameConfig::from_rows(
+            1,
+            &taxas_minimas(),
+            vec![],
+            vec![],
+            vec![npc(7, false, 0)],
+            vec![],
+        )
+        .expect("npc válido");
+        assert_eq!(cfg.npc_count(), 1);
+        assert_eq!(cfg.npcs_on_map(1).count(), 0);
+    }
+
+    #[test]
+    fn loja_recusa_slot_fora_da_faixa_e_duplicado() {
+        assert!(matches!(
+            GameConfig::from_rows_with_shops(
+                1,
+                &taxas_minimas(),
+                vec![],
+                vec![],
+                vec![npc(7, true, 0)],
+                vec![],
+                vec![loja(7, SHOP_SLOTS, 5, 10, 1)]
+            ),
+            Err(ConfigError::OutOfRange { family: "shop", .. })
+        ));
+        assert!(matches!(
+            GameConfig::from_rows_with_shops(
+                1,
+                &taxas_minimas(),
+                vec![],
+                vec![],
+                vec![npc(7, true, 0)],
+                vec![],
+                vec![loja(7, 0, 5, 10, 1), loja(7, 0, 6, 20, 1)]
+            ),
+            Err(ConfigError::OutOfRange {
+                family: "shop_duplicado",
+                ..
+            })
+        ));
+    }
+
+    fn rota(id: i32) -> RouteConfigRow {
+        RouteConfigRow {
+            id,
+            from_map_id: 1,
+            from_x: 10,
+            from_y: 20,
+            to_map_id: 2,
+            to_x: 30,
+            to_y: 40,
+            npc_id: Some(7),
+            cost_gold: 100,
+            req_level: 5,
+            enabled: true,
+        }
+    }
+
+    fn acessorio(step_to: i16) -> AccessoryRuleRow {
+        AccessoryRuleRow {
+            kind: "earring".to_string(),
+            recipe: "prata".to_string(),
+            step_from: 0,
+            step_to,
+            rate_bps: 5_000,
+            fail_mode: "kept".to_string(),
+            fail_bonus_bps: 100,
+            gold_cost: 1_000,
+            material_name: "prata".to_string(),
+            material_qty: 1,
+            source: "teste".to_string(),
+            notes: String::new(),
+        }
+    }
+
+    #[test]
+    fn rota_e_acessorio_carregados() {
+        let cfg = GameConfig::from_rows(
+            1,
+            &taxas_minimas(),
+            vec![acessorio(1)],
+            vec![],
+            vec![],
+            vec![rota(9)],
+        )
+        .expect("rota e acessório válidos");
+        assert_eq!(cfg.route_count(), 1);
+        let regra = cfg.route(9).expect("rota carregada");
+        assert_eq!(
+            (regra.to_map_id, regra.to_x, regra.cost_gold, regra.npc_id),
+            (2, 30, 100, Some(7))
+        );
+        assert!(cfg.route(10).is_none());
+        assert_eq!(cfg.routes().count(), 1);
+        assert_eq!(cfg.accessory_count(), 1);
+        assert_eq!(cfg.accessory_rate_bps("earring", "prata", 0), Some(5_000));
+        assert_eq!(cfg.accessory_rate_bps("earring", "ouro", 0), None);
+
+        // O passo de destino tem de ser exatamente o de origem + 1.
+        assert!(matches!(
+            GameConfig::from_rows(
+                1,
+                &taxas_minimas(),
+                vec![acessorio(5)],
+                vec![],
+                vec![],
+                vec![]
+            ),
+            Err(ConfigError::OutOfRange {
+                family: "accessory",
+                ..
+            })
+        ));
+    }
+}

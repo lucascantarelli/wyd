@@ -1122,13 +1122,25 @@ fn contas_reais_listam_sem_segredo() {
             .await
         })
         .expect("conta de teste");
-    let contas: Vec<wyd_db::AccountListRow> = rt
-        .block_on(backend.config_accounts(200, None))
-        .expect("contas");
-    let achada = contas
-        .iter()
-        .find(|row| row.id == conta)
-        .expect("conta criada aparece na lista");
+    // A lista pagina por id (`limit` máximo de 200) e o banco descartável pode já ter mais de 200
+    // contas de execuções anteriores: procurar só a primeira página fazia o teste depender de um
+    // banco vazio. Pagina até achar (ou esgotar), que é o contrato real da rota.
+    let mut achada: Option<wyd_db::AccountListRow> = None;
+    let mut depois: Option<i64> = None;
+    for _ in 0..100 {
+        let contas: Vec<wyd_db::AccountListRow> = rt
+            .block_on(backend.config_accounts(200, depois))
+            .expect("contas");
+        let Some(ultima) = contas.last().map(|row| row.id) else {
+            break;
+        };
+        achada = contas.into_iter().find(|row| row.id == conta);
+        if achada.is_some() {
+            break;
+        }
+        depois = Some(ultima);
+    }
+    let achada = achada.expect("conta criada aparece na lista");
     assert_eq!(achada.login, login);
     assert_eq!(achada.role, "moderator");
     let uma = rt

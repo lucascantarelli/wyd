@@ -119,10 +119,10 @@ pub struct AppliedGem {
     pub refine: u8,
 }
 
-/// Refino mínimo para gema em item comum.
-pub const GEM_MIN_REFINE: u8 = 10;
-/// Refino máximo conhecido.
-pub const GEM_MAX_REFINE: u8 = 15;
+/// Refino máximo conhecido — mesma origem.
+pub use wyd_sim::formula::refine::GEM_MAX_REFINE;
+/// Refino mínimo para gema em item comum — regra única em `wyd-sim` (ADR-0029).
+pub use wyd_sim::formula::refine::GEM_MIN_REFINE;
 
 impl Inventory {
     /// Valida a aplicação **sem escrever nada** — item, refino, gema e faixa.
@@ -140,31 +140,31 @@ impl Inventory {
         if item.id == 0 {
             return Err(CoreError::EmptySlot { slot: slot as u16 });
         }
-        let effect = gem_effect_code(gem_item).ok_or(CoreError::UnknownGem {
-            item_index: gem_item,
-        })?;
-        if item.refine > GEM_MAX_REFINE {
-            return Err(CoreError::GemRefineTooHigh {
-                refine: item.refine,
-            });
-        }
-        if !item.ancient && item.refine < GEM_MIN_REFINE {
-            return Err(CoreError::GemRefineTooLow {
-                refine: item.refine,
-            });
-        }
-        // Anct abaixo de +10 conta como +10 (fonte: `docs/wyd/sistemas/refino.md` §3).
-        let effective_refine = item.refine.max(GEM_MIN_REFINE);
-        let value = gem_value(effect, effective_refine).expect("faixa validada acima");
+        // Regra única (ADR-0029): validação da faixa, piso de +10 do Anct e valor por refino
+        // vêm de `wyd-sim`. Aqui só traduzimos o erro tipado e o código de estado.
+        use wyd_sim::formula::refine::{apply_gem, GemError};
+        let aplicado = match apply_gem(gem_item, item.refine, item.ancient) {
+            Ok(aplicado) => aplicado,
+            Err(GemError::UnknownGem { item_index }) => {
+                return Err(CoreError::UnknownGem { item_index });
+            }
+            Err(GemError::RefineTooLow { refine }) => {
+                return Err(CoreError::GemRefineTooLow { refine });
+            }
+            Err(GemError::RefineTooHigh { refine }) => {
+                return Err(CoreError::GemRefineTooHigh { refine });
+            }
+        };
+        let value = u16::try_from(aplicado.value).expect("valor de gema cabe em u16");
         Ok(AppliedGem {
             slot,
             previous: GemEffect {
                 effect: item.gem_effect,
                 value: item.gem_value,
             },
-            effect,
+            effect: aplicado.effect.state_code(),
             value,
-            refine: effective_refine,
+            refine: aplicado.refine,
         })
     }
 
@@ -234,28 +234,20 @@ impl Inventory {
 /// Gema do `item_catalog` → código de efeito (`None` se não for uma das quatro).
 #[must_use]
 pub const fn gem_effect_code(item_index: u32) -> Option<u8> {
-    match item_index {
-        3386 => Some(GEM_EFFECT_DROP),
-        3387 => Some(GEM_EFFECT_PIERCE),
-        3388 => Some(GEM_EFFECT_EXP),
-        3389 => Some(GEM_EFFECT_ABSORB),
-        _ => None,
+    match wyd_sim::formula::refine::GemEffect::from_item(item_index) {
+        Some(effect) => Some(effect.state_code()),
+        None => None,
     }
 }
 
 /// Valor do efeito: fixo para drop/EXP, `40 × (refino − 9)` para perfuração/absorção.
+///
+/// A conta é de `wyd-sim` (ADR-0029); esta função só traduz o código de estado do item.
 #[must_use]
 pub fn gem_value(effect: u8, refine: u8) -> Option<u16> {
-    if !(GEM_MIN_REFINE..=GEM_MAX_REFINE).contains(&refine) {
-        return None;
-    }
-    let steps = u16::from(refine - (GEM_MIN_REFINE - 1));
-    match effect {
-        GEM_EFFECT_DROP => Some(8),
-        GEM_EFFECT_EXP => Some(2),
-        GEM_EFFECT_PIERCE | GEM_EFFECT_ABSORB => Some(40 * steps),
-        _ => None,
-    }
+    let effect = wyd_sim::formula::refine::GemEffect::from_state_code(effect)?;
+    let value = wyd_sim::formula::refine::gem_effect_value(effect, refine)?;
+    u16::try_from(value).ok()
 }
 
 /// As 4 espécies de entidade do mundo (03-2: sem hierarquia OOP).
@@ -548,6 +540,23 @@ impl ComponentStore {
             .flatten()
     }
 
+    /// Substitui os stats de uma entidade viva (nível/atributos recém-gravados).
+    ///
+    /// A borda é a autoridade dos valores — o tick não recalcula fórmula nem persiste:
+    /// só passa a enxergar o estado que o banco já aceitou. Entidade morta/obsoleta
+    /// devolve `false` e nada muda.
+    pub fn set_stats(&mut self, entity: Entity, stats: Stats) -> bool {
+        if !self.is_alive(entity) {
+            return false;
+        }
+        let i = entity.index as usize;
+        if i >= self.stats.len() {
+            return false;
+        }
+        self.stats[i] = stats;
+        true
+    }
+
     /// Restaura o HP de uma entidade viva (cap no máximo).
     ///
     /// Usado pela morte de PvP: a vítima volta ao mundo com a barra cheia, sem perder
@@ -796,11 +805,29 @@ mod tests {
 }
 
 /// Gema de efeito: autoridade do servidor sobre o item equipado.
-/// Mesma tabela de `wyd-sim::formula::refine` (golden nos dois lados; dívida de unificação
-/// registrada em `docs/rust/06-matematica.md` §4).
+/// A regra (piso de +10, valor por refino, efeito por item) mora em `wyd-sim`; o core só
+/// aplica a transação sobre o inventário (ADR-0029).
 #[cfg(test)]
 mod gem_tests {
     use super::*;
+
+    /// O código persistido no item é o mesmo que `wyd-sim` expõe (ADR-0029): se um lado mudar
+    /// a numeração, o estado do item deixa de bater com a regra — este teste avisa.
+    #[test]
+    fn codigos_de_estado_batem_com_wyd_sim() {
+        use wyd_sim::formula::refine::GemEffect;
+        for (codigo, efeito, item) in [
+            (GEM_EFFECT_DROP, GemEffect::Drop, 3386),
+            (GEM_EFFECT_PIERCE, GemEffect::Pierce, 3387),
+            (GEM_EFFECT_EXP, GemEffect::Exp, 3388),
+            (GEM_EFFECT_ABSORB, GemEffect::Absorb, 3389),
+        ] {
+            assert_eq!(efeito.state_code(), codigo, "código de {:?}", efeito);
+            assert_eq!(GemEffect::from_state_code(codigo), Some(efeito));
+            assert_eq!(gem_effect_code(item), Some(codigo));
+        }
+        assert_eq!(GemEffect::from_state_code(GEM_EFFECT_NONE), None);
+    }
 
     /// Armadura no slot 3 **e** as quatro gemas na mochila (2 de cada).
     ///

@@ -28,9 +28,10 @@ Canal 1 em `127.0.0.1:8281`, canal 2 em `127.0.0.2:8281`, banco descartável com
 
 1. **`campo_vivo` — teste anterior à cena por proximidade.**
    `campo_vivo.rs:93` exige uma instância do Primeiro Treinador na cena recebida. O personagem
-   nasce em `(2096,2096)` e o treinador está em `(2077,2017)` — 79 tiles de distância, fora do
-   raio de 24 (`world::scene_around`, `ENV_SCENE_VIEW_TILES`). O NPC existe no banco
-   (`npc_definition` id 6301) e o canal loga `event=npc result=spawn map=0 spawned=6111`.
+   nasce em `(2096,2096)` e o treinador herdado está em `(2080,2018)` — ~79 tiles de distância,
+   fora do raio de 24 (`world::scene_around`, `ENV_SCENE_VIEW_TILES`). O NPC existe no banco
+   (`npc_definition` `Treinador1`, `merchant` 36 desde a `0051`) e o canal loga
+   `event=npc result=spawn map=0 spawned=6111`.
    **Correção:** andar até o raio antes de ler a cena (ou posicionar o personagem no teste), não
    afrouxar o assert.
 2. **`selecao` — `expect` em variável opcional.**

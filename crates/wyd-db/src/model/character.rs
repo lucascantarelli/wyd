@@ -93,6 +93,11 @@ pub struct ItemRow {
     pub ancient: bool,
     pub gem_effect: i64,
     pub gem_value: i64,
+    /// Três pares `EF_*` do **catálogo** (`item_catalog.effects`) que formam o `STRUCT_ITEM`
+    /// do fio. São eles que o legado soma em `BASE_GetCurrentScore`
+    /// (`Basedef.cpp:3028`: `Damage += BASE_GetMobAbility(EF_DAMAGE)`, `Ac += ... EF_AC`):
+    /// `EF_DAMAGE = 2`, `EF_AC = 3`. Item fora do catálogo fica zerado — nada é estimado.
+    pub effects: [[u8; 2]; 3],
 }
 
 impl ItemRow {

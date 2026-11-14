@@ -19,9 +19,10 @@ agressividade nem dano.
 
 Duas pressões apareceram na entrega:
 
-1. **Não duplicar regra** entre `wyd-sim` (matemática de ameaça) e `wyd-core`. O DAG
-   (`estrutura-e-padroes.md` §1) proíbe `wyd-core → wyd-sim`; a ADR-0011 já registrou a
-   dívida de unificação que exige contrato em `wyd-protocol`.
+1. **Não duplicar regra** entre `wyd-sim` (matemática de ameaça) e `wyd-core`. Na data desta
+   ADR o DAG (`estrutura-e-padroes.md` §1) proibia `wyd-core → wyd-sim`, e a ADR-0011 já
+   registrava a dívida de unificação. A ADR-0029 abriu a aresta para funções puras (a gema
+   usa regra única em `wyd-sim`); a ameaça continua como cópia presa por golden até a GAME-19.
 2. **Não deixar a IA virar autoridade paralela.** Se a FSM movesse a criatura diretamente,
    existiriam dois caminhos de escrita de posição/HP — um validado (`systems/movement.rs`,
    `systems/combat.rs`) e outro não.

@@ -85,6 +85,14 @@ fn entrar_e_sair_salva_posicao_e_vitais_no_banco() {
         guild: 0,
         attack_run: 82,
         direction: 0,
+        mp: 0,
+        max_mp: 0,
+        strength: 0,
+        intelligence: 0,
+        dexterity: 0,
+        constitution: 0,
+        attack: 0,
+        defense: 0,
     };
     let entrada = handle.enter(&personagem, &skin).expect("entrada no mundo");
     assert!(

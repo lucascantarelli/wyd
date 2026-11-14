@@ -13,6 +13,19 @@ use argon2::Argon2;
 /// Tamanho mínimo de senha aceito no seed/hash (não é política de jogo).
 pub const MIN_PASSWORD_LEN: usize = 8;
 
+/// Teto de senha **de jogador**, em bytes: é o campo `account_password[12]` do
+/// `_MSG_AccountLogin`. Senha maior não existe no fio, então não pode ser cadastrada.
+pub const MAX_GAME_PASSWORD_BYTES: usize = 12;
+
+/// Senha de jogador válida: 8..=12 **bytes** (acento conta dois) e sem NUL, que
+/// truncaria o campo no fio. Staff do portal não passa por esta regra — a senha de
+/// staff nunca é digitada no cliente.
+#[must_use]
+pub fn valid_game_password(password: &str) -> bool {
+    (MIN_PASSWORD_LEN..=MAX_GAME_PASSWORD_BYTES).contains(&password.len())
+        && !password.as_bytes().contains(&0)
+}
+
 /// Senha curta demais ou hash inválido (nunca carrega a senha na mensagem).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PasswordError {

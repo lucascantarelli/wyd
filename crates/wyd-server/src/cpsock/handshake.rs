@@ -148,11 +148,15 @@ pub(super) fn handshake(
                 Opcode::NewAccountFail,
                 wyd_protocol::motivo::CodigoRecusa::Senha,
             );
-            // O build 7662 **não** trata `_MSG_NewAccountFail` (0x0117): sem um pacote que ele
-            // desenhe, senha errada não mostra nada na tela. `_MSG_MessagePanel` (0x0101) é o
-            // único texto livre que o roteador do cliente reconhece; vai junto, com o layout
-            // portado. Se o cliente ignorar fora do jogo, nada muda para ele — o `*Fail`
-            // continua sendo o pacote de contrato.
+            // O build 7662 **não** trata `_MSG_NewAccountFail` (0x0117) — é o que fazia senha
+            // errada não mostrar nada. Dos `*Fail` do login, o que o binário desenha é
+            // `_MSG_CharacterLoginFail` (0x0119, `BUG-01`); ele vai junto com o painel de texto.
+            let _ = reply_recusa(
+                stream,
+                header.key_word,
+                Opcode::CharacterLoginFail,
+                wyd_protocol::motivo::CodigoRecusa::Senha,
+            );
             let _ = reply_panel(stream, header.key_word, "Senha ou conta incorreta");
             return Err(HandshakeError::Auth(error.to_string()));
         }
@@ -207,4 +211,49 @@ pub(super) fn handshake(
         },
         conta,
     ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+    use std::net::{TcpListener, TcpStream};
+
+    fn mundo() -> World {
+        World::new(vec![wyd_db::ServerChannel {
+            group_id: 1,
+            channel: 1,
+            host: "127.0.0.1".to_string(),
+            status_url: String::new(),
+            enabled: true,
+        }])
+        .expect("foto de canais válida")
+    }
+
+    /// O gate de INITCODE tem de recusar **antes** de ler o frame: com 4 B errados e nada
+    /// mais, o `read_exact` do frame nunca chega, então o erro precisa ser `InitCode`.
+    #[test]
+    fn initcode_divergente_e_recusado_antes_de_ler_o_frame() {
+        let listener = TcpListener::bind("127.0.0.1:0").expect("porta efêmera");
+        let endereco = listener.local_addr().expect("endereço");
+        let cliente = std::thread::spawn(move || {
+            let mut stream = TcpStream::connect(endereco).expect("conecta");
+            stream
+                .write_all(&0xDEAD_BEEFu32.to_le_bytes())
+                .expect("initcode errado");
+        });
+        let (mut servidor, _) = listener.accept().expect("aceita");
+        servidor
+            .set_read_timeout(Some(std::time::Duration::from_secs(5)))
+            .expect("timeout");
+        let erro = match handshake(&mut servidor, &mundo(), VersionGate::default(), None, None) {
+            Ok(_) => panic!("INITCODE divergente foi aceito"),
+            Err(erro) => erro,
+        };
+        assert!(
+            matches!(erro, HandshakeError::InitCode { received } if received == 0xDEAD_BEEF),
+            "erro: {erro:?}"
+        );
+        cliente.join().expect("thread do cliente");
+    }
 }
