@@ -64,9 +64,24 @@ Exit `0` = a sequência de respostas (tamanho de cada frame) bate com a da captu
 keyword e ids que variam).
 
 O que o replay **já** pega: frame faltando/sobrando, `Size` errado, ordem trocada, servidor que
-fecha ou muda a cardinalidade. O que ainda **não** pega: opcode e conteúdo, porque o `message_type`
-é ofuscado. Próximo passo: decodificar a captura com o `wyd-protocol` (CLI Rust) e comparar
-`opcode` + campos, sem reimplementar a `pKeyWord` em JS.
+fecha ou muda a cardinalidade. O que ainda **não** pega: opcode e conteúdo, porque o `message_type` é ofuscado — para isso
+use o decodificador da seção 4.1.
+
+## 4.1 Como decodificar (opcode e campos)
+
+```bash
+cargo run -p wyd-protocol --bin decode-captura -- tmp/cliente/sessao-login.jsonl
+```
+
+Cada frame vira uma linha com direção, `Size`, opcode (`0xNNNN` + nome da tabela congelada),
+`id`, `tick`, keyword e checksum. Os opcodes já portados trazem campos: `AccountLogin` (conta e
+versão, **sem** senha), `CreateMob` (nível, HP/MP, FOR/INT/DES/CON, chaos, posição) e
+`MessagePanel` (texto). Opcode sem layout documentado aparece só como `desconhecido` — o CLI não
+inventa offset.
+
+`--hex` imprime o frame em hexadecimal quando o decode falha. Exit `1` se o arquivo não tiver
+frame ou se algum frame não decodificar: uma captura só com `FIM` (cliente que não conectou) é
+falha explícita, não sucesso vazio.
 
 ## 5. Cliente no loop (L3): por que ainda não está pronto
 
