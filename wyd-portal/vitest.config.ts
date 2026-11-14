@@ -23,6 +23,11 @@ export default defineConfig({
     // saía com 144/28 e código 1. Dois workers rodam os 154/29 e mantêm o
     // isolamento por arquivo (medido em 2026-11-13).
     pool: "forks",
-    maxWorkers: 2,
+    // Um worker só: sob carga (gate/CI rodando cargo e docker em paralelo) o
+    // startup do worker jsdom passava do timeout do pool e o arquivo de
+    // componente nem rodava — 144/28 com erro em vez de 154/29. Serial é mais
+    // lento e determinístico; timeout maior cobre o teardown do jsdom.
+    maxWorkers: 1,
+    teardownTimeout: 30_000,
   },
 });
