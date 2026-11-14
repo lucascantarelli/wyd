@@ -45,3 +45,6 @@
 /client-*.zip
 # Cache do client.zip dentro da pasta do jogo, se ela estiver no repo.
 /.launcher-cache/
+
+# relatório HTML gerado pelo vitest
+wyd-portal/coverage/

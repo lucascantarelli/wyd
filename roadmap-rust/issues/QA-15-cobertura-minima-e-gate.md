@@ -15,6 +15,9 @@ piso documentado por camada.
 
 ## Contexto
 
+- Baseline medido em 2026-11-14 (`docs/rust/evidencias/cobertura-2026-11-14.md`): Rust 58,1% de
+  linha no workspace e portal 53,8% — nenhum dos dois no piso. Só `wyd-sim` (96,2%) e `wyd-net`
+  (96,1%) passam de 95%; `wyd-server` (51,9%) e `wyd-admin` (54,9%) concentram o gap.
 - `make coverage` gera `coverage/rust-lcov.info` e a cobertura do portal, mas o target está fora
   do `check` e nenhum número é comparado com piso.
 - O prompt master (§13 e §16-FASE 7) exige testes de paridade, protocolo, funcionais e regressão,
@@ -24,7 +27,8 @@ piso documentado por camada.
 
 ## Passos
 
-1. Rodar `make coverage` e publicar o baseline por crate em `docs/rust/evidencias/`.
+1. Rodar `make coverage` e publicar o baseline por crate em `docs/rust/evidencias/` (feito em
+   2026-11-14; refazer a cada mudança de gate).
 2. Definir o piso por camada: `wyd-core`/`wyd-sim`/`wyd-protocol` 95% de linha; integração
    (socket/DB) 80%; global 80%.
 3. Criar `tools/dev/check-coverage.mjs` lendo o LCOV (sem depender de serviço externo) e
