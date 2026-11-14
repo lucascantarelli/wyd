@@ -26,18 +26,20 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use wyd_admin::auth::hash_secret;
-use wyd_bots::{Bot, BotConfig, Race, SceneMob};
+use wyd_bots::{Bot, BotConfig, Race};
 use wyd_db::{Accounts, Character, Characters, PgBackend, PoolConfig, Role};
 use wyd_protocol::wire::header::HEADER_SIZE;
 use wyd_protocol::wire::opcode::Opcode;
 
 const SENHA: &str = "qa12345678";
 const CONTA: &str = "qanivel01";
+const CONTA_NIVEL: &str = "qanivel02";
+/// `Porco` do campo (EXP 295 do template), alvo do level-up.
+const PORCO: (i32, i32) = (2113, 2047);
 /// Ponto de save do template do TK — mesma origem do `combate_vivo`.
 const INICIO: (i32, i32) = (2096, 2096);
-/// Canto do campo de treino com monstros de nível baixo na vista.
-const CAMPO: (i32, i32) = (2113, 2047);
-const RELATORIO: &str = "tmp/nivel-wire";
+/// Dump no workspace (o `cargo test` roda com CWD no pacote).
+const RELATORIO: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../tmp/nivel-wire");
 
 /// `sizeof(STRUCT_SCORE)` e offset do `Level` dentro dele (`Basedef.h:524-552`).
 const SCORE_LEN_LEGADO: usize = 48;
@@ -126,7 +128,6 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
 
     // Criação por protocolo, duas vezes: `_MSG_CreateCharacter` → `CNFNewCharacter` +
     // `CNFCharacterLogin`. O banco nasce nível 1.
-    let mut ultimo = None;
     for (slot, nome) in [(2_i32, "QANIVEL2"), (3, "QANIVEL3")] {
         config.slot = slot;
         let mut bot = Bot::connect_novo(&config, Race::TransKnight, nome, Race::TransKnight.class())
@@ -143,9 +144,6 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
         despejar(&format!("criacao-{nome}"), &bot);
         let medido = medir(&bot, slot, "criacao", nome);
         conferir(medido, banco.level, "criacao", nome);
-        if slot == 3 {
-            ultimo = Some(bot);
-        }
     }
 
     // Login de personagem existente: intermediário (200) e teto (399).
@@ -162,76 +160,79 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
         std::thread::sleep(Duration::from_millis(300));
     }
 
-    // Level-up ao vivo: o char da criação (nível 1) abate um alvo **parado** do campo — a
-    // cena é lida duas vezes e só entram os `CreateMob` com o mesmo id na mesma coordenada.
-    let mut bot = ultimo.expect("bot da criação do slot 3");
+    // Level-up ao vivo: personagem de nível 1 com 499 de EXP (o nível 2 custa 500 —
+    // `LEVEL_CURVE[1]`), abatendo o `Porco` do campo (EXP 295 do template). O alvo é
+    // estacionário e o caminho é o mesmo do `combate_vivo`.
+    let conta_nivel = setup_conta(&rt, &backend, CONTA_NIVEL).expect("conta do level-up");
+    let personagem = Character {
+        id: 0,
+        account_id: conta_nivel.id,
+        slot: 0,
+        name: "QANIVELUP".to_string(),
+        class: 1,
+        level: 1,
+        exp: 499,
+        hp: 83,
+        mp: 46,
+        pos_x: i64::from(INICIO.0),
+        pos_y: i64::from(INICIO.1),
+        gold: 1_000,
+        hp_max: 83,
+        mp_max: 46,
+        ..Character::default()
+    };
+    rt.block_on(backend.create_character(&personagem))
+        .expect("personagem do level-up");
+    config.account = CONTA_NIVEL.to_string();
+    config.slot = 0;
+    let mut bot = Bot::connect(&config, Race::TransKnight).expect("login do char do level-up");
     let mut cena = bot.read_scene(1_500).expect("cena");
+    let mut porco = cena.iter().find(|mob| mob.name == "Porco").cloned();
     let (mut x, mut y) = INICIO;
-    while (x, y) != CAMPO {
-        let proximo = (
-            x + (CAMPO.0 - x).clamp(-3, 3),
-            y + (CAMPO.1 - y).clamp(-3, 3),
-        );
+    while porco.is_none() && (x, y) != PORCO {
+        let proximo = (x + (PORCO.0 - x).clamp(-3, 3), y + (PORCO.1 - y).clamp(-3, 3));
         bot.action_at((x, y), proximo).expect("passo no campo");
         std::thread::sleep(Duration::from_millis(700));
-        cena.extend(bot.read_scene(500).expect("cena do passo"));
+        cena.extend(bot.read_scene(300).expect("cena do passo"));
+        porco = cena.iter().find(|mob| mob.name == "Porco").cloned();
         (x, y) = proximo;
     }
-    // Candidatos: monstros vistos na caminhada (a cena é delta), do mais fraco para o mais
-    // forte. A posição é reconferida na cena imediatamente antes do golpe — monstro que anda
-    // muda de tile e o `_MSG_Attack` é resolvido por coordenada.
-    let mut chao: Vec<SceneMob> = cena
-        .iter()
-        .filter(|mob| mob.max_hp > 0 && mob.max_hp <= 200 && mob.name != "QANIVEL3")
-        .cloned()
-        .collect();
-    chao.sort_by_key(|mob| mob.max_hp);
-    chao.dedup_by_key(|mob| mob.id);
-    assert!(
-        !chao.is_empty(),
-        "nenhum monstro fraco na cena caminhada: {:?}",
-        cena.iter()
-            .map(|mob| (mob.name.clone(), mob.x, mob.y, mob.max_hp))
-            .collect::<Vec<_>>()
-    );
-    let mut posicao = (x, y);
-    let mut nivel_depois = 1;
-    for alvo in chao.iter().take(3) {
-        posicao = bot
-            .walk_to(posicao, (alvo.x, alvo.y + 1))
-            .expect("caminhada até o alvo");
-        let agora = bot.read_scene(800).expect("cena do alvo");
-        let Some(fresco) = agora
-            .iter()
-            .filter(|mob| mob.id == alvo.id)
-            .next_back()
-            .cloned()
-        else {
-            eprintln!("ALVO {} id={} saiu da vista", alvo.name, alvo.id);
-            continue;
-        };
-        eprintln!(
-            "ALVO {} id={} ({},{}) hp={}",
-            fresco.name, fresco.id, fresco.x, fresco.y, fresco.max_hp
-        );
-        for _ in 0..3 {
-            if bot.kill_at(fresco.id, fresco.x, fresco.y).is_ok() {
+    let porco = porco.unwrap_or_else(|| {
+        panic!(
+            "Porco ausente da cena (canal sem respawn? reinicie o canal-1): {:?}",
+            cena.iter().map(|m| (m.name.clone(), m.x, m.y)).collect::<Vec<_>>()
+        )
+    });
+    eprintln!("ALVO Porco id={} ({},{})", porco.id, porco.x, porco.y);
+    bot.walk_to((x, y), (porco.x, porco.y + 1))
+        .expect("caminhada até o porco");
+    let mut abatido = false;
+    for _ in 0..4 {
+        match bot.kill_at(porco.id, porco.x, porco.y) {
+            Ok(()) => {
+                abatido = true;
                 break;
             }
-        }
-        std::thread::sleep(Duration::from_millis(500));
-        nivel_depois = ler_personagem(&rt, &backend, conta.id, 3).level;
-        if nivel_depois > 1 {
-            break;
+            Err(erro) if erro.kind() == std::io::ErrorKind::TimedOut => continue,
+            Err(erro) => panic!("abate do Porco: {erro}"),
         }
     }
+    assert!(abatido, "Porco não morreu: sem EXP não há level-up");
+    let mut banco = ler_personagem(&rt, &backend, conta_nivel.id, 0);
+    for _ in 0..20 {
+        if banco.level > 1 {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(300));
+        banco = ler_personagem(&rt, &backend, conta_nivel.id, 0);
+    }
     assert!(
-        nivel_depois > 1,
-        "abate sem level-up no banco (level={nivel_depois}); alvos={:?}",
-        chao.iter().map(|mob| &mob.name).collect::<Vec<_>>()
+        banco.level > 1,
+        "abate sem level-up no banco (level={} exp={})",
+        banco.level,
+        banco.exp
     );
     despejar("levelup", &bot);
-    let banco = ler_personagem(&rt, &backend, conta.id, 3);
     let update = nivel_do_update_score(&bot).expect("_MSG_UpdateScore do level-up");
     assert_eq!(
         i64::from(update + 1),
@@ -240,11 +241,32 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
         banco.level
     );
     eprintln!(
-        "PASS(levelup): banco={} exp={} UpdateScore@0={update} desenhado={}",
+        "PASS(levelup): banco={} exp={} UpdateScore[0]={update} desenhado={}",
         banco.level,
         banco.exp,
         banco.level
     );
+}
+
+/// Conta com credenciais e roster vazio; cria os personagens depois.
+fn setup_conta(
+    rt: &Arc<tokio::runtime::Runtime>,
+    backend: &Arc<PgBackend>,
+    conta_login: &str,
+) -> Option<wyd_db::Account> {
+    let hash = hash_secret(SENHA).expect("argon2id");
+    match rt.block_on(backend.create_account(conta_login, Role::Player)) {
+        Ok(_) => {}
+        Err(wyd_db::DbError::ConstraintViolation { .. }) => {}
+        Err(error) => panic!("conta: {error}"),
+    }
+    rt.block_on(backend.set_credentials(conta_login, &hash, Role::Player))
+        .ok()?;
+    let conta = rt.block_on(backend.find_by_login(conta_login)).ok()?;
+    for personagem in rt.block_on(backend.list_by_account(conta.id)).ok()? {
+        rt.block_on(backend.soft_delete(personagem.id)).ok()?;
+    }
+    Some(conta)
 }
 
 /// Valor cru lido nos quatro pacotes, cada um no offset do legado.

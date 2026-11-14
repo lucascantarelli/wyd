@@ -15,6 +15,8 @@
 //
 // Nada aqui importa crate nem struct do servidor: só a tabela acima e os bytes.
 
+import { readFileSync } from "node:fs";
+
 const SCORE_LEN = 48;
 const SCORE_LEVEL = 0;
 const MOB_BASE_SCORE = 44;
@@ -89,8 +91,7 @@ function principal() {
     console.error("uso: node tools/client/nivel-do-legado.mjs <dump.txt> [--slot=N]");
     process.exit(2);
   }
-  const linhas = require("node:fs")
-    .readFileSync(arquivo, "utf8")
+  const linhas = readFileSync(arquivo, "utf8")
     .split(/\r?\n/)
     .filter(Boolean);
 
