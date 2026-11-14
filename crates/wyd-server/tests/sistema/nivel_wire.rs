@@ -129,8 +129,15 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     let mut ultimo = None;
     for (slot, nome) in [(2_i32, "QANIVEL2"), (3, "QANIVEL3")] {
         config.slot = slot;
-        let bot = Bot::connect_novo(&config, Race::TransKnight, nome, Race::TransKnight.class())
+        let mut bot = Bot::connect_novo(&config, Race::TransKnight, nome, Race::TransKnight.class())
             .expect("criação + entrada no mundo");
+        // O `CreateMob` do próprio personagem chega no tick seguinte ao login.
+        let cena = bot.read_scene(1_500).expect("cena da criação");
+        assert!(
+            cena.iter().any(|mob| mob.name == nome),
+            "{nome} sem CreateMob na cena: {:?}",
+            cena.iter().map(|mob| mob.name.clone()).collect::<Vec<_>>()
+        );
         let banco = ler_personagem(&rt, &backend, conta.id, slot);
         assert_eq!(banco.level, 1, "{nome}: banco nasce 1");
         despejar(&format!("criacao-{nome}"), &bot);
@@ -144,7 +151,8 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     // Login de personagem existente: intermediário (200) e teto (399).
     for slot in [0_i32, 1] {
         config.slot = slot;
-        let bot = Bot::connect(&config, Race::TransKnight).expect("login do char existente");
+        let mut bot = Bot::connect(&config, Race::TransKnight).expect("login do char existente");
+        bot.read_scene(1_500).expect("cena do login");
         let banco = ler_personagem(&rt, &backend, conta.id, slot);
         assert_eq!(banco.level, i64::from([200_i64, 399][usize::try_from(slot).expect("slot")]));
         despejar(&format!("login-slot{slot}"), &bot);
@@ -225,7 +233,7 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     let banco = ler_personagem(&rt, &backend, conta.id, 3);
     let update = nivel_do_update_score(&bot).expect("_MSG_UpdateScore do level-up");
     assert_eq!(
-        update + 1,
+        i64::from(update + 1),
         banco.level,
         "UpdateScore do level-up: fio {update} + 1 = banco {}",
         banco.level
@@ -264,6 +272,13 @@ fn medir(bot: &Bot, slot: i32, caminho: &str, nome: &str) -> Medido {
         .expect("roster cru (CNFAccountLogin/CNFNewCharacter)");
     let login = corpo_de(bot, Opcode::CNFCharacterLogin).expect("CNFCharacterLogin cru");
     let proprio = corpo_create_mob(bot, nome).expect("CreateMob do próprio personagem");
+
+    let login_base = MOB_AT_LOGIN_LEGADO + MOB_BASE_SCORE_LEGADO + SCORE_LEVEL_LEGADO;
+    assert_eq!(
+        i32_em(&login, login_base),
+        i32_em(&login, login_off),
+        "BaseScore[{login_base}] ≠ CurrentScore[{login_off}]"
+    );
 
     Medido {
         selchar: i32_em(&roster, sel_off),
