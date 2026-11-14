@@ -158,12 +158,16 @@ fn frame_create(slot: i32, nome: &str, classe: i32) -> Vec<u8> {
     fechar(frame)
 }
 
-fn frame_delete(slot: i32, nome: &str) -> Vec<u8> {
+fn frame_delete(slot: i32, nome: &str, senha: &str) -> Vec<u8> {
     let mut frame = quadro(Opcode::DeleteCharacter, DeleteCharacter::WIRE_LEN);
+    let mut senha_bytes = [0u8; 12];
+    let bytes = senha.as_bytes();
+    let n = bytes.len().min(senha_bytes.len());
+    senha_bytes[..n].copy_from_slice(&bytes[..n]);
     DeleteCharacter {
         slot,
         mob_name: nome16(nome),
-        password: [0u8; 12],
+        password: senha_bytes,
     }
     .encode_into(&mut frame)
     .expect("corpo");
@@ -201,6 +205,18 @@ fn abrir_com_corpo(frame: &[u8]) -> (Opcode, Vec<u8>) {
 fn responde(stream: &mut TcpStream, frame: Vec<u8>) -> Opcode {
     stream.write_all(&frame).expect("envia");
     abrir(&ler_frame(stream))
+}
+
+/// Recusa de exclusão: o `*Fail` e, depois, o painel de texto que o cliente desenha.
+fn responde_recusa(stream: &mut TcpStream, frame: Vec<u8>) -> Opcode {
+    stream.write_all(&frame).expect("envia");
+    let opcode = abrir(&ler_frame(stream));
+    assert_eq!(
+        abrir(&ler_frame(stream)),
+        Opcode::MessagePanel,
+        "toda recusa de exclusão leva painel"
+    );
+    opcode
 }
 
 #[test]
@@ -282,9 +298,22 @@ fn cria_e_deleta_personagem_pelo_protocolo() {
         "spawn do template"
     );
 
+    // Senha da conta errada é recusada e não apaga.
+    assert_eq!(
+        responde_recusa(&mut stream, frame_delete(1, &nome, "senha-errada")),
+        Opcode::DeleteCharacterFail
+    );
+    assert_eq!(
+        rt.block_on(backend.list_by_account(conta_id))
+            .expect("roster")
+            .len(),
+        1,
+        "senha errada não pode apagar"
+    );
+
     // Deleção com nome divergente é recusada e não apaga.
     assert_eq!(
-        responde(&mut stream, frame_delete(1, "NomeErrado")),
+        responde_recusa(&mut stream, frame_delete(1, "NomeErrado", SENHA)),
         Opcode::DeleteCharacterFail
     );
     assert_eq!(
@@ -297,7 +326,7 @@ fn cria_e_deleta_personagem_pelo_protocolo() {
 
     // Deleção correta: confirmação com o roster redesenhado e roster vazio (soft delete).
     stream
-        .write_all(&frame_delete(1, &nome))
+        .write_all(&frame_delete(1, &nome, SENHA))
         .expect("envia remoção");
     let (opcode_delete, corpo_delete) = abrir_com_corpo(&ler_frame(&mut stream));
     assert_eq!(opcode_delete, Opcode::CNFDeleteCharacter);

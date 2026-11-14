@@ -79,6 +79,19 @@ pub enum PinOutcome {
     Changed,
 }
 
+/// Confere a senha da conta fora do handshake (exclusão de personagem).
+///
+/// Usa a mesma porta e o mesmo Argon2id do `_MSG_AccountLogin`: não existe caminho de
+/// conferência alternativo, e o bloqueio de moderação vale igual.
+pub(crate) fn verify_login_password(
+    backend: &PgBackend,
+    runtime: &tokio::runtime::Runtime,
+    login: &str,
+    senha: &[u8],
+) -> Result<(), AuthError> {
+    password::verify(backend, runtime, login, senha)
+}
+
 /// Converte falha de banco na recusa de autenticação correspondente.
 pub(crate) fn mapear_db(error: DbError) -> AuthError {
     match error {

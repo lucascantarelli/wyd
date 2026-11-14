@@ -203,6 +203,8 @@ pub enum SelectionError {
     Db(String),
     /// Pacote com tamanho diferente do layout portado.
     Layout(String),
+    /// Senha da conta não confere (exclusão de personagem).
+    Auth(String),
     /// `_MSG_ApplyBonus` recusado (sem ponto, classe errada, pré-requisito, morto).
     Bonus(String),
     /// Ganho de EXP recusado (valor não positivo).
@@ -232,6 +234,7 @@ impl core::fmt::Display for SelectionError {
             Self::Conflict => write!(f, "nome de personagem já usado"),
             Self::Db(motivo) => write!(f, "personagem sem lastro no banco: {motivo}"),
             Self::Layout(motivo) => write!(f, "payload inválido: {motivo}"),
+            Self::Auth(motivo) => write!(f, "senha da conta recusada: {motivo}"),
             Self::Bonus(motivo) => write!(f, "bônus recusado: {motivo}"),
             Self::Exp(motivo) => write!(f, "EXP recusada: {motivo}"),
             Self::UseItem(motivo) => write!(f, "uso de item recusado: {motivo}"),
@@ -923,16 +926,29 @@ impl SelectionStore {
         Ok(criado)
     }
 
-    /// Remove (soft-delete) o personagem do slot, exigindo o nome que veio no pacote.
+    /// Remove (soft-delete) o personagem do slot, exigindo nome e senha da conta.
     ///
-    /// A senha de 12 bytes do `_MSG_DeleteCharacter` **não** é conferida: ela pertence à
-    /// autenticação de conta, que ainda não existe nesta entrega (o próprio
-    /// `_MSG_AccountLogin` só tem a versão validada). Quem remove é o dono da sessão; a
-    /// conferência da senha entra junto com a autenticação, nunca antes por palpite.
-    pub fn delete(&self, login: &str, slot: i32, name: &[u8]) -> Result<Character, SelectionError> {
+    /// `senha` são os 12 bytes do `_MSG_DeleteCharacter` — a mesma senha do
+    /// `_MSG_AccountLogin`, conferida aqui com o mesmo Argon2id. Sem isso, uma sessão
+    /// sequestrada apagaria personagem sem prova nenhuma. A recusa é
+    /// [`SelectionError::Auth`] e a borda responde `DeleteCharacterFail` + painel.
+    pub fn delete(
+        &self,
+        login: &str,
+        slot: i32,
+        name: &[u8],
+        senha: &[u8],
+    ) -> Result<Character, SelectionError> {
         let slot = check_slot(slot)?;
         let name = check_name(name)?;
         let account_id = self.account_id(login)?;
+        crate::auth::verify_login_password(
+            self.backend.as_ref(),
+            self.runtime.as_ref(),
+            login,
+            senha,
+        )
+        .map_err(|error| SelectionError::Auth(error.to_string()))?;
         let character = self.find(account_id, slot)?;
         if character.name != name {
             // O cliente manda nome + slot: divergência é recusa, não "apaga o que estiver lá".

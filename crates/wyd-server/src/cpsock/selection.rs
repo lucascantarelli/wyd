@@ -236,11 +236,10 @@ pub(super) fn delete_character(
 ) -> Result<String, SelectionError> {
     let packet = DeleteCharacter::decode(frame)
         .map_err(|error| SelectionError::Layout(error.to_string()))?;
-    let character = store.delete(account, packet.slot, &packet.mob_name)?;
-    // `password_checked=false`: a senha do pacote pertence à autenticação de conta, que ainda
-    // não existe; a remoção é do dono da sessão. Auditoria não pode fingir que houve conferência.
+    let character = store.delete(account, packet.slot, &packet.mob_name, &packet.password)?;
+    // A senha do pacote é conferida com o Argon2id da conta antes do soft-delete.
     Ok(format!(
-        "slot={} name={} id={} password_checked=false",
+        "slot={} name={} id={} password_checked=true",
         character.slot, character.name, character.id
     ))
 }

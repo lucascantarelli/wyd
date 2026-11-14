@@ -4,12 +4,16 @@
 //! lados do gate: versão do cliente oficial (12 000) recebe `_MSG_CNFAccountLogin`; versão
 //! histórica (7 640) é recusada e a conexão fecha sem resposta.
 
+#[path = "../common/mod.rs"]
+mod common;
+
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_db::ServerChannel;
+use wyd_admin::hash_password;
+use wyd_db::{Accounts, PgBackend, PoolConfig, Role, ServerChannel};
 use wyd_net::VersionGate;
 use wyd_protocol::codec::keyword::encode_in_place;
 use wyd_protocol::payload::WirePayload;
@@ -49,11 +53,14 @@ fn world() -> Arc<World> {
 ///
 /// `conta` é única por chamada porque o cânone do log cobre uma sessão por conta: dois testes
 /// em paralelo com a mesma conta disputariam a cerca (`character_session`).
-fn login_frame(version: i32, key_word: u8, conta: &str) -> Vec<u8> {
+fn login_frame(version: i32, key_word: u8, conta: &str, senha: &str) -> Vec<u8> {
     let mut nome_conta = [0u8; 16];
     let bytes = conta.as_bytes();
     let n = bytes.len().min(nome_conta.len());
     nome_conta[..n].copy_from_slice(&bytes[..n]);
+    let mut senha_bytes = [0u8; 12];
+    let s = senha.as_bytes();
+    senha_bytes[..s.len().min(12)].copy_from_slice(&s[..s.len().min(12)]);
     let mut frame = vec![0u8; AccountLogin::WIRE_LEN];
     Header {
         size: AccountLogin::WIRE_LEN as u16,
@@ -66,7 +73,7 @@ fn login_frame(version: i32, key_word: u8, conta: &str) -> Vec<u8> {
     .encode(&mut frame)
     .expect("cabeçalho cabe no frame");
     AccountLogin {
-        account_password: [0u8; 12],
+        account_password: senha_bytes,
         account_name: nome_conta,
         zero: [0u8; 52],
         client_version: version,
@@ -120,7 +127,7 @@ fn versao_do_cliente_oficial_completa_o_handshake() {
         .expect("timeout");
     stream.write_all(&INITCODE.to_le_bytes()).expect("INITCODE");
     stream
-        .write_all(&login_frame(12_000, 7, &conta_unica("h")))
+        .write_all(&login_frame(12_000, 7, &conta_unica("h"), ""))
         .expect("login");
 
     let mut head = [0u8; HEADER_SIZE];
@@ -151,7 +158,7 @@ fn versao_fora_do_gate_e_recusada_com_conexao_fechada() {
         .expect("timeout");
     stream.write_all(&INITCODE.to_le_bytes()).expect("INITCODE");
     stream
-        .write_all(&login_frame(7_640, 3, &conta_unica("v")))
+        .write_all(&login_frame(7_640, 3, &conta_unica("v"), ""))
         .expect("login histórico");
 
     let mut buf = Vec::new();
@@ -169,25 +176,55 @@ fn handshake_contra_servidor_vivo() {
     let Ok(endereco) = std::env::var("WYD_LIVE_CPSOCK") else {
         return;
     };
+    let Some(dsn) = common::dsn_ou_skip("handshake autenticado contra o container") else {
+        return;
+    };
+    // O campo do `_MSG_AccountLogin` tem 12 bytes: a senha do teste cabe nele.
+    const SENHA: &str = "Senha123456";
+    let rt = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(1)
+        .enable_all()
+        .build()
+        .expect("runtime");
+    let backend = rt
+        .block_on(PgBackend::connect(&dsn, PoolConfig::local()))
+        .expect("banco do handshake");
+    let conta = conta_ao_vivo("l");
+    // Conta pode já existir (WYD_LIVE_ACCOUNT): reaplica a senha em vez de falhar no UNIQUE.
+    match rt.block_on(backend.create_account(&conta, Role::Player)) {
+        Ok(_) | Err(wyd_db::DbError::ConstraintViolation { .. }) => {}
+        Err(error) => panic!("conta do handshake: {error}"),
+    }
+    let hash = hash_password(SENHA).expect("argon2id");
+    rt.block_on(backend.set_credentials(&conta, &hash, Role::Player))
+        .expect("senha do handshake");
+
     let mut stream = TcpStream::connect(&endereco).expect("conecta no container");
     stream
         .set_read_timeout(Some(Duration::from_secs(5)))
         .expect("timeout");
     stream.write_all(&INITCODE.to_le_bytes()).expect("INITCODE");
     stream
-        .write_all(&login_frame(12_000, 11, &conta_ao_vivo("l")))
+        .write_all(&login_frame(12_000, 11, &conta, SENHA))
         .expect("login");
     let mut reply = [0u8; HEADER_SIZE];
     stream
         .read_exact(&mut reply)
         .expect("resposta do container");
-    let mut frame = reply;
+    let size = usize::from(u16::from_le_bytes([reply[0], reply[1]]));
+    let mut frame = vec![0u8; size];
+    frame[..HEADER_SIZE].copy_from_slice(&reply);
+    if size > HEADER_SIZE {
+        stream
+            .read_exact(&mut frame[HEADER_SIZE..])
+            .expect("corpo da resposta");
+    }
     wyd_protocol::codec::keyword::decode_in_place(&mut frame).expect("desofusca");
     let header = Header::decode(&frame).expect("cabeçalho");
     assert_eq!(
         Opcode::from_wire(header.message_type),
         Some(Opcode::CNFAccountLogin),
-        "{endereco} confirmou o handshake"
+        "{endereco} confirmou o handshake com senha"
     );
 }
 
@@ -203,7 +240,7 @@ fn versao_historica_e_recusada_pelo_servidor_vivo() {
         .expect("timeout");
     stream.write_all(&INITCODE.to_le_bytes()).expect("INITCODE");
     stream
-        .write_all(&login_frame(7_640, 5, &conta_unica("b")))
+        .write_all(&login_frame(7_640, 5, &conta_unica("b"), ""))
         .expect("login");
     let mut buf = Vec::new();
     let lido = std::io::Read::read_to_end(&mut stream, &mut buf).unwrap_or(1);

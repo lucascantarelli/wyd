@@ -1,5 +1,6 @@
 //! Submódulo de `cpsock` (ADR-0026, etapa 2).
 
+use super::action::reply_panel;
 use super::selection::read_frame;
 use super::*;
 
@@ -89,6 +90,11 @@ pub(super) fn authorize_pin(
                             Opcode::AccountSecureFail,
                             wyd_protocol::motivo::CodigoRecusa::PinIncorreto,
                         );
+                        let _ = reply_panel(
+                            stream,
+                            head[2],
+                            "Confirme o PIN atual antes de gravar o novo.",
+                        );
                         return Err(HandshakeError::Pin("troca sem PIN atual".to_string()));
                     }
                     _ => auth.secure_pin(account, &pacote.numeric_token),
@@ -124,6 +130,8 @@ pub(super) fn authorize_pin(
                                 Opcode::AccountSecureFail,
                                 wyd_protocol::motivo::CodigoRecusa::ContaEmUso,
                             );
+                            let _ =
+                                reply_panel(stream, head[2], "Conta já conectada em outro canal.");
                             return Err(HandshakeError::Session(
                                 "conta em uso (forçado por WYD_TEST_FORCE_CONTA_EM_USO)"
                                     .to_string(),
@@ -145,6 +153,11 @@ pub(super) fn authorize_pin(
                                     Opcode::AccountSecureFail,
                                     wyd_protocol::motivo::CodigoRecusa::ContaEmUso,
                                 );
+                                let _ = reply_panel(
+                                    stream,
+                                    head[2],
+                                    "Conta já conectada em outro canal.",
+                                );
                                 return Err(error);
                             }
                         }
@@ -163,6 +176,13 @@ pub(super) fn authorize_pin(
                             wyd_protocol::motivo::CodigoRecusa::PinIncorreto
                         };
                         let _ = reply_recusa(stream, head[2], Opcode::AccountSecureFail, motivo);
+                        let texto =
+                            if matches!(motivo, wyd_protocol::motivo::CodigoRecusa::PinBloqueado) {
+                                "PIN bloqueado por várias tentativas. Aguarde 10 minutos."
+                            } else {
+                                "PIN incorreto. Tente novamente."
+                            };
+                        let _ = reply_panel(stream, head[2], texto);
                         return Err(HandshakeError::Pin(error.to_string()));
                     }
                 }

@@ -94,7 +94,17 @@ pub(super) fn dispatch(
                         "character",
                         &format!("result=refused action=delete account={account} reason={error}"),
                     );
-                    reply(stream, key_word, Opcode::DeleteCharacterFail)
+                    // `0x0113` sozinho não desenha nada no 7662: o painel é o texto que o
+                    // jogador vê quando a senha da conta não confere.
+                    let texto = match &error {
+                        SelectionError::Auth(_) => "Senha incorreta. Tente novamente.",
+                        _ => "Não foi possível excluir o personagem.",
+                    };
+                    // Contrato primeiro (`0x0113`), texto depois: o cliente lê o opcode e,
+                    // quando reconhece o painel, desenha a frase.
+                    let entregue = reply(stream, key_word, Opcode::DeleteCharacterFail);
+                    let _ = reply_panel(stream, key_word, texto);
+                    entregue
                 }
             }
         }

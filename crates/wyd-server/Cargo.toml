@@ -74,6 +74,10 @@ name = "integracao_tick_processo"
 path = "tests/integracao/tick_processo.rs"
 
 [[test]]
+name = "sistema_autenticacao"
+path = "tests/sistema/autenticacao.rs"
+
+[[test]]
 name = "sistema_campo_vivo"
 path = "tests/sistema/campo_vivo.rs"
 

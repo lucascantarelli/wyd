@@ -184,3 +184,22 @@ viva segue bloqueada por `CLIENT-06`.
 
 Critérios para voltar a ✅: senha errada recusa de fato, PIN errado recusa com mensagem visível,
 PIN novo grava e autentica no relogin, tudo com print + log do canal.
+
+## Execução 2026-11-14 (servidor)
+
+- **Exclusão de personagem passou a exigir a senha da conta**: `_MSG_DeleteCharacter` traz 12 B de
+  senha e eles são conferidos com o mesmo Argon2id do `_MSG_AccountLogin` antes do soft-delete.
+  Senha errada → `DeleteCharacterFail` + `MessagePanel`, personagem intacto; sucesso →
+  `CNFDeleteCharacter` e log `password_checked=true`.
+- **Recusas de PIN com texto**: PIN incorreto, PIN bloqueado, conta em uso e troca sem o PIN atual
+  enviam `AccountSecureFail` **e** o `MessagePanel` que o 7662 desenha; a senha errada de login já
+  enviava `NewAccountFail` + painel.
+- **Provas de fio** (Postgres + canal 1 em `127.0.0.1:8281`, imagem reconstruída):
+  `sistema_autenticacao` 1/1 (senha errada, PIN errado, PIN certo, delete com senha errada e certa),
+  `sistema_login` 8/8, `sistema_personagens_crud` 2/2, `sistema_handshake` 5/5,
+  `sistema_pin_troca` 1/1, `sistema_pin_persistencia` 3/3.
+- **Continua pendente**: a prova **visual** no 7662 (senha/PIN recusados com mensagem na tela e
+  exclusão pedindo a senha), que depende de `CLIENT-06`/entrada no cliente.
+
+Critérios para ✅ permanecem: print + log do canal para senha errada, PIN errado com mensagem,
+PIN novo autenticando no relogin e exclusão exigindo a senha.

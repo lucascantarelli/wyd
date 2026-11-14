@@ -388,6 +388,21 @@ fn pin_errado_e_recusado_sem_sessao() {
     assert_eq!(login(&mut s, &conta, SENHA), Some(Opcode::CNFAccountLogin));
     s.write_all(&frame_pin("0000")).expect("PIN errado");
     assert_eq!(ler_opcode(&mut s), Opcode::AccountSecureFail);
+    // A recusa vem com o painel de texto que o 7662 desenha.
+    let painel = ler_frame(&mut s).expect("painel da recusa de PIN");
+    let cabecalho = Header::decode(&painel).expect("header do painel");
+    assert_eq!(
+        Opcode::from_wire(cabecalho.message_type),
+        Some(Opcode::MessagePanel)
+    );
+    let texto = String::from_utf8_lossy(wyd_protocol::nul_trimmed(
+        &MessagePanel::decode(&painel).expect("painel").text,
+    ))
+    .to_string();
+    assert!(
+        texto.to_lowercase().contains("pin"),
+        "painel da recusa precisa citar o PIN: {texto:?}"
+    );
     let mut resto = Vec::new();
     assert_eq!(s.read_to_end(&mut resto).unwrap_or(0), 0, "conexão fechada");
 

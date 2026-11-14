@@ -187,9 +187,10 @@ grep -nE "(^|[ ,])0x270([ ,]|$)" target/wyd-text.asm   # site de envio
 | 4c | `_MSG_MessageWhisper` (`0x0334`, canal do `/getout`) | **tolerado** com `event=citizen action=getout`: o corpo não tem layout provado, então nada é lido nem executado e a sessão continua (invariante 5) |
 | 5 | qualquer outro | **tolerado** (`result=tolerated`), sessão continua — antes o primeiro pacote encerrava a conexão |
 
-Só `Size` inválido ou falha de I/O encerram a conexão. A senha de 12 bytes do
-`_MSG_DeleteCharacter` não é conferida nesta entrega (pertence à autenticação de conta, que
-ainda não existe); a remoção é do dono da sessão e o log grava `password_checked=false`.
+Só `Size` inválido ou falha de I/O encerram a conexão. Os 12 bytes de senha do
+`_MSG_DeleteCharacter` são conferidos com o mesmo Argon2id do `_MSG_AccountLogin` antes do
+soft-delete: senha errada responde `DeleteCharacterFail` + `MessagePanel` e não apaga nada;
+no sucesso o log grava `password_checked=true`.
 
 ## Regras
 
