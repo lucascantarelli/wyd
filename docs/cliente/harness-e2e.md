@@ -70,14 +70,15 @@ use o decodificador da seção 4.1.
 ## 4.1 Como decodificar (opcode e campos)
 
 ```bash
-cargo run -p wyd-protocol --bin decode-captura -- tmp/cliente/sessao-login.jsonl
+cargo run -p wyd-server --bin decode-captura -- tmp/cliente/sessao-login.jsonl
 ```
 
 Cada frame vira uma linha com direção, `Size`, opcode (`0xNNNN` + nome da tabela congelada),
 `id`, `tick`, keyword e checksum. Os opcodes já portados trazem campos: `AccountLogin` (conta e
 versão, **sem** senha), `CreateMob` (nível, HP/MP, FOR/INT/DES/CON, chaos, posição) e
-`MessagePanel` (texto). Opcode sem layout documentado aparece só como `desconhecido` — o CLI não
-inventa offset.
+`MessagePanel` (texto), `CNFCharacterLogin` (o `STRUCT_MOB` do login) e `UpdateScore`
+(`STRUCT_SCORE`, crítico e resist). Opcode sem layout documentado aparece só como
+`desconhecido` — o CLI não inventa offset.
 
 `--hex` imprime o frame em hexadecimal quando o decode falha. Exit `1` se o arquivo não tiver
 frame ou se algum frame não decodificar: uma captura só com `FIM` (cliente que não conectou) é

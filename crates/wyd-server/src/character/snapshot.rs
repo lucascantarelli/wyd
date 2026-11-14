@@ -588,6 +588,12 @@ impl Mob {
         let cor = chaos_rate_de(personagem.cp);
         mob.base_score.chaos_rate = cor;
         mob.current_score.chaos_rate = cor;
+        // `Critical` e `Resist[4]` do template são placeholders do `BaseMob` (255 e -11), não
+        // stats do jogador: no fio viram 102% de crítico e 245 de resistência no 7662 (medido
+        // na captura de 2026-11-14). Enquanto não há fonte persistida/equipamento para eles,
+        // o personagem sai neutro — o bônus de item é GAME-19.
+        mob.critical = 0;
+        mob.resist = [0; 4];
         mob.score_bonus = u16_of(personagem.score_bonus);
         mob.skill_bonus = u16_of(personagem.skill_bonus);
         mob
@@ -987,6 +993,16 @@ mod tests {
             skill_bonus: 3,
             ..Character::default()
         }
+    }
+
+    #[test]
+    fn personagem_nao_herda_critico_e_resist_do_template() {
+        let mob = Mob::from_character(&personagem(0, "Novato", 0));
+        assert_eq!(mob.critical, 0, "Critical 255 do template virava 102%");
+        assert_eq!(mob.resist, [0; 4], "Resist -11 do template virava 245");
+        let body = update_score_body(&mob);
+        assert_eq!(body[48], 0, "MSG_UpdateScore.Critical@48");
+        assert_eq!(&body[118..122], &[0, 0, 0, 0], "MSG_UpdateScore.Resist@118");
     }
 
     #[test]

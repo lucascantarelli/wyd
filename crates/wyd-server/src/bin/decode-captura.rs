@@ -7,8 +7,8 @@
 //! está portado, os campos são impressos.
 //!
 //! Uso:
-//!   cargo run -p wyd-protocol --bin decode-captura -- tmp/cliente/primeira-sessao.jsonl
-//!   cargo run -p wyd-protocol --bin decode-captura -- <sessao.jsonl> --hex
+//!   cargo run -p wyd-server --bin decode-captura -- tmp/cliente/primeira-sessao.jsonl
+//!   cargo run -p wyd-server --bin decode-captura -- <sessao.jsonl> --hex
 //!
 //! Nada aqui inventa layout: opcode sem tipo portado aparece só como `0xNNNN`.
 
@@ -17,7 +17,9 @@ use std::fs;
 use std::process::ExitCode;
 
 use wyd_protocol::payload::{nul_trimmed, AccountLogin, CreateMob, MessagePanel};
+use wyd_protocol::wire::header::HEADER_SIZE;
 use wyd_protocol::{decode_in_place, Header, Opcode, WirePayload};
+use wyd_server::personagens::Mob;
 
 fn main() -> ExitCode {
     let mut args = env::args().skip(1);
@@ -137,6 +139,58 @@ fn resumo(opcode: Opcode, frame: &[u8]) -> Option<String> {
                 p.dexterity,
                 p.constitution,
                 p.chaos_rate
+            ))
+        }
+        Opcode::CNFCharacterLogin => {
+            // Corpo: `PosX@0`, `PosY@2`, `STRUCT_MOB@4` (`character_login_body`).
+            let mob = Mob::decode(frame.get(HEADER_SIZE + 4..)?).ok()?;
+            let score = mob.current_score;
+            Some(format!(
+                "mob={} nivel={} hp={}/{} mp={}/{} for={} int={} des={} con={} dano={} chaos={} resist={:?} critico={}",
+                String::from_utf8_lossy(nul_trimmed(&mob.name)),
+                score.level,
+                score.hp,
+                score.max_hp,
+                score.mp,
+                score.max_mp,
+                score.strength,
+                score.intelligence,
+                score.dexterity,
+                score.constitution,
+                score.damage,
+                score.chaos_rate,
+                mob.resist,
+                mob.critical
+            ))
+        }
+        Opcode::UpdateScore => {
+            // Corpo: `STRUCT_SCORE`@0 (48 B), `Critical`@48, `Resist[4]`@118,
+            // `CurrHp`@124, `CurrMp`@128 (`MSG_UpdateScore`, protocolo.md §6).
+            let body = frame.get(HEADER_SIZE..)?;
+            if body.len() < 132 {
+                return None;
+            }
+            let i32_at = |off: usize| {
+                i32::from_le_bytes([body[off], body[off + 1], body[off + 2], body[off + 3]])
+            };
+            let i16_at = |off: usize| i16::from_le_bytes([body[off], body[off + 1]]);
+            Some(format!(
+                "nivel={} hp={}/{} mp={}/{} for={} int={} des={} con={} chaos={} dano={} critico={} resist={:?} curr_hp={} curr_mp={}",
+                i32_at(0),
+                i32_at(24),
+                i32_at(16),
+                i32_at(28),
+                i32_at(20),
+                i16_at(32),
+                i16_at(34),
+                i16_at(36),
+                i16_at(38),
+                body[15],
+                i32_at(8),
+                body[48],
+                [body[118], body[119], body[120], body[121]],
+                i32_at(124),
+                i32_at(128)
             ))
         }
         Opcode::MessagePanel => {

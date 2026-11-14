@@ -66,3 +66,43 @@ O caminho do `select` também precisa ser conferido contra `list_by_account`, qu
 - [ ] CP de personagem novo = neutro (nome amarelo), provado por print.
 - [ ] `STRUCT_MOB`/`UpdateScore` com golden de bytes e captura do 7662.
 - [ ] Nenhuma correção por “ajustar até parecer certo” sem captura.
+
+## Captura decodificada (2026-11-14)
+
+Primeira captura real decodificada com o CLI Rust (`wyd-server/src/bin/decode-captura.rs`),
+gravada pelo proxy do harness com um login completo (`INITCODE` → `AccountLogin` → `AccountSecure`
+→ `CharacterLogin`) do personagem `QAVIVO01` (nível 10, HP 100/100, MP 50/50, FOR/INT/DES/CON
+0/0/0/0 no banco; `character_scores` presente, CP 0).
+
+```
+#7 S 1832B 0x0114 CNFCharacterLogin id=30000 mob=QAVIVO01 nivel=9 hp=100/100 mp=50/50 for=0 int=0 des=0 con=0 dano=5 chaos=75 resist=[-11,-11,-11,-11] critico=255
+#8 S  152B 0x0336 UpdateScore        id=1      nivel=9 hp=100/100 mp=50/50 for=0 int=0 des=0 con=0 chaos=75 dano=5 critico=255 resist=[245,245,245,245] curr_hp=100 curr_mp=50
+```
+
+Leitura:
+
+- **Resist 245 e crítico 102% têm origem confirmada no servidor.** `Mob::from_character` herdava
+  `Resist[4] = -11` e `Critical = 255` do `BaseMob`; no fio o resist sai `245` (u8) e o cliente
+  desenha `255 / 2,5 = 102%`. Corrigido: personagem sai com `critical = 0` e `resist = [0; 4]`
+  (equipamento é GAME-19), coberto por `personagem_nao_herda_critico_e_resist_do_template`.
+- **MP e atributos do `CNFCharacterLogin`/`UpdateScore` chegam corretos** para um personagem com
+  `character_scores`: `mp=50/50` e `curr_mp=50`, atributos iguais ao banco. O `mp=0/0` e os
+  `FOR/INT/DES/CON=0` do print **não se reproduzem** nesse caminho — resta comparar com o
+  personagem exato do print (há seis linhas vivas `Cantarelli`, ids 57/137/150/151/152/164) e
+  capturar o mesmo login no 7662 para saber se o cliente lê outros offsets.
+- Nível no fio é 0-based (`nível 10` → `9`), como o `wire_level` documenta.
+- `CreateMob` do jogador continua com `mp=0/0` e atributos 0 porque `SceneMob` não carrega esses
+  campos (o painel do próprio personagem vem do `CNF`/`UpdateScore`); fica registrado como
+  limitação separada, não como causa do print.
+
+Depois da correção, a mesma captura (novo login pelo proxy, canal 1 reconstruído) mostra:
+
+```
+#7 CNFCharacterLogin ... mp=50/50 chaos=75 resist=[0,0,0,0] critico=0
+#8 UpdateScore        ... critico=0 resist=[0,0,0,0] curr_mp=50
+```
+
+Arquivos: `tmp/cliente/captura-bot.jsonl` (antes) e `tmp/cliente/captura-bot2.jsonl` (depois),
+fora do git. Evidência de teste: `cargo test -p wyd-server --lib snapshot` 14/14.
+
+O aceite visual do 7662 continua pendente (print + log do mesmo login) e a issue segue **⬜**.

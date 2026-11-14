@@ -256,6 +256,9 @@ fn cena_entrega_create_mob_do_snapshot_e_o_npc_responde_ao_dialogo() {
                 ativos.insert(mob.mob_id, mob);
                 mobs.push(mob);
             }
+            // Par documentado da entrada (`UpdateScore` + `UpdateEtc`, protocolo.md §6):
+            // o teste da cena não depende do conteúdo do `UpdateEtc`.
+            Opcode::UpdateEtc => {}
             Opcode::RemoveMob => removes += 1,
             outro => panic!("frame inesperado na entrada do mundo: {outro:?}"),
         }
