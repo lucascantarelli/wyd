@@ -106,3 +106,28 @@ Arquivos: `tmp/cliente/captura-bot.jsonl` (antes) e `tmp/cliente/captura-bot2.js
 fora do git. Evidência de teste: `cargo test -p wyd-server --lib snapshot` 14/14.
 
 O aceite visual do 7662 continua pendente (print + log do mesmo login) e a issue segue **⬜**.
+
+### Comparação com o banco (2026-11-14)
+
+O decodificador ganhou `--dsn`: ele pega conta (`AccountLogin`), personagem/slot (`CNFCharacterLogin`)
+e o `STRUCT_SCORE` (do `CNF` e do `UpdateScore`, que substitui) e compara com `characters` +
+`character_scores` — nível 1-based do banco convertido por `wire_level`, HP/MP, atributos e
+`CP + 75`.
+
+Saída real para `QAVIVO01` (canal 1 reconstruído):
+
+```
+banco: QAVIVO01 id=138 slot=0 nivel=10 (fio 9) hp=100/100 mp=50/50 for=0 int=0 des=0 con=0 cp=0
+nivel: captura=9 banco=9 OK
+hp: captura=100 banco=100 OK
+hp_max: captura=100 banco=100 OK
+mp: captura=50 banco=50 OK
+mp_max: captura=50 banco=50 OK
+forca: captura=0 banco=0 OK
+...
+chaos: captura=75 banco=75 OK
+```
+
+Zero divergências para um personagem com `character_scores`. Isso separa o que o servidor manda
+(correto neste caso) do que o cliente desenha — o `mp=0/0`/atributos 0 do print continua sem
+reprodução no fio e precisa do login do **mesmo** personagem no 7662.

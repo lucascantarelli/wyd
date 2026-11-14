@@ -80,6 +80,16 @@ versão, **sem** senha), `CreateMob` (nível, HP/MP, FOR/INT/DES/CON, chaos, pos
 (`STRUCT_SCORE`, crítico e resist). Opcode sem layout documentado aparece só como
 `desconhecido` — o CLI não inventa offset.
 
+Com `--dsn <url>` (ou `WYD_TEST_DSN`/`DATABASE_URL`), o personagem do `CNFCharacterLogin` é
+comparado com `characters` + `character_scores`: nível (banco 1-based → fio 0-based), HP, MP,
+FOR/INT/DES/CON e a cor do nome (`CP + 75`). Cada campo sai `OK` ou `DIVERGENTE`, e qualquer
+divergência faz o processo sair `1`.
+
+```bash
+cargo run -p wyd-server --bin decode-captura -- tmp/cliente/sessao-login.jsonl \
+  --dsn postgres://admin:admin123@127.0.0.1:5432/wyd
+```
+
 `--hex` imprime o frame em hexadecimal quando o decode falha. Exit `1` se o arquivo não tiver
 frame ou se algum frame não decodificar: uma captura só com `FIM` (cliente que não conectou) é
 falha explícita, não sucesso vazio.
