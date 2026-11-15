@@ -10,6 +10,10 @@ use std::io::ErrorKind;
 
 use wyd_protocol::wire::opcode::Opcode;
 
+pub mod router;
+
+pub use router::{Acao, Estagio, Router7662};
+
 /// Recusa que a tela sabe explicar. `Desconhecida` é o último recurso acionável.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Recusa {

@@ -153,6 +153,14 @@ impl Engine {
             } => {
                 let _ = reply.send(self.attack_at(attacker, x, y, now_ms));
             }
+            Command::AttackScene {
+                attacker,
+                scene,
+                now_ms,
+                reply,
+            } => {
+                let _ = reply.send(self.attack_scene_at(attacker, scene, now_ms));
+            }
             Command::UseKey {
                 speaker,
                 x,

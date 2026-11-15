@@ -453,6 +453,11 @@ pub struct ActorRefresh {
     pub intelligence: i16,
     pub dexterity: i16,
     pub constitution: i16,
+    /// EXP acumulada do personagem. `None` = quem chamou só tem o `STRUCT_SCORE` (não mexe
+    /// na EXP viva); `Some` = o `STRUCT_MOB` inteiro, e o save de saída grava este valor em
+    /// vez do exp do login (sem isso, o abate creditava EXP no banco e o logout devolvia o
+    /// valor antigo).
+    pub exp: Option<i64>,
 }
 
 impl ActorRefresh {
@@ -475,6 +480,16 @@ impl ActorRefresh {
             intelligence: score.intelligence,
             dexterity: score.dexterity,
             constitution: score.constitution,
+            exp: None,
+        }
+    }
+
+    /// Mesmo refresh, mas levando também a EXP acumulada do `STRUCT_MOB` gravado.
+    #[must_use]
+    pub fn from_mob(mob: &crate::character::snapshot::Mob) -> Self {
+        Self {
+            exp: Some(mob.exp),
+            ..Self::from_score(&mob.current_score)
         }
     }
 }
@@ -575,6 +590,17 @@ pub enum Command {
         attacker: Entity,
         x: i32,
         y: i32,
+        now_ms: u64,
+        reply: SyncSender<Result<Option<AttackOutcome>, CoreError>>,
+    },
+    /// Golpe no `MobID` de cena que veio em `Dam[i].TargetID`.
+    ///
+    /// É o campo que o `MobAttack` do legado (`Server.cpp:9881`) lê: o alvo é o id, não o
+    /// tile. O cliente 7662 preenche `Dam[].TargetID` e pode mandar `TargetX/TargetY` zerado
+    /// no golpe básico; resolver só pelo tile perdia o alvo (`result=no_target`).
+    AttackScene {
+        attacker: Entity,
+        scene: u16,
         now_ms: u64,
         reply: SyncSender<Result<Option<AttackOutcome>, CoreError>>,
     },
@@ -841,6 +867,30 @@ impl EngineHandle {
                 attacker,
                 x,
                 y,
+                now_ms,
+                reply,
+            },
+            COMMAND_TIMEOUT,
+        ) {
+            Some(resultado) => resultado,
+            None => Err(CoreError::EntityNotAlive {
+                index: attacker.index,
+                generation: attacker.generation,
+            }),
+        }
+    }
+
+    /// Golpe no `MobID` de cena (`Dam[i].TargetID` do `_MSG_Attack`).
+    pub fn attack_scene(
+        &self,
+        attacker: Entity,
+        scene: u16,
+        now_ms: u64,
+    ) -> Result<Option<AttackOutcome>, CoreError> {
+        match self.call(
+            |reply| Command::AttackScene {
+                attacker,
+                scene,
                 now_ms,
                 reply,
             },
@@ -1281,6 +1331,42 @@ mod tests {
         assert_eq!(engine.npc_actors(), 0);
     }
 
+    /// O `CreateMob` é fio: o `Score.Level` sai **0-based** para NPC e para jogador, porque o
+    /// cliente 7662 desenha `Level + 1` (personagem de banco nível 1 aparecia "Nv 2" com o
+    /// nível 1-based no fio). O banco/`NpcSpec` continuam 1-based.
+    #[test]
+    fn create_mob_manda_nivel_zero_based_para_npc_e_jogador() {
+        let mut engine = engine();
+        let monstro = NpcSpec {
+            stats: Stats {
+                level: 30,
+                ..npc(9, "GremlinDecoy", 41, 40, 120).stats
+            },
+            ..npc(9, "GremlinDecoy", 41, 40, 120)
+        };
+        engine.sync_npcs(vec![monstro]);
+        engine
+            .enter(&personagem(9, 10, 10), ActorSkin::default())
+            .expect("entrada");
+
+        let foto = engine.scene_snapshot();
+        let npc_visto = foto
+            .mobs
+            .iter()
+            .find(|mob| mob.npc_id == 9)
+            .expect("NPC na cena");
+        assert_eq!(npc_visto.level, 29, "NPC nível 30 no banco vai como 29");
+        let jogador_visto = foto
+            .mobs
+            .iter()
+            .find(|mob| mob.actor)
+            .expect("jogador na cena");
+        assert_eq!(
+            jogador_visto.level, 9,
+            "jogador de banco nível 10 vai como 9"
+        );
+    }
+
     #[test]
     fn dialogo_exige_alcance_e_usa_o_nome_da_definicao() {
         let mut engine = engine();
@@ -1636,6 +1722,28 @@ mod tests {
             ..Default::default()
         };
         assert_eq!(ActorRefresh::from_score(&teto).level, 399);
+    }
+
+    #[test]
+    fn refresh_do_abate_leva_a_exp_para_o_save() {
+        // Antes, o refresh sem relogin não carregava a EXP: o save de saída gravava a do
+        // login e todo abate perdia a EXP no logout.
+        let mob = crate::personagens::Mob {
+            exp: 794,
+            current_score: crate::personagens::Score {
+                level: 1,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let refresh = ActorRefresh::from_mob(&mob);
+        assert_eq!(refresh.exp, Some(794), "from_mob leva a EXP gravada");
+        assert_eq!(refresh.level, 2, "fio 1 = banco 2");
+        assert_eq!(
+            ActorRefresh::from_score(&mob.current_score).exp,
+            None,
+            "quem só tem o Score não mexe na EXP viva"
+        );
     }
 
     #[test]

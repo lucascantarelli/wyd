@@ -189,9 +189,31 @@ pub(super) fn authorize_pin(
                 }
             }
             Opcode::CreateCharacter | Opcode::DeleteCharacter | Opcode::CharacterLogin => {
-                // O cliente 7662 não repete o PIN ao entrar no canal: manda a seleção
-                // direto. A senha já foi conferida no `_MSG_AccountLogin`, então a sessão
-                // abre aqui e o pacote (já em claro) volta para o laço de seleção — o
+                // Conta **com** PIN cadastrado que pula a segunda senha não entra: antes este
+                // braço abria a sessão para qualquer um, então "PIN aceita qualquer coisa" era
+                // literal — o cliente que mandasse a seleção direto passava sem conferir nada.
+                // A recusa é a mesma do PIN errado (`0x0FDF` + painel) e a sessão não abre.
+                if registrado {
+                    log(
+                        "warn",
+                        "pin",
+                        &format!(
+                            "result=refused account={account} reason=selecao_antes_do_pin opcode={}",
+                            valid.opcode.const_name()
+                        ),
+                    );
+                    let _ = reply_recusa(
+                        stream,
+                        head[2],
+                        Opcode::AccountSecureFail,
+                        wyd_protocol::motivo::CodigoRecusa::PinIncorreto,
+                    );
+                    let _ = reply_panel(stream, head[2], "Senha numérica exigida.");
+                    return Err(HandshakeError::Pin("seleção antes do PIN".to_string()));
+                }
+                // Sem PIN cadastrado, o cliente 7662 não repete a segunda senha: manda a
+                // seleção direto. A senha já foi conferida no `_MSG_AccountLogin`, então a
+                // sessão abre aqui e o pacote (já em claro) volta para o laço de seleção — o
                 // jogador entra no mundo em vez de receber "Falha ao conectar".
                 let lease = open_session(account, sessions, version)?;
                 log(

@@ -82,6 +82,10 @@ name = "sistema_campo_vivo"
 path = "tests/sistema/campo_vivo.rs"
 
 [[test]]
+name = "sistema_combate_pacote"
+path = "tests/sistema/combate_pacote.rs"
+
+[[test]]
 name = "sistema_combate_vivo"
 path = "tests/sistema/combate_vivo.rs"
 
@@ -116,6 +120,18 @@ path = "tests/sistema/limite_ip.rs"
 [[test]]
 name = "sistema_login"
 path = "tests/sistema/login.rs"
+
+[[test]]
+name = "sistema_login_canal"
+path = "tests/sistema/login_canal.rs"
+
+[[test]]
+name = "sistema_painel_login_canal"
+path = "tests/sistema/painel_login_canal.rs"
+
+[[test]]
+name = "sistema_criacao_canal"
+path = "tests/sistema/criacao_canal.rs"
 
 [[test]]
 name = "sistema_loja_viva"

@@ -118,7 +118,7 @@ sequenceDiagram
 | 🗄️ Banco | **50 migrations · 86 tabelas** no gate atual |
 | 🧱 Workspace | **9 crates Rust** + `apps/launcher-ui` (Tauri) |
 | 🌐 Stack local | 2 canais + gateway + portal + PostgreSQL + Prometheus/Grafana/Loki |
-| 🖥️ Cliente | 7662 externo; prova visual de `BUG-01`, `BUG-02`, `GAME-17` e `GAME-18` pendente |
+| 🖥️ Cliente | 7662 externo; recusa de login **provada por captura** (`0x011C` → registro 12 do `strdef.bin`); prova visual de `BUG-02`, `GAME-17` e `GAME-18` pendente |
 
 ### ✅ Já funciona com prova
 
@@ -131,7 +131,7 @@ sequenceDiagram
 
 ### 🚧 Ainda em aberto
 
-- **Prova visual no cliente 7662** para mensagens de entrada, PIN, cena e Campo de Treinamento.
+- **Prova visual no cliente 7662** para PIN, cena e Campo de Treinamento (a recusa de login já foi capturada: `target/login-recusa-1.jpg`, texto igual ao registro 12 de `client/UI/strdef.bin`).
 - Lojas/diálogo de NPC, caixa de drop no chão, trade jogador↔jogador e skills no fio.
 - Cobertura completa de carga, concorrência, banco e build de produção.
 - Curva de crescimento e reorganização final do roadmap.

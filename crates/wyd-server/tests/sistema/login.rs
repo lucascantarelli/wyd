@@ -15,7 +15,7 @@ use std::time::Duration;
 
 use wyd_admin::auth::hash_secret;
 use wyd_admin::hash_password;
-use wyd_db::{Accounts, PgBackend, PoolConfig, Role, ServerChannel};
+use wyd_db::{Accounts, Characters, PgBackend, PoolConfig, Role, ServerChannel};
 use wyd_net::VersionGate;
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::payload::WirePayload;
@@ -295,11 +295,35 @@ fn senha_e_pin_corretos_chegam_na_selecao() {
     assert!(personagens.iter().any(|p| p.name == nome), "criou no banco");
 }
 
-/// Lê o `_MSG_MessagePanel` que acompanha o `NewAccountFail` e confere o texto genérico.
+/// O caso visível (senha errada na exclusão) não fecha a conexão depois do painel: a janela do
+/// cliente continua viva. O login recusado tem de fazer o mesmo — nenhum byte novo e **sem EOF**
+/// (um FIN imediato apaga a janela de erro antes de ela ser desenhada).
+fn assert_conexao_aberta_sem_bytes(stream: &mut TcpStream) {
+    stream
+        .set_read_timeout(Some(Duration::from_millis(800)))
+        .expect("timeout curto");
+    let mut resto = [0u8; 64];
+    match stream.read(&mut resto) {
+        Ok(0) => panic!("conexão fechada no instante do painel — o caso visível não fecha"),
+        Ok(n) => panic!("bytes inesperados depois do painel: {n}"),
+        Err(erro)
+            if matches!(
+                erro.kind(),
+                std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+            ) => {}
+        Err(erro) => panic!("erro de leitura depois do painel: {erro}"),
+    }
+}
+
+/// Confere a recusa de senha **na forma medida** contra o único caminho que o jogador vê
+/// (senha errada na exclusão de personagem): **um** `*Fail` da operação, header-only (12 B, já
+/// consumido pelo chamador), e `_MSG_MessagePanel` de 140 B com o texto@12.
 ///
-/// O 7662 ignora o `*Fail` puro; este painel é a fallback visível de senha errada.
+/// O `0x0117 NewAccountFail` saiu do fio: o binário 7662 não compara esse opcode (`DIV-01`) e
+/// era o único frame a mais em relação ao caso visível. Comparação campo a campo em
+/// `docs/rust/evidencias/painel-login-2026-11-14.md`.
 fn assert_painel_de_senha(stream: &mut TcpStream) {
-    let painel = ler_frame(stream).expect("_MSG_MessagePanel depois do NewAccountFail");
+    let painel = ler_frame(stream).expect("_MSG_MessagePanel depois do *Fail");
     let header = Header::decode(&painel).expect("header do painel");
     assert_eq!(
         header.size as usize,
@@ -329,19 +353,13 @@ fn senha_errada_e_recusada_sem_sessao() {
     let mut s = conectar(porta);
     assert_eq!(
         login(&mut s, &conta, "senha-errada"),
-        Some(Opcode::NewAccountFail),
+        Some(Opcode::CharacterLoginFail),
         "senha errada recebe recusa, nunca CNF"
     );
-    // A recusa vem com `NewAccountFail` + painel explicativo antes de fechar. O segundo
-    // frame é o que o 7662 realmente desenha: o teste falha se ele sumir, mudar de tamanho
-    // ou perder o motivo. Drenar sem afirmar nada deixava o BUG-01 voltar em silêncio.
+    // A recusa vem com **um** `0x0119` header-only + painel de 140 B, a mesma forma do caso
+    // que o jogador vê na exclusão. O teste falha se o painel sumir ou mudar de tamanho.
     assert_painel_de_senha(&mut s);
-    let mut resto = Vec::new();
-    assert_eq!(
-        s.read_to_end(&mut resto).unwrap_or(0),
-        0,
-        "conexão fecha depois dos dois frames"
-    );
+    assert_conexao_aberta_sem_bytes(&mut s);
 
     // Se houvesse sessão meio-aberta, este login correto bateria na cerca.
     let mut ok = conectar(porta);
@@ -365,16 +383,11 @@ fn conta_inexistente_usa_o_mesmo_painel_de_senha_errada() {
     let mut s = conectar(porta);
     assert_eq!(
         login(&mut s, &conta, SENHA),
-        Some(Opcode::NewAccountFail),
+        Some(Opcode::CharacterLoginFail),
         "conta inexistente recebe a mesma recusa"
     );
     assert_painel_de_senha(&mut s);
-    let mut resto = Vec::new();
-    assert_eq!(
-        s.read_to_end(&mut resto).unwrap_or(0),
-        0,
-        "conexão fecha depois dos dois frames"
-    );
+    assert_conexao_aberta_sem_bytes(&mut s);
 }
 
 #[test]
@@ -413,6 +426,74 @@ fn pin_errado_e_recusado_sem_sessao() {
         ler_opcode(&mut ok),
         Opcode::AccountSecure,
         "sem sessão presa"
+    );
+}
+
+/// Conta **com** PIN cadastrado que manda a seleção sem a segunda senha é recusada.
+///
+/// Antes deste teste o braço de seleção abria a sessão para qualquer pacote
+/// (`result=deferred`), então pular o `_MSG_AccountSecure` entrava sem conferir PIN.
+#[test]
+fn selecao_sem_pin_em_conta_com_pin_e_recusada_e_nao_grava() {
+    let Some(_dsn) = common::dsn_ou_skip("login do canal") else {
+        return;
+    };
+    let conta = conta_unica();
+    let (porta, backend, rt) = entrada(&conta);
+    // Cadastra o PIN na primeira conexão (o `secure_pin` grava o primeiro).
+    let mut primeiro = conectar(porta);
+    assert_eq!(
+        login(&mut primeiro, &conta, SENHA),
+        Some(Opcode::CNFAccountLogin)
+    );
+    primeiro
+        .write_all(&frame_pin(PIN))
+        .expect("cadastro do PIN");
+    assert_eq!(ler_opcode(&mut primeiro), Opcode::AccountSecure);
+    drop(primeiro);
+    std::thread::sleep(Duration::from_millis(500));
+
+    let conta_db = rt.block_on(backend.find_by_login(&conta)).expect("conta");
+    let antes = rt
+        .block_on(backend.list_by_account(conta_db.id))
+        .expect("roster antes");
+
+    let mut s = conectar(porta);
+    assert_eq!(login(&mut s, &conta, SENHA), Some(Opcode::CNFAccountLogin));
+    let nome = format!("Pn{}", &conta[2..]);
+    s.write_all(&frame_criacao(1, &nome))
+        .expect("seleção sem PIN");
+    assert_eq!(
+        ler_opcode(&mut s),
+        Opcode::AccountSecureFail,
+        "seleção antes do PIN recebe `0x0FDF`, nunca `CNFNewCharacter`"
+    );
+    let painel = ler_frame(&mut s).expect("painel da recusa");
+    let cabecalho = Header::decode(&painel).expect("header do painel");
+    assert_eq!(
+        Opcode::from_wire(cabecalho.message_type),
+        Some(Opcode::MessagePanel)
+    );
+    let texto = String::from_utf8_lossy(wyd_protocol::nul_trimmed(
+        &MessagePanel::decode(&painel).expect("painel").text,
+    ))
+    .to_string();
+    assert!(
+        texto.to_lowercase().contains("numérica"),
+        "painel precisa dizer que a senha numérica é exigida: {texto:?}"
+    );
+
+    let depois = rt
+        .block_on(backend.list_by_account(conta_db.id))
+        .expect("roster depois");
+    assert_eq!(
+        antes.len(),
+        depois.len(),
+        "seleção recusada não pode criar personagem: {depois:?}"
+    );
+    assert!(
+        !depois.iter().any(|p| p.name == nome),
+        "nenhum personagem `{nome}` no banco"
     );
 }
 
@@ -534,7 +615,7 @@ fn conta_bloqueada_e_recusada_e_volta_a_logar_apos_desbloqueio() {
     let mut s = conectar(porta);
     assert_eq!(
         login(&mut s, &conta, SENHA),
-        Some(Opcode::NewAccountFail),
+        Some(Opcode::CharacterLoginFail),
         "conta bloqueada recebe recusa, nunca CNF"
     );
     drop(s);

@@ -102,7 +102,18 @@ fn atender(mut stream: TcpStream, source: &dyn MetricsSource) -> std::io::Result
         corpo.len()
     );
     stream.write_all(resposta.as_bytes())?;
-    stream.flush()
+    stream.flush()?;
+    // Half-close + drenagem: fechar o socket com qualquer byte ainda não lido faz o Windows
+    // mandar RST, e o scrape morre com `ConnectionAborted` mesmo tendo o corpo inteiro.
+    let _ = stream.shutdown(std::net::Shutdown::Write);
+    let _ = stream.set_read_timeout(Some(Duration::from_millis(50)));
+    let mut sobra = [0u8; 256];
+    while let Ok(n) = stream.read(&mut sobra) {
+        if n == 0 {
+            break;
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]

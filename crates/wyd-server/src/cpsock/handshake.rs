@@ -1,6 +1,5 @@
 //! Submódulo de `cpsock` (ADR-0026, etapa 2).
 
-use super::action::reply_panel;
 use super::*;
 
 /// Resultado de um handshake aceito (o que ficou provado sobre a conexão).
@@ -130,8 +129,9 @@ pub(super) fn handshake(
             expected: gate.expected(),
         })?;
     let conta = String::from_utf8_lossy(login.account_name_bytes()).to_string();
-    // Senha da conta **antes** de qualquer confirmação: senha errada não recebe `CNF` e não
-    // chega perto da cerca. Sem porta de autenticação (teste de framing/gate) o passo é pulado.
+    // Senha da conta **antes** de qualquer confirmação: senha errada não abre sessão, não grava
+    // linha e não recebe roster nem `CNFAccountLogin`. Sem porta de autenticação (teste de
+    // framing/gate) o passo é pulado.
     if let Some(auth) = auth {
         if let Err(error) = auth.verify_password(&conta, &login.account_password) {
             NET.packet_rejected("auth");
@@ -140,24 +140,22 @@ pub(super) fn handshake(
                 "login",
                 &format!("result=refused account={conta} reason={error}"),
             );
-            // Senha/versão recusada: mesmo ponto único das demais recusas, com o código
-            // próprio no trailer (`NewAccountFail` é o `*Fail` do login).
-            let _ = reply_recusa(
-                stream,
-                header.key_word,
-                Opcode::NewAccountFail,
-                wyd_protocol::motivo::CodigoRecusa::Senha,
-            );
-            // O build 7662 **não** trata `_MSG_NewAccountFail` (0x0117) — é o que fazia senha
-            // errada não mostrar nada. Dos `*Fail` do login, o que o binário desenha é
-            // `_MSG_CharacterLoginFail` (0x0119, `BUG-01`); ele vai junto com o painel de texto.
-            let _ = reply_recusa(
-                stream,
-                header.key_word,
-                Opcode::CharacterLoginFail,
-                wyd_protocol::motivo::CodigoRecusa::Senha,
-            );
-            let _ = reply_panel(stream, header.key_word, "Senha ou conta incorreta");
+            // Provado no binário (`docs/rust/evidencias/login-tela-handler-2026-11-14.md`): a
+            // função da etapa de login (`0x4b3e83`) compara **só** `0x0101` (visibilidade,
+            // `0x4b3ec1`), `0x010A` (`0x4b3f45`), `0x011D` (`0x4b4071`) e `0x011C` (`0x4b4082`);
+            // não existe `cmp ...,0x119` nem `0x11b` ali, e o `0x0101` não chama `0x404109`.
+            //
+            // A recusa **não** manda `CNFAccountLogin` nem roster: a variante com CNF de roster
+            // vazio foi medida no canal vivo e rejeitada — ela tira o cliente da tela de login e
+            // o faz progredir para a tela de personagens (ver
+            // `docs/rust/evidencias/login-tela-handler-2026-11-14.md`, seção "Retratação").
+            //
+            // Na etapa de login (`0x4b3e83`) o único braço que chega à rotina de mensagem
+            // `0x404109` é o de `0x011D`/`0x011C` (`0x4b4071`/`0x4b4082`): `push 0xfa0` (4000 ms)
+            // + `push 0x109aab8` (id de mensagem do cliente) — o frame **não** é passado, então o
+            // texto vem do binário, nunca do payload. `0x0119` não tem `cmp` nessa função.
+            let _ = reply(stream, header.key_word, Opcode::AlreadyPlaying);
+            manter_conexao_aberta_apos_recusa(stream);
             return Err(HandshakeError::Auth(error.to_string()));
         }
     }
@@ -211,6 +209,35 @@ pub(super) fn handshake(
         },
         conta,
     ))
+}
+
+/// Mantém o soquete aberto depois do painel de recusa de senha.
+///
+/// O caminho que o jogador **vê** (senha errada na exclusão de personagem) roda dentro do laço do
+/// canal: o painel chega e a conexão **continua viva**, sem FIN. A recusa de login fechava o
+/// soquete no mesmo instante do painel, e um FIN imediato é justamente o que apaga a janela de
+/// erro do cliente antes de ela ser desenhada. Aqui a conexão é drenada até o cliente fechar, no
+/// máximo `SEGUNDOS_DE_JANELA` — o mesmo comportamento do caso visível, sem sessão aberta.
+fn manter_conexao_aberta_apos_recusa(stream: &mut TcpStream) {
+    use std::time::{Duration, Instant};
+
+    const SEGUNDOS_DE_JANELA: u64 = 30;
+    let _ = stream.flush();
+    let _ = stream.set_read_timeout(Some(Duration::from_millis(250)));
+    let prazo = Instant::now() + Duration::from_secs(SEGUNDOS_DE_JANELA);
+    let mut lixo = [0u8; 512];
+    while Instant::now() < prazo {
+        match stream.read(&mut lixo) {
+            Ok(0) => break,
+            Ok(_) => {}
+            Err(erro)
+                if matches!(
+                    erro.kind(),
+                    std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+                ) => {}
+            Err(_) => break,
+        }
+    }
 }
 
 #[cfg(test)]

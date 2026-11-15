@@ -60,7 +60,15 @@ impl<const N: usize> WirePayload for Attack<N> {
     const WIRE_LEN: usize = ATTACK_BODY_LEN + TargetDamage::WIRE_LEN * N;
 
     fn decode(packet: &[u8]) -> Result<Self, PayloadError> {
-        super::check_len(Self::WIRE_LEN, packet.len())?;
+        // Tolerante a frame **maior**: o cliente 7662 manda `_MSG_AttackOne` (0x039D) com
+        // 168 B — o corpo do `MSG_Attack` de 13 alvos (164 B) mais 4 B de trailer —, e o
+        // legado lê os `Dam[]` pelos mesmos offsets. Frame menor que o layout continua erro.
+        if packet.len() < Self::WIRE_LEN {
+            return Err(PayloadError::BadLength {
+                expected: Self::WIRE_LEN,
+                got: packet.len(),
+            });
+        }
         let mut dam = [TargetDamage::default(); N];
         for (index, slot) in dam.iter_mut().enumerate() {
             let off = ATTACK_BODY_LEN + index * TargetDamage::WIRE_LEN;
@@ -123,8 +131,8 @@ impl<const N: usize> WirePayload for Attack<N> {
     }
 }
 
-/// Corpo fixo de `MSG_Attack` antes de `Dam[]`.
-const ATTACK_BODY_LEN: usize = 60;
+/// Corpo fixo de `MSG_Attack` antes de `Dam[]` (offset do primeiro `STRUCT_DAM`).
+pub const ATTACK_BODY_LEN: usize = 60;
 
 /// `_MSG_Attack` com 13 alvos (`MAX_TARGET`).
 pub type AttackFull = Attack<13>;
@@ -209,5 +217,46 @@ mod tests {
         assert_eq!(AttackTwo::WIRE_LEN, 76);
         let decoded = round_trip(two);
         assert_eq!(decoded.dam[1].damage, 88);
+    }
+
+    /// Trava os offsets do legado (`Basedef.h:2399-2432`) e o frame **real** do cliente
+    /// 7662: `0x039D` com 168 B (o `MSG_Attack` de 13 alvos + 4 B de trailer). Se alguém
+    /// mexer na ordem dos campos, o alvo (`TargetX@38`, `Dam[0].TargetID@60`) muda e o
+    /// ataque passa a acertar lugar nenhum — este teste falha antes.
+    #[test]
+    fn frame_do_cliente_7662_le_alvo_e_dano_nos_offsets_do_legado() {
+        assert_eq!(ATTACK_BODY_LEN, 60, "Dam[] começa no 60 do frame");
+        assert_eq!(AttackFull::WIRE_LEN, 164);
+
+        let mut frame = vec![0u8; AttackFull::WIRE_LEN];
+        // Campos nos offsets do `MSG_Attack` do legado, escritos à mão.
+        frame[38..40].copy_from_slice(&2110_u16.to_le_bytes());
+        frame[40..42].copy_from_slice(&2046_u16.to_le_bytes());
+        frame[42..44].copy_from_slice(&7_u16.to_le_bytes());
+        frame[46] = 1;
+        frame[60..64].copy_from_slice(&3654_i32.to_le_bytes());
+        frame[64..68].copy_from_slice(&0_i32.to_le_bytes());
+        frame.extend_from_slice(&[0u8; 4]); // trailer do cliente
+
+        let decoded = AttackFull::decode(&frame).expect("168 B decodificam");
+        assert_eq!(decoded.target_x, 2110, "TargetX no offset 38");
+        assert_eq!(decoded.target_y, 2046, "TargetY no offset 40");
+        assert_eq!(decoded.attacker_id, 7);
+        assert_eq!(decoded.motion, 1);
+        assert_eq!(
+            decoded.dam[0].target_id, 3654,
+            "Dam[0].TargetID no offset 60"
+        );
+        assert_eq!(decoded.dam[0].damage, 0, "Dam[0].Damage no offset 64");
+
+        // Frame menor que o layout continua recusado (nada de ler além do buffer).
+        let curto = &frame[..AttackFull::WIRE_LEN - 1];
+        assert!(matches!(
+            AttackFull::decode(curto),
+            Err(PayloadError::BadLength {
+                expected: 164,
+                got: 163
+            })
+        ));
     }
 }

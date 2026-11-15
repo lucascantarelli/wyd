@@ -2,7 +2,7 @@
 
 > **ID canônico:** `BUG-01`
 > **ID histórico:** `BUG-01`
-> **Estado 2026-11-12:** ⬜ · ver `roadmap-rust/index.md`.
+> **Estado 2026-11-15:** 🟡 (mensagens resolvidas e provadas por captura; entrada no mundo segue em `GAME-17`) · ver `roadmap-rust/index.md`.
 
 **Tipo:** Bug · **Esforço:** M · **Depende de:** CLIENT-06 🚧 (captura/prova visual), GAME-17 🚧 (mesma entrada) · **Bloqueia:** onda 1 (jogável)
 
@@ -23,6 +23,23 @@
 3. Entrada no mundo: `CharacterLogin` 20/36 B → `enter_world` → `CNFCharacterLogin` → `UpdateScore` → cena; checar `client_id`, `CreateType`, `ESCENE_FIELD`, posição salva; registrar ponto exato de falha no log (`character ok action=select client_id=…`).
 4. Correção só com prova: se o cliente ignora trailer, responder `Size=12` puro nos `*Fail` do login (mantendo motivo só no log); se espera `MessagePanel`, mapear sem inventar texto.
 5. Atualizar `docs/rust/08-checklist-funcionalidades.md` §1 + `docs/cliente/pacotes.md` com a lista completa.
+
+## Prova medida do lado das mensagens (2026-11-15)
+
+- A etapa de login do 7662 só desenha texto por **`0x011C`/`0x011D`**, e os dois empurram o mesmo id
+  `0x109aab8` = registro 12 de `client/UI/strdef.bin` (offset `0x600`, cp1252):
+  **"Conexão anterior finalizada. Tente novamente."**; `0x0119`/`0x011B` não são comparados nessa
+  etapa (só na seleção).
+- O canal passou a responder **um** `_MSG_AlreadyPlaying` (`0x011C`) header-only, 12 B
+  (`0c000bac1c01010000000000`), sem roster e sem `CNFAccountLogin`, mantendo a conexão aberta.
+- **Cliente real** (7662, elevado) na tela de Login contra o canal vivo: conta existente com senha
+  errada (`cenamob1`) e conta inexistente (`qxnova1122`) desenham exatamente o literal do registro
+  12 — capturas `target/login-recusa-1.jpg` e `target/login-inexistente-recusa-1.jpg`, servidor
+  registrando `event=login result=refused` e `handshake rejected`.
+- Ferramenta: `tools/client/captura-sessao.ps1` (entrada por `SendInput` absoluto + scan code;
+  `mouse_event` não chega ao cliente — medido).
+
+Detalhe completo: `docs/rust/evidencias/login-tela-handler-2026-11-14.md`.
 
 ## Arquivos
 
@@ -52,10 +69,11 @@ Saída esperada: cada recusa com motivo distinto no log; admin entra, aparece na
 
 ## Subtasks
 
-- [ ] Matriz mensagem × exibe/não-exibe com evidência
-- [ ] Reprodução com conta admin no 7662
-- [ ] Correção com prova (sem pacote inventado)
-- [ ] Checklist + pacotes atualizados
+- [x] Matriz mensagem × exibe/não-exibe com evidência
+- [x] Reprodução com conta admin no 7662 (senha errada e conta inexistente, com captura)
+- [x] Correção com prova (sem pacote inventado): `0x011C` header-only
+- [x] Checklist + pacotes atualizados
+- [ ] Entrada no mundo ponta a ponta (segue em `GAME-17`)
 
 ## Critérios de aceite
 

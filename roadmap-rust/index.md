@@ -1,7 +1,13 @@
 # Roadmap Rust — índice executável
 
-> **Estado:** 2026-11-14 · **61 issues ativas** (41 anteriores + 20 da auditoria) + 15
+> **Estado:** 2026-11-15 · **61 issues ativas** (41 anteriores + 20 da auditoria) + 15
 > descritores de fase. 64 issues concluídas estão em [`changelog.md`](changelog.md).
+>
+> **Recusa de login provada no cliente real (2026-11-15):** o 7662 na tela de LOGIN contra o canal
+> vivo desenha o registro 12 de `client/UI/strdef.bin` ("Conexão anterior finalizada. Tente
+> novamente.") ao receber **um** `0x011C` header-only — capturas `target/login-recusa-1.jpg` e
+> `target/login-inexistente-recusa-1.jpg`, harness `tools/client/captura-sessao.ps1`. Resta a prova
+> visual de PIN, cena e Campo de Treinamento (`BUG-02`, `GAME-17`, `GAME-18`).
 >
 > **Auditoria de DevOps/CI:** das doze issues da análise de pipeline, imagens, compose, testes e
 > monitoramento, **todas as doze estão fechadas** (`DEVOPS-01`…`DEVOPS-13`); o

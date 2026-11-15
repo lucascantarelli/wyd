@@ -277,6 +277,16 @@
 `STRUCT_DAM` = `target_id` i32 + `damage` i32. Strings são `char[N]` em bytes
 crus (nunca UTF-8 assumido); leitura até o primeiro `NUL`.
 
+> **Frame real do cliente 7662 no golpe básico (`0x039D` com 168 B).** Medido no canal
+> (`event=attack result=refused reason=layout:tamanho de pacote inválido: esperado 68,
+> recebido 168`): o cliente manda o tipo `_MSG_AttackOne` com o corpo do `MSG_Attack` de 13
+> alvos (164 B) mais **4 B de trailer**. Os campos usados ficam nos mesmos offsets do
+> legado (`TargetX@38`, `TargetY@40`, `Dam[0].TargetID@60`, `Dam[0].Damage@64`), então o
+> decode do porte aceita frame **maior** que o layout mínimo e escolhe a aridade de `Dam[]`
+> pelo tamanho (`(len − 60) / 8`, 1..13). O alvo é resolvido pelo `Dam[i].TargetID`, como no
+> `MobAttack` do legado (`Server.cpp:9881`), com o tile como reserva.
+> Evidência: `docs/rust/evidencias/combate-pacote-2026-11-14.md`.
+
 `_MSG_SendItem` atualiza **um slot** do inventário no cliente após mutação
 server-side (ex.: refino, GAME-16): o `HEADER.ID` é o id da **conexão**
 (não `ESCENE_FIELD`), e o par sanc no fio carrega nível + 10×piedade

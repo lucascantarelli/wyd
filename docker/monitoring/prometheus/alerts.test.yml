@@ -70,10 +70,11 @@ tests:
   - interval: 1m
     name: "pacotes recusados acima de 10%"
     input_series:
+      # 100 pacotes/min (1,67/s) e 40 recusas/min (0,67/s): razão 0,4 e volume acima do piso.
       - series: 'wyd_packets_total'
         values: '0+100x15'
       - series: 'wyd_packets_rejected_total{reason="rate"}'
-        values: '0+20x15'
+        values: '0+40x15'
     alert_rule_test:
       - eval_time: 15m
         alertname: WydPacotesRecusados
@@ -81,8 +82,22 @@ tests:
           - exp_labels:
               severity: warning
             exp_annotations:
-              summary: "mais de 10% dos pacotes recusados (rate limit/IP/tamanho)"
+              summary: "mais de 10% dos pacotes recusados e ≥0,5 recusa/s (rate limit/IP/tamanho)"
               runbook: "docs/rust/06-observabilidade-runbooks.md#wydpacotesrecusados"
+
+  # Razão alta sobre amostra minúscula não é incidente: é o que os testes de integração fazem
+  # (poucos pacotes, algumas sessões que terminam em `timeout`). O piso de 0,5 recusa/s segura.
+  - interval: 1m
+    name: "pacotes recusados em volume baixo não disparam"
+    input_series:
+      - series: 'wyd_packets_total'
+        values: '0+60x15'
+      - series: 'wyd_packets_rejected_total{reason="timeout"}'
+        values: '0+12x15'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: WydPacotesRecusados
+        exp_alerts: []
 
   - interval: 1m
     name: "tick acima de 100% do orçamento dispara"

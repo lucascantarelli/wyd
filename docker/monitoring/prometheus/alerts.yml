@@ -76,12 +76,21 @@ groups:
           runbook: "docs/rust/06-observabilidade-runbooks.md#wydmotorsemtick"
 
       - alert: WydPacotesRecusados
-        expr: sum(rate(wyd_packets_rejected_total[5m])) / clamp_min(sum(rate(wyd_packets_total[5m])), 0.001) > 0.1
+        # Piso de volume antes da razão: com amostra minúscula a razão não significa nada.
+        # Medido em 2026-11-14 (testes de integração subindo no canal 1): a única recusa era
+        # `reason="timeout"` (12 em 1 h — sessão de teste que abre, lê e sai) e o denominador
+        # `wyd_packets_total` ficava perto de zero, então 3 recusas em 20 pacotes davam >10% e
+        # disparavam alerta sem incidente. Recusa sustentada de verdade (rate limit/IP/tamanho)
+        # passa de 0,5 pacote/s; caminho normal e suíte de teste não chegam perto disso.
+        expr: |
+          sum(rate(wyd_packets_rejected_total[5m])) > 0.5
+          and
+          sum(rate(wyd_packets_rejected_total[5m])) / clamp_min(sum(rate(wyd_packets_total[5m])), 0.001) > 0.1
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "mais de 10% dos pacotes recusados (rate limit/IP/tamanho)"
+          summary: "mais de 10% dos pacotes recusados e ≥0,5 recusa/s (rate limit/IP/tamanho)"
           runbook: "docs/rust/06-observabilidade-runbooks.md#wydpacotesrecusados"
 
       - alert: WydHandshakeFalhando

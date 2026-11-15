@@ -221,19 +221,14 @@ fn autenticacao_completa_no_cpsock() {
         "primeiro PIN da conta é cadastrado"
     );
 
-    // 1) Senha errada: `NewAccountFail` + painel, sem `CNFAccountLogin`.
+    // 1) Senha errada: **um** `_MSG_AlreadyPlaying` header-only — a forma que a etapa de login
+    // do 7662 desenha (`0x4b4082`), sem roster e sem `CNFAccountLogin`
+    // (`docs/rust/evidencias/login-tela-handler-2026-11-14.md`).
     let mut sessao = conectar(&endereco);
     assert_eq!(
         login(&mut sessao, &conta_login, "senha-errada"),
-        Some(Opcode::NewAccountFail),
-        "senha errada não recebe confirmação de login"
-    );
-    let (opcode, painel) = ler(&mut sessao).expect("painel da recusa de senha");
-    assert_eq!(opcode, Opcode::MessagePanel);
-    let texto = texto_do_painel(&painel);
-    assert!(
-        texto.to_lowercase().contains("senha"),
-        "painel precisa dizer que a senha está errada: {texto:?}"
+        Some(Opcode::AlreadyPlaying),
+        "a recusa manda a mensagem que a tela de login desenha"
     );
     drop(sessao);
 

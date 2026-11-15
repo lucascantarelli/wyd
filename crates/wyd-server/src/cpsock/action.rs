@@ -2,6 +2,7 @@
 
 use super::selection::{create_character, delete_character, select_character};
 use super::*;
+use wyd_protocol::payload::combat::ATTACK_BODY_LEN;
 
 /// Trata um pacote já desofuscado e íntegro. `false` = a escrita falhou, encerrar.
 pub(super) fn dispatch(
@@ -13,17 +14,63 @@ pub(super) fn dispatch(
     selection: Option<&SelectionStore>,
     stage: &mut Stage,
 ) -> bool {
-    let Sessao { account } = sessao;
+    let Sessao { account, auth } = sessao;
     match opcode {
-        // `0x0FDE` depois da seleção: conta sem PIN cadastrado pode receber o pacote
-        // ainda assim (cliente que já conhece o fluxo). Confirma sem abrir sessão nova.
+        // `0x0FDE` na etapa de seleção é a **confirmação da segunda senha** que o cliente pede
+        // antes de criar/apagar personagem. Este braço respondia `0x0FDE` sem comparar o token
+        // com nada — era a raiz de "a segunda senha aceita qualquer coisa". Agora o token passa
+        // pelo mesmo `secure_pin` do login: confere contra `accounts.pin_hash` (e cadastra o
+        // primeiro PIN, quando a conta ainda não tem). Divergência recebe `0x0FDF` + painel e
+        // **encerra a conexão**, então o `_MSG_CreateCharacter` seguinte não é processado e
+        // nada chega ao banco.
         Opcode::AccountSecure => {
-            log(
-                "info",
-                "pin",
-                &format!("result=ok account={account} mode=late"),
-            );
-            reply(stream, key_word, Opcode::AccountSecure)
+            let Some(auth) = auth else {
+                return reply(stream, key_word, Opcode::AccountSecure);
+            };
+            let conferido = AccountSecure::decode(frame)
+                .map_err(|error| error.to_string())
+                .and_then(|pacote| {
+                    auth.secure_pin(account, &pacote.numeric_token)
+                        .map_err(|error| error.to_string())
+                });
+            match conferido {
+                Ok(resultado) => {
+                    log(
+                        "info",
+                        "pin",
+                        &format!("result=ok account={account} mode=confirmacao {resultado:?}"),
+                    );
+                    reply(stream, key_word, Opcode::AccountSecure)
+                }
+                Err(error) => {
+                    log(
+                        "warn",
+                        "pin",
+                        &format!(
+                            "result=refused account={account} reason={error} mode=confirmacao"
+                        ),
+                    );
+                    let motivo = if error.to_lowercase().contains("bloque")
+                        || error.to_lowercase().contains("aguarde")
+                    {
+                        wyd_protocol::motivo::CodigoRecusa::PinBloqueado
+                    } else {
+                        wyd_protocol::motivo::CodigoRecusa::PinIncorreto
+                    };
+                    let _ = reply_recusa(stream, key_word, Opcode::AccountSecureFail, motivo);
+                    let texto =
+                        if matches!(motivo, wyd_protocol::motivo::CodigoRecusa::PinBloqueado) {
+                            "PIN bloqueado por várias tentativas. Aguarde 10 minutos."
+                        } else {
+                            // ASCII puro: o campo de texto do `0x0101` é de 128 B e o caso que o
+                            // cliente comprovadamente desenha ("Senha incorreta. Tente novamente.")
+                            // não tem acento — nada de UTF-8 multibyte num cliente Windows.
+                            "As senhas numericas nao conferem."
+                        };
+                    let _ = reply_panel(stream, key_word, texto);
+                    false
+                }
+            }
         }
         Opcode::CreateCharacter => {
             let resultado = match selection {
@@ -470,9 +517,9 @@ pub(super) fn dispatch(
         // `_MSG_Attack`/`_MSG_AttackOne`/`_MSG_AttackTwo`: mesmo corpo, aridade diferente.
         // O cliente aponta o alvo (x/y); o dano é do servidor e a EXP do template só entra
         // no abate, via `SelectionStore::attack` → `gain_exp` (multiplicador do snapshot).
-        Opcode::AttackOne => handle_attack::<1>(stream, frame, key_word, account, stage, selection),
-        Opcode::AttackTwo => handle_attack::<2>(stream, frame, key_word, account, stage, selection),
-        Opcode::Attack => handle_attack::<13>(stream, frame, key_word, account, stage, selection),
+        Opcode::AttackOne | Opcode::AttackTwo | Opcode::Attack => {
+            handle_attack(stream, frame, key_word, account, stage, selection)
+        }
         // `_MSG_Action` de NPC: o clique vira diálogo com o dado de `npc_definition`.
         Opcode::Action => handle_action(stream, frame, key_word, account, stage, selection),
         // `_MSG_MessageChat` (0x0333): `/cp` responde no painel; o resto vai para quem está
@@ -507,7 +554,29 @@ pub(super) fn dispatch(
 /// O `current_exp` que vem no pacote é ignorado (cliente não é autoridade); o valor enviado
 /// de volta é o do `Mob` gravado. `UpdateEtc`+`UpdateScore` são o par que o cliente usa para
 /// redesenhar a barra de EXP/HP.
-pub(super) fn handle_attack<const N: usize>(
+pub(super) fn handle_attack(
+    stream: &mut TcpStream,
+    frame: &[u8],
+    key_word: u8,
+    account: &str,
+    stage: &mut Stage,
+    selection: Option<&SelectionStore>,
+) -> bool {
+    // Aridade pelo tamanho do frame, não pelo opcode: o cliente 7662 manda `_MSG_AttackOne`
+    // (0x039D) com **168 B** — o corpo do `MSG_Attack` de 13 alvos (164 B) mais 4 B de
+    // trailer — e o `check_len` exigindo os 68 B do `MSG_AttackOne` recusava todo golpe com
+    // `reason=layout:tamanho de pacote inválido: esperado 68, recebido 168`: era esse o motivo
+    // de o jogador não tirar HP de ninguém. `Attack` (0x0367, 164 B) e `AttackTwo` (76 B)
+    // continuam caindo na aridade certa.
+    let alvos = (frame.len().saturating_sub(ATTACK_BODY_LEN)) / TargetDamage::WIRE_LEN;
+    match alvos.clamp(1, 13) {
+        1 => atacar::<1>(stream, frame, key_word, account, stage, selection),
+        2 => atacar::<2>(stream, frame, key_word, account, stage, selection),
+        _ => atacar::<13>(stream, frame, key_word, account, stage, selection),
+    }
+}
+
+fn atacar<const N: usize>(
     stream: &mut TcpStream,
     frame: &[u8],
     key_word: u8,
@@ -550,20 +619,49 @@ pub(super) fn handle_attack<const N: usize>(
     // para o log, então o kill é reproduzível a partir da tabela do snapshot.
     let seed = loot_seed();
     let mut die = XorShift64::from_seed(seed);
-    match store.attack(
-        selected.as_ref(),
-        *entity,
-        i32::from(packet.target_x),
-        i32::from(packet.target_y),
-        now_ms(),
-        &mut die,
-    ) {
+    // Alvo: primeiro o `Dam[i].TargetID` do pacote (o campo que o `MobAttack` do legado lê,
+    // `Server.cpp:9881`); o tile clicado só é usado quando o id não existe na cena. O cliente
+    // 7662 manda `TargetX/TargetY` zerado no golpe básico — resolver só pelo tile dava
+    // `result=no_target` e nenhum dano.
+    let por_id = u16::try_from(alvo_id).ok().filter(|_| alvo_id > 0);
+    let (resultado, via) = match por_id {
+        Some(scene_id) => {
+            match store.attack_scene(selected.as_ref(), *entity, scene_id, now_ms(), &mut die) {
+                Ok(Some(report)) => (Ok(Some(report)), "id"),
+                // Id fora da cena (alvo já removido): cai no tile, como o cliente antigo.
+                Ok(None) => (
+                    store.attack(
+                        selected.as_ref(),
+                        *entity,
+                        i32::from(packet.target_x),
+                        i32::from(packet.target_y),
+                        now_ms(),
+                        &mut die,
+                    ),
+                    "tile",
+                ),
+                Err(error) => (Err(error), "id"),
+            }
+        }
+        None => (
+            store.attack(
+                selected.as_ref(),
+                *entity,
+                i32::from(packet.target_x),
+                i32::from(packet.target_y),
+                now_ms(),
+                &mut die,
+            ),
+            "tile",
+        ),
+    };
+    match resultado {
         Ok(Some(report)) => {
             log(
                 "info",
                 "attack",
                 &format!(
-                    "result=hit account={account} npc={} at=({}, {}) damage={} hp_left={} killed={} exp_base={} exp_granted={} levels={} client_damage={alvo_id}/{dano_cliente}",
+                    "result=hit account={account} npc={} via={via} at=({}, {}) damage={} hp_left={} killed={} exp_base={} exp_granted={} levels={} client_damage={alvo_id}/{dano_cliente}",
                     report.target_npc,
                     packet.target_x,
                     packet.target_y,
@@ -659,17 +757,35 @@ pub(super) fn handle_attack<const N: usize>(
                                 let Some(linha) =
                                     selected.items.iter().find(|linha| linha.slot == slot)
                                 else {
+                                    log(
+                                        "warn",
+                                        "loot",
+                                        &format!(
+                                            "result=sem_linha account={account} npc={} slot={slot} itens={}",
+                                            report.target_npc,
+                                            selected.items.len()
+                                        ),
+                                    );
                                     continue;
                                 };
                                 let item = Item::from_row(linha).to_bytes();
-                                if !reply_send_item(
+                                let enviado = reply_send_item(
                                     stream,
                                     key_word,
                                     *client_id,
                                     0,
                                     i32::try_from(slot).unwrap_or(0),
                                     item,
-                                ) {
+                                );
+                                log(
+                                    "info",
+                                    "loot",
+                                    &format!(
+                                        "result=send_item account={account} npc={} slot={slot} ok={enviado}",
+                                        report.target_npc
+                                    ),
+                                );
+                                if !enviado {
                                     envio_ok = false;
                                     break;
                                 }

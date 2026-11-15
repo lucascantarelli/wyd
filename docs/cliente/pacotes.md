@@ -44,13 +44,36 @@ Consequências medidas — não deduzidas:
 | `0x0110` | CNFNewCharacter | **sim** | copia 0x348 (840 B) de `frame+0x10` (sel@4 do corpo) |
 | `0x0112` | CNFDeleteCharacter | **sim** | mesmo `memcpy` 840 B de `frame+0x10` → corpo de **844 B** (`sel@4`) |
 | `0x0117` | NewAccountFail | **NÃO** (zero ocorrências) | senha errada com esse pacote não mostra nada — é o caso relatado no teste manual |
-| `0x0119` / `0x011a` / `0x011b` | CharacterLoginFail / NewCharacterFail / DeleteCharacterFail | **sim** | cada um exibe mensagem própria do cliente |
+| `0x0119` / `0x011a` / `0x011b` | CharacterLoginFail / NewCharacterFail / DeleteCharacterFail | **sim** | cada um exibe mensagem própria do cliente — mas **só na etapa de seleção**, depois do `0x010A` (ver abaixo) |
 
 O `CNFDeleteCharacter` com `Size = 852` (12 de header + 844) está **correto**: o cliente lê os
 840 B a partir de `frame+16`, exatamente `sel@4` no corpo. Já o `_MSG_NewAccountFail` (0x0117)
 não existe no binário; para a senha errada aparecer na tela é preciso usar um opcode que o
 cliente desenhe (`MessagePanel`) com o layout provado — **não** foi trocado às cegas nesta
 entrega.
+
+### Etapa de login × etapa de seleção (desassemble 2026-11-14)
+
+O roteador de recebimento tem **duas** etapas, e só a segunda desenha os `*Fail`:
+
+- **login** — função `0x4b3e83` (termina em `0x4b412b`): compara `0x4b3ec1` `0x0101` (só
+  visibilidade, não chama a rotina de mensagem `0x404109`), `0x4b3f45` `0x010A` (roster),
+  `0x4b4071` `0x011D` e `0x4b4082` `0x011C` (mensagem nativa `0x109aab8`). Não existe
+  `cmp ...,0x119` nem `0x11b` aqui; qualquer outro opcode cai em `xor eax,eax` (`0x4b4126`).
+- **seleção** — função de `0x4aea52`: `0x4aea5b` `cmp ecx,0x11b` → mensagem `0x109aeb8`;
+  `0x4aed63` `cmp ecx,0x119` → mensagem `0x109af38`; `0x4aeab5` `cmp ecx,0x114` → `STRUCT_MOB`.
+
+Consequência: recusa de credencial (antes do roster) só consegue desenhar mensagem pelo braço
+`0x011C`/`0x011D`, e o texto é o do próprio cliente (id `0x109aab8`, 4000 ms), porque o frame não é
+passado a `0x404109`. Mandar `CNFAccountLogin` para chegar à etapa de seleção foi medido e
+rejeitado: tira o cliente da tela de login.
+
+O id de mensagem é **ponteiro de registro** na tabela em `0x109a4b8` (128 B por registro, 2000
+registros) preenchida por `0x53a837` a partir de `UI/strdef.bin` (checksum `0x53a55b`, `xor 0x5a`).
+Registro 12 (offset `0x600`, cp1252) = **"Conexão anterior finalizada. Tente novamente."** — é o que
+`0x011C`/`0x011D` desenham; registro 20 = "Falha ao apagar o personagem." e 21 = "Falha ao logar o
+personagem.". Extração: `node tools/client/strdef.mjs`. Prova completa, com hex do canal vivo e a
+cadeia de assembly: `docs/rust/evidencias/login-tela-handler-2026-11-14.md`.
 
 O canal responde hoje com corpo em `0x010A` (`MSG_DBCNFAccountLogin`, 1996 B), `0x0110`
 (`STRUCT_SELCHAR`, 844 B), `0x0112` (o mesmo `STRUCT_SELCHAR` depois da remoção) e `0x0114`

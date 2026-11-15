@@ -734,6 +734,39 @@ impl SelectionStore {
             .handle
             .attack(entity, target_x, target_y, now_ms)
             .map_err(|error| SelectionError::Combat(error.to_string()))?;
+        self.reportar_golpe(selected, entity, resultado, die)
+    }
+
+    /// `_MSG_Attack` resolvido pelo **`MobID` do pacote** (`Dam[i].TargetID`).
+    ///
+    /// Rota do `MobAttack` do legado (`Server.cpp:9881`): o cliente 7662 pode mandar
+    /// `TargetX/TargetY` zerado no golpe básico e só o id do alvo em `Dam[]`; resolver pelo
+    /// tile devolvia `Ok(None)` e o jogador não tirava HP de ninguém.
+    pub fn attack_scene(
+        &self,
+        selected: &Selected,
+        entity: Entity,
+        scene: u16,
+        now_ms: u64,
+        die: &mut XorShift64,
+    ) -> Result<Option<AttackReport>, SelectionError> {
+        let bridge = self.world.as_ref().ok_or(SelectionError::Unavailable)?;
+        let resultado = bridge
+            .handle
+            .attack_scene(entity, scene, now_ms)
+            .map_err(|error| SelectionError::Combat(error.to_string()))?;
+        self.reportar_golpe(selected, entity, resultado, die)
+    }
+
+    /// EXP/loot/refresh de um golpe já resolvido pelo motor (tile ou `MobID`).
+    fn reportar_golpe(
+        &self,
+        selected: &Selected,
+        entity: Entity,
+        resultado: Option<crate::world::AttackOutcome>,
+        die: &mut XorShift64,
+    ) -> Result<Option<AttackReport>, SelectionError> {
+        let bridge = self.world.as_ref().ok_or(SelectionError::Unavailable)?;
         let Some(golpe) = resultado else {
             return Ok(None);
         };
@@ -776,14 +809,13 @@ impl SelectionStore {
             }));
         }
         let ganho = self.gain_exp(selected, golpe.exp)?;
-        // Level up sem relogin: o mundo recebe o `STRUCT_SCORE` que acabou de ser gravado
-        // (nível, HP/MP máximos e atributos) e a cena reemite o `CreateMob` de quem subiu.
-        if ganho.levels > 0 {
-            let _ = bridge.handle.refresh_actor(
-                entity,
-                crate::world::ActorRefresh::from_score(&ganho.mob.current_score),
-            );
-        }
+        // Sem relogin o mundo recebe o `STRUCT_MOB` que acabou de ser gravado — nível, HP/MP
+        // máximos, atributos **e a EXP acumulada**. A EXP entra em todo abate (não só no level
+        // up): sem ela no estado vivo, o save de saída devolvia o exp do login e o abate
+        // "sumia" no logout.
+        let _ = bridge
+            .handle
+            .refresh_actor(entity, crate::world::ActorRefresh::from_mob(&ganho.mob));
         // O abate resolve o loot **agora**: tabela do template no snapshot vigente e os rolls
         // do `die` desta sessão. Sem resolvedor no processo (teste/legado) não há sorteio —
         // nunca um drop inventado.
@@ -819,10 +851,9 @@ impl SelectionStore {
     /// login até o personagem sair e voltar. Devolve `false` se ele não está no mundo.
     pub fn refresh_actor(&self, entity: Entity, mob: &Mob) -> bool {
         self.world.as_ref().is_some_and(|bridge| {
-            bridge.handle.refresh_actor(
-                entity,
-                crate::world::ActorRefresh::from_score(&mob.current_score),
-            )
+            bridge
+                .handle
+                .refresh_actor(entity, crate::world::ActorRefresh::from_mob(mob))
         })
     }
 

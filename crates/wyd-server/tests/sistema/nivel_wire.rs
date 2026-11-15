@@ -130,8 +130,9 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     // `CNFCharacterLogin`. O banco nasce nível 1.
     for (slot, nome) in [(2_i32, "QANIVEL2"), (3, "QANIVEL3")] {
         config.slot = slot;
-        let mut bot = Bot::connect_novo(&config, Race::TransKnight, nome, Race::TransKnight.class())
-            .expect("criação + entrada no mundo");
+        let mut bot =
+            Bot::connect_novo(&config, Race::TransKnight, nome, Race::TransKnight.class())
+                .expect("criação + entrada no mundo");
         // O `CreateMob` do próprio personagem chega no tick seguinte ao login.
         let cena = bot.read_scene(1_500).expect("cena da criação");
         assert!(
@@ -152,7 +153,10 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
         let mut bot = Bot::connect(&config, Race::TransKnight).expect("login do char existente");
         bot.read_scene(1_500).expect("cena do login");
         let banco = ler_personagem(&rt, &backend, conta.id, slot);
-        assert_eq!(banco.level, i64::from([200_i64, 399][usize::try_from(slot).expect("slot")]));
+        assert_eq!(
+            banco.level,
+            [200_i64, 399][usize::try_from(slot).expect("slot")]
+        );
         despejar(&format!("login-slot{slot}"), &bot);
         let medido = medir(&bot, slot, "login", &banco.name);
         conferir(medido, banco.level, "login", &banco.name);
@@ -190,7 +194,10 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     let mut porco = cena.iter().find(|mob| mob.name == "Porco").cloned();
     let (mut x, mut y) = INICIO;
     while porco.is_none() && (x, y) != PORCO {
-        let proximo = (x + (PORCO.0 - x).clamp(-3, 3), y + (PORCO.1 - y).clamp(-3, 3));
+        let proximo = (
+            x + (PORCO.0 - x).clamp(-3, 3),
+            y + (PORCO.1 - y).clamp(-3, 3),
+        );
         bot.action_at((x, y), proximo).expect("passo no campo");
         std::thread::sleep(Duration::from_millis(700));
         cena.extend(bot.read_scene(300).expect("cena do passo"));
@@ -200,7 +207,9 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     let porco = porco.unwrap_or_else(|| {
         panic!(
             "Porco ausente da cena (canal sem respawn? reinicie o canal-1): {:?}",
-            cena.iter().map(|m| (m.name.clone(), m.x, m.y)).collect::<Vec<_>>()
+            cena.iter()
+                .map(|m| (m.name.clone(), m.x, m.y))
+                .collect::<Vec<_>>()
         )
     });
     eprintln!("ALVO Porco id={} ({},{})", porco.id, porco.x, porco.y);
@@ -242,9 +251,23 @@ fn nivel_do_banco_chega_ao_cliente_sem_salto() {
     );
     eprintln!(
         "PASS(levelup): banco={} exp={} UpdateScore[0]={update} desenhado={}",
-        banco.level,
-        banco.exp,
-        banco.level
+        banco.level, banco.exp, banco.level
+    );
+
+    // O save de saída grava o estado vivo: nível e EXP têm de continuar os do abate. Antes do
+    // `ActorRefresh::from_mob`, o logout regravava a EXP do login e o abate "sumia".
+    let (nivel, exp) = (banco.level, banco.exp);
+    drop(bot);
+    std::thread::sleep(Duration::from_millis(2_000));
+    let salvo = ler_personagem(&rt, &backend, conta_nivel.id, 0);
+    assert_eq!(
+        (salvo.level, salvo.exp),
+        (nivel, exp),
+        "save de saída regravou nível/EXP do login"
+    );
+    eprintln!(
+        "PASS(save): banco apos logout nivel={} exp={}",
+        salvo.level, salvo.exp
     );
 }
 
@@ -356,10 +379,9 @@ fn conferir(medido: Medido, banco: i64, caminho: &str, nome: &str) {
 fn nivel_do_update_score(bot: &Bot) -> Option<i32> {
     bot.raw_frames()
         .iter()
-        .filter(|frame| {
+        .rfind(|frame| {
             Opcode::from_wire(u16::from_le_bytes([frame[4], frame[5]])) == Some(Opcode::UpdateScore)
         })
-        .next_back()
         .map(|frame| i32_em(&frame[HEADER_SIZE..], SCORE_LEVEL_LEGADO))
 }
 
@@ -367,9 +389,7 @@ fn nivel_do_update_score(bot: &Bot) -> Option<i32> {
 fn corpo_de(bot: &Bot, opcode: Opcode) -> Option<Vec<u8>> {
     bot.raw_frames()
         .iter()
-        .find(|frame| {
-            Opcode::from_wire(u16::from_le_bytes([frame[4], frame[5]])) == Some(opcode)
-        })
+        .find(|frame| Opcode::from_wire(u16::from_le_bytes([frame[4], frame[5]])) == Some(opcode))
         .map(|frame| frame[HEADER_SIZE..].to_vec())
 }
 
@@ -380,7 +400,10 @@ fn corpo_create_mob(bot: &Bot, nome: &str) -> Option<Vec<u8>> {
             return None;
         }
         let corpo = &frame[HEADER_SIZE..];
-        let fim = corpo[6..22].iter().position(|byte| *byte == 0).unwrap_or(16);
+        let fim = corpo[6..22]
+            .iter()
+            .position(|byte| *byte == 0)
+            .unwrap_or(16);
         let visto = String::from_utf8_lossy(&corpo[6..6 + fim]);
         (visto == nome).then(|| corpo.to_vec())
     })

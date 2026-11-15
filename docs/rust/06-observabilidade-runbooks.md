@@ -109,7 +109,14 @@ P99 do tick acima de 40% do orçamento do processo por 10 min. O orçamento vem 
 
 ### WydPacotesRecusados
 
-Mais de 10% dos pacotes recusados por 5 min.
+Mais de 10% dos pacotes recusados **e** pelo menos 0,5 recusa/s, sustentado por 5 min.
+
+O piso de volume entrou em 2026-11-14: durante a suíte de integração o denominador
+`wyd_packets_total` fica perto de zero e a única recusa medida era `reason="timeout"` (12 em 1 h —
+sessão de teste que abre, lê e sai), então 3 recusas em 20 pacotes davam >10% e o alerta disparava
+sem incidente. `rate`/`ip`/`total` estavam em **zero** na mesma janela: nenhum cliente foi
+estrangulado, era razão sobre amostra minúscula. Com o piso, teste não dispara e ataque real
+(brute force, rajada de um IP) continua acima de 0,5 recusa/s.
 
 1. Painel "Recusas por motivo": `rate` = rate limit (jogador atacando rápido demais), `ip` =
    muitas conexões do mesmo IP, `total` = teto global, `timeout` = sessão ociosa.

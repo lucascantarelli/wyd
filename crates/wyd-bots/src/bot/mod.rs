@@ -43,6 +43,8 @@ pub struct Bot {
     roster: Option<Vec<u8>>,
     /// Corpo cru do último `_MSG_CNFCharacterLogin` (`STRUCT_MOB` a partir do offset 4).
     login: Option<Vec<u8>>,
+    /// Frames crus enviados ao canal (header + corpo, ofuscados como saem no fio), na ordem.
+    sent: Vec<Vec<u8>>,
     /// Frames crus (header + corpo, já de-ofuscados) dos pacotes que carregam nível:
     /// `CNFAccountLogin`, `CNFNewCharacter`, `CNFCharacterLogin` e `CreateMob`. É o byte que
     /// o cliente 7662 recebe; serve para um parser externo medir o offset do legado.
@@ -66,6 +68,7 @@ impl Bot {
             race,
             roster: None,
             login: None,
+            sent: Vec::new(),
             raw: Vec::new(),
         };
         // Servidor que encerra sem responder (ex.: fail só de cabeçalho já consumido, ou
@@ -187,6 +190,7 @@ impl Bot {
             race,
             roster: None,
             login: None,
+            sent: Vec::new(),
             raw: Vec::new(),
         };
         bot.autenticar(config)?;
@@ -318,6 +322,7 @@ impl Bot {
         corpo(&mut frame);
         encode_in_place(&mut frame, self.key_word)
             .map_err(|erro| Error::new(ErrorKind::InvalidData, erro.to_string()))?;
+        self.sent.push(frame.clone());
         self.stream.write_all(&frame)
     }
 
@@ -344,6 +349,11 @@ impl Bot {
                     | Opcode::CreateMob
                     | Opcode::UpdateScore
                     | Opcode::UpdateEtc
+                    | Opcode::Attack
+                    | Opcode::AttackOne
+                    | Opcode::AttackTwo
+                    | Opcode::RemoveMob
+                    | Opcode::SendItem
             )
         ) {
             self.raw.push(frame.clone());
@@ -355,6 +365,12 @@ impl Bot {
     #[must_use]
     pub fn raw_frames(&self) -> &[Vec<u8>] {
         &self.raw
+    }
+
+    /// Frames crus enviados (header + corpo, já ofuscados): o byte que o canal recebeu.
+    #[must_use]
+    pub fn sent_frames(&self) -> &[Vec<u8>] {
+        &self.sent
     }
 
     fn expect(&mut self, opcode: Opcode) -> std::io::Result<()> {

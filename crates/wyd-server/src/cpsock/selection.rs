@@ -14,6 +14,7 @@ use super::*;
 pub(super) fn serve_selection(
     stream: &mut TcpStream,
     account: &str,
+    auth: Option<&Authenticator>,
     selection: Option<&SelectionStore>,
     lease: Option<&SessionLease>,
     idle: Duration,
@@ -40,7 +41,7 @@ pub(super) fn serve_selection(
             &frame,
             chave,
             valid.opcode,
-            Sessao { account },
+            Sessao { account, auth },
             selection,
             &mut stage,
         ) {
@@ -169,7 +170,7 @@ pub(super) fn serve_selection(
             &limpo,
             head[2],
             valid.opcode,
-            Sessao { account },
+            Sessao { account, auth },
             selection,
             &mut stage,
         ) {

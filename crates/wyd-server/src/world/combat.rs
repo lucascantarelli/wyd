@@ -29,6 +29,69 @@ impl Engine {
             // Sem criatura no ponto: com PvP ligado, o alvo pode ser outro jogador.
             return self.attack_player(attacker, x, y, now_ms);
         };
+        self.strike(attacker, entity, npc_id, exp, template, now_ms)
+    }
+
+    /// Golpe no `MobID` de cena que veio em `Dam[i].TargetID` do `_MSG_Attack`.
+    ///
+    /// É a rota do `MobAttack` do legado (`Server.cpp:9881`: `int Target =
+    /// sm.Dam[i].TargetID;`): o alvo é o **id do pacote**, não o tile. O cliente 7662 preenche
+    /// `Dam[].TargetID` e pode mandar `TargetX/TargetY` zerado no golpe básico — resolver só
+    /// pelo ponto clicado devolvia `result=no_target` e o jogador não tirava HP de ninguém.
+    /// O alcance continua sendo a posição autoritativa do motor, nunca a do cliente.
+    pub fn attack_scene_at(
+        &mut self,
+        attacker: Entity,
+        scene: u16,
+        now_ms: u64,
+    ) -> Result<Option<AttackOutcome>, CoreError> {
+        let Some((entity, npc_id, exp, template)) = self
+            .npcs
+            .values()
+            .find(|npc| self.scene_ids.get(&npc.entity.index).copied() == Some(scene))
+            .map(|npc| {
+                (
+                    npc.entity,
+                    npc.spec.id,
+                    npc.spec.exp,
+                    npc.spec.template.clone(),
+                )
+            })
+        else {
+            return Ok(None);
+        };
+        let (Some(posicao_atacante), Some(posicao_alvo)) = (
+            self.store.position_of(attacker),
+            self.store.position_of(entity),
+        ) else {
+            return Ok(None);
+        };
+        if posicao_atacante
+            .x
+            .abs_diff(posicao_alvo.x)
+            .max(posicao_atacante.y.abs_diff(posicao_alvo.y))
+            > ATTACK_RANGE_TILES
+        {
+            return Ok(None);
+        }
+        self.strike(attacker, entity, npc_id, exp, template, now_ms)
+    }
+
+    /// Aplica o golpe numa criatura já resolvida (por tile ou por `MobID`) e devolve o
+    /// resultado de domínio; a sessão cuida de EXP/loot.
+    fn strike(
+        &mut self,
+        attacker: Entity,
+        entity: Entity,
+        npc_id: i32,
+        exp: i64,
+        template: String,
+        now_ms: u64,
+    ) -> Result<Option<AttackOutcome>, CoreError> {
+        // Id de cena **antes** do despawn: `despawn` devolve o id ao pool, e ler depois dava
+        // `target_scene = 0` no golpe que mata — o eco `_MSG_AttackOne` e o `_MSG_RemoveMob`
+        // saíam com id 0 e o cliente não tirava o cadáver nem desenhava o dano final.
+        let target_scene = self.scene_ids.get(&entity.index).copied().unwrap_or(0);
         let golpe = combat_system::attack(
             &mut self.store,
             attacker,
@@ -47,7 +110,7 @@ impl Engine {
         }
         Ok(Some(AttackOutcome {
             target_npc: npc_id,
-            target_scene: self.scene_ids.get(&entity.index).copied().unwrap_or(0),
+            target_scene,
             template,
             damage: golpe.amount,
             remaining_hp: golpe.remaining_hp,

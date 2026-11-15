@@ -133,7 +133,10 @@ impl Engine {
                 npc_id: npc.spec.id,
                 name: fixed_name(&npc.spec.name),
                 position,
-                level: npc.spec.stats.level,
+                // Mesmo `STRUCT_SCORE` do `CreateMob` de jogador: o cliente desenha
+                // `Level + 1` (medido no personagem: fio 1 → "Nv 2"), então o nível do NPC
+                // (1-based na definição) também vai 0-based no fio.
+                level: npc.spec.stats.level.saturating_sub(1),
                 hp: npc.spec.stats.hp,
                 max_hp: npc.spec.stats.max_hp,
                 attack: npc.spec.stats.attack,
@@ -319,6 +322,9 @@ impl Engine {
             state.level = refresh.level;
             state.hp = refresh.hp;
             state.mp = refresh.mp;
+            if let Some(exp) = refresh.exp {
+                state.exp = exp;
+            }
         }
         if let Some(skin) = self.skins.get_mut(&entity.index) {
             skin.mp = i32::try_from(refresh.mp).unwrap_or(i32::MAX);

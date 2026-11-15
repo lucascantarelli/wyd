@@ -275,6 +275,7 @@ pub fn handle_connection(
         let entity = serve_selection(
             &mut stream,
             &conta,
+            auth,
             selection,
             lease.as_ref(),
             idle,
@@ -304,6 +305,9 @@ type PinStep = (Option<SessionLease>, Option<Pendente>);
 /// Conta autenticada nesta conexão (`account` decide o roster e o dono da criação).
 struct Sessao<'a> {
     account: &'a str,
+    /// Autenticador da conta: a confirmação tardia da segunda senha (`_MSG_AccountSecure` na
+    /// etapa de seleção) só pode ser aceita comparando o token com o PIN gravado.
+    auth: Option<&'a Authenticator>,
 }
 
 /// Frame com corpo (`Size = 12 + corpo`), ofuscado com a chave do frame de entrada.
