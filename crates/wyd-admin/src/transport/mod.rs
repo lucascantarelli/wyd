@@ -23,10 +23,11 @@ use wyd_db::{
 };
 
 use crate::api::{
-    create_account, economy_summary, find_account, moderation, own_account, own_characters,
-    own_history, recent_audit, request_grant, request_recovery, set_blocked, set_role,
-    top_rankings, AccountSummary, ChannelPresence, ConfigStore, GrantKind, GrantRequest,
-    PanelAccount, PanelCharacter, PanelEvent, PanelSession, RankingEntry,
+    confirm_pin_reset, create_account, economy_summary, find_account, moderation, own_account,
+    own_characters, own_history, recent_audit, request_grant, request_recovery, reset_numeric_pin,
+    set_blocked, set_email, set_role, start_pin_reset, top_rankings, AccountSummary,
+    ChannelPresence, ConfigStore, GrantKind, GrantRequest, PanelAccount, PanelCharacter,
+    PanelEvent, PanelSession, RankingEntry,
 };
 use crate::audit::{log_action, log_denied, log_panel, AuditSink};
 use crate::auth::{Session, StaffSession};
@@ -57,12 +58,22 @@ pub const SERVICOS: &[(&str, &[&str])] = &[
             "set_role",
             "set_blocked",
             "create_account",
+            "reset_numeric_pin",
         ],
     ),
     // Trilha de auditoria (somente leitura, append-only) e economia auditada.
     ("audit_admin", &["recent"]),
     ("economy_admin", &["summary"]),
-    ("account_web", &["verify_credentials", "change_numeric_pin"]),
+    (
+        "account_web",
+        &[
+            "verify_credentials",
+            "change_numeric_pin",
+            "set_email",
+            "start_pin_reset",
+            "confirm_pin_reset",
+        ],
+    ),
     (
         "attribute_map_admin",
         &["get_attribute_map_info", "transform_attribute_map"],
@@ -370,6 +381,11 @@ pub struct Router<A, C, S> {
     config: Option<Arc<dyn ConfigStore>>,
     /// Histórico de sessões do jogador (`character_session`, leitura pura).
     session_trail: Option<Arc<dyn wyd_db::SessionTrail + Send + Sync>>,
+    /// E-mail e tokens do reset da segunda senha (autoatendimento por link).
+    ///
+    /// Sem esta fonte as rotas `account_web/*pin_reset*` respondem `503`: o gateway não
+    /// inventa token nem e-mail.
+    pin_reset: Option<Arc<dyn wyd_db::PinReset + Send + Sync>>,
     max_body: usize,
 }
 
@@ -392,6 +408,7 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
             game: None,
             config: None,
             session_trail: None,
+            pin_reset: None,
             max_body: http::MAX_BODY,
         }
     }
@@ -442,6 +459,13 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
     #[must_use]
     pub fn with_economy(mut self, economy: Arc<dyn Economy + Send + Sync>) -> Self {
         self.economy = Some(economy);
+        self
+    }
+
+    /// Liga o e-mail da conta e os tokens do reset da segunda senha.
+    #[must_use]
+    pub fn with_pin_reset(mut self, repo: Arc<dyn wyd_db::PinReset + Send + Sync>) -> Self {
+        self.pin_reset = Some(repo);
         self
     }
 
@@ -533,6 +557,9 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
             ("accounts", "get_moderation") => self.accounts_moderation(session, &params, trace),
             ("accounts", "set_role") => self.accounts_set_role(session, &params, trace),
             ("accounts", "set_blocked") => self.accounts_set_blocked(session, &params, trace),
+            ("account_admin", "reset_numeric_pin") => {
+                self.accounts_reset_pin(session, &params, trace)
+            }
             ("audit_admin", "recent") => self.audit_recent(session, &params, trace),
             ("economy_admin", "summary") => self.economy_summary(session, trace),
             ("grants", "request") => self.grants_request(session, &params, trace),
@@ -546,6 +573,13 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
             ("panel", "characters") => self.panel_characters(session, &params, trace),
             ("panel", "rankings") => self.panel_rankings(session, &params, trace),
             ("panel", "history") => self.panel_history(session, &params, trace),
+            ("account_web", "set_email") => self.panel_set_email(session, &params, trace),
+            ("account_web", "start_pin_reset") => {
+                self.panel_start_pin_reset(session, &params, trace)
+            }
+            ("account_web", "confirm_pin_reset") => {
+                self.panel_confirm_pin_reset(session, &params, trace)
+            }
             ("item_catalog", "list_items") => self.catalog_list_items(session, trace),
             ("account_web", "verify_credentials") => self.verify_credentials(&params, trace),
             ("account_web", "change_numeric_pin") => self.change_pin(&params, trace),
@@ -1808,6 +1842,79 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
         }
     }
 
+    /// `account_web/set_email` — e-mail de recuperação da própria conta.
+    fn panel_set_email(&self, session: Session, params: &json::Json, trace: &str) -> Reply {
+        let Some(account_id) = params.get("account_id").and_then(json::Json::as_i64) else {
+            return Reply::business(trace, RESULT_INVALID, "campo account_id obrigatório");
+        };
+        let Some(email) = params.get("email").and_then(json::Json::as_str) else {
+            return Reply::business(trace, RESULT_INVALID, "campo email obrigatório");
+        };
+        let Some(repo) = &self.pin_reset else {
+            return Reply::transport(503, trace, "e-mail/token de reset não montados no gateway");
+        };
+        match poll_once(set_email(
+            Some(session),
+            account_id,
+            email,
+            repo.as_ref(),
+            &self.audit,
+        )) {
+            Some(Ok(email)) => Reply::ok(trace, &format!(",\"email\":{}", json::quote(&email))),
+            Some(Err(error)) => Reply::from_error(trace, &error),
+            None => Reply::transport(500, trace, "handler pendente de runtime async"),
+        }
+    }
+
+    /// `account_web/start_pin_reset` — emite o token; devolve o e-mail de destino.
+    fn panel_start_pin_reset(&self, session: Session, params: &json::Json, trace: &str) -> Reply {
+        let Some(account_id) = params.get("account_id").and_then(json::Json::as_i64) else {
+            return Reply::business(trace, RESULT_INVALID, "campo account_id obrigatório");
+        };
+        let Some(token_hash) = params.get("token_hash").and_then(json::Json::as_str) else {
+            return Reply::business(trace, RESULT_INVALID, "campo token_hash obrigatório");
+        };
+        let Some(repo) = &self.pin_reset else {
+            return Reply::transport(503, trace, "e-mail/token de reset não montados no gateway");
+        };
+        match poll_once(start_pin_reset(
+            Some(session),
+            account_id,
+            token_hash,
+            repo.as_ref(),
+            &self.audit,
+        )) {
+            Some(Ok(email)) => Reply::ok(trace, &format!(",\"email\":{}", json::quote(&email))),
+            Some(Err(error)) => Reply::from_error(trace, &error),
+            None => Reply::transport(500, trace, "handler pendente de runtime async"),
+        }
+    }
+
+    /// `account_web/confirm_pin_reset` — consome o token e apaga o PIN.
+    fn panel_confirm_pin_reset(&self, session: Session, params: &json::Json, trace: &str) -> Reply {
+        let Some(account_id) = params.get("account_id").and_then(json::Json::as_i64) else {
+            return Reply::business(trace, RESULT_INVALID, "campo account_id obrigatório");
+        };
+        let Some(token_hash) = params.get("token_hash").and_then(json::Json::as_str) else {
+            return Reply::business(trace, RESULT_INVALID, "campo token_hash obrigatório");
+        };
+        let Some(repo) = &self.pin_reset else {
+            return Reply::transport(503, trace, "e-mail/token de reset não montados no gateway");
+        };
+        match poll_once(confirm_pin_reset(
+            Some(session),
+            account_id,
+            token_hash,
+            &self.accounts,
+            repo.as_ref(),
+            &self.audit,
+        )) {
+            Some(Ok(())) => Reply::ok(trace, ",\"reset\":true"),
+            Some(Err(error)) => Reply::from_error(trace, &error),
+            None => Reply::transport(500, trace, "handler pendente de runtime async"),
+        }
+    }
+
     fn panel_characters(&self, session: Session, params: &json::Json, trace: &str) -> Reply {
         let Some(account_id) = params.get("account_id").and_then(json::Json::as_i64) else {
             return Reply::business(trace, RESULT_INVALID, "campo account_id obrigatório");
@@ -1970,6 +2077,33 @@ impl<A: Accounts, C: Characters, S: AuditSink> Router<A, C, S> {
                 trace,
                 &format!(",\"moderation\":{}", moderation_json(&estado)),
             ),
+            Some(Err(error)) => Reply::from_error(trace, &error),
+            None => Reply::transport(500, trace, "handler pendente de runtime async"),
+        }
+    }
+
+    /// `account_admin/reset_numeric_pin` — reset auditado da segunda senha (staff).
+    ///
+    /// O motivo é obrigatório: a conta volta a "primeira entrada" e o jogador cadastra o
+    /// PIN novo no cliente. Sem motivo não há trilha explicável para um reset de credencial.
+    fn accounts_reset_pin(&self, session: Session, params: &json::Json, trace: &str) -> Reply {
+        let Some(login) = params.get("login").and_then(json::Json::as_str) else {
+            return Reply::business(trace, RESULT_INVALID, "campo login obrigatório");
+        };
+        let reason = params
+            .get("reason")
+            .and_then(json::Json::as_str)
+            .unwrap_or("");
+        match poll_once(reset_numeric_pin(
+            Some(session),
+            login,
+            reason,
+            &self.accounts,
+            &self.audit,
+        )) {
+            Some(Ok(conta)) => {
+                Reply::ok(trace, &format!(",\"login\":{}", json::quote(&conta.login)))
+            }
             Some(Err(error)) => Reply::from_error(trace, &error),
             None => Reply::transport(500, trace, "handler pendente de runtime async"),
         }

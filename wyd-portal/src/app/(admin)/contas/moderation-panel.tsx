@@ -1,6 +1,6 @@
 "use client";
 
-import { Ban, ShieldCheck, UserCog } from "lucide-react";
+import { Ban, KeyRound, ShieldCheck, UserCog } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ export function ModerationPanel({
 }) {
   const router = useRouter();
   const toast = useToast();
-  const [mode, setMode] = useState<null | "role" | "block" | "unblock">(null);
+  const [mode, setMode] = useState<null | "role" | "block" | "unblock" | "pin-reset">(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nextRole, setNextRole] = useState<Role>(role);
@@ -95,6 +95,15 @@ export function ModerationPanel({
             Alterar papel
           </button>
 
+          <button
+            className="ui-btn ui-btn--ghost"
+            onClick={() => setMode("pin-reset")}
+            title="Apaga a segunda senha para o jogador cadastrar outra no cliente"
+          >
+            <KeyRound size={15} strokeWidth={1.8} aria-hidden="true" />
+            Redefinir 2ª senha
+          </button>
+
           {blocked ? (
             <button className="ui-btn ui-btn--primary" onClick={() => setMode("unblock")}>
               <ShieldCheck size={15} strokeWidth={1.8} aria-hidden="true" />
@@ -127,14 +136,18 @@ export function ModerationPanel({
             ? "Alterar papel"
             : mode === "block"
               ? "Bloquear conta"
-              : "Liberar conta"
+              : mode === "pin-reset"
+                ? "Redefinir segunda senha"
+                : "Liberar conta"
         }
         description={
           mode === "role"
             ? `O novo papel vale no jogo e no portal e é conferido a cada login de ${login}.`
             : mode === "block"
               ? `${login} perde o acesso ao jogo e ao portal até ser liberada. O motivo fica na trilha.`
-              : `${login} volta a poder entrar no jogo e no portal.`
+              : mode === "pin-reset"
+                ? `A segunda senha de ${login} é apagada e as tentativas erradas são zeradas. No próximo login o jogador cadastra o PIN novo no cliente. O motivo fica na trilha.`
+                : `${login} volta a poder entrar no jogo e no portal.`
         }
         onClose={close}
         footer={
@@ -145,7 +158,11 @@ export function ModerationPanel({
             <button
               className={mode === "block" ? "ui-btn ui-btn--danger" : "ui-btn ui-btn--primary"}
               onClick={submit}
-              disabled={pending || (mode === "block" && reason.trim() === "")}
+              disabled={
+                pending ||
+                (mode === "block" && reason.trim() === "") ||
+                (mode === "pin-reset" && reason.trim().length < 3)
+              }
             >
               {pending ? "Aplicando…" : "Confirmar"}
             </button>
@@ -170,8 +187,11 @@ export function ModerationPanel({
             </Field>
           ) : null}
 
-          {mode === "block" ? (
-            <Field label="Motivo do bloqueio" hint="obrigatório; vai para a trilha de auditoria">
+          {mode === "block" || mode === "pin-reset" ? (
+            <Field
+              label={mode === "pin-reset" ? "Motivo do reset" : "Motivo do bloqueio"}
+              hint="obrigatório; vai para a trilha de auditoria"
+            >
               <textarea
                 className="ui-input"
                 rows={3}

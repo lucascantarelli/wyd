@@ -15,11 +15,14 @@ pub mod mob;
 pub mod moderation;
 pub mod npc;
 pub mod panel;
+pub mod pin_reset;
 pub mod presence;
 pub mod rates;
 pub mod teleport;
 
-pub use accounts::{account_json, accounts_json, create_account, find_account, AccountSummary};
+pub use accounts::{
+    account_json, accounts_json, create_account, find_account, reset_numeric_pin, AccountSummary,
+};
 pub use catalog::items_json;
 pub use daily::rewards_json;
 pub use donate::{
@@ -37,6 +40,7 @@ pub use panel::{
     own_account, own_characters, own_history, request_recovery, top_rankings, PanelAccount,
     PanelCharacter, PanelEvent, PanelSession, RankingEntry, MAX_RANKING,
 };
+pub use pin_reset::{confirm_pin_reset, set_email, start_pin_reset};
 pub use presence::{list_channel_presence, ChannelPresence, PresenceSnapshot};
 pub use rates::{
     ConfigStore, DailyEdit, DailyRewardRow, DonateEdit, DonateItemRow, DropEdit, DropRow,

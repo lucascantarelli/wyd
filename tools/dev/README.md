@@ -8,5 +8,6 @@ Scripts Node sem dependências, chamados pelo `make check` ou por alvos específ
 | `bench-gate.mjs` | `make bench-gate` | regressão de benchmarks contra baseline por cenário |
 | `monitoring-smoke.mjs` | `make monitoring-check` | stack de monitoramento viva |
 | `clean-tmp.mjs` | `make clean-tmp` | limpeza de artefatos conhecidos de `tmp/` |
+| `limpar-qa.mjs` | `make db-limpa-qa` | contas de QA acumuladas (login terminando em 5+ dígitos) no banco de testes: contagens, amostra e remoção transacional com `--aplicar` |
 
 `check-docs-consistency.mjs` não corrige nada: divergência é erro com lista de caminhos.

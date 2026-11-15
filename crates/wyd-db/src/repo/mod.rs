@@ -10,6 +10,7 @@ pub mod content;
 pub mod economy;
 pub mod grants;
 pub mod pg;
+pub mod pin_reset;
 pub mod sessions;
 
 pub use accounts::{Accounts, CredentialRecord};
@@ -28,4 +29,5 @@ pub use content::{
 pub use economy::{CityTaxTotal, Economy, EconomySummary, GrantTotal};
 pub use grants::{Grant, Grants, QueuedGrantRow};
 pub use pg::NO_CREDENTIAL;
+pub use pin_reset::PinReset;
 pub use sessions::{ClaimOutcome, SessionHistoryRow, SessionTrail, Sessions};

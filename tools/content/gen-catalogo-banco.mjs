@@ -139,9 +139,11 @@ push(
     return `| ${arquivo.slice(0, 4)} | ${B}${arquivo}${B} | ${tipo} | ${objetos.length ? objetos.join(', ') : '—'} |`;
   }),
   '',
-  'Regra da série: DDL inteiro antes do primeiro seed, um domínio por arquivo, nenhuma tabela',
-  'partida entre arquivos, nenhuma FK para tabela criada depois e **nenhum `ALTER TABLE` no',
-  '`up`** — coluna nova nasce na criação da tabela (o gerador falha se aparecer um).',
+  'Regra da série: DDL antes do primeiro seed que dependa dele, um domínio por arquivo, nenhuma',
+  'tabela partida entre arquivos, nenhuma FK para tabela criada depois e **nenhum `ALTER TABLE` no',
+  '`up`** — coluna nova nasce na criação da tabela (o gerador falha se aparecer um). DDL decidida',
+  'depois do bloco de seed (`0028`, `0053`) é exceção registrada: o que a regra proíbe é seed',
+  'inserindo em tabela que ainda não existe.',
   '',
 );
 

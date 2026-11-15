@@ -33,10 +33,12 @@ offset de outro build não é evidência.
 | `captura-live.mjs` | converter captura JSON em fixtures / conferir com o servidor | CLI única |
 | `diff-captura.mjs` | diff de duas capturas (opcode, tamanho e offsets que mudaram) | CLI única |
 | `trade-layout.mjs` | decidir o layout de `MSG_Trade` (156 B natural × 154 B packed) e validar campos | CLI `<hex>` / `--self-test` |
-| `strdef.mjs` | resolver id de mensagem do binário (`0x109a4b8` + n×128) no arquivo `client/UI/strdef.bin` | CLIs `--index N` / `<VA>`; sem I/O de rede |
+| `strdef.mjs` | resolver id de mensagem do binário (`0x109a4b8` + n×128) no arquivo `client/UI/strdef.bin` | CLIs `--index N` / `<VA>`, `--json`; sem I/O de rede |
+| `strdef-patch.mjs` | reescrever um registro da tabela em cp1252 (com backup, offsets, bytes antes/depois e o checksum `0x53a55b` recalculado) | CLI `--index N --texto … [--dry-run] [--backup …]`; recusa texto > 127 B |
 | `map-skills.mjs` | mapear skills do cliente para o catálogo | CLI única |
 | `captura-print.ps1` | screenshot da janela D3D9 (`PrintWindow`/`BitBlt`), exige elevação | operador, Windows |
-| `captura-sessao.ps1` | captura o handshake/login real: listeners 8281/80 (ou `-SemListeners`), entrada por `SendInput` absoluto + scan code — `mouse_event` não chega ao cliente — e, com `-Conta`/`-Senha`, digita o login e captura a recusa (`target/<prefixo>-recusa-*.jpg`) | operador, Windows, elevação |
+| `captura-sessao.ps1` | captura o handshake/login real: listeners 8281/80 (ou `-SemListeners`), entrada por `SendInput` absoluto + scan code — `mouse_event` não chega ao cliente — e, com `-Conta`/`-Senha`, digita o login, captura a recusa (`target/<prefixo>-recusa-*.png`) e compara o texto desenhado com o registro do `strdef.bin` via `ocr-texto.ps1` (`veredito_ocr=confere|divergente` no log) | operador, Windows, elevação |
+| `ocr-texto.ps1` | OCR offline da captura (`Windows.Media.Ocr`) em fatias horizontais + comparação normalizada (acento/caixa/pontuação) com um registro de `UI/strdef.bin`, sem leitura manual | CLI `-Imagem`/`-Strdef N`; exit 0 confere, 1 divergiu, 2 sem OCR |
 | `captura-tela.ps1` | captura a tela em intervalo fixo (`target/tela/*.jpg`), porque `PrintWindow` de D3D9 volta preto | operador, Windows |
 
 ## Padrões

@@ -29,7 +29,7 @@ const ADMIN_TOKEN = process.env.WEB_API_TOKEN ?? "";
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 /** Resposta do envelope: `result` sempre presente (1 = OK). */
-interface AdminEnvelope {
+export interface AdminEnvelope {
   result: number;
   message?: string;
   trace_id?: string;
@@ -176,7 +176,9 @@ export interface GetAccountResponse extends AdminEnvelope {
 export const accountAdmin = svc<{
   listAccounts: Unary<{ limit: number; after_id?: number }, ListAccountsResponse>;
   getAccount: Unary<{ id: number }, GetAccountResponse>;
-}>("account_admin", ["listAccounts", "getAccount"]);
+  /** Reset auditado da segunda senha: motivo obrigatório, autor vem da sessão. */
+  resetNumericPin: Unary<{ login: string; reason: string }, AdminEnvelope>;
+}>("account_admin", ["listAccounts", "getAccount", "resetNumericPin"]);
 
 /* ------------------------------- catálogo ------------------------------ */
 
@@ -230,7 +232,14 @@ export interface VerifyCredentialsResponse {
 /** `account_web/*` — verificação de credencial e troca de senha numérica. */
 export const accountWeb = svc<{
   verifyCredentials: Unary<{ name: string; password: string }, VerifyCredentialsResponse>;
-}>("account_web", ["verifyCredentials"]);
+  /** E-mail de recuperação e link de uso único do reset da segunda senha. */
+  setEmail: Unary<{ account_id: number; email: string }, AdminEnvelope & { email?: string }>;
+  startPinReset: Unary<
+    { account_id: number; token_hash: string },
+    AdminEnvelope & { email?: string }
+  >;
+  confirmPinReset: Unary<{ account_id: number; token_hash: string }, AdminEnvelope>;
+}>("account_web", ["verifyCredentials", "setEmail", "startPinReset", "confirmPinReset"]);
 
 /* ------------------------------- presença ------------------------------ */
 

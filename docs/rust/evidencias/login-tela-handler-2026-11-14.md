@@ -4,6 +4,12 @@ Data: 2026-11-14. Escopo: estabelecer **qual frame a etapa de login do cliente d
 texto**, e provar a cadeia do frame até a chamada de desenho. Nada de loja/NPC, combate, criação ou
 nível.
 
+> **Nota de 2026-11-15:** o literal do registro 12 registrado abaixo é o de **fábrica** do 7662 e
+> foi reescrito nesta data para "Usuário ou senha incorretos." (`tools/client/strdef-patch.mjs`).
+> A cadeia `0x4b4082 → push 0x109aab8 → 0x404109` continua valendo; bytes antes/depois, checksum e
+> veredito do cliente estão em
+> [`autenticacao-ocr-2026-11-15.md`](autenticacao-ocr-2026-11-15.md) §7.
+
 **Resultado em uma linha:** a etapa de login só desenha `0x011C`/`0x011D`, e o texto é o registro
 **12** de `client/UI/strdef.bin` (offset **0x600**, cp1252, NUL-padded):
 **"Conexão anterior finalizada. Tente novamente."** O servidor emite **um** `0x011C` header-only

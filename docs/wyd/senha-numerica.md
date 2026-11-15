@@ -162,3 +162,74 @@ Provas: `crates/wyd-admin/src/api/accounts.rs`
 (`senha_do_jogo_cabe_em_doze_bytes`, `teto_de_doze_bytes_vale_so_para_jogador`),
 `crates/wyd-admin/tests/contrato/transporte.rs::moderator_cannot_create_staff` e
 `wyd-portal/tests/unidade/lib/senha.test.ts`.
+
+## O botão "Alterar" do cliente 7662 (medido no proxy, 2026-11-15)
+
+O proxy TCP/UDP (`tools/client/captura-live.mjs` + sniffer local) decodificou o corpo do `0x0FDE`
+que o **Alterar** envia. Não existe sub-protocolo de troca: o botão manda **um único**
+`0x0FDE` com `change_numeric = 0` — o mesmo pacote do Confirmar — e o campo `numeric_token[6]`
+vem com o valor digitado **duas vezes**, cortado em 6 posições:
+
+| Digitado | `numeric_token[6]` no fio | ASCII |
+|---|---|---|
+| `8642` | `38 36 34 32 38 36` | `864286` |
+| `123456` | `31 32 33 34 35 36` | `123456` (cabe inteiro, a duplicação é cortada) |
+| `4321` | `34 33 32 31 34 33` | `432143` |
+
+Layout do frame (32 B, header de 12 B em LE): `Size` @0, `KeyWord` @2, `CheckSum` @3,
+`Type` @4 (**ofuscado**, decodificar antes de ler), `ID` @6, `ClientTick` @8,
+`numeric_token[6]` @12, `unknown[10]` @18, `change_numeric: i32` @28.
+
+Consequências implementadas:
+
+- `crates/wyd-server/src/auth/pin.rs::candidatos` aceita o prefixo **só quando a cauda repete o
+  começo** (`864286` → `8642`), nunca um 6 dígitos arbitrário. PIN errado continua recusado e
+  contando em `pin_failures`; o passo `change=1`/`2` do portal segue igual.
+- Com `pin_hash` nulo, o mesmo pacote **cadastra** o PIN (último candidato, ou seja, o valor
+  digitado de verdade). É o único caminho de gravação que o cliente oferece: o Alterar, com PIN
+  já gravado, apenas verifica e entra — o cliente fecha o diálogo e vai para a seleção.
+- A troca em si continua em dois caminhos: o portal (`account_web/change_numeric_pin`, passos
+  1/2) e o **reset auditado** abaixo, seguido do cadastro no cliente.
+
+## Reset auditado da segunda senha (jogador que esqueceu o PIN)
+
+- Gateway: `POST /admin/v1/account_admin/reset_numeric_pin` com `{"login","reason"}`; staff
+  obrigatório (`authorization: Bearer <token>` + `x-wyd-actor: <id>:<papel>`), motivo com 3 a 200
+  caracteres. Apaga `pin_hash` e zera `pin_failures`/`pin_locked_until` (`clear_pin_hash`), e
+  grava `accounts.pin_reset` na trilha com alvo `account:<id>` e o motivo.
+- Portal: botão **Redefinir 2ª senha** no painel de contas (`contas/moderation-panel.tsx` →
+  `moderation-actions.ts` → `server/accounts.ts::resetAccountPin`), com motivo obrigatório.
+- O jogador então abre o cliente, faz login com a senha da conta e digita o PIN novo no diálogo
+  (Confirmar ou Alterar): a conta está em "primeira entrada" e o canal grava o valor.
+
+## Autoatendimento: link de uso único por e-mail
+
+O reset por staff não escala para o jogador que esqueceu o PIN. O caminho de autoatendimento usa
+o **e-mail da conta** como fator de prova:
+
+1. Na área **Minha conta**, o jogador cadastra o e-mail (`POST /api/panel/email` →
+   `account_web/set_email`); o gateway valida a forma e audita `panel.email`.
+2. "Enviar link de reset" (`POST /api/panel/pin-reset`): o **portal** gera um token de 256 bits,
+   manda ao gateway só o `sha256` (64 hex) e envia o link por e-mail. O gateway grava em
+   `pin_reset_token` com validade de **15 minutos**, invalidando links anteriores da conta, e
+   audita `accounts.pin_reset_request`.
+3. O jogador abre `/conta/pin-reset?token=…` (exige sessão do portal) e confirma
+   (`POST /api/panel/pin-reset/confirmar` → `account_web/confirm_pin_reset`): o token é
+   consumido **uma vez** (`used_at`), o PIN é apagado com o mesmo `clear_pin_hash` do reset por
+staff e a trilha recebe `accounts.pin_reset_self`.
+4. No próximo acesso ao cliente, o diálogo da segunda senha cadastra o PIN novo.
+
+O token em claro só existe na URL entregue por e-mail: não é logado, não é gravado (só o hash) e
+não volta em resposta. Token expirado, já usado ou desconhecido respondem a mesma recusa.
+
+Verificado num navegador real (Chromium) com o portal em container e `PIN_RESET_MAIL_ENDPOINT`
+apontando para um coletor local: cadastro do e-mail, envio com destino mascarado
+(`qa*****@example.com`), abertura do link capturado, confirmação com `pin_hash` indo para NULL e
+`accounts.pin_reset_self` na trilha, recusa do token já usado (“link inválido ou expirado”),
+token ausente/malformado sem quebrar a página e **503** com mensagem honesta quando o provedor
+não está configurado. Detalhes em `docs/rust/evidencias/pin-reset-portal-2026-11-15.md`.
+
+Configuração do envio (portal): `RESEND_API_KEY` e `PIN_RESET_FROM` (remetente verificado no
+provedor). Sem as duas, a rota responde **503** — o portal nunca reporta envio que não houve.
+`PORTAL_BASE_URL` define o domínio do link. `PIN_RESET_MAIL_ENDPOINT` permite apontar para um
+coletor local em desenvolvimento/teste.

@@ -32,6 +32,31 @@ cor.danger = #e06a6a
 # Grafana, declarado aqui para que nenhuma cor exista fora da identidade.
 cor.embed = #111217
 
+# --- paleta do tema claro ("pergaminho") ---
+#
+# Só o portal usa: o launcher desenha a tela de entrada sempre no tema escuro. Os nomes
+# seguem `cor.claro-*` de propósito — o consumidor CSS deriva `--claro-*` cortando o
+# prefixo `cor.`, então um ponto a mais (`cor.claro.bg`) viraria a variável `--claro.bg`,
+# que não é um nome utilizável. É a mesma regra do `cor.surface-2` → `--surface-2`.
+cor.claro-bg = #f8f6f0
+cor.claro-surface = #ffffff
+cor.claro-surface-2 = #efece4
+cor.claro-border = #d9d3c6
+cor.claro-border-strong = #bfb7a6
+cor.claro-border-control = #8a8474
+cor.claro-text = #1a1d24
+cor.claro-muted = #5c6270
+# Ouro fechado: o `cor.accent` (#c8a24a) não tem contraste suficiente sobre pergaminho.
+cor.claro-accent = #9a7b26
+cor.claro-accent-ink = #ffffff
+# Fundo de embed externo no tema claro (o Grafana continua escuro por dentro).
+cor.claro-embed = #ffffff
+
+# --- acentos cerimoniais (valem nos dois temas) ---
+cor.ouro-imperial = #d4af37
+cor.arcano = #3b82f6
+cor.batalha = #ef4444
+
 # --- escala de espaço (base 4, série de Fibonacci) ---
 espaco.1 = 4
 espaco.2 = 8

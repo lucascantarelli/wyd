@@ -92,6 +92,13 @@ pub(crate) fn verify_login_password(
     password::verify(backend, runtime, login, senha)
 }
 
+/// Log estruturado (uma linha, `key=value`) — mesmo formato do canal e do gateway.
+pub(crate) fn log(level: &str, event: &str, fields: &str) {
+    let linha = format!("level={level} event={event} {fields}");
+    crate::logs::record(&linha);
+    println!("{linha}");
+}
+
 /// Converte falha de banco na recusa de autenticação correspondente.
 pub(crate) fn mapear_db(error: DbError) -> AuthError {
     match error {

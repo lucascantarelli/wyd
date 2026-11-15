@@ -18,7 +18,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_db::ServerChannel;
+use wyd_db::{PgBackend, PoolConfig, ServerChannel, Sessions};
 use wyd_net::VersionGate;
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::payload::WirePayload;
@@ -319,8 +319,22 @@ fn esperar_gauge(
 /// personagem pelo `_MSG_CreateCharacter` no slot e o remove no fim, pelo protocolo).
 ///
 /// O personagem é o persistido no slot ou o criado pelo protocolo. A sessão fica aberta
-/// (ping a cada 5 s) por pelo menos um scrape de 15 s; o teste exige o gauge > 0 no canal e,
-/// depois do FIN, a volta a 0.
+/// (ping a cada 5 s) por pelo menos um scrape de 15 s.
+///
+/// O que este teste assere, e o que **não** assere: `wyd_entities_active` é, por definição do
+/// registro (`crates/wyd-core/src/metrics/registry.rs:245`), a população de entidades vivas do
+/// **mundo** — não da sessão. Com o mundo carregado (medido: 6105 entidades), o valor não muda
+/// ao entrar nem ao sair do jogador, então "voltar a 0 depois do FIN" era falso por construção
+/// e o teste falhava com o canal correto. Agora:
+///
+/// 1. o gauge precisa estar **publicado e > 0** com a sessão aberta;
+/// 2. depois do FIN ele continua publicado e **igual** ao valor observado (população do mundo,
+///    estável — é isso que o gauge representa);
+/// 3. a liberação da sessão é asserida na **fonte certa**: `character_session` viva da conta no
+///    banco (`live_session_of`), que tem de ir a `None`.
+///
+/// O personagem criado é removido pelo protocolo **em qualquer caminho**, inclusive panic
+/// ([`Limpeza`]), para duas execuções seguidas darem o mesmo resultado e o banco terminar igual.
 #[test]
 fn sessao_viva_publica_entidade_no_gauge() {
     let Ok(endereco) = std::env::var("WYD_LIVE_CPSOCK") else {
@@ -347,17 +361,45 @@ fn sessao_viva_publica_entidade_no_gauge() {
         .ok()
         .filter(|nome| !nome.trim().is_empty());
 
+    // Normaliza a conta do env **antes** de conectar: senha, PIN e roster voltam ao estado
+    // conhecido. Sem isso o fixture é compartilhado e qualquer teste que reescreva a credencial
+    // (era o caso do handshake) derruba este aqui com `senha de login não confere`.
+    let banco = common::dsn_ou_skip("sessão viva no gauge").map(|dsn| {
+        let rt = tokio::runtime::Builder::new_multi_thread()
+            .worker_threads(1)
+            .enable_all()
+            .build()
+            .expect("runtime do banco");
+        let backend = rt
+            .block_on(PgBackend::connect(&dsn, PoolConfig::local()))
+            .expect("banco da sessão");
+        common::preparar_conta_de_teste(&rt, &backend, &conta, &senha, &pin);
+        (rt, backend)
+    });
+
     let mut stream = TcpStream::connect(&endereco).expect("conecta no canal");
     stream
         .set_read_timeout(Some(Duration::from_secs(10)))
         .expect("timeout");
     autenticar(&mut stream, &conta, &senha, &pin);
 
-    let criado = criar.map(|nome| {
+    // A guarda nasce **antes** do `_MSG_CreateCharacter`: se a criação ou qualquer asserção
+    // seguinte estourar, o `Drop` ainda remove o personagem pelo protocolo.
+    let mut guarda: Option<Limpeza> = None;
+    if let Some(nome) = criar {
         let bytes = nome.as_bytes();
         assert!(bytes.len() <= 16, "nome do personagem cabe em char[16]");
         let mut campo = [0u8; 16];
         campo[..bytes.len()].copy_from_slice(bytes);
+        guarda = Some(Limpeza {
+            endereco: endereco.clone(),
+            conta: conta.clone(),
+            senha: senha.clone(),
+            pin: pin.clone(),
+            slot,
+            nome: campo,
+            feito: false,
+        });
         enviar(
             &mut stream,
             11,
@@ -378,8 +420,7 @@ fn sessao_viva_publica_entidade_no_gauge() {
             Opcode::CNFNewCharacter,
             "{endereco} criou o personagem {nome} no slot {slot}"
         );
-        campo
-    });
+    }
 
     enviar(
         &mut stream,
@@ -418,47 +459,166 @@ fn sessao_viva_publica_entidade_no_gauge() {
     }
     drop(stream);
 
+    // Liberação da sessão: fonte correta é o banco, não o gauge do mundo.
+    if let Some((rt, backend)) = banco {
+        let liberou = common::esperar_ate(Duration::from_secs(30), || {
+            rt.block_on(backend.live_session_of(&conta))
+                .map(|viva| viva.is_none())
+                .unwrap_or(false)
+        });
+        assert!(
+            liberou,
+            "`character_session` da conta continua viva depois do FIN ({conta})"
+        );
+        eprintln!(
+            "PASS: banco sem sessão viva de {conta} depois do FIN (character_session released_at não nulo)"
+        );
+    } else {
+        eprintln!("SKIP: sem DSN — liberação de sessão asserida pelo banco não verificada");
+    }
+
+    // O gauge é população do mundo: continua publicado e com o MESMO valor que tinha com a
+    // sessão aberta — é isso que ele representa (antes do conserto o teste exigia 0 e falhava
+    // com o canal correto).
     let depois = esperar_gauge(
         &prometheus,
         &canal,
-        |valor| valor == 0.0,
+        |valor| valor == durante,
         Duration::from_secs(45),
     )
     .unwrap_or_else(|| {
-        panic!("wyd_entities_active{{canal=\"{canal}\"}} não voltou a 0 após o logout")
+        panic!(
+            "wyd_entities_active{{canal=\"{canal}\"}} mudou depois do FIN (esperado o mundo estável em {durante})"
+        )
     });
-    assert_eq!(depois, 0.0, "gauge zerado depois do FIN");
-    eprintln!("PASS: logout zerou wyd_entities_active{{canal=\"{canal}\"}}");
+    assert_eq!(depois, durante, "gauge do mundo estável ao sair do jogador");
+    eprintln!(
+        "PASS: wyd_entities_active{{canal=\"{canal}\"}} = {depois} antes e depois do FIN (população do mundo, não da sessão)"
+    );
 
-    if let Some(nome) = criado {
-        // Remove o personagem pelo mesmo protocolo do cliente; a sessão anterior já saiu.
-        std::thread::sleep(Duration::from_secs(1));
-        let mut limpeza = TcpStream::connect(&endereco).expect("reconecta para remover");
-        limpeza
-            .set_read_timeout(Some(Duration::from_secs(10)))
-            .expect("timeout da remoção");
-        autenticar(&mut limpeza, &conta, &senha, &pin);
-        enviar(
-            &mut limpeza,
-            11,
-            Opcode::DeleteCharacter,
-            DeleteCharacter::WIRE_LEN,
-            |f| {
-                DeleteCharacter {
-                    slot,
-                    mob_name: nome,
-                    password: [0u8; 12],
-                }
-                .encode_into(f)
-                .expect("corpo da remoção");
-            },
-        );
+    if let Some(guarda) = guarda.as_mut() {
+        // Remove o personagem pelo protocolo do cliente; se falhar aqui, o `Drop` não repete.
+        let resposta = guarda.remover();
         assert_eq!(
-            expect_reply(&mut limpeza),
-            Opcode::CNFDeleteCharacter,
+            resposta,
+            Some(Opcode::CNFDeleteCharacter),
             "personagem de prova removido pelo protocolo"
         );
     }
+}
+
+/// Remove o personagem de prova pelo protocolo do cliente, **inclusive quando o teste estoura**.
+///
+/// Roda no `Drop`, então não pode `panic!` (pânico durante unwind aborta o processo) e não pode
+/// depender do caminho feliz: sem isso o `QaGauge1` ficava no banco quando uma asserção falhava.
+/// A senha vai no campo `password[12]@32` do `_MSG_DeleteCharacter`, que o canal confere com o
+/// Argon2id da conta antes do soft-delete.
+struct Limpeza {
+    endereco: String,
+    conta: String,
+    senha: String,
+    pin: String,
+    slot: i32,
+    nome: [u8; 16],
+    feito: bool,
+}
+
+impl Limpeza {
+    /// Remove uma vez (o `Drop` não repete) e devolve o opcode da resposta.
+    fn remover(&mut self) -> Option<Opcode> {
+        if self.feito {
+            return None;
+        }
+        self.feito = true;
+        self.tentar().ok().flatten()
+    }
+
+    fn tentar(&self) -> std::io::Result<Option<Opcode>> {
+        let mut s = TcpStream::connect(&self.endereco)?;
+        s.set_read_timeout(Some(Duration::from_secs(10)))?;
+        s.set_write_timeout(Some(Duration::from_secs(10)))?;
+        s.write_all(&INITCODE.to_le_bytes())?;
+
+        let mut login = frame(11, Opcode::AccountLogin, AccountLogin::WIRE_LEN);
+        let mut nome = [0u8; 16];
+        let bytes = self.conta.trim().as_bytes();
+        let limite = bytes.len().min(nome.len());
+        nome[..limite].copy_from_slice(&bytes[..limite]);
+        let mut senha = [0u8; 12];
+        let bytes = self.senha.as_bytes();
+        let limite = bytes.len().min(senha.len());
+        senha[..limite].copy_from_slice(&bytes[..limite]);
+        AccountLogin {
+            account_password: senha,
+            account_name: nome,
+            zero: [0u8; 52],
+            client_version: 12_000,
+            db_need_save: 1,
+            adapter_name: [0; 4],
+        }
+        .encode_into(&mut login)
+        .map_err(invalido)?;
+        encode_in_place(&mut login, 11).map_err(invalido)?;
+        s.write_all(&login)?;
+        if ler_opcode_seguro(&mut s)? != Some(Opcode::CNFAccountLogin) {
+            return Ok(None);
+        }
+
+        let mut token = [0u8; 6];
+        let bytes = self.pin.as_bytes();
+        let limite = bytes.len().min(token.len());
+        token[..limite].copy_from_slice(&bytes[..limite]);
+        let mut pin = frame(11, Opcode::AccountSecure, AccountSecure::WIRE_LEN);
+        AccountSecure {
+            numeric_token: token,
+            unknown: [0u8; 10],
+            change_numeric: 0,
+        }
+        .encode_into(&mut pin)
+        .map_err(invalido)?;
+        encode_in_place(&mut pin, 11).map_err(invalido)?;
+        s.write_all(&pin)?;
+        if ler_opcode_seguro(&mut s)? != Some(Opcode::AccountSecure) {
+            return Ok(None);
+        }
+
+        let mut remocao = frame(11, Opcode::DeleteCharacter, DeleteCharacter::WIRE_LEN);
+        DeleteCharacter {
+            slot: self.slot,
+            mob_name: self.nome,
+            password: senha,
+        }
+        .encode_into(&mut remocao)
+        .map_err(invalido)?;
+        encode_in_place(&mut remocao, 11).map_err(invalido)?;
+        s.write_all(&remocao)?;
+        ler_opcode_seguro(&mut s)
+    }
+}
+
+impl Drop for Limpeza {
+    fn drop(&mut self) {
+        let _ = self.remover();
+    }
+}
+
+fn invalido(error: impl std::fmt::Display) -> std::io::Error {
+    std::io::Error::new(std::io::ErrorKind::InvalidData, error.to_string())
+}
+
+/// Lê um frame e devolve o opcode **sem panic** (usado pela limpeza, que roda no `Drop`).
+fn ler_opcode_seguro(stream: &mut TcpStream) -> std::io::Result<Option<Opcode>> {
+    let mut head = [0u8; HEADER_SIZE];
+    stream.read_exact(&mut head)?;
+    let size = usize::from(u16::from_le_bytes([head[0], head[1]]));
+    let mut reply = vec![0u8; size];
+    reply[..HEADER_SIZE].copy_from_slice(&head);
+    if size > HEADER_SIZE {
+        stream.read_exact(&mut reply[HEADER_SIZE..])?;
+    }
+    let _ = decode_in_place(&mut reply);
+    let header = Header::decode(&reply).map_err(invalido)?;
+    Ok(Opcode::from_wire(header.message_type))
 }
 
 #[test]

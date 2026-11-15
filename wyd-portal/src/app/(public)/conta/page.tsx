@@ -16,6 +16,7 @@ import {
 import { getSession } from "@/server/session";
 
 import PinForm from "./pin-form";
+import PinResetForm from "./pin-reset-form";
 import RecoveryForm from "./recovery-form";
 
 export const dynamic = "force-dynamic";
@@ -292,6 +293,7 @@ export default async function ContaPage() {
             </div>
             <div className="card__body">
               <RecoveryForm />
+              <PinResetForm />
             </div>
           </section>
         </div>

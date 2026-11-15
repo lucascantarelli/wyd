@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 
 import { ROLES, roleLabel, type Role } from "@/lib/role";
 
-import { setAccountBlocked, setAccountRole } from "@/server/accounts";
+import { resetAccountPin, setAccountBlocked, setAccountRole } from "@/server/accounts";
 import { AdminError } from "@/server/errors";
 
 export type ModerationActionResult = { ok: true; message: string } | { ok: false; error: string };
@@ -20,7 +20,7 @@ const MAX_REASON = 200;
 
 export async function moderateAccountAction(input: {
   login: string;
-  action: "role" | "block" | "unblock";
+  action: "role" | "block" | "unblock" | "pin-reset";
   role?: Role;
   reason?: string;
 }): Promise<ModerationActionResult> {
@@ -37,6 +37,20 @@ export async function moderateAccountAction(input: {
       return {
         ok: true,
         message: `${estado.account.login} agora é ${roleLabel(estado.account.role as Role)}`,
+      };
+    }
+
+    if (input.action === "pin-reset") {
+      const motivo = (input.reason ?? "").trim();
+      if (motivo.length < 3) return { ok: false, error: "informe o motivo do reset" };
+      if (motivo.length > MAX_REASON) {
+        return { ok: false, error: `o motivo aceita no máximo ${MAX_REASON} caracteres` };
+      }
+      await resetAccountPin({ login, reason: motivo });
+      revalidatePath("/contas");
+      return {
+        ok: true,
+        message: `segunda senha de ${login} apagada — o jogador cadastra o PIN novo no cliente`,
       };
     }
 

@@ -750,6 +750,40 @@ impl Accounts for Blocking {
         async move { run_on(&rt, Accounts::pin_hash(&inner, &login)) }
     }
 
+    fn set_credentials(
+        &self,
+        login: &str,
+        password_hash: &str,
+        role: Role,
+    ) -> impl std::future::Future<Output = Result<Account, DbError>> + Send {
+        // Sem esta delegação `accounts/create` criava a linha e caía no default do
+        // trait ("account id=0 não encontrado"): a conta nascia sem a senha digitada
+        // e o jogador não conseguia entrar nem no jogo nem no portal.
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        let login = login.to_string();
+        let password_hash = password_hash.to_string();
+        async move {
+            run_on(
+                &rt,
+                Accounts::set_credentials(&inner, &login, &password_hash, role),
+            )
+        }
+    }
+
+    fn clear_pin_hash(
+        &self,
+        login: &str,
+    ) -> impl std::future::Future<Output = Result<(), DbError>> + Send {
+        // Sem esta delegação o `Blocking` cai no default do trait (que devolve
+        // `NotFoundKey`) e o reset auditado do PIN respondia "account não encontrado"
+        // com a conta existindo — o pior tipo de erro: silencioso e de credencial.
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        let login = login.to_string();
+        async move { run_on(&rt, Accounts::clear_pin_hash(&inner, &login)) }
+    }
+
     fn create_account(
         &self,
         login: &str,
@@ -803,6 +837,78 @@ impl Accounts for Blocking {
             run_on(
                 &rt,
                 Accounts::set_blocked(&inner, &login, blocked, &reason, by),
+            )
+        })
+    }
+}
+
+/// E-mail e tokens do reset da segunda senha com a mesma ponte síncrona.
+///
+/// As quatro operações rodam no runtime do binário e chegam prontas ao `poll_once`; sem
+/// elas o roteador cairia no default do trait (`PinReset`) e o link nunca seria emitido.
+impl wyd_db::PinReset for Blocking {
+    fn email<'a>(
+        &'a self,
+        account_id: i64,
+    ) -> std::pin::Pin<
+        Box<dyn std::future::Future<Output = Result<Option<String>, DbError>> + Send + 'a>,
+    > {
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        Box::pin(async move { run_on(&rt, wyd_db::PinReset::email(&inner, account_id)) })
+    }
+
+    fn set_email<'a>(
+        &'a self,
+        account_id: i64,
+        email: &'a str,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), DbError>> + Send + 'a>> {
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        let email = email.to_string();
+        Box::pin(
+            async move { run_on(&rt, wyd_db::PinReset::set_email(&inner, account_id, &email)) },
+        )
+    }
+
+    fn issue_token<'a>(
+        &'a self,
+        account_id: i64,
+        token_hash: &'a str,
+        delivered_to: &'a str,
+        ttl_seconds: i64,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), DbError>> + Send + 'a>> {
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        let token_hash = token_hash.to_string();
+        let delivered_to = delivered_to.to_string();
+        Box::pin(async move {
+            run_on(
+                &rt,
+                wyd_db::PinReset::issue_token(
+                    &inner,
+                    account_id,
+                    &token_hash,
+                    &delivered_to,
+                    ttl_seconds,
+                ),
+            )
+        })
+    }
+
+    fn consume_token<'a>(
+        &'a self,
+        account_id: i64,
+        token_hash: &'a str,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<bool, DbError>> + Send + 'a>>
+    {
+        let rt = std::sync::Arc::clone(&self.runtime);
+        let inner = self.inner.clone();
+        let token_hash = token_hash.to_string();
+        Box::pin(async move {
+            run_on(
+                &rt,
+                wyd_db::PinReset::consume_token(&inner, account_id, &token_hash),
             )
         })
     }
@@ -1096,6 +1202,10 @@ fn run() -> Result<(), String> {
         backend.clone(),
         std::sync::Arc::clone(&runtime),
     ));
+    // Autoatendimento do reset da segunda senha: e-mail da conta e tokens de uso único.
+    let pin_reset: std::sync::Arc<dyn wyd_db::PinReset + Send + Sync> = std::sync::Arc::new(
+        Blocking::new(backend.clone(), std::sync::Arc::clone(&runtime)),
+    );
     let sink = PersistentSink::new(backend.clone(), std::sync::Arc::clone(&runtime));
     let router = Router::new(accounts, characters, sink, tokens)
         .with_catalog(catalog)
@@ -1105,6 +1215,7 @@ fn run() -> Result<(), String> {
         .with_session_trail(sessoes)
         .with_economy(economia)
         .with_config(config_store)
+        .with_pin_reset(pin_reset)
         // Fila durável de grants (migration 0032): o portal enfileira aqui e o
         // servidor de jogo drena. Sem isto `grants/request` responde
         // "fila de entrega não conectada" — estado antigo da fase 07-4.

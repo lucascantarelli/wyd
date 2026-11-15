@@ -116,6 +116,55 @@ pub async fn create_account(
     Ok(account.into())
 }
 
+/// Teto do motivo do reset de segunda senha (texto de staff que vai para a trilha).
+pub const MAX_PIN_RESET_REASON: usize = 200;
+
+/// Reset **auditado** da segunda senha (`account_admin/reset_numeric_pin`).
+///
+/// Atende o jogador que esqueceu o PIN: o staff confirma a identidade e apaga o hash, com
+/// motivo obrigatório na trilha. A conta volta ao estado de primeira entrada — o próximo
+/// login no cliente **cadastra** o PIN novo (`_MSG_AccountSecure`), que é o único caminho
+/// de gravação que o cliente 7662 oferece (o botão Alterar só reenvia o campo duplicado).
+///
+/// O `clear_pin_hash` também zera `pin_failures`/`pin_locked_until`: sem isso o jogador
+/// ficaria preso no bloqueio de 10 minutos logo depois do reset.
+pub async fn reset_numeric_pin(
+    session: Option<Session>,
+    login: &str,
+    reason: &str,
+    repo: &impl Accounts,
+    sink: &impl AuditSink,
+) -> Result<AccountSummary, AdminError> {
+    let staff = staff_or_deny(session, sink, "accounts.pin_reset")?;
+    let login = login.trim();
+    if login.is_empty() {
+        return Err(AdminError::InvalidInput {
+            reason: "login obrigatório",
+        });
+    }
+    let motivo = reason.trim();
+    if motivo.chars().count() < 3 {
+        return Err(AdminError::InvalidInput {
+            reason: "motivo do reset obrigatório",
+        });
+    }
+    if motivo.chars().count() > MAX_PIN_RESET_REASON {
+        return Err(AdminError::InvalidInput {
+            reason: "motivo do reset longo demais",
+        });
+    }
+    let account = repo.find_by_login(login).await?;
+    repo.clear_pin_hash(login).await?;
+    log_action(
+        sink,
+        &staff,
+        "accounts.pin_reset",
+        &format!("account:{}", account.id),
+        &format!("segunda senha apagada: {motivo}"),
+    );
+    Ok(account.into())
+}
+
 /// Teto de contas por leitura.
 pub const MAX_LIMIT: i64 = 200;
 
@@ -200,6 +249,8 @@ mod tests {
         next: Mutex<i64>,
         by_login: Mutex<HashMap<String, Account>>,
         hashes: Mutex<HashMap<String, String>>,
+        /// Logins cujo PIN foi apagado, na ordem (prova o reset do `clear_pin_hash`).
+        limpos: Mutex<Vec<String>>,
     }
 
     impl FakeAccounts {
@@ -208,6 +259,7 @@ mod tests {
                 next: Mutex::new(1),
                 by_login: Mutex::new(HashMap::new()),
                 hashes: Mutex::new(HashMap::new()),
+                limpos: Mutex::new(Vec::new()),
             }
         }
 
@@ -269,6 +321,26 @@ mod tests {
             Ok(account)
         }
 
+        async fn clear_pin_hash(&self, login: &str) -> Result<(), wyd_db::DbError> {
+            if !self
+                .by_login
+                .lock()
+                .expect("fake acessível")
+                .contains_key(login)
+            {
+                return Err(wyd_db::DbError::NotFound {
+                    entity: "account",
+                    id: 0,
+                });
+            }
+            self.hashes.lock().expect("fake acessível").remove(login);
+            self.limpos
+                .lock()
+                .expect("fake acessível")
+                .push(login.to_string());
+            Ok(())
+        }
+
         async fn set_credentials(
             &self,
             login: &str,
@@ -303,6 +375,74 @@ mod tests {
     }
 
     use crate::block_on;
+
+    #[test]
+    fn reset_da_segunda_senha_apaga_o_pin_e_audita_o_motivo() {
+        let repo = FakeAccounts::new();
+        let sink = crate::audit::VecSink::default();
+        block_on(create_account(
+            staff(Role::Admin),
+            "alvo",
+            "senha123",
+            Role::Player,
+            &repo,
+            &sink,
+        ))
+        .expect("conta criada");
+        repo.hashes
+            .lock()
+            .expect("fake acessível")
+            .insert("alvo".to_string(), "$argon2id$pin".to_string());
+
+        let conta = block_on(reset_numeric_pin(
+            staff(Role::Moderator),
+            "alvo",
+            "jogador esqueceu o PIN",
+            &repo,
+            &sink,
+        ))
+        .expect("moderador reseta por suporte");
+        assert_eq!(conta.login, "alvo");
+        assert_eq!(*repo.limpos.lock().expect("fake acessível"), vec!["alvo"]);
+        assert!(repo.hash_de("alvo").is_none(), "hash apagado");
+        let entries = sink.entries();
+        let ultima = entries.last().expect("trilha");
+        assert_eq!(ultima.action, "accounts.pin_reset");
+        assert_eq!(ultima.target, format!("account:{}", conta.id));
+        assert!(ultima.detail.contains("jogador esqueceu o PIN"));
+    }
+
+    #[test]
+    fn reset_sem_motivo_nao_apaga_nada() {
+        let repo = FakeAccounts::new();
+        let sink = crate::audit::VecSink::default();
+        block_on(create_account(
+            staff(Role::Admin),
+            "alvo",
+            "senha123",
+            Role::Player,
+            &repo,
+            &sink,
+        ))
+        .expect("conta criada");
+        assert_eq!(
+            block_on(reset_numeric_pin(
+                staff(Role::Admin),
+                "alvo",
+                "  ",
+                &repo,
+                &sink
+            )),
+            Err(AdminError::InvalidInput {
+                reason: "motivo do reset obrigatório"
+            })
+        );
+        assert!(repo.limpos.lock().expect("fake acessível").is_empty());
+        assert_eq!(
+            block_on(reset_numeric_pin(None, "alvo", "suporte", &repo, &sink)),
+            Err(AdminError::Unauthorized)
+        );
+    }
 
     #[test]
     fn moderator_creates_player_but_not_staff() {

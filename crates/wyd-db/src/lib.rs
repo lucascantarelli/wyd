@@ -20,12 +20,12 @@ pub mod pool;
 pub mod repo;
 pub mod transfer;
 
-/// Versão do schema = número da última migration (`0050_seed_correcao_catalogo_game12_15`).
+/// Versão do schema = número da última migration (`0053_pin_reset_token`).
 ///
 /// Invariante cobrada por `tests/catalogo.rs`: este número tem de acompanhar o último
 /// arquivo da série. Antes ficou em 6 com 25 migrations aplicadas — catálogo e save mentindo
 /// juntos é pior que não ter versão.
-pub const SCHEMA_VERSION: u32 = 52;
+pub const SCHEMA_VERSION: u32 = 53;
 
 /// Esquema esperado da string de conexão.
 pub const EXPECTED_SCHEME: &str = "postgres://";
@@ -52,8 +52,9 @@ pub use repo::{
     DonateBuyerConfigRow, DonateCreditConfigRow, DonateDebitConfigRow, DonateItemRow,
     DonateRevenueConfigRow, DropConfigRow, Economy, EconomySummary, EffectRow, EventScheduleRow,
     Grant, GrantTotal, Grants, ItemPriceConfigRow, MobTemplateRow, NewAuditEntry, NpcConfigRow,
-    NpcListRow, QueuedGrantRow, RouteConfigRow, ServerChannel, SessionHistoryRow, SessionTrail,
-    Sessions, ShopItemConfigRow, SkillRule, SkillRules, StackCapRow, WorldEventRow, NO_CREDENTIAL,
+    NpcListRow, PinReset, QueuedGrantRow, RouteConfigRow, ServerChannel, SessionHistoryRow,
+    SessionTrail, Sessions, ShopItemConfigRow, SkillRule, SkillRules, StackCapRow, WorldEventRow,
+    NO_CREDENTIAL,
 };
 pub use transfer::{
     DeliveryQueue, FlushReport, QueuedGrant, SaveDrain, SavePolicy, SaveQueue, SaveRequest,
@@ -71,7 +72,7 @@ mod tests {
 
     #[test]
     fn schema_version_matches_latest_migration() {
-        assert_eq!(SCHEMA_VERSION, 52);
+        assert_eq!(SCHEMA_VERSION, 53);
         // A amarração de verdade (arquivo mais alto da série) está em tests/catalogo.rs.
     }
 }

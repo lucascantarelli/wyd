@@ -1,6 +1,7 @@
 import { LogIn, UserRound } from "lucide-react";
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { getSession } from "@/server/session";
 
 /**
@@ -47,6 +48,7 @@ export async function SiteHeader({ current }: { current?: string }) {
       </nav>
 
       <div className="sitebar__account">
+        <ThemeToggle />
         {session ? (
           <Link className="ui-btn ui-btn--sm" href="/conta">
             <UserRound size={15} strokeWidth={1.8} aria-hidden="true" />

@@ -25,8 +25,7 @@ use std::net::TcpStream;
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_admin::auth::hash_secret;
-use wyd_db::{Accounts, PgBackend, PoolConfig, Role};
+use wyd_db::{Accounts, Characters, PgBackend, PoolConfig};
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::wire::frame::INITCODE;
 use wyd_protocol::wire::header::HEADER_SIZE;
@@ -236,13 +235,11 @@ fn painel_do_login_tem_a_mesma_forma_do_painel_da_exclusao() {
 
     // Conta com senha + PIN + um personagem no slot 1.
     let sufixo = sufixo();
-    let conta = format!("qapn{sufixo}");
-    let nome = format!("Pn{}", &sufixo[..6]);
-    rt.block_on(backend.create_account(&conta, Role::Player))
-        .expect("conta");
-    let hash = hash_secret(SENHA).expect("argon2id");
-    rt.block_on(backend.set_credentials(&conta, &hash, Role::Player))
-        .expect("senha");
+    // Conta **fixa** de QA (reuso, não conta nova por execução): `accounts` fica igual entre
+    // rodadas; o preparo zera roster, senha e PIN — ver `common::preparar_conta_de_teste`.
+    let conta = "qapainellive".to_string();
+    let nome = "PnLive".to_string();
+    common::preparar_conta_de_teste(&rt, &backend, &conta, SENHA, PIN);
 
     // PIN cadastrado pela primeira conexão (fluxo real).
     let mut sessao = conectar(&endereco);
@@ -367,8 +364,26 @@ fn painel_do_login_tem_a_mesma_forma_do_painel_da_exclusao() {
         "login falho não pode fechar o soquete no instante do painel (o caso visível não fecha)"
     );
 
+    drop(s2);
+
+    // Devolve o banco ao estado inicial: o personagem de prova sai pelo `_MSG_DeleteCharacter`
+    // (a conexão da sessão já foi fechada acima) — duas execuções seguidas deixam as mesmas
+    // contagens de sessões e personagens.
+    assert_eq!(
+        common::remover_personagem(&endereco, &conta, SENHA, PIN, 1, &nome),
+        Some(Opcode::CNFDeleteCharacter),
+        "personagem de prova removido pelo protocolo"
+    );
+    let conta_id = rt
+        .block_on(backend.find_by_login(&conta))
+        .expect("conta da limpeza")
+        .id;
+    let roster = rt
+        .block_on(backend.list_by_account(conta_id))
+        .expect("roster depois da limpeza");
+    assert!(roster.is_empty(), "roster volta a zero: {roster:?}");
     eprintln!(
-        "PASS: recusa = [0x011c header-only] ({} frame, sem roster e sem CNF); referência visível (exclusão) mantém 0x011b + painel de 140 B; conexão aberta",
+        "PASS: recusa = [0x011c header-only] ({} frame, sem roster e sem CNF); referência visível (exclusão) mantém 0x011b + painel de 140 B; conexão aberta | limpeza: CNFDeleteCharacter roster=0",
         sequencia.len()
     );
 }

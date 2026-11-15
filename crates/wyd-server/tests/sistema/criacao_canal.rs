@@ -26,8 +26,7 @@ use std::net::TcpStream;
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_admin::auth::hash_secret;
-use wyd_db::{Accounts, Character, Characters, PgBackend, PoolConfig, Role};
+use wyd_db::{Character, Characters, PgBackend, PoolConfig, Sessions};
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::wire::frame::INITCODE;
 use wyd_protocol::wire::header::HEADER_SIZE;
@@ -190,15 +189,6 @@ fn despejar(nome: &str, linhas: &[String]) {
     std::fs::write(format!("{RELATORIO}/{nome}.txt"), linhas.join("\n") + "\n").expect("dump");
 }
 
-fn nova_conta(rt: &tokio::runtime::Runtime, backend: &PgBackend, conta: &str) -> i64 {
-    rt.block_on(backend.create_account(conta, Role::Player))
-        .expect("conta");
-    let hash = hash_secret(SENHA).expect("argon2id");
-    rt.block_on(backend.set_credentials(conta, &hash, Role::Player))
-        .expect("credencial");
-    rt.block_on(backend.find_by_login(conta)).expect("conta").id
-}
-
 /// Conecta, faz o login e o PIN; devolve o stream pronto para a seleção.
 fn entrar(endereco: &str, conta: &str, pin: &str) -> TcpStream {
     let mut s = conectar(endereco);
@@ -236,8 +226,10 @@ fn criacao_por_protocolo_confere_pin_e_nivel() {
     let mut linhas: Vec<String> = Vec::new();
 
     // ---- 1. Confirmação divergente: recusa com painel e nada gravado ----
-    let conta = format!("qacr{}", sufixo);
-    let conta_id = nova_conta(&rt, &backend, &conta);
+    // Contas **fixas** de QA (reuso, não conta nova por execução): `accounts` fica igual entre
+    // rodadas; o preparo zera roster, senha e PIN — ver `common::preparar_conta_de_teste`.
+    let conta = "qacrialive".to_string();
+    let conta_id = common::preparar_conta_de_teste(&rt, &backend, &conta, SENHA, PIN);
     let mut s = entrar(&endereco, &conta, PIN); // cadastra o PIN 2468
     let divergente = frame_pin("0000");
     s.write_all(&divergente).expect("confirmação divergente");
@@ -334,8 +326,8 @@ fn criacao_por_protocolo_confere_pin_e_nivel() {
     std::thread::sleep(Duration::from_millis(500));
 
     // ---- 3. Fronteiras de nível: banco 2, 399 e 400 ----
-    let conta_borda = format!("qab{}", sufixo);
-    let conta_borda_id = nova_conta(&rt, &backend, &conta_borda);
+    let conta_borda = "qabordalive".to_string();
+    let conta_borda_id = common::preparar_conta_de_teste(&rt, &backend, &conta_borda, SENHA, PIN);
     for (slot, nivel) in [(0_i64, 400_i64), (1, 399), (2, 2)] {
         let personagem = Character {
             id: 0,
@@ -401,4 +393,46 @@ fn criacao_por_protocolo_confere_pin_e_nivel() {
         ),
     ]);
     despejar("criacao", &linhas);
+
+    // Devolve o banco ao estado inicial: as três linhas de borda foram inseridas direto no banco
+    // (saem por soft-delete) e o personagem criado pelo protocolo sai pelo `_MSG_DeleteCharacter`
+    // depois que a sessão da conta de borda fecha — duas execuções seguidas deixam as mesmas
+    // contagens de sessões e personagens.
+    drop(s);
+    let liberou = common::esperar_ate(Duration::from_secs(20), || {
+        rt.block_on(backend.live_session_of(&conta_borda))
+            .map(|viva| viva.is_none())
+            .unwrap_or(false)
+    });
+    assert!(liberou, "sessão da conta de borda liberada depois do FIN");
+    assert_eq!(
+        common::remover_personagem(&endereco, &conta, SENHA, PIN, 2, &nome),
+        Some(Opcode::CNFDeleteCharacter),
+        "personagem de prova removido pelo protocolo"
+    );
+    let bordas = rt
+        .block_on(backend.list_by_account(conta_borda_id))
+        .expect("bordas antes da limpeza");
+    assert_eq!(
+        bordas.len(),
+        3,
+        "três linhas de borda a remover: {bordas:?}"
+    );
+    for personagem in bordas {
+        rt.block_on(backend.soft_delete(personagem.id))
+            .expect("soft-delete da borda");
+    }
+    assert!(
+        rt.block_on(backend.list_by_account(conta_id))
+            .expect("roster da conta")
+            .is_empty(),
+        "roster da conta de criação volta a zero"
+    );
+    assert!(
+        rt.block_on(backend.list_by_account(conta_borda_id))
+            .expect("roster de borda")
+            .is_empty(),
+        "roster da conta de borda volta a zero"
+    );
+    eprintln!("PASS(limpeza): CNFDeleteCharacter + 3 soft-deletes | rosters=0/0");
 }

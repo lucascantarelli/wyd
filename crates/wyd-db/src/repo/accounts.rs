@@ -73,6 +73,17 @@ pub trait Accounts {
         async { Err(DbError::NotFoundKey { entity: "account" }) }
     }
 
+    /// Apaga o hash do PIN e zera falhas/bloqueio: a conta volta ao estado de **primeira
+    /// entrada** (o próximo login *cadastra* o PIN em vez de verificar).
+    ///
+    /// Existe para o preparo de contas de QA (a suíte reusa a mesma conta por execução e o
+    /// teste de autenticação precisa do caminho de cadastro, não do de verificação) e serve
+    /// para reset administrativo do PIN. Sem isso o único estado possível era "PIN definido".
+    fn clear_pin_hash(&self, login: &str) -> impl Future<Output = Result<(), DbError>> + Send {
+        let _ = login;
+        async { Err(DbError::NotFoundKey { entity: "account" }) }
+    }
+
     /// Estado do bloqueio do PIN: `(falhas acumuladas, segundos restantes)`.
     ///
     /// Persistido em `accounts` — reiniciar o processo do canal não zera tentativas.

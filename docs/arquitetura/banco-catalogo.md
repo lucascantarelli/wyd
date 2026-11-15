@@ -11,13 +11,13 @@
 
 ## 1. Resumo
 
-- migrations: **50** · última versão: **50**
-- tabelas: **86** · colunas: **617** · índices: **35** · funções: **1**
+- migrations: **53** · última versão: **53**
+- tabelas: **87** · colunas: **625** · índices: **37** · funções: **1**
 - domínios: **18** · tabelas com dado provisório: **27**
 
 | Domínio | Tabelas |
 |---|---|
-| acesso | `accounts`, `character_session` |
+| acesso | `accounts`, `character_session`, `pin_reset_token` |
 | arena | `arena`, `arena_match`, `arena_round`, `arena_score` |
 | auditoria | `audit_log` |
 | canal de servidor | `server_channel`, `channel_capacity`, `channel_role` |
@@ -45,9 +45,9 @@
 - **Nota:** Hash de senha/PIN opaco (argon2id); nada em texto plano.
 - **PK:** `id`
 - **FK:** —
-- **CHECK:** `accounts_login_nonempty`, `accounts_role`, `accounts_pin_failures`
+- **CHECK:** `accounts_login_nonempty`, `accounts_role`, `accounts_pin_failures`, `accounts_email_formato`
 - **UNIQUE de tabela:** —
-- **Índices:** `accounts_login_unique` (login) UNIQUE ;
+- **Índices:** `accounts_email_unique` (email) UNIQUE WHERE email IS NOT NULL; · `accounts_login_unique` (login) UNIQUE ;
 
 | Coluna | Tipo | Nulo |
 |---|---|---|
@@ -60,6 +60,7 @@
 | `role` | `text` | não |
 | `created_at` | `timestamp with time zone` | não |
 | `last_login_at` | `timestamp with time zone` | sim |
+| `email` | `text` | sim |
 
 ### `characters`
 
@@ -1859,6 +1860,27 @@
 | `character_id` | `bigint` | não |
 | `cp` | `smallint` | não |
 
+### `pin_reset_token`
+
+- **Arquivo:** `0053_pin_reset_token.sql` · **Domínio:** acesso · **Estado:** confirmado
+- **Fonte:** migration 0053 + BFF do portal (reset da segunda senha por e-mail)
+- **Nota:** Só o hash sha256 do token é gravado, com validade curta e uso único; `delivered_to` audita qual endereço recebeu o link.
+- **PK:** `id`
+- **FK:** `account_id` → `accounts`
+- **CHECK:** `pin_reset_token_hash_formato`, `pin_reset_token_validade`
+- **UNIQUE de tabela:** —
+- **Índices:** `pin_reset_token_account_idx` (account_id, created_at DESC) ;
+
+| Coluna | Tipo | Nulo |
+|---|---|---|
+| `id` | `bigint` | não |
+| `account_id` | `bigint` | não |
+| `token_hash` | `text` | não |
+| `delivered_to` | `text` | não |
+| `created_at` | `timestamp with time zone` | não |
+| `expires_at` | `timestamp with time zone` | não |
+| `used_at` | `timestamp with time zone` | sim |
+
 ## 3. Decisões provisórias (D-Bxx)
 
 Mesmo padrão do registro `D-xx` de `docs/arquitetura/matematica-sim.md`: decisão, escolha,
@@ -1961,7 +1983,12 @@ não virou tabela está declarado como pendência com ID, nunca sumiu em silênc
 | 0048 | `0048_chaos_points.sql` | DDL | `character_chaos` |
 | 0049 | `0049_seed_campo_sephira.sql` | seed | — |
 | 0050 | `0050_seed_correcao_catalogo_game12_15.sql` | seed | — |
+| 0051 | `0051_seed_campo_sem_duplicatas.sql` | seed | — |
+| 0052 | `0052_seed_campo_nomes.sql` | seed | — |
+| 0053 | `0053_pin_reset_token.sql` | DDL | `pin_reset_token` |
 
-Regra da série: DDL inteiro antes do primeiro seed, um domínio por arquivo, nenhuma tabela
-partida entre arquivos, nenhuma FK para tabela criada depois e **nenhum `ALTER TABLE` no
-`up`** — coluna nova nasce na criação da tabela (o gerador falha se aparecer um).
+Regra da série: DDL antes do primeiro seed que dependa dele, um domínio por arquivo, nenhuma
+tabela partida entre arquivos, nenhuma FK para tabela criada depois e **nenhum `ALTER TABLE` no
+`up`** — coluna nova nasce na criação da tabela (o gerador falha se aparecer um). DDL decidida
+depois do bloco de seed (`0028`, `0053`) é exceção registrada: o que a regra proíbe é seed
+inserindo em tabela que ainda não existe.

@@ -115,7 +115,7 @@ sequenceDiagram
 |---|---|
 | 🗺️ Roadmap | **34 issues ativas** + 15 descritores de fase · **58 concluídas** |
 | 🧪 Checklist funcional | **35 ✅ · 23 🚧 · 34 ⬜ · 2 ⛔** em 94 linhas |
-| 🗄️ Banco | **50 migrations · 86 tabelas** no gate atual |
+| 🗄️ Banco | **53 migrations · 87 tabelas** no gate atual |
 | 🧱 Workspace | **9 crates Rust** + `apps/launcher-ui` (Tauri) |
 | 🌐 Stack local | 2 canais + gateway + portal + PostgreSQL + Prometheus/Grafana/Loki |
 | 🖥️ Cliente | 7662 externo; recusa de login **provada por captura** (`0x011C` → registro 12 do `strdef.bin`); prova visual de `BUG-02`, `GAME-17` e `GAME-18` pendente |

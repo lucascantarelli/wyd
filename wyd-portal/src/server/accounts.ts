@@ -9,6 +9,7 @@ import { adminCall } from "./admin";
 import {
   accountAdmin,
   accountsAdmin,
+  type AdminEnvelope,
   type AccountModerationWire,
   type AccountSummary,
   type AccountWire,
@@ -86,6 +87,21 @@ export async function setAccountBlocked(input: {
   );
   if (!res.moderation) throw new Error("resposta sem o estado de moderação");
   return toModerationView(res.moderation);
+}
+
+/**
+ * Reset auditado da segunda senha (`account_admin/reset_numeric_pin`).
+ *
+ * O staff confirma a identidade do jogador e apaga o PIN; o jogador cadastra um novo no
+ * cliente (primeira entrada). O motivo vai para a trilha com o autor da sessão.
+ */
+export async function resetAccountPin(input: { login: string; reason: string }): Promise<void> {
+  const login = input.login.trim();
+  await adminCall<{ login: string; reason: string }, AdminEnvelope>(
+    accountAdmin.resetNumericPin.bind(accountAdmin),
+    { login, reason: input.reason.trim() },
+    { action: "accounts.pin_reset", target: `login:${login.slice(0, 16)}` },
+  );
 }
 
 /** Teto de contas por página (o mesmo do gateway, `api::accounts::MAX_LIMIT`). */

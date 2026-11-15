@@ -316,7 +316,7 @@ fn cada_metodo_do_portal_tem_rota_no_control_plane() {
         assert!(!metodos.is_empty(), "serviço {servico} declara métodos");
         total += metodos.len();
     }
-    assert_eq!(total, 44, "44 métodos declarados pelo portal");
+    assert_eq!(total, 48, "48 métodos declarados pelo portal");
 
     // `SERVICOS` contém só a superfície vigente do portal; a rota legada
     // `set_reward_item_enabled` saiu do contrato e responde 404. A paridade é

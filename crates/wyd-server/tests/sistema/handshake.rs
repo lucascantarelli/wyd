@@ -12,8 +12,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_admin::hash_password;
-use wyd_db::{Accounts, PgBackend, PoolConfig, Role, ServerChannel};
+use wyd_db::{PgBackend, PoolConfig, ServerChannel};
 use wyd_net::VersionGate;
 use wyd_protocol::codec::keyword::encode_in_place;
 use wyd_protocol::payload::WirePayload;
@@ -97,17 +96,6 @@ fn serve() -> u16 {
     port
 }
 
-/// Conta do handshake ao vivo: `WYD_LIVE_ACCOUNT` quando a auditoria precisa de uma conta real
-/// de `accounts.login` (`test1`, `admin`…), senão uma única por chamada — a cerca de sessão é
-/// por conta e dois testes em paralelo com o mesmo nome disputariam a mesma sessão.
-fn conta_ao_vivo(prefixo: &str) -> String {
-    std::env::var("WYD_LIVE_ACCOUNT")
-        .ok()
-        .map(|valor| valor.trim().to_string())
-        .filter(|valor| !valor.is_empty())
-        .unwrap_or_else(|| conta_unica(prefixo))
-}
-
 /// Conta única por chamada (16 bytes no fio): a cerca é por conta.
 fn conta_unica(prefixo: &str) -> String {
     let nanos = std::time::SystemTime::now()
@@ -189,15 +177,14 @@ fn handshake_contra_servidor_vivo() {
     let backend = rt
         .block_on(PgBackend::connect(&dsn, PoolConfig::local()))
         .expect("banco do handshake");
-    let conta = conta_ao_vivo("l");
-    // Conta pode já existir (WYD_LIVE_ACCOUNT): reaplica a senha em vez de falhar no UNIQUE.
-    match rt.block_on(backend.create_account(&conta, Role::Player)) {
-        Ok(_) | Err(wyd_db::DbError::ConstraintViolation { .. }) => {}
-        Err(error) => panic!("conta do handshake: {error}"),
-    }
-    let hash = hash_password(SENHA).expect("argon2id");
-    rt.block_on(backend.set_credentials(&conta, &hash, Role::Player))
-        .expect("senha do handshake");
+    // Conta **própria** e fixa deste teste (`qahandlive`), não a `WYD_LIVE_ACCOUNT` do harness.
+    //
+    // Antes ele pegava a conta do env e **reescrevia a senha** para `Senha123456`: como a suíte
+    // inteira aponta para a mesma conta (`qapinraw0001`), o teste de gauge logo depois levava
+    // `senha de login não confere` — medido no log do canal em 2026-11-15. Reusar conta de outro
+    // teste assim não é autossuficiente; cada um normaliza a sua.
+    let conta = "qahandlive".to_string();
+    common::preparar_conta_de_teste(&rt, &backend, &conta, SENHA, "2468");
 
     let mut stream = TcpStream::connect(&endereco).expect("conecta no container");
     stream

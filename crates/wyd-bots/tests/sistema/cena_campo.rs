@@ -75,7 +75,16 @@ fn imprime_os_npcs_do_campo_com_mobid_da_cena() {
     config.pin = pin;
     config.slot = slot;
 
-    let mut bot = Bot::connect(&config, Race::TransKnight).expect("handshake");
+    // Slot vazio (banco de QA limpo): o bot cria o personagem pelo protocolo (`0x0203`) e entra,
+    // como o cliente na tela de criação — nada de esperar personagem de rodada anterior. O
+    // personagem criado é o fixture `WYD_LIVE_CREATE_NAME`, que `sistema_cena_mobs` reusa e
+    // remove no fim da bateria.
+    let nome = std::env::var("WYD_LIVE_CREATE_NAME").unwrap_or_else(|_| "QaCena1".to_string());
+    let mut bot = match Bot::connect(&config, Race::TransKnight) {
+        Ok(bot) => bot,
+        Err(_) => Bot::connect_novo(&config, Race::TransKnight, &nome, 0)
+            .expect("criação do personagem e entrada no mundo"),
+    };
     let mut vistos: BTreeMap<u16, SceneMob> = BTreeMap::new();
     coletar(&mut bot, &mut vistos);
     let eu = vistos

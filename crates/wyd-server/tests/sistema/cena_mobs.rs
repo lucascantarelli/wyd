@@ -31,7 +31,12 @@ use wyd_protocol::payload::WirePayload;
 use wyd_protocol::wire::frame::INITCODE;
 use wyd_protocol::wire::header::HEADER_SIZE;
 use wyd_protocol::wire::opcode::Opcode;
-use wyd_protocol::{AccountLogin, AccountSecure, Action, CharacterLogin, Header, MessagePanel};
+use wyd_protocol::{
+    AccountLogin, AccountSecure, Action, CharacterLogin, CreateCharacter, Header, MessagePanel,
+};
+
+#[path = "../common/mod.rs"]
+mod common;
 
 /// `HEADER.ID` do pacote autoritativo de cena (`ESCENE_FIELD`).
 const ID_SCENE: u16 = 30000;
@@ -120,6 +125,71 @@ fn autenticar(stream: &mut TcpStream, conta: &str, senha: &str, pin: &str) {
     assert_eq!(opcode, Opcode::AccountSecure, "PIN aceito ou cadastrado");
 }
 
+/// Seleciona o slot e, se ele estiver **vazio**, cria o personagem pelo protocolo e seleciona de
+/// novo; devolve `(frame da seleção, criou)`.
+///
+/// A bateria roda contra o banco de QA **limpo**: nenhuma conta acumulada garante personagem
+/// pré-existente no slot, e esperar linha de rodada anterior era exatamente o que quebrava este
+/// teste depois de `tools/dev/limpar-qa.mjs` (`CharacterLoginFail` em 0,25 s, medido em
+/// 2026-11-15). O caminho aqui é o mesmo do cliente 7662 na tela de criação (0x0203, 36 B).
+fn selecionar_ou_criar(
+    stream: &mut TcpStream,
+    slot: i32,
+    nome: &str,
+) -> ((Opcode, u16, Vec<u8>), bool) {
+    let selecionar = |stream: &mut TcpStream| {
+        enviar(
+            stream,
+            11,
+            Opcode::CharacterLogin,
+            CharacterLogin::WIRE_LEN_CLIENTE,
+            |f| {
+                CharacterLogin { slot, force: 1 }
+                    .encode_into(&mut f[..CharacterLogin::WIRE_LEN])
+                    .expect("corpo da seleção");
+            },
+        );
+        ler_frame(stream, Duration::from_secs(15))
+            .unwrap_or_else(|| panic!("canal não respondeu a seleção do slot {slot}"))
+    };
+
+    let resposta = selecionar(stream);
+    if resposta.0 != Opcode::CharacterLoginFail {
+        return (resposta, false);
+    }
+
+    let mut mob_name = [0u8; 16];
+    let bytes = nome.as_bytes();
+    assert!(
+        bytes.len() <= mob_name.len(),
+        "nome de criação cabe em char[16]"
+    );
+    mob_name[..bytes.len()].copy_from_slice(bytes);
+    enviar(
+        stream,
+        11,
+        Opcode::CreateCharacter,
+        CreateCharacter::WIRE_LEN,
+        |f| {
+            CreateCharacter {
+                slot,
+                mob_name,
+                mob_class: 0,
+            }
+            .encode_into(f)
+            .expect("corpo da criação");
+        },
+    );
+    let (opcode, _, _) =
+        ler_frame(stream, Duration::from_secs(15)).expect("resposta da criação do personagem");
+    assert_eq!(
+        opcode,
+        Opcode::CNFNewCharacter,
+        "criação do personagem no slot {slot}"
+    );
+    (selecionar(stream), true)
+}
+
 /// Lê um frame inteiro (cabeçalho + corpo), confere o checksum e devolve
 /// `(opcode, HEADER.ID, frame decodificado)`. `None` = nada chegou no prazo.
 fn ler_frame(stream: &mut TcpStream, espera: Duration) -> Option<(Opcode, u16, Vec<u8>)> {
@@ -170,21 +240,11 @@ fn cena_entrega_create_mob_do_snapshot_e_o_npc_responde_ao_dialogo() {
 
     // Entrada no mundo pela seleção normal do cliente. O 7662 manda **36 B** aqui (corpo de
     // 24); o teste usa o mesmo tamanho para provar o caminho real, não o curto dos unitários.
-    enviar(
-        &mut stream,
-        11,
-        Opcode::CharacterLogin,
-        CharacterLogin::WIRE_LEN_CLIENTE,
-        |f| {
-            CharacterLogin { slot, force: 1 }
-                .encode_into(&mut f[..CharacterLogin::WIRE_LEN])
-                .expect("corpo da seleção");
-        },
-    );
+    let nome_criado =
+        std::env::var("WYD_LIVE_CREATE_NAME").unwrap_or_else(|_| "QaCena1".to_string());
+    let ((opcode, id, cnf), criou) = selecionar_ou_criar(&mut stream, slot, &nome_criado);
 
     // 1) `CNFCharacterLogin` com o `STRUCT_MOB`; PosX/PosY no corpo (+12/+14).
-    let (opcode, id, cnf) = ler_frame(&mut stream, Duration::from_secs(15))
-        .unwrap_or_else(|| panic!("{endereco} não respondeu a seleção do slot {slot}"));
     assert_eq!(opcode, Opcode::CNFCharacterLogin, "personagem encarnado");
     assert_eq!(id, ID_SCENE, "CNFCharacterLogin leva ESCENE_FIELD no ID");
     let jogador = (
@@ -449,4 +509,38 @@ fn cena_entrega_create_mob_do_snapshot_e_o_npc_responde_ao_dialogo() {
         "PASS(cena): janela de {espera}s — creates={crias} removes={removes} ativos={}",
         ativos.len()
     );
+
+    // Limpeza: o fixture `WYD_LIVE_CREATE_NAME` não fica no banco de QA — a bateria tem de
+    // terminar com os mesmos contadores que começou (`personagens_vivos`). Vale também quando o
+    // slot já estava ocupado: o personagem é do mesmo fixture, criado por este teste ou pelo bot
+    // de cena (`sistema_cena_campo`), e é recriado na execução seguinte se precisar.
+    if criou || std::env::var("WYD_LIVE_CREATE_NAME").is_ok() {
+        if let Some(dsn) = common::dsn_ou_skip("limpeza do personagem de cena") {
+            use wyd_db::{Accounts, Characters, PgBackend, PoolConfig};
+
+            let rt = tokio::runtime::Builder::new_multi_thread()
+                .worker_threads(1)
+                .enable_all()
+                .build()
+                .expect("runtime da limpeza");
+            let backend = rt
+                .block_on(PgBackend::connect(&dsn, PoolConfig::local()))
+                .expect("banco da limpeza");
+            let conta_id = rt
+                .block_on(backend.find_by_login(&conta))
+                .expect("conta do personagem de cena")
+                .id;
+            let roster = rt
+                .block_on(backend.list_by_account(conta_id))
+                .expect("roster do personagem de cena");
+            if let Some(alvo) = roster
+                .iter()
+                .find(|personagem| personagem.name == nome_criado)
+            {
+                rt.block_on(backend.soft_delete(alvo.id))
+                    .expect("personagem de cena removido");
+                eprintln!("PASS(limpeza): personagem {nome_criado} removido do slot {slot}");
+            }
+        }
+    }
 }

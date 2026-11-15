@@ -27,8 +27,7 @@ use std::net::TcpStream;
 use std::sync::Arc;
 use std::time::Duration;
 
-use wyd_admin::auth::hash_secret;
-use wyd_db::{Accounts, Characters, PgBackend, PoolConfig, Role};
+use wyd_db::{Accounts, Characters, PgBackend, PoolConfig, Sessions};
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::wire::frame::INITCODE;
 use wyd_protocol::wire::header::HEADER_SIZE;
@@ -243,14 +242,6 @@ fn conferir_recusa_de_senha(endereco: &str, conta: &str, senha: &str, caso: &str
     ]
 }
 
-fn nova_conta(rt: &tokio::runtime::Runtime, backend: &PgBackend, conta: &str) {
-    rt.block_on(backend.create_account(conta, Role::Player))
-        .expect("conta criada");
-    let hash = hash_secret(SENHA).expect("argon2id");
-    rt.block_on(backend.set_credentials(conta, &hash, Role::Player))
-        .expect("credencial");
-}
-
 #[test]
 fn recusas_de_login_no_canal_real() {
     let Ok(endereco) = std::env::var("WYD_LIVE_CPSOCK") else {
@@ -268,8 +259,12 @@ fn recusas_de_login_no_canal_real() {
     let mut linhas: Vec<String> = Vec::new();
 
     // 1. senha errada numa conta que existe.
-    let conta = conta_unica("qasenha");
-    nova_conta(&rt, &backend, &conta);
+    //
+    // Conta **fixa** de QA: a suíte reutiliza em vez de criar uma por execução, senão
+    // `accounts` crescia a cada rodada e o banco não terminava igual ao início. O preparo zera
+    // roster, normaliza credencial e PIN (ver `common::preparar_conta_de_teste`).
+    let conta = "qasenhalive".to_string();
+    common::preparar_conta_de_teste(&rt, &backend, &conta, SENHA, PIN);
     linhas.extend(conferir_recusa_de_senha(
         &endereco,
         &conta,
@@ -303,8 +298,8 @@ fn recusas_de_login_no_canal_real() {
     despejar("recusas", &linhas);
 
     // 3. PIN errado → 0x0FDF + painel, roster intacto.
-    let conta_pin = conta_unica("qapin");
-    nova_conta(&rt, &backend, &conta_pin);
+    let conta_pin = "qapinlive".to_string();
+    common::preparar_conta_de_teste(&rt, &backend, &conta_pin, SENHA, PIN);
     let conta_db = rt
         .block_on(backend.find_by_login(&conta_pin))
         .expect("conta do PIN");
@@ -469,4 +464,29 @@ fn recusas_de_login_no_canal_real() {
     ];
     despejar("selecao_sem_pin", &linhas_pulo);
     linhas_pulo.clear();
+
+    // Devolve o banco ao estado inicial: fecha as duas conexões, espera a cerca de sessão cair e
+    // remove o personagem de prova pelo protocolo — duas execuções seguidas deixam as mesmas
+    // contagens de sessões e personagens.
+    drop(certo);
+    drop(pulou);
+    let liberou = common::esperar_ate(Duration::from_secs(20), || {
+        rt.block_on(backend.live_session_of(&conta_pin))
+            .map(|viva| viva.is_none())
+            .unwrap_or(false)
+    });
+    assert!(liberou, "sessão da conta de PIN liberada depois do FIN");
+    assert_eq!(
+        common::remover_personagem(&endereco, &conta_pin, SENHA, PIN, 1, &nome),
+        Some(Opcode::CNFDeleteCharacter),
+        "personagem de prova removido pelo protocolo"
+    );
+    let roster = rt
+        .block_on(backend.list_by_account(conta_db.id))
+        .expect("roster depois da limpeza");
+    assert!(roster.is_empty(), "roster volta a zero: {roster:?}");
+    eprintln!(
+        "PASS(limpeza): CNFDeleteCharacter | roster={} sessao=None",
+        roster.len()
+    );
 }

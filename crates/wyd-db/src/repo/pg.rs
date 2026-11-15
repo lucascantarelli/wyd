@@ -174,6 +174,21 @@ impl Accounts for PgBackend {
         ))
     }
 
+    async fn clear_pin_hash(&self, login: &str) -> Result<(), DbError> {
+        let feito = sqlx::query(
+            "UPDATE accounts SET pin_hash = NULL, pin_failures = 0, pin_locked_until = NULL \
+             WHERE login = $1",
+        )
+        .bind(login)
+        .execute(self.pool())
+        .await
+        .map_err(map_error("accounts.clear_pin_hash", "accounts"))?;
+        if feito.rows_affected() == 0 {
+            return Err(DbError::NotFoundKey { entity: "account" });
+        }
+        Ok(())
+    }
+
     async fn pin_success(&self, login: &str) -> Result<(), DbError> {
         let feito = sqlx::query(
             "UPDATE accounts SET pin_failures = 0, pin_locked_until = NULL WHERE login = $1",

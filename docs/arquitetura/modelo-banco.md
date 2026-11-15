@@ -40,7 +40,7 @@ audit_log (append-only, sem FK para nunca bloquear escrita)
 
 | Tabela | PK | FKs | CHECKs | Índices quentes |
 |---|---|---|---|---|
-| `accounts` | `id` | — | `role IN ('player','moderator','admin')`, `login` não-vazio | `UNIQUE(login)` |
+| `accounts` | `id` | — | `role IN ('player','moderator','admin')`, `login` não-vazio, `email` com formato quando preenchido | `UNIQUE(login)`, `UNIQUE(email) WHERE email IS NOT NULL` |
 | `characters` | `id` | `account_id → accounts` ON DELETE CASCADE | `slot 0–3`, `level ≥ 1`, `exp ≥ 0`, `hp ≥ 0`, `name` não-vazio | `UNIQUE(account_id, slot) WHERE deleted_at IS NULL`, `UNIQUE(name) WHERE deleted_at IS NULL`, `idx(account_id)` |
 | `character_items` | `(character_id, slot)` | `character_id → characters` ON DELETE CASCADE | `slot 0–127`, `qty ≥ 1` | `idx(character_id)` (= PK) |
 | `vault_items` | `(account_id, slot)` | `account_id → accounts` ON DELETE CASCADE | `slot 0–127`, `qty ≥ 1` | `idx(account_id)` (= PK) |
@@ -208,7 +208,7 @@ nenhum `ALTER TABLE` no `up`. Verificação em três camadas:
 `node tools/content/check-migrations.mjs` (ordem/FK/down/INSERT, sem banco),
 `cargo test -p wyd-db` (`tests/contrato/catalogo.rs`: doc ↔ SQL, `SCHEMA_VERSION`, seed depois do DDL)
 e `node tools/content/verify-schema.mjs` (banco vazio → `up` → `information_schema` ↔ catálogo).
-Números atuais: **50 arquivos, 86 tabelas, 160 `INSERT`s**, sem problema (medidos pelo `check-migrations`, 2026-11-12; colunas não recontadas aqui).
+Números atuais: **53 arquivos, 87 tabelas, 625 colunas, 161 `INSERT`s**, sem problema (medidos por `check-migrations` e `gen-catalogo-banco`, 2026-11-15). O `ALTER TABLE` que a `0053` original trazia (`accounts.email`) foi consolidado na criação da tabela (`0001_contas`), e a `0053` virou DDL puro do `pin_reset_token` — a série voltou a obedecer à própria regra.
 
 | Migração | Domínio | Objetos |
 |---|---|---|

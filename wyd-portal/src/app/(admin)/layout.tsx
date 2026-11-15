@@ -4,6 +4,7 @@ import { Badge } from "@/components/Badge";
 import { LogoutButton } from "@/components/LogoutButton";
 import { roleLabel } from "@/lib/role";
 import { Sidebar } from "@/components/Sidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ToastProvider } from "@/components/Toast";
 import { getSession, isStaff } from "@/server/session";
 
@@ -33,6 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <strong>WYD2</strong>
           </div>
           <div className="topbar__actions">
+            <ThemeToggle />
             <div className="who">
               <span>Conta #{session.accountId}</span>
               <Badge tone="accent">{roleLabel(session.role)}</Badge>

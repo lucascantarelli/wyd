@@ -478,8 +478,10 @@ fn selecao_sem_pin_em_conta_com_pin_e_recusada_e_nao_grava() {
         &MessagePanel::decode(&painel).expect("painel").text,
     ))
     .to_string();
+    // ASCII de propósito: o campo do painel é copiado byte a byte e acento em UTF-8 vira
+    // dois bytes (mojibake no cliente cp1252). Ver `TEXTO_PIN_EXIGIDO` em `cpsock/login.rs`.
     assert!(
-        texto.to_lowercase().contains("numérica"),
+        texto.to_lowercase().contains("numerica"),
         "painel precisa dizer que a senha numérica é exigida: {texto:?}"
     );
 

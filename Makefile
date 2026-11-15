@@ -8,7 +8,7 @@
 
 CARGO ?= cargo
 
-.PHONY: help fmt clippy build test test-all check audit deny bench bench-build bench-gate release docker docker-smoke gateway-image gateway-smoke server-image server-smoke telemetry-smoke clean ci migrations-check issue-status-check harness-cliente docs-check skills-check actions-pin-check docs-serve docs-smoke migrations-apply db-migrate db-reset banco-catalogo banco-verify stack-config stack-up stack-down stack-logs local-rebuild prod-env-smoke monitoring-rules monitoring-up monitoring-down monitoring-check monitoring-alertas portal-install portal-dev portal-test portal-build tools-re tools-binarios tools-strings tools-pacotes tools-test tools-inventario tools-zip-check client-zip clean-target clean-tmp versao-check compose-hardening sistema-test deploy-local coverage
+.PHONY: help fmt clippy build test test-all check audit deny bench bench-build bench-gate release docker docker-smoke gateway-image gateway-smoke server-image server-smoke telemetry-smoke clean ci migrations-check issue-status-check harness-cliente docs-check skills-check actions-pin-check docs-serve docs-smoke migrations-apply db-migrate db-reset db-limpa-qa banco-catalogo banco-verify stack-config stack-up stack-down stack-logs local-rebuild prod-env-smoke monitoring-rules monitoring-up monitoring-down monitoring-check monitoring-alertas portal-install portal-dev portal-test portal-build tools-re tools-binarios tools-strings tools-pacotes tools-test tools-inventario tools-zip-check client-zip clean-target clean-tmp versao-check compose-hardening sistema-test deploy-local coverage
 
 # TAG usada só para VALIDAR o overlay de produção (o overlay exige TAG; o gate não exige
 # que o dono exporte uma). A prova de que sem TAG falha está no fim de `stack-config`.
@@ -172,6 +172,9 @@ db-migrate: ## aplica as migrations no banco da stack (mesmo runner do boot)
 
 db-reset: ## recria o schema do banco da stack do zero (DROP SCHEMA + série)
 	docker compose run --rm gateway --migrate --reset
+
+db-limpa-qa: ## contas de QA acumuladas no banco de testes (dry-run; use ARGS=--aplicar)
+	node tools/dev/limpar-qa.mjs $(ARGS)
 
 gateway-image: ## imagem do gateway HTTP/JSON do portal (ADR-0022, WEB-01)
 	docker build -f docker/Dockerfile.gateway -t wyd/gateway:$${TAG:-dev} \

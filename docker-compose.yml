@@ -131,8 +131,14 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+    # Alias fixo: é o nome que o gateway usa (`WYD_GAME_ADDR=wyd-canal-1:8281`) para abrir
+    # uma conexão de jogo real e trocar a senha numérica pelo portal. Sem este alias o nome
+    # não resolve, `service::pin::change_pin` cai em `Unavailable` e a troca pelo portal vira
+    # 502 (medido em 2026-11-15).
     networks:
-      - wyd
+      wyd:
+        aliases:
+          - wyd-canal-1
 
   server-canal-2:
     # Canal 2 (verde/novato): MESMA imagem e MESMO banco, outro IP — o cliente só
@@ -168,8 +174,11 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+    # Alias do canal 2, simétrico ao `wyd-canal-1` (outro IP, mesmo banco).
     networks:
-      - wyd
+      wyd:
+        aliases:
+          - wyd-canal-2
 
   portal:
     # Serviço web: Dockerfile próprio (multi-stage, non-root, standalone).

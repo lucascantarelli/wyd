@@ -10,9 +10,10 @@
  *   `base + 12 * 128` = registro **12**;
  * - texto em **cp1252** (não UTF-8), NUL-padded.
  *
- * Uso: node tools/client/strdef.mjs            # ids conhecidos
- *      node tools/client/strdef.mjs 0x109aab8  # um VA qualquer
+ * Uso: node tools/client/strdef.mjs                 # ids conhecidos
+ *      node tools/client/strdef.mjs 0x109aab8       # um VA qualquer
  *      node tools/client/strdef.mjs --index 12
+ *      node tools/client/strdef.mjs --index 12 --json   # consumo por outro script
  */
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -51,8 +52,13 @@ export function registroPorIndice(index, tabela = lerTabela()) {
 
 const principal = () => {
   const [arg] = process.argv.slice(2);
+  const json = process.argv.includes("--json");
   if (arg === "--index") {
     const { index, offset, texto } = registroPorIndice(Number(process.argv[3]));
+    if (json) {
+      console.log(JSON.stringify({ index, offset, texto }));
+      return;
+    }
     console.log(`índice=${index} file_off=0x${offset.toString(16)} cp1252=${JSON.stringify(texto)}`);
     return;
   }

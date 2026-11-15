@@ -132,7 +132,27 @@ make stack-up        # up completo (gateway e canais migram no próprio boot)
 make local-rebuild   # atalho + provas de contrato (/login 200, /entregas 307, /health com schema)
 make db-migrate      # = docker compose run --rm gateway --migrate
 make db-reset        # = docker compose run --rm gateway --migrate --reset
+make db-limpa-qa     # contas de QA acumuladas (dry-run; ARGS=--aplicar remove)
 ```
+
+**Limpeza das contas de QA (`tools/dev/limpar-qa.mjs`).** Os testes vivos criam contas com
+sufixo numérico (`qasenha12345678`, `qapin90000000`, `cr…`, `sc…`, `pp…`); sem limpeza o
+`accounts` cresce a cada rodada. O alvo é exatamente esse padrão — **login terminando em 5+
+dígitos** — e a lista de preservadas inclui as fixtures documentadas (`qapinraw0001`,
+`qapin86895000`, `qabanido0001`, `qanivel01`, `cenamob1`) e as contas fixas da suíte
+(`qasenhalive`, `qapinlive`, `qapainellive`, `qacrialive`, `qabordalive`, `qapinprobe`).
+
+```bash
+node tools/dev/limpar-qa.mjs            # conta, amostra e preservadas (não remove)
+node tools/dev/limpar-qa.mjs --aplicar  # remove numa transação única
+```
+
+A remoção respeita as FKs: apaga `delivery_queue`/`donate_credit`/`donate_debit` (RESTRICT) e
+`guilds` com mestre em conta alvo, apaga o histórico `character_session` dessas contas e então
+`DELETE FROM accounts` — personagens, itens, cofre, moderação, carteira e diária caem por
+`ON DELETE CASCADE`. Não toca em migration, não derruba volume e não mexe em conta fora do
+padrão. Medição de 2026-11-15: `accounts` 489 → 22, personagens vivos 211 → 15, sessões vivas 0,
+zero sessão órfã; a suíte viva rodou verde em seguida mantendo `22/15/0`.
 
 Regras do runner (`crates/wyd-db/src/migrate.rs`), as mesmas em qualquer caminho:
 

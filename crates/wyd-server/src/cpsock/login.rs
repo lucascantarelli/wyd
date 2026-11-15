@@ -4,9 +4,25 @@ use super::action::reply_panel;
 use super::selection::read_frame;
 use super::*;
 
+/// Texto do painel quando a segunda senha não foi enviada ou foi pulada.
+///
+/// ASCII de propósito: o campo do `0x0101` é copiado byte a byte, e acento em UTF-8 vira
+/// dois bytes que o cliente Windows (cp1252) desenha como mojibake — `numérica` saía `numÃ©rica`.
+const TEXTO_PIN_EXIGIDO: &str = "Senha numerica exigida. Tente novamente.";
+
+/// Texto do painel quando a conta está **sem PIN**: primeira entrada ou PIN apagado pelo reset
+/// do portal. O cliente 7662 reabre o diálogo "Insira Senha(2)" nessa entrada e o servidor
+/// avisa, no canal de texto da seleção, o que ele espera a seguir. ASCII pelo mesmo motivo de
+/// `TEXTO_PIN_EXIGIDO` (cp1252 do cliente Windows).
+const TEXTO_PIN_CADASTRO: &str = "Cadastre a segunda senha no dialogo do cliente.";
+
+/// Prazo para o jogador digitar a segunda senha no diálogo do cliente.
+pub(crate) const PIN_TIMEOUT: Duration = Duration::from_secs(120);
+
 pub(super) fn authorize_pin(
     stream: &mut TcpStream,
     account: &str,
+    key_word: u8,
     auth: Option<&Authenticator>,
     sessions: Option<&SessionGate>,
     version: i32,
@@ -34,18 +50,63 @@ pub(super) fn authorize_pin(
         log(
             "info",
             "pin",
-            &format!("result=awaiting_first_pin account={account}"),
+            &format!("result=awaiting_first_pin account={account} state=register"),
         );
+        // Pedido explícito do passo: sem PIN (conta nova ou `pin_hash` zerado pelo reset por
+        // link), o servidor diz ao cliente que o próximo passo é **cadastrar**. `0x0101` é o
+        // canal de texto que a tela de seleção desenha e a etapa de login ignora (RE do
+        // `WYD.exe`: o roteador do login só compara `0x0101` para visibilidade).
+        if !reply_panel(stream, key_word, TEXTO_PIN_CADASTRO) {
+            return Err(HandshakeError::Io(
+                "falha ao escrever o pedido da segunda senha".to_string(),
+            ));
+        }
     }
-    let _ = stream.set_read_timeout(Some(HANDSHAKE_TIMEOUT));
+    // Espera pela segunda senha é **tempo humano** (abrir o diálogo, clicar quatro dígitos e
+    // Confirmar), não tempo de protocolo. Com o timeout do handshake (10 s) o jogador real era
+    // recusado no meio do diálogo: medido em 2026-11-15 com a conta `admin` no cliente 7662 —
+    // `pin result=refused account=admin reason=pin_ausente kind=WouldBlock`, o `0x0FDF`+painel
+    // saíam e a conexão fechava, deixando o cliente numa tela de seleção sem sessão ("cliquei em
+    // Conectar e nada acontece"). Cliente que **desaparece** (FIN/EOF) continua recusado na hora.
+    let _ = stream.set_read_timeout(Some(PIN_TIMEOUT));
     // Passo 1 da troca de PIN aceito nesta conexão; o 2 só vale com ele armado.
     let mut troca_armada = false;
     loop {
         let mut head = [0u8; HEADER_SIZE];
-        stream
-            .read_exact(&mut head)
-            .map_err(|_| HandshakeError::PinTimeout)?;
+        // Sem frame não há PIN: quem fica mudo (cliente travado, evasão, soquete meio aberto)
+        // recebia o fechamento sem nenhum byte — tela muda. O caminho de PIN recusado já manda
+        // `0x0FDF` + painel; aqui sai o **mesmo par** antes de encerrar. Medido no canal real:
+        // antes do conserto o cliente não recebia nada (FIN seco) e o banco ficava intacto.
+        let sem_frame = match stream.read_exact(&mut head) {
+            Ok(()) => None,
+            Err(erro) => Some(erro.kind()),
+        };
+        if sem_frame.is_some() {
+            log(
+                "warn",
+                "pin",
+                &format!(
+                    "result=refused account={account} reason=pin_ausente kind={:?}",
+                    sem_frame.unwrap_or(std::io::ErrorKind::Other)
+                ),
+            );
+            let _ = reply_recusa(
+                stream,
+                key_word,
+                Opcode::AccountSecureFail,
+                wyd_protocol::motivo::CodigoRecusa::PinIncorreto,
+            );
+            let _ = reply_panel(stream, key_word, TEXTO_PIN_EXIGIDO);
+            return Err(HandshakeError::PinTimeout);
+        }
         let Some(mut frame) = read_frame(stream, &head, account) else {
+            let _ = reply_recusa(
+                stream,
+                key_word,
+                Opcode::AccountSecureFail,
+                wyd_protocol::motivo::CodigoRecusa::PinIncorreto,
+            );
+            let _ = reply_panel(stream, key_word, TEXTO_PIN_EXIGIDO);
             return Err(HandshakeError::PinTimeout);
         };
         let computed = decode_in_place(&mut frame)
@@ -61,6 +122,22 @@ pub(super) fn authorize_pin(
             Opcode::AccountSecure => {
                 let pacote = AccountSecure::decode(&frame)
                     .map_err(|error| HandshakeError::Pin(error.to_string()))?;
+                // Qual passo do diálogo o cliente real está pedindo: `change_numeric` em +28.
+                // Nunca loga o token — só o passo e quantos dígitos vieram (medido em
+                // 2026-11-15 para separar "Confirmar" de "Alterar" no cliente 7662).
+                let digitos = pacote
+                    .numeric_token
+                    .iter()
+                    .take_while(|byte| **byte != 0)
+                    .count();
+                log(
+                    "info",
+                    "pin",
+                    &format!(
+                        "packet account={account} change={} digits={digitos}",
+                        pacote.change_numeric
+                    ),
+                );
                 // Troca de PIN em duas etapas no mesmo `0x0FDE` (decisão nossa, ver
                 // `docs/wyd/senha-numerica.md`): `change_numeric = 1` confere o PIN atual e arma;
                 // `2` grava o PIN novo. A sessão só abre depois do passo 2 (ou do login normal).
@@ -208,7 +285,7 @@ pub(super) fn authorize_pin(
                         Opcode::AccountSecureFail,
                         wyd_protocol::motivo::CodigoRecusa::PinIncorreto,
                     );
-                    let _ = reply_panel(stream, head[2], "Senha numérica exigida.");
+                    let _ = reply_panel(stream, head[2], TEXTO_PIN_EXIGIDO);
                     return Err(HandshakeError::Pin("seleção antes do PIN".to_string()));
                 }
                 // Sem PIN cadastrado, o cliente 7662 não repete a segunda senha: manda a

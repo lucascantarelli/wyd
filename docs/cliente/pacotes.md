@@ -70,10 +70,16 @@ rejeitado: tira o cliente da tela de login.
 
 O id de mensagem é **ponteiro de registro** na tabela em `0x109a4b8` (128 B por registro, 2000
 registros) preenchida por `0x53a837` a partir de `UI/strdef.bin` (checksum `0x53a55b`, `xor 0x5a`).
-Registro 12 (offset `0x600`, cp1252) = **"Conexão anterior finalizada. Tente novamente."** — é o que
+Registro 12 (offset `0x600`, cp1252) = **"Usuário ou senha incorretos."** — é o que
 `0x011C`/`0x011D` desenham; registro 20 = "Falha ao apagar o personagem." e 21 = "Falha ao logar o
-personagem.". Extração: `node tools/client/strdef.mjs`. Prova completa, com hex do canal vivo e a
-cadeia de assembly: `docs/rust/evidencias/login-tela-handler-2026-11-14.md`.
+personagem.". Até 2026-11-15 o registro 12 dizia "Conexão anterior finalizada. Tente novamente."
+(literal de fábrica do 7662); ele foi reescrito com `node tools/client/strdef-patch.mjs --index 12`
+— o loader (`0x53a837`) só aplica `xor 0x5a` quando o checksum do fim do arquivo confere, e este
+arquivo já estava divergente (4 B de checksum ausentes), com o retorno descartado pelo chamador
+(`0x5494ea`), então o texto é lido em claro. Extração: `node tools/client/strdef.mjs`. Prova
+completa, com hex do canal vivo, cadeia de assembly e bytes antes/depois do registro:
+`docs/rust/evidencias/login-tela-handler-2026-11-14.md` e
+`docs/rust/evidencias/autenticacao-ocr-2026-11-15.md` §7.
 
 O canal responde hoje com corpo em `0x010A` (`MSG_DBCNFAccountLogin`, 1996 B), `0x0110`
 (`STRUCT_SELCHAR`, 844 B), `0x0112` (o mesmo `STRUCT_SELCHAR` depois da remoção) e `0x0114`

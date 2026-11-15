@@ -6,31 +6,36 @@ blocos: `-- migrate:up` e `-- migrate:down`. O marcador só vale quando ocupa a 
 
 ## Regra da sequência
 
-**DDL primeiro (`0001`–`0016`), seed depois (`0017`–`0024`).** Um seed nunca roda antes de a
-tabela que ele preenche existir; separar as fases deixa o `down` de seed (só `DELETE`) e o de
-DDL (`DROP TABLE`) em blocos previsíveis.
+**DDL primeiro, seed depois.** Um seed nunca roda antes de a tabela que ele preenche existir;
+separar as fases deixa o `down` de seed (`DELETE`/`UPDATE` de volta ao estado herdado) e o de
+DDL (`DROP TABLE`) em blocos previsíveis. DDL que entrou depois do bloco de seed (tabelas
+decididas depois, como `0028` e `0053`) é exceção registrada: o que a regra proíbe de verdade é
+seed inserindo em tabela inexistente, cobrado por `tests/contrato/catalogo.rs`.
 
 | Faixa | Conteúdo |
 |---|---|
-| `0001`–`0006` | base de jogo: contas, personagens, inventário (com refino/Anct/gema na criação), guildas, auditoria, delivery_queue |
+| `0001`–`0006` | base de jogo: contas (login, senha, PIN, e-mail, papel), personagens, inventário (com refino/Anct/gema na criação), guildas, auditoria, delivery_queue |
 | `0007`–`0008` | catálogo (item/skill/efeito, com `skill_catalog.notes`) e mundo (NPC, loja, região, settings) |
-| `0009`–`0015` | refino, economia, rotas, combate, quests, eventos, arena |
-| `0016` | progressão por personagem: `character_status`, `character_lineage`, `character_skills` |
-| `0017`–`0024` | seeds: taxonomia, itens, skills, mundo, linhagem de skills, refino, mundo fixo, skills da Kersef |
+| `0009`–`0016` | refino, economia, rotas, combate, quests, eventos, arena, progressão por personagem |
+| `0017`–`0027` | seeds: taxonomia, itens, skills, mundo, linhagem de skills, refino, mundo fixo, skills da Kersef, SancRate, composição |
+| `0028`–`0037` | estado de jogo (buffs, capa, diária, clãs, GTorre), canal de servidor, sessão única, moderação, tabelas 1:1 de personagem (`character_scores`, `short_skill`, `learned_skill`, `special`, `wallet`), config editável |
+| `0038`–`0043` | seed de refino de acessório, views de classificação/teto, capacidade e papel do canal, razão de crédito, piedade de refino |
+| `0044`–`0052` | seed e correções de conteúdo (Campo de Treinamento, catálogo GAME-12/15, nomes de tela, sem duplicatas) |
+| `0053` | token de reset da segunda senha (`pin_reset_token`); o e-mail da conta mora em `accounts` desde a criação |
 
 Regras que o verificador cobra:
 
 1. **Nenhum `ALTER TABLE` no `up`.** Coluna nova nasce na criação da tabela. `ALTER` corretivo
-   esconde desenho errado e foi removido da série em 2026-11-08 (`0023_inventario_gema` e
-   `0024_catalogo_skill_nota` foram consolidados em `0003` e `0007`); o gerador do catálogo
-   falha se um `ALTER` reaparecer.
+   esconde desenho errado — `0023_inventario_gema` e `0024_catalogo_skill_nota` foram
+   consolidados em `0003`/`0007` (2026-11-08) e `0053_pin_reset_email` em `0001`/`0053`
+   (2026-11-15). O teste do catálogo falha se um `ALTER` reaparecer.
 2. **Nenhuma FK para tabela criada depois** — é o que obriga `0016_progressao` a vir depois de
    `0007`, já que referencia `skill_lineage`/`skill_catalog`.
 3. **Toda tabela criada cai no `down` do próprio arquivo.**
 4. **`down` de seed restaura o estado anterior, não o apaga** (ADR-0013): reverter uma migração
    de seed devolve as linhas herdadas ao valor da migração anterior (ex.: `0021` restaura as 6
    linhas da `0019`) e só zera o que ela própria classificou.
-4. Numeração contígua a partir de `0001`, sem buraco.
+5. Numeração contígua a partir de `0001`, sem buraco.
 
 ## Verificação em três camadas
 
@@ -43,30 +48,14 @@ make migrations-apply   # up → down → up, contagens iguais (Docker)
 
 | Camada | Comando | O que prova |
 |---|---|---|
-| estrutural | `node tools/content/check-migrations.mjs` | ordem, tabela duplicada, FK para tabela futura, `down` esquecido, `INSERT` órfão |
-| contrato | `cargo test -p wyd-db` (`tests/catalogo.rs`) | catálogo documentado == migrations; `SCHEMA_VERSION` == última; seed só depois do DDL |
+| estrutural | `node tools/content/check-migrations.mjs` | ordem, tabela duplicada, FK para tabela futura, `down` esquecido, `INSERT` órfão, contagem documentada |
+| contrato | `cargo test -p wyd-db` (`tests/contrato/catalogo.rs`) | catálogo documentado == migrations; `SCHEMA_VERSION` == última; seed só depois do DDL; sem `ALTER TABLE` |
 | banco real | `node tools/content/verify-schema.mjs` | `pg_attribute`/`information_schema` == catálogo (tabela, coluna, tipo, nulidade, PK), sem sobra nem falta |
 | ciclo | `node tools/content/migrate-cycle.mjs` | `up` completo, `down` completo (0 tabelas), `up` de novo com contagens idênticas |
 
-Última execução (2026-11-08, `postgres:17-alpine`):
-
-| Medida | Valor |
-|---|---|
-| migrations | 24 (16 DDL + 8 seeds) |
-| tabelas / colunas | 59 / 457 |
-| tabelas após o `down` | 0 |
-| `item_catalog` / `skill_catalog` | 3.220 / 154 (72 com linhagem) |
-| `npc_definition` / `npc_shop_item` / `level_item` | 6.100 / 6.706 / 161 |
-| `region` / `game_system` / `item_effect` | 52 / 20 / 55 |
-| `refine_rate` / `refine_gem_effect` / `sanc_rate` | 15 / 4 / 36 |
-| `content_version` | 7 |
-| ciclo up/down/up | 24 migrations, ~55 s, contagens idênticas |
-
-Atualização de 2026-11-08 (ADR-0022 §7): `0029_canal_de_servidor.sql` acrescentou
-`server_channel` — **29 migrations, 67 tabelas, 497 colunas**, seed com 3 linhas
-(canal 0 = URL de status, 1 = normal, 2 = verde). `make db-migrate` (binário `--migrate`,
-ADR-0024) aplica a série
-no Postgres da stack; `banco-catalogo.md` e `banco-fontes.mjs` já refletem a tabela.
+Medida de 2026-11-15 (`gen-catalogo-banco` + `check-migrations`): **53 migrations, 87 tabelas,
+625 colunas, 161 `INSERT`s**. As medidas antigas deste README (24 e 29 migrations) descreviam a
+série antes de `0028`–`0053` e ficam apenas como histórico no `roadmap-rust/changelog.md`.
 
 ## Lacunas declaradas (tabela criada ≠ conteúdo pronto)
 
@@ -75,9 +64,15 @@ no Postgres da stack; `banco-catalogo.md` e `banco-fontes.mjs` já refletem a ta
 | `quest`, `character_quest` | vazia | cadeia do 7662 não está fechada; seed seria invenção de quest |
 | `mob_template_stat`, `mob_template_equip` | vazia | stats vêm do `STRUCT_MOB` (blob de `npc_template`); extração do struct ainda não foi feita |
 | `character_status`, `character_lineage`, `character_skills` | vazia | schema pronto para o save; a fórmula de pontos está em `docs/wyd/progressao.md` e entra com a FASE-10 |
-
 | `item_price`, `donate_shop_item`, `daily_reward_item` | vazia | preço é configuração do dono do servidor, não dado do legado |
 | `item_effect_override`, `castle_quest_state`, `mob_carry_override` | fora do schema | pendências D-B05/D-B06/D-B07 em `docs/arquitetura/banco-catalogo.md` §3 |
+
+## Contas de teste
+
+A série não cria conta nenhuma. O banco de testes sobe **sem admin**: as contas padrão
+(`teste01`..`teste04`, senha `teste1234`, PIN `1234`, um personagem por classe) vivem em
+`crates/wyd-db/seeds/dev.sql` e são aplicadas uma vez, com o schema recém-criado. Staff nasce
+de `wyd-gateway --seed-staff` ou do portal quando o teste exigir.
 
 ## Catálogo
 

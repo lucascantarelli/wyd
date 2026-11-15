@@ -266,8 +266,14 @@ pub fn handle_connection(
         let (mut ok, conta) = handshake(&mut stream, world, gate, auth, selection)?;
         // A cerca só abre **depois** da senha: senha errada ou PIN errado não deixam sessão.
         // O `pendente` é o pacote de seleção que o cliente mandou no lugar do PIN.
-        let (lease, pendente) =
-            authorize_pin(&mut stream, &conta, auth, sessions, ok.client_version)?;
+        let (lease, pendente) = authorize_pin(
+            &mut stream,
+            &conta,
+            ok.key_word,
+            auth,
+            sessions,
+            ok.client_version,
+        )?;
         ok.session_id = lease.as_ref().map(SessionLease::id);
         // Segura a conexão: é a vida da sessão. Sem isso a sessão morreria no CNF e a cerca
         // não impediria nada — e sem o laço de seleção o jogador não passa do login.

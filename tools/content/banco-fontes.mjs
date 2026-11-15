@@ -15,6 +15,13 @@ export const FONTES = {
     estado: 'confirmado',
     nota: 'Hash de senha/PIN opaco (argon2id); nada em texto plano.',
   },
+  pin_reset_token: {
+    dominio: 'acesso',
+    fonte: 'migration 0053 + BFF do portal (reset da segunda senha por e-mail)',
+    estado: 'confirmado',
+    nota:
+      'Só o hash sha256 do token é gravado, com validade curta e uso único; `delivered_to` audita qual endereço recebeu o link.',
+  },
   character_session: {
     dominio: 'acesso',
     fonte: 'docs/wyd/canais-e-cidadania.md §5 + migration 0030',

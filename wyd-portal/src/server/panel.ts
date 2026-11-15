@@ -71,6 +71,7 @@ interface Envelope {
   sessions?: PanelSession[];
   events?: PanelEvent[];
   requested?: boolean;
+  email?: string;
 }
 
 async function call<T extends Envelope>(
@@ -196,6 +197,49 @@ export async function changeNumericPin(
       current_pin: input.currentPin,
       new_pin: input.newPin,
     },
+    traceId,
+  );
+}
+
+/**
+ * Cadastra o e-mail de recuperação da própria conta.
+ *
+ * É o canal de prova do reset da segunda senha: sem e-mail não há link. O gateway
+ * audita a troca com o autor da sessão; o endereço não é segredo, o PIN é.
+ */
+export async function setAccountEmail(email: string, traceId?: string): Promise<string> {
+  const accountId = await ownAccountId();
+  const res = await call<Envelope>(
+    "account_web/set_email",
+    { account_id: accountId, email },
+    traceId,
+  );
+  return res.email ?? email;
+}
+
+/**
+ * Emite o token de uso único e devolve o e-mail para onde o link deve ir.
+ *
+ * Quem gera o token é o portal (`server/pin-reset`); o gateway recebe só o hash e
+ * responde o destino cadastrado. Sem e-mail na conta o gateway recusa com 422.
+ */
+export async function startPinReset(tokenHash: string, traceId?: string): Promise<string> {
+  const accountId = await ownAccountId();
+  const res = await call<Envelope>(
+    "account_web/start_pin_reset",
+    { account_id: accountId, token_hash: tokenHash },
+    traceId,
+  );
+  if (!res.email) throw new AdminUnavailableError("resposta sem o e-mail de destino");
+  return res.email;
+}
+
+/** Consome o token do link e apaga a segunda senha (o jogador cadastra outra no cliente). */
+export async function confirmPinReset(tokenHash: string, traceId?: string): Promise<void> {
+  const accountId = await ownAccountId();
+  await call<Envelope>(
+    "account_web/confirm_pin_reset",
+    { account_id: accountId, token_hash: tokenHash },
     traceId,
   );
 }

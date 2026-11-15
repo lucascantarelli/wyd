@@ -13,10 +13,9 @@ mod common;
 use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::sync::Arc;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::Duration;
 
-use wyd_admin::auth::hash_password;
-use wyd_db::{Accounts, Character, Characters, PgBackend, PoolConfig, Role};
+use wyd_db::{Accounts, Character, Characters, PgBackend, PoolConfig};
 use wyd_protocol::codec::keyword::{decode_in_place, encode_in_place};
 use wyd_protocol::payload::{nul_trimmed, AccountLogin, AccountSecure, DeleteCharacter};
 use wyd_protocol::wire::frame::INITCODE;
@@ -36,14 +35,6 @@ fn runtime() -> Arc<tokio::runtime::Runtime> {
             .build()
             .expect("runtime"),
     )
-}
-
-fn sufixo() -> String {
-    let nanos = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_nanos())
-        .unwrap_or(0);
-    format!("{}", nanos % 100_000_000_000)
 }
 
 /// Frame completo com corpo escrito por `preencher` e ofuscação do cliente.
@@ -186,18 +177,18 @@ fn autenticacao_completa_no_cpsock() {
             .expect("banco"),
     );
 
-    // Conta descartável com senha, personagem no slot 0 e PIN cadastrado.
-    let sufixo = sufixo();
-    let conta_login = format!("aa{sufixo}");
-    let nome = format!("QAA{sufixo}");
-    rt.block_on(backend.create_account(&conta_login, Role::Player))
-        .expect("conta");
-    let hash = hash_password(SENHA).expect("argon2id");
-    rt.block_on(backend.set_credentials(&conta_login, &hash, Role::Player))
-        .expect("senha");
-    let conta = rt
-        .block_on(backend.find_by_login(&conta_login))
-        .expect("conta");
+    // Conta **fixa** de QA com senha, personagem no slot 0 e PIN cadastrado.
+    //
+    // Antes era `aa{sufixo}`: cada execução deixava uma conta nova que a limpeza de QA
+    // (`tools/dev/limpar-qa.mjs`) apagava, e a bateria ficava dependente do que sobrou de
+    // rodadas anteriores. Agora o preparo (`common::preparar_conta_de_teste`) normaliza senha,
+    // PIN e roster — a execução é idempotente e não cria conta acumulada.
+    let conta_login = "qaauthlive".to_string();
+    let nome = "QAALive".to_string();
+    // Sem PIN: este teste assere o caminho de **cadastro** (`mode=Registered`), então a conta
+    // fixa é limpa do PIN a cada execução em vez de ganhar uma conta nova.
+    let conta_id = common::preparar_conta_de_teste_sem_pin(&rt, &backend, &conta_login, SENHA);
+    let conta = rt.block_on(backend.find_by_id(conta_id)).expect("conta");
     let personagem = Character {
         id: 0,
         account_id: conta.id,

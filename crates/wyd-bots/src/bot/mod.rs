@@ -136,11 +136,18 @@ impl Bot {
         for (indice, digito) in config.pin.bytes().take(6).enumerate() {
             token[indice] = digito;
         }
+        // `change_numeric = 0` é o login normal. O valor `1` é o **passo 1 da troca** de PIN no
+        // protocolo deste servidor (`cpsock::authorize_pin`): o canal confere o PIN atual, arma a
+        // troca e fica esperando o passo `2`, sem abrir sessão. O bot mandava `1` em todo login, o
+        // que armava a troca e fazia o `_MSG_CharacterLogin` seguinte cair como "PIN incorreto" —
+        // nenhum teste pegava porque as contas de QA nasciam com o primeiro PIN (caminho
+        // `Registered`, que não arma). Medido contra `qapinraw0001` (PIN já cadastrado):
+        // com `1` o bot saía com recusa de PIN mesmo com o PIN certo.
         self.send(Opcode::AccountSecure, AccountSecure::WIRE_LEN, |frame| {
             AccountSecure {
                 numeric_token: token,
                 unknown: [0u8; 10],
-                change_numeric: 1,
+                change_numeric: 0,
             }
             .encode_into(frame)
             .expect("corpo do AccountSecure");

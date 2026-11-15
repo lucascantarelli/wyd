@@ -130,6 +130,10 @@ name = "sistema_painel_login_canal"
 path = "tests/sistema/painel_login_canal.rs"
 
 [[test]]
+name = "sistema_pin_canal"
+path = "tests/sistema/pin_canal.rs"
+
+[[test]]
 name = "sistema_criacao_canal"
 path = "tests/sistema/criacao_canal.rs"
 
@@ -156,6 +160,10 @@ path = "tests/sistema/pin_persistencia.rs"
 [[test]]
 name = "sistema_pin_troca"
 path = "tests/sistema/pin_troca.rs"
+
+[[test]]
+name = "sistema_pin_reset_ingame"
+path = "tests/sistema/pin_reset_ingame.rs"
 
 [[test]]
 name = "sistema_portal_pin"
