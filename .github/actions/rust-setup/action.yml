@@ -22,7 +22,7 @@ inputs:
   tauri:
     description: >-
       Instala as bibliotecas nativas do Tauri (GTK/WebKit) no Linux. Necessário em todo job que
-      compila o workspace inteiro: `apps/launcher-ui` puxa `webkit2gtk` e, sem isso, o
+      compila o workspace inteiro: `crates/wyd-launcher/ui` puxa `webkit2gtk` e, sem isso, o
       `glib-sys` falha no build script — foi o que derrubou `gate` e `benches` no primeiro run.
     required: false
     default: "false"

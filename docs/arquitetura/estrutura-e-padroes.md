@@ -188,13 +188,14 @@ com prazo); asserção enfraquecida para "passar no CI".
 4. Escrever o menor código que fecha o contrato, com teste no mesmo commit.
 5. Atualizar `docs/rust/03-progresso.md` e a issue com evidência.
 
-## 9. `wyd-launcher` — árvore executada (CLIENT-07/CLIENT-03)
+## 9. Grupo `wyd-launcher` — árvore executada (CLIENT-07/CLIENT-03, ADR-0030)
 
 > Executado em 2026-11-12; a lista abaixo inclui os módulos que não estavam no plano
-> original (`cliente_zip`, `portal_client`, `reparo`, `wyt`).
+> original (`cliente_zip`, `portal_client`, `reparo`, `wyt`). Desde a ADR-0030 o núcleo
+> mora em `core/` e a janela Tauri em `ui/` (§9.1), como pacotes irmãos.
 
 ```
-crates/wyd-launcher/
+crates/wyd-launcher/core/
 ├── Cargo.toml            # ed25519-dalek verify-only (assinatura do pacote, ADR-0003)
 ├── src/
 │   ├── lib.rs            # Facade: re-exports + invariantes em //!
@@ -226,22 +227,24 @@ Sem subdirs — crate pequena. Um erro por fronteira (`ManifestError`,
 ele) em vez de `error.rs` único: exceção deliberada a §2, coberta pela skill
 `software-architecture` (patterns de erro por fronteira, "um erro por fronteira").
 
-### 9.1 `apps/launcher-ui` — janela Tauri (CLIENT-08, ADR-0007)
+### 9.1 `crates/wyd-launcher/ui` — janela Tauri (CLIENT-08, ADR-0007/ADR-0030)
 
-Fica fora de `crates/` de propósito: é frente de apresentação, não núcleo. Não
-tem marca nem escrita própria — chama `wyd-launcher` como biblioteca.
+Pacote irmão do núcleo dentro do grupo `crates/wyd-launcher/`, cada um com o próprio
+`Cargo.toml`; os nomes de pacote não mudaram (`-p wyd-launcher`, `-p wyd-launcher-ui`).
+A janela é frente de apresentação, não núcleo: não tem marca nem escrita própria —
+chama `wyd-launcher` como biblioteca.
 
 ```
-apps/launcher-ui/
-├── Cargo.toml            # tauri 2 + wyd-launcher (path); bin `WYDLauncher`
+crates/wyd-launcher/ui/
+├── Cargo.toml            # tauri 2 + wyd-launcher (path ../core); bin `WYDLauncher`
 ├── build.rs              # tauri_build::build()
-├── tauri.conf.json       # janela 720×660, frontendDist ../ui, withGlobalTauri
+├── tauri.conf.json       # janela 720×660, frontendDist web, withGlobalTauri
 ├── capabilities/
 │   └── default.json      # só `core:default` na janela `main`
 ├── assets/
 │   └── fundo-original.jpg
 ├── gen/                  # schemas gerados pelo Tauri (não editar)
-├── ui/
+├── web/
 │   └── index.html        # shell: invoke("pagina") injeta o HTML da identidade; submit → invoke("jogar")
 └── src/
     └── main.rs           # comandos `pagina`/`jogar`, `--instalar <dir>`, `--dir`, `--check`

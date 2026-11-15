@@ -9,6 +9,14 @@
 > `PROC-22`, `QA-07`, `QA-08` e `WEB-04` estão agora em 🟢 no painel, com o motivo na linha e o
 > inventário completo em [`../docs/rust/evidencias/auditoria-status-honestidade-2026-11-14.md`](../docs/rust/evidencias/auditoria-status-honestidade-2026-11-14.md).
 
+## ADR-0030 — Grupo `crates/wyd-launcher/` com `core/` e `ui/`
+
+- **ID:** `ADR-0030`
+- **Concluída em:** 2026-11-15
+- **Resumo:** o launcher deixou de estar partido em dois lugares: `crates/wyd-launcher/` virou **grupo de pacotes** com `core/` (lib `wyd_launcher` + bin `wyd-launcher`) e `ui/` (bin `WYDLauncher`, Tauri v2, antes `apps/launcher-ui/`). Nomes de pacote não mudaram, então `-p`, `--bin`, `Cargo.lock` e CI seguem válidos; `apps/` ficou só com ferramentas Node (`apps/tools`). O gate `check-docs-consistency` passou a identificar crate por caminho relativo a `crates/` e a varrer dois níveis (grupo é um nível só), e o `README`/`AGENTS`/`estrutura-e-padroes` §9–§9.1/`visao-pastas` acompanharam. Os três Dockerfiles perderam o `COPY apps/launcher-ui` (o `COPY crates` já inclui a janela).
+- **Prova:** `cargo build -p wyd-launcher -p wyd-launcher-ui` exit 0 (1 m 58 s); `cargo test -p wyd-launcher --all-targets` 123 lib + 4 contrato + 2 golden + 3 golden + 8 integração verdes (1 ignorado, o smoke de rede do GitHub Releases); `make check` verde em fmt, clippy, build, test, `migrations-check`, `audit-coverage`, `docs-check` (10 crates/10 membros), `skills-check`, `versao-check` (10 membros e portal em 0.1.0), `tools-test` e `portal-test` (tsc + 179 casos). Duas quebras de caminho apareceram e foram corrigidas no mesmo commit: `include_str!` de `identidade.rs` (um nível a mais) e o `raiz()` de `contrato/identidade.rs` + `golden/serverlist_paridade.rs` (que passou a apontar para `crates/`).
+- **Resíduo:** `make check` ainda para em `issue-status-check` (`BUG-01`: arquivo 🟡 × índice ⬜, divergência de 2026-11-15 em arquivos não tocados aqui) e em `actions-pin-check` (5 pins P3 cujas tags se moveram: `dtolnay/rust-toolchain`, `taiki-e/install-action`) — ambas pré-existentes e independentes da reorganização.
+
 ## AUD-02 — Direção do `_MSG_CreateItem` (0x026E) no catálogo
 
 - **ID:** `AUD-02`

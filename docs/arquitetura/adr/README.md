@@ -35,6 +35,7 @@ declarado aqui é o do cabeçalho da própria ADR; quando divergirem, vale a ADR
 | [0022](0022-binarios-de-servico.md) | Binários de serviço (`wyd-gateway` agora, `tmserver` depois): imagem/tag, healthcheck pelo binário, `/metrics` declarado | aceita (gateway implementado) |
 | [0026](0026-arvore-por-dominio-no-wyd-server.md) | Árvore de `wyd-server/src` por domínio (substitui a lista plana do §16) | aceita — etapa 1 (`boot/`, `auth/`) |
 | [0029](0029-core-consome-matematica-de-wyd-sim.md) | `wyd-core` consome a matemática pura de `wyd-sim` (regra única de gema) | aceita (implementada) |
+| [0030](0030-grupo-wyd-launcher.md) | Grupo `crates/wyd-launcher/` com `core/` e `ui/` (substitui a §9.1 da ADR-0002) | aceita (implementada) |
 
 ## Decisões que o código já aplica
 

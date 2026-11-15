@@ -8,9 +8,10 @@ members = [
   "crates/wyd-admin",
   "crates/wyd-server",
   "crates/wyd-sim",
-  "crates/wyd-launcher",
   "crates/wyd-bots",
-  "apps/launcher-ui",
+  # Grupo `wyd-launcher` (ADR-0030): núcleo e janela são pacotes irmãos, cada um na sua pasta.
+  "crates/wyd-launcher/core",
+  "crates/wyd-launcher/ui",
 ]
 
 # Release otimizado (QA-03, ADR-0017): LTO thin, uma unidade de codegen e strip.

@@ -11,11 +11,11 @@ FROM rust:1.99-bookworm AS builder
 WORKDIR /src
 COPY Cargo.toml Cargo.lock rust-toolchain.toml ./
 COPY crates ./crates
-# A GUI Tauri é membro do workspace; o manifesto precisa existir mesmo ao compilar o CLI.
-COPY apps/launcher-ui ./apps/launcher-ui
+# A janela Tauri é membro do workspace e vive em `crates/wyd-launcher/ui` (ADR-0030):
+# o `COPY crates` acima já a inclui, e o manifesto fica resolvido ao compilar só o CLI.
 # Entrada de build, não documentação: `include_str!` em
-# crates/wyd-launcher/src/identidade.rs resolve `../../../docs/...` a partir de
-# /src/crates/wyd-launcher/src. Sem este COPY o build falha com "couldn't read".
+# crates/wyd-launcher/core/src/identidade.rs resolve `../../../../docs/...` a partir de
+# /src/crates/wyd-launcher/core/src. Sem este COPY o build falha com "couldn't read".
 # O `.dockerignore` libera exatamente este arquivo de `docs/`.
 COPY docs/arquitetura/identidade.tokens ./docs/arquitetura/identidade.tokens
 # Cache BuildKit do registry + target acelera rebuilds sem invalidar camadas.

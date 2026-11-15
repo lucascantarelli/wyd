@@ -369,7 +369,7 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      # `tauri: true`: `cargo llvm-cov --workspace` compila `apps/launcher-ui`; sem GTK/WebKit o
+      # `tauri: true`: `cargo llvm-cov --workspace` compila `crates/wyd-launcher/ui`; sem GTK/WebKit o
       # `glib-sys` morre no build script (DEFEITO do run 43431211305, já corrigido).
       - uses: ./.github/actions/rust-setup
         with:

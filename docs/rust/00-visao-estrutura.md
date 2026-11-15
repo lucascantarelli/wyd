@@ -2,7 +2,7 @@
 
 > **Documento histórico (snapshot de 2026-11-07).** Ele registra o estado da transição
 durante o arquivamento do Go (7 crates, 15 skills, Go ainda no PATH) e **não** descreve o
-presente. Estado vigente: **9 crates** + `apps/launcher-ui`, **18 skills**, Go fora da fonte de
+presente. Estado vigente: **10 crates** (9 de domínio + a janela em `crates/wyd-launcher/ui`), **18 skills**, Go fora da fonte de
 build — ver `docs/rust/03-progresso.md`, `docs/arquitetura/estrutura-e-padroes.md` §1/§16 e
 `docs/rust/04-revisao-roadmap.md` §6.
 

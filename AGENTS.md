@@ -25,7 +25,8 @@
 | `crates/wyd-admin/` | control plane Cold Path e binário `wyd-gateway` |
 | `crates/wyd-server/` | composição do monólito; um processo por canal |
 | `crates/wyd-sim/` | fórmulas e simulações determinísticas |
-| `crates/wyd-launcher/` + `apps/launcher-ui/` | distribuição/patch e janela Tauri |
+| `crates/wyd-launcher/core/` | distribuição/patch, serverlist e bootstrap (lib + CLI) |
+| `crates/wyd-launcher/ui/` | janela Tauri `WYDLauncher` (WebView2) |
 | `crates/wyd-bots/` | bots de QA/carga; cliente de protocolo sem GUI |
 | `wyd-portal/` | BFF Next.js sobre `wyd-admin` (nunca SQL/estado vivo) |
 | `docs/` | norma técnica, cliente, operação e conhecimento do jogo |

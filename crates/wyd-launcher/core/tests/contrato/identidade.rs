@@ -20,7 +20,9 @@ use std::path::{Path, PathBuf};
 use wyd_launcher::{branding, identidade, serverlist, snbin};
 
 fn raiz() -> PathBuf {
+    // `core/` está dois níveis abaixo de `crates/`: sobe três até a raiz do repo (ADR-0030).
     Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
         .join("..")
         .join("..")
         .canonicalize()

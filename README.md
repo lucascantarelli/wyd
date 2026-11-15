@@ -116,7 +116,7 @@ sequenceDiagram
 | 🗺️ Roadmap | **34 issues ativas** + 15 descritores de fase · **58 concluídas** |
 | 🧪 Checklist funcional | **35 ✅ · 23 🚧 · 34 ⬜ · 2 ⛔** em 94 linhas |
 | 🗄️ Banco | **53 migrations · 87 tabelas** no gate atual |
-| 🧱 Workspace | **9 crates Rust** + `apps/launcher-ui` (Tauri) |
+| 🧱 Workspace | **10 crates Rust** (9 de domínio + a janela Tauri do launcher) |
 | 🌐 Stack local | 2 canais + gateway + portal + PostgreSQL + Prometheus/Grafana/Loki |
 | 🖥️ Cliente | 7662 externo; recusa de login **provada por captura** (`0x011C` → registro 12 do `strdef.bin`); prova visual de `BUG-02`, `GAME-17` e `GAME-18` pendente |
 
@@ -187,7 +187,7 @@ make local-rebuild
 ```bash
 make fmt          # rustfmt
 make clippy       # -D warnings, incluindo testes e benches
-make build        # compila as 9 crates do workspace
+make build        # compila as 10 crates do workspace
 make test         # workspace
 make test-all     # unitários + integração + doc-tests + benches
 make check        # gate obrigatório de toda issue
@@ -209,9 +209,9 @@ wyd2/
 │   ├── wyd-admin/         # 🧊 Cold Path e binário wyd-gateway
 │   ├── wyd-server/        # ⚙️ composição do monólito; um processo por canal
 │   ├── wyd-sim/           # 🧮 fórmulas, curvas e simulações determinísticas
-│   ├── wyd-launcher/      # 🚀 patch, manifesto, serverlist e bootstrap
+│   ├── wyd-launcher/core/ # 🚀 patch, manifesto, serverlist e bootstrap (lib + CLI)
+│   ├── wyd-launcher/ui/   # 🖥️ janela Tauri (`WYDLauncher`, WebView2)
 │   └── wyd-bots/          # 🤖 bots de QA/carga e campanha do Campo
-├── apps/launcher-ui/      # 🖥️ GUI Tauri do launcher
 ├── wyd-portal/            # 📊 BFF Next.js + telas de staff + E2E
 ├── docs/                  # 📚 arquitetura, operação, cliente, jogo e manuais
 ├── roadmap-rust/          # 🗺️ fases, 34 issues ativas, bugs e changelog

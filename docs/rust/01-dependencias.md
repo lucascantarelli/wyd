@@ -28,7 +28,7 @@
 | Observabilidade | `tracing` 0.1.44 + `tracing-subscriber` 0.3.23; exporter Prometheus próprio | **adotado na QA-04** (ADR-0018) |
 | Qualidade/supply-chain | `cargo-audit`, `cargo-deny`, `cargo-tarpaulin`, `miri` | pendente (FASE-05/15) |
 | Hash de senha | `argon2` 0.5 | **adotado no `wyd-admin`** em 2026-11-08 (AGENTS §3.6): argon2id padrão, só na borda de login (`auth/password.rs`); o hash nunca sai da resposta |
-| Launcher UI | Tauri (ou CLI puro) | **`tauri` 2 adotado em `apps/launcher-ui`** (2026-11-12, CLIENT-08 + ADR-0007): janela WebView2, `tauri-build` para recursos; só `core:default` nas capabilities, sem plugins/updater nesta frente |
+| Launcher UI | Tauri (ou CLI puro) | **`tauri` 2 adotado em `crates/wyd-launcher/ui`** (2026-11-12, CLIENT-08 + ADR-0007; caminho da ADR-0030): janela WebView2, `tauri-build` para recursos; só `core:default` nas capabilities, sem plugins/updater nesta frente |
 | Assinatura de pacote (launcher) | `ed25519-dalek` 2.x | **adotado no `wyd-launcher`** em 2026-11-11 (revisão do ADR-0003): Ed25519 verify-only, chave pública embutida; `default-features = false` + `std` |
 
 ## Notas datadas (PROC-23, 2026-11-07 — sem troca sem ADR + PoC)

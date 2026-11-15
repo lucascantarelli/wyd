@@ -3,7 +3,8 @@
  * Gate de consistência documental (PROC-13).
  *
  * Verifica, sem dependências:
- * - membros de `Cargo.toml` × diretórios com `crates/<nome>/Cargo.toml`;
+ * - membros de `Cargo.toml` × diretórios com `crates/<crate>/Cargo.toml`, aceitando um
+ *   nível de grupo (`crates/<grupo>/<crate>`, ADR-0030);
  * - contagem e nomes das crates citados no README e na tabela do AGENTS;
  * - links relativos de README.md e AGENTS.md;
  * - conta issues ativas/migrations para o resumo do gate.
@@ -31,15 +32,28 @@ const members = membersBlock
 for (const member of members) {
   if (!existsSync(member)) fail(`Cargo.toml: membro inexistente (${member})`);
 }
+// Identidade da crate = caminho relativo a `crates/`, com `/` como separador:
+// `wyd-core` (crate solta) ou `wyd-launcher/core` (crate dentro de grupo, ADR-0030).
 const memberCrates = uniq(
   members
     .filter((member) => member.startsWith("crates/"))
-    .map((member) => path.basename(member)),
+    .map((member) => path.relative("crates", member).split(path.sep).join("/")),
 );
+// Dois níveis: diretório com `Cargo.toml` é crate; sem ele, é grupo de crates (um nível
+// só — grupo dentro de grupo não é árvore aprovada).
 const crateDirs = uniq(
   readdirSync("crates", { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && existsSync(path.join("crates", entry.name, "Cargo.toml")))
-    .map((entry) => entry.name),
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) => {
+      const dir = path.join("crates", entry.name);
+      if (existsSync(path.join(dir, "Cargo.toml"))) return [entry.name];
+      return readdirSync(dir, { withFileTypes: true })
+        .filter(
+          (filho) =>
+            filho.isDirectory() && existsSync(path.join(dir, filho.name, "Cargo.toml")),
+        )
+        .map((filho) => `${entry.name}/${filho.name}`);
+    }),
 );
 
 for (const name of crateDirs) {
@@ -65,7 +79,9 @@ if (!treeBlock) {
   fail("README.md: bloco de árvore com crates/ não encontrado");
 } else {
   const treeCrates = uniq(
-    [...treeBlock.matchAll(/^\s*│\s+[├└]── (wyd-[a-z0-9-]+)\//gm)].map((match) => match[1]),
+    [...treeBlock.matchAll(/^\s*│\s+[├└]── ((?:wyd-[a-z0-9-]+)(?:\/[a-z0-9-]+)?)\//gm)].map(
+      (match) => match[1],
+    ),
   );
   for (const name of treeCrates) {
     if (!memberCrates.includes(name)) fail(`README.md: crate na árvore fora do workspace (${name})`);
@@ -78,7 +94,9 @@ if (!treeBlock) {
 // 3. AGENTS: tabela de crates.
 const agents = read("AGENTS.md");
 const agentsCrates = uniq(
-  [...agents.matchAll(/^\|\s*`crates\/([a-z0-9-]+)\/`[^|]*\|/gm)].map((match) => match[1]),
+  [...agents.matchAll(/^\|\s*`crates\/([a-z0-9-]+(?:\/[a-z0-9-]+)?)\/`[^|]*\|/gm)].map(
+    (match) => match[1],
+  ),
 );
 for (const name of agentsCrates) {
   if (!memberCrates.includes(name)) fail(`AGENTS.md: crate na tabela fora do workspace (${name})`);

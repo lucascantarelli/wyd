@@ -106,8 +106,8 @@ launcher v1 = **opcional** (o jogo autentica no CPSock; o launcher não guarda s
 ## 7. Plano (issue GUI criada: CLIENT-08, decisão Tauri + nome WYD em 2026-11-07)
 
 1. ADR GUI (Tauri v2 + fronteiras com `wyd-launcher`) — **aceita** (ADR-0007).
-2. **Frente mínima entregue (2026-11-12):** `apps/launcher-ui` (bin
-   `WYDLauncher`) abre janela Tauri com o HTML da identidade efetiva (mesma
+2. **Frente mínima entregue (2026-11-12):** `crates/wyd-launcher/ui` (bin
+   `WYDLauncher`, antes `apps/launcher-ui`) abre janela Tauri com o HTML da identidade efetiva (mesma
    `configuracao::resolver_flags` da CLI), notícias do portal com fallback e o
    botão Jogar chamando `lancamento::iniciar` — fail-closed, sem escrita própria.
    `WYDLauncher.exe --instalar <pasta-do-jogo>` copia o executável para
@@ -119,7 +119,7 @@ launcher v1 = **opcional** (o jogo autentica no CPSock; o launcher não guarda s
    (o `WYDLauncher.exe` original fica em `.bak`) e, rodando de lá sem `--dir`,
    ele resolve a própria pasta.
    **Arte:** o ícone da janela/instalador é o ICO entregue pelo dono em
-   `apps/launcher-ui/icons/icon.ico`; o fundo (`apps/launcher-ui/assets/`,
+   `crates/wyd-launcher/ui/icons/icon.ico`; o fundo (`crates/wyd-launcher/ui/assets/`,
    otimizado para `crates/wyd-launcher/assets/fundo.jpg`, 135 KB) entra embutido
    no HTML como `data:` URI, com véu escuro por cima para manter contraste —
    o mesmo desenho no HTML da CLI e na janela Tauri.

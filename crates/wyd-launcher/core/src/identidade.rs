@@ -12,7 +12,7 @@
 use core::fmt;
 
 /// Arquivo canônico, embutido no binário: o launcher não lê identidade em runtime.
-pub const FONTE: &str = include_str!("../../../docs/arquitetura/identidade.tokens");
+pub const FONTE: &str = include_str!("../../../../docs/arquitetura/identidade.tokens");
 
 /// Maior nome de servidor que cabe no campo de 9 B do `sn.bin` (NUL no fim).
 pub const NOME_SERVIDOR_MAX: usize = 8;
