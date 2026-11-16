@@ -7,7 +7,7 @@
 # Proveniência: versão/commit entram por build-arg e ficam nas labels OCI.
 # Bases (DEVOPS-01): builder por minor (rust-toolchain 1.99.1), runtime por digest.
 
-FROM rust:1.99-bookworm AS builder
+FROM rust:1.100-bookworm AS builder
 WORKDIR /src
 COPY Cargo.toml Cargo.lock rust-toolchain.toml ./
 COPY crates ./crates

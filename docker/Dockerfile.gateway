@@ -9,7 +9,7 @@
 # (1.99.1) — e runtime fixado por digest para o build ser reprodutível. Subir
 # qualquer uma delas é uma mudança explícita, com `docker build` no mesmo commit.
 
-FROM rust:1.99-bookworm AS builder
+FROM rust:1.100-bookworm AS builder
 WORKDIR /src
 COPY Cargo.toml Cargo.lock rust-toolchain.toml ./
 # Árvore completa de crates: o workspace declara todos os membros no Cargo.toml, então
