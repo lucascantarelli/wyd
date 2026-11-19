@@ -3,10 +3,10 @@
 > **Estado: registro vivo (2026-11-19).** Este é o **único** lugar onde uma lacuna do site oficial
 > tem dono, impacto, marco e estado.
 >
-> **O que este arquivo cobre:** as **14 lacunas** `LPDOC-01`–`LPDOC-14`. Nenhuma foi fechada.
-> O site foi montado em MkDocs 2.0 pré-release e publicado/validado em GitHub Pages em 2026-11-19
-> (`wyd-docs-1.0.0.md` §7.3). O dono aprovou GitHub Pages como hospedagem canônica com publicação
-> contínua; `LPDOC-01` permanece aberta até a validação do rollback.
+> **O que este arquivo cobre:** as **14 lacunas** `LPDOC-01`–`LPDOC-14`, **1 fechada** (`LPDOC-01`,
+> rollback e restauração validados em 2026-11-19, `wyd-docs-1.0.0.md` §7.3). O site foi montado em
+> MkDocs 2.0 pré-release e publicado/validado em GitHub Pages em 2026-11-19. O dono aprovou GitHub
+> Pages como hospedagem canônica com publicação contínua.
 >
 > **O que este arquivo não é:** não decide. Cada linha diz **quem** decide e **o que** precisa ser
 > decidido; a decisão entra no documento dono (ou em `ADR-DOC-nnnn`) e volta aqui como linha
@@ -49,11 +49,11 @@
 
 | Grupo | Lacunas | Abertas | Propostas | Fechadas |
 |---|---:|---:|---:|---:|
-| Publicação e infraestrutura | 3 | 2 (`LPDOC-01`, `LPDOC-04`) | 1 (`LPDOC-08`) | 0 |
+| Publicação e infraestrutura | 3 | 1 (`LPDOC-04`) | 1 (`LPDOC-08`) | 1 (`LPDOC-01`) |
 | Conteúdo publicado | 3 | 0 | 3 (`LPDOC-02`, `LPDOC-03`, `LPDOC-09`) | 0 |
 | URL, versão e idioma | 3 | 1 (`LPDOC-05`) | 2 (`LPDOC-06`, `LPDOC-07`) | 0 |
 | Ferramenta e sintaxe | 5 | 3 (`LPDOC-10`, `LPDOC-12`, `LPDOC-13`) | 2 (`LPDOC-11`, `LPDOC-14`) | 0 |
-| **Total** | **14** | **6** | **8** | **0** |
+| **Total** | **14** | **5** | **8** | **1** |
 
 \"Proposta\" não é decisão: descreve o caminho recomendado para o dono aceitar ou recusar.
 
@@ -65,7 +65,7 @@
 
 | ID | Pergunta | Por que importa | Dono | Marco | Estado | Evidência |
 |---|---|---|---|---|---|---|
-| `LPDOC-01` | Validar rollback da hospedagem canônica aprovada (GitHub Pages)? | confirmar que a publicação contínua pode ser revertida com segurança; hospedar em duas plataformas duplicaria automação | operação | `P1` | aberta | `V` (2026-11-19): dono aprovou GitHub Pages como hospedagem canônica com publicação contínua; PR #44 foi mesclado, workflow `docs` publicou com sucesso e `https://lucascantarelli.github.io/wyd/` foi validado publicamente. Consulta somente leitura à execução `docs` #2 (ID `44492052127`, [run](https://github.com/lucascantarelli/wyd/actions/runs/44492052127)) confirmou o SHA base `2378b62b658303e6378c15be0a8ff38d248b019c`, conclusão `success`, branch `develop` e que, em 2026-11-19, a execução permanecia dentro da janela de reexecução de 30 dias. A configuração consultada de `github-pages` ([ambiente](https://api.github.com/repos/lucascantarelli/wyd/environments/github-pages)) lista a política de branch `develop`, sem revisores obrigatórios, temporizador de espera ou proteções customizadas (0 listadas), e permite bypass de administradores (`can_admins_bypass: true`). Essa consulta não acionou reexecução nem publicação e não comprova rollback/restauração ou permissões efetivas do ator; é pré-checagem, não evidência do teste real. Verificação adicional somente leitura em 2026-11-19: o deployment mais recente consultado de `github-pages` (ID `7909492410`, [deployment](https://github.com/lucascantarelli/wyd/deployments/7909492410)) usa SHA `0d76585821583d5ef60e790fa44fb65572576d4b` e está `success` ([workflow `docs` #4](https://github.com/lucascantarelli/wyd/actions/runs/44498880453)); não havia execuções `docs` em `develop` com estado `in_progress`, `queued` ou `waiting` ([workflow](https://github.com/lucascantarelli/wyd/actions/workflows/docs.yml?query=branch%3Adevelop)). Isso é pré-checagem, não evidência de rollback; `LPDOC-01` continua aberta. `P`: runbook em `wyd-docs-1.0.0.md` §7.3 define pré-checagens sem publicação, reexecução completa de uma execução do SHA exato dentro de 30 dias, autorização para rollback e restauração, e evidência de deploy/conteúdo público. Falta executar rollback e restauração; manter aberta até ambos serem verificados. |
+| `LPDOC-01` | Validar rollback da hospedagem canônica aprovada (GitHub Pages)? | confirmar que a publicação contínua pode ser revertida com segurança; hospedar em duas plataformas duplicaria automação | operação | `P1` | fechada | `V` (2026-11-19): dono aprovou GitHub Pages como hospedagem canônica com publicação contínua; PR #44 mesclado, workflow `docs` publicou e o site foi validado. Pré-checagens somente leitura: runs #2 (`44492052127`, SHA `2378b62b`) e #4 (`44498880453`, SHA `0d765858`) em `success` em `develop`, sem execução concorrente; o ambiente `github-pages` só tem política de branch `develop`, sem revisores; e os deployments #6 (`7910251866`) e #8 (`7910399204`) mostraram que um push novo publica por cima do estado anterior, o que exigiu a janela de congelamento; o dono confirmou o run #4 como SHA final e declarou a janela de congelamento. Validação local: os dois commits passaram `preparar.py`, `mkdocs build` e `verificar.py site` em container Linux (30 páginas, exit 0), diferindo só na URL do Highlight.js em `tema/site.js`. Teste na janela declarada: run #2 reexecutado publicou `2378b62b` (deployment `7911886524`, `success` `11:33:08Z`) e o site passou a servir `npm/highlight.js@11.12.0`; run #4 reexecutado restaurou `0d765858` (deployment `7911904845`, `success` `11:34:01Z`), com `cdn-release@11.12.0` servido e `200` na raiz e em páginas internas. Não medidos: erro de console e presença de `hljs`. Detalhe em `wyd-docs-1.0.0.md` §7.3. |
 | `LPDOC-04` | O site terá domínio próprio? | URL publicada é contrato; trocar depois exige redirect permanente | operação + produto | `P1` | aberta | nenhuma URL canônica definida; sem `site_url` no MkDocs 2.0 |
 | `LPDOC-08` | Quem aprova a publicação de um sistema novo? | sem dono, qualquer pasta vira página pública; com dono único, um sistema pode ficar meses fora do ar | documentação + arquitetura | `P2` | proposta | `preparar.py` publica toda pasta `docs/` que existir, sem aprovação por sistema |
 
