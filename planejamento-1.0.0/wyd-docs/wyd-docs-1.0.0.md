@@ -279,16 +279,95 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | artefato | GitHub Pages | estático, sem servidor |
 
 Permissões: `contents: read`, `pages: write`, `id-token: write`; `concurrency` de um deploy. Ação de
-terceiro fixada por commit SHA. Rollback planejado: republicar o commit anterior — não há dado migrado;
-a execução do rollback ainda não foi verificada.
+terceiro fixada por commit SHA. Rollback proposto: reconstruir e republicar o conteúdo de um commit
+anterior conhecido; não há dado migrado. A execução ainda não foi verificada.
+
+**Runbook de rollback (`P`; não executado nesta atualização; depende de execução-alvo elegível dentro da janela de 30 dias):**
+
+**Base verificada (`V`, 2026-11-19):** `.github/workflows/docs.yml` faz checkout sem `ref` explícito,
+`workflow_dispatch` não declara inputs, o job `publicar` roda para qualquer evento que não seja PR e
+a concorrência usa `docs-${{ github.ref }}` com cancelamento do run ativo. Portanto, reexecutar uma
+execução anterior completa preserva SHA/ref do evento original; um dispatch não escolhe SHA arbitrário
+e pode publicar o tip da ref escolhida. Referências: [eventos e workflow_dispatch](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows),
+[reexecução](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs),
+[checkout](https://github.com/actions/checkout) e [concorrência](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-when-your-workflow-runs/control-the-concurrency-of-workflows-and-jobs).
+
+**Pré-checagens sem publicação**
+
+1. Na página Deployments / ambiente `github-pages`, identifique o SHA atualmente publicado. Escolha
+   o SHA anterior que deve ser restaurado e uma página ou trecho cujo conteúdo diferencie as duas
+   versões; registre os SHAs e a URL antes do teste.
+2. Na aba Actions, localize uma execução bem-sucedida do workflow `docs` para o SHA-alvo exato.
+   Confirme `head_sha`, branch/ref, evento, conclusão do job `build e verificação` e do job
+   `publicar no GitHub Pages`. Para usar **Re-run all jobs**, a execução deve estar dentro da janela
+   de reexecução do GitHub (até 30 dias); reexecuções preservam `GITHUB_SHA`/`GITHUB_REF` e usam as
+   permissões do ator da execução original.
+3. Sem publicar, valide o commit-alvo num checkout local destacado ou container Linux: confirme
+   `git rev-parse HEAD` contra o SHA registrado e rode `preparar.py`, `mkdocs build` e
+   `verificar.py site`. Guarde o resultado do gate.
+4. Confirme que não há deploy `docs` concorrente para a mesma ref. O grupo atual
+   `docs-${{ github.ref }}` usa `cancel-in-progress: true`; uma nova execução da mesma ref pode
+   cancelar a execução ativa. Verifique também as regras de proteção/revisão do ambiente
+   `github-pages` e se o ator original pode satisfazê-las.
+
+**Teste real (publica; exige autorização explícita antes de começar)**
+
+1. Autorizar expressamente a publicação temporária do SHA anterior escolhido e a publicação de
+   restauração do SHA que deve ficar ativo ao final. Pause mudanças que possam acionar um deploy na
+   mesma ref durante a janela do teste.
+2. Na execução `docs` verificada no passo 2, escolher **Re-run all jobs**, não apenas um job. Isso
+   refaz checkout, gate, artefato e deploy. Como `actions/checkout` não especifica `ref`, usa o SHA
+   do evento; a execução original precisa estar associada ao SHA-alvo exato. Antes de confirmar a
+   reexecução, confira novamente o run e o SHA. Uma reexecução completa reconstrói o artefato; não
+   depende de promover manualmente um artefato antigo.
+3. Não usar `workflow_dispatch` como seletor de SHA: existe sem inputs e uma execução que não seja
+   `pull_request` alcança o job de publicação. Selecionar uma branch executa o tip daquela ref, não
+   escolhe um commit arbitrário.
+4. Após o run, guarde o SHA/ref do run, a saída do gate e a conclusão do deploy. Confirme no histórico
+   do ambiente Pages que o deploy-alvo foi registrado. Na URL pública, force recarga e confira o
+   conteúdo identificador da versão anterior e os recursos necessários.
+5. Republicar a versão que deve permanecer ativa usando sua execução bem-sucedida identificada na
+   pré-checagem e **autorizada**; verificar novamente run, SHA no histórico de Pages e conteúdo
+   público identificador restaurado. Se não for possível identificar/reexecutar com segurança os
+   dois SHAs, interromper: o workflow atual não fornece um parâmetro de commit para dispatch.
+
+**Limite operacional (`V`):** a documentação do GitHub permite reexecutar workflows até 30 dias após
+a execução original. Há registro de execução `docs` bem-sucedida para o commit base
+`2378b62b658303e6378c15be0a8ff38d248b019c` (`#44492052127`, 2026-11-19), anterior ao deploy do
+PR #44 (`0d76585821583d5ef60e790fa44fb65572576d4b`, `#44498880453`, 2026-11-19). A data está dentro
+do limite de 30 dias medido em 2026-11-19; antes do teste, confirme no GitHub que a execução original
+continua acessível e oferece **Re-run all jobs**. Se não estiver elegível, não há no workflow atual
+um caminho seguro para selecionar SHA arbitrário: `workflow_dispatch` escolhe branch/tag e usa seu
+tip. Nesse caso, interromper e obter aprovação para um mecanismo separado, revisado e não usado sem
+autorização. O teste real e a restauração continuam pendentes.
+
+**Verificação somente leitura (`V`, 2026-11-19; não é teste real):** a execução `docs` **#2**
+(ID `44492052127`) corresponde ao SHA `2378b62b658303e6378c15be0a8ff38d248b019c`, foi concluída
+com sucesso em `develop` (`push`; criada em `2026-11-19T08:57:34Z`) e, na data da consulta,
+permanece dentro da janela de reexecução de 30 dias. Evidência: [run #2](https://github.com/lucascantarelli/wyd/actions/runs/44492052127)
+(e [endpoint da execução](https://api.github.com/repos/lucascantarelli/wyd/actions/runs/44492052127)).
+A leitura da configuração do ambiente `github-pages` retornou a política de branch `develop`, sem
+revisores obrigatórios nem temporizador de espera listados; não há proteções customizadas listadas
+(`total_count: 0`) e `can_admins_bypass` é `true`. Evidências: [ambiente](https://api.github.com/repos/lucascantarelli/wyd/environments/github-pages),
+[políticas de branch](https://api.github.com/repos/lucascantarelli/wyd/environments/github-pages/deployment-branch-policies)
+e [proteções customizadas](https://api.github.com/repos/lucascantarelli/wyd/environments/github-pages/deployment-protection-rules).
+A consulta foi somente leitura: não acionou `Re-run all jobs`, não publicou e não verificou um
+rollback/restauração real nem as permissões de escrita do ator. Estes dados são pré-checagem, não
+evidência para fechar `LPDOC-01`; antes do teste, reconfirmar a disponibilidade da reexecução e as
+proteções vigentes. A lacuna permanece aberta.
+
+**Evidência para fechar `LPDOC-01`:** registrar data, aprovação para o teste e para restauração, SHA
+antes/alvo/restaurado, links das execuções e dos deploys Pages, resultado do gate de cada execução e
+prova pública do conteúdo correspondente a cada SHA. Fechar somente depois de rollback e restauração
+validados; falha ou ausência de evidência mantém a lacuna aberta.
 
 **Estado observado (`V`, 2026-11-19):** o PR #44 foi mesclado e o workflow `docs` executou com
 sucesso o gate e a publicação em GitHub Pages; a URL pública foi recarregada, o bundle do
 Highlight.js 11.12.0 respondeu HTTP 200 e o console não exibiu os dois erros descritos acima.
 
 **Decisão registrada (`V`, 2026-11-19):** o dono aprovou GitHub Pages como hospedagem canônica,
-com publicação contínua nele. A escolha está decidida; `LPDOC-01` permanece **aberta** até que o
-rollback seja executado e validado. Não alterar a hospedagem nem fechar a lacuna antes dessa prova.
+com publicação contínua nele. `LPDOC-01` permanece **aberta** até que o runbook seja executado e a
+evidência acima seja registrada. Não alterar a hospedagem nem fechar a lacuna antes dessa prova.
 
 ---
 
