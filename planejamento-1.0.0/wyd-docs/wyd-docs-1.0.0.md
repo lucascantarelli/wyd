@@ -300,7 +300,7 @@ rollback seja executado e validado. Não alterar a hospedagem nem fechar a lacun
 | `WYDDOC-nnn` | issue do roadmap | `roadmap/` |
 | `ADR-DOC-nnnn` | decisão estrutural do site | `docs/arquitetura/adr/` (vazio) |
 
-Não há ADR nesta entrega: tema, montagem e publicação são **proposta** e estão sujeitos a decisão.
+Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica e a decisão está registrada neste plano; tema, montagem e as demais decisões continuam regidos pelas lacunas correspondentes.
 
 ---
 
@@ -348,7 +348,7 @@ somente para acompanhar a validação do rollback.
 ## 11. O que este documento não decide
 
 - Não decide conteúdo de sistema: publica o que o dono escreveu.
-- A hospedagem canônica está aprovada como GitHub Pages; não considera a decisão concluída operacionalmente até validar o rollback (`LPDOC-01`).
+- A aprovação de GitHub Pages como hospedagem canônica não substitui a validação operacional do rollback; `LPDOC-01` permanece aberta até essa prova.
 - Não cria ADR.
 - Não decide o padrão editorial de cada sistema: cada um tem o seu; o mínimo comum é
   `wyd-docs/docs/contribuir/`.

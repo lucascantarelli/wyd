@@ -4,9 +4,9 @@
 > tem dono, impacto, marco e estado.
 >
 > **O que este arquivo cobre:** as **14 lacunas** `LPDOC-01`–`LPDOC-14`. Nenhuma foi fechada.
-> O site foi montado em MkDocs 2.0 pré-release; GitHub Pages foi publicado e validado em
-> 2026-11-19 (`wyd-docs-1.0.0.md` §7.3), mas a escolha formal de hospedagem continua dependendo
-> da decisão do dono em `LPDOC-01`.
+> O site foi montado em MkDocs 2.0 pré-release e publicado/validado em GitHub Pages em 2026-11-19
+> (`wyd-docs-1.0.0.md` §7.3). O dono aprovou GitHub Pages como hospedagem canônica com publicação
+> contínua; `LPDOC-01` permanece aberta até a validação do rollback.
 >
 > **O que este arquivo não é:** não decide. Cada linha diz **quem** decide e **o que** precisa ser
 > decidido; a decisão entra no documento dono (ou em `ADR-DOC-nnnn`) e volta aqui como linha
@@ -65,7 +65,7 @@
 
 | ID | Pergunta | Por que importa | Dono | Marco | Estado | Evidência |
 |---|---|---|---|---|---|---|
-| `LPDOC-01` | GitHub Pages ou Cloudflare Pages? | muda workflow, permissão, cache e rollback; manter as duas duplica automação | operação | `P1` | aberta | `V` (2026-11-19): PR #44 mesclado; workflow `docs` publicou com sucesso em GitHub Pages e `https://lucascantarelli.github.io/wyd/` foi verificado publicamente. Uso observado não equivale à escolha aprovada; decisão do dono e prova de rollback continuam pendentes (`wyd-docs-1.0.0.md` §7.3). |
+| `LPDOC-01` | Validar rollback da hospedagem canônica aprovada (GitHub Pages)? | confirmar que a publicação contínua pode ser revertida com segurança; hospedar em duas plataformas duplicaria automação | operação | `P1` | aberta | `V` (2026-11-19): dono aprovou GitHub Pages como hospedagem canônica com publicação contínua; PR #44 foi mesclado, workflow `docs` publicou com sucesso e `https://lucascantarelli.github.io/wyd/` foi validado publicamente. Falta executar e verificar rollback (`wyd-docs-1.0.0.md` §7.3). |
 | `LPDOC-04` | O site terá domínio próprio? | URL publicada é contrato; trocar depois exige redirect permanente | operação + produto | `P1` | aberta | nenhuma URL canônica definida; sem `site_url` no MkDocs 2.0 |
 | `LPDOC-08` | Quem aprova a publicação de um sistema novo? | sem dono, qualquer pasta vira página pública; com dono único, um sistema pode ficar meses fora do ar | documentação + arquitetura | `P2` | proposta | `preparar.py` publica toda pasta `docs/` que existir, sem aprovação por sistema |
 
