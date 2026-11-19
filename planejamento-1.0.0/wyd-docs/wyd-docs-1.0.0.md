@@ -324,7 +324,11 @@ e pode publicar o tip da ref escolhida. Referências: [eventos e workflow_dispat
 
 1. Na página Deployments / ambiente `github-pages`, identifique o SHA atualmente publicado. Escolha
    o SHA anterior que deve ser restaurado e uma página ou trecho cujo conteúdo diferencie as duas
-   versões; registre os SHAs e a URL antes do teste.
+   versões; registre os SHAs e a URL antes do teste. Não procure de novo: o **Baseline do conteúdo
+   público**, acima, fixa a URL (`https://lucascantarelli.github.io/wyd/assets/site.js`), o marcador
+   `cdn-release@11.12.0` e a medição HTTP completa; o bloco **Teste real executado**, ao final da
+   seção, registra o SHA restaurado (`0d765858…`, deployment `7911904845`). O baseline foi medido com
+   `aedd1f73…` no ar, antes do teste — use-o para a URL e o marcador, não como SHA a restaurar.
 2. Na aba Actions, localize uma execução bem-sucedida do workflow `docs` para o SHA-alvo exato.
    Confirme `head_sha`, branch/ref, evento, conclusão do job `build e verificação` e do job
    `publicar no GitHub Pages`. Para usar **Re-run all jobs**, a execução deve estar dentro da janela
