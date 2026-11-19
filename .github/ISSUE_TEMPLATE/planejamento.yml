@@ -1,0 +1,84 @@
+name: Planejamento
+description: Página ou documento novo em um sistema — com público, pergunta e fonte.
+title: "[planejamento] "
+labels: []
+body:
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      description: Onde a página vai morar. O sistema dono escreve; o site apenas publica.
+      options:
+        - wyd-protocol
+        - wyd-net
+        - wyd-core
+        - wyd-server
+        - wyd-sim
+        - wyd-db
+        - wyd-admin
+        - wyd-portal
+        - wyd-launcher
+        - wyd-client
+        - wyd-bots
+        - wyd-docs
+        - wyd-ops
+    validations:
+      required: true
+
+  - type: input
+    id: arquivo
+    attributes:
+      label: Arquivo previsto
+      description: Caminho relativo em `planejamento-1.0.0/<sistema>/docs/`.
+      placeholder: docs/arquitetura/visao-geral.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: pergunta
+    attributes:
+      label: Que pergunta a página responde
+      description: Uma pergunta, a mesma do cabeçalho `> Pergunta:`.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: publico
+    attributes:
+      label: Público
+      options:
+        - Desenvolvedor novo
+        - Desenvolvedor de outro sistema
+        - Arquiteto
+        - Operação
+        - QA
+        - Produto / gestão
+        - Agente de IA
+    validations:
+      required: true
+
+  - type: textarea
+    id: fonte
+    attributes:
+      label: Fonte da afirmação
+      description: De onde vem cada fato — comando, arquivo, golden, captura ou `H` com o ID da lacuna.
+    validations:
+      required: true
+
+  - type: textarea
+    id: gate
+    attributes:
+      label: Como a página fecha
+      description: Checklist de aceite — cabeçalho, evidência, dono, revisão de quem não escreveu e build do site.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: A página está prevista na árvore do plano diretor do sistema.
+          required: true
+        - label: O conteúdo não é cópia de `deprecated/`.
+          required: true

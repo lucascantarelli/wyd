@@ -1,0 +1,92 @@
+name: Decisão
+description: Fechar uma lacuna registrada — com dono, opções, impacto e marco.
+title: "[decisão] "
+labels: []
+body:
+  - type: input
+    id: lacuna
+    attributes:
+      label: ID da lacuna
+      description: O ID já registrado no `lacunas.md` do sistema. Lacuna não registrada se abre antes no arquivo.
+      placeholder: LPRT-04
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      description: Dono do registro de lacunas.
+      options:
+        - wyd-protocol
+        - wyd-net
+        - wyd-core
+        - wyd-server
+        - wyd-sim
+        - wyd-db
+        - wyd-admin
+        - wyd-portal
+        - wyd-launcher
+        - wyd-client
+        - wyd-bots
+        - wyd-docs
+        - wyd-ops
+    validations:
+      required: true
+
+  - type: input
+    id: dono
+    attributes:
+      label: Quem decide
+      description: Papel, não nome de pessoa. "Arquitetura" hoje significa proposta técnica + aprovação do time.
+      placeholder: arquitetura + frente wyd-net
+    validations:
+      required: true
+
+  - type: textarea
+    id: opcoes
+    attributes:
+      label: Opções consideradas
+      description: Uma por linha, com o custo de cada uma. Decisão sem alternativa não é decisão.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto
+      description: O que muda em schema, fronteira, contrato ou operação — e o que fica bloqueado até decidir.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verificacao
+    attributes:
+      label: Como verificar depois
+      description: Comando, arquivo ou teste que prova que a decisão está aplicada. Sem isso vira ADR sem prova.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: marco
+    attributes:
+      label: Marco
+      options:
+        - M0 — Fundação
+        - M1 — Planejamento
+        - M2 — wyd-db
+        - M3 — Sistemas
+        - M4 — 1.0.0
+        - M5 — Operação
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: A decisão muda schema, fronteira ou operação? Se sim, o resultado vira ADR com "como verificar".
+          required: false
+        - label: Não estou fechando a lacuna sem o "sim" do dono nomeado.
+          required: true

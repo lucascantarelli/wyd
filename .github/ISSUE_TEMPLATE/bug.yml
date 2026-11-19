@@ -1,0 +1,87 @@
+name: Defeito
+description: Algo no repositório está errado — documento, site, script de build ou (no futuro) código.
+title: "[defeito] "
+labels: []
+body:
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      description: Qual pasta de `planejamento-1.0.0/` ou projeto é dono do defeito?
+      options:
+        - wyd-protocol
+        - wyd-net
+        - wyd-core
+        - wyd-server
+        - wyd-sim
+        - wyd-db
+        - wyd-admin
+        - wyd-portal
+        - wyd-launcher
+        - wyd-client
+        - wyd-bots
+        - wyd-docs
+        - wyd-ops
+        - repositório (AGENTS.md, README, GitHub)
+    validations:
+      required: true
+
+  - type: textarea
+    id: aconteceu
+    attributes:
+      label: O que aconteceu
+      description: Descreva o comportamento observado, com o caminho do arquivo ou a URL.
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que era esperado
+      description: Aponte o documento dono ou a regra que o comportamento viola.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Comando exato, passos ou link. Sem passo não é defeito reproduzível.
+      placeholder: |
+        1. cd wyd-docs
+        2. python preparar.py
+        3. mkdocs build --dir .build/docs --output site
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidência
+      description: Saída do comando, trecho de arquivo com linha ou captura. Nada de segredo ou dado de jogador.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: marco
+    attributes:
+      label: Marco
+      options:
+        - M0 — Fundação
+        - M1 — Planejamento
+        - M2 — wyd-db
+        - M3 — Sistemas
+        - M4 — 1.0.0
+        - M5 — Operação
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Antes de abrir
+      options:
+        - label: Li o `AGENTS.md` e o sistema dono.
+          required: true
+        - label: Não incluí segredo, DSN, token ou dado de jogador.
+          required: true

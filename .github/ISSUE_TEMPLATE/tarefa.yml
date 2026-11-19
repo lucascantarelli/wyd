@@ -1,0 +1,93 @@
+name: Tarefa
+description: Implementação ou trabalho com entregável e DoD verificável.
+title: "[tarefa] "
+labels: []
+body:
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      options:
+        - wyd-protocol
+        - wyd-net
+        - wyd-core
+        - wyd-server
+        - wyd-sim
+        - wyd-db
+        - wyd-admin
+        - wyd-portal
+        - wyd-launcher
+        - wyd-client
+        - wyd-bots
+        - wyd-docs
+        - wyd-ops
+        - repositório (AGENTS.md, README, GitHub)
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Duas a quatro linhas. Aponte a página que descreve a tarefa.
+    validations:
+      required: true
+
+  - type: textarea
+    id: entregavel
+    attributes:
+      label: Entregável
+      description: O que existe ao final, em arquivo, comando ou artefato.
+    validations:
+      required: true
+
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      description: Verificável, com comando ou arquivo. "Funciona" não é DoD.
+      placeholder: |
+        - [ ] `python verificar.py site` sem problema
+        - [ ] página publicada em /sistemas/wyd-db/
+    validations:
+      required: true
+
+  - type: textarea
+    id: fora
+    attributes:
+      label: Fora de escopo
+      description: O que não entra neste PR, para não crescer no meio.
+    validations:
+      required: false
+
+  - type: textarea
+    id: depende
+    attributes:
+      label: Depende de
+      description: Issues, lacunas ou decisões. Escreva "nada" quando não houver.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: marco
+    attributes:
+      label: Marco
+      options:
+        - M0 — Fundação
+        - M1 — Planejamento
+        - M2 — wyd-db
+        - M3 — Sistemas
+        - M4 — 1.0.0
+        - M5 — Operação
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: A página que descreve a tarefa está escrita e revisada.
+          required: true
+        - label: É uma issue por PR, sem refatoração fora do escopo.
+          required: true
