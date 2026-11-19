@@ -1,0 +1,1 @@
+# AGENTS.md — Dolorestec WYD (Rust)
