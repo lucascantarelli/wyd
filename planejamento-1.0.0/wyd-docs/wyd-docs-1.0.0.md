@@ -20,8 +20,8 @@
 > <https://lucascantarelli.github.io/wyd/>, o bundle browser do Highlight.js 11.12.0 respondeu HTTP
 > 200 e o console ficou sem `require is not defined` e sem o erro em `highlightElement`.
 > Decisão do dono (`V`, 2026-11-19): GitHub Pages é a hospedagem canônica, com publicação
-> contínua nele. A validação do rollback ainda está pendente em `LPDOC-01`; esta evidência não fecha
-> essa lacuna.
+> contínua nele. Aquela evidência, por si só, não fechava `LPDOC-01`; o teste real de rollback em
+> 2026-11-19 (§7.3) é a prova que a fechou.
 
 ---
 
@@ -280,9 +280,37 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Permissões: `contents: read`, `pages: write`, `id-token: write`; `concurrency` de um deploy. Ação de
 terceiro fixada por commit SHA. Rollback proposto: reconstruir e republicar o conteúdo de um commit
-anterior conhecido; não há dado migrado. A execução ainda não foi verificada.
+anterior conhecido; não há dado migrado. A execução já foi verificada (`V`, 2026-11-19): o workflow
+`docs` tem 8 execuções concluídas e o Pages serve o `success` mais recente (`7911904845`,
+`0d765858`).
 
-**Runbook de rollback (`P`; não executado nesta atualização; depende de execução-alvo elegível dentro da janela de 30 dias):**
+**Baseline do conteúdo público (`V`, 2026-11-19):** leitura HTTP somente `GET` de
+<https://lucascantarelli.github.io/wyd/assets/site.js> devolveu `200 OK`,
+`Content-Type: application/javascript; charset=utf-8`, `Content-Length: 4219`,
+`Last-Modified: Thu, 19 Nov 2026 10:25:10 GMT` e `Date: Thu, 19 Nov 2026 11:27:30 GMT`, com
+`x-proxy-cache: MISS` e `Cache-Control: max-age=600`. O corpo servido referencia o bundle browser
+do Highlight.js por URL literal:
+`https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js`. O
+`Last-Modified` cai entre o `created_at` (10:25:00Z) e o `success` (10:25:17Z) do deployment
+`7910399204`, SHA `aedd1f73` — à época, o único `success` do ambiente.
+
+Durações do workflow `docs`, medidas do `created_at` da execução até a conclusão — não apenas o
+tempo do job:
+
+| Execução | SHA | `created_at` UTC | conclusão UTC | duração | Deployment | estado atual |
+|---|---|---:|---:|---:|---|---|
+| [#4](https://github.com/lucascantarelli/wyd/actions/runs/44498880453) | `0d765858` | 09:42:27 | 09:43:16 | 49 s | `7909492410` | `inactive` desde 10:18:34 |
+| [#6](https://github.com/lucascantarelli/wyd/actions/runs/44504331348) | `f65a45bb` | 10:17:50 | 10:18:33 | 43 s | `7910251866` | `inactive` desde 10:25:19 |
+| [#8](https://github.com/lucascantarelli/wyd/actions/runs/44505419875) | `aedd1f73` | 10:24:48 | 10:25:17 | 29 s | `7910399204` | `inactive` desde 11:33:10 |
+
+Os três estão `inactive` desde 10:18:34, 10:25:19 e 11:33:10; em cada caso há um deployment `success`
+posterior (#6, #8 e a restauração). A duração acima é o tempo até a publicação daquela execução,
+não o estado atual daquela versão. A baseline dimensiona a janela de congelamento; não promete
+duração para uma janela futura. A coleta foi só leitura — nenhum workflow, deployment ou arquivo do site foi
+acionado por ela.
+
+**Runbook de rollback (`V`, 2026-11-19: executado até o fim; resultado no bloco "Teste real
+executado", ao final desta seção):**
 
 **Base verificada (`V`, 2026-11-19):** `.github/workflows/docs.yml` faz checkout sem `ref` explícito,
 `workflow_dispatch` não declara inputs, o job `publicar` roda para qualquer evento que não seja PR e
@@ -296,7 +324,11 @@ e pode publicar o tip da ref escolhida. Referências: [eventos e workflow_dispat
 
 1. Na página Deployments / ambiente `github-pages`, identifique o SHA atualmente publicado. Escolha
    o SHA anterior que deve ser restaurado e uma página ou trecho cujo conteúdo diferencie as duas
-   versões; registre os SHAs e a URL antes do teste.
+   versões; registre os SHAs e a URL antes do teste. Não procure de novo: o **Baseline do conteúdo
+   público**, acima, fixa a URL (`https://lucascantarelli.github.io/wyd/assets/site.js`), o marcador
+   `cdn-release@11.12.0` e a medição HTTP completa; o bloco **Teste real executado**, ao final da
+   seção, registra o SHA restaurado (`0d765858…`, deployment `7911904845`). O baseline foi medido com
+   `aedd1f73…` no ar, antes do teste — use-o para a URL e o marcador, não como SHA a restaurar.
 2. Na aba Actions, localize uma execução bem-sucedida do workflow `docs` para o SHA-alvo exato.
    Confirme `head_sha`, branch/ref, evento, conclusão do job `build e verificação` e do job
    `publicar no GitHub Pages`. Para usar **Re-run all jobs**, a execução deve estar dentro da janela
@@ -339,7 +371,7 @@ do limite de 30 dias medido em 2026-11-19; antes do teste, confirme no GitHub qu
 continua acessível e oferece **Re-run all jobs**. Se não estiver elegível, não há no workflow atual
 um caminho seguro para selecionar SHA arbitrário: `workflow_dispatch` escolhe branch/tag e usa seu
 tip. Nesse caso, interromper e obter aprovação para um mecanismo separado, revisado e não usado sem
-autorização. O teste real e a restauração continuam pendentes.
+autorização. O teste real e a restauração foram executados em 2026-11-19 (bloco ao final da seção).
 
 **Verificação somente leitura (`V`, 2026-11-19; não é teste real):** a execução `docs` **#2**
 (ID `44492052127`) corresponde ao SHA `2378b62b658303e6378c15be0a8ff38d248b019c`, foi concluída
@@ -363,20 +395,171 @@ recente de `github-pages` consultado é o ID `7909492410`, para o SHA
 execuções do workflow `docs` em `develop`, não havia runs em `in_progress`, `queued` ou `waiting`
 ([workflow](https://github.com/lucascantarelli/wyd/actions/workflows/docs.yml?query=branch%3Adevelop)).
 A verificação foi somente leitura; registra o SHA publicado e a ausência observada de concorrência,
-não executa nem comprova rollback/restauração. `LPDOC-01` permanece aberta.
+não executa nem comprova rollback/restauração.
 
-**Evidência para fechar `LPDOC-01`:** registrar data, aprovação para o teste e para restauração, SHA
-antes/alvo/restaurado, links das execuções e dos deploys Pages, resultado do gate de cada execução e
-prova pública do conteúdo correspondente a cada SHA. Fechar somente depois de rollback e restauração
-validados; falha ou ausência de evidência mantém a lacuna aberta.
+**Interrupção antes do teste (`V`, 2026-11-19; não é evidência de rollback):** antes de qualquer
+reexecução, os runs `docs` #2 e #4 foram reconfirmados como concluídos com sucesso e com os SHAs
+alvo `2378b62b658303e6378c15be0a8ff38d248b019c` e `0d76585821583d5ef60e790fa44fb65572576d4b`,
+respectivamente ([#2](https://github.com/lucascantarelli/wyd/actions/runs/44492052127),
+[#4](https://github.com/lucascantarelli/wyd/actions/runs/44498880453)). Porém, o histórico apresentou
+um deployment posterior de `github-pages`, ID `7910251866`, com SHA
+`f65a45bbfde806ec5bbf6122293a81b73b02b2d3`, status final `success` ([deployment](https://github.com/lucascantarelli/wyd/deployments/7910251866),
+[execução `docs` #6](https://github.com/lucascantarelli/wyd/actions/runs/44504331348)). Esse SHA diverge
+do estado que havia sido reconfirmado antes como atual (`0d76585821583d5ef60e790fa44fb65572576d4b`).
+Conforme a condição de parada, nenhuma reexecução foi iniciada. Não houve validação do conteúdo
+público das duas versões do teste, nem rollback ou restauração real.
 
-**Estado observado (`V`, 2026-11-19):** o PR #44 foi mesclado e o workflow `docs` executou com
-sucesso o gate e a publicação em GitHub Pages; a URL pública foi recarregada, o bundle do
-Highlight.js 11.12.0 respondeu HTTP 200 e o console não exibiu os dois erros descritos acima.
+**Segunda interrupção (`V`, 2026-11-19):** após o dono confirmar que o SHA final deveria ser o do run
+#4, uma nova reconfirmação encontrou outro deployment posterior: ID `7910399204`, SHA
+`aedd1f7338fdfd7125c0c25f4c47255ca88d8672`, status final `success`, gerado pela execução
+`docs` #8 ([deployment](https://github.com/lucascantarelli/wyd/deployments/7910399204),
+[run #8](https://github.com/lucascantarelli/wyd/actions/runs/44505419875)); os runs #2 e #4 seguiam
+válidos, com os SHAs originais e conclusão `success`. Nenhuma reexecução foi acionada nesta nova
+rodada.
+
+**Causa do bloqueio (`V`):** o workflow publica em todo evento que não seja PR. Enquanto `develop`
+recebe merges — três deploys em 43 minutos nesta data (#4 às 09:42:27, #8 às 10:25:17) — o Pages
+avança para o tip da branch e qualquer versão restaurada por reexecução é sobrescrita pelo push
+seguinte. O ensaio não era executável com a branch ativa; a pré-condição que faltava não era técnica
+do workflow, era a janela sem publicação.
+
+**Pré-condição que faltava (`V`):** declarar um congelamento explícito de `develop` (sem merge nem push)
+durante todo o teste, do rollback até a restauração e a validação pública; registrar os SHAs
+verificados imediatamente antes de cada reexecução. Sem essa janela, o teste mede apenas a última
+publicação automática, não o rollback. A aprovação do dono para o teste foi consumida em 2026-11-19,
+na janela declarada, com o resultado registrado ao final desta seção.
+
+**Próximos passos para desbloquear o teste (`P`; ordem por ganho ÷ esforço, não por completude)**
+
+| # | Passo | Desbloqueia concretamente | Exige do usuário | Custo / risco |
+|---:|---|---|---|---|
+| 1 | Abrir a janela de congelamento de `develop` e executar o checklist abaixo — **feito** em 2026-11-19 | o teste real inteiro, que fechou `LPDOC-01` | declarar a janela e não mergear durante ela (~20 min) | baixo: coordenação apenas; nenhuma alteração de código, workflow ou configuração |
+| 2 | Validar os dois SHAs localmente antes da janela (checkout destacado + `preparar.py`, `mkdocs build`, `verificar.py site`) | tira falha de build do meio da janela, onde cada minuto conta | nenhuma autorização nova: não publica | baixo: minutos de container Linux; **feito** em 2026-11-19, ver bloco de validação local abaixo |
+| 3 | Decidir o estado do site depois da restauração — **decidido** em 2026-11-19: fica `0d765858…` até o merge do PR, que publica o tip `aedd1f73…` de conteúdo idêntico | fecha sem execução extra: o merge do PR já dispara `docs` | — | nenhum: sem republicação manual |
+| 4 | Se a janela falhar de novo, mudar o mecanismo (alternativa D) — **não aplicável**: a janela funcionou em 2026-11-19 | reduz a dependência de disciplina de merge | autorização + admin do repositório | médio-alto e permanente; ler a tabela de alternativas |
+
+**Alternativas ao congelamento (`V` = documentação ou configuração lida; `P` = avaliação)**
+
+| Alternativa | Como funcionaria | Evidência | Custo / risco | Autorização |
+|---|---|---|---|---|
+| **A. Congelar `develop` na janela** | nenhum merge ou push durante rollback, restauração e validação | o workflow publica em todo evento que não seja PR; três deploys saíram em 43 min nesta data (#4 a #8) | baixo: coordenação; a janela precisa ser curta porque merges são frequentes | **gate do usuário**: declarar a janela |
+| B. Desabilitar o workflow `docs` | `gh workflow disable` impede novos disparos | `V`: [não é possível reexecutar](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs) run ou job com o workflow desabilitado; é preciso reabilitar antes, e reabilitado o próximo push volta a publicar | não cria janela protegida: reabilitar para reexecutar devolve o risco; acrescenta o risco de esquecer reabilitar | autorização + escrita no repositório |
+| C. Publicar só sob `workflow_dispatch` | editar o gatilho para o `push` não publicar | `V`: a reexecução usa `GITHUB_SHA`/`GITHUB_REF` do evento e o workflow do commit original, então os runs #2/#4 seguiriam publicando como hoje | alto: PR + merge para ligar (o merge já roda `docs`), outro PR para reverter; o teste deixa de medir o fluxo de produção | **autorização explícita antes de tocar em workflow** |
+| D. `github-pages` com revisor obrigatório | deploy fica pendente até aprovação manual | `V` (2026-11-19): o ambiente tem só a política de branch `develop`, sem revisores, sem proteções customizadas e com `can_admins_bypass: true` | médio-alto e permanente: todo deploy passa a exigir aprovação manual; não impede a criação do deploy, apenas o segura | autorização + admin; muda a operação, então não cabe em página |
+
+**Recomendação (`P`): alternativa A, congelar `develop` na janela.** É a única que não altera o objeto
+medido: o teste precisa exercitar o fluxo de produção como ele é, e A mantém workflow, ambiente e
+gatilhos idênticos. O sintoma observado — reimplementação do tip em 43 minutos — é concorrência de
+`push`, não defeito de publicação; o remédio é não publicar durante a janela, não reescrever a
+automação. B e C custam mais e mexem no fluxo sob teste; C ainda exige reverter depois e, pela regra de
+reexecução, não mudaria o comportamento dos runs #2/#4. D só se justifica se a janela de congelamento
+falhar de forma repetida, porque introduz aprovação manual permanente em toda publicação.
+
+**Checklist da janela de congelamento (`P`; gate do usuário — só abrir com a janela declarada)**
+
+Sequencial sempre: os runs #2 e #4 compartilham o grupo `docs-${{ github.ref }}` com
+`cancel-in-progress: true`, então nunca rodar os dois ao mesmo tempo.
+
+| Passo | Ação | Critério de sucesso | Falha |
+|---:|---|---|---|
+| 0 | Declarar o congelamento de `develop` (sem merge, sem push) e registrar hora de início | nenhuma publicação durante os passos 1–8 | houve push → parar e reabrir o gate |
+| 1 | Ler o deployment mais recente de `github-pages` e o run `docs` mais recente | registrar `D0` (ID + SHA) e dizer qual SHA está publicado; em 2026-11-19 o último observado era `7910399204` / `aedd1f7338fdfd7125c0c25f4c47255ca88d8672` | deploy `in_progress`/`queued` → esperar terminar e reler |
+| 2 | Reconfirmar run #2 (`44492052127`): `head_sha`, branch, conclusão | `2378b62b658303e6378c15be0a8ff38d248b019c`, `develop`, `success` | divergiu → parar |
+| 3 | Reconfirmar run #4 (`44498880453`): `head_sha`, branch, conclusão | `0d76585821583d5ef60e790fa44fb65572576d4b`, `develop`, `success` | divergiu → parar |
+| 4 | Confirmar ausência de execução `docs` concorrente em `develop` | nenhuma em `in_progress`, `queued` ou `waiting` | existe → parar |
+| 5 | **Rollback:** Re-run all jobs no run #2 | novo deployment `D1` com SHA `2378b62b…` e status `success` | falhou ou SHA diferente → parar |
+| 6 | Validar o conteúdo público de `D1` | `assets/site.js` servido contém `cdn.jsdelivr.net/npm/highlight.js@11.12.0/lib/common.min.js` e a página com bloco de código acusa `require is not defined` no console (`V`: URL presente na árvore do commit) | conteúdo igual ao de `0d765858…` → parar |
+| 7 | **Restauração**, só se 5 e 6 passaram: Re-run all jobs no run #4 | novo deployment `D2` com SHA `0d765858…` e status `success` | falhou ou SHA diferente → parar e reabrir |
+| 8 | Validar o conteúdo público de `D2` | igual à referência do deployment `7909492410`: `assets/site.js` contém `cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js`, o recurso responde 200 e `hljs` existe, sem `require is not defined` | divergiu → parar e reabrir |
+| 9 | Registrar em §7.3 e em `LPDOC-01` | data, janela, `D0`/`D1`/`D2`, links dos runs e dos deploys, prova pública de cada versão | falta de prova → lacuna aberta |
+
+**Critério de parada (`P`):** qualquer divergência de SHA, de branch, de conclusão ou de conteúdo, ou
+qualquer novo deployment não explicado pelo passo em curso, encerra a janela no ato. Não se repete o
+passo dentro da mesma janela: reabre-se o gate com o estado novo e decide-se entre nova janela ou
+alternativa D. Restaurar para `0d765858…` deixa o site atrás do tip de `develop` até o próximo push;
+espa é a decisão do passo 3.
+
+**Limites já medidos (`V`):** reexecução vale até 30 dias e no máximo 50 vezes por run, e usa as
+permissões do ator original. Os deploys de referência conhecidos são `7908551978` (`2378b62b…`),
+`7909492410` (`0d765858…`), `7910251866` (`f65a45bb…`) e `7910399204` (`aedd1f73…`).
+
+**Validação local dos dois commits (`V`, 2026-11-19; passo 2 da lista; não é rollback e não publica)**
+
+Método: cada commit foi extraído com `git archive <sha> | tar -x` para
+`wyd-docs/.build/validacao/<short>` (diretório ignorado pelo git), com `git rev-parse <sha>^{tree}`
+registrado como vínculo árvore↔SHA, e o gate rodou no mesmo container Linux do build:
+
+```bash
+docker run --rm -v "D:/dolorestec/wyd2:/work" -w <árvore>/wyd-docs python:3.15-slim sh -c \
+  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site"
+```
+
+| Commit | Tree | `preparar.py` | `mkdocs build` | `verificar.py site` | Exit |
+|---|---|---|---|---|---|
+| `2378b62b658303e6378c15be0a8ff38d248b019c` | `747989dd0d8a9e6f83feecc5926f50852dd6237b` | 30 páginas de 3 sistemas | ok | 30 páginas, links, âncoras e navegação ok | 0 |
+| `0d76585821583d5ef60e790fa44fb65572576d4b` | `f817fa94e80a75763cd18aebc3db14f9395136e3` | 30 páginas de 3 sistemas | ok | 30 páginas, links, âncoras e navegação ok | 0 |
+
+As duas árvores diferem em um único arquivo publicado: `wyd-docs/tema/site.js`, na URL do
+Highlight.js — `cdn.jsdelivr.net/npm/highlight.js@11.12.0/lib/common.min.js` em `2378b62b…` e
+`cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js` em `0d765858…`. É esse o
+marcador usado nos passos 6 e 8 do checklist: dá para conferir por HTTP em `assets/site.js`, sem
+depender do console.
+
+**Teste real executado (`V`, 2026-11-19; prova de `LPDOC-01`)**
+
+Janela declarada pelo dono antes do primeiro comando: nenhum merge, push ou outra publicação em
+`develop` durante o teste. O checklist foi seguido de 0 a 9, com os dois runs em sequência.
+
+| Passo | Resultado medido |
+|---:|---|
+| 1 | `D0` = deployment `7910399204`, SHA `aedd1f73` — último `success` antes do teste |
+| 2 | run #2 `44492052127`: `2378b62b`, `develop`, `success` |
+| 3 | run #4 `44498880453`: `0d765858`, `develop`, `success` |
+| 4 | nenhuma execução `docs` em `in_progress`, `queued` ou `waiting` antes de começar |
+| 5 | rollback: [deployment `7911886524`](https://github.com/lucascantarelli/wyd/deployments/7911886524), SHA `2378b62b`, `success` às `11:33:08Z` |
+| 6 | `assets/site.js` público passou ao marcador `npm/highlight.js@11.12.0` |
+| 7 | restauração: [deployment `7911904845`](https://github.com/lucascantarelli/wyd/deployments/7911904845), SHA `0d765858`, `success` às `11:34:01Z` |
+| 8 | `assets/site.js` voltou ao marcador `cdn-release@11.12.0`; `200` na raiz e em `/sistemas/wyd-db/`, `/sistemas/wyd-docs/` e `/contribuir/` |
+| 9 | este registro e `LPDOC-01` fechada em `lacunas.md` |
+
+Reexecuções por **Re-run all jobs**, com o mesmo `head_sha` e a mesma ref das execuções originais:
+[#2 attempt 2](https://github.com/lucascantarelli/wyd/actions/runs/44492052127) concluído em
+`11:33:08Z` (deployment `created_at` `11:32:52Z`, 16 s até `success`) e
+[#4 attempt 2](https://github.com/lucascantarelli/wyd/actions/runs/44498880453) em `11:34:01Z`
+(`created_at` `11:33:44Z`, 17 s). O job `build e verificação` (que chama o `docs-check`) e o
+`publicar no GitHub Pages` concluíram `success` nas duas reexecuções. Após `D2`, o `7911886524` ficou
+`inactive` (`11:34:02Z`) e o `7910399204` ficou `inactive` (`11:33:10Z`): resta um deployment
+`success`, o `7911904845`.
+
+**O que não foi medido:** o erro de console (`require is not defined`) do passo 6 e a presença de
+`hljs` no navegador no passo 8 — a validação pública usou o marcador HTTP em `assets/site.js`, como
+o próprio checklist prevê; nenhum navegador foi automatizado.
+
+**Efeito de estado (`V`, 2026-11-19):** o site está em `0d765858…` (`D2`) e `develop` está em
+`aedd1f73…`. As duas versões publicam conteúdo idêntico — `git diff --name-only 0d765858 aedd1f73 --
+'planejamento-1.0.0/*/docs/**' 'wyd-docs/**'` volta vazio —, então a diferença é de registro de
+deployment, não de conteúdo. `P`: o próximo push em `develop` publica o tip outra vez.
+
+Conclusão: os dois commits constroem e verificam em Linux, então falha de build deixa de ser causa
+provável de parada dentro da janela. Isso, sozinho, não validava rollback nem fechava `LPDOC-01`; o
+teste real registrado ao final da seção fez as duas coisas.
+
+**Próximos passos do projeto:** a ordem priorizada por ganho ÷ esforço — incluindo o que a automação
+executa sem decisão do dono e o que só o dono decide — mora em `planejamento-1.0.0/wyd-1.0.0.md` §6;
+esta seção guarda o detalhe operacional do teste.
+
+**Critério de evidência aplicado no fechamento:** data e janela, SHA antes/alvo/restaurado, links das
+execuções e dos deploys Pages, resultado dos jobs de cada reexecução e prova pública do conteúdo de
+cada SHA — tudo no bloco acima. Sem rollback e restauração validados, a lacuna ficaria aberta.
+
+**Estado observado (`V`, 2026-11-19; validação do PR #44, não do teste de rollback):** o PR #44 foi
+mesclado e o workflow `docs` executou com sucesso o gate e a publicação em GitHub Pages; a URL
+pública foi recarregada, o bundle do Highlight.js 11.12.0 respondeu HTTP 200 e o console não exibiu
+os dois erros descritos acima.
 
 **Decisão registrada (`V`, 2026-11-19):** o dono aprovou GitHub Pages como hospedagem canônica,
-com publicação contínua nele. `LPDOC-01` permanece **aberta** até que o runbook seja executado e a
-evidência acima seja registrada. Não alterar a hospedagem nem fechar a lacuna antes dessa prova.
+com publicação contínua nele. O runbook foi executado em 2026-11-19 e a evidência está em §7.3, o que
+fechou `LPDOC-01`. Não alterar a hospedagem sem nova decisão.
 
 ---
 
@@ -397,26 +580,31 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 | Fase | Escopo | Estado |
 |---|---|---|
 | 1 | site funcionando: montagem, tema, gate local | **feito** (2026-11-19) |
-| 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback pendente (`LPDOC-01` aberta) |
+| 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
 | 3 | padrão editorial: convenções, guia do autor, revisão | pendente |
 | 4 | robustez: redirect, busca, métrica | pendente |
 
 **Gate da `1.0.0` do site:** build e verificação verdes no CI, publicação automática em `develop`,
 URL estável para toda página publicada e nenhum conteúdo interno no artefato. O deploy público e a
-validação descritos em §7.3, junto da aprovação de GitHub Pages, não comprovam rollback; `LPDOC-01`
-segue aberta até essa validação.
+validação descritos em §7.3, junto da aprovação de GitHub Pages, não comprovavam rollback por si sós;
+o teste real de 2026-11-19 é a prova registrada que fechou `LPDOC-01`.
+
+**Conteúdo no ar após a restauração (decisão do dono, 2026-11-19):** o site fica em `0d765858…` até
+o merge do PR, que publica o tip `aedd1f73…` de conteúdo idêntico. Conferência:
+`git diff --name-only 0d765858 aedd1f73 -- 'planejamento-1.0.0/*/docs/**' 'wyd-docs/**'` volta
+vazio. Sem republicação manual.
 
 ---
 
 ## 10. Decisões que dependem do time
 
 As decisões ainda pendentes apontam a lacuna que as fecha. A hospedagem canônica já foi aprovada
-pelo dono: GitHub Pages com publicação contínua (`V`, 2026-11-19). `LPDOC-01` permanece aberta
-somente para acompanhar a validação do rollback.
+pelo dono: GitHub Pages com publicação contínua (`V`, 2026-11-19). `LPDOC-01` foi fechada em
+2026-11-19 com o rollback validado (§7.3).
 
 | # | Decisão | Lacuna |
 |---|---|---|
-| 1 | Publicação contínua no GitHub Pages como hospedagem canônica (aprovado pelo dono em 2026-11-19); validar rollback | `LPDOC-01` |
+| 1 | Publicação contínua no GitHub Pages como hospedagem canônica (aprovado pelo dono em 2026-11-19); rollback validado em 2026-11-19 | `LPDOC-01` |
 | 2 | Publicar `AGENTS.md` e o panorama no site | `LPDOC-02` |
 | 3 | Publicar página com estado `proposto` | `LPDOC-03` |
 | 4 | Domínio próprio | `LPDOC-04` |
@@ -436,7 +624,8 @@ somente para acompanhar a validação do rollback.
 ## 11. O que este documento não decide
 
 - Não decide conteúdo de sistema: publica o que o dono escreveu.
-- A aprovação de GitHub Pages como hospedagem canônica não substitui a validação operacional do rollback; `LPDOC-01` permanece aberta até essa prova.
+- A validação operacional do rollback (`V`, 2026-11-19) é a prova que fechou `LPDOC-01`; aprovar a
+  hospedagem e provar o rollback continuam coisas distintas.
 - Não cria ADR.
 - Não decide o padrão editorial de cada sistema: cada um tem o seu; o mínimo comum é
   `wyd-docs/docs/contribuir/`.
