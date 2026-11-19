@@ -1,0 +1,723 @@
+/* Tema do site de documentação do WYD 1.0.0 — escrito para o MkDocs 2.0. */
+
+:root {
+  --largura-barra: 17rem;
+  --largura-sumario: 14rem;
+  --largura-texto: 54rem;
+  --raio: 8px;
+  --fonte: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Cascadia Code", "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+html[data-tema="claro"] {
+  --fundo: #fbfaf8;
+  --fundo-alt: #f2efe9;
+  --fundo-codigo: #f4f1eb;
+  --texto: #221f1b;
+  --texto-fraco: #5f5a52;
+  --borda: #ddd7cc;
+  --borda-forte: #c4bcae;
+  --acento: #a8431b;
+  --acento-fraco: #f6e5da;
+  --link: #8a3a13;
+  --sombra: 0 1px 2px rgb(34 31 27 / 8%), 0 8px 24px rgb(34 31 27 / 6%);
+  --nota: #1f6feb;
+  --dica: #1a7f37;
+  --atencao: #9a6700;
+  --perigo: #c2412d;
+  --resumo: #6a4fb3;
+  --sintaxe-chave: #a626a4;
+  --sintaxe-texto: #50a14f;
+  --sintaxe-numero: #986801;
+  --sintaxe-titulo: #4078f2;
+  --sintaxe-atributo: #c18401;
+}
+
+html[data-tema="escuro"] {
+  --fundo: #16181d;
+  --fundo-alt: #1d2027;
+  --fundo-codigo: #101216;
+  --texto: #e8e4dc;
+  --texto-fraco: #a4a096;
+  --borda: #2c3038;
+  --borda-forte: #3d434d;
+  --acento: #e2764a;
+  --acento-fraco: #2a1e17;
+  --link: #f0a077;
+  --sombra: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px rgb(0 0 0 / 30%);
+  --nota: #6ea8ff;
+  --dica: #62c98a;
+  --atencao: #e0b04a;
+  --perigo: #f08a74;
+  --resumo: #b39bf0;
+  --sintaxe-chave: #c678dd;
+  --sintaxe-texto: #98c379;
+  --sintaxe-numero: #d19a66;
+  --sintaxe-titulo: #61afef;
+  --sintaxe-atributo: #e5c07b;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--link);
+  text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.pular {
+  position: absolute;
+  left: -100vw;
+  top: 0;
+  z-index: 20;
+  padding: 0.6rem 1rem;
+  background: var(--acento);
+  color: #fff;
+}
+
+.pular:focus {
+  left: 0;
+}
+
+/* Topo */
+
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.25rem;
+  background: color-mix(in srgb, var(--fundo) 88%, transparent);
+  border-bottom: 1px solid var(--borda);
+  backdrop-filter: blur(8px);
+}
+
+.marca {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--texto);
+  text-decoration: none;
+}
+
+.marca span {
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.selo {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--borda-forte);
+  border-radius: 999px;
+  color: var(--texto-fraco);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.topo-espaco {
+  flex: 1;
+}
+
+.topo-link {
+  color: var(--texto-fraco);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.topo-link:hover {
+  color: var(--texto);
+}
+
+.icone-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid transparent;
+  border-radius: var(--raio);
+  background: transparent;
+  color: var(--texto-fraco);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.icone-botao:hover {
+  border-color: var(--borda);
+  color: var(--texto);
+}
+
+[data-menu] {
+  display: none;
+}
+
+/* Layout */
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--largura-barra) minmax(0, 1fr) var(--largura-sumario);
+  gap: 2rem;
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.barra,
+.sumario {
+  position: sticky;
+  top: 4rem;
+  align-self: start;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  padding: 1.5rem 0;
+  font-size: 0.88rem;
+}
+
+.sumario {
+  border-left: 1px solid var(--borda);
+  padding-left: 1rem;
+}
+
+.filtro input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--fundo-alt);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.filtro input:focus {
+  outline: 2px solid var(--acento);
+  outline-offset: 1px;
+}
+
+.navegacao {
+  margin-top: 1rem;
+}
+
+.navegacao ul {
+  margin: 0;
+  padding-left: 0.85rem;
+  list-style: none;
+}
+
+.navegacao > ul {
+  padding-left: 0;
+}
+
+.navegacao li {
+  margin: 0.1rem 0;
+}
+
+.navegacao a {
+  display: block;
+  padding: 0.16rem 0.4rem;
+  border-radius: 6px;
+  color: var(--texto-fraco);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.navegacao a:hover {
+  background: var(--fundo-alt);
+  color: var(--texto);
+}
+
+.navegacao a.ativo {
+  background: var(--acento-fraco);
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.navegacao .grupo > span {
+  display: block;
+  margin: 0.85rem 0 0.25rem;
+  color: var(--texto);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.barra-nota {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--borda);
+  color: var(--texto-fraco);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Conteúdo */
+
+.conteudo {
+  min-width: 0;
+  padding: 2rem 0 3rem;
+}
+
+.pagina {
+  max-width: var(--largura-texto);
+}
+
+.pagina > h1:first-child {
+  margin-top: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.pagina h1,
+.pagina h2,
+.pagina h3,
+.pagina h4 {
+  margin: 2.2rem 0 0.8rem;
+  font-weight: 650;
+  line-height: 1.3;
+  scroll-margin-top: 5rem;
+}
+
+.pagina h2 {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--borda);
+  font-size: 1.4rem;
+}
+
+.pagina h3 {
+  font-size: 1.15rem;
+}
+
+.pagina h4 {
+  color: var(--texto-fraco);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pagina p {
+  margin: 0.9rem 0;
+}
+
+.pagina ul,
+.pagina ol {
+  padding-left: 1.4rem;
+}
+
+.pagina li {
+  margin: 0.3rem 0;
+}
+
+.pagina hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--borda);
+}
+
+.pagina img {
+  max-width: 100%;
+  border-radius: var(--raio);
+}
+
+.pagina strong {
+  font-weight: 650;
+}
+
+/* Cabeçalho da página (bloco de citação inicial) */
+
+.pagina > blockquote:first-of-type {
+  margin: 1.2rem 0 1.8rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--acento);
+  border-radius: var(--raio);
+  background: var(--fundo-alt);
+  color: var(--texto-fraco);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.pagina > blockquote:first-of-type p {
+  margin: 0.15rem 0;
+}
+
+.pagina blockquote:not(:first-of-type) {
+  margin: 1.2rem 0;
+  padding: 0.2rem 1rem;
+  border-left: 3px solid var(--borda-forte);
+  color: var(--texto-fraco);
+}
+
+/* Avisos (convertidos de admonition e de [!TIPO]) */
+
+.aviso {
+  margin: 1.4rem 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--borda);
+  border-left: 4px solid var(--borda-forte);
+  border-radius: var(--raio);
+  background: var(--fundo-alt);
+}
+
+.aviso-titulo {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.aviso-corpo > :first-child {
+  margin-top: 0;
+}
+
+.aviso-corpo > :last-child {
+  margin-bottom: 0;
+}
+
+.aviso-note,
+.aviso-info {
+  border-left-color: var(--nota);
+}
+
+.aviso-tip,
+.aviso-success {
+  border-left-color: var(--dica);
+}
+
+.aviso-warning,
+.aviso-caution {
+  border-left-color: var(--atencao);
+}
+
+.aviso-danger,
+.aviso-failure,
+.aviso-bug {
+  border-left-color: var(--perigo);
+}
+
+.aviso-abstract,
+.aviso-question,
+.aviso-example,
+.aviso-quote {
+  border-left-color: var(--resumo);
+}
+
+.aviso-note .aviso-titulo,
+.aviso-info .aviso-titulo {
+  color: var(--nota);
+}
+
+.aviso-tip .aviso-titulo,
+.aviso-success .aviso-titulo {
+  color: var(--dica);
+}
+
+.aviso-warning .aviso-titulo,
+.aviso-caution .aviso-titulo {
+  color: var(--atencao);
+}
+
+.aviso-danger .aviso-titulo,
+.aviso-failure .aviso-titulo,
+.aviso-bug .aviso-titulo {
+  color: var(--perigo);
+}
+
+.aviso-abstract .aviso-titulo,
+.aviso-question .aviso-titulo,
+.aviso-example .aviso-titulo,
+.aviso-quote .aviso-titulo {
+  color: var(--resumo);
+}
+
+/* Cartões (grid cards) */
+
+.cartoes + ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.9rem;
+  margin: 1.2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cartoes + ul > li {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--fundo-alt);
+}
+
+.cartoes + ul > li > hr {
+  margin: 0.5rem 0;
+  border-top: 1px solid var(--borda);
+}
+
+.cartoes + ul > li p {
+  margin: 0.35rem 0;
+  color: var(--texto-fraco);
+  font-size: 0.88rem;
+}
+
+/* Tabelas */
+
+.pagina table {
+  display: block;
+  width: 100%;
+  margin: 1.2rem 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.pagina th,
+.pagina td {
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--borda);
+  text-align: left;
+  vertical-align: top;
+}
+
+.pagina th {
+  background: var(--fundo-alt);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.pagina tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--fundo-alt) 55%, transparent);
+}
+
+/* Código */
+
+.pagina code {
+  padding: 0.1rem 0.32rem;
+  border: 1px solid var(--borda);
+  border-radius: 5px;
+  background: var(--fundo-codigo);
+  font-family: var(--mono);
+  font-size: 0.86em;
+}
+
+.pagina pre {
+  position: relative;
+  margin: 1.2rem 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--fundo-codigo);
+  line-height: 1.5;
+}
+
+.pagina pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.85rem;
+}
+
+/* Destaque de sintaxe (highlight.js, tokens comuns) */
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--texto-fraco);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: var(--sintaxe-chave);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: var(--sintaxe-texto);
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-meta {
+  color: var(--sintaxe-numero);
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name {
+  color: var(--sintaxe-titulo);
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable {
+  color: var(--sintaxe-atributo);
+}
+
+.hljs-deletion {
+  color: var(--perigo);
+}
+
+.botao-copiar {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--borda-forte);
+  border-radius: 5px;
+  background: var(--fundo-alt);
+  color: var(--texto-fraco);
+  font: inherit;
+  font-size: 0.7rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.pagina pre:hover .botao-copiar,
+.botao-copiar:focus {
+  opacity: 1;
+}
+
+.pagina pre.mermaid {
+  border: 0;
+  background: none;
+  text-align: center;
+}
+
+/* Sumário da página */
+
+.sumario-titulo {
+  margin: 0 0 0.6rem;
+  color: var(--texto);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sumario ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sumario ul ul {
+  padding-left: 0.8rem;
+}
+
+.sumario li {
+  margin: 0.3rem 0;
+}
+
+.sumario a {
+  color: var(--texto-fraco);
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.sumario a:hover,
+.sumario a.ativo {
+  color: var(--acento);
+}
+
+/* Rodapé */
+
+.rodape {
+  max-width: var(--largura-texto);
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--borda);
+  color: var(--texto-fraco);
+  font-size: 0.8rem;
+}
+
+/* Responsivo */
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: var(--largura-barra) minmax(0, 1fr);
+  }
+
+  .sumario {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    display: block;
+    padding: 0 1rem;
+  }
+
+  [data-menu] {
+    display: inline-flex;
+  }
+
+  .topo-link {
+    display: none;
+  }
+
+  .barra {
+    position: fixed;
+    inset: 3.4rem 0 0 0;
+    z-index: 9;
+    display: none;
+    max-height: none;
+    padding: 1rem 1.25rem 3rem;
+    background: var(--fundo);
+    border-right: 1px solid var(--borda);
+    overflow-y: auto;
+  }
+
+  .barra.aberta {
+    display: block;
+  }
+
+  .conteudo {
+    padding-top: 1.5rem;
+  }
+
+  .pagina > h1:first-child {
+    font-size: 1.6rem;
+  }
+}

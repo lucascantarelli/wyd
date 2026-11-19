@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title or "WYD 1.0.0" }} · WYD 1.0.0</title>
+  <meta name="description" content="Documentação oficial da reimplementação do WYD2 em Rust, PostgreSQL e Next.js.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>⚔️</text></svg>">
+  <link rel="stylesheet" href="{{ '/assets/estilo.css' | url }}">
+  <script>
+    (function () {
+      var salvo = localStorage.getItem("wyd-tema");
+      var prefereClaro = window.matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.tema = salvo || (prefereClaro ? "claro" : "escuro");
+    })();
+  </script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <button class="icone-botao" type="button" data-menu aria-label="Abrir navegação" aria-expanded="false">☰</button>
+    <a class="marca" href="{{ '/' | url }}">WYD <span>1.0.0</span></a>
+    <span class="selo">planejamento</span>
+    <span class="topo-espaco"></span>
+    <a class="topo-link" href="https://github.com/lucascantarelli/wyd">Repositório</a>
+    <button class="icone-botao" type="button" data-tema-botao aria-label="Alternar tema claro e escuro">◐</button>
+  </header>
+
+  <div class="layout">
+    <aside class="barra" data-barra>
+      <label class="filtro">
+        <span class="oculto">Filtrar páginas</span>
+        <input type="search" placeholder="Filtrar páginas" data-filtro autocomplete="off">
+      </label>
+      <nav class="navegacao" aria-label="Navegação do site">
+        {% include "navegacao.html" %}
+      </nav>
+      <p class="barra-nota">Documentação publicada do planejamento da <strong>1.0.0</strong>. Página escrita no sistema dono; o site não edita conteúdo.</p>
+    </aside>
+
+    <main id="conteudo" class="conteudo">
+      <article class="pagina">
+        {{ page.html }}
+      </article>
+      <footer class="rodape">
+        <p><strong>WYD 1.0.0</strong> — documentação oficial em planejamento. Conteúdo sob GPL-2.0; cliente e assets do jogo pertencem aos seus donos.</p>
+      </footer>
+    </main>
+
+    {% if page.toc %}
+    <aside class="sumario" aria-label="Nesta página">
+      <p class="sumario-titulo">Nesta página</p>
+      {{ page.toc.html }}
+    </aside>
+    {% endif %}
+  </div>
+
+  <script src="{{ '/assets/site.js' | url }}" defer></script>
+  <script type="module" src="{{ '/assets/mermaid.js' | url }}"></script>
+</body>
+</html>
