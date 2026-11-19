@@ -122,7 +122,7 @@
   var blocos = Array.prototype.slice.call(document.querySelectorAll(".pagina pre code:not(.language-mermaid)"));
   if (blocos.length) {
     var script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/highlight.js@11.12.0/lib/common.min.js";
+    script.src = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js";
     script.onload = function () {
       blocos.forEach(function (bloco) {
         window.hljs.highlightElement(bloco);
