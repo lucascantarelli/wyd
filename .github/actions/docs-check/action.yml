@@ -1,0 +1,31 @@
+name: docs-check
+description: Monta, constrói e verifica o site MkDocs 2.0 do repositório.
+
+inputs:
+  python:
+    description: Executável do Python com as dependências instaladas.
+    required: false
+    default: python
+
+runs:
+  using: composite
+  steps:
+    - name: Instalar dependências do site
+      shell: bash
+      run: |
+        "${{ inputs.python }}" -m pip install --disable-pip-version-check -r wyd-docs/requirements.txt
+
+    - name: Montar fontes
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} preparar.py"
+
+    - name: Construir site
+      shell: bash
+      working-directory: wyd-docs
+      run: mkdocs build --dir .build/docs --output site
+
+    - name: Verificar link, âncora, navegação e título
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} verificar.py site"

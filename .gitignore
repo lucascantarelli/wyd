@@ -33,3 +33,7 @@ wyd-client/files/*
 
 # Memória do agente
 .agents/memory/
+# Site de documentação: ambiente local e fonte montada (artefato em site/)
+/wyd-docs/.venv/
+/wyd-docs/.build/
+__pycache__/
