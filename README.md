@@ -28,10 +28,10 @@ antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 
 | Existe | Não existe ainda |
 |---|---|
-| `planejamento-1.0.0/` com o panorama e 3 sistemas abertos | `Cargo.toml`, `rust-toolchain.toml`, `Makefile` |
+| `planejamento-1.0.0/` com o panorama e os sistemas já abertos | `Cargo.toml`, `rust-toolchain.toml`, `Makefile` |
 | site MkDocs 2.0 montado em `wyd-docs/` | código de produção em `crates/` (só `.gitkeep`) |
-| plano do `wyd-db` com 15 páginas, 2 ADRs e 29 lacunas | migrations da `1.0.0` (a série é planejada, não escrita) |
-| plano do `wyd-protocol` com 20 lacunas e teto de 131 páginas | goldens de fio e payloads implementados |
+| plano do `wyd-db` (piloto) com páginas, ADRs e lacunas registrados | migrations da `1.0.0` (a série é planejada, não escrita) |
+| plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | workflow principal `.github/workflows/full-workflow.yml` limitado ao `Get Info`; o workflow `docs.yml` faz build/verificação e publica Pages | CI de código com build, teste e cobertura |
 
 Números medidos em **2026-11-19** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
@@ -58,11 +58,11 @@ planejamento-1.0.0/      # fonte de verdade nível 1: um sistema por pasta
 ├── wyd-db/              # piloto: PostgreSQL, migrations, portas, filas
 ├── wyd-protocol/        # segundo piloto: CPSock, opcodes, payloads, goldens
 ├── wyd-docs/            # site: montagem, tema, gate e publicação
-└── <10 outros sistemas> # só .gitkeep: não planejado, não "livre para inventar"
+└── <demais sistemas>    # só .gitkeep: não planejado, não "livre para inventar"
 wyd-docs/                # projeto do site MkDocs 2.0 (tema, montagem, verificação)
 wyd-portal/              # portal Next.js (ainda sem código)
 wyd-client/              # patches e config do cliente (files/ ignorado)
-crates/                  # 9 pastas reservadas, só .gitkeep
+crates/                  # pastas reservadas, só .gitkeep
 deprecated/              # referência legada, ignorada pelo git: nunca é fonte
 ```
 
@@ -91,7 +91,7 @@ py -3.15 -m venv .venv                       # Linux/macOS: python3 -m venv .ven
 3. **Validar** pelo gate do sistema: cabeçalho, link que resolve, sem placeholder, sem segredo,
    revisão de quem não escreveu.
 4. **Implementar** só depois do gate de planejamento: uma issue por PR, teste antes, cobertura mínima
-   de 85%, documentação atualizada na mesma entrega.
+   definida em [`AGENTS.md`](AGENTS.md) §8, documentação atualizada na mesma entrega.
 
 Mudança de arquitetura, escopo ou nomenclatura é **proposta**, não commit: o time aprova, a decisão
 vira ADR com "como verificar" e a lacuna fecha com data.
@@ -107,7 +107,8 @@ Ordem de planejamento e gates conforme [`planejamento-1.0.0/wyd-1.0.0.md` §4](p
 
 **Ação operacional independente do Highlight.js:** revisar a configuração CodeQL Default setup e retirar Rust da análise enquanto não houver fonte Rust versionada para analisar. Isso elimina o job `Analyze (rust)` sem alterar o PR #44 nem desativar a análise das linguagens com código no repositório; reavaliar quando Rust entrar no Git.
 
-`deprecated/` guarda a implementação anterior (375 arquivos Rust) e **não é versionado**. Ele serve
+`deprecated/` guarda a implementação anterior e **não é versionado**; a contagem está em
+[`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1.4. Ele serve
 para entender comportamento e defeito; nada dele entra por cópia — se o dado não foi reverificado no
 planejamento novo, é hipótese.
 

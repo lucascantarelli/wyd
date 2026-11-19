@@ -10,7 +10,7 @@
 > **Stack decidida pelo time:** **MkDocs 2.0** com **Python 3.15**. Medido em **2026-11-19**:
 > `mkdocs 2.0.dev6` é a única versão 2.0 publicada (pré-release de 2026-09-15), roda em Python 3.15
 > e **não tem** `mkdocs.yml`, plugin, tema embutido, configuração de Markdown, modo estrito nem
-> suporte a Windows (§2). O site desta entrega é a primeira montagem real: **30 páginas**, build e
+> suporte a Windows (§2). O site daquela entrega foi a primeira montagem real: **30 páginas** (histórico; o número atual está em §7.2), build e
 > verificação executados (§7.1).
 >
 > **Evidência de publicação (`V`, 2026-11-19):** o PR [#44](https://github.com/lucascantarelli/wyd/pull/44)
@@ -70,8 +70,8 @@
 | Sistema | Fornece ao site | Exige do site |
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
-| `wyd-db` | 15 páginas escritas + 91 geradas (planejadas) | seção própria e ordem de leitura preservada |
-| `wyd-protocol` | 2 páginas escritas + teto de 131 | seção própria |
+| `wyd-db` | 15 páginas escritas + 91 geradas (planejadas em `planejamento-1.0.0/wyd-db/proposta-paginas.md`) | seção própria e ordem de leitura preservada |
+| `wyd-protocol` | 2 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
 ---
@@ -105,7 +105,7 @@ Fonte: inspeção de `mkdocs 2.0.dev6` instalado em 2026-11-19
 | sem navegação agrupada | `preparar.py` gera `templates/navegacao.html` com a árvore real |
 | sem tema | `tema/base.html`, `estilo.css` e `site.js` são o tema |
 | sem admonition/abas | `compat.py` traduz o material antigo; página nova usa GFM (§6) |
-| sem validação | `verificar.py` é o gate (§7.2) |
+| sem validação | `verificar.py` é o gate (§7.1) |
 | sem Windows | build roda em Linux: container `python:3.15-slim` no local e runner Ubuntu no CI |
 
 ### 2.3 Consequência declarada
@@ -185,7 +185,7 @@ planejamento-1.0.0/wyd-docs/
 ├── lacunas.md                        ● registro de lacuna e dono
 ├── docs/
 │   ├── index.md                      ● porta de entrada do sistema
-│   ├── convencoes.md                 ▲ padrão editorial do site
+│   ├── convencoes.md                 ● padrão editorial do site
 │   ├── arquitetura/
 │   │   ├── index.md                  ▲
 │   │   ├── montagem-do-site.md       ▲ preparar, compat, build, verificar
@@ -200,13 +200,14 @@ planejamento-1.0.0/wyd-docs/
 │   │   ├── index.md                  ▲
 │   │   ├── fases.md                  ▲
 │   │   └── WYDDOC-001..WYDDOC-012.md ▲
-│   ├── guia-autor/                   ▲
+│   ├── guia-autor/                   ●
 │   ├── guia-operador/                ▲
-│   └── guia-desenvolvedor/           ▲
+│   ├── guia-desenvolvedor/           ▲
+│   └── revisao.md                    ● critério de revisão
 └── prompts/  skills/                 ▲ (4 + 4)
 ```
 
-**Medido:** 2 páginas em `docs/` do sistema, 6 arquivos implementados no projeto do site.
+**Medido em 2026-11-19 (`find planejamento-1.0.0/wyd-docs/docs -name '*.md'` e `git ls-files wyd-docs`, sem `.gitkeep`):** 5 páginas em `docs/` do sistema e 8 arquivos implementados no projeto do site, fora de `docs/`.
 
 ---
 
@@ -268,7 +269,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | título | página sem título no `<title>` |
 | contagem | `preparar.py` monta menos páginas que as existentes nos sistemas |
 
-**Medido em 2026-11-19:** 30 páginas montadas de 3 sistemas; `verificar.py` sem problema.
+**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 33 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 5 `aceito` = 33**. Este é o único dono do total e do censo; `convencoes.md`, `AGENTS.md` e `proximos-passos.md` citam esta seção em vez de repetir os números.
 
 ### 7.3 Publicação
 
@@ -281,7 +282,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 Permissões: `contents: read`, `pages: write`, `id-token: write`; `concurrency` de um deploy. Ação de
 terceiro fixada por commit SHA. Rollback proposto: reconstruir e republicar o conteúdo de um commit
 anterior conhecido; não há dado migrado. A execução já foi verificada (`V`, 2026-11-19): o workflow
-`docs` tem 8 execuções concluídas e o Pages serve o `success` mais recente (`7911904845`,
+`docs` tem 13 execuções (`/actions/workflows/docs.yml/runs`, `total_count` consultado na API em 2026-11-19) e o Pages serve o `success` mais recente (`7911904845`,
 `0d765858`).
 
 **Baseline do conteúdo público (`V`, 2026-11-19):** leitura HTTP somente `GET` de
@@ -581,11 +582,15 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 |---|---|---|
 | 1 | site funcionando: montagem, tema, gate local | **feito** (2026-11-19) |
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
-| 3 | padrão editorial: convenções, guia do autor, revisão | pendente |
+| 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
 | 4 | robustez: redirect, busca, métrica | pendente |
 
+A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
+
 **Gate da `1.0.0` do site:** build e verificação verdes no CI, publicação automática em `develop`,
-URL estável para toda página publicada e nenhum conteúdo interno no artefato. O deploy público e a
+URL estável para toda página publicada e nenhum conteúdo interno no artefato. A URL estável está
+declarada desde 2026-11-19: `https://lucascantarelli.github.io/wyd/`, sem domínio próprio na `1.0.0`
+(`V`, `LPDOC-04`). O deploy público e a
 validação descritos em §7.3, junto da aprovação de GitHub Pages, não comprovavam rollback por si sós;
 o teste real de 2026-11-19 é a prova registrada que fechou `LPDOC-01`.
 
@@ -600,19 +605,20 @@ vazio. Sem republicação manual.
 
 As decisões ainda pendentes apontam a lacuna que as fecha. A hospedagem canônica já foi aprovada
 pelo dono: GitHub Pages com publicação contínua (`V`, 2026-11-19). `LPDOC-01` foi fechada em
-2026-11-19 com o rollback validado (§7.3).
+2026-11-19 com o rollback validado (§7.3), e `LPDOC-04` foi fechada em 2026-11-19: sem domínio
+próprio na `1.0.0`, o site publica em `lucascantarelli.github.io/wyd`.
 
 | # | Decisão | Lacuna |
 |---|---|---|
 | 1 | Publicação contínua no GitHub Pages como hospedagem canônica (aprovado pelo dono em 2026-11-19); rollback validado em 2026-11-19 | `LPDOC-01` |
 | 2 | Publicar `AGENTS.md` e o panorama no site | `LPDOC-02` |
 | 3 | Publicar página com estado `proposto` | `LPDOC-03` |
-| 4 | Domínio próprio | `LPDOC-04` |
+| 4 | Sem domínio próprio na `1.0.0`: publica em `lucascantarelli.github.io/wyd` (decidido em 2026-11-19) | `LPDOC-04` |
 | 5 | Versionar o site por release | `LPDOC-05` |
 | 6 | Redirect ao renomear página | `LPDOC-06` |
 | 7 | Idioma único ou i18n | `LPDOC-07` |
 | 8 | Quem aprova publicação de sistema novo | `LPDOC-08` |
-| 9 | Incluir as 91 páginas geradas do `wyd-db` | `LPDOC-09` |
+| 9 | Incluir as 91 páginas geradas do `wyd-db` (plano em `planejamento-1.0.0/wyd-db/proposta-paginas.md`) | `LPDOC-09` |
 | 10 | Publicar catálogo de opcodes gerado | `LPDOC-10` |
 | 11 | Quando atualizar o `2.0.dev6` | `LPDOC-11` |
 | 12 | Build no Windows ou só em Linux/CI | `LPDOC-12` |

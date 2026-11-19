@@ -51,16 +51,16 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Fato | Medição |
 |---|---|
 | Fase | planejamento; **nada em produção** e nenhum serviço no ar |
-| Sistemas | 13 pastas em `planejamento-1.0.0/`; `wyd-db` (piloto), `wyd-protocol` (2º piloto) e `wyd-docs` têm documentação; `wyd-portal`, um prompt |
-| `wyd-db` | 76 arquivos; 15 páginas com cabeçalho; 2 de 29 migrations documentadas; 2 ADRs aceitos |
-| `wyd-protocol` | plano diretor com teto de 131 páginas, 2 escritas; 20 lacunas abertas; nenhum ADR |
-| `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: 30 páginas montadas, build e verificação verdes; 14 lacunas |
-| Lacunas do `wyd-db` | 29 registradas: 14 abertas, 3 externas, 12 fechadas |
-| Código Rust | apenas em `deprecated/crates/` (375 arquivos), **ignorado pelo git**; `crates/*` só tem `.gitkeep` |
+| Sistemas | os sistemas, um por pasta de `planejamento-1.0.0/`, e o estado de planejamento de cada um estão em §6; as contagens por sistema, em `planejamento-1.0.0/wyd-1.0.0.md` §1 |
+| `wyd-db` | piloto parcial; arquivos, páginas com cabeçalho e migrations documentadas em `planejamento-1.0.0/wyd-1.0.0.md` §1; 2 ADRs aceitos (§5.3) |
+| `wyd-protocol` | 2º piloto aberto; teto de páginas em `planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4, escritas e lacunas em `planejamento-1.0.0/wyd-1.0.0.md` §1 e `planejamento-1.0.0/wyd-protocol/lacunas.md` §1; nenhum ADR |
+| `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: páginas montadas e censo por estado em `wyd-docs-1.0.0.md` §7.2 (2026-11-19), build e verificação verdes; lacunas com estado e dono em `planejamento-1.0.0/wyd-docs/lacunas.md` §1 |
+| Lacunas do `wyd-db` | registradas por estado em `planejamento-1.0.0/wyd-db/lacunas.md` §1 |
+| Código Rust | apenas em `deprecated/crates/`, **ignorado pelo git**; `crates/*` só tem `.gitkeep` (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml` ou `Makefile` |
-| GitHub | público, `develop` padrão, 0 issues abertas, **6 milestones** (`M0`–`M5`) e Projects habilitado, project `WYD 1.0.0` nº 10 (API do GitHub, 2026-11-19; detalhe em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
-| CI | `.github/workflows/full-workflow.yml` tem 1 job (`Get Info`) que conclui `success` e entrega `version`/`commit` vazios; não há build, teste, cobertura nem gate (run #14 `44505419869`; detalhe em `planejamento-1.0.0/wyd-ops/` §2.1) |
-| Cliente | `wyd-client/files/` com 7.147 arquivos, ignorado pelo git |
+| GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4, estrutura criada conforme `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10 |
+| CI | `.github/workflows/full-workflow.yml` é um stub de metadados: o job `Get Info` conclui `success` e entrega `version`/`commit` vazios, e não há build, teste, cobertura nem gate (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
+| Cliente | `wyd-client/files/`, ignorado pelo git (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 
 Números vivem em `planejamento-1.0.0/wyd-1.0.0.md` §1, com comando e data. Não replique contagem em
 outro documento: cite a seção.

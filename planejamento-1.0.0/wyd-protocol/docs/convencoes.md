@@ -10,10 +10,9 @@ Esta página é o contrato de **leitura** da documentação do `wyd-protocol`. A
 do projeto (`V`, `H`, `P`) valem aqui como valem no `wyd-db`; o que esta página acrescenta são as
 regras que só existem quando a afirmação é sobre **byte**.
 
-!!! tip "A regra que resolve quase tudo"
-    Se a frase afirma offset, tipo, tamanho ou valor e não aponta um golden, uma captura datada ou
-    uma leitura do cliente, ela é hipótese. O verbo correto é \"pretende\", não \"é\".
-
+> [!TIP] A regra que resolve quase tudo
+> Se a frase afirma offset, tipo, tamanho ou valor e não aponta um golden, uma captura datada ou
+> uma leitura do cliente, ela é hipótese. O verbo correto é "pretende", não "é".
 ## Marcações de evidência
 
 | Marca | Significa | O que você pode concluir |
@@ -35,7 +34,7 @@ H — LPRT-04 (sem captura de string acentuada)
 ```
 
 Três origens são aceitas: **golden**, **captura** e **leitura do cliente**. As três exigem data.
-\"O legado faz assim\" não é origem: `deprecated/crates/wyd-protocol/` é nível 4 de `AGENTS.md` §3,
+"O legado faz assim" não é origem: `deprecated/crates/wyd-protocol/` é nível 4 de `AGENTS.md` §3,
 inspira a pergunta e não responde por ela.
 
 ## Direção é parte da afirmação

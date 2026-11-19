@@ -10,11 +10,10 @@ O `wyd-protocol` é o crate que transforma bytes do CPSock em tipos e tipos em b
 12 bytes, enquadramento por `Size`, ofuscação por `pKeyWord`, checksum e catálogo de `Type`. Ele não
 abre socket, não guarda sessão e não decide regra de jogo.
 
-!!! abstract "Regra que vale para toda esta documentação"
-    O layout do fio é imposto pelo cliente 7662, que é binário externo e proprietário. Byte sem
-    prova (golden, captura ou leitura do cliente) é hipótese marcada `H` com o ID da lacuna que a
-    fecha — nunca afirmação.
-
+> [!ABSTRACT] Regra que vale para toda esta documentação
+> O layout do fio é imposto pelo cliente 7662, que é binário externo e proprietário. Byte sem
+> prova (golden, captura ou leitura do cliente) é hipótese marcada `H` com o ID da lacuna que a
+> fecha — nunca afirmação.
 ## O que existe aqui
 
 Esta árvore está em **planejamento**: duas páginas escritas, o restante é teto declarado no

@@ -171,7 +171,7 @@ item real — nenhuma issue foi criada.
 
 Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ordem nova.
 
-- [ ] Fechar as 14 lacunas abertas com o dono nomeado em `lacunas.md` (bloqueantes primeiro).
+- [ ] Fechar as lacunas pendentes com o dono nomeado em `lacunas.md` (bloqueantes primeiro).
 - [ ] Escrever as 27 páginas de migration restantes sobre DDL fechado, sem inventar coluna.
 - [ ] Fechar o DDL das 77 tabelas restantes em `ddl-confirmado.md` antes da página.
 - [ ] Escrever `specs/` (requisitos, regras, NFR, casos de uso, fluxos, estados, rastreabilidade).
