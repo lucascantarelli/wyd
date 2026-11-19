@@ -26,7 +26,7 @@ Duas regras valem para as três colunas:
 
 1. **Dado do legado não é fonte de decisão.** Contagem, volume e comportamento da série herdada não
    entram como afirmação; o número permitido é o **planejado** (`plano-migrations.md` §3: 29 arquivos,
-   91 tabelas, `SCHEMA_VERSION = 29` na troca) ou o **medido depois** da série (`M20`). Página que só
+   92 tabelas, `SCHEMA_VERSION = 29` na troca) ou o **medido depois** da série (`M20`). Página que só
    existiria para descrever o legado não entra — é o caso de `guia-teste/dados-de-teste.md`.
 2. **Nada de valor redigitado.** A página cita a seção dona. `padrao-banco.md` §1 enuncia a decisão de
    forma; a página de arquitetura cita "P-03" e não recopia o DDL.
@@ -99,7 +99,7 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 
 | Seção | Aterrissa em | Nota |
 |---|---|---|
-| §1 critério e "14 de 91" | `migrations/index.md` (o que tem DDL fechado) | — |
+| §1 critério e "15 de 92" | `migrations/index.md` (o que tem DDL fechado) | — |
 | §2 veredito por arquivo | `migrations/index.md` (coluna de estado; valor derivado de `migrations-checklist.md` §1.2) | — |
 | §3 `0001` | `migrations/0001-bootstrap.md` (escrita; cita esta seção) | — |
 | §4 `0004` | `migrations/0004-portal-access.md` (escrita; cita esta seção) | — |
@@ -118,7 +118,7 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 |---|---|---|
 | §1 ferramentas que recusam o desenho | `guia-desenvolvedor/como-adicionar-tabela.md` §6 (estado `V` do gate, escrito) + `plano-de-implantacao.md` §Pré-requisitos + `planos/riscos.md` (a escrever) | **existe** (nota de §1) |
 | §2 formato e numeração | `migrations/serie-e-regras.md` (regra, a escrever) + `arquitetura/migracoes.md` §2 (porquê, escrito) | **existe** (nota de §2) |
-| §3 a série (29/91) | `migrations/index.md` (lista) + `dicionario-dados/index.md` (contagem `P`) | — |
+| §3 a série (29/92) | `migrations/index.md` (lista) + `dicionario-dados/index.md` (contagem `P`) | — |
 | §3.1 por que esta ordem | `migrations/serie-e-regras.md` | — |
 | §3.2 corte vertical | `planos/plano-de-testes.md` (critério de saída) | — |
 | §4 seeds | `planos/plano-de-dados-e-seeds.md` | — |
@@ -180,7 +180,7 @@ própria página — não é pendência escondida.
 | Página | O que já está confirmado (fonte) | Declara em aberto |
 |---|---|---|
 | `contexto-c4.md` | três consumidores com poderes diferentes (`padrao-banco.md` §0), schema × dono × escrita × leitura (§2), cinco papéis (`seguranca.md`), uma DSN por papel (`src/provision/spec.md` §3) | — |
-| `visao-geral.md` | escopo da edição (`wyd-db-1.0.0.md` §1.2), 29/91/29 planejados (`plano-migrations.md` §3) | os três números são `P`; o runtime assíncrono do crate não está decidido em documento |
+| `visao-geral.md` | escopo da edição (`wyd-db-1.0.0.md` §1.2), 29/92/29 planejados (`plano-migrations.md` §3) | os três números são `P`; o runtime assíncrono do crate não está decidido em documento |
 | `index.md` | mapa das 13 páginas e ordem de leitura (`wyd-db-1.0.0.md` §6.2) | estado de cada página, que muda por escrita |
 
 ### 4.2 `specs/` (5)
@@ -197,7 +197,7 @@ própria página — não é pendência escondida.
 
 | Página | O que já está confirmado (fonte) | Declara em aberto |
 |---|---|---|
-| `index.md` | 91 tabelas planejadas e a distribuição por arquivo (`plano-migrations.md` §3); estado derivado de `migrations-checklist.md` §1.2 | a distribuição domínio × tabela é `P` até o gerador |
+| `index.md` | 92 tabelas planejadas e a distribuição por arquivo (`plano-migrations.md` §3); estado derivado de `migrations-checklist.md` §1.2 | a distribuição domínio × tabela é `P` até o gerador |
 | `como-ler.md` | anatomia da página de tabela (`wyd-db-1.0.0.md` §6.8), gerado × escrito, `V`/`H`/`P` (`convencoes.md`), regra da divergência (§8.2) | — |
 | `dominio-canal.md` | `game.server_channel` com `max_players`/`maintenance`/`role` e `ck_server_channel_jogavel` (`ddl-confirmado.md` §5.5, `M23`) | capacidade e manutenção em operação: sem medição |
 | `dominio-auditoria.md` | `ops.audit_log` com ator tripartido, 3 CHECKs, `ix_audit_actor` e sem FK (`M18-A`, `ddl-confirmado.md` §5.3); `ops.login_attempt` com `identifier_hash`, `surface`, `ip INET` (`M6`, `ddl-confirmado.md` §5.4) | retenção: `M22` |
@@ -271,7 +271,7 @@ Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
 | specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | dependem de `0006`, `0009`, `0011`, `0012`, `0021` — DDL aberto; `A14`, `A19`, `M16`, `M17` | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | ator → requisito exige `RF-DB` com número, que nascem na onda 3 | onda 3 |
 | dicionário — 15 domínios | `dominio-personagem`, `inventario`, `social`, `mundo`, `catalogo`, `combate`, `refino`, `economia`, `quests`, `eventos`, `arena`, `progressao`, `moderacao`, `configuracao`, `ponte-web-jogo` | só o nome das tabelas: sem coluna não há ciclo de vida nem regra | arquitetura (desenho de coluna) |
-| dicionário — gerado (**fora das 146**) | `gerado/index.md` + as 91 páginas de tabela | o gerador não existe; é `◆` por definição, e não conta no teto autoral | `make dicionario-dados`, onda 4 |
+| dicionário — gerado (**fora das 146**) | `gerado/index.md` + as 92 páginas de tabela | o gerador não existe; é `◆` por definição, e não conta no teto autoral | `make dicionario-dados`, onda 4 |
 | planos — documentação | `plano-de-documentacao.md` | `D-A` aberta: duas numerações de onda concorrentes | arquitetura, marco `P2` |
 | planos — manutenção e métrica | `plano-de-manutencao.md`, `metricas.md` | rotina depende de retenção; número medido só depois da série | operação (marco `P3`) / arquitetura (`M20`, marco `P2`) |
 | roadmap | `index.md` + 40 `WYDDB-nnn` | a distribuição das 40 issues é `D-7`, não aprovada; issue sem DoD executável não entra | produto, onda 8 |
@@ -317,12 +317,11 @@ ondas.
 ## 9. O que esta proposta não decide
 
 1. **Não cria página.** Nenhum arquivo de `docs/` foi escrito por causa desta proposta.
-2. **Não decide lacuna.** As 17 linhas não fechadas de `lacunas.md` — `B1`, `B3`, `A7`, `A8`, `A11`,
-   `A13`, `A14`, `A17`, `A18`, `A19`, `A20`, `A21`, `M16`, `M17`, `M19`, `M21`, `M22` — continuam com o
-   estado do registro.
+2. **Não decide lacuna.** As linhas ainda abertas de `lacunas.md` — `A7`, `A21` e `P3` — continuam com
+   o estado do registro; as demais foram fechadas em 2026-11-19.
 3. **Não numera requisito.** Os `RF-DB`/`RN-DB` do lote 2 nascem com o próximo número livre, na hora da
    escrita; esta proposta só diz que o conteúdo existe.
-4. **Não mede nada.** 29, 91 e a distribuição por arquivo são planejados (`plano-migrations.md` §3);
+4. **Não mede nada.** 29, 92 e a distribuição por arquivo são planejados (`plano-migrations.md` §3);
    o medido sai do catálogo depois da série.
 5. **Não substitui `metricas.md`.** Ela diz o que dá para escrever; quanto está escrito continua sendo
    contagem de página com cabeçalho, como em §2.

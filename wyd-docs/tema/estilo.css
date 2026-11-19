@@ -383,7 +383,7 @@ a:hover {
   color: var(--texto-fraco);
 }
 
-/* Avisos (convertidos de admonition e de [!TIPO]) */
+/* Avisos (`> [!TIPO]`) */
 
 .aviso {
   margin: 1.4rem 0;

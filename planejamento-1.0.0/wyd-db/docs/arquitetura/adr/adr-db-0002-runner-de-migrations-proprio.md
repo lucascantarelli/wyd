@@ -10,7 +10,7 @@
 
 Quatro níveis de afirmação convivem aqui:
 
-- **`P`** — o que a série 1.0.0 projeta: os 29 arquivos, os quatro schemas, as 91 tabelas e o runner
+- **`P`** — o que a série 1.0.0 projeta: os 29 arquivos, os quatro schemas, as 92 tabelas e o runner
   novo.
 - **`H`** — leitura da intenção do desenho herdado, dita com o que a fecharia.
 - **`V`** — o que foi medido no runner herdado, com caminho e data: `crates/wyd-db/src/migrate.rs`,
@@ -22,7 +22,7 @@ Quatro níveis de afirmação convivem aqui:
 
 A série 1.0.0 não é a herdada com outro conteúdo: são 29 arquivos escritos do zero que trocam 87
 tabelas em `public` (o legado não cria schema nenhum) por quatro schemas (`content`, `game`,
-`portal`, `ops`) e 91 tabelas. O runner herdado já tem checksum e advisory lock de sessão; o que ele
+`portal`, `ops`) e 92 tabelas. O runner herdado já tem checksum e advisory lock de sessão; o que ele
 não tem é o **contrato** que a série nova exige — e é isso, não um defeito, que motiva a decisão
 (`V`, `crates/wyd-db/src/migrate.rs`, 2026-11-17):
 
@@ -38,7 +38,7 @@ não tem é o **contrato** que a série nova exige — e é isso, não um defeit
 Nada disso é "defeito" do herdado: ele foi desenhado para **uma** série em `public`, já aplicada num
 volume existente — a baseline marca tudo como aplicado em vez de executar (`V`); que esse fosse o
 desenho pretendido é leitura da intenção (`H`). A 1.0.0 troca o contrato de schema (quatro schemas,
-91 tabelas) e por isso redefine o registro — o herdado fica como baseline medido, não como desenho a
+92 tabelas) e por isso redefine o registro — o herdado fica como baseline medido, não como desenho a
 imitar (preâmbulo de `src/migrate/spec.md`). As linhas de `migrate.rs` que provam cada linha da
 tabela estão em `Rastreabilidade`: elas valem enquanto o arquivo existir, e o arquivo é substituído
 pelo módulo `migrate/` na implementação.

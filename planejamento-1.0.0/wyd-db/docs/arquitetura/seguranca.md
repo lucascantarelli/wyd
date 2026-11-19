@@ -42,10 +42,19 @@ do nome.
 | senha do portal (`portal.person`) | `argon2id`, com sal por linha | nunca reversível, nunca comparada em claro |
 | PIN de conta de jogo | `argon2id`, com sal por linha | PIN curto não muda o algoritmo: o custo vem do parâmetro, não do tamanho |
 | token de sessão do portal | hash do token | o valor em claro existe só no cookie do cliente |
-| idempotência de crédito | chave única | impede crédito duplicado por reenvio (`ddl-confirmado.md`, chave única de `game.donate_credit`) |
+| idempotência de crédito | chave UUID única gerada pelo BFF, janela de 24 h | impede crédito duplicado por reenvio (`M17`, `0011`/`0012`) |
 
 Parâmetro de custo é decisão de instalação, documentada; baixar o custo para "ficar rápido" é
 regressão de segurança, não ajuste de performance.
+
+## Política de credencial (decidida em 2026-11-19)
+
+- **PIN de conta de jogo:** 4–6 dígitos, 5 falhas consecutivas bloqueiam por 10 minutos, desbloqueio
+  só por tempo; `game.account.pin_failure_count` e `pin_locked_until` são os contadores.
+- **Login do portal:** o mesmo limiar — 5 falhas/10 min, desbloqueio por tempo, sem intervenção de
+  staff; os contadores de `portal.person` passam a ser movidos no login.
+- **Senha do portal:** 15–128 caracteres, sem regra de composição, sem expiração periódica, com
+  blocklist e `argon2id` (`M9`).
 
 ## O que nunca é gravado
 

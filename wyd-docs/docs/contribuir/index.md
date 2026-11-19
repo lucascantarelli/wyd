@@ -4,60 +4,29 @@ Cada página pertence a um sistema. Você escreve em `planejamento-1.0.0/<sistem
 apenas publica. Corrigir texto no HTML gerado ou no `.build` é trabalho perdido: o próximo build
 sobrescreve.
 
-## Antes de escrever
+> [!TIP] A regra está escrita, não aqui
+> As três normas do `wyd-docs` valem como regra desde 2026-11-19 (`V`): forma da página em
+> [convenções](../sistemas/wyd-docs/convencoes.md), processo de autoria em
+> [guia do autor](../sistemas/wyd-docs/guia-autor/index.md) e veredito em
+> [revisão](../sistemas/wyd-docs/revisao.md). Esta página só diz onde cada pergunta é respondida.
+
+## O caminho, em cinco passos
 
 1. Leia `AGENTS.md` — hierarquia de fontes, invariantes e o que exige aprovação.
 2. Leia o dashboard do sistema (`<sistema>-1.0.0.md`) e as lacunas dele.
-3. Confirme que a página está prevista na árvore do plano diretor. Página fora do teto é proposta,
-   não fato.
+3. Confirme que a página está prevista na árvore do plano diretor — o guia do autor explica o teto.
+4. Escreva no sistema dono seguindo as convenções; rode o gate como o guia do autor manda.
+5. Abra o PR e peça revisão a quem não escreveu — o critério está em revisão.
 
-## Cabeçalho obrigatório
+## Onde cada pergunta é respondida
 
-Toda página de `docs/` começa com cinco linhas e uma linha de estado:
-
-```text
-> Pergunta: "..."
-> Público: <papel>
-> Dono: equipe do <sistema>
-> Base: <fonte consultada> ou —
-> Revisado em: AAAA-MM-DD
-
-**Estado:** proposto (AAAA-MM-DD)
-```
-
-## Sintaxe que o site entende
-
-O Markdown do MkDocs 2.0 é GFM com tabelas, notas de rodapé, riscado e âncoras de título. Use:
-
-| Recurso | Como escrever |
+| Pergunta | Página dona |
 |---|---|
-| Aviso | `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!CAUTION]` na primeira linha da citação |
-| Tabela | pipes, com cabeçalho |
-| Código | cerca com linguagem; o botão de copiar aparece no bloco |
-| Diagrama | cerca `mermaid` com um tipo por bloco |
-| Ênfase | `**forte**` e `` `código` `` |
+| Que forma a página precisa ter: cabeçalho, estado, evidência, sintaxe, o que reprova? | [convenções](../sistemas/wyd-docs/convencoes.md) |
+| Como escrevo e entrego: teto, gate, PR, pedido de revisão? | [guia do autor](../sistemas/wyd-docs/guia-autor/index.md) |
+| O que o revisor confere e quando a página fica `aceito`? | [revisão](../sistemas/wyd-docs/revisao.md) |
 
-> [!WARNING] Sintaxe herdada do MkDocs 1.x
-> `!!! tip`, `??? note`, `=== "Aba"`, `{ .md-button }` e `:material-x:` **não** existem no MkDocs
-> 2.0. O build traduz esses casos para citação, título e lista (`compat.py`), mas página nova não
-> deve usá-los: a ponte é para o material antigo, não um recurso do site.
+## O que esta página não repete
 
-## Publicar
-
-O gate é local e igual ao do CI:
-
-```bash
-cd wyd-docs
-.venv/Scripts/python.exe preparar.py
-.venv/Scripts/mkdocs.exe build --dir .build/docs --output site
-.venv/Scripts/python.exe verificar.py site
-```
-
-O `verificar.py` reprova link interno quebrado, âncora inexistente, página sem navegação e página sem
-título. O MkDocs 2.0 não tem modo estrito: sem esse passo, link quebrado vai para produção.
-
-## Revisão
-
-Página só é `aceito` depois de revisão de alguém que não escreveu. O que reprova está na convenção do
-sistema dono — para o `wyd-db`, em `planejamento-1.0.0/wyd-db/docs/convencoes.md`; para o
-`wyd-protocol`, em `planejamento-1.0.0/wyd-protocol/docs/convencoes.md`.
+Cabeçalho de cinco linhas, tabela de sintaxe, comando do gate e critério de revisão moram nas três
+normas. Se a norma mudar, esta página continua certa: ela aponta, não copia.

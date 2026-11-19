@@ -58,7 +58,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **29 arquivos**, **91 tabelas** e `SCHEMA_VERSION = 29` na troca — **planejado** em 2026-11-17, dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **29 arquivos**, **92 tabelas** e `SCHEMA_VERSION = 29` na troca — **planejado** em 2026-11-17, dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -229,7 +229,7 @@ planejamento-1.0.0/wyd-db/
 │   │   ├── dominio-ponte-web-jogo.md            ▲
 │   │   └── gerado/
 │   │       ├── index.md                         ◆
-│   │       └── <tabela>.md  (uma por tabela: 91) ◆
+│   │       └── <tabela>.md  (uma por tabela: 92) ◆
 │   ├── planos/
 │   │   ├── index.md                             ▲
 │   │   ├── plano-de-documentacao.md             ▲
@@ -336,12 +336,12 @@ planejamento-1.0.0/wyd-db/
 ```
 
 **Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
-`specs/` · 20 autorais + 91 geradas em `dicionario-dados/` · 10 em `planos/` · 42 em `roadmap/` ·
+`specs/` · 20 autorais + 92 geradas em `dicionario-dados/` · 10 em `planos/` · 42 em `roadmap/` ·
 11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · 8 em
 `guia-documentacao/` · 31 em `migrations/` · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
-→ **teto de páginas autorais + 91 geradas + 1 dado de apoio**, mais este plano diretor.
+→ **teto de páginas autorais + 92 geradas + 1 dado de apoio**, mais este plano diretor.
 
-**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **91 geradas** (uma por
+**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **92 geradas** (uma por
 tabela) e **31 em `migrations/`** (2 páginas de seção + 29 arquivos) — são **planejados** e vêm de
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
@@ -385,7 +385,7 @@ Arquivos de raiz:
 
 | Arquivo | Responde | Conteúdo obrigatório |
 |---|---|---|
-| `index.md` | "por onde começo?" | objetivo da doc em 5 linhas, tabela de público (§2), mapa das 10 subpastas em cards com estado; trilhas em abas; 2 botões de ação (`.md-button`); emoji por seção e cor por tipo de admonition; 3 links de entrada (requisitos, dicionário, guia do dev) |
+| `index.md` | "por onde começo?" | objetivo da doc em 5 linhas, tabela de público (§2), mapa das 10 subpastas em grade de cartões com estado; trilhas em subtítulos; 2 links de ação; emoji por seção e cor por tipo de aviso; 3 links de entrada (requisitos, dicionário, guia do dev) |
 | `convencoes.md` | "como leio estas páginas?" | marcações `V`/`H`/`P`, estados de tabela (`pronto`/`provisório`/`planejado`), formato de número com fonte e data, regra de link, padrão de diagrama, o que é proibido (§3) |
 | `glossario.md` | "o que significa este termo?" | um verbete por termo de domínio (conta, personagem, slot, refino, Anct, gema, SANC, grant, canal, delivery queue, sessão única, catálogo, conteúdo estático), com definição de 1–2 linhas e link para a página dona |
 
@@ -415,7 +415,7 @@ Ver §6.5–§6.7.
 - **Fronteira:** significado e regra. **Forma** (coluna, tipo, nulidade, índice) é gerada e não se
   escreve à mão.
 - **Duas camadas, de propósito:** 18 páginas por domínio (escritas, com contexto e decisão) +
-  uma página gerada por tabela (91 planejadas hoje; `planos/metricas.md` e `plano-migrations.md` §3),
+  uma página gerada por tabela (92 planejadas hoje; `planos/metricas.md` e `plano-migrations.md` §3),
   derivadas das migrations e do catálogo. A página de domínio é a porta de entrada; a gerada é a referência
   exata de campo.
 
@@ -637,7 +637,7 @@ Domínios (um arquivo cada): `acesso`, `personagem`, `inventario`, `social`, `mu
 `auditoria`, `configuracao`, `ponte-web-jogo`.
 
 **`gerado/<tabela>.md`** — uma página por tabela, produzida por script a partir das migrations e do
-catálogo; o total é uma página por tabela — **91** planejadas (`plano-migrations.md` §3), e o número
+catálogo; o total é uma página por tabela — **92** planejadas (`plano-migrations.md` §3), e o número
 final é o medido do catálogo (`planos/metricas.md`).
 Conteúdo fixo: papel em uma linha, colunas com tipo/nulidade/default, PK, FKs de saída e de
 entrada, unicidade, CHECKs, índices, quem escreve/lê (quando declarado na fonte), arquivo de
@@ -738,9 +738,9 @@ Distribuição inicial das 40 issues por fase (a numeração é criada na Onda 7
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
 | `index.md` | "qual regra eu procuro?" | mapa dos 7 guias por tarefa (criar, escrever, diagramar, linkar, ilustrar, revisar, publicar); estado de cada um |
-| `estrutura-e-navegacao.md` | "onde este assunto mora?" | árvore e o que pertence a cada pasta; padrão de nome de arquivo (`kebab-case`, sem acento); quando criar seção × página; regra de `index.md` por pasta; como o `nav` do mkdocs espelha a árvore |
+| `estrutura-e-navegacao.md` | "onde este assunto mora?" | árvore e o que pertence a cada pasta; padrão de nome de arquivo (`kebab-case`, sem acento); quando criar seção × página; regra de `index.md` por pasta; como a árvore vira navegação no `preparar.py` |
 | `estilo-e-linguagem.md` | "como escrevo?" | voz e tempo verbal; tamanho de frase e de página; o que evitar (adjetivo sem medida, "basta", "simplesmente"); termos preferidos × proibidos; 5 pares de exemplo certo × errado com frase real |
-| `markdown-e-mkdocs.md` | "que recurso posso usar?" | recursos **habilitados** no `mkdocs.yml` do projeto: admonition (e a **cor por tipo**: `tip` verde, `warning` âmbar, `danger` vermelho, `abstract` turquesa), tables, content tabs, details, footnotes, bloco de código com cópia, botões `.md-button`, grid cards, emoji Unicode e ícones Material; **Mermaid habilitado por `custom_fences`** (todo diagrama vai em cerca `mermaid`, um tipo por bloco); o que não usar (captura de tela como prova única, sintaxe que o config não habilita); exemplo de cada; quando preferir lista × tabela × admonition |
+| `markdown-e-mkdocs.md` | "que recurso posso usar?" | recursos que a 2.0 renderiza: tables, footnotes, bloco de código com cópia, `> [!TIPO]` (e a **cor por tipo**: `tip` verde, `warning` âmbar, `danger` vermelho, `abstract` turquesa), `<div class="cartoes"></div>` para grade, emoji Unicode, riscado e **Mermaid** em cerca `mermaid` (um tipo por bloco); o que não usar (admonition `!!!`, abas `=== "…"`, details `???`, attr-list e botões, grid cards, `:material-…:`, captura de tela como prova única); exemplo de cada; quando preferir lista × tabela × aviso |
 | `diagramas.md` | "que diagrama uso?" | tipo por pergunta (fluxo, sequência, estado, ER, C4); um tipo por diagrama; legenda em português; tamanho máximo; o que fazer quando o diagrama não renderiza |
 | `links-referencias-e-ids.md` | "como aponto para outra página ou para o código?" | link relativo e âncora; citação `arquivo:linha`; prefixos `RF-DB`/`ADR-DB`/`WYDDB`; proibição de link para fora de `docs/`; como marcar link ainda sem destino |
 | `imagens-e-evidencias.md` | "como provo com imagem?" | quando a imagem é necessária; nome e pasta; texto alternativo obrigatório; peso e formato; o que nunca aparece na captura (dado de jogador, segredo) |
@@ -1004,7 +1004,7 @@ parar e perguntar**, **armadilhas**.
 
 ## 7. Formato fixo por tipo de página
 
-Todo arquivo começa com um bloco de cabeçalho de 4 linhas e segue o molde do seu tipo. Sem molde,
+Todo arquivo começa com um bloco de cabeçalho de 5 linhas e segue o molde do seu tipo. Sem molde,
 sem página.
 
 ### 7.1 Cabeçalho (todos os arquivos)
@@ -1205,6 +1205,10 @@ fechamento.
 
 ## 11. Ordem de produção (ondas)
 
+**Vocabulário (decidido em 2026-11-19):** **Onda** é a trilha de documentação (a tabela abaixo);
+**Etapa** é a trilha de código (`plano-migrations.md` §9). A timeline única, com as duas trilhas e o
+ponto de junção **Etapa 1 → Onda 3**, fica em `planos/plano-de-documentacao.md`, criado na onda 8.
+
 Cada onda é uma entrega revisável. Nenhuma começa antes de a anterior fechar o critério de saída.
 A ordem segue dependência de conteúdo: primeiro o vocabulário, depois o requisito, depois a
 tabela, depois o procedimento.
@@ -1214,14 +1218,14 @@ tabela, depois o procedimento.
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
-| **4. Dicionário** | `dicionario-dados/` (2 + 18) + gerador `make dicionario-dados` + 91 geradas | 20 + 91 | 91 tabelas cobertas; índice sem número digitado; gerador roda no gate |
+| **4. Dicionário** | `dicionario-dados/` (2 + 18) + gerador `make dicionario-dados` + 92 geradas | 20 + 92 | 92 tabelas cobertas; índice sem número digitado; gerador roda no gate |
 | **5. Histórico de schema** | `migrations/` (2 + 29) + `arquitetura/migracoes` + `retencao-e-capacidade` | 31 | 29 páginas com `down` e verificação, nomes fechados na decisão `P8` (`plano-migrations.md` §3); política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
-| **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + nav do mkdocs + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
+| **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
-**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; geradas = **91** planejadas (uma por tabela, `plano-migrations.md` §3) + 1 dado de apoio.
+**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; geradas = **92** planejadas (uma por tabela, `plano-migrations.md` §3) + 1 dado de apoio.
 
 **Dependências duras:** Onda 3 depende de 1–2 (requisito cita entidade do modelo); Onda 4 depende
 de 2 (domínio cita entidade); Onda 7 depende de 4–5 (módulo cita tabela e migration); Onda 8
@@ -1231,7 +1235,7 @@ depende de 3 (issue cita requisito).
 
 A release de documentação fecha quando **todas** forem verdadeiras ao mesmo tempo:
 
-- todas as páginas contadas em `planos/metricas.md` (autorais + **91** geradas) estão `aceito` ou
+- todas as páginas contadas em `planos/metricas.md` (autorais + **92** geradas) estão `aceito` ou
   `retirado` com justificativa;
 - nenhuma página cita número sem fonte e data;
 - nenhum link relativo sem destino (`mkdocs build --strict` verde);
@@ -1245,8 +1249,8 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **29 arquivos**, **91 tabelas** e `SCHEMA_VERSION = 29` na troca — planejado, fonte `plano-migrations.md` §3 | aprovar (§1.2) | Ondas 2–9 |
-| `D-2` | dicionário em duas camadas: 18 páginas de domínio + **91** geradas | aprovar (§6.8) | Onda 4 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **29 arquivos**, **92 tabelas** e `SCHEMA_VERSION = 29` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-2` | dicionário em duas camadas: 18 páginas de domínio + **92** geradas | aprovar (§6.8) | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**29** arquivos), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | aprovar | Ondas 3 e 8 |
@@ -1256,7 +1260,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 ### 12.1 Checklist de aprovação
 
-- [ ] `D-1` escopo reescrito e limites de §1.2
+- [x] `D-1` escopo reescrito e limites de §1.2 (aprovada em 2026-11-19)
 - [ ] `D-2` dicionário em duas camadas
 - [ ] `D-3` páginas de módulo sem espelho de código
 - [ ] `D-4` página por migration

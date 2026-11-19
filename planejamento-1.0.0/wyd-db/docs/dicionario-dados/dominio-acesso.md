@@ -46,9 +46,8 @@ erDiagram
 ## Tabela de tabelas
 
 **Estado não se digita aqui.** Ele deriva do estado do arquivo em `migrations-checklist.md` §1.2 —
-dono único da derivação: as tabelas de `0003`, `0004` e `0007` estão em arquivo `pronta` (`planejado`),
-as de `0005` em arquivo `parcial` (`provisório`, por `A17`/`M16`). Nenhuma é `pronto`: isso exige a
-migration aplicada com o checksum vigente no ledger.
+dono único da derivação: as tabelas de `0003`, `0004`, `0005` e `0007` estão em arquivo `pronta`
+(`planejado`). Nenhuma é `pronto`: isso exige a migration aplicada com o checksum vigente no ledger.
 
 | Tabela | Papel em uma linha | Escreve | Lê | Colunas |
 |---|---|---|---|---|

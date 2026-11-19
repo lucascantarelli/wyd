@@ -119,6 +119,23 @@
     bloco.appendChild(botao);
   });
 
+  Array.prototype.forEach.call(document.querySelectorAll(".pagina p"), function (paragrafo) {
+    if (!/^Estado:\s*proposto/i.test(paragrafo.textContent.trim())) {
+      return;
+    }
+    var aviso = document.createElement("div");
+    aviso.className = "aviso aviso-warning aviso-proposto";
+    var titulo = document.createElement("p");
+    titulo.className = "aviso-titulo";
+    titulo.textContent = "Página em proposta";
+    var corpo = document.createElement("div");
+    corpo.className = "aviso-corpo";
+    corpo.textContent = "Este conteúdo ainda não foi aprovado; trate como intenção, não como regra.";
+    aviso.appendChild(titulo);
+    aviso.appendChild(corpo);
+    paragrafo.parentNode.insertBefore(aviso, paragrafo);
+  });
+
   var blocos = Array.prototype.slice.call(document.querySelectorAll(".pagina pre code:not(.language-mermaid)"));
   if (blocos.length) {
     var script = document.createElement("script");

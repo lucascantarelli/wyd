@@ -37,10 +37,10 @@ aqui fica só qual etapa usa qual.
 | 4 | serviços | jogo (`WYD_DB_URL_GAME`) e portal (`WYD_DB_URL_PORTAL`) sobem e rodam o preflight de conexão | preflight recusa papel errado em vez de degradar |
 | 5 | verificação | §"Verificação pós-implantação" | falha aqui é rollback, não "ajustar depois" |
 
-!!! warning "Dado legado é decisão aberta"
-    Se existir base antiga a preservar, esta ordem **não** se aplica como está: entra uma etapa de
-    carga entre 2 e 3, com ETL e janela próprios. A `1.0.0` não decidiu isso ainda — está registrado
-    como pendência, e assumir "banco novo" sem essa decisão é o erro mais caro desta página.
+> [!WARNING] Dado legado é decisão aberta
+> Se existir base antiga a preservar, esta ordem **não** se aplica como está: entra uma etapa de
+> carga entre 2 e 3, com ETL e janela próprios. A `1.0.0` não decidiu isso ainda — está registrado
+> como pendência, e assumir "banco novo" sem essa decisão é o erro mais caro desta página.
 
 ## Janela
 
@@ -52,7 +52,7 @@ a janela com o número medido no ensaio, não com estimativa.
 
 | O que conferir | Esperado |
 |---|---|
-| tabelas por schema (`content`, `game`, `portal`, `ops`) | soma **91** (`plano-migrations.md` §3), com fonte e data na página da série |
+| tabelas por schema (`content`, `game`, `portal`, `ops`) | soma **92** (`plano-migrations.md` §3), com fonte e data na página da série |
 | views | 2 (`plano-migrations.md` §3) |
 | versão de conteúdo | `content_version = 7` (`plano-migrations.md` §4) |
 | papéis | os cinco existem; `wyd_owner` é `NOLOGIN` (`seguranca.md`) |

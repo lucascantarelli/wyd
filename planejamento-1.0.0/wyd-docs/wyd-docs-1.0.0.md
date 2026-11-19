@@ -10,7 +10,7 @@
 > **Stack decidida pelo time:** **MkDocs 2.0** com **Python 3.15**. Medido em **2026-11-19**:
 > `mkdocs 2.0.dev6` é a única versão 2.0 publicada (pré-release de 2026-09-15), roda em Python 3.15
 > e **não tem** `mkdocs.yml`, plugin, tema embutido, configuração de Markdown, modo estrito nem
-> suporte a Windows (§2). O site desta entrega é a primeira montagem real: **30 páginas**, build e
+> suporte a Windows (§2). O site daquela entrega foi a primeira montagem real: **30 páginas** (histórico; o número atual está em §7.2), build e
 > verificação executados (§7.1).
 >
 > **Evidência de publicação (`V`, 2026-11-19):** o PR [#44](https://github.com/lucascantarelli/wyd/pull/44)
@@ -61,7 +61,6 @@
 |---|---|
 | tema completo em `templates/base.html` + CSS + JS | conteúdo de sistema: dono é cada `<sistema>/docs/` |
 | montagem das páginas em `.build/docs/` e navegação gerada | edição de página de sistema dentro de `wyd-docs/` |
-| ponte de sintaxe para o material escrito em MkDocs 1.x | reescrever página de sistema por causa do site |
 | verificação de link, âncora, navegação e título | revisão de conteúdo: dono é o sistema |
 | publicação em GitHub Pages por Actions | hospedagem paga, CDN paga, domínio próprio |
 
@@ -70,8 +69,8 @@
 | Sistema | Fornece ao site | Exige do site |
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
-| `wyd-db` | 15 páginas escritas + 91 geradas (planejadas) | seção própria e ordem de leitura preservada |
-| `wyd-protocol` | 2 páginas escritas + teto de 131 | seção própria |
+| `wyd-db` | 15 páginas escritas + 91 geradas (teto da `LPDOC-09`; projeto em §9.1) | seção própria e ordem de leitura preservada |
+| `wyd-protocol` | 2 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
 ---
@@ -104,8 +103,8 @@ Fonte: inspeção de `mkdocs 2.0.dev6` instalado em 2026-11-19
 | sem coleta de vários diretórios | `preparar.py` monta `.build/docs/` a partir dos sistemas |
 | sem navegação agrupada | `preparar.py` gera `templates/navegacao.html` com a árvore real |
 | sem tema | `tema/base.html`, `estilo.css` e `site.js` são o tema |
-| sem admonition/abas | `compat.py` traduz o material antigo; página nova usa GFM (§6) |
-| sem validação | `verificar.py` é o gate (§7.2) |
+| sem admonition/abas | material antigo convertido para GFM em 2026-11-19; página nova usa GFM (§6) |
+| sem validação | `verificar.py` é o gate (§7.1) |
 | sem Windows | build roda em Linux: container `python:3.15-slim` no local e runner Ubuntu no CI |
 
 ### 2.3 Consequência declarada
@@ -165,8 +164,8 @@ Legenda: `●` implementado nesta entrega · `▲` a escrever.
 wyd-docs/
 ├── requirements.txt                  ● mkdocs==2.0.dev6
 ├── preparar.py                       ● monta .build/docs e a navegação
-├── compat.py                         ● ponte MkDocs 1.x → GFM da 2.0
-├── verificar.py                      ● gate de link, âncora, nav e título
+├── verificar.py                      ● gate de link, âncora, nav, título e sintaxe 1.x
+├── redirects.tsv                     ● mapa origem → destino dos redirects
 ├── tema/
 │   ├── base.html                     ● tema Jinja completo
 │   ├── estilo.css                    ● claro/escuro, layout, avisos, tabelas, código
@@ -185,46 +184,47 @@ planejamento-1.0.0/wyd-docs/
 ├── lacunas.md                        ● registro de lacuna e dono
 ├── docs/
 │   ├── index.md                      ● porta de entrada do sistema
-│   ├── convencoes.md                 ▲ padrão editorial do site
+│   ├── convencoes.md                 ● padrão editorial do site
 │   ├── arquitetura/
 │   │   ├── index.md                  ▲
-│   │   ├── montagem-do-site.md       ▲ preparar, compat, build, verificar
+│   │   ├── montagem-do-site.md       ▲ preparar, build, verificar
 │   │   ├── tema-e-recursos.md        ▲ o que a 2.0 não tem e como o tema cobre
 │   │   ├── publicacao.md             ▲ Pages, permissões, rollback
 │   │   └── dominio-e-url.md          ▲ URL como contrato
 │   ├── planos/
 │   │   ├── index.md                  ▲
 │   │   ├── plano-de-documentacao.md  ▲
-│   │   └── metricas.md               ▲ dono dos números do site
+│   │   └── metricas.md               ● definição da métrica (valor em §7.2)
 │   ├── roadmap/
 │   │   ├── index.md                  ▲
 │   │   ├── fases.md                  ▲
 │   │   └── WYDDOC-001..WYDDOC-012.md ▲
-│   ├── guia-autor/                   ▲
+│   ├── guia-autor/                   ●
 │   ├── guia-operador/                ▲
-│   └── guia-desenvolvedor/           ▲
+│   ├── guia-desenvolvedor/           ▲
+│   └── revisao.md                    ● critério de revisão
 └── prompts/  skills/                 ▲ (4 + 4)
 ```
 
-**Medido:** 2 páginas em `docs/` do sistema, 6 arquivos implementados no projeto do site.
+**Medido em 2026-11-19 (`find planejamento-1.0.0/wyd-docs/docs -name '*.md'` e `git ls-files wyd-docs`, sem `.gitkeep`):** 5 páginas em `docs/` do sistema e 8 arquivos implementados no projeto do site, fora de `docs/`.
 
 ---
 
 ## 6. Recursos: como eram no MkDocs 1.x e como são na 2.0
 
-| Recurso usado até aqui | No MkDocs 1.x / Material | No MkDocs 2.0 | O que o site faz |
+| Recurso usado até aqui | No MkDocs 1.x / Material | No MkDocs 2.0 | O que o site faz (ponte removida em 2026-11-19) |
 |---|---|---|---|
 | Configuração do site | `mkdocs.yml` (YAML) | **não existe**; o CLI aborta se encontrar o arquivo | comando fixo em §7.1 |
 | Tema | `theme: material` com `features` | **não existe** tema embutido; só `theme/base.html` | tema próprio em `tema/` |
 | Navegação | `nav:` hierárquica com títulos | lista plana, título = nome do arquivo | `preparar.py` gera a árvore |
 | Busca | plugin `search` com `lang: pt` | **não existe** plugin | filtro de navegação no cliente; busca em página é `LPDOC-13` |
-| Admonition (`!!! tip`) | extensão `admonition` + cores | **não existe** | `compat.py` converte para citação `[!TIPO]`; `site.js` monta o aviso |
-| Abas (`=== "A"`) | `pymdownx.tabbed` | **não existe** | `compat.py` converte para subtítulo |
-| Detalhe (`??? note`) | `pymdownx.details` | **não existe** | `compat.py` converte para aviso aberto |
-| Botão (`.md-button`) | `attr_list` + CSS | sem `attr_list` | `compat.py` remove o atributo; vira link |
-| Grid cards | `md_in_html` + `attr_list` | sem `md_in_html` | `compat.py` marca a lista; CSS vira grade de cartões |
-| Ícone `:material-x:` | `pymdownx.emoji` | shortcode próprio, só 11 emojis | `compat.py` troca por emoji Unicode |
-| Tasklist | `pymdownx.tasklist` | **não existe** | `compat.py` troca por `☐`/`☑` |
+| Admonition (`!!! tip`) | extensão `admonition` + cores | **não existe** | convertido para citação `[!TIPO]`; `site.js` monta o aviso |
+| Abas (`=== "A"`) | `pymdownx.tabbed` | **não existe** | convertido para subtítulo |
+| Detalhe (`??? note`) | `pymdownx.details` | **não existe** | convertido para aviso aberto |
+| Botão (`.md-button`) | `attr_list` + CSS | sem `attr_list` | atributo removido na conversão; vira link |
+| Grid cards | `md_in_html` + `attr_list` | sem `md_in_html` | convertido em `<div class="cartoes"></div>` mais lista; CSS vira grade |
+| Ícone `:material-x:` | `pymdownx.emoji` | shortcode próprio, só 11 emojis | emoji Unicode no material convertido |
+| Tasklist | `pymdownx.tasklist` | **não existe** | `☐`/`☑` no material convertido |
 | Destaque de sintaxe | `pymdownx.highlight` | **não existe** | `highlight.js` 11.12.0 no cliente |
 | Copiar código | `content.code.copy` | **não existe** | `site.js` adiciona o botão |
 | Mermaid | `custom_fences` | **não existe** | `mermaid.js` 12.3.0 renderiza `language-mermaid` |
@@ -232,8 +232,9 @@ planejamento-1.0.0/wyd-docs/
 | Modo estrito | `--strict` | **não existe** | `verificar.py` |
 | Build no Windows | suportado | **quebrado** (`PosixPath`) | build em container Linux |
 
-**Regra:** página nova usa só GFM + `> [!TIPO]` + cerca `mermaid`. Os recursos da coluna 1 existem
-apenas para o material já escrito; a ponte é dívida declarada (`LPDOC-14`), não padrão novo.
+**Regra:** página nova usa só GFM + `> [!TIPO]` + cerca `mermaid`. Os recursos da coluna 1 existiram
+apenas no material já escrito e foram convertidos uma vez em 2026-11-19 (`LPDOC-14` fechada); não são
+padrão novo.
 
 ---
 
@@ -266,9 +267,10 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | âncora | `#secao` não corresponde a nenhum `id` do destino |
 | navegação | página gerada sem `<aside class="barra">` |
 | título | página sem título no `<title>` |
-| contagem | `preparar.py` monta menos páginas que as existentes nos sistemas |
+| redirect | origem do `redirects.tsv` sem página-stub, destino inexistente, `refresh`/`canonical` fora do destino, destino que é outro stub ou origem duplicada |
+| sintaxe 1.x | fonte publicada em `planejamento-1.0.0/*/docs` com `!!!`, `=== "…"`, `???`, atributo de link `](pagina.md){ … }` ou `<div class="grid cards" markdown>` fora de bloco de código e de code span |
 
-**Medido em 2026-11-19:** 30 páginas montadas de 3 sistemas; `verificar.py` sem problema.
+**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Este é o único dono do total e do censo; `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam esta seção em vez de repetir os números.
 
 ### 7.3 Publicação
 
@@ -281,7 +283,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 Permissões: `contents: read`, `pages: write`, `id-token: write`; `concurrency` de um deploy. Ação de
 terceiro fixada por commit SHA. Rollback proposto: reconstruir e republicar o conteúdo de um commit
 anterior conhecido; não há dado migrado. A execução já foi verificada (`V`, 2026-11-19): o workflow
-`docs` tem 8 execuções concluídas e o Pages serve o `success` mais recente (`7911904845`,
+`docs` tem 13 execuções (`/actions/workflows/docs.yml/runs`, `total_count` consultado na API em 2026-11-19) e o Pages serve o `success` mais recente (`7911904845`,
 `0d765858`).
 
 **Baseline do conteúdo público (`V`, 2026-11-19):** leitura HTTP somente `GET` de
@@ -581,11 +583,41 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 |---|---|---|
 | 1 | site funcionando: montagem, tema, gate local | **feito** (2026-11-19) |
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
-| 3 | padrão editorial: convenções, guia do autor, revisão | pendente |
-| 4 | robustez: redirect, busca, métrica | pendente |
+| 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
+| 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `verificar.py`); busca decidida e métrica aceita em 2026-11-19 |
+| 5 | gerador das 91 páginas do `wyd-db` como projeto próprio | pendente; nenhuma página gerada existe hoje — entrega separada, especificada em §9.1 |
+
+### 9.1 Gerador das 91 páginas — projeto próprio
+
+O gerador não é uma página do site nem parte do `wyd-docs`: é um **projeto separado**, com dono
+`arquitetura + documentação`, entrada e saída próprias. O site apenas coleta o diretório gerado;
+não edita, completa nem cria página gerada.
+
+| Item | Definição |
+|---|---|
+| Projeto | `wyd-db-pages` (nome de trabalho), executável fora de `wyd-docs/`; a entrada pública é `make dicionario-dados`. A implementação fica em `tools/wyd-db-pages/` (**planejada**, ainda não existe) |
+| Entrada | migrations, DDL confirmado e catálogo do `wyd-db`; cada campo gerado declara sua origem, sem copiar valor do legado como fato |
+| Saída | `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/`: **91 páginas geradas** + `gerado/index.md` (índice de navegação) |
+| Teto | **91 páginas geradas**; o `index.md` não amplia o teto. A 92ª página é falha de geração, não uma página nova por conveniência |
+| Fora do escopo | editar página manual, decidir coluna, publicar direto no Pages e gerar catálogo de opcodes (`LPDOC-10`) |
+
+**Critério de pronto do projeto** (todos os itens):
+
+1. `make dicionario-dados` roda em checkout limpo e produz exatamente **91 páginas + `gerado/index.md`**, com código de saída 0.
+2. A segunda execução não altera byte nenhum da saída — o gerador é determinístico.
+3. Cada página tem cabeçalho de 5 campos, título, links/âncoras que resolvem e origem declarada; não contém PII nem segredo.
+4. O CI reprova saída ausente, página extra acima do teto, diff depois de regenerar e edição manual de `gerado/`.
+5. `preparar.py` e `verificar.py` passam com a saída presente. Sem a saída, o site continua com as 34 páginas atuais e **nenhum stub afirma que as 91 existem**.
+
+**Estado (2026-11-19):** nenhuma das 91 páginas de tabela existe. `gerado/index.md` é apenas o índice
+vazio de navegação; o projeto é pré-requisito da `LPDOC-09`, não do site atual.
+
+A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 
 **Gate da `1.0.0` do site:** build e verificação verdes no CI, publicação automática em `develop`,
-URL estável para toda página publicada e nenhum conteúdo interno no artefato. O deploy público e a
+URL estável para toda página publicada e nenhum conteúdo interno no artefato. A URL estável está
+declarada desde 2026-11-19: `https://lucascantarelli.github.io/wyd/`, sem domínio próprio na `1.0.0`
+(`V`, `LPDOC-04`). O deploy público e a
 validação descritos em §7.3, junto da aprovação de GitHub Pages, não comprovavam rollback por si sós;
 o teste real de 2026-11-19 é a prova registrada que fechou `LPDOC-01`.
 
@@ -598,26 +630,32 @@ vazio. Sem republicação manual.
 
 ## 10. Decisões que dependem do time
 
-As decisões ainda pendentes apontam a lacuna que as fecha. A hospedagem canônica já foi aprovada
-pelo dono: GitHub Pages com publicação contínua (`V`, 2026-11-19). `LPDOC-01` foi fechada em
-2026-11-19 com o rollback validado (§7.3).
+As decisões do site foram fechadas em 2026-11-19 e a tabela mantém o registro. A hospedagem canônica
+foi aprovada pelo dono: GitHub Pages com publicação contínua (`V`, 2026-11-19). `LPDOC-01` foi fechada
+com o rollback validado (§7.3), e `LPDOC-04`: sem domínio próprio na `1.0.0`, o site publica em
+`lucascantarelli.github.io/wyd`. O dono também fechou `LPDOC-05` (só a branch), `LPDOC-06` (redirect
+obrigatório), `LPDOC-10` (sem catálogo gerado), `LPDOC-13` (sem busca de texto completo), `LPDOC-08`
+(arquitetura aprova o sistema novo e a entrada em `SISTEMAS`; documentação publica), `LPDOC-02`
+(não publicar `AGENTS.md` nem o panorama), `LPDOC-03` (publicar `proposto` com aviso visível),
+`LPDOC-07` (só pt-BR), `LPDOC-09` (gerar e publicar as 91 páginas) e `LPDOC-11` (manter `2.0.dev6`
+fixo até a próxima dev).
 
 | # | Decisão | Lacuna |
 |---|---|---|
 | 1 | Publicação contínua no GitHub Pages como hospedagem canônica (aprovado pelo dono em 2026-11-19); rollback validado em 2026-11-19 | `LPDOC-01` |
-| 2 | Publicar `AGENTS.md` e o panorama no site | `LPDOC-02` |
-| 3 | Publicar página com estado `proposto` | `LPDOC-03` |
-| 4 | Domínio próprio | `LPDOC-04` |
-| 5 | Versionar o site por release | `LPDOC-05` |
-| 6 | Redirect ao renomear página | `LPDOC-06` |
-| 7 | Idioma único ou i18n | `LPDOC-07` |
-| 8 | Quem aprova publicação de sistema novo | `LPDOC-08` |
-| 9 | Incluir as 91 páginas geradas do `wyd-db` | `LPDOC-09` |
-| 10 | Publicar catálogo de opcodes gerado | `LPDOC-10` |
-| 11 | Quando atualizar o `2.0.dev6` | `LPDOC-11` |
+| 2 | Não publicar `AGENTS.md` nem o panorama (decidido em 2026-11-19) | `LPDOC-02` |
+| 3 | Publicar página com estado `proposto`, com aviso visível no topo (decidido em 2026-11-19) | `LPDOC-03` |
+| 4 | Sem domínio próprio na `1.0.0`: publica em `lucascantarelli.github.io/wyd` (decidido em 2026-11-19) | `LPDOC-04` |
+| 5 | Só a branch, sem `/1.0.0/`: uma versão viva (decidido em 2026-11-19) | `LPDOC-05` |
+| 6 | Redirect ao renomear página: obrigatório, mapa em `wyd-docs/redirects.tsv` (decidido e implementado em 2026-11-19) | `LPDOC-06` |
+| 7 | Só pt-BR na `1.0.0`; i18n fora desta versão (decidido em 2026-11-19) | `LPDOC-07` |
+| 8 | Arquitetura aprova sistema novo e a entrada em `SISTEMAS`; documentação publica (decidido em 2026-11-19) | `LPDOC-08` |
+| 9 | Gerar as 91 páginas do `wyd-db` e publicá-las; o gerador é projeto próprio e pré-requisito (decidido em 2026-11-19; §9.1) | `LPDOC-09` |
+| 10 | Não publicar catálogo de opcodes gerado na `1.0.0` (decidido em 2026-11-19) | `LPDOC-10` |
+| 11 | Manter `2.0.dev6` fixo; revisar quando a próxima dev for publicada, com build e `verificar.py` antes (decidido em 2026-11-19) | `LPDOC-11` |
 | 12 | Build no Windows ou só em Linux/CI | `LPDOC-12` |
-| 13 | Busca de texto completo | `LPDOC-13` |
-| 14 | Até quando a ponte `compat.py` existe | `LPDOC-14` |
+| 13 | Sem busca de texto completo na `1.0.0`: o filtro de navegação é a navegação (decidido em 2026-11-19) | `LPDOC-13` |
+| 14 | Até quando a ponte `compat.py` existiu | `LPDOC-14` |
 
 ---
 

@@ -31,16 +31,16 @@ em `migrations-checklist.md` §3; o que é de 18 é o ID, não a contagem.
 
 | Nível | Quantos | Quais |
 |---|---:|---|
-| arquivos 100% | **4** | `0001_bootstrap.sql`, `0003_portal_person.sql`, `0004_portal_access.sql`, `0007_game_session.sql` |
-| tabelas com DDL fechado dentro de arquivo ainda `parcial` | **6** | `ops.audit_log` e `ops.login_attempt` (2 de 4 em `0002`); `game.account`, `game.account_wallet`, `game.account_moderation`, `game.pin_reset` (4 de 4 em `0005`, `parcial` por `A17`/`M16`) |
-| tabelas com DDL fechado no total | **14** | 1 de `0001` + 2 de `0002` + 3 de `0003` + 2 de `0004` + 4 de `0005` + 2 de `0007` |
-| tabelas da série | 91 | `plano-migrations.md` §3 |
+| arquivos 100% | **5** | `0001_bootstrap.sql`, `0003_portal_person.sql`, `0004_portal_access.sql`, `0005_game_account.sql`, `0007_game_session.sql` |
+| tabelas com DDL fechado dentro de arquivo ainda `parcial` | **2** | `ops.audit_log` e `ops.login_attempt` (2 de 4 em `0002`) |
+| tabelas com DDL fechado no total | **15** | 1 de `0001` + 2 de `0002` + 3 de `0003` + 2 de `0004` + 5 de `0005` + 2 de `0007` |
+| tabelas da série | 92 | `plano-migrations.md` §3 |
 
 Estado de **documentação** e de **aplicação** não é daqui: esta página só diz se o DDL está fechado.
 Quem deriva `planejado`/`provisório`/`pronto` do estado do arquivo é `migrations-checklist.md` §1.2,
 dono único. A coluna `Estado` de §2 cita esse checklist arquivo a arquivo, sem escala própria.
 
-**14 de 91** é o número honesto. Os outros 77 não têm coluna desenhada em nenhum documento aprovado —
+**15 de 92** é o número honesto. Os outros 78 não têm coluna desenhada em nenhum documento aprovado —
 o plano lhes dá nome, dono e ordem, não forma. Escrever DDL para eles agora seria inventar desenho.
 
 ---
@@ -57,13 +57,13 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 2 | `0002_ops_audit.sql` | `parcial` | — | `config_revision` e `config_change` só têm nome; `audit_log` (§5.3) e `login_attempt` (§5.4) estão fechadas |
 | 3 | `0003_portal_person.sql` | `pronta` | §5.1, §5.6, §5.7 | — |
 | 4 | `0004_portal_access.sql` | `concluída` | §4 | — |
-| 5 | `0005_game_account.sql` | `parcial` | — | `A17` (transferência) pode acrescentar tabela de titularidade ou coluna em `game.account`; `M16` (ledger de `coin`) só tabela (`game.account_ledger`); as 4 tabelas atuais estão fechadas (§5.2) |
+| 5 | `0005_game_account.sql` | `pronta` | §5.2 | `A17` fechada em 2026-11-19 sem objeto (conta não é transferível); `M16` acrescenta `game.account_ledger`, desenhado em §5.2 — 5 tabelas, arquivo inteiro |
 | 6 | `0006_game_character.sql` | `bloqueada` | — | 5 tabelas sem coluna desenhada; os campos vêm do `STRUCT_MOB` e de `A14` (soft-delete × sessão) |
 | 7 | `0007_game_session.sql` | `pronta` | §5.5 | depende de `game.character(id) BIGINT`, que é do `0006` ainda `bloqueada` (`H`); o resto fechou (`A10`, chave composta de `server_channel`, fusão `M23`) |
 | 8 | `0008_game_skills.sql` | `bloqueada` | — | 5 tabelas sem coluna desenhada |
 | 9 | `0009_game_inventory.sql` | `bloqueada` | — | 3 tabelas sem coluna desenhada |
 | 10 | `0010_game_guild.sql` | `bloqueada` | — | 4 tabelas sem coluna desenhada |
-| 11 | `0011_game_economy.sql` | `bloqueada` | — | 10 tabelas sem coluna desenhada; `A19` (loja/cash) e `M16`/`M17` mudam o bloco |
+| 11 | `0011_game_economy.sql` | `bloqueada` | — | 10 tabelas sem coluna desenhada; `A19` decidida: 6 de loja/cash em `portal` (`donate_*`, `daily_reward_*`, `kingdom_cape_price`, `donate_shop_item`) e 4 de jogo em `game`; `M17` acrescenta `idempotency_key` único |
 | 12 | `0012_ops_delivery.sql` | `bloqueada` | — | `delivery_queue` existe no legado, mas o desenho novo (idempotência é `M17`) não foi aprovado |
 | 13 | `0013_content_taxonomy.sql` | `bloqueada` | — | 5 tabelas + `fn_fold` sem DDL aprovado para o schema `content` |
 | 14 | `0014_content_item.sql` | `bloqueada` | — | `content.item_catalog` só tem PK e 2 detalhes definidos; as demais colunas vêm do `STRUCT_MOB` (não reescritas) |
@@ -84,7 +84,7 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 29 | `0029_views.sql` | `bloqueada` | — | as 2 views têm propósito decidido, não lista de colunas |
 
 **Leitura do estado:** o bloqueio dos arquivos 8–29 é o mesmo — **falta desenho de coluna**, não
-falta decisão de produto. É trabalho de modelagem, e cada tabela fechada sobe o "14 de 91".
+falta decisão de produto. É trabalho de modelagem, e cada tabela fechada sobe o "15 de 92".
 
 ---
 
@@ -455,6 +455,27 @@ CREATE TABLE game.account_wallet (
     CONSTRAINT ck_account_wallet_coin CHECK (coin >= 0 AND coin <= 2147483647)
 );
 
+-- Livro de `coin` (`M16`, decidido em 2026-11-19): toda mudança de carteira deixa uma linha.
+-- `balance_after` é o saldo no instante do lançamento; `account_wallet.coin` passa a ser o saldo corrente.
+CREATE TABLE game.account_ledger (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY,
+    account_id    BIGINT NOT NULL,
+    delta         BIGINT NOT NULL,
+    balance_after BIGINT NOT NULL,
+    reason        TEXT NOT NULL,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_account_ledger PRIMARY KEY (id),
+    CONSTRAINT fk_account_ledger_account FOREIGN KEY (account_id)
+        REFERENCES game.account (id) ON DELETE RESTRICT,
+    CONSTRAINT ck_account_ledger_delta CHECK (delta <> 0),
+    CONSTRAINT ck_account_ledger_balance CHECK (
+        balance_after >= 0 AND balance_after <= 2147483647
+    ),
+    CONSTRAINT ck_account_ledger_reason CHECK (char_length(reason) BETWEEN 1 AND 64)
+);
+
+CREATE INDEX ix_account_ledger_conta ON game.account_ledger (account_id, created_at DESC);
+
 CREATE TABLE game.account_moderation (
     account_id BIGINT NOT NULL,
     blocked    BOOLEAN NOT NULL DEFAULT false,
@@ -509,6 +530,8 @@ DROP TABLE game.pin_reset;
 DROP INDEX ix_account_moderation_bloqueadas;
 DROP INDEX ix_account_moderation_autor;
 DROP TABLE game.account_moderation;
+DROP INDEX ix_account_ledger_conta;
+DROP TABLE game.account_ledger;
 DROP TABLE game.account_wallet;
 DROP TRIGGER trg_account_set_updated_at ON game.account;
 DROP INDEX ix_account_person;
@@ -521,18 +544,18 @@ DROP TABLE game.account;
 
 | Lacuna | Pergunta | Efeito se a resposta for "sim" |
 |---|---|---|
-| `A17` | conta pode ser transferida/vendida entre pessoas? | **duas formas, e só a forma tabela acrescenta objeto:** tabela de histórico de titularidade no `0005` **ou** coluna de instante da última troca em `game.account`, que reabre tabela já fechada (`migrations-checklist.md` §2, arquivo 5) |
+| `A17` | conta pode ser transferida/vendida entre pessoas? | **decidido em 2026-11-19: não.** Nenhuma tabela, coluna ou índice novo; `0005` fecha com as 4 tabelas atuais mais o ledger de `M16` |
 | `M16` | `coin` precisa de razão de lançamento? | tabela `game.account_ledger` + índice por conta — arquivo novo, não coluna nesta |
 
-Enquanto a resposta de `A17` for a tabela, nenhuma das duas muda **estas** quatro tabelas; se for a
-coluna, `game.account` reabre, o `4 de 4` de §1 cai e aquela contagem é remedida quando isso
-acontecer — não antes, e não por antecipação. Nas duas formas o **arquivo** muda, e por isso `0005`
-espera. `A19` (loja/cash) não toca aqui: cairia em `portal` ou fora do schema.
+`A17` foi fechada em 2026-11-19: conta não é transferível nem vendável, então nenhuma das quatro
+tabelas muda por transferência e não há objeto novo. `M16` acrescenta `game.account_ledger`, desenhado
+acima; o `0005` passa a 5 tabelas e fecha inteiro. `A19` (loja/cash) não toca aqui: 6 tabelas ficam em
+`portal` e 4 em `game` (`plano-migrations.md` §3).
 
 **Decidido em 2026-11-17:** `M1` (status só `active`/`closed`), `M2` (`pin_reset` sem `delivered_to`,
 com `requested_ip`) e `M3` (contadores de falha da senha, `password_changed_at`, `updated_at` com
 trigger). Diferença declarada: `game.pin_reset` **não** tem o índice "um vivo por conta" que
-`ux_person_token_vivo` dá ao portal; alinhar quando `0005` fechar (`A17`/`M16`), não antes.
+`ux_person_token_vivo` dá ao portal; o alinhamento do índice fica para a onda 2, quando `0005` for aplicado.
 
 **Política de exclusão do bloco — decidida em 2026-11-18: `RESTRICT` nas três FKs que apontam para
 `game.account`** (`account_wallet`, `account_moderation`, `pin_reset`). Nenhuma cascata aqui, e a
@@ -649,13 +672,14 @@ fechados.
 
 Três decisões fecharam o arquivo, todas a partir do legado medido.
 
-**`A10` — não existe `released_reason`.** Quem libera a sessão é o **canal**, no disconnect, e o
-**reaper** (varredura de 60 s, `stale` de 180 s) quando o processo cai sem liberar. Os dois são
-processos, não pessoas: não há autor a registrar. O **motivo** de uma liberação é um evento, e o dono
-de evento neste schema é `ops.audit_log` (`actor_kind = 'system'`, `action = 'session_released'`).
-Uma coluna `TEXT` com CHECK criaria uma segunda fonte para o mesmo fato — exatamente o antipatrão
-que `padrao-banco.md` §11 proíbe e que `B5` já rejeitou uma vez, ao remover `released_reason` do
-`game_session` do rascunho.
+**`A10` — revisada em 2026-11-19 por `A14`: existe `released_reason`.** Quem libera a sessão é o
+**canal**, no disconnect, e o **reaper** (varredura de 60 s, `stale` de 180 s) quando o processo cai
+sem liberar. A `A14` decidiu que apagar personagem derruba a sessão **e** registra o motivo; por isso
+`game.session` ganha `released_reason`, com CHECK fechado (`disconnect`, `reaper`,
+`character_deleted`, `admin`) e exigência de preenchimento quando `released_at` existe. O evento
+continua em `ops.audit_log` (`actor_kind = 'system'`, `action = 'session_released'`): a coluna é o
+estado operacional da sessão; o log é a trilha auditável. As duas fontes respondem perguntas
+diferentes e não se substituem.
 
 **Chave de `game.server_channel` — composta `(group_id, channel)`.** É a topologia real do jogo, não
 uma escolha de modelagem: grupo é a instalação do servidor, `channel` 1–10 são os canais jogáveis do
@@ -733,6 +757,8 @@ CREATE TABLE game.session (
     opened_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     renewed_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     released_at    TIMESTAMPTZ,
+    -- Motivo operacional da liberação (`A14`, 2026-11-19); o evento auditável continua em `ops.audit_log`.
+    released_reason TEXT,
     CONSTRAINT pk_session PRIMARY KEY (id),
     -- Conta não é apagada (fecha com `closed_at`): RESTRICT é rede de segurança, não caminho.
     CONSTRAINT fk_session_account FOREIGN KEY (account_id)
@@ -747,7 +773,12 @@ CREATE TABLE game.session (
     CONSTRAINT ck_session_client_version CHECK (client_version > 0),
     -- Sinal de vida nunca antes da abertura, liberação nunca antes da abertura.
     CONSTRAINT ck_session_sinal CHECK (renewed_at >= opened_at),
-    CONSTRAINT ck_session_liberacao CHECK (released_at >= opened_at)
+    CONSTRAINT ck_session_liberacao CHECK (released_at >= opened_at),
+    -- Liberou, tem motivo; viva, não tem. Os quatro motivos são os dois processos e as duas ações.
+    CONSTRAINT ck_session_motivo CHECK (
+        (released_at IS NULL AND released_reason IS NULL)
+     OR (released_at IS NOT NULL AND released_reason IN ('disconnect', 'reaper', 'character_deleted', 'admin'))
+    )
 );
 
 -- Uma sessão viva por conta: a 2ª conexão da mesma conta falha aqui (nunca por código só).
@@ -798,8 +829,9 @@ devolve a linha como está — nada de `COALESCE`/default em runtime, porque 100
 não constante do código. Quem escrever o port (`crates/wyd-db`) implementa essas três regras, não a
 anterior.
 
-**O que a decisão custa, declarado:** `released_reason` não existe, então "por que esta sessão caiu"
-só se responde no `audit_log` — quem não consultar auditoria não vê o motivo. A FK composta obriga
+**O que a decisão custa, declarado:** `released_reason` existe e é obrigatório quando `released_at`
+está preenchido; o motivo fica na própria sessão e o evento continua no `audit_log`. Quem não
+consultar o log perde o autor do evento, mas não o motivo operacional. A FK composta obriga
 todo `INSERT` em `game.session` a trazer `group_id` e `channel` de um canal cadastrado, o que é o
 trabalho desejado: canal novo entra em `server_channel`, nunca por texto solto na sessão. E a fusão
 exige que a linha de status (`channel = 0`) entre com `NULL, NULL, NULL` explícito nos três campos de
@@ -888,6 +920,18 @@ não via é que sem essas duas tabelas não há onde guardar nome de exibição 
 ambos iriam para dentro de `person` (identidade) ou para fora do banco. As duas nascem mínimas:
 nenhuma coluna obrigatória além da chave, e o preenchimento é da onda dona da tela (`M21`, `EXT`).
 
+### 5.8 Decisões de comportamento e retenção (2026-11-19)
+
+Estas não mudam DDL, mas fecham lacunas e viram teste de comportamento:
+
+- **`A13`** — fechar pessoa com conta ativa fecha tudo na mesma transação; não há recusa.
+- **`A18`** — conta nasce só no portal; não existe rota de cadastro no cliente.
+- **`B1`** — envio real de e-mail na `1.0.0`, provedor escolhido na onda 6, 3 reenvios/h, TTL e
+  templates na mesma onda.
+- **`M19`** — seed de desenvolvimento usa senha fixa `dev-only`, documentada no próprio seed.
+- **`M22`** — retenção: `portal.person_session` 30 dias após `expires_at`; `game.session` 365 dias
+  após `released_at`; `ops.audit_log` 730 dias, append-only.
+
 ## 6. Adaptações obrigatórias em relação ao rascunho
 
 Onde o rascunho e o padrão divergem, **vale o padrão**. Sem esta tabela, quem copiar o rascunho
@@ -945,18 +989,18 @@ série parcial, o teste de "0 tabela ao fim do `down`" não tem o que medir.
 
 ## 8. O que este documento não faz
 
-1. **Não decide** `A17` e `M16` — as duas que §5.2 marca como capazes de acrescentar tabela ou coluna
-   ao `0005` — e nenhuma delas fecha por conveniência de escrita.
+1. **Decididas em 2026-11-19:** `A17` não cria objeto (conta não é transferível) e `M16` desenha o
+   ledger `game.account_ledger` em §5.2; o que resta em `0005` é execução, não decisão.
 2. **Não escreve** arquivo em `crates/wyd-db/`: a série nova é escrita na branch `serie-1.0.0`, em
    `migrations/`, e continua não autorizada a substituir a herdada (`plano-migrations.md` §6).
 3. **Não altera** `tools/`: o PR de ferramentas segue adiado por decisão do dono.
-4. **Não mede** catálogo: as 14 tabelas daqui são contagem de documento, não de `information_schema`.
+4. **Não mede** catálogo: as 15 tabelas daqui são contagem de documento, não de `information_schema`.
 5. **Não fecha** `0003`/`0005` por ter as tabelas com DDL fechado: arquivo é unidade de aplicação; meio
    arquivo não roda.
 
-**Próximo passo de desenho, por ordem de retorno:** `0002` (`config_revision`/`config_change`),
-`0005` (`A17`/`M16`) e `0006` (`character` e os quatro satélites, com `A14` na semântica do delete).
-`0001`, `0003`, `0004` e `0007` estão fechados: **8 das 91** tabelas, e é o começo do corte vertical
+**Próximo passo de desenho, por ordem de retorno:** `0002` (`config_revision`/`config_change`) e
+`0006` (`character` e os quatro satélites, com `A14` na semântica do delete).
+`0001`, `0003`, `0004`, `0005` e `0007` estão fechados: **13 das 92** tabelas, e é o começo do corte vertical
 de `plano-migrations.md` §3.2. `server_channel` **não** é pendência de desenho: `M23` fundiu
 `channel_capacity` e `channel_role` na própria linha do canal (§5.5), e a FK de `game.session` só
 espera `game.character(id)` — `H` do `0006`, não deste arquivo. Fechados os três restantes, o corte
