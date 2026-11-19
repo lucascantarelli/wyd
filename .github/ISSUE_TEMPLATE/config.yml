@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Panorama do projeto
+    url: https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-1.0.0.md
+    about: O que existe, o que está medido, o que está aberto e a ordem das fases.
+  - name: Regras para agentes e contribuidores
+    url: https://github.com/lucascantarelli/wyd/blob/develop/AGENTS.md
+    about: Hierarquia de fontes, invariantes e fluxo de trabalho.
+  - name: Guia de contribuição da documentação
+    url: https://github.com/lucascantarelli/wyd/blob/develop/wyd-docs/docs/contribuir/index.md
+    about: Como escrever, revisar e publicar uma página.
