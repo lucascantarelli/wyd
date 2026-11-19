@@ -8,10 +8,10 @@ Esta página é o contrato de **leitura** da documentação do `wyd-db`. Ela diz
 significa e o que você tem direito de concluir de uma frase. As regras de **escrita** ficam em
 `guia-documentacao/`, pasta que ainda não foi escrita; aqui interessa o que o leitor pode exigir.
 
-!!! tip "A regra que resolve quase tudo"
-    Toda afirmação de comportamento carrega um nível de evidência. Se a frase fala de
-    comportamento no presente do indicativo e não tem `V` no contexto, trate como hipótese:
-    o verbo correto seria "pretende", não "faz".
+> [!TIP] A regra que resolve quase tudo
+> Toda afirmação de comportamento carrega um nível de evidência. Se a frase fala de
+> comportamento no presente do indicativo e não tem `V` no contexto, trate como hipótese:
+> o verbo correto seria "pretende", não "faz".
 
 ## Marcações de evidência
 
@@ -56,10 +56,10 @@ Quatro regras:
 - **A legenda não se repete no corpo.** Depois dela, a marca vai colada na afirmação (seção acima),
   não em cada parágrafo.
 
-!!! warning "`V` emprestado é o erro que a legenda evita"
-    Um `V` medido num arquivo não empresta verificação ao parágrafo seguinte sobre o banco. Quando o
-    nível muda, o texto diz onde muda; página que não sabe dizer qual afirmação é qual não está
-    pronta para revisão.
+> [!WARNING] `V` emprestado é o erro que a legenda evita
+> Um `V` medido num arquivo não empresta verificação ao parágrafo seguinte sobre o banco. Quando o
+> nível muda, o texto diz onde muda; página que não sabe dizer qual afirmação é qual não está
+> pronta para revisão.
 
 ## Estados
 
@@ -123,10 +123,10 @@ publicado. Na prática isso é caminho em `code` precedido da marca, nunca link 
 relativo para fora de `docs/` reprova (`mkdocs build --strict`), e link para `.agents/` é proibido
 em qualquer forma (§8.4).
 
-!!! warning "Link que não resolve é defeito"
-    Caminho em `code` significa "vai existir e é aqui que ele mora". Link significa "abra agora".
-    Trocar um pelo outro para o build passar é o erro mais comum: se o alvo não existe, mantenha
-    `code`.
+> [!WARNING] Link que não resolve é defeito
+> Caminho em `code` significa "vai existir e é aqui que ele mora". Link significa "abra agora".
+> Trocar um pelo outro para o build passar é o erro mais comum: se o alvo não existe, mantenha
+> `code`.
 
 ## Nota de enunciação
 
@@ -164,11 +164,11 @@ Quatro regras que a nota não pode quebrar:
 - **Sem ponteiro prometido.** Se a nota diz que a página aponta para cá, a página aponta de fato: com
   a seção no `Base:` ou numa citação do corpo. Promessa de mão dupla que não existe é defeito.
 
-!!! warning "Nota desatualizada é pior que nota ausente"
-    Quando o dono muda de novo, a nota antiga passa a afirmar o contrário do arranjo vigente. Foi o que
-    aconteceu quando §9 virou ponteiro: a nota ainda dizia que as regras da série ficavam ali, e a
-    primeira correção foi a própria nota. Ao mudar um dono, revise a nota que o declarava **antes** de
-    revisar o corpo.
+> [!WARNING] Nota desatualizada é pior que nota ausente
+> Quando o dono muda de novo, a nota antiga passa a afirmar o contrário do arranjo vigente. Foi o que
+> aconteceu quando §9 virou ponteiro: a nota ainda dizia que as regras da série ficavam ali, e a
+> primeira correção foi a própria nota. Ao mudar um dono, revise a nota que o declarava **antes** de
+> revisar o corpo.
 
 ## Coluna de dono
 
@@ -198,15 +198,15 @@ Regras:
   decisão com `Refletida em` e `Onde vive hoje` — mesma função, nome próprio, porque a linha é
   índice e não regra. Esses dois nomes não convergem para `Regra em`.
 
-!!! warning "Coluna preenchida com parágrafo é redigitação"
-    Célula que explica a regra em vez de apontá-la faz a tabela divergir do dono na primeira mudança.
-    Se a explicação é necessária, ela é da página dona e não da célula.
+> [!WARNING] Coluna preenchida com parágrafo é redigitação
+> Célula que explica a regra em vez de apontá-la faz a tabela divergir do dono na primeira mudança.
+> Se a explicação é necessária, ela é da página dona e não da célula.
 
 ## Cabeçalho de página
 
-Todo arquivo começa com cinco linhas. O plano (§7) escreve "bloco de cabeçalho de 4 linhas" e
-lista cinco campos: vale a lista, e a contagem é divergência do plano, registrada e não corrigida
-nesta página. Cada campo promete uma coisa:
+Todo arquivo começa com cinco linhas. O plano (§7) dizia "bloco de cabeçalho de 4 linhas" e listava
+cinco campos; `P1` decidiu, em 2026-11-19, que valem os cinco campos, e o plano já usa esse número.
+Cada campo promete uma coisa:
 
 | Campo | O que promete |
 |---|---|
@@ -289,48 +289,53 @@ Regra para o próximo diagrama:
 - Bloco `mermaid` que não renderiza no build é **defeito bloqueante** (`wyd-db-1.0.0.md` §10, item 6), não estilo.
 - Diagrama que só repete a tabela ao lado não entra: escolhe-se um dos dois.
 
-## Recursos do site (habilitados e de uso obrigatório)
+## Recursos do site (só o que a 2.0 renderiza)
 
-O site habilita os recursos abaixo, e usar o recurso certo é parte da página, não enfeite: regra
-escrita em parágrafo onde cabia `!!! warning` está escondida do leitor.
+`preparar.py` copia a página como está; o MkDocs 2.0 renderiza `fenced_code`, `footnotes`, `tables`,
+`toc`, link relativo, riscado e emoji curto, e o tema transforma citação `[!TIPO]` em aviso e
+`<div class="cartoes"></div>` em grade. Usar o recurso certo é parte da página, não enfeite: regra
+escrita em parágrafo onde cabia um aviso está escondida do leitor.
 
 | Recurso | Sintaxe | Uso obrigatório quando |
 |---|---|---|
-| Admonition | `!!! tip` / `warning` / `danger` / `abstract` | regra, risco, decisão ou resumo de seção — cor por tipo: `tip` verde, `warning` âmbar, `danger` vermelho, `abstract` turquesa |
+| Aviso | `> [!TIP]`, `> [!NOTE]`, `> [!WARNING]`, `> [!DANGER]` (tipo em maiúscula) | regra, risco, decisão ou resumo de seção — cor por tipo: `tip` verde, `warning` âmbar, `danger` vermelho, `note` neutro |
 | Tabela | pipes | comparar 2+ itens por atributo; nunca lista disfarçada de tabela |
-| Content tabs | `=== "Rust"` | alternativas do mesmo passo (comando por sistema, cliente × servidor) |
-| Details | `??? note` | detalhe que quebraria o fluxo de leitura |
-| Footnotes | `[^1]` | fonte externa citada no texto |
+| Nota de rodapé | `[^1]` no texto e `[^1]: fonte` no fim | fonte externa citada no texto |
 | Código com cópia | cerca com linguagem | todo comando que o leitor vai executar |
-| Botão | `<a class="md-button" href="...">` | ação única no topo da página (abrir painel, rodar gate) |
-| Grid cards | `<div class="grid cards" markdown>` | índice de pasta com 4+ páginas |
-| Emoji e ícone Material | `:material-database:` | sinalizar tipo de conteúdo; um por título, nunca no meio da frase |
+| Lista de cartões | `<div class="cartoes"></div>` na linha anterior à lista | índice de pasta com 4+ páginas |
+| Emoji | `🗄️` Unicode direto no texto | sinalizar tipo de conteúdo; um por título, nunca no meio da frase |
 | Mermaid | cerca `mermaid` | qualquer diagrama (seção acima) |
+| Link interno | caminho relativo `page.md` | outra página publicada de `docs/` |
+
+Admonition `!!!`, aba `=== "…"`, detalhe `???`, attr-list `{ … }` (incluindo `.md-button`), grade
+`<div class="grid cards" markdown>` e ícone `:material-…:` **não existem** na 2.0: a lista de
+proibidos é a de `wyd-docs-1.0.0.md` §6 e a página que os usa reprova. O material antigo foi
+convertido uma vez em 2026-11-19 (`LPDOC-14`); página nova nasce em GFM.
 
 Página que desenha diagrama em bloco `text`, ou que lista em parágrafo o que deveria ser
-tabela/admonition, volta para rascunho na revisão.
+tabela/aviso, volta para rascunho na revisão.
 
 ## O que reprova uma página
 
 Use esta lista para julgar o que está lendo:
 
-- [ ] falta o cabeçalho, ou a pergunta do cabeçalho não é respondida pelo corpo;
-- [ ] afirmação de comportamento sem marca `V`/`H`/`P`; página que mistura os níveis sem a
+- ☐ falta o cabeçalho, ou a pergunta do cabeçalho não é respondida pelo corpo;
+- ☐ afirmação de comportamento sem marca `V`/`H`/`P`; página que mistura os níveis sem a
   legenda; `H` sem o ID que o reabre;
-- [ ] número sem fonte ou sem data;
-- [ ] link relativo sem destino, ou link para fora de `docs/` sem a marca "planejamento";
-- [ ] nota de enunciação ausente onde a enunciação mudou de dono, ou nota que promete ponteiro que a
+- ☐ número sem fonte ou sem data;
+- ☐ link relativo sem destino, ou link para fora de `docs/` sem a marca "planejamento";
+- ☐ nota de enunciação ausente onde a enunciação mudou de dono, ou nota que promete ponteiro que a
   página não faz;
-- [ ] tabela que enuncia regra sem a coluna `Regra em`, ou célula que copia o texto da regra;
-- [ ] placeholder: `TODO`, "em construção", seção vazia, tabela com coluna "a preencher";
-- [ ] adjetivo sem medida: "rápido", "robusto", "escalável";
-- [ ] índice de conteúdo escrito à mão no topo;
-- [ ] regra de negócio em página de arquitetura, ou operação em página de requisito;
-- [ ] espelho 1:1 do código, arquivo por arquivo, sem contrato nem invariante;
-- [ ] segredo, DSN, token ou hash no corpo, num exemplo ou num log citado;
-- [ ] sem revisão de alguém que não escreveu — página sem segunda leitura não fecha;
-- [ ] fora do `index.md` da pasta, ou não contabilizada em `planos/metricas.md`;
-- [ ] `Base:` vazio, `Base:` que nomeia arquivo sem a seção quando a página enuncia seção de raiz, ou
+- ☐ tabela que enuncia regra sem a coluna `Regra em`, ou célula que copia o texto da regra;
+- ☐ placeholder: `TODO`, "em construção", seção vazia, tabela com coluna "a preencher";
+- ☐ adjetivo sem medida: "rápido", "robusto", "escalável";
+- ☐ índice de conteúdo escrito à mão no topo;
+- ☐ regra de negócio em página de arquitetura, ou operação em página de requisito;
+- ☐ espelho 1:1 do código, arquivo por arquivo, sem contrato nem invariante;
+- ☐ segredo, DSN, token ou hash no corpo, num exemplo ou num log citado;
+- ☐ sem revisão de alguém que não escreveu — página sem segunda leitura não fecha;
+- ☐ fora do `index.md` da pasta, ou não contabilizada em `planos/metricas.md`;
+- ☐ `Base:` vazio, `Base:` que nomeia arquivo sem a seção quando a página enuncia seção de raiz, ou
   afirmação que só se sustenta em material fora da árvore.
 
 Falha nos quatro primeiros critérios de `wyd-db-1.0.0.md` §10 devolve a página a rascunho; falta de link, diagrama

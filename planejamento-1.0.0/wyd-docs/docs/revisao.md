@@ -50,17 +50,17 @@ O que cada marca exige é de `convencoes.md` §5, e número com fonte e data, se
 
 ### 2.3 Dono e escopo
 
-- [ ] o assunto pertence ao sistema da página, não a outro (`AGENTS.md` §6);
-- [ ] regra de outro dono é citada por seção, não reescrita — inclusive contagem, que o §5.1 de
+- ☐ o assunto pertence ao sistema da página, não a outro (`AGENTS.md` §6);
+- ☐ regra de outro dono é citada por seção, não reescrita — inclusive contagem, que o §5.1 de
   `convencoes.md` já proíbe copiar;
-- [ ] a página está dentro do teto do plano do sistema.
+- ☐ a página está dentro do teto do plano do sistema.
 
 ### 2.4 Entrega
 
-- [ ] a lacuna correspondente foi atualizada no mesmo PR, se a página fechou decisão;
-- [ ] o plano do sistema aponta a página, se ela é nova;
-- [ ] o gate foi rodado e a saída está no PR;
-- [ ] o PR tem um assunto só.
+- ☐ a lacuna correspondente foi atualizada no mesmo PR, se a página fechou decisão;
+- ☐ o plano do sistema aponta a página, se ela é nova;
+- ☐ o gate foi rodado e a saída está no PR;
+- ☐ o PR tem um assunto só.
 
 ## 3. Três vereditos
 
@@ -89,7 +89,7 @@ typo, link ou data de revisão não reabre o estado.
 - Não é revisão literária: estilo é do autor, desde que a afirmação seja verificável.
 - Não substitui o gate: `verificar.py` verde é pré-requisito, não veredito.
 - Não decide lacuna: revisor aponta; quem decide é o dono nomeado em `lacunas.md` — inclusive
-  publicação de sistema novo e página `proposto` no ar (`LPDOC-08`, `LPDOC-03`).
+  página `proposto` no ar, decidida em 2026-11-19 com aviso visível (`LPDOC-03`).
 - Não cria ADR nem fecha decisão estrutural.
 
 ## 6. O que esta página não decide

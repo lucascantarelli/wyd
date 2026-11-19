@@ -9,7 +9,7 @@
 > o rascunho foi reduzido a histórico de requisitos.
 > **Medido no dia:** 53 migrations, 87 tabelas, 625 colunas, `SCHEMA_VERSION = 53`.
 
-Números deste plano são **planejados**: 29 arquivos, 91 tabelas. O número real sai do catálogo
+Números deste plano são **planejados**: 29 arquivos, 92 tabelas. O número real sai do catálogo
 depois que a série existir — e **não é meta** (é consequência das decisões).
 
 ---
@@ -188,7 +188,7 @@ entrega.
 
 ---
 
-## 3. A série (29 arquivos, 91 tabelas)
+## 3. A série (29 arquivos, 92 tabelas)
 
 Antes do arquivo 1 existe a **etapa 0**, que não é migration: `db/roles.sql`, os papéis do cluster —
 artefato gerado por `wyd-db provision render`, especificado em `src/provision/spec.md`
@@ -204,13 +204,13 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 | 2 | `0002_ops_audit.sql` | `ops` | `audit_log`, `login_attempt`, `config_revision`, `config_change` | 4 |
 | 3 | `0003_portal_person.sql` | `portal` | `person`, `person_profile`, `person_consent` | 3 |
 | 4 | `0004_portal_access.sql` | `portal` | `person_session`, `person_token` | 2 |
-| 5 | `0005_game_account.sql` | `game` | `account`, `account_wallet`, `account_moderation`, `pin_reset` | 4 |
+| 5 | `0005_game_account.sql` | `game` | `account`, `account_wallet`, `account_ledger` (`M16`), `account_moderation`, `pin_reset` | 5 |
 | 6 | `0006_game_character.sql` | `game` | `character`, `character_status`, `character_scores`, `character_special`, `character_short_skill` | 5 |
 | 7 | `0007_game_session.sql` | `game` | `session`, `server_channel` (com `max_players`/`maintenance`/`role`, `M23`) | 2 |
 | 8 | `0008_game_skills.sql` | `game` | `character_skill`, `character_learned_skill`, `character_lineage`, `character_affect`, `character_chaos` | 5 |
 | 9 | `0009_game_inventory.sql` | `game` | `character_item`, `vault_item`, `refine_pity` | 3 |
 | 10 | `0010_game_guild.sql` | `game` | `guild`, `guild_member`, `guild_relation`, `guild_tower` | 4 |
-| 11 | `0011_game_economy.sql` | `game` | `city`, `city_tax_ledger`, `item_price`, `personal_shop`, `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit` | 10 |
+| 11 | `0011_game_economy.sql` | `game` + `portal` | `city`, `city_tax_ledger`, `item_price`, `personal_shop` (em `game`); `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit` (6 em `portal`, `A19`) | 10 |
 | 12 | `0012_ops_delivery.sql` | `ops` | `delivery_queue` | 1 |
 | 13 | `0013_content_taxonomy.sql` | `content` | `game_system`, `game_class`, `skill_lineage`, `item_kind`, `item_effect`, `fn_fold` | 5 |
 | 14 | `0014_content_item.sql` | `content` | `item_catalog` (PK `item_index`; `name_fold` gerada; GIN em `effect_names`) | 1 |
@@ -230,12 +230,12 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 | 28 | `0028_game_quests_events.sql` | `game` | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` | 7 |
 | 29 | `0029_views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
 
-**Total: 29 arquivos, 91 tabelas, 6 arquivos de seed.**
+**Total: 29 arquivos, 92 tabelas, 6 arquivos de seed.**
 
 **DDL já decidido:** `0001_bootstrap.sql`, `0003_portal_person.sql`, `0004_portal_access.sql` e
 `0007_game_session.sql` fecham inteiros hoje, mais 6 tabelas prontas dentro de arquivos abertos —
-**14 de 91** no total, com o texto completo em `ddl-confirmado.md`. Nome de tabela nesta lista **não**
-é DDL: os outros 77 nomes
+**15 de 92** no total, com o texto completo em `ddl-confirmado.md`. Nome de tabela nesta lista **não**
+é DDL: os outros 78 nomes
 não têm coluna desenhada em documento aprovado.
 
 ### 3.1 Por que esta ordem
@@ -336,7 +336,7 @@ banco de desenvolvimento de quem usa a stack.
 | diretório vivo | `migrations/` (53 arquivos, em `develop`) | `migrations/` (29 arquivos, no commit da troca) |
 | `SCHEMA_VERSION` | `53` | `29` |
 | `make migrations-apply` | série herdada | série nova |
-| catálogo/doc | `public`, 87 tabelas | 4 schemas, 91 tabelas + 2 views |
+| catálogo/doc | `public`, 87 tabelas | 4 schemas, 92 tabelas + 2 views |
 | imagem/runner | `WYD_MIGRATIONS_DIR=/migrations` | mesmo caminho, conteúdo novo |
 
 Procedimento da troca, **quando `0001`–`0007` estiverem verdes** (não executar antes): (1) `git tag pre-serie-1.0.0` no
@@ -357,7 +357,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 | Gate | Critério |
 |---|---|
 | estrutura | 29 arquivos contíguos; 0 tabela ao fim do `down` (somando os 4 schemas) |
-| catálogo | 91 tabelas + 2 views no documento gerado, todas com schema, nota e fonte |
+| catálogo | 92 tabelas + 2 views no documento gerado, todas com schema, nota e fonte |
 | tipos | nenhum `serial`, `timestamp`, `money`, `varchar`, `enum` na série |
 | constraints | 100% nomeadas; toda constraint tem teste que a viola e recebe o erro esperado |
 | fronteira | `permission denied` para portal escrevendo em `game`; jogo lendo `portal.person` |
@@ -382,7 +382,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 
 ---
 
-## 9. Ordem de execução
+## 9. Etapas de código (a execução da série)
 
 1. **[adiado em 2026-11-17]** PR de ferramentas (`banco-parse`, `check-migrations`, `pg`, `catalogo.rs`,
    `src/migrate/`, geradores)

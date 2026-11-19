@@ -27,9 +27,10 @@
 | 4 | o assunto pertence a este sistema, não a outro | `AGENTS.md` §6 |
 
 Página **fora do teto** não se escreve direto: entra como proposta no plano do sistema, com a
-pergunta que responde e o lugar na árvore. Publicar sistema novo no site depende de `LPDOC-08`, com
-estado em `planejamento-1.0.0/wyd-docs/lacunas.md`; até a decisão, o comportamento medido é que `preparar.py`
-publica toda pasta `docs/` que existir (`V`, 2026-11-19; total em `wyd-docs-1.0.0.md` §7.2).
+pergunta que responde e o lugar na árvore. Publicar sistema novo no site exige aprovação de
+arquitetura (nome, fronteira e entrada em `SISTEMAS`) e publicação pela documentação — decidido em
+2026-11-19 (`LPDOC-08` fechada). O ato técnico é a lista de `preparar.py:23-37`: pasta fora dela não
+é copiada (`preparar.py:196-201`); total de páginas em `wyd-docs-1.0.0.md` §7.2.
 
 ## 2. Onde a página mora
 
@@ -78,6 +79,8 @@ o ruleset não exige aprovação, o que o revisor confere e como o veredito é r
 
 - Não decide a forma da página: é de `convencoes.md`.
 - Não decide o veredito da revisão: é de `revisao.md`.
-- Não decide quem aprova sistema novo (`LPDOC-08`) nem página `proposto` publicada (`LPDOC-03`).
-- Não decide redirect, idioma, busca ou versão (`LPDOC-06`, `LPDOC-07`, `LPDOC-13`, `LPDOC-05`).
+- Não decide publicação de sistema novo — decidida em 2026-11-19 (`LPDOC-08`) — nem página
+  `proposto` publicada: decidido em 2026-11-19 com aviso visível (`LPDOC-03`).
+- Não decide redirect, idioma, busca nem versão: todos foram decididos em 2026-11-19
+  (`LPDOC-06`, `LPDOC-13`, `LPDOC-05`, `LPDOC-07`).
 - Não decide conteúdo de sistema: só o processo de quem escreve.

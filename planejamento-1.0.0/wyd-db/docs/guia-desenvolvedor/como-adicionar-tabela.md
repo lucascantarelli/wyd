@@ -33,10 +33,10 @@ não decidir duas vezes nem no lugar errado.
 | 7 | **Retenção** | declarar se a tabela cresce para sempre e qual é a política | crescimento sem política é descoberto tarde, no disco | §1 (`P-21`) |
 | 8 | **Permissão** | conferir se o `ALTER DEFAULT PRIVILEGES` do schema já dá o efeito certo aos papéis | a fronteira de escrita é do banco, não da revisão de código | §8; [`seguranca.md`](../arquitetura/seguranca.md) |
 
-!!! tip "A ordem importa"
-    Chave antes de nulidade, nulidade antes de `CHECK`, `CHECK` antes de índice. Cada passo depende do
-    anterior: um `CHECK` escrito antes da nulidade acaba com `COALESCE` dentro do predicado, que é o
-    cheiro de que a nulidade foi decidida no lugar errado.
+> [!TIP] A ordem importa
+> Chave antes de nulidade, nulidade antes de `CHECK`, `CHECK` antes de índice. Cada passo depende do
+> anterior: um `CHECK` escrito antes da nulidade acaba com `COALESCE` dentro do predicado, que é o
+> cheiro de que a nulidade foi decidida no lugar errado.
 
 ## 2. Coluna, tabela 1:1 ou tabela filha
 
@@ -58,10 +58,10 @@ Dois casos reais, em direções opostas, e a diferença entre eles é a pergunta
   mora só em `portal` (`padrao-banco.md` §1, `P-22`). O DDL está em `ddl-confirmado.md` §5.6 e §5.7, e
   o significado em [`dominio-acesso.md`](../dicionario-dados/dominio-acesso.md).
 
-!!! warning "Sem soft-delete genérico"
-    `deleted_at` universal contamina todo `WHERE`, todo índice e toda FK. Estado é explícito: `status`
-    com carimbo coerente, e `deleted_at` só onde o jogo exige (`padrao-banco.md` §1, `P-20`). Se a
-    tabela nova "precisa" de soft-delete, a pergunta é outra: que estado ela tem?
+> [!WARNING] Sem soft-delete genérico
+> `deleted_at` universal contamina todo `WHERE`, todo índice e toda FK. Estado é explícito: `status`
+> com carimbo coerente, e `deleted_at` só onde o jogo exige (`padrao-banco.md` §1, `P-20`). Se a
+> tabela nova "precisa" de soft-delete, a pergunta é outra: que estado ela tem?
 
 ## 3. Onde a tabela nasce
 

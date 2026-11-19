@@ -9,10 +9,11 @@
 # wyd-docs — convenções editoriais
 
 **Norma aceita pelo dono de `documentação` em 2026-11-19 (`V`; fase 3 em `wyd-docs-1.0.0.md`
-§9).** O contrato abaixo está em vigor desde o aceite. As regras que dependem de decisão pendente
-aparecem marcadas com o ID e continuam valendo como estão até a decisão: `LPDOC-03` (publicar
-página `proposto`), `LPDOC-06` (redirect ao renomear), `LPDOC-07` (idioma), `LPDOC-08` (quem aprova
-sistema novo) e `LPDOC-14` (ponte `compat.py`).
+§9).** O contrato abaixo está em vigor desde o aceite. As regras que dependem de decisão aparecem
+marcadas com o ID; `LPDOC-03` (publicar página `proposto` com aviso visível) e `LPDOC-07` (só pt-BR)
+foram decididas em 2026-11-19. Publicação de sistema novo também foi decidida em 2026-11-19
+(`LPDOC-08`: arquitetura aprova, documentação publica); redirect e ponte foram decididos
+(`LPDOC-06` e `LPDOC-14` fechadas) e a ponte já foi removida.
 
 Este é o contrato de **escrita** de quem publica página no site. O contrato de **leitura** do leitor
 é do sistema dono: `wyd-db/docs/convencoes.md` e `wyd-protocol/docs/convencoes.md` continuam donos do
@@ -45,21 +46,24 @@ texto nasce na pasta `docs/` do sistema dono, e o que está fora dela é citado,
 ## 2. Sintaxe permitida em página nova
 
 Página escrita a partir de 2026-11-19 usa **só** o que a 2.0 renderiza sem plugin: GFM, citação de
-aviso `> [!TIPO]` e cerca `mermaid` — a regra é de `wyd-docs-1.0.0.md` §6, junto do que a 2.0 não
-tem e do que o `compat.py` converte no material antigo. A lista de recursos proibidos não se repete
+aviso `> [!TIPO]`, lista de cartões `<div class="cartoes"></div>` e cerca `mermaid` — a regra é de
+`wyd-docs-1.0.0.md` §6, junto do que a 2.0 não tem. A lista de recursos proibidos não se repete
 aqui: é a de `wyd-docs-1.0.0.md` §6.
 
 | Recurso | Sintaxe | Quando usar |
 |---|---|---|
-| aviso | `> [!TIP]`, `> [!WARNING]`, `> [!NOTE]`, `> [!IMPORTANT]` | regra, risco ou resumo de seção |
+| aviso | `> [!TIP]`, `> [!NOTE]`, `> [!WARNING]`, `> [!DANGER]` | regra, risco ou resumo de seção |
 | tabela | pipes | comparar 2+ itens por atributo |
+| nota de rodapé | `[^1]` no texto e `[^1]: fonte` no fim | fonte externa citada no texto |
 | código | cerca com linguagem | todo comando que o leitor vai executar |
+| lista de cartões | `<div class="cartoes"></div>` na linha anterior à lista | índice com 4+ páginas |
+| emoji | `🗄️` Unicode direto no texto | sinalizar tipo; um por título |
 | diagrama | cerca `mermaid` | relação que a tabela não mostra |
 | link interno | caminho relativo `.md` | outra página publicada |
 | caminho fora de `docs/` | `code`, sem link | alvo interno, não publicado |
 
-Copiar a sintaxe antiga para página nova é defeito: ela passa pelo conversor hoje e some quando a
-ponte sair (`LPDOC-14`, com estado em `lacunas.md` §1).
+Copiar a sintaxe antiga para página nova é defeito: a ponte saiu em 2026-11-19 e a sintaxe 1.x
+não renderiza mais (`LPDOC-14` fechada).
 
 ## 3. Cabeçalho e estado
 
@@ -83,17 +87,17 @@ Todo arquivo publicado abre com as cinco linhas do cabeçalho e, na linha seguin
 | `Base` | seção consultada no sistema dono; `—` quando não houve |
 | `Revisado em` | data da última verificação, não a da última edição |
 
-Estados: `proposto`, `aceito`, `substituído`, `retirado`. O site publica a página hoje qualquer que
-seja o estado, e o estado viaja visível no topo — é o que `LPDOC-03` registra como situação atual;
-se o dono decidir esconder rascunho, esta seção muda na mesma entrega.
+Estados: `proposto`, `aceito`, `substituído`, `retirado`. O site publica a página qualquer que seja
+o estado, e o estado viaja visível no topo; desde 2026-11-19 a página `proposto` também leva um aviso
+no topo (`LPDOC-03`), e esconder rascunho exigiria nova decisão.
 
 ## 4. Título, URL e navegação
 
 Título, URL e navegação são de `wyd-docs-1.0.0.md` §4.1–§4.3 e não se redefinem aqui. O que a forma
 acrescenta é o efeito sobre quem edita: uma heading `#` por página, porque sem ela `verificar.py`
-reprova (`wyd-docs-1.0.0.md` §4.3); e renomear página publicada é mudança de contrato — até a
-decisão de `LPDOC-06` (redirect), com estado em `lacunas.md` §1, o link externo quebra em silêncio e
-o risco fica registrado na revisão.
+reprova (`wyd-docs-1.0.0.md` §4.3); e renomear página publicada é mudança de contrato: exige
+redirect (`LPDOC-06`, decidido em 2026-11-19; mapa em `wyd-docs/redirects.tsv`), senão o link
+externo quebra em silêncio.
 
 ## 5. Evidência
 
@@ -145,24 +149,26 @@ conteúdo do dono cria a segunda boca — e a que divergir primeiro é a errada,
 
 ## 7. O que reprova uma página publicada
 
-- [ ] falta o cabeçalho de cinco linhas, ou a `Pergunta` não é respondida pelo corpo;
-- [ ] falta `**Estado:** … (AAAA-MM-DD)` ou a data é a da edição, não a da atribuição;
-- [ ] afirmação de comportamento sem `V`/`H`/`P`, ou `H` sem o ID que a reabre;
-- [ ] número sem fonte e data;
-- [ ] sintaxe antiga em página nova (`!!!`, `===`, `???`, `attr_list`, grid cards);
-- [ ] link relativo sem destino, ou link para fora de `docs/` em vez de caminho em `code`;
-- [ ] placeholder: `TODO`, "em construção", seção vazia, tabela "a preencher";
-- [ ] adjetivo sem medida: "rápido", "robusto", "escalável";
-- [ ] índice de conteúdo escrito à mão no topo, quando a navegação já o gera;
-- [ ] segredo, DSN, token, hash ou dado de jogador no corpo, em exemplo ou em log citado;
-- [ ] conteúdo de domínio reescrito aqui em vez de publicado no sistema dono;
-- [ ] página sem segunda leitura.
+- ☐ falta o cabeçalho de cinco linhas, ou a `Pergunta` não é respondida pelo corpo;
+- ☐ falta `**Estado:** … (AAAA-MM-DD)` ou a data é a da edição, não a da atribuição;
+- ☐ afirmação de comportamento sem `V`/`H`/`P`, ou `H` sem o ID que a reabre;
+- ☐ número sem fonte e data;
+- ☐ sintaxe antiga em página nova (`!!!`, `===`, `???`, `attr_list`, grade de cartões, `:material-…:`);
+- ☐ link relativo sem destino, ou link para fora de `docs/` em vez de caminho em `code`;
+- ☐ placeholder: `TODO`, "em construção", seção vazia, tabela "a preencher";
+- ☐ adjetivo sem medida: "rápido", "robusto", "escalável";
+- ☐ índice de conteúdo escrito à mão no topo, quando a navegação já o gera;
+- ☐ segredo, DSN, token, hash ou dado de jogador no corpo, em exemplo ou em log citado;
+- ☐ conteúdo de domínio reescrito aqui em vez de publicado no sistema dono;
+- ☐ página sem segunda leitura.
 
 ## 8. O que esta página não decide
 
 - Não decide o que é publicado: isso é de `wyd-docs-1.0.0.md` §3.
-- Não decide quem aprova página de sistema novo (`LPDOC-08`) nem se página `proposto` aparece
-  (`LPDOC-03`); o estado de ambas é de `lacunas.md` §1.
-- Não decide redirect, idioma ou busca (`LPDOC-06`, `LPDOC-07`, `LPDOC-13`).
+- Não decide publicação de sistema novo — decidida em 2026-11-19: arquitetura aprova, documentação
+  publica (`LPDOC-08`) — nem se página `proposto` aparece; decidido em 2026-11-19 com aviso visível
+  (`LPDOC-03`).
+- Não decide redirect nem idioma: redirect e busca foram decididos em 2026-11-19 (`LPDOC-06`,
+  `LPDOC-13`); idioma único em pt-BR também foi decidido em 2026-11-19 (`LPDOC-07`).
 - Não decide sintaxe de domínio: offset, opcode e DDL são do `convencoes.md` de cada sistema.
 - Não cria ADR: o aceite vale como norma editorial, não como decisão estrutural.

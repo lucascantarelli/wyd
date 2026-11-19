@@ -31,10 +31,10 @@ página e a seção de raiz de onde o critério veio é o de [`../convencoes.md`
 | isso cresce para sempre? | sim | retenção declarada; partição só no limite medido | `padrao-banco.md` §1 (`P-21`) |
 | isso é regra de jogo ou de armazenamento? | regra de jogo | fica no código; trigger é proibido para isso | `padrao-banco.md` §1 (`P-16`) |
 
-!!! warning "Regra de jogo em trigger é o erro mais caro"
-    Trigger é invisível no código, não aparece no erro que o jogador vê e não tem teste de violação
-    natural. A única trigger que a série aceita é a de `updated_at`, e ela existe porque a alternativa
-    seria repetir o carimbo em cada `UPDATE` escrito à mão (`padrao-banco.md` §7).
+> [!WARNING] Regra de jogo em trigger é o erro mais caro
+> Trigger é invisível no código, não aparece no erro que o jogador vê e não tem teste de violação
+> natural. A única trigger que a série aceita é a de `updated_at`, e ela existe porque a alternativa
+> seria repetir o carimbo em cada `UPDATE` escrito à mão (`padrao-banco.md` §7).
 
 ## 2. Tipo: o que decide a escolha
 
@@ -118,12 +118,12 @@ Três garantias de concorrência têm decisão registrada:
 3. **Recurso finito não se resolve com `COUNT` no app.** Duas criações concorrentes do mesmo recurso
    disputam o índice único parcial e a segunda recebe erro do banco (`padrao-banco.md` §5, item 3).
 
-!!! note "O que esta página **não** afirma sobre concorrência"
-    `H` — não há decisão registrada para versionamento otimista de linha (coluna de versão) nem para
-    `SELECT … FOR UPDATE SKIP LOCKED` no consumo da fila de entrega. As duas aparecem no molde desta
-    página porque o assunto é desta seção, não porque existam: enquanto não houver decisão, a série
-    não ganha coluna de versão nem consulta de fila escrita por conta desta página
-    (`lacunas.md` §2.3, `M17`, aberta).
+> [!NOTE] O que esta página **não** afirma sobre concorrência
+> `H` — não há decisão registrada para versionamento otimista de linha (coluna de versão) nem para
+> `SELECT … FOR UPDATE SKIP LOCKED` no consumo da fila de entrega. As duas aparecem no molde desta
+> página porque o assunto é desta seção, não porque existam: enquanto não houver decisão, a série
+> não ganha coluna de versão nem consulta de fila escrita por conta desta página
+> (`lacunas.md` §2.3, `M17`, aberta).
 
 ## 7. Armadilhas: quatro famílias de defeito
 

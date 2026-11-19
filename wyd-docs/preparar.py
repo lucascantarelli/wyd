@@ -2,24 +2,23 @@
 
 O MkDocs 2.0 não tem plugin nem hook: só existe um diretório de entrada. Este passo copia
 as páginas de cada sistema (`planejamento-1.0.0/<sistema>/docs/`) para
-`.build/docs/sistemas/<sistema>/`, aplica a ponte de sintaxe de `compat.py`, copia o tema
-e gera `templates/navegacao.html` a partir da árvore real. Nenhuma página é editada no
-sistema dono.
+`.build/docs/sistemas/<sistema>/`, copia o tema e gera `templates/navegacao.html` a partir da
+árvore real. Nenhuma página é editada no sistema dono.
 """
 
 from __future__ import annotations
 
 import html
+import os
 import shutil
 from pathlib import Path
-
-import compat
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parent
 PLANEJAMENTO = REPO / "planejamento-1.0.0"
 MONTAGEM = BASE / ".build" / "docs"
 TEMA = BASE / "tema"
+REDIRECTS = BASE / "redirects.tsv"
 
 SISTEMAS = [
     "wyd-protocol",
@@ -98,10 +97,47 @@ def _copiar_paginas(origem: Path, destino: Path, prefixo: str) -> list[dict[str,
         rel = arquivo.relative_to(origem).as_posix()
         alvo = destino / rel
         alvo.parent.mkdir(parents=True, exist_ok=True)
-        alvo.write_text(compat.converter(arquivo.read_text(encoding="utf-8")), encoding="utf-8")
+        shutil.copyfile(arquivo, alvo)
         padrao = "Visão geral" if Path(rel).name == "index.md" else _bonito(Path(rel).stem)
         paginas.append(_pagina(alvo, f"{prefixo}/{rel}" if prefixo else rel, _titulo(arquivo, padrao)))
     return paginas
+
+
+def _redirects() -> list[tuple[str, str]]:
+    """Le `redirects.tsv`: uma linha `origem<TAB>destino`, sem `.md` e sem barra inicial."""
+    if not REDIRECTS.exists():
+        return []
+    mapa: list[tuple[str, str]] = []
+    for numero, linha in enumerate(REDIRECTS.read_text(encoding="utf-8").splitlines(), 1):
+        linha = linha.strip()
+        if not linha or linha.startswith("#"):
+            continue
+        campos = [campo.strip() for campo in linha.split("\t")]
+        if len(campos) != 2 or not all(campos):
+            raise SystemExit(f"redirects.tsv:{numero}: esperado origem<TAB>destino")
+        origem, destino = (campo.strip("/").removesuffix(".md") for campo in campos)
+        if not origem or not destino or ".." in Path(origem).parts or ".." in Path(destino).parts:
+            raise SystemExit(f"redirects.tsv:{numero}: caminho invalido")
+        mapa.append((origem, destino))
+    return mapa
+
+
+def _criar_stubs(redirects: list[tuple[str, str]]) -> int:
+    """Cria uma pagina-stub para cada origem: `meta refresh` + `canonical` para o destino."""
+    for origem, destino in redirects:
+        alvo = MONTAGEM / f"{origem}.md"
+        if alvo.exists():
+            raise SystemExit(f"redirects.tsv: {origem} colide com pagina existente")
+        alvo.parent.mkdir(parents=True, exist_ok=True)
+        rel = os.path.relpath(MONTAGEM / destino / "index.html", MONTAGEM / origem).replace("\\", "/")
+        alvo.write_text(
+            f'<meta http-equiv="refresh" content="0; url={rel}">\n'
+            f'<link rel="canonical" href="{rel}">\n\n'
+            f"# Página movida\n\n"
+            f"Esta página mudou de endereço: [ir para o novo endereço]({rel}).\n",
+            encoding="utf-8",
+        )
+    return len(redirects)
 
 
 def _arvore(paginas: list[dict[str, str]]) -> dict:
@@ -164,6 +200,8 @@ def main() -> int:
             continue
         sistemas[sistema] = _copiar_paginas(origem, MONTAGEM / "sistemas" / sistema, f"sistemas/{sistema}")
 
+    stubs = _criar_stubs(_redirects())
+
     templates = MONTAGEM / "templates"
     templates.mkdir(exist_ok=True)
     shutil.copyfile(TEMA / "base.html", templates / "base.html")
@@ -179,6 +217,8 @@ def main() -> int:
     total_paginas = len(proprias) + sum(len(paginas) for paginas in sistemas.values())
     total_sistemas = sum(1 for paginas in sistemas.values() if paginas)
     print(f"montagem: {total_paginas} páginas de {total_sistemas} sistemas em {MONTAGEM}")
+    if stubs:
+        print(f"redirects: {stubs} página(s)-stub gerada(s)")
     return 0
 
 

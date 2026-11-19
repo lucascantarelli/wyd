@@ -28,9 +28,9 @@ fica como se roda a camada de sistema.
 ausente, o teste falha nomeando a variável — nunca passa em silêncio. Ela não é lida por `spec.rs`
 nem por binário de produção: só pela suíte.
 
-!!! warning "Sem banco, sem verde"
-    `SKIP` por variável ausente é reprovado pelo gate (`gates-e-anti-skip.md`). Um teste que não
-    pode rodar é falha declarada com o motivo, não um resultado neutro.
+> [!WARNING] Sem banco, sem verde
+> `SKIP` por variável ausente é reprovado pelo gate (`gates-e-anti-skip.md`). Um teste que não
+> pode rodar é falha declarada com o motivo, não um resultado neutro.
 
 ## Paralelismo
 

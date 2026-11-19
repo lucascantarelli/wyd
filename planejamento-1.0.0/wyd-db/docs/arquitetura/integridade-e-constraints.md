@@ -80,10 +80,10 @@ página de migration do arquivo dono — esta página diz **quando ele é devido
 | coerência de par | dois campos só são válidos juntos (ou nulos juntos) | `padrao-banco.md` §5, item 6 |
 | forma de segredo | a coluna guarda hash ou token | `padrao-banco.md` §4 |
 
-!!! danger "Estado e carimbo divergentes é o defeito silencioso"
-    `(status = 'closed') = (closed_at IS NOT NULL)` é a forma da regra, e ela é `CHECK` porque o
-    contrário — status fechado sem data, ou data sem status — passa despercebido em qualquer revisão
-    de código e envenena toda consulta de retenção (`padrao-banco.md` §5, item 1).
+> [!DANGER] Estado e carimbo divergentes é o defeito silencioso
+> `(status = 'closed') = (closed_at IS NOT NULL)` é a forma da regra, e ela é `CHECK` porque o
+> contrário — status fechado sem data, ou data sem status — passa despercebido em qualquer revisão
+> de código e envenena toda consulta de retenção (`padrao-banco.md` §5, item 1).
 
 **Um estado, um dono.** Bloqueio disciplinar e ciclo de vida não são a mesma coluna: o ciclo de vida
 fica no `status`, e o bloqueio disciplinar vive na tabela de moderação, com autor, motivo e instante.
@@ -113,10 +113,10 @@ outra transação. O banco decide; o app trata o erro.
   ausência a contrato: se o caso aparecer, a decisão entra com dono e motivo, não por conveniência de
   escrita.
 
-!!! note "Por que esta seção existe mesmo sem decisão"
-    O molde da página exige o assunto. Declarar **ausência** é diferente de omitir: quem for escrever
-    DDL precisa saber que adiar constraint hoje é escolha sem registro, e que a decisão não foi tomada
-    por esquecimento.
+> [!NOTE] Por que esta seção existe mesmo sem decisão
+> O molde da página exige o assunto. Declarar **ausência** é diferente de omitir: quem for escrever
+> DDL precisa saber que adiar constraint hoje é escolha sem registro, e que a decisão não foi tomada
+> por esquecimento.
 
 ## 6. O que o banco não garante, de propósito
 

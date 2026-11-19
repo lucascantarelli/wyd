@@ -69,7 +69,7 @@ aplica a derivação por domínio e cita esta seção, nunca o valor. Aqui ficam
 tabela e o **estado de cada arquivo** (§2). Regra nova de derivação entra só aqui; estado novo (a
 palavra) é decisão de `convencoes` e aparece nas duas na mesma entrega.
 
-## 2. Checklist (29 arquivos, 91 tabelas)
+## 2. Checklist (29 arquivos, 92 tabelas)
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|
@@ -77,13 +77,13 @@ palavra) é decisão de `convencoes` e aparece nas duas na mesma entrega.
 | 2 | `0002-ops-audit.md` | 4 | `parcial` | `config_revision` e `config_change` só têm nome no plano; falta desenho de coluna. `audit_log` e `login_attempt` estão fechadas. |
 | 3 | `0003-portal-person.md` | 3 | `pronta` | — (as três tabelas fechadas em `ddl-confirmado.md` §5.1/§5.6/§5.7; `D5` × `P-22` resolvido por `M7`) |
 | 4 | `0004-portal-access.md` | 2 | `concluída` | — |
-| 5 | `0005-game-account.md` | 4 | `parcial` | As 4 tabelas atuais estão fechadas; objeto novo só vem se `M16` virar ledger ou se `A17` responder tabela. `A17` também pode responder coluna em `game.account` — e aí reabre tabela fechada sem objeto novo. |
+| 5 | `0005-game-account.md` | 5 | `pronta` | As 5 tabelas estão fechadas: 4 atuais + `game.account_ledger` (`M16`); `A17` decidiu que não há transferência, então nenhum objeto de titularidade. |
 | 6 | `0006-game-character.md` | 5 | `bloqueada` | 5 tabelas sem coluna desenhada; os campos vêm do `STRUCT_MOB` e `A14` (soft-delete × sessão viva) muda a semântica do delete. |
 | 7 | `0007-game-session.md` | 2 | `pronta` | — (as duas tabelas fechadas em `ddl-confirmado.md` §5.5; `A10`, a chave composta e a fusão `M23` decididas em 2026-11-18) |
 | 8 | `0008-game-skills.md` | 5 | `bloqueada` | 5 tabelas sem coluna desenhada. |
 | 9 | `0009-game-inventory.md` | 3 | `bloqueada` | 3 tabelas sem coluna desenhada. |
 | 10 | `0010-game-guild.md` | 4 | `bloqueada` | 4 tabelas sem coluna desenhada. |
-| 11 | `0011-game-economy.md` | 10 | `bloqueada` | 10 tabelas sem coluna desenhada; `A19` (loja/cash), `M16` (ledger de `coin`) e `M17` (idempotência de crédito) mudam o bloco. |
+| 11 | `0011-game-economy.md` | 10 | `bloqueada` | 10 tabelas sem coluna desenhada; `A19` decidiu 6 de loja/cash em `portal` e 4 de jogo em `game`; `M17` acrescenta `idempotency_key`. |
 | 12 | `0012-ops-delivery.md` | 1 | `bloqueada` | A tabela existe no legado, mas o desenho novo não foi aprovado: a idempotência de crédito (`M17`) ainda não tem dono nem formato. |
 | 13 | `0013-content-taxonomy.md` | 5 | `bloqueada` | Nenhum DDL aprovado para o schema `content` (5 tabelas + `fn_fold`). |
 | 14 | `0014-content-item.md` | 1 | `bloqueada` | Só a PK e dois detalhes estão definidos; as demais colunas vêm do `STRUCT_MOB` e não foram reescritas no padrão. |
@@ -110,7 +110,7 @@ O detalhe de cada decisão fica em `lacunas.md`; aqui está só o que **impede a
 | Bloqueio | O que é | Arquivos afetados | Dono |
 |---|---|---|---|
 | Desenho de coluna | Nenhuma coluna aprovada em documento para as tabelas do arquivo. É modelagem, não lacuna de produto. | `0006`, `0008`–`0012`, `0013`–`0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0029` | arquitetura |
-| `A17` | Conta de jogo pode ser transferida entre pessoas? Se sim, são duas formas e só a forma tabela acrescenta objeto: histórico de titularidade vira tabela, **ou** o instante da última troca vira coluna em `game.account`, que reabre tabela já fechada (`ddl-confirmado.md` §5.2). | `0005` | produto + arquitetura |
+| `A17` | **Fechada em 2026-11-19: não.** Conta não é transferível nem vendável; nenhum objeto em `0005` (`ddl-confirmado.md` §5.2). | `0005` | produto + arquitetura |
 | `M16` | `coin` precisa de razão de lançamento (ledger) ou snapshot auditado basta? | `0005`, `0011` | produto + arquitetura |
 | `M17` | Chave de idempotência sem dono, formato e janela de replay: trava crédito e entrega. | `0011`, `0012` | arquitetura + frente `wyd-portal` |
 | `A19` | Loja e cash existem? Entra em `portal`, fica fora do schema, ou não existe. | `0011` | produto |
@@ -129,14 +129,14 @@ o token, que é rota e emissor, não coluna).
 | Medida | Valor | Fonte |
 |---|---:|---|
 | Arquivos planejados | 29 | `plano-migrations.md` §3 |
-| Tabelas planejadas | 91 | soma da coluna `Tab.` acima |
+| Tabelas planejadas | 92 | soma da coluna `Tab.` acima |
 | Arquivos de seed | 6 | `plano-migrations.md` §4 |
 | Páginas `concluída` hoje | 2 | `0001`, `0004` |
-| Páginas `pronta` (a escrever) | 2 | `0003`, `0007` |
-| Arquivos com DDL parcial | 2 | `0002` (2 de 4), `0005` (4 de 4, arquivo aberto por `A17`/`M16`) |
+| Páginas `pronta` (a escrever) | 3 | `0003`, `0005`, `0007` |
+| Arquivos com DDL parcial | 1 | `0002` (2 de 4) |
 | Arquivos bloqueados | 23 | `0006`, `0008`–`0029` (`0007` fechou em 2026-11-18) |
-| Soma que fecha | 29 | 2 `concluída` + 2 `pronta` + 2 `parcial` + 23 `bloqueada` |
-| Tabelas com DDL fechado | 14 de 91 | `ddl-confirmado.md` §1 |
+| Soma que fecha | 29 | 2 `concluída` + 3 `pronta` + 1 `parcial` + 23 `bloqueada` |
+| Tabelas com DDL fechado | 15 de 92 | `ddl-confirmado.md` §1 |
 
 Número é **planejado**, não medido: a contagem real sai do catálogo depois que a série existir
 (`M20`). Nenhum arquivo `.sql` desta série foi escrito e nenhum Postgres rodou.
@@ -178,8 +178,8 @@ página escrita por dedução virar DDL sem decisão.
   `Bloqueio` — nunca a coluna `Tab.` nem a contagem de arquivos, que vêm do plano.
 - Arquivo novo na série entra aqui com o próximo número livre e passa por `plano-migrations.md`
   antes; este checklist não cria migration.
-- A ordem de escrita não é a ordem da tabela: os arquivos `pronta` primeiro (`0003`, `0007`), depois
-  os `parcial` que destravam o corte vertical (`0002`, `0005`), depois o resto.
+- A ordem de escrita não é a ordem da tabela: os arquivos `pronta` primeiro (`0003`, `0005`, `0007`),
+  depois o `parcial` que destrava o corte vertical (`0002`), depois o resto.
 - Pré-requisito de ambiente (papel de cluster) **não** mora nesta pasta nem altera a contagem de 29
   arquivos: é artefato gerado por `wyd-db provision render`, especificado em
   `src/provision/spec.md` (**planejamento**). Se um pré-requisito passar a mudar schema, ele vira

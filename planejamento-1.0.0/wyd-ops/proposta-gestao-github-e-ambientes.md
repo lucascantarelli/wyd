@@ -103,7 +103,7 @@ checklist em texto para substituir hierarquia: checklist não aparece no board c
 O GitHub liberou **issue types e fields para contas pessoais em 2026-11-11** (GA). Como o repositório
 é de conta pessoal, isso está disponível sem organização.
 
-Proposta:
+**Proposta em aberto:**
 
 | Recurso | Valores |
 |---|---|
@@ -197,7 +197,7 @@ Rulesets e branch protection estão disponíveis em repositório público no pla
 ├── actions/
 │   ├── setup-rust/action.yml       # toolchain + cache
 │   ├── setup-node/action.yml       # node + npm cache
-│   ├── docs-check/action.yml       # mkdocs build --strict + links
+│   ├── docs-check/action.yml       # preparar.py + mkdocs build + verificar.py
 │   └── coverage-gate/action.yml    # lê cobertura e falha abaixo de 85%
 └── workflows/
     ├── ci.yml                      # orquestra em estágios
@@ -237,16 +237,25 @@ sempre passa: gate que não pode falhar não é gate.
 ```yaml
 # .github/actions/docs-check/action.yml
 name: docs-check
-description: Valida o site MkDocs em modo estrito.
+description: Monta, constrói e verifica o site MkDocs 2.0.
 runs:
   using: composite
   steps:
-    - name: Instalar MkDocs
+    - name: Instalar dependências
       shell: bash
-      run: pip install mkdocs-material
-    - name: Build estrito
+      run: pip install -r wyd-docs/requirements.txt
+    - name: Montar fontes
       shell: bash
-      run: mkdocs build --strict
+      working-directory: wyd-docs
+      run: python preparar.py
+    - name: Construir site
+      shell: bash
+      working-directory: wyd-docs
+      run: mkdocs build --dir .build/docs --output site
+    - name: Verificar
+      shell: bash
+      working-directory: wyd-docs
+      run: python verificar.py site
 ```
 
 Exemplo de workflow reutilizável:
@@ -338,7 +347,7 @@ O servidor de jogo precisa de processo persistente, porta TCP `8281` (CPSock), e
 latência baixa. Nenhum free tier acima oferece isso: todos dormem, expiram ou são serverless. Banco
 de produção também não cabe: 1 GB e scale-to-zero não sustentam personagens, auditoria e catálogo.
 
-**Proposta:** produção só depois de decisão de custo — máquina própria, VPS barata ou crédito de
+**Proposta em aberto:** produção só depois de decisão de custo — máquina própria, VPS barata ou crédito de
 provedor. Até lá, free tier é vitrine de portal e banco de homologação.
 
 ### 7.4 Documentação e portal

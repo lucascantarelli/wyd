@@ -10,96 +10,95 @@
 pool, filas de transferência e carga de conteúdo — documentados para quem vai entender, alterar ou
 operar o banco.
 
-[Começar pelo guia do desenvolvedor](guia-desenvolvedor/index.md){ .md-button .md-button--primary }
-[Ver os requisitos](specs/index.md){ .md-button }
+[Começar pelo guia do desenvolvedor](guia-desenvolvedor/index.md)
+[Ver os requisitos](specs/index.md)
 
-!!! tip "⏱️ Trilha de 10 minutos"
-    1. [🏛️ Arquitetura](arquitetura/index.md) — o que o `wyd-db` é e onde ficam as fronteiras.
-    2. [🗂️ Dicionário de dados](dicionario-dados/index.md) — o que cada tabela significa.
-    3. [👩‍💻 Guia do desenvolvedor](guia-desenvolvedor/index.md) — como mexer sem quebrar.
+> [!TIP] ⏱️ Trilha de 10 minutos
+> 1. [🏛️ Arquitetura](arquitetura/index.md) — o que o `wyd-db` é e onde ficam as fronteiras.
+> 2. [🗂️ Dicionário de dados](dicionario-dados/index.md) — o que cada tabela significa.
+> 3. [👩‍💻 Guia do desenvolvedor](guia-desenvolvedor/index.md) — como mexer sem quebrar.
 
 ## 🧭 Seções
 
-<div class="grid cards" markdown>
+<div class="cartoes"></div>
 
 -   **🏛️ Arquitetura**
 
-    ---
+---
 
-    Contexto, componentes, fronteira entre o tick e o banco, modelo conceitual e lógico, padrões
-    de PostgreSQL e decisões registradas.
+Contexto, componentes, fronteira entre o tick e o banco, modelo conceitual e lógico, padrões
+de PostgreSQL e decisões registradas.
 
-    [Abrir arquitetura →](arquitetura/index.md)
+[Abrir arquitetura →](arquitetura/index.md)
 
 -   **📋 Especificações e requisitos**
 
-    ---
+---
 
-    Requisitos funcionais, regras de negócio, requisitos não funcionais, casos de uso, fluxos,
-    estados e a matriz de rastreabilidade.
+Requisitos funcionais, regras de negócio, requisitos não funcionais, casos de uso, fluxos,
+estados e a matriz de rastreabilidade.
 
-    [Abrir especificações →](specs/index.md)
+[Abrir especificações →](specs/index.md)
 
 -   **🗂️ Dicionário de dados**
 
-    ---
+---
 
-    O significado de cada tabela por domínio e a referência de campo gerada a partir das
-    migrations.
+O significado de cada tabela por domínio e a referência de campo gerada a partir das
+migrations.
 
-    [Abrir dicionário →](dicionario-dados/index.md)
+[Abrir dicionário →](dicionario-dados/index.md)
 
 -   **🗺️ Planos**
 
-    ---
+---
 
-    Plano de documentação, testes, implantação, manutenção, qualidade, métricas e riscos.
+Plano de documentação, testes, implantação, manutenção, qualidade, métricas e riscos.
 
-    [Abrir planos →](planos/index.md)
+[Abrir planos →](planos/index.md)
 
 -   **🚀 Roadmap**
 
-    ---
+---
 
-    Fases, prioridades e a página de cada issue `WYDDB-nnn` com o seu critério de pronto.
+Fases, prioridades e a página de cada issue `WYDDB-nnn` com o seu critério de pronto.
 
-    [Abrir roadmap →](roadmap/index.md)
+[Abrir roadmap →](roadmap/index.md)
 
 -   **👩‍💻 Guia do desenvolvedor**
 
-    ---
+---
 
-    Ambiente, mapa do crate, portas e contratos, como adicionar migration e como escrever teste.
+Ambiente, mapa do crate, portas e contratos, como adicionar migration e como escrever teste.
 
-    [Abrir guia do desenvolvedor →](guia-desenvolvedor/index.md)
+[Abrir guia do desenvolvedor →](guia-desenvolvedor/index.md)
 
 -   **🛠️ Guia do administrador**
 
-    ---
+---
 
-    Instalação, configuração, backup e restore, diagnóstico, manutenção e recuperação de desastre.
+Instalação, configuração, backup e restore, diagnóstico, manutenção e recuperação de desastre.
 
-    [Abrir guia do administrador →](guia-administrador/index.md)
+[Abrir guia do administrador →](guia-administrador/index.md)
 
 -   **🧪 Guia de teste**
 
-    ---
+---
 
-    Pirâmide de testes, fixtures, dados de teste, contrato, sistema e os gates que impedem teste
-    que não roda.
+Pirâmide de testes, fixtures, dados de teste, contrato, sistema e os gates que impedem teste
+que não roda.
 
-    [Abrir guia de teste →](guia-teste/index.md)
+[Abrir guia de teste →](guia-teste/index.md)
 
 -   **✍️ Guia de documentação**
 
-    ---
+---
 
-    Os padrões desta documentação: onde cada assunto mora, como escrever, que recursos de markdown
-    usar, como diagramar, linkar e publicar.
+Os padrões desta documentação: onde cada assunto mora, como escrever, que recursos de markdown
+usar, como diagramar, linkar e publicar.
 
-    [Abrir guia de documentação →](guia-documentacao/index.md)
+[Abrir guia de documentação →](guia-documentacao/index.md)
 
-</div>
 
 ## 🎯 Por onde começar
 
@@ -114,60 +113,62 @@ operar o banco.
 
 ## 🛤️ Trilhas de leitura
 
-=== "🧠 Entender o banco"
+#### 🧠 Entender o banco
 
-    1. [Arquitetura](arquitetura/index.md) — `visao-geral.md`, `modelo-conceitual.md`.
-    2. [Dicionário de dados](dicionario-dados/index.md) — começa em `como-ler.md`.
-    3. [Especificações](specs/index.md) — as regras que o banco precisa cumprir.
 
-=== "🔧 Alterar o schema"
+1. [Arquitetura](arquitetura/index.md) — `visao-geral.md`, `modelo-conceitual.md`.
+2. [Dicionário de dados](dicionario-dados/index.md) — começa em `como-ler.md`.
+3. [Especificações](specs/index.md) — as regras que o banco precisa cumprir.
 
-    1. [Arquitetura](arquitetura/index.md) — `padroes-postgres.md` e `integridade-e-constraints.md`.
-    2. [Guia do desenvolvedor](guia-desenvolvedor/index.md) — `como-adicionar-migration.md`.
-    3. [Guia de teste](guia-teste/index.md) — o que precisa ser provado antes do merge.
+#### 🔧 Alterar o schema
 
-=== "🚦 Operar em produção"
 
-    1. [Guia do administrador](guia-administrador/index.md) — `backup-e-restore.md`, `diagnostico.md`.
-    2. [Planos](planos/index.md) — `plano-de-implantacao.md`.
+1. [Arquitetura](arquitetura/index.md) — `padroes-postgres.md` e `integridade-e-constraints.md`.
+2. [Guia do desenvolvedor](guia-desenvolvedor/index.md) — `como-adicionar-migration.md`.
+3. [Guia de teste](guia-teste/index.md) — o que precisa ser provado antes do merge.
 
+#### 🚦 Operar em produção
+
+
+1. [Guia do administrador](guia-administrador/index.md) — `backup-e-restore.md`, `diagnostico.md`.
+2. [Planos](planos/index.md) — `plano-de-implantacao.md`.
 ## ⚠️ Antes de alterar o schema
 
-!!! warning "Três regras que evitam retrabalho"
-    - **Coluna nasce com a tabela.** Não existe `ALTER TABLE` corretivo: desenho errado se conserta
-      na origem, não com remendo.
-    - **DDL antes de seed.** Nenhum seed roda antes de a tabela que ele preenche existir, e o
-      `down` de seed restaura o estado anterior em vez de apagar.
-    - **Todo objeto criado cai no `down` do próprio arquivo.** Reverter precisa voltar ao estado
-      exato de antes.
-
-    O passo a passo está em [Guia do desenvolvedor](guia-desenvolvedor/index.md); o porquê de cada
-    regra está em [Arquitetura](arquitetura/index.md).
+> [!WARNING] Três regras que evitam retrabalho
+> - **Coluna nasce com a tabela.** Não existe `ALTER TABLE` corretivo: desenho errado se conserta
+>   na origem, não com remendo.
+> - **DDL antes de seed.** Nenhum seed roda antes de a tabela que ele preenche existir, e o
+>   `down` de seed restaura o estado anterior em vez de apagar.
+> - **Todo objeto criado cai no `down` do próprio arquivo.** Reverter precisa voltar ao estado
+>   exato de antes.
+>
+> O passo a passo está em [Guia do desenvolvedor](guia-desenvolvedor/index.md); o porquê de cada
+> regra está em [Arquitetura](arquitetura/index.md).
 
 ## 📦 Escopo desta edição
 
-??? note "O que está documentado e o que fica fora"
-    **Dentro:** o schema da série 1.0.0 (`0001_bootstrap.sql` … `0029_views.sql` — contagem de
-    arquivos, tabelas e `SCHEMA_VERSION` em `plano-migrations.md` §3), o crate `wyd-db`
-    (portas, adapter, pool, migrations, filas), o seed de desenvolvimento, a operação do banco e os
-    requisitos que ele precisa cumprir.
-
-    **Fora:** `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin` e o portal; regra de jogo
-    implementada no tick; dados de jogador reais; harness E2E de cliente e bots.
+> [!NOTE] O que está documentado e o que fica fora
+> **Dentro:** o schema da série 1.0.0 (`0001_bootstrap.sql` … `0029_views.sql` — contagem de
+> arquivos, tabelas e `SCHEMA_VERSION` em `plano-migrations.md` §3), o crate `wyd-db`
+> (portas, adapter, pool, migrations, filas), o seed de desenvolvimento, a operação do banco e os
+> requisitos que ele precisa cumprir.
+>
+> **Fora:** `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin` e o portal; regra de jogo
+> implementada no tick; dados de jogador reais; harness E2E de cliente e bots.
 
 ## 📐 Convenções de leitura
 
-!!! abstract "Como interpretar o texto"
-    - `V` — **verificado** por comando, arquivo ou artefato.
-    - `H` — **hipótese** declarada, com o que falta para fechar.
-    - `P` — **planejado**, ainda não existe.
-    - **sem marca** — comportamento do PostgreSQL: plataforma, não projeto.
-
-    Comportamento sem `arquivo:linha` nunca é apresentado como prova, e todo número cita a fonte e a
-    data da medição.
-
-    A forma do schema (coluna, tipo, índice, CHECK) vem da referência **gerada**; o texto explica o
-    significado em vez de repetir a coluna.
-
-    As regras de escrita, marcação e publicação estão no
-    [✍️ guia de documentação](guia-documentacao/index.md).
+> [!ABSTRACT] Como interpretar o texto
+> - `V` — **verificado** por comando, arquivo ou artefato.
+> - `H` — **hipótese** declarada, com o que falta para fechar.
+> - `P` — **planejado**, ainda não existe.
+> - **sem marca** — comportamento do PostgreSQL: plataforma, não projeto.
+>
+> Comportamento sem `arquivo:linha` nunca é apresentado como prova, e todo número cita a fonte e a
+> data da medição.
+>
+> A forma do schema (coluna, tipo, índice, CHECK) vem da referência **gerada**; o texto explica o
+> significado em vez de repetir a coluna.
+>
+> As regras de escrita, marcação e publicação estão no
+> [✍️ guia de documentação](guia-documentacao/index.md).
