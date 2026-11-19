@@ -30,3 +30,6 @@ wyd-client/files/*
 **/dist/
 **/target/
 **/*.rs.bk
+
+# Memória do agente
+.agents/memory/
