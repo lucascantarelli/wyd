@@ -17,6 +17,7 @@
 | ver contradições que precisam de decisão do time | §3 |
 | saber a ordem de execução e o gate de cada fase | §4 |
 | saber o que este plano não decide | §5 |
+| saber o que fazer em seguida, por ganho ÷ esforço | §6 |
 
 ---
 
@@ -78,7 +79,7 @@
 | `crates/*` | 9 pastas, só `.gitkeep` | `git ls-files` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
-| CI | 1 workflow, 1 job (`get-info`), sem build nem teste | `.github/workflows/full-workflow.yml` |
+| CI | `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; 30 páginas montadas de 3 sistemas; build e `verificar.py` verdes | `wyd-docs/`, 2026-11-19 |
 | Cliente | 7.147 arquivos em `wyd-client/files/`, ignorado | `find` |
@@ -121,9 +122,9 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 |---|---|---|---|
 | D1 | `README.md` da raiz afirma desenvolvimento ativo, 10 crates, 34 issues ativas, 58 concluídas, 53 migrations e serviços no ar — **resolvido em 2026-11-19**: reescrito para o estado medido, sem contagem replicada | `README.md` × `git ls-files`, API do GitHub | agente e visitante leem estado falso |
 | D2 | `crates/*` estão vazios, mas o README e o CI pressupõem workspace Rust | `find crates` | qualquer `cargo build` na raiz falha |
-| D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando | `.github/workflows/full-workflow.yml:37-44` | job falha; não há build, teste, cobertura nem gate |
-| D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` só tem `.gitkeep` | `git ls-files .github` | meta da `1.0.0` sem base |
-| D5 | `has_projects: false`, 0 milestones, 0 issues: não há gestão de trabalho | API do GitHub | roadmap de 40 issues do `wyd-db` não tem onde viver |
+| D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
+| D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
+| D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-19**: a estrutura existe (labels, formulários, board); falta criar as issues, que dependem de página com DoD |
 | D6 | O plano diretor declara 146 páginas autorais, mas 84 estão bloqueadas por falta de decisão | `proposta-paginas.md` §1 | escrever mais rápido exige fechar lacuna, não escrever autour |
 | D7 | Não existe `mkdocs.yml` em lugar nenhum, mas `wyd-docs` é dono do site e o guia do `wyd-db` já prescreve recursos do MkDocs — **resolvido em 2026-11-19**: site em MkDocs 2.0 no `wyd-docs/`, sem `mkdocs.yml`; recursos do MkDocs 1.x traduzidos por `compat.py` (§2.2 e `LPDOC-14`) | `find . -iname 'mkdocs*.yml'` sem resultado | site não publicável; exigência sem base executável |
 | D8 | `docs/` na raiz não existe; no legado, `docs/` é referência — **resolvido em 2026-11-19**: a documentação publicada sai de `planejamento-1.0.0/*/docs/` por `wyd-docs/`, e o legado não é publicado | `ls` | risco de alguém publicar o legado como doc oficial |
@@ -178,7 +179,7 @@ Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ord
 - [ ] Escrever `planos/` (testes, dados, qualidade, métricas, riscos, execução).
 - [ ] Escrever `guia-administrador/`, `guia-documentacao/` e o restante de `guia-teste/`.
 - [ ] Criar `tests/` e `prompts/`/`skills/` do sistema.
-- [ ] Validar o site: `mkdocs build --strict` sem link quebrado nem diagrama inválido.
+- [ ] Validar o site: `mkdocs build --strict` sem link morto nem diagrama inválido.
 
 **Gate:** 29 páginas de migration + 18 de domínio + 91 geradas; `planos/metricas.md` mede o
 fechamento; nenhuma afirmação de comportamento sem `V`; site estrito passa.
@@ -229,3 +230,26 @@ sistema executando contra Postgres real.
 - Não escolhe hospedagem: a proposta está em `wyd-ops/proposta-gestao-github-e-ambientes.md` e
   depende de aprovação.
 - Não mede qualidade de código: não há código de produção para medir.
+
+---
+
+## 6. Próximos passos priorizados por ganho ÷ esforço (2026-11-19)
+
+Ordem por **desbloqueio ÷ esforço**, não pela sequência das fases de §4. `automação` significa
+executável agora, sem decisão pendente; `usuário` significa que só o dono decide ou autoriza. Todo
+item termina num resultado observável — nenhum é "revisar" ou "amadurecer". O único passo que publicou foi o 2,
+dentro da janela declarada pelo dono.
+
+| # | Passo | Desbloqueia | Por que é rápido (o que já existe) | Pré-requisito | Executa | Termina quando |
+|---:|---|---|---|---|---|---|
+| 1 | Capturar o marcador público atual e registrar o custo de publicação | dimensiona a janela de congelamento e fixa o baseline `D0` do conteúdo público antes de congelar | reutilizou runs e deployments já identificados, os horários de `created_at`/status final e o marcador das duas árvores | nenhum | automação | **feito** (`V`, 2026-11-19): `assets/site.js` respondeu 200 com a URL literal do Highlight.js e as durações #4/#6/#8 foram 49/43/29 s; o registro está em `wyd-docs-1.0.0.md` §7.3 |
+| 2 | Declarar a janela sem publicação e executar o checklist de rollback | fecha `LPDOC-01`, a lacuna que segura a publicação contínua do site | os dois runs estão elegíveis, o build dos dois commits passou em Linux (`V`, §7.3) e o checklist de 10 passos já está escrito | declaração de congelamento do dono | usuário declara; automação executa | **feito** (`V`, 2026-11-19): #2 publicou `2378b62b` (`npm/highlight.js`), #4 restaurou `0d765858` (`cdn-release`); deployments `7911886524` e `7911904845` `success`; `LPDOC-01` fechada |
+| 3 | Decidir o conteúdo que fica público depois da restauração | evita manter o site atrás de `develop` sem decisão registrada | a consequência já está escrita no critério de parada de §7.3; falta uma frase | nenhum | usuário | uma linha em `wyd-docs-1.0.0.md` §7.3/§9 diz qual conteúdo deve ficar no ar e se o tip será republicado |
+| 4 | Fechar `LPDOC-12` fixando o build suportado em Linux/container | remove ambiguidade do build local; é uma lacuna `P1` aberta | o erro `PosixPath` está reproduzido e o mesmo comando passa em container nos dois commits | nenhum | usuário (dono: operação) | linha `LPDOC-12` fechada em `lacunas.md` e §7.1 declarando o escopo |
+| 5 | Medir o comportamento real do CI `full-workflow` como baseline do plano do `wyd-ops` | dá base verificável para a Fase 4 (CI real) e tira a causa de `H` | runs, jobs e log já estavam acessíveis por leitura; faltava medir o efeito real do defeito de shell que `D3` apontava | nenhum | automação | **feito** (`V`, 2026-11-19): run #14 (`44505419869`) e job `Get Info` (`135495629487`) `success`, saída `version`/`commit` vazias; registrado em `wyd-ops` §2 e §2.1 |
+
+**Próxima ação imediata (uma só): publicar os arquivos pendentes por PR.** O passo 2 foi executado em
+2026-11-19 e fechou `LPDOC-01`; o site está em `0d765858…` e `develop` no tip. O que sobra é o que só
+o dono libera: commit, push e PR sob o ruleset de `develop`, cujo merge dispara `docs` e cria um
+deployment novo — sem risco de conteúdo, porque as duas versões publicam os mesmos bytes. Depois
+dele, os passos 3 e 4 e a `LPDOC-12` são frases curtas que não publicam nada.

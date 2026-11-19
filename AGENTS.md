@@ -58,8 +58,8 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Lacunas do `wyd-db` | 29 registradas: 14 abertas, 3 externas, 12 fechadas |
 | Código Rust | apenas em `deprecated/crates/` (375 arquivos), **ignorado pelo git**; `crates/*` só tem `.gitkeep` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml` ou `Makefile` |
-| GitHub | público, `develop` padrão, 0 issues abertas, 0 milestones, Projects do repositório desabilitado |
-| CI | `.github/workflows/full-workflow.yml` tem só o job `get-info`, e ele está quebrado |
+| GitHub | público, `develop` padrão, 0 issues abertas, **6 milestones** (`M0`–`M5`) e Projects habilitado, project `WYD 1.0.0` nº 10 (API do GitHub, 2026-11-19; detalhe em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
+| CI | `.github/workflows/full-workflow.yml` tem 1 job (`Get Info`) que conclui `success` e entrega `version`/`commit` vazios; não há build, teste, cobertura nem gate (run #14 `44505419869`; detalhe em `planejamento-1.0.0/wyd-ops/` §2.1) |
 | Cliente | `wyd-client/files/` com 7.147 arquivos, ignorado pelo git |
 
 Números vivem em `planejamento-1.0.0/wyd-1.0.0.md` §1, com comando e data. Não replique contagem em

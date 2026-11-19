@@ -29,17 +29,59 @@
 | Visibilidade | público | API do GitHub |
 | Branch padrão | `develop` | API do GitHub |
 | Issues | habilitadas, **0 abertas** | API do GitHub |
-| Milestones | **0** | API do GitHub |
-| Projects do repositório | **desabilitado** (`has_projects: false`) | API do GitHub |
-| Projects da conta | 1, “GP-100 Pipeline”, de outro assunto | API do GitHub |
-| Merge | squash permitido; merge/rebase desabilitados; branch apagada no merge | API do GitHub |
+| Milestones | **6** (`M0 — Fundação` a `M5 — Operação`, nº 1–6) | API do GitHub, 2026-11-19; criação em §10 |
+| Projects do repositório | **habilitado** (`has_projects: true`), project `WYD 1.0.0` nº 10 | API do GitHub, 2026-11-19; criação em §10 |
+| Projects da conta | o `WYD 1.0.0` (§10) e 1 de outro assunto (“GP-100 Pipeline”) | API do GitHub |
+| Merge | apenas squash (merge commit e rebase não permitidos); branch apagada no merge | API do GitHub |
 | Segurança | secret scanning e Dependabot ativos | API do GitHub |
-| CI | 1 workflow, 1 job `get-info`, quebrado; sem build, teste ou cobertura | `.github/workflows/full-workflow.yml` |
-| Actions compostas | pasta `.github/actions/` só com `.gitkeep` | `git ls-files .github` |
-| Templates | nenhum issue template nem PR template | `.github/` |
+| CI | 2 workflows: `Full Workflow` (1 job `Get Info`, **verde** e sem build/teste/cobertura; grava `version`/`commit` vazios — §2.1) e `docs` (gate do site + publicação) | `.github/workflows/` |
+| Actions compostas | 1 (`docs-check`, usada pelo workflow `docs`), além do `.gitkeep` | `git ls-files .github`, 2026-11-19 |
+| Templates | 4 formulários de issue (`bug`, `planejamento`, `decisao`, `tarefa`), `config.yml` e PR template (§10) | `git ls-files .github`, 2026-11-19 |
 
-O job atual falha por construção: o `run:` contém `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell tenta
-executar como comando. Além disso, não há `Cargo.toml` na raiz para um job Rust compilar.
+O job **não** falha: ele conclui `success` e grava saída vazia (§2.1). O `run:` contém `$(0.0.0-<sha>)`
+e `$(<sha>)`, que o shell tenta executar como comando; a falha fica dentro
+da substituição de comando, não no status do passo. Além disso, não há `Cargo.toml` na raiz para um
+job Rust compilar.
+
+### 2.1 Baseline medido do CI `full-workflow` (`V`, 2026-11-19; somente leitura)
+
+Medido por consulta de leitura às execuções do workflow e ao log do job. Nenhum workflow foi
+acionado, editado ou reexecutado por esta coleta.
+
+| Campo | Valor |
+|---|---|
+| Workflow | `Full Workflow` — `.github/workflows/full-workflow.yml` |
+| Execução | [#14](https://github.com/lucascantarelli/wyd/actions/runs/44505419869), ID `44505419869`, evento `push`, `develop`, SHA `aedd1f7338fdfd7125c0c25f4c47255ca88d8672` |
+| Janela | `created_at` `2026-11-19T10:24:48Z`, `updated_at` `10:24:54Z` |
+| Conclusão da execução | `success` |
+| Job | `Get Info` [ID `135495629487`](https://github.com/lucascantarelli/wyd/actions/runs/44505419869/job/135495629487), `success`; os passos `Get version` e `Get commit` também concluíram `success` |
+| Execuções com conclusão `failure` | **0** para este workflow em todo o repositório (filtro `status=failure`) |
+
+**Mensagem exata do shell (log do job, `2026-11-19T10:24:52Z`):**
+
+```text
+/home/runner/work/_temp/679c9341-bb0f-4f0d-9866-62bce7758d08.sh: line 1: 0.0.0-aedd1f7338fdfd7125c0c25f4c47255ca88d8672: command not found
+/home/runner/work/_temp/4f5a1ba4-f2b6-4b95-a770-1c0f224ee838.sh: line 1: aedd1f7338fdfd7125c0c25f4c47255ca88d8672: command not found
+```
+
+**Causa (`V`, medida):** o `${{ ... }}` das linhas 40 e 44 é interpolado pelo GitHub **antes** do
+shell, então o `run:` chega ao bash como `echo "version=$(0.0.0-<sha>)"` e `echo "commit=$(<sha>)"`.
+O `$(...)` restante é substituição de comando: o bash tenta executar `0.0.0-<sha>` e `<sha>` como
+programas e falha com `command not found`. A falha ocorre **dentro** da substituição, então o `echo`
+executa mesmo assim e retorna 0 — o passo fica `success`, o job fica verde e o valor gravado em
+`$GITHUB_OUTPUT` sai vazio (`version=`, `commit=`).
+
+**Efeito:** não há job vermelho para consertar; há **gate verde que não publica metadado**. O
+`version`/`commit` que um job futuro consumiria chega vazio, e o defeito não aparece em status check
+nenhum. Um gate que não pode falhar não é gate. Continua verdade que não existe build, teste,
+cobertura nem gate de código: `crates/*` só tem `.gitkeep` e não há `Cargo.toml` na raiz.
+
+**O que esta medição não decide:** corrigir a interpolação do `run:` e substituir o stub pela
+arquitetura de §4 são a decisão 6 de §8 e a Fase 4 do panorama. O workflow não foi alterado.
+
+**Alinhamento com o panorama (`V`, 2026-11-19):** `planejamento-1.0.0/wyd-1.0.0.md` §3 (`D3`) afirmava
+que o job "falha"; a medição acima mostra conclusão `success`. O panorama foi corrigido nesta data e
+cita esta seção como dono do detalhe, junto da linha `CI` de §1.4 e do passo 5 de §6.
 
 ---
 
@@ -380,7 +422,7 @@ Aprovada pelo time nesta data. O que foi criado no GitHub, por API e `gh`:
 
 | Desvio | Motivo | Quando corrigir |
 |---|---|---|
-| Sem *required status check* nos rulesets | não existe check que reporte: o CI atual é stub e o workflow de docs nunca rodou | Fase 4, ao substituir o CI stub |
+| Sem *required status check* nos rulesets | o `Full Workflow` é verde sem build (§2.1) e o `docs` não avalia código | Fase 4, ao substituir o CI stub |
 | Sem aprovação obrigatória de revisor | o repositório tem um mantenedor; exigir aprovação travaria o próprio dono | quando houver segundo revisor |
 | Sem views customizadas no project | a API cria view sem filtro; view sem filtro não é a view prometida em §3.5 | quando o project tiver itens reais |
 | Labels padrão do GitHub mantidas | remover `bug`/`enhancement` é destrutivo e o histórico pode depender delas | decisão do time; a regra de não duplicar tipo vale para issue nova |
@@ -389,6 +431,5 @@ Aprovada pelo time nesta data. O que foi criado no GitHub, por API e `gh`:
 ### 10.2 O que continua pendente
 
 - Views do project e ajuste das opções de `Status`.
-- Primeira execução do workflow de documentação e habilitação de GitHub Pages (`LPDOC-01`).
 - Migração das issues planejadas para issues reais, uma vez que as páginas com DoD existam.
 
