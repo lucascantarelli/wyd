@@ -3,10 +3,11 @@
 > **Estado: registro vivo (2026-11-19).** Este é o **único** lugar onde uma lacuna do site oficial
 > tem dono, impacto, marco e estado.
 >
-> **O que este arquivo cobre:** as **14 lacunas** `LPDOC-01`–`LPDOC-14`, **1 fechada** (`LPDOC-01`,
-> rollback e restauração validados em 2026-11-19, `wyd-docs-1.0.0.md` §7.3). O site foi montado em
-> MkDocs 2.0 pré-release e publicado/validado em GitHub Pages em 2026-11-19. O dono aprovou GitHub
-> Pages como hospedagem canônica com publicação contínua.
+> **O que este arquivo cobre:** as **14 lacunas** `LPDOC-01`–`LPDOC-14`, **2 fechadas**: `LPDOC-01`
+> (rollback e restauração validados em 2026-11-19, `wyd-docs-1.0.0.md` §7.3) e `LPDOC-12` (build
+> suportado em Linux/container, decidido em 2026-11-19). O site foi montado em MkDocs 2.0 pré-release
+> e publicado/validado em GitHub Pages em 2026-11-19. O dono aprovou GitHub Pages como hospedagem
+> canônica com publicação contínua.
 >
 > **O que este arquivo não é:** não decide. Cada linha diz **quem** decide e **o que** precisa ser
 > decidido; a decisão entra no documento dono (ou em `ADR-DOC-nnnn`) e volta aqui como linha
@@ -52,8 +53,8 @@
 | Publicação e infraestrutura | 3 | 1 (`LPDOC-04`) | 1 (`LPDOC-08`) | 1 (`LPDOC-01`) |
 | Conteúdo publicado | 3 | 0 | 3 (`LPDOC-02`, `LPDOC-03`, `LPDOC-09`) | 0 |
 | URL, versão e idioma | 3 | 1 (`LPDOC-05`) | 2 (`LPDOC-06`, `LPDOC-07`) | 0 |
-| Ferramenta e sintaxe | 5 | 3 (`LPDOC-10`, `LPDOC-12`, `LPDOC-13`) | 2 (`LPDOC-11`, `LPDOC-14`) | 0 |
-| **Total** | **14** | **5** | **8** | **1** |
+| Ferramenta e sintaxe | 5 | 2 (`LPDOC-10`, `LPDOC-13`) | 2 (`LPDOC-11`, `LPDOC-14`) | 1 (`LPDOC-12`) |
+| **Total** | **14** | **4** | **8** | **2** |
 
 \"Proposta\" não é decisão: descreve o caminho recomendado para o dono aceitar ou recusar.
 
@@ -91,7 +92,7 @@
 |---|---|---|---|---|---|---|
 | `LPDOC-10` | O catálogo de opcodes e o dicionário de dados são publicados como página gerada? | catálogo mantido à mão diverge do código; gerado exige pipeline no `preparar.py` | arquitetura | `P3` | aberta | nenhum gerador de página no `wyd-docs`; `LPRT-20` depende desta resposta |
 | `LPDOC-11` | Quando atualizar o `mkdocs 2.0.dev6`? | é pré-release sem data de lançamento; atualizar sem teste pode quebrar tema e navegação | arquitetura + operação | `P3` | proposta | `requirements.txt` fixa `2.0.dev6` (2026-09-15); upgrade exige rodar build e `verificar.py` antes |
-| `LPDOC-12` | O build é só Linux/CI ou precisa rodar no Windows? | `mkdocs 2.0.dev6` instancia `PosixPath` e falha no Windows; hoje o build local exige Docker | operação | `P1` | aberta | erro reproduzido em 2026-11-19: `UnsupportedOperation: cannot instantiate 'PosixPath' on your system` |
+| `LPDOC-12` | O build é só Linux/CI ou precisa rodar no Windows? | `mkdocs 2.0.dev6` instancia `PosixPath` e falha no Windows; hoje o build local exige Docker | operação | `P1` | fechada | decisão do dono (`V`, 2026-11-19): build suportado = Linux/container, Windows fora de escopo; falha reproduzida em 2026-11-19 (`UnsupportedOperation: cannot instantiate 'PosixPath' on your system`) e o mesmo comando passou em container Linux nos commits `2378b62b` e `0d765858` (30 páginas, exit 0); §7.1 declara o escopo |
 | `LPDOC-13` | Busca de texto completo existe? | a 2.0 não tem plugin de busca; o site tem só filtro de navegação | arquitetura + produto | `P3` | aberta | nenhum índice de busca gerado; `verificar.py` não cobre busca |
 | `LPDOC-14` | Até quando a ponte `compat.py` existe? | ela traduz sintaxe do MkDocs 1.x para GFM; enquanto existir, duas sintaxes convivem | arquitetura + documentação | `P2` | proposta | 22 admonitions, 7 abas, 1 detalhe, 3 grids e 67 tasklists convertidos em 2026-11-19 |
 
