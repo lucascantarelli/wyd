@@ -354,7 +354,16 @@ e [proteções customizadas](https://api.github.com/repos/lucascantarelli/wyd/en
 A consulta foi somente leitura: não acionou `Re-run all jobs`, não publicou e não verificou um
 rollback/restauração real nem as permissões de escrita do ator. Estes dados são pré-checagem, não
 evidência para fechar `LPDOC-01`; antes do teste, reconfirmar a disponibilidade da reexecução e as
-proteções vigentes. A lacuna permanece aberta.
+proteções vigentes.
+
+**Pré-checagem somente leitura (`V`, 2026-11-19; não é evidência de rollback):** o deployment mais
+recente de `github-pages` consultado é o ID `7909492410`, para o SHA
+`0d76585821583d5ef60e790fa44fb65572576d4b`, com status final `success` ([deployment](https://github.com/lucascantarelli/wyd/deployments/7909492410),
+[execução `docs` #4](https://github.com/lucascantarelli/wyd/actions/runs/44498880453)). Na consulta às
+execuções do workflow `docs` em `develop`, não havia runs em `in_progress`, `queued` ou `waiting`
+([workflow](https://github.com/lucascantarelli/wyd/actions/workflows/docs.yml?query=branch%3Adevelop)).
+A verificação foi somente leitura; registra o SHA publicado e a ausência observada de concorrência,
+não executa nem comprova rollback/restauração. `LPDOC-01` permanece aberta.
 
 **Evidência para fechar `LPDOC-01`:** registrar data, aprovação para o teste e para restauração, SHA
 antes/alvo/restaurado, links das execuções e dos deploys Pages, resultado do gate de cada execução e
