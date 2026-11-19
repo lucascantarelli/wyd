@@ -1,7 +1,7 @@
 # Arquivos ignorados
 
 # Pasta deprecated
-deprecated/
+deprecated/*
 
 # Cliente do jogo (binários proprietários, ~344 MB): nunca versionar.
 wyd-client/files/*
