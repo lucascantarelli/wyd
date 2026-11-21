@@ -330,9 +330,9 @@ antipadrão continua sendo decisão desta seção.
 |---|---|
 | `rascunho-accounts.md` | **pago em 2026-11-17:** reduzido a histórico de requisitos; sem DDL, sem lista de arquivos, sem `SCHEMA_VERSION` |
 | `lacunas.md` | `B2` (lista nominal, que aponta `plano-migrations.md` §3) e `M20` (medição depois da série); o número planejado da série não mora aqui — o dono é `plano-migrations.md` §3 |
-| `wyd-db-1.0.0.md` | **pago em 2026-11-18:** a árvore de §4 e o §6.15 descrevem a série nova (29 arquivos) e os 29 slugs (`P8`, fechado em 2026-11-18); resta a escrita das páginas (onda 5) |
+| `wyd-db-1.0.0.md` | **pago em 2026-11-18:** a árvore de §4 e o §6.15 descrevem a série nova e os slugs de `P8` (fechado em 2026-11-18), hoje 31 arquivos com os adendos `0030`/`0031`; resta a escrita das páginas (onda 5) |
 | `docs/arquitetura/modelo-banco.md` | ER e tabela por tabela continuam na forma antiga (`public`, 53 arquivos) |
-| `docs/arquitetura/banco-catalogo.md` | gerado; só volta a bater depois do gerador schema-aware |
+| `docs/arquitetura/banco-catalogo.md` | artefato de conferência; só volta a bater depois do PR de ferramentas autorizado, que não é pré-requisito do DDL (`plano-migrations.md` §1) |
 
 Nenhum desses é editado por este documento: ele **decide** e aponta a dívida.
 

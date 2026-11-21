@@ -30,7 +30,7 @@ Toda afirmação de layout carrega a origem, no formato:
 ```text
 V — golden G-auth-01 (tests/golden/, capturado 2026-11-20 do cliente 7662)
 V — cliente 7662, leitura em 0x0040A1C2 (registro de RE, 2026-11-22)
-H — LPRT-04 (sem captura de string acentuada)
+H — LPRT-06 (sem captura de string acentuada)
 ```
 
 Três origens são aceitas: **golden**, **captura** e **leitura do cliente**. As três exigem data.
@@ -68,8 +68,11 @@ Número sem fonte e data é hipótese. Formato:
 12 bytes de HEADER (deprecated/crates/wyd-protocol/src/wire/header.rs:18, 2026-11-19)
 ```
 
-Números do legado descrevem o que a reescrita substitui; não são meta da `1.0.0`. O total de opcodes
-da `1.0.0` é o que `docs/wire/tabela-de-opcodes.md` medir depois de `LPRT-01` fechar.
+Números do legado descrevem o que a reescrita substitui; não são meta da `1.0.0`. Os **198 são o
+baseline do legado**, piso de cobertura do catálogo novo — não o total alvo nem o total publicado. O
+escopo foi decidido em `LPRT-01` (cobertura integral do inventário, entregue em versões menores até a
+`1.0.0`); o total publicado é o que `docs/wire/tabela-de-opcodes.md` medir do catálogo gerado, com
+versão e data.
 
 ## Links e citações
 

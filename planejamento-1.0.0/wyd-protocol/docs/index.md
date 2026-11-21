@@ -16,7 +16,7 @@ abre socket, não guarda sessão e não decide regra de jogo.
 > fecha — nunca afirmação.
 ## O que existe aqui
 
-Esta árvore está em **planejamento**: duas páginas escritas, o restante é teto declarado no
+Esta árvore está em **planejamento**: cinco páginas escritas, o restante é teto declarado no
 `wyd-protocol-1.0.0.md` (planejamento) e nas lacunas do sistema (planejamento).
 
 | Pasta | Responde | Estado |
@@ -25,9 +25,9 @@ Esta árvore está em **planejamento**: duas páginas escritas, o restante é te
 | `docs/specs/` | requisitos, regras, fluxos e estados com ID | planejada |
 | `docs/wire/` | cabeçalho, enquadramento, transformação, catálogo e limites | planejada |
 | `docs/payloads/` | campos de cada mensagem, com offset, tipo e proveniência | planejada |
-| `docs/goldens/` | que bytes provam o layout e de onde vieram | planejada |
+| `docs/goldens/` | que bytes provam o layout e de onde vieram | parcial — 1 escrita (procedimento) |
 | `docs/planos/` | plano, métrica e risco do sistema | planejada |
-| `docs/roadmap/` | issues `WYDPRT-nnn` com DoD verificável | planejada |
+| `docs/roadmap/` | issues `WYDPRT-nnn` com DoD verificável | parcial — 2 escritas (índice e fases) |
 | `docs/guia-desenvolvedor/` | como mexer no crate sem quebrar o fio | planejada |
 | `docs/guia-teste/` | como provar o layout | planejada |
 

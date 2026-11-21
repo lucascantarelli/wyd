@@ -119,11 +119,11 @@ Três garantias de concorrência têm decisão registrada:
    disputam o índice único parcial e a segunda recebe erro do banco (`padrao-banco.md` §5, item 3).
 
 > [!NOTE] O que esta página **não** afirma sobre concorrência
-> `H` — não há decisão registrada para versionamento otimista de linha (coluna de versão) nem para
-> `SELECT … FOR UPDATE SKIP LOCKED` no consumo da fila de entrega. As duas aparecem no molde desta
-> página porque o assunto é desta seção, não porque existam: enquanto não houver decisão, a série
-> não ganha coluna de versão nem consulta de fila escrita por conta desta página
-> (`lacunas.md` §2.3, `M17`, aberta).
+> `H` — não há decisão registrada para versionamento otimista de linha (coluna de versão): a série
+> não ganha coluna de versão por conta desta página. O consumo da fila de entrega **foi** decidido em
+> 2026-11-20 (`M25`): o dreno usa `SELECT … FOR UPDATE SKIP LOCKED` em transação curta e marca
+> `claimed` antes de aplicar, com expurgo de `applied`/`failed` 30 dias após `closed_at` — o texto
+> dono é `ddl-confirmado.md` §5.16.
 
 ## 7. Armadilhas: quatro famílias de defeito
 

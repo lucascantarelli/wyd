@@ -44,8 +44,8 @@ Medido no código atual; cada linha vira requisito. Não é desenho.
 | R5 | Um resgate diário por conta por dia UTC | `0028_estado_de_jogo.sql` | `game` (0011), outro arquivo |
 | R6 | Uma sessão viva por conta; mesma conta em dois canais é recusada | `0030_sessao_unica.sql` | `ux_session_viva_por_conta` (`ddl-confirmado.md` §5.5) |
 | R7 | Bloqueio exige motivo e autor | `0031_moderacao.sql` | `game.account_moderation` (§5.2) |
-| R8 | Crédito/débito de donate idempotente por chave | `0042`, `0045` | `game` (0011); formato é `M17`, ainda aberta |
-| R9 | Grant pendente impede apagar conta/personagem (`RESTRICT`) | `0006_delivery_queue.sql` | `game` (0012) |
+| R8 | Crédito/débito de donate idempotente por chave | `0042`, `0045` | `portal` (0011); formato é `M17`, decidida em 2026-11-19 |
+| R9 | Grant pendente impede apagar conta/personagem (`RESTRICT`) | `0006_delivery_queue.sql` | `ops` (0012, desenho em `ddl-confirmado.md` §5.16) |
 | R10 | Token de reset só existe como hash sha256 hex de 64 | `0053_pin_reset_token.sql` | `portal.person_token` (§4) e `game.pin_reset` (§5.2) |
 | R11 | Auditoria append-only, sem FK | `0005_auditoria.sql` | `ops.audit_log` (§5.3), ator tripartido (`M18-A`) |
 | R12 | Papel do jogador no jogo: `player`/`moderator`/`admin` | `accounts_role` | `game.account.role` (§5.2) |

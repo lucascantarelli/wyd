@@ -2,9 +2,15 @@
 
 > **Estado: plano de trabalho, não decisão aprovada.** Este documento é o painel único do projeto
 > inteiro: o que existe, o que está medido, em que ordem o planejamento avança e qual é o gate de
-> cada etapa. Ele **não** substitui o plano diretor de nenhum sistema e **não** decide arquitetura.
+> cada etapa — inclusive o gate de cobertura funcional que fecha a `1.0.0` (§4.2). Ele **não**
+> substitui o plano diretor de nenhum sistema e **não** decide arquitetura.
 >
 > Medido em **2026-11-19**. Toda contagem traz a fonte; número sem fonte é `H`.
+>
+> **Alvo declarado pelo dono em 2026-11-20:** a `1.0.0` é o **jogo completo** — todos os sistemas e
+> funcionalidades do jogo oficial funcionando —, e o critério de saída é **cobertura funcional de
+> 100%** (§4.2). O número de cobertura é medido em §1.5; nenhum total de funcionalidade é estimado
+> aqui.
 
 ---
 
@@ -13,6 +19,7 @@
 | Se você quer… | Vá para |
 |---|---|
 | saber o que está pronto e o que não está | §1 |
+| saber quanto do jogo já funciona | §1.5 |
 | saber o que já foi decidido e o que está aberto | §2 |
 | ver contradições que precisam de decisão do time | §3 |
 | saber a ordem de execução e o gate de cada fase | §4 |
@@ -27,8 +34,8 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 76 | piloto parcial: 15 páginas com cabeçalho, 2 de 29 migrations, 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/` | `find`/`grep` em 2026-11-19 |
-| `wyd-protocol` | 4 | 2º piloto aberto: plano diretor com teto de 131 páginas, 2 escritas, 20 lacunas, nenhum ADR | `wyd-protocol-1.0.0.md` e `lacunas.md` |
+| `wyd-db` | 76 | piloto parcial: 15 páginas com cabeçalho, 13 de 30 migrations, 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/` | `find`/`grep` em 2026-11-20 |
+| `wyd-protocol` | 4 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md` |
 | `wyd-docs` | 4 | plano diretor e lacunas (14) + site MkDocs 2.0 implementado | `wyd-docs-1.0.0.md`; `wyd-docs/` |
 | `wyd-portal` | 1 | só o prompt de produto | `wyd-portal/wyd-portal-prompt.md` |
 | `wyd-admin`, `wyd-bots`, `wyd-client`, `wyd-core`, `wyd-launcher`, `wyd-net`, `wyd-ops`, `wyd-server`, `wyd-sim` | 0 | não planejado; só `.gitkeep` | `find planejamento-1.0.0` |
@@ -40,33 +47,34 @@
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
 | `docs/arquitetura/` | 7 | 17 | faltam C4, modelo conceitual/lógico, retenção, fronteira |
 | `docs/specs/` | 0 | 20 | nenhum requisito com ID existe ainda |
-| `docs/dicionario-dados/` | 1 | 20 (+91 geradas) | só `dominio-acesso` |
+| `docs/dicionario-dados/` | 1 | 20 (+97 de tabela) | só `dominio-acesso`; as 97 páginas por tabela são escritas à mão em lotes (`M26`) |
 | `docs/planos/` | 1 | 10 | só `plano-de-implantacao` |
 | `docs/roadmap/` | 0 | 42 | 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
 | `docs/guia-desenvolvedor/` | 2 | 11 | |
 | `docs/guia-administrador/` | 0 | 8 | |
 | `docs/guia-teste/` | 1 | 7 | |
 | `docs/guia-documentacao/` | 0 | 8 | |
-| `migrations/` | 2 | 31 | 2 páginas de seção + 29 arquivos |
+| `migrations/` | 25 | 33 | 2 páginas de seção (por escrever) + 31 arquivos, 25 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
 | `tests/` | 0 | 12 | |
 | `prompts/` | 0 | 9 | |
 | `skills/` | 0 | 9 | |
 
-**Totais planejados:** 146 páginas autorais em `docs/` + 91 geradas + 31 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 15 em `docs/`, 2 em
+**Totais planejados:** 146 páginas autorais em `docs/` + 97 geradas (uma por tabela planejada) + 33 de migration + 59 de `src/`
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 15 em `docs/`, 25 em
 `migrations/`, 37 em `src/`.
 
 ### 1.3 Série de migrations
 
 | Indicador | Valor | Fonte |
 |---|---:|---|
-| Arquivos da série | 29 | `plano-migrations.md` §3 |
-| Tabelas | 91 | idem |
+| Arquivos da série | 31 (29 originais + os adendos `0030`/`0031`) | `plano-migrations.md` §3 |
+| Tabelas | 97 | `plano-migrations.md` §3 (planejado) |
 | Arquivos de seed | 6 | idem |
-| Tabelas com DDL fechado | 14 de 91 | `ddl-confirmado.md` §1 |
-| Arquivos com DDL inteiro fechado | 4 (`0001`, `0003`, `0004`, `0007`) | `plano-migrations.md` §3 |
-| `SCHEMA_VERSION` alvo | 29 | `plano-migrations.md` §3 |
+| Tabelas com DDL fechado | 97 de 97 | `ddl-confirmado.md` §1 |
+| Tabelas desenhadas e aguardando aprovação | 0 | `ddl-confirmado.md` §1 |
+| Arquivos com DDL inteiro fechado | 20 (`0001`–`0015`, `0019`, `0021`, `0024`, `0030` e `0031`) | `migrations-checklist.md` §4 |
+| `SCHEMA_VERSION` alvo | 31 | `plano-migrations.md` §6 |
 
 ### 1.4 Repositório, GitHub e operação
 
@@ -83,6 +91,30 @@
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; 30 páginas montadas de 3 sistemas; build e `verificar.py` verdes | `wyd-docs/`, 2026-11-19 |
 | Cliente | 7.147 arquivos em `wyd-client/files/`, ignorado | `find` |
+
+### 1.5 Cobertura funcional da `1.0.0`
+
+A `1.0.0` é o jogo completo (§4.2), então a medida que decide a versão é **cobertura funcional**, não
+página escrita. Esta seção é o **dono do número agregado**: total de funcionalidades do catálogo e
+fração com prova, medidos com data, quando o catálogo existir.
+
+Uma entrada conta quando está `aceita` — fluxo com passo a passo, dono entre os 13 sistemas, prova
+(golden, captura datada ou leitura do cliente, com segunda leitura) e versão em que entra; sem prova
+ela não conta. O molde da entrada é de `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7, que
+ainda é proposta: enquanto não for executada, esta tabela fica em “não medido”, não em estimativa.
+
+| Indicador | Valor (2026-11-20) | Fonte |
+|---|---|---|
+| Funcionalidades no catálogo | não medido | catálogo funcional não existe (`wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7) |
+| Funcionalidades `aceitas` | não medido | idem |
+| Cobertura | meta **100%**, não medida | §4.2 |
+
+Nenhum total é estimado antes do levantamento: os 13 sistemas técnicos não são 13 funcionalidades, a
+lista de domínios citada pelo dono (classes, skills, refinamento, guerras, cidadania, estados
+especiais, montarias, invocações, transformações, magias, quests, guildas) é pauta de levantamento,
+não catálogo, e o inventário do legado (`wyd-protocol` §0.4) é baseline de referência, não total
+alvo. Contagem de funcionalidade sem catálogo é `H`, nunca estimativa. Cobertura declarada sem data é
+`H` também: cada valor desta tabela entra com a data em que foi medido.
 
 ---
 
@@ -105,10 +137,10 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 14 | `B1` (entrega do link de recuperação), `B3` (política de PIN), `A17` (transferência de conta), `A21`, `M16`, `M17` (idempotência de crédito), `M19`, `M22` |
+| Lacunas `B`/`A`/`M` | 0 | `B1`, `A17`, `M16`, `M17` e `M25` fecharam; a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
-| Divergências do plano diretor | 3 | `P1`, `P3`, `P5` |
-| DDL não desenhado | 77 tabelas | `0012`, `0013`, `0029` totalmente bloqueadas |
+| Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
+| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; faltam o "sim" de cinco lotes e o gerador dos seis seeds |
 | ADR de fronteira pessoa × conta | sem número | citada em `lacunas.md` §0.2 e `rascunho-accounts.md` |
 
 ---
@@ -172,16 +204,16 @@ item real — nenhuma issue foi criada.
 Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ordem nova.
 
 - [ ] Fechar as lacunas pendentes com o dono nomeado em `lacunas.md` (bloqueantes primeiro).
-- [ ] Escrever as 27 páginas de migration restantes sobre DDL fechado, sem inventar coluna.
-- [ ] Fechar o DDL das 77 tabelas restantes em `ddl-confirmado.md` antes da página.
+- [ ] Escrever as 6 páginas de migration restantes (seeds), quando o dado de origem estiver verificado; os arquivos são escritos à mão, sem gerador (`plano-migrations.md` §4).
+- [x] Aprovar os cinco lotes propostos (`0022`, `0025`, `0026`, `0028`, `0029`) em `ddl-confirmado.md` antes da página — aprovados em 2026-11-21; nenhum lote aguarda aprovação.
 - [ ] Escrever `specs/` (requisitos, regras, NFR, casos de uso, fluxos, estados, rastreabilidade).
-- [ ] Escrever as 17 páginas de domínio do dicionário e o gerador das 91 páginas.
+- [ ] Escrever as 17 páginas de domínio do dicionário e, em lotes, as 97 páginas por tabela (`M26`: à mão, sem gerador).
 - [ ] Escrever `planos/` (testes, dados, qualidade, métricas, riscos, execução).
 - [ ] Escrever `guia-administrador/`, `guia-documentacao/` e o restante de `guia-teste/`.
 - [ ] Criar `tests/` e `prompts/`/`skills/` do sistema.
 - [ ] Validar o site: `mkdocs build --strict` sem link morto nem diagrama inválido.
 
-**Gate:** 29 páginas de migration + 18 de domínio + 91 geradas; `planos/metricas.md` mede o
+**Gate:** 31 páginas de migration + 18 de domínio + 97 geradas (uma por tabela planejada); `planos/metricas.md` mede o
 fechamento; nenhuma afirmação de comportamento sem `V`; site estrito passa.
 
 ### Fase 3 — Planejar os 12 sistemas restantes
@@ -203,11 +235,11 @@ com DoD; nenhum sistema depende de tabela de outro sem contrato.
 - [ ] Criar o workspace Rust na raiz com `Cargo.toml`, `rust-toolchain.toml` e `Makefile`.
 - [ ] Implementar na ordem de dependência, uma issue por PR, TDD, cobertura ≥ 85%.
 - [ ] Substituir o CI stub por workflows reutilizáveis + actions compostas.
-- [ ] Rodar o corte vertical do `wyd-db` (`0001`–`0007`, 21 tabelas) antes dos 22 arquivos restantes.
+- [ ] Rodar o corte vertical do `wyd-db` (`0001`–`0007`, 22 tabelas) antes dos 23 arquivos restantes.
 - [ ] Provar isolamento entre `portal` e `game` por `permission denied`, não por revisão.
 
 **Gate:** `fmt`, `clippy -D warnings`, testes, cobertura, migrations e build verdes em PR; E2E do
-sistema executando contra Postgres real.
+sistema executando contra Postgres real; cobertura funcional de §1.5 medida a cada versão entregue.
 
 ### Fase 5 — Operação
 
@@ -218,13 +250,72 @@ sistema executando contra Postgres real.
 
 **Gate:** nenhum segredo em repositório; deploy reproduzível; rollback ensaiado; alerta testado.
 
+### 4.1 Série de versões do `wyd-protocol` (`0.1.0` → `1.0.0`)
+
+O `wyd-protocol` entrega em versões menores, abertas na `0.1.0` e fechadas na `1.0.0`. Escopo, gate
+e pré-requisito de cada fatia são de `planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §9.1 e
+não se repetem aqui. Nesta seção a `1.0.0` é a versão do **crate**; o alvo do jogo completo é §4.2, e
+as duas coisas não se substituem. Estado `P`: nenhuma versão entregue, nenhum opcode gerado, nenhuma
+data.
+
+A série é o eixo de entrega para fatiar sprints, issues e milestones: cada issue pertence a
+exatamente uma versão — a que serve o gate dela — e a ordem das versões é ordem de entrega, não
+calendário. Quem escreve issue usa o fatiamento de
+`planejamento-1.0.0/wyd-protocol/docs/roadmap/fases.md`; como a versão aparece no board foi decidido
+pelo dono de operação em 2026-11-20 — milestone por versão, com migração ainda não executada
+(`wyd-ops/proposta-versoes-e-cobertura-funcional.md` §4) — e não é decisão desta página. Só o
+`wyd-protocol` tem série escrita hoje: o fatiamento `0.1.0` → `1.0.0` dos outros sistemas é decisão
+do dono de cada um, na mesma escala de versões já escolhida para o board.
+
+Isso não muda as fases acima: fase é estágio do projeto; versão é fatia de entrega do crate e do
+catálogo, dentro da Fase 4.
+
+### 4.2 Critério de saída da `1.0.0` — jogo completo
+
+`1.0.0` aqui não significa “planejamento concluído”: significa **jogo completo**. Declarado pelo dono
+em 2026-11-20. A versão sai quando 100% das entradas do catálogo funcional estiverem `aceitas` — cada
+uma com fluxo, dono, prova e versão —, sem entrada aberta e com todos os gates de sistema verdes.
+
+O mesmo critério mede as versões menores: uma fatia `0.x` fecha quando as entradas que ela promete
+estão `aceitas`, e o jogo fecha quando todas estiverem. A fatia não recalcula cobertura: lê a de §1.5,
+que é a única contagem agregada.
+
+| Critério | Como se verifica |
+|---|---|
+| fatia `0.x` | entradas prometidas pela fatia `aceitas`, lidas de §1.5 |
+| cobertura funcional | total e fração de §1.5, medidos do catálogo, com data |
+| fluxo por funcionalidade | entrada do catálogo com passo a passo e estado |
+| prova por funcionalidade | golden, captura datada ou leitura do cliente, com segunda leitura |
+| sistema dono | cada entrada aponta um dos 13 sistemas, sem dono duplicado |
+| release | gate da Fase 5: deploy reproduzível e rollback ensaiado |
+
+Consequências para este plano:
+
+1. **Planejar página não é entregar funcionalidade.** Fechar as páginas de um sistema continua sendo
+   pré-requisito para implementá-lo, mas não conta cobertura.
+2. **O catálogo funcional é pré-requisito do plano de sprint.** Sem ele a `1.0.0` não tem como ser
+   medida e nenhuma versão menor pode ser declarada completa — planejamento fechado não supre a
+   falta do catálogo.
+3. **A contagem é daqui.** Total de funcionalidades e fração coberta são números deste panorama
+   (§1.5); o catálogo é dono da entrada e da prova, e nenhuma página recalcula o agregado.
+4. **As fases continuam estágios.** A mudança é de alvo e de critério de saída, não de ordem: a Fase 4
+   implementa, a Fase 5 opera, e a `1.0.0` exige as duas.
+
+O catálogo funcional não existe hoje: a divisão de dono (`wyd-core`/`wyd-sim`/`wyd-db`) e o molde de
+entrada estão propostos em `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7.
+
 ---
 
 ## 5. O que este documento não decide
 
 - Não decide arquitetura de nenhum sistema; o dono é o plano diretor de cada um.
-- Não decide prioridade de produto nem data de release.
+- Não decide data nem prioridade de release; o alvo “jogo completo” está registrado como declaração
+  do dono (2026-11-20), com o critério em §4.2.
 - Não fecha lacuna: lacuna é fechada em `lacunas.md`, pelo dono nomeado.
+- Não estima cobertura funcional: §1.5 mede, com data e fonte, e “não medido” é resposta válida
+  enquanto o catálogo não existir.
+- Não declara versão entregue: declarar `0.x` ou `1.0.0` exige o critério de §4.2, não a conclusão
+  das páginas de planejamento.
 - Não cria ADR: ADR nasce de decisão tomada, com “como verificar”.
 - Não define o molde dos 12 sistemas restantes; propõe que o de `wyd-db` seja a base.
 - Não escolhe hospedagem: a proposta está em `wyd-ops/proposta-gestao-github-e-ambientes.md` e
@@ -233,7 +324,7 @@ sistema executando contra Postgres real.
 
 ---
 
-## 6. Próximos passos priorizados por ganho ÷ esforço (2026-11-19)
+## 6. Próximos passos priorizados por ganho ÷ esforço (2026-11-19, revisto em 2026-11-20)
 
 Ordem por **desbloqueio ÷ esforço**, não pela sequência das fases de §4. `automação` significa
 executável agora, sem decisão pendente; `usuário` significa que só o dono decide ou autoriza. Todo
@@ -248,8 +339,16 @@ dentro da janela declarada pelo dono.
 | 4 | Fechar `LPDOC-12` fixando o build suportado em Linux/container | remove ambiguidade do build local; era a lacuna `P1` que faltava fechar | o erro `PosixPath` está reproduzido e o mesmo comando passa em container nos dois commits | nenhum | usuário (dono: operação) | **feito** (`V`, 2026-11-19): decisão do dono fixou Linux/container como build suportado, com Windows fora de escopo; `lacunas.md` fechou `LPDOC-12` e §7.1 registra que o build roda em Linux e que no Windows falha por `PosixPath` |
 | 5 | Medir o comportamento real do CI `full-workflow` como baseline do plano do `wyd-ops` | dá base verificável para a Fase 4 (CI real) e tira a causa de `H` | runs, jobs e log já estavam acessíveis por leitura; faltava medir o efeito real do defeito de shell que `D3` apontava | nenhum | automação | **feito** (`V`, 2026-11-19): run #14 (`44505419869`) e job `Get Info` (`135495629487`) `success`, saída `version`/`commit` vazias; registrado em `wyd-ops` §2 e §2.1 |
 
-**Próxima ação imediata (uma só): publicar os arquivos pendentes por PR.** O passo 2 foi executado em
-2026-11-19 e fechou `LPDOC-01`; o site está em `0d765858…` e `develop` no tip. O que sobra é o que só
-o dono libera: commit, push e PR sob o ruleset de `develop`, cujo merge dispara `docs` e cria um
-deployment novo — sem risco de conteúdo, porque as duas versões publicam os mesmos bytes. Os passos 3
-e 4 e a `LPDOC-12` já foram decididos e não publicam nada.
+**A fila que serve à `1.0.0` é outra.** Os cinco passos acima fecharam fundação e publicação do site;
+nenhum deles mede funcionalidade. Com o alvo de §4.2, o primeiro passo que destrava a versão é o
+catálogo funcional (§1.5): enquanto ele não existir, a cobertura fica “não medido” e nenhuma versão
+pode ser declarada completa, por mais páginas que o planejamento feche. Executar a divisão
+`wyd-core`/`wyd-sim`/`wyd-db` e o molde de entrada está proposto em
+`wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7 e é passo de `usuário`, não de automação.
+
+**Próxima ação imediata:** as duas filas correm em paralelo. Na documentação, executar o próximo
+passo ativo da fila do sistema dono — no `wyd-docs`, o gerador `wyd-db-pages` das 97 páginas
+planejadas, especificado em `planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md` §9.1 e alinhado à
+contagem de tabelas do `wyd-db`; nenhuma página gerada existe ainda. Na cobertura, a ação é a decisão
+do catálogo acima; o gerador fecha planejamento, não a `1.0.0`. O pacote anterior já foi mesclado no
+PR #48 (`e08f7d1`, 2026-11-19), portanto não há commit, push nem PR pendente daquela entrega.

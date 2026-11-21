@@ -2,7 +2,7 @@
 > Público: quem mantém o `wyd-docs`
 > Dono: equipe do wyd-docs
 > Base: `lacunas.md`; `wyd-docs-1.0.0.md` §7.2 e §9; `roadmap-fase-3-para-4.md` §2
-> Revisado em: 2026-11-19
+> Revisado em: 2026-11-20
 
 **Estado:** proposto (2026-11-19)
 
@@ -22,22 +22,28 @@ age: `usuário` espera uma palavra, `agente` executa sem decisão. **Tamanho** �
 sessão curta) ou `médio` (decisão + implementação). Onde depende do usuário, a recomendação já
 vem escrita — basta aceitar ou recusar.
 
+**Estado do pacote anterior (`V`, 2026-11-19):** PR #48 foi mesclado por squash em `e08f7d1`; sua
+publicação e CI não são mais pendências. A reconciliação posterior da `LPDOC-09` de 91 para 92
+páginas não pertence àquele PR e permanece nas alterações locais atuais.
+
 ## 1. Fila priorizada
 
 | # | Item e o que destrava | Dono | Tamanho | Recomendação e impacto | Pronto quando |
 |---:|---|---|---|---|---|
-| 1 | **Publicar o pacote no PR #48** — commit e push dos 40 caminhos pendentes (37 modificados + `compat.py` removido + 2 novos: `metricas.md` e `redirects.tsv`) | usuário (autorização) | rápido — 1 comando | recomendado **sim**: tudo vira revisável e o `docs.yml` roda o gate no PR | push feito e CI verde |
-| 2 | **Gerador das 91 páginas do `wyd-db`** — projeto próprio `wyd-db-pages`, com teto de 91 páginas e critério de pronto em `wyd-docs-1.0.0.md` §9.1; publicar só depois de gerar | arquitetura + documentação | médio — projeto | recomendado **uma página por tabela, extraída do catálogo**, como em `proposta-paginas.md`; sem gerador a decisão não vira site | 91 páginas geradas + `gerado/index.md` + gate verde |
-| 3 | **Próxima rodada de decisões** — `A21` (troca de e-mail), `P3` (`planos/riscos.md`) e os `LPRT` mais desbloqueantes (`LPRT-01`, `19`, `18`) | usuário (produto + arquitetura) | rápido — 1 resposta por ID | **nenhuma resposta inventada**; recomendado `LPRT-01` primeiro, porque a lista de opcodes destrava `LPRT-20` e o catálogo | respostas registradas e linhas fechadas |
+| 1 | **97 páginas por tabela do `wyd-db`** — produção a decidir na lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3); o gerador `wyd-db-pages` deixou de ser presumido e só existiria com aprovação explícita | arquitetura + documentação | bloqueado por decisão, não por projeto | nenhuma ferramenta é proposta por esta fila; as opções (à mão em lotes, gerador, adiar ou cancelar) estão em `M26` | decisão registrada e, se houver páginas, `gerado/index.md` + gate verde |
+| 2 | **Próxima rodada de decisões** — `A21` (troca de e-mail) e `P3` (`planos/riscos.md`) | usuário (produto + arquitetura) | rápido — 1 resposta por ID | **nenhuma resposta inventada**; são as duas de maior desbloqueio entre as que ainda esperam palavra do dono — as demais de §5.3 são de outro dono ou de onda posterior | respostas registradas e linhas fechadas |
+| 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`), `LPRT-06` (encoding/terminador) e `LPRT-09` (build-alvo); detalhe do que medir em §6 | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida em 2026-11-20 e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
 
-A linha 2 é a execução do gerador decidido em `LPDOC-09`; a 3 não é lacuna deste site, mas é a
-maior fonte de bloqueio do sistema vizinho que o site publica.
+A linha 1 depende da decisão `M26` do `wyd-db` e não autoriza ferramenta nenhuma; a 2 não é lacuna deste site, mas reúne
+o que ainda bloqueia o sistema vizinho que o site publica. A 3 é a única frente do protocolo que não
+espera resposta do usuário: as três `LPRT` que sobraram não são perguntas em aberto, são medições que
+ninguém fez ainda — o que medir está em §6, e nenhum resultado está registrado.
 
 ## 2. Pré-commit
 
 | O que | Onde | Por que agora |
 |---|---|---|
-| Rodar o gate antes de publicar o pacote | `wyd-docs/` (comando de `wyd-docs-1.0.0.md` §7.1) | evita empurrar página quebrada e refazer o PR |
+| Rodar o gate antes do próximo PR que alterar documentação publicável | `wyd-docs/` (comando de `wyd-docs-1.0.0.md` §7.1) | evita introduzir página quebrada em uma mudança futura |
 | Conferir o total e o censo medidos | `wyd-docs-1.0.0.md` §7.2 | número que não bate com a montagem é defeito, não estimativa |
 
 ## 3. Recontar o censo (um comando)
@@ -107,17 +113,15 @@ Nenhuma resposta abaixo foi inventada. Cada linha só registra **o que a respost
 |---|---|---|
 | `A21` | A troca de e-mail entra na `1.0.0`? Quem pode pedir, como o endereço novo é verificado, o que o antigo recebe e se a troca encerra sessões? | Rota de troca e emissor do token `email_change` na frente `wyd-portal`, onda 6; o `purpose` já existe no CHECK de `0004`, então não há DDL nova a decidir aqui |
 | `P3` | Qual é o registro de riscos do `wyd-db` e quem o mantém? | Criação de `planos/riscos.md` e fim do defeito sem dono; sem ele, a revisão do plano diretor não tem onde registrar risco |
-| `LPRT-01` | Quais dos opcodes do legado entram na `1.0.0`? | Lista aprovada de opcodes (198 variantes medidas), tamanho do catálogo, páginas de payload, goldens e suíte; destrava também `LPRT-20` |
-| `LPRT-19` | Os fluxos `game ↔ db` (`FLAG_GAME2DB`, `FLAG_DB2GAME`, `FLAG_DB2NP`, `FLAG_NP2DB`) entram no escopo? | Fronteira do protocolo e dos fluxos; não muda o schema do `wyd-db` porque não há consumidor medido na arquitetura nova |
-| `LPRT-18` | O crate entrega payload tipado ou bytes crus ao `wyd-core`? | Contrato de API entre `wyd-protocol` e `wyd-core`; evita que cada sistema interprete o fio por conta própria |
 | `A7` | Cadastro de pessoa: autocadastro ou criado por staff? `pending` exige clique no e-mail? | Rota de cadastro do portal e teste “cadastro cria pessoa + conta”, onda 6; é a lacuna aberta do `wyd-db`, sem DDL nova |
 | `A11` | Qual é o charset real do login do cliente 7662? | Fecha o contrato de `GameLogin` na onda 5; é `externa`, dona `wyd-server`, e não bloqueia schema |
 | `A20` | MFA de staff: quando e para quem o segundo fator existe? | Telas e rotas de staff do portal, onda 6; é `externa`, dona `wyd-portal` |
 | `M21` | Quais telas do portal existem (cadastro, recuperação, lista de contas)? | Rotas do portal, onda 6; é `externa`, dona `wyd-portal` |
 
-`LPRT-20` (catálogo gerado × escrito à mão) também está aberta, mas depende de `LPRT-01`; não é uma
-frente independente deste brainstorm. As demais `LPRT` abertas seguem o mesmo registro, sem resposta
-registrada até aqui.
+`LPRT-01`, `LPRT-18`, `LPRT-19` e as demais decididas em 2026-11-20 saíram desta lista; `LPRT-20`
+fechou junto com `LPRT-01`. Restam abertas `LPRT-03`, `LPRT-06` e `LPRT-09`, que não estão aqui
+porque não são decisões pendentes: são medições do cliente, tratadas na frente de captura de §6.
+Nenhuma delas muda o schema do `wyd-db`.
 
 ### 5.4 Contagens que este anexo usa
 
@@ -135,3 +139,31 @@ registrada até aqui.
 O número de tabelas não sobe ao escrever página: página é documentação; **15/92** é DDL já desenhado,
 e **92** é o planejado da série. Nenhum dos dois é contagem de catálogo, porque nenhum Postgres rodou
 nesta rodada.
+
+---
+
+## 6. Frente de captura — o que medir (não é rodada de decisão)
+
+> **Seção própria, fora do anexo de §5.** **Nenhuma linha desta seção registra resultado.**
+> `LPRT-03`, `LPRT-06` e `LPRT-09` continuam `aberta` em `lacunas.md`, que é o dono do estado. O que
+> esta seção fixa é **o que uma captura precisa mostrar** para fechar cada uma, para que a próxima
+> sessão não rediscuta a pergunta nem aceite um “parece que é”.
+
+As três não esperam palavra do usuário: em `LPRT-03` e `LPRT-06` a parte decidível já foi decidida em
+2026-11-20, e o que resta é medir o que o cliente faz no fio. Uma única sessão de captura do cliente
+7662 pode responder as três, e nenhuma bloqueia as outras. Dono da execução: frente `wyd-client` +
+pesquisa; o usuário fornece o cliente e o ambiente, não uma resposta. O processo de captura é o de
+`LPRT-10` — datada, anonimizada, `G-<familia>-<nn>` em `tests/golden/`, origem registrada e segunda
+leitura antes de aceitar. O procedimento operacional das três — o que capturar, como anonimizar e a
+ficha de origem — está em `planejamento-1.0.0/wyd-protocol/docs/goldens/como-capturar.md`.
+
+| ID | O que já está decidido (não reabrir) | O que a captura precisa medir | Fecha quando | Enquanto não houver captura |
+|---|---|---|---|---|
+| `LPRT-03` | o crate **recebe** a `KeyWord` do chamador e não assume origem; escolher quem gera não é pergunta do crate | no handshake: se o cliente envia a semente ou só a recebe; qual dos 16 pares de `KEY_TABLE` aparece; em que campo/offset do frame ela viaja; se viaja antes ou depois da ofuscação | captura datada do handshake + segunda leitura, com o offset e o campo escritos em `keyword-e-checksum.md` | a origem da `KeyWord` fica `H`; `header.md`, `enquadramento.md` e `keyword-e-checksum.md` sem afirmação de byte |
+| `LPRT-06` | o codec **não transcodifica**; string é bytes de tamanho fixo declarado | num frame com texto acentuado (nome e linha de chat): a sequência exata de bytes; a qual encoding ela corresponde, comparada contra candidatos sem presumir; se há terminador e de que largura; se o tamanho declarado conta o terminador; o que acontece quando o texto preenche o campo | captura com o mesmo texto visível na tela e os bytes no frame, datada e anonimizada | `payloads/*` sem afirmação de encoding; contrato de nome e chat sem fechar |
+| `LPRT-09` | nada decidido além do alvo **provável** 7662, que não é confirmação | a build que o cliente reporta (welcome/handshake ou o próprio binário); se `APP_VERSION = 7640` do legado bate ou diverge; o que muda entre as duas builds que toque header ou opcode | captura ou leitura datada que identifique a build, com o arquivo de origem registrado | catálogo e versionamento sem afirmação de versão; `wire/opcodes/*` e `versionamento-e-compatibilidade.md` seguem bloqueados |
+
+Uma captura parcial é resultado válido e não vira decisão pela metade: registra-se o que ela respondeu
+e o que não respondeu, e a lacuna que ficou sem resposta continua `aberta`. Se a captura mostrar algo
+diferente do decidido em 2026-11-20, o caminho não é ajustar a página: a `LPRT` reabre em `lacunas.md`
+com a evidência nova e a decisão é revista.

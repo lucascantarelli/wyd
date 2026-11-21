@@ -81,13 +81,12 @@ Dois casos reais, em direções opostas, e a diferença entre eles é a pergunta
 | O quê | Onde | Regra |
 |---|---|---|
 | por que a tabela existe, ciclo de vida e armadilhas | página de domínio do dicionário, seção "tabela de tabelas" | uma linha por tabela; o domínio é a porta de entrada (`wyd-db-1.0.0.md` §6.8) |
-| coluna, tipo, nulidade, PK, FK, `CHECK` e índice | página **gerada** de `dicionario-dados/gerado/` | gerada a partir das migrations; não se escreve à mão (`wyd-db-1.0.0.md` §6.8, §3 item 3) |
+| coluna, tipo, nulidade, PK, FK, `CHECK` e índice | DDL e tabela de colunas da página de `migrations/` (dona); a página por tabela, escrita à mão (`M26`) | a forma não se digita em texto solto (`wyd-db-1.0.0.md` §6.8) |
 | intenção e `down` do arquivo | página de `migrations/` | molde de 10 itens em `migrations-checklist.md` §5 |
 | estado da tabela | derivado do estado do arquivo | `migrations-checklist.md` §1.2; a página de domínio **cita**, não digita (`D-C`) |
 
-**Nunca** copie a forma para o texto: se a coluna muda, o texto e a página gerada divergem, e a
-divergência vira defeito registrado — a migration prevalece e a origem é corrigida, não o texto
-(`wyd-db-1.0.0.md` §8.2).
+**Nunca** copie a forma para um segundo lugar: se a coluna muda, a cópia diverge e a divergência vira
+defeito registrado — a migration prevalece e a origem é corrigida, não o texto (`wyd-db-1.0.0.md` §8.2).
 
 ## 5. Revisão exigida
 
@@ -117,7 +116,7 @@ executado (`P`):
 # planejado — não executado nesta árvore
 node tools/content/check-migrations.mjs
 make migrations-apply        # up → down → up
-make banco-catalogo          # regenera a referência por tabela
+# catálogo e páginas por tabela não entram: ferramenta não aprovada e produção em `M26`
 ```
 
 Quando o PR for autorizado, o critério de pronto dele é o de `plano-migrations.md` §1.3, e a partir daí

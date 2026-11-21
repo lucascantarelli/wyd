@@ -66,7 +66,7 @@ dono único da derivação: as tabelas de `0003`, `0004`, `0005` e `0007` estão
 é `planejado` como o resto, mas não pode virar SQL antes de `0006` — esta página não antecipa essa
 forma.
 
-As páginas `gerado/<tabela>.md` só existem depois do gerador do dicionário (`make dicionario-dados`).
+As páginas `gerado/<tabela>.md` não existem hoje: elas são escritas à mão em lotes (`M26`, decidida em 2026-11-21), sem gerador, e cada uma aponta para a página de `migrations/` como dona da forma.
 Até lá, coluna, tipo, nulidade, default e índice vivem em `ddl-confirmado.md`, e esta página só os cita
 ([`../convencoes.md`](../convencoes.md) §*Nota de enunciação*).
 

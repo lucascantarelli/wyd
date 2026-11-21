@@ -1,6 +1,6 @@
 # wyd-protocol 1.0.0 — plano diretor da documentação oficial
 
-> **Estado: RASCUNHO PARA APROVAÇÃO (2026-11-19).** Este documento define **o que** a documentação
+> **Estado: RASCUNHO PARA APROVAÇÃO (2026-11-19; decisões de escopo em 2026-11-20).** Este documento define **o que** a documentação
 > oficial do `wyd-protocol` contém, **em que arquivo** cada assunto mora, **quem** responde por ele e
 > **em que ordem** o material é produzido. A árvore de §4 é o **teto**, não o estado: página escrita
 > se reconhece pelo cabeçalho de §6.1 e pelo estado; o que está pronto é medido em
@@ -13,9 +13,11 @@
 > Baseline de referência, medido em **2026-11-19** em `deprecated/crates/wyd-protocol/`: **26
 > arquivos `.rs`**, **198 variantes de `Opcode`**, **7 flags de direção**, **`HEADER_SIZE = 12`**,
 > **`MAX_MESSAGE_SIZE = 8192`**, **14 testes** (10 em `tests/golden/pacotes.rs`, 4 em
-> `tests/integracao/roundtrip.rs`). Esses números descrevem o que a reescrita **substitui**; nenhum
-> deles é meta da `1.0.0`, e nenhum entra nesta árvore como regra sem reverificação (ver `LPRT-01`,
-> `LPRT-04`).
+> `tests/integracao/roundtrip.rs`). Esses números descrevem o que a reescrita **substitui**.
+> **198 é o baseline do legado, não o total alvo do catálogo novo:** vale como piso de cobertura, e a
+> contagem publicada vem do gerador novo, com proveniência (`LPRT-01`, `LPRT-16`, `LPRT-20`). A
+> cobertura integral é entregue em versões menores, da `0.1.0` à `1.0.0` (§9.1); nenhum número do
+> legado entra nesta árvore como regra sem reverificação (`LPRT-04`).
 
 ---
 
@@ -46,7 +48,8 @@ tipos e tipos em bytes — de modo que:
 1. **o layout do fio** (cabeçalho, ofuscação, checksum, enquadramento, catálogo de `Type`) esteja
    descrito de forma que um desenvolvedor implemente o codec sem abrir o cliente;
 2. **cada payload** tenha forma, faixa de valor e semântica declaradas, com a origem da afirmação;
-3. **cada opcode da `1.0.0`** tenha uma linha no catálogo, com direção, família, payload e golden;
+3. **cada opcode do catálogo, na versão em que entra,** tenha uma linha com direção, família,
+   payload e golden;
 4. **o erro** seja tipado e mapeado para a política de conexão de `wyd-net`, sem decisão duplicada;
 5. a documentação seja **publicável** no site do `wyd-docs` sem reescrita.
 
@@ -56,6 +59,7 @@ tipos e tipos em bytes — de modo que:
 |---|---|
 | codec CPSock: `HEADER` de 12 bytes, ofuscação `pKeyWord`, checksum, enquadramento por `Size` | transporte, socket, sessão, timeout e rate-limit — dono: `wyd-net` |
 | catálogo de `Type` (`Opcode`), flags de direção e `FLAG_NEW` | roteamento de mensagem e despacho por sistema — dono: `wyd-net`/`wyd-server` |
+| os fluxos `game ↔ db`, `db ↔ np` e `np` (`FLAG_GAME2DB`, `FLAG_DB2GAME`, `FLAG_DB2NP`, `FLAG_NP2DB`), decididos em 2026-11-20 (`LPRT-19`) | consumo desses fluxos pelos sistemas de destino — dono: `wyd-db`/`wyd-server` |
 | payload de cada opcode do escopo: campos, offsets, tipos, faixas e nulidade | regra de jogo (dano, EXP, cooldown, drop) — dono: `wyd-core`/`wyd-sim` |
 | goldens de bytes e testes de propriedade do codec | captura de tráfego em produção e ferramenta de captura — dono: `wyd-ops`/`wyd-client` |
 | tabelas geradas (`Opcode`, `KEY_TABLE`) e sua reprodutibilidade | geração de `strdef.bin`, assets e patch do cliente — dono: `wyd-client` |
@@ -69,7 +73,8 @@ e proprietário. Afirmação sobre byte que não foi capturado, lido no cliente 
 ### 1.3 O que esta documentação **não** é
 
 - Não é cópia do `Basedef.h` nem tradução do crate antigo: o catálogo novo é escrito uma vez, com
-  proveniência por linha.
+  proveniência por linha, e não é dimensionado pelo inventário do legado — 198 é piso de cobertura,
+  não total (§9.1).
 - Não é manual de jogo nem descrição de balanceamento.
 - Não é registro de captura: o golden é artefato (`tests/`), a página descreve o que ele prova.
 - Não é especificação de rede: o que acontece com pacote inválido na conexão é de `wyd-net`.
@@ -271,14 +276,18 @@ planejamento-1.0.0/wyd-protocol/
 **4+1** em `skills/`.
 
 **Contagem e fonte:** os **34** de `roadmap/` são 2 páginas de seção + **32 issues** `WYDPRT-nnn`,
-fatiadas em §9. O total autoral é **131 páginas** em `docs/`, e o número **medido** é de
-`planos/metricas.md`, escrito depois que as páginas existirem — nenhum total desta seção é medição.
-**Escrito em 2026-11-19:** `docs/index.md` e `docs/convencoes.md`; os demais são teto.
+fatiadas em §9. As duas páginas de seção são `roadmap/index.md` (porta de entrada, que não conta
+issue) e `roadmap/fases.md` (recorte das issues por versão, ligado a §9.1). O total autoral é **131
+páginas** em `docs/`, e o número **medido** é de `planos/metricas.md`, escrito depois que as páginas
+existirem — nenhum total desta seção é medição.
+**Escrito:** `docs/index.md` e `docs/convencoes.md` (2026-11-19), `docs/goldens/como-capturar.md`,
+`docs/roadmap/index.md` e `docs/roadmap/fases.md` (2026-11-20); os demais são teto.
 
 **O que dá para escrever sem fechar lacuna:** as páginas de **método** (`guia-desenvolvedor/`,
 `guia-teste/`, `planos/`, `prompts/`, `skills/`) descrevem procedimento e não dependem de byte; as de
-**conteúdo** (`wire/`, `payloads/`, `goldens/`, `specs/fluxos/`) dependem de `LPRT-01`, `LPRT-04` e
-`LPRT-10`. Ver §9.
+**conteúdo** (`wire/`, `payloads/`, `goldens/`, `specs/fluxos/`) dependem de **captura**: a forma já
+está decidida (`LPRT-01`, `04`, `10`), o que falta é a prova (`LPRT-03`, `LPRT-06`, `LPRT-09` e os
+goldens por família). Ver §9.
 
 ---
 
@@ -314,7 +323,8 @@ fatiadas em §9. O total autoral é **131 páginas** em `docs/`, e o número **m
 - **Fronteira:** forma do fio. Valor de enum de jogo não entra: `RemoveMob` descreve a mensagem, não
   a regra de morte.
 - **Regra:** `header.md` é dono dos offsets do `HEADER`; `tabela-de-opcodes.md` é dono do total de
-  opcodes e da origem da tabela; `opcodes/*` só classifica por família e aponta para o payload.
+  opcodes — medido do gerador na versão, nunca herdado do legado — e da origem da tabela;
+  `opcodes/*` só classifica por família e aponta para o payload.
 
 ### 5.5 `docs/payloads/`
 
@@ -401,7 +411,7 @@ Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalh
 | `header.md` | \"quais são os campos do `HEADER` e em que offset?\" | tabela `offset | campo | tipo | tamanho | direção | proveniência`; exemplo hexadecimal anotado; o que muda entre cliente e servidor |
 | `enquadramento.md` | \"como sei onde um pacote termina?\" | regra por `Size`; mínimo e máximo com origem; pacote parcial, pacote colado e lixo no buffer; o que o codec devolve em cada caso; diagrama de estados do buffer |
 | `keyword-e-checksum.md` | \"como o payload é ofuscado e verificado?\" | quais bytes ficam em claro; semente e passo da transformação; cálculo do checksum com exemplo numérico de 8 bits; política estrita × tolerante e quem escolhe |
-| `tabela-de-opcodes.md` | \"quantos opcodes existem e de onde vem a tabela?\" | total com fonte e data; origem da tabela e do gerador; colunas `valor | nome | direção | família | payload | golden`; regra de valor novo |
+| `tabela-de-opcodes.md` | \"quantos opcodes existem e de onde vem a tabela?\" | total medido do gerador na versão, com data (o 198 do legado é baseline, não total); origem da tabela e do gerador; colunas `valor | nome | direção | família | payload | golden`; regra de valor novo |
 | `flags-de-direcao.md` | \"o que os bits altos do `Type` significam?\" | uma seção por flag; como o valor de fio é composto; o que acontece com combinação inválida; quem roteia |
 | `limites-e-faixas.md` | \"quais são os tetos do fio?\" | tamanho mínimo/máximo; tamanho de string e de vetor; profundidade e quantidade; o que fazer no limite; tabela com origem de cada teto |
 | `opcodes/*.md` | \"quais mensagens existem nesta família?\" | tabela `opcode | direção | payload | golden | estado`; agrupamento por fluxo; o que a família não cobre |
@@ -457,8 +467,9 @@ estado | efeito no buffer/conexão`, estados proibidos.
 
 Seguem o molde de `wyd-db-1.0.0.md` §6.9–§6.17, sem repetir texto: plano de documentação (ondas de
 §9), plano de testes (alvos e matriz capacidade × alvo), `metricas.md` (dono dos números),
-`riscos.md` (risco, sinal, antídoto, dono), roadmap (issue com DoD executável e fase), guias
-(procedimento copiável) e `tests/` (um arquivo por alvo, com o que prova e que dado usa).
+`riscos.md` (risco, sinal, antídoto, dono), roadmap (issue com DoD executável e fase, e o recorte por
+versão de §9.1 em `docs/roadmap/fases.md`), guias (procedimento copiável) e `tests/` (um arquivo por
+alvo, com o que prova e que dado usa).
 
 ---
 
@@ -493,7 +504,8 @@ Uma página é `aceito` quando:
 7. não há placeholder, link quebrado, segredo nem captura com dado de jogador;
 8. foi revisada por alguém que não escreveu.
 
-**Defeito bloqueante:** byte afirmado sem prova; opcode inventado; total sem fonte; valor de opcode
+**Defeito bloqueante:** byte afirmado sem prova; opcode inventado; total sem fonte — inclusive o
+inventário do legado apresentado como total do catálogo novo; valor de opcode
 digitado à mão onde o catálogo gerado existe; link para fora de `docs/` sem a marca \"planejamento\".
 
 ---
@@ -503,10 +515,10 @@ digitado à mão onde o catálogo gerado existe; link para fora de `docs/` sem a
 | Onda | Escopo | Pré-requisito | Páginas |
 |---|---|---|---:|
 | 1 | método: `guia-desenvolvedor/`, `guia-teste/`, `planos/`, `prompts/`, `skills/` | nenhum | 32 |
-| 2 | fio sem payload: `wire/header`, `enquadramento`, `keyword-e-checksum`, `limites-e-faixas`, `flags-de-direcao` | `LPRT-02`, `LPRT-03` | 5 |
-| 3 | catálogo: `wire/tabela-de-opcodes`, `wire/opcodes/*` | `LPRT-01` (escopo de opcodes) | 10 |
-| 4 | payloads: `payloads/*` | `LPRT-04`, `LPRT-10` | 12 |
-| 5 | goldens: `goldens/*` e `tests/*` | `LPRT-10` | 11 |
+| 2 | fio sem payload: `wire/header`, `enquadramento`, `keyword-e-checksum`, `limites-e-faixas`, `flags-de-direcao` | `LPRT-03` e prova de byte por golden (forma decidida em `LPRT-02`, `05`, `07`, `11`) | 5 |
+| 3 | catálogo: `wire/tabela-de-opcodes`, `wire/opcodes/*` | `LPRT-09` (build-alvo; escopo e gerador decididos em `LPRT-01`, `16`) | 10 |
+| 4 | payloads: `payloads/*` | `LPRT-06` e golden por família (fonte de verdade em `LPRT-04`) | 12 |
+| 5 | goldens: `goldens/*` e `tests/*` | capturas reais: processo aprovado em `LPRT-10`, nenhuma captura existe | 11 |
 | 6 | requisitos e fluxos: `specs/*` | ondas 2–5 | 19 |
 | 7 | arquitetura e ADRs: `arquitetura/*` | decisões tomadas | 11 |
 | 8 | roadmap: 32 issues `WYDPRT-nnn` | fases aprovadas | 34 |
@@ -514,42 +526,89 @@ digitado à mão onde o catálogo gerado existe; link para fora de `docs/` sem a
 **Gate da Fase 3 do panorama:** o sistema tem fronteira, contrato com `wyd-net` e `wyd-core`,
 requisitos com ID, plano de teste e roadmap com DoD; nenhum byte afirmado sem prova.
 
+### 9.1 Fatias de versão — `0.1.0` → `1.0.0`
+
+**Estado: `P` (planejado).** Nenhuma versão foi entregue, nenhum opcode foi gerado e a série abaixo é
+ordem de execução, não estado medido. As ondas de §9 ordenam a **produção da documentação**; esta
+seção ordena a **entrega do crate e do catálogo**. O dono declarou em 2026-11-20 que a série está
+aberta na `0.1.0` e que o catálogo novo é completo: nada do inventário do legado fica de fora e nada é
+descartado por não caber numa fatia — fatiar é entregar em partes, não reduzir o escopo (`LPRT-01`).
+
+Regras da série:
+
+1. **Cobertura integral na `1.0.0`:** todo opcode do inventário do legado tem linha no catálogo novo, e
+   a `1.0.0` só fecha com todas as famílias provadas por golden.
+2. **198 é piso, não total:** o número do legado (`lacunas.md` §0.4) mede o que precisa ser coberto,
+   não o tamanho do catálogo. A contagem de cada versão é medida do gerador (`LPRT-16`) e registrada
+   em `planos/metricas.md`, com versão e data — nunca herdada do inventário do legado nem transportada
+   de uma página para outra.
+3. **String antes de personagem, prova antes da família:** `LPRT-06` fecha antes de qualquer família
+   cujo payload carregue texto — o nome de personagem já atravessa o fio como string —, e cada versão
+   entrega família com payload tipado e golden aprovado pelo processo de `LPRT-10`; opcode sem golden
+   migra para a versão seguinte em vez de entrar "para provar depois".
+4. **Versão não remove escopo:** o que não couber numa fatia passa para a próxima; retirar opcode do
+   catálogo exige decisão do dono e linha nova em `lacunas.md`.
+5. **A fatia não é calendário:** é ordem de entrega. Nenhuma versão tem data neste plano.
+
+| Versão | Escopo da fatia | Gate de saída |
+|---|---|---|
+| **0.1.0** | fio sem payload: `HEADER`, enquadramento, ofuscação e checksum, limites, flags; páginas de método; **captura do handshake (`LPRT-03`) e goldens do fio como pré-requisito** | captura datada do handshake com a origem da `KeyWord` registrada, mais goldens de header, enquadramento e transformação aceitos; nenhum opcode de payload |
+| **0.2.0** | catálogo base: famílias `autenticacao` e `personagem`, só depois de `LPRT-06` fechar | golden por família; login e seleção de personagem com nome acentuado provados ponta a ponta |
+| **0.3.0** | `cena-e-mundo` e `movimento` | golden por família; entrada na cena e movimento provados |
+| **0.4.0** | `combate` | golden por família; ataque e dano provados no fio, sem regra de jogo |
+| **0.5.0** | `inventario` e `comercio` | golden por família; item e troca provados |
+| **0.6.0** | `quest-e-eventos` | golden por família; quest e evento provados |
+| **0.7.0** | `ui-e-chat` | golden com texto acentuado em chat e em campo de nome; encoding já fechado antes de `personagem` |
+| **0.8.0** | fluxos internos `game ↔ db`, `db ↔ np` e `np` (`LPRT-19`) | golden de cada fluxo, sem consumidor novo na arquitetura |
+| **0.9.0** | fechamento: matriz de capacidade por variante (`LPRT-15`), fuzz agendado (`LPRT-14`), páginas `aceitas` | cobertura de capacidade de todas as variantes; nenhuma página de `wire/` ou `payloads/` reprovada |
+| **1.0.0** | congelamento: catálogo completo medido do gerador, goldens por família, compatibilidade declarada (`LPRT-09`) | total do catálogo publicado com fonte e data; nenhuma lacuna de prova aberta |
+
+**Pré-requisito de prova no `0.1.0`:** a captura de `LPRT-03` e os goldens do fio entram na primeira
+fatia como pré-requisito, do mesmo modo que a onda 2 de §9 — o fio sem payload só fecha com o handshake
+medido e o byte provado. Não é decisão nova: é a exigência de `LPRT-10` aplicada à primeira fatia.
+
+**Onde o fatiamento vira issue:** `docs/roadmap/fases.md` liga cada issue `WYDPRT-nnn` à versão cujo
+gate ela serve e registra as regras dessa ligação. Ele cita esta seção como dona do escopo e do gate,
+e esta seção cita ele como dono do recorte — mudar uma fatia exige atualizar as duas páginas na mesma
+entrega.
+
 ---
 
-## 10. Decisões que dependem do time
+## 10. Decisões do time
 
-Nenhuma foi tomada. Cada linha aponta a lacuna que a fecha; `lacunas.md` é o dono do estado, do dono
-e do prazo.
+**17 decisões foram tomadas pelo dono em 2026-11-20** e valem como regra deste plano; 3 continuam
+abertas porque dependem de captura ou leitura do cliente. `lacunas.md` é o dono do estado, do dono e
+do prazo; aqui fica o texto da decisão que o restante da árvore precisa citar.
 
-| # | Decisão | Lacuna |
-|---|---|---|
-| 1 | quais opcodes entram na `1.0.0` | `LPRT-01` |
-| 2 | política de checksum no servidor | `LPRT-02` |
-| 3 | origem da semente de ofuscação | `LPRT-03` |
-| 4 | fonte de verdade do layout de payload | `LPRT-04` |
-| 5 | `repr(C)` × leitura explícita por offset | `LPRT-05` |
-| 6 | encoding e terminador de string | `LPRT-06` |
-| 7 | comportamento em frame no limite e acima dele | `LPRT-07` |
-| 8 | reação a opcode desconhecido | `LPRT-08` |
-| 9 | versão-alvo do cliente e compatibilidade | `LPRT-09` |
-| 10 | processo de captura e aprovação de golden | `LPRT-10` |
-| 11 | semântica de `FLAG_NEW` e das flags de direção | `LPRT-11` |
-| 12 | quem garante ordem entre mensagens | `LPRT-12` |
-| 13 | taxonomia de erro e reação na conexão | `LPRT-13` |
-| 14 | escopo de fuzz e orçamento no CI | `LPRT-14` |
-| 15 | como medir 85% num crate com tabelas geradas | `LPRT-15` |
-| 16 | gerador de tabela: próprio e reprodutível | `LPRT-16` |
-| 17 | declaração de segurança da ofuscação | `LPRT-17` |
-| 18 | payload tipado × bytes crus na fronteira com `wyd-core` | `LPRT-18` |
-| 19 | se os fluxos `db ↔ game` e `np` entram no escopo | `LPRT-19` |
-| 20 | publicação do catálogo no site (gerado ou escrito) | `LPRT-20` |
+| # | Decisão | Lacuna | Estado e decisão (2026-11-20) |
+|---|---|---|---|
+| 1 | cobertura do catálogo e sua distribuição até a `1.0.0` | `LPRT-01` | **decidida:** catálogo completo — todo o inventário do legado, sem se limitar a ele; 198 é baseline/piso, não total; total publicado medido do gerador; entrega fatiada em `0.1.0`→`1.0.0` (§9.1) |
+| 2 | política de checksum no servidor | `LPRT-02` | **decidida:** recusar divergente, sem modo tolerante |
+| 3 | origem da semente de ofuscação | `LPRT-03` | **aberta:** o crate recebe a `KeyWord`, origem não assumida; falta captura do handshake |
+| 4 | fonte de verdade do layout de payload | `LPRT-04` | **decidida:** cliente + captura; legado só `H` |
+| 5 | `repr(C)` × leitura explícita por offset | `LPRT-05` | **decidida:** leitura explícita, sem `unsafe` |
+| 6 | encoding e terminador de string | `LPRT-06` | **aberta:** codec não transcodifica e trata bytes de tamanho fixo; encoding e terminador dependem de captura |
+| 7 | comportamento em frame no limite e acima dele | `LPRT-07` | **decidida:** aceitar `Size = 8192`, recusar acima com erro tipado |
+| 8 | reação a opcode desconhecido | `LPRT-08` | **decidida:** codec devolve `UnknownType`; `wyd-net` decide a reação |
+| 9 | versão-alvo do cliente e compatibilidade | `LPRT-09` | **aberta:** alvo provável 7662; fecha com captura datada |
+| 10 | processo de captura e aprovação de golden | `LPRT-10` | **decidida:** captura datada, anonimização, `G-<familia>-<nn>`, origem registrada e segunda leitura |
+| 11 | semântica de `FLAG_NEW` e das flags de direção | `LPRT-11` | **decidida:** direção roteia; `FLAG_NEW` é marcador de versão |
+| 12 | quem garante ordem entre mensagens | `LPRT-12` | **decidida:** `wyd-net` garante; codec é stateless |
+| 13 | taxonomia de erro e reação na conexão | `LPRT-13` | **decidida:** três famílias com classe recuperável/fatal; crate classifica, `wyd-net` reage |
+| 14 | escopo de fuzz e orçamento no CI | `LPRT-14` | **decidida:** propriedade curta no PR + fuzz agendado com teto de tempo |
+| 15 | como medir 85% num crate com tabelas geradas | `LPRT-15` | **decidida:** gerado fora da métrica de linha; matriz de capacidade por variante |
+| 16 | gerador de tabela: próprio e reprodutível | `LPRT-16` | **decidida:** gerador próprio, entrada versionada, saída determinística, diff no CI |
+| 17 | declaração de segurança da ofuscação | `LPRT-17` | **decidida:** ofuscação ≠ criptografia; checksum não é MAC |
+| 18 | payload tipado × bytes crus na fronteira com `wyd-core` | `LPRT-18` | **decidida:** payload tipado e validado; bytes crus não saem do crate |
+| 19 | se os fluxos `db ↔ game` e `np` entram no escopo | `LPRT-19` | **decidida:** os três fluxos entram (`game ↔ db`, `db ↔ np`, `np`) |
+| 20 | publicação do catálogo no site (gerado ou escrito) | `LPRT-20` | **decidida:** catálogo escrito à mão citando os valores do gerador; mantém a `LPDOC-10`; o total exibido é o medido do gerador, na versão |
 
 ---
 
 ## 11. O que este documento não decide
 
-- Não decide quais opcodes entram na `1.0.0`: `LPRT-01`.
-- Não decide layout de payload: `LPRT-04` e `LPRT-10`.
+- Não decide o layout de campo de cada payload: a fonte de verdade foi decidida em `LPRT-04`
+  (cliente + captura), mas cada campo continua exigindo golden — `LPRT-10` define o processo, não a prova.
 - Não decide arquitetura de `wyd-net` nem reação a pacote inválido na conexão.
 - Não decide regra de jogo nem balanceamento.
 - Não cria ADR: decisão registrada nasce com \"como verificar\", depois do \"sim\" do dono.

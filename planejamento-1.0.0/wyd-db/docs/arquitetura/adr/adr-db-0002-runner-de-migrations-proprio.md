@@ -8,6 +8,14 @@
 
 # ADR-DB-0002 — Runner de migrations próprio, com ledger por versão
 
+> **Correção de 2026-11-20 — contagens.** O texto abaixo é o de 2026-11-18 e **não** foi reescrito: ele
+> registra a decisão, não o andamento. As contagens mudaram depois do aceite e têm dono noutro lugar:
+> a série passou a **31 arquivos e 97 tabelas** com os adendos `0030` e `0031`, aprovados em 2026-11-20
+> (`plano-migrations.md` §3), e tem **97 tabelas com DDL fechado** e nenhuma sem coluna desenhada ou aguardando aprovação
+> (`ddl-confirmado.md` §1). Onde este arquivo diz "29 arquivos",
+> "92 tabelas" ou "os 29", leia-se o número vigente do plano; a decisão — runner próprio, ledger por
+> versão, lock `0x5759_4404` — não mudou.
+
 Quatro níveis de afirmação convivem aqui:
 
 - **`P`** — o que a série 1.0.0 projeta: os 29 arquivos, os quatro schemas, as 92 tabelas e o runner
