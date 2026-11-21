@@ -177,6 +177,13 @@ Cada prova é um teste do módulo (`src/migrate/spec.md` §13), não uma confer�
 
 ## Revisão
 
+**Revisão de estado — 2026-11-21 (`M27`/`0032`).** A série passou de 31 para 32 arquivos; `0032`
+concede privilégios a `wyd_admin` e não altera o número de tabelas (`plano-migrations.md` §3;
+`migrations/0032-admin-grants.md`). O total vigente de papéis passou de cinco para seis com a decisão
+`M27` (`src/provision/spec.md` §2; `lacunas.md` §2.3). Esta nota atualiza os números de estado, sem
+reescrever a decisão original: contagens e menções anteriores refletem o desenho considerado no aceite
+de 2026-11-18.
+
 Revisar quando: houver mais de uma série no mesmo banco (exige coluna de série no ledger e muda a
 chave), entrar réplica de leitura com migrations (o lock é por cluster, não por nó), ou algum processo
 deixar de chamar `migrate::run` no boot — o que reabre a discussão de quem aplica a série.
