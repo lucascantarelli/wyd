@@ -28,8 +28,9 @@ ser escrito) nem autoria de conteúdo editorial do portal.
 | `content.game_setting` (0019) | par `(section, key)` lido no boot — valor base de regra | seed | jogo, `wyd_read` | `gerado/game_setting.md` |
 | `content.game_matrix` (0019) | bloco numérico posicional `(section, block_index, line_index)` | seed | jogo, `wyd_read` | `gerado/game_matrix.md` |
 
-As cinco páginas de `gerado/` existem (`M26`, escritas à mão): coluna, tipo, nulidade, default,
-constraint e índice ficam lá, e esta página lê o que eles garantem neste domínio.
+As cinco páginas de `gerado/` existem (`M26`, escritas à mão) e resumem coluna, tipo, nulidade,
+default, constraint e índice; a forma é da página de `migrations/` de cada arquivo, e esta página lê
+o que as duas garantem neste domínio.
 
 ## Relações
 
