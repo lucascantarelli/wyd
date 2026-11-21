@@ -61,47 +61,47 @@ tabela. Nenhuma rota pede `DELETE`.
 | `game.session` | §4.4 | `SELECT`, `UPDATE` | `released_at`/`released_reason` só depois do ack |
 | `game.city` | §4.6 | `SELECT`, `UPDATE` | alíquota com `expected_tax_rate_bps` |
 | `game.item_price` | §4.7 | `SELECT`, `UPDATE` | preços com os dois `expected_*` |
-| `ops.audit_log` | todas | `INSERT` (+ `SELECT` em `id` se o `200` devolver `audit_id`) | auditoria da ação |
+| `ops.audit_log` | todas | `INSERT` + `SELECT (id)` | auditoria da ação e retorno do `audit_id` |
 
-### Opções para o dono
+### Decisões registradas e alternativas (M27)
 
 #### 1. Forma do papel
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **A (recomendada)** | `wyd_admin` com `LOGIN`, sem membership, senha própria por ambiente e DSN nova (`WYD_DB_URL_ADMIN`) | papel separado e atribuível, como os outros quatro; custo é mais um segredo para provisionar e rotacionar (`wyd-ops`) |
-| B | `wyd_admin` sem `LOGIN`, com o processo do admin fazendo `SET ROLE` a partir de uma credencial existente | economiza uma DSN, mas o runtime passa a carregar a credencial mais ampla e o `SET ROLE` vira parte do contrato |
-| C (recusada) | conceder a escrita em `game` a `wyd_game`, sem papel novo | amplia o runtime de jogo com escrita de staff e mistura duas atribuições; contraria `ADR-DB-0001` e o princípio de credencial por runtime |
+| **A (decidida em 2026-11-21)** | `wyd_admin` com `LOGIN`, sem membership, senha própria por ambiente e DSN nova (`WYD_DB_URL_ADMIN`) | papel separado e atribuível; custo: mais um segredo a provisionar e rotacionar (`wyd-ops`) |
+| B (não escolhida) | `wyd_admin` sem `LOGIN`, com o processo do admin fazendo `SET ROLE` a partir de uma credencial existente | economizaria uma DSN, mas o runtime passaria a carregar a credencial mais ampla e o `SET ROLE` viraria parte do contrato |
+| C (recusada) | conceder a escrita em `game` a `wyd_game`, sem papel novo | ampliaria o runtime de jogo com escrita de staff e misturaria duas atribuições; contrariaria `ADR-DB-0001` e o princípio de credencial por runtime |
 
 #### 2. Leitura nas tabelas do C4
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **S1 (recomendada)** | `SELECT` nas sete tabelas | cobre `expected_*`, `WHERE` e `RETURNING` sem depender de leitura em outra tabela; é o menor conjunto que faz o contrato funcionar |
-| S2 | `SELECT` por coluna, só nas conferidas e devolvidas | menos leitura, mas cada mudança de resposta do C4 vira mudança de `GRANT` |
-| S3 (recusada) | nenhum `SELECT` | `RETURNING` e `expected_*` exigem leitura; sem ela, §4.1–§4.7 não fecham |
+| **S1 (decidida em 2026-11-21)** | `SELECT` nas sete tabelas | cobre `expected_*`, `WHERE` e `RETURNING` sem depender de leitura em outra tabela; é o menor conjunto que faz o contrato funcionar |
+| S2 (não escolhida) | `SELECT` por coluna, só nas conferidas e devolvidas | reduziria a leitura, mas cada mudança de resposta do C4 viraria mudança de `GRANT` |
+| S3 (recusada) | nenhum `SELECT` | `RETURNING` e `expected_*` exigem leitura; sem ela, §4.1–§4.7 não fechariam |
 
 #### 3. Auditoria
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **C1 (recomendada)** | `USAGE` em `ops` + `INSERT` em `ops.audit_log` (e `SELECT` em `id`, se o `audit_id` continuar na resposta) | `USAGE` dá acesso ao schema, não às tabelas; nenhum DDL novo |
-| C2 | função `SECURITY DEFINER` em `ops`, com `EXECUTE` para `wyd_admin` e sem `USAGE` em `ops` | tira do papel o `INSERT` direto, mas cria objeto novo e um caminho de escrita a mais; exige DDL e revisão própria |
-| C3 | `INSERT` sem `RETURNING` | dispensa `SELECT` em `audit_log`, mas o `200` do C4 perde `audit_id` — é mudança de contrato, não de banco |
+| **C1 (decidida em 2026-11-21)** | `USAGE` em `ops` + `INSERT` em `ops.audit_log` + `SELECT (id)` | `USAGE` dá acesso ao schema, não às tabelas; o `SELECT (id)` permite devolver `audit_id`; nenhum DDL novo |
+| C2 (não escolhida) | função `SECURITY DEFINER` em `ops`, com `EXECUTE` para `wyd_admin` e sem `USAGE` em `ops` | tiraria do papel o `INSERT` direto, mas criaria objeto novo e um caminho de escrita a mais; exigiria DDL e revisão própria |
+| C3 (não escolhida) | `INSERT` sem `RETURNING` | dispensaria `SELECT` em `audit_log`, mas o `200` do C4 perderia `audit_id` — seria mudança de contrato, não de banco |
 
 #### 4. Onde o `GRANT` mora
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **D1 (recomendada)** | arquivo novo `0032_admin_grants.sql` | não reabre `0001`; a série passa de 31 para 32 arquivos, `Tab.` continua 97 e as citações de contagem e gates mudam na mesma entrega |
-| D2 | dentro de `0001_bootstrap.sql` | mantém 31 arquivos, mas reabre o DDL de `0001`, que o registro trata como congelável |
-| D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` só cria papel e mexe em `public` |
+| **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos, `Tab.` continua 97 e as citações de contagem e gates foram atualizadas na mesma entrega |
+| D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria 31 arquivos, mas reabriria o DDL de `0001`, que o registro trata como congelável |
+| D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` cria papel e mexe em `public` |
 
-### Recomendação
+### Decisão registrada
 
 **Decidido em 2026-11-21 pelo dono: A + S1 + C1 + D1.** Um papel `wyd_admin` com `LOGIN`, `USAGE` em `game` e em `ops`, `SELECT` e
-`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, mais `INSERT` em `ops.audit_log`; o `GRANT`
-entra em arquivo novo da série. Isso mantém a escrita de staff separada da do jogo e do portal, não
+`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, mais `INSERT` e `SELECT (id)` em
+`ops.audit_log`; o `GRANT` entrou no arquivo novo `0032`. Isso mantém a escrita de staff separada da do jogo e do portal, não
 reabre DDL aprovado e não cria tabela.
 
 **O que a decisão mudou:** `ROLES` e o golden `db/roles.sql` (`src/provision/spec.md`), a DSN nova
@@ -114,60 +114,57 @@ no `0032`, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão.
 rodada: a redação de §5.15 e de `0030` §8 continua aberta, e até lá só a primeira oração de §5.15
 mudou, porque sem isso ela seria falsa com o papel existindo.
 
-**Divergência observada, não corrigida:** `ddl-confirmado.md` §5.15 afirma que a API interna usa a
-credencial `wyd_portal` até ganhar papel próprio. `wyd_portal` não tem `USAGE` em `game` (`0001`), então
-a frase não se sustenta com o DDL aprovado; ela é anterior a esta proposta e não foi alterada aqui —
-corrigi-la exige a decisão do dono junto com A/S/C/D; a divergência está registrada como `M28` em
-`lacunas.md` §2.3.
+**Divergência de prosa ainda aberta (`M28`):** `ddl-confirmado.md` §5.15 atribui à "API interna" a
+credencial `wyd_portal` para uma escrita que não alcança `game` (`0001`). A escolha de redação A/B fica
+para a rodada própria de `M28`, registrada em `lacunas.md` §2.3; ela não reabre nem condiciona as
+decisões A + S1 + C1 + D1 de `M27`.
 
 ### Duas redações para fechar `M28`
 
 As duas substituem **só prosa** — nenhum `GRANT`, nenhuma linha de DDL — e fecham `M28` em rodada
 própria, depois de `M27`; até lá a lacuna continua `aberta` e os arquivos de DDL não mudam.
 
-**`M28` segue aberta em 2026-11-21:** nenhuma das duas redações foi aplicada. Com `M27` fechada, as
-duas precisam trocar o "Se o `wyd-admin` ganhar papel próprio, o `GRANT` vem em lote novo" pelo
-presente — o papel existe e o `GRANT` está no `0032` — antes de entrar.
+**`M28` segue aberta em 2026-11-21:** nenhuma das duas redações foi aplicada. As alternativas abaixo
+continuam sem escolha; seus trechos sobre `M27` já refletem o papel existente e o `GRANT` em `0032`.
+A rodada de `M28` ainda precisa decidir a quem o texto chama de "API interna" e aplicar uma das duas
+redações, sem reabrir `M27`.
 
-**O que sai hoje.**
+**Trechos de origem que `M28` ainda precisa resolver (citações dos arquivos, não decisões sobre `M27`):**
 
-- `ddl-confirmado.md` §5.15: "Não existe papel `wyd_admin` no `provision` — a API interna usa a
-  credencial `wyd_portal` até ganhar papel próprio em lote novo."
-- `0030-portal-content.md` §8, sob o rótulo **"Escrita pelo `wyd-admin`"**: "Hoje a API interna usa a
-  credencial `wyd_portal`; se o `wyd-admin` ganhar papel próprio, o `GRANT` vem em lote novo — este
-  arquivo **não** inventa papel."
+- `ddl-confirmado.md` §5.15: a oração restante atribui à "API interna" a credencial `wyd_portal` para
+  estas quatro tabelas, embora `wyd_portal` não alcance `game`.
+- `0030-portal-content.md` §8, sob o rótulo **"Escrita pelo `wyd-admin`"**, ainda atribui à "API interna"
+  a credencial `wyd_portal` e descreve o papel e o `GRANT` como condicionais; essa prosa precisa ser
+  resolvida por uma das redações abaixo, sem alterar o fato já decidido em `M27`.
 
 #### Redação A — "API interna" é o BFF administrativo do portal
 
-**`ddl-confirmado.md` §5.15 passa a dizer:** "Não existe papel `wyd_admin` no `provision`. Estas quatro
-  tabelas de `portal` são escritas pelo **BFF administrativo do portal**, com a credencial `wyd_portal`;
-  essa credencial **não** alcança `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`); as ações do
-  C4 em `game` continuam sendo do `wyd-admin` (`LAC-POR-01`). Se o `wyd-admin` ganhar papel próprio, o
-  `GRANT` vem em lote novo."
+**`ddl-confirmado.md` §5.15 passaria a dizer:** "O papel `wyd_admin` existe para `game` e `ops.audit_log`
+  (`M27`, `0032`). Estas quatro tabelas de `portal` são escritas pelo **BFF administrativo do portal**,
+  com a credencial `wyd_portal`; essa credencial **não** alcança `game` (o `0001` não dá `USAGE` no
+  schema a `wyd_portal`); as ações do C4 em `game` continuam sendo do `wyd-admin` (`LAC-POR-01`)."
 
-**`0030-portal-content.md` §8:** o rótulo passa a **"Escrita pelo BFF do portal"** e o parágrafo vira:
-  "Não existe papel `wyd_admin` no `provision` (`src/provision/spec.md` não cria papel de serviço para
-  o `wyd-admin`). Hoje as rotas `/admin/conteudo/*` e `/admin/launcher` usam a credencial `wyd_portal`;
-  ela **não** cobre `game`, cujas ações do C4 são do `wyd-admin` (`LAC-POR-01`). Se o `wyd-admin`
-  ganhar papel próprio, o `GRANT` vem em lote novo."
+**`0030-portal-content.md` §8, na redação A:** o rótulo passaria a **"Escrita pelo BFF do portal"** e o parágrafo seria:
+  "O papel `wyd_admin` existe para `game` e `ops.audit_log` (`M27`, `0032`). As rotas
+  `/admin/conteudo/*` e `/admin/launcher` usam a credencial `wyd_portal`; ela **não** cobre `game`, cujas
+  ações do C4 são do `wyd-admin` (`LAC-POR-01`)."
 
-**Efeito:** o texto fica verdadeiro para as quatro tabelas, sem sugerir que a mesma credencial serve ao
+**Efeito previsto se escolhida:** o texto identifica quem escreve as quatro tabelas sem sugerir que a mesma credencial serve ao
 C4. **Fontes:** `0030` §9 (as rotas `/admin/conteudo/*` e `/admin/launcher` escrevem com `wyd_portal`, e
 estas tabelas não são estado de jogo) e `fronteira.md` §7 do `wyd-admin` (o admin não escreve em
 `portal`); o C4 §4.8 aplica o mesmo limite às três tabelas de economia, não a estas quatro.
 
 #### Redação B — "API interna" é o serviço `wyd-admin`
 
-**`ddl-confirmado.md` §5.15 passa a dizer:** "Não existe papel `wyd_admin` no `provision`. Estas quatro
-  tabelas de `portal` são escritas pelo **BFF do portal** com a credencial `wyd_portal`; o serviço
-  `wyd-admin` **não** as escreve. Para `game` e `ops.audit_log`, o `wyd-admin` tem papel próprio
-  (`M27`), e `wyd_portal` não serve para `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`). O
-  `GRANT` do papel novo vem em lote novo."
+**`ddl-confirmado.md` §5.15 passaria a dizer:** "O papel `wyd_admin` existe para `game` e
+  `ops.audit_log` (`M27`, `0032`). Estas quatro tabelas de `portal` são escritas pelo **BFF do portal**
+  com a credencial `wyd_portal`; o serviço `wyd-admin` **não** as escreve. `wyd_portal` não serve para
+  `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`)."
 
-**`0030-portal-content.md` §8:** o rótulo passa a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
-  e o parágrafo vira: "Não existe papel `wyd_admin` no `provision`. Estas quatro tabelas são escritas
-  pelo BFF do portal com a credencial `wyd_portal`; o `wyd-admin` não as escreve e, para `game` e
-  `ops.audit_log`, tem papel próprio (`M27`) e não usa `wyd_portal` para `game`."
+**`0030-portal-content.md` §8, na redação B:** o rótulo passaria a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
+  e o parágrafo seria: "Estas quatro tabelas são escritas pelo BFF do portal com a credencial `wyd_portal`;
+  o `wyd-admin` não as escreve e, para `game` e `ops.audit_log`, tem papel próprio (`M27`, `0032`) e não
+  usa `wyd_portal` para `game`."
 
 **Efeito:** explicita a fronteira que `fronteira.md` §7 já declara ("o admin **não** escreve em
 `portal`") e nomeia o dono da escrita em `game`/`ops.audit_log`. **Custo:** mexe também no rótulo e
@@ -180,8 +177,8 @@ quatro.
 | Quem escreve as quatro tabelas | BFF, com `wyd_portal` | BFF, com `wyd_portal`; o texto diz que o admin não escreve |
 | Tamanho da edição | uma frase em §5.15 e o parágrafo de §8 | uma frase em §5.15, o rótulo e o parágrafo de §8 |
 
-Nas duas, o papel do `wyd-admin` em `game`/`ops.audit_log` continua sendo `M27`. A escolha é do dono, em
-rodada própria: `M27` fechou em 2026-11-21 sem ela.
+Nas duas alternativas, o papel do `wyd-admin` em `game`/`ops.audit_log` já existe por `M27` (`0032`).
+A escolha entre A e B é do dono, em rodada própria; `M28` continua aberta.
 
 ## O que é hash e com que algoritmo
 
