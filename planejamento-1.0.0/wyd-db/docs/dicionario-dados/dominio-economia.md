@@ -18,19 +18,19 @@ carteira da conta ([acesso](dominio-acesso.md)), refino como custo (`dominio-ref
 
 ## Tabela de tabelas
 
-| Tabela | Schema | Papel em uma linha |
-|---|---|---|
-| `game.city` | game | cidade, capital e alíquota em bps |
-| `game.item_price` | game | preço de compra e venda por `(item_index, npc_id)` |
-| `game.personal_shop` | game | loja de personagem, uma aberta por vez |
-| `game.city_tax_ledger` | game | imposto arrecadado por cidade, com motivo |
-| `game.account_ledger` | game | lançamento de moeda com saldo e motivo |
-| `portal.donate_shop_item` | portal | item de loja cash, com preço em créditos |
-| `portal.daily_reward_item` | portal | item do bônus diário, por dia 1–7 |
-| `portal.daily_reward_claim` | portal | resgate do bônus, um por conta/dia |
-| `portal.kingdom_cape_price` | portal | linha única do preço da capa de reino |
-| `portal.donate_credit` | portal | crédito de cash, idempotente |
-| `portal.donate_debit` | portal | débito de cash, idempotente, com motivo |
+| Tabela | Schema | Papel em uma linha | Colunas |
+|---|---|---|---|
+| `game.city` | game | cidade, capital e alíquota em bps | `gerado/city.md` |
+| `game.item_price` | game | preço de compra e venda por `(item_index, npc_id)` | `gerado/item_price.md` |
+| `game.personal_shop` | game | loja de personagem, uma aberta por vez | `gerado/personal_shop.md` |
+| `game.city_tax_ledger` | game | imposto arrecadado por cidade, com motivo | `gerado/city_tax_ledger.md` |
+| `game.account_ledger` | game | lançamento de moeda com saldo e motivo | `gerado/account_ledger.md` |
+| `portal.donate_shop_item` | portal | item de loja cash, com preço em créditos | `gerado/donate_shop_item.md` |
+| `portal.daily_reward_item` | portal | item do bônus diário, por dia 1–7 | `gerado/daily_reward_item.md` |
+| `portal.daily_reward_claim` | portal | resgate do bônus, um por conta/dia | `gerado/daily_reward_claim.md` |
+| `portal.kingdom_cape_price` | portal | linha única do preço da capa de reino | `gerado/kingdom_cape_price.md` |
+| `portal.donate_credit` | portal | crédito de cash, idempotente | `gerado/donate_credit.md` |
+| `portal.donate_debit` | portal | débito de cash, idempotente, com motivo | `gerado/donate_debit.md` |
 
 `A19` mantém seis tabelas em `portal` e quatro em `game`; o ledger da conta é `game`.
 
@@ -45,8 +45,10 @@ erDiagram
     account ||--o{ donate_debit : "debita"
 ```
 
-`portal` não tem FK para `game` (`P-17`): as tabelas de cash guardam `account_id` como número e a
-integridade é do BFF, não da constraint. Isso é decisão de fronteira, não esquecimento.
+`portal` não tem FK para `game` (`P-17`): `donate_credit`, `donate_debit` e `daily_reward_claim`
+guardam `account_id` como número, e a integridade é do BFF, não da constraint. A exceção fica **dentro**
+do próprio schema: `daily_reward_claim.reward_item_id` tem FK `RESTRICT` para `daily_reward_item`
+(`ddl-confirmado.md` §5.14). Isso é decisão de fronteira, não esquecimento.
 
 ## Ciclo de vida do dado
 
@@ -66,6 +68,8 @@ integridade é do BFF, não da constraint. Isso é decisão de fronteira, não e
 - **loja com estado coerente:** `is_open = (closed_at IS NULL)` e **uma** loja aberta por personagem
   (`ux_personal_shop_aberta … WHERE is_open`).
 - **bônus diário único por dia:** `uq_daily_reward_claim_dia (account_id, claim_date)`.
+- **resgate aponta para recompensa existente:** FK `RESTRICT` de `daily_reward_claim` para
+  `daily_reward_item`; apagar a recompensa com resgate registrado falha alto.
 - **bônus tem conteúdo:** `item_index IS NOT NULL OR gold > 0`.
 - **cash idempotente:** `idempotency_key` única em crédito e débito (`M17`).
 - **débito com motivo finito:** `portal` ou `shop_purchase`.
@@ -78,6 +82,8 @@ integridade é do BFF, não da constraint. Isso é decisão de fronteira, não e
 - quatro saldos diferentes: `character.coin` (ouro do personagem), `account_wallet.coin` (carteira),
   `account_ledger` (histórico) e o **cash** do portal (`donate_credit`/`donate_debit`). Nenhum é o outro.
 - `donate_credit`/`donate_debit` **não** são a carteira: são o extrato do cash, e o saldo é derivado.
+- `donate_shop_item.item_index` e `daily_reward_item.item_index` **não têm FK** para
+  `content.item_catalog`: o catálogo é de `0014` e a integridade é do seed (§5.14).
 - `city.map_id` é anulável porque o mapa da cidade não é publicado pelo cliente (`H`); não preencha com
   suposição.
 - `personal_shop` fechada não é apagada: o histórico de imposto fica no ledger.

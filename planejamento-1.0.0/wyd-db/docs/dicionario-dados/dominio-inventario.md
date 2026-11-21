@@ -17,11 +17,11 @@ contador de piedade de refino. O item é identificado por `item_index` do client
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `game.character_item` (0009) | item na posição 0–79 do personagem, com refino e gema | jogo | jogo |
-| `game.vault_item` (0009) | item na posição 0–127 do baú da conta | jogo | jogo |
-| `game.refine_pity` (0009) | contador de piedade por personagem/item (0–20) | jogo | jogo |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.character_item` (0009) | item na posição 0–79 do personagem, com refino e gema | jogo | jogo | `gerado/character_item.md` |
+| `game.vault_item` (0009) | item na posição 0–127 do baú da conta | jogo | jogo | `gerado/vault_item.md` |
+| `game.refine_pity` (0009) | contador de piedade por personagem/item (0–20) | jogo | jogo | `gerado/refine_pity.md` |
 
 ## Relações
 

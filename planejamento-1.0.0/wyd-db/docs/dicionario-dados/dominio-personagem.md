@@ -18,13 +18,13 @@ subir de nível e ao trocar de mapa; os satélites mudam a cada tick.
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `game.character` (0006) | identidade do personagem: vaga, nome, classe, nível, ouro e soft-delete | jogo | jogo, portal (via view de `0029`) |
-| `game.character_status` (0006) | vida, mana, pontos de PvP, regeneração e resistências | jogo | jogo |
-| `game.character_scores` (0006) | atributos e scores **base** e **atuais** | jogo | jogo |
-| `game.character_special` (0006) | quatro valores especiais do `STRUCT_MOB` | jogo | jogo |
-| `game.character_short_skill` (0006) | quatro atalhos de skill da barra | jogo | jogo |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.character` (0006) | identidade do personagem: vaga, nome, classe, nível, ouro e soft-delete | jogo | jogo, portal (via view de `0029`) | `gerado/character.md` |
+| `game.character_status` (0006) | vida, mana, pontos de PvP, regeneração e resistências | jogo | jogo | `gerado/character_status.md` |
+| `game.character_scores` (0006) | atributos e scores **base** e **atuais** | jogo | jogo | `gerado/character_scores.md` |
+| `game.character_special` (0006) | quatro valores especiais do `STRUCT_MOB` | jogo | jogo | `gerado/character_special.md` |
+| `game.character_short_skill` (0006) | quatro atalhos de skill da barra | jogo | jogo | `gerado/character_short_skill.md` |
 
 ## Relações
 

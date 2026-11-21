@@ -20,13 +20,16 @@ ser escrito) nem autoria de conteúdo editorial do portal.
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `content.content_version` (0001) | linha única (`id = 1`) com a versão do conteúdo aplicado | seed | jogo, portal, `wyd_read` |
-| `ops.config_revision` (0002) | cabeçalho de uma revisão: autor tripartido, nota, instante de aplicação | portal (`INSERT` só) | portal, `wyd_read` |
-| `ops.config_change` (0002) | uma linha por chave alterada, com valor anterior e novo em texto canônico | portal (`INSERT` só) | portal, `wyd_read` |
-| `content.game_setting` (0019) | par `(section, key)` lido no boot — valor base de regra | seed | jogo, `wyd_read` |
-| `content.game_matrix` (0019) | bloco numérico posicional `(section, block_index, line_index)` | seed | jogo, `wyd_read` |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `content.content_version` (0001) | linha única (`id = 1`) com a versão do conteúdo aplicado | seed | jogo, portal, `wyd_read` | `gerado/content_version.md` |
+| `ops.config_revision` (0002) | cabeçalho de uma revisão: autor tripartido, nota, instante de aplicação | portal (`INSERT` só) | portal, `wyd_read` | `gerado/config_revision.md` |
+| `ops.config_change` (0002) | uma linha por chave alterada, com valor anterior e novo em texto canônico | portal (`INSERT` só) | portal, `wyd_read` | `gerado/config_change.md` |
+| `content.game_setting` (0019) | par `(section, key)` lido no boot — valor base de regra | seed | jogo, `wyd_read` | `gerado/game_setting.md` |
+| `content.game_matrix` (0019) | bloco numérico posicional `(section, block_index, line_index)` | seed | jogo, `wyd_read` | `gerado/game_matrix.md` |
+
+As cinco páginas de `gerado/` existem (`M26`, escritas à mão): coluna, tipo, nulidade, default,
+constraint e índice ficam lá, e esta página lê o que eles garantem neste domínio.
 
 ## Relações
 

@@ -23,10 +23,10 @@ nem para `game.account` — apagar ou fechar o ator não pode apagar a prova.
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `ops.audit_log` (0002) | evento auditável com ator tripartido, ação, alvo e detalhe | jogo e portal (`INSERT` só) | `wyd_read`; jogo/portal leem por `SELECT` herdado |
-| `ops.login_attempt` (0002) | tentativa de autenticação com identificador **hasheado**, origem, IP e resultado | jogo e portal (`INSERT` só) | `wyd_read` |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `ops.audit_log` (0002) | evento auditável com ator tripartido, ação, alvo e detalhe | jogo e portal (`INSERT` só) | `wyd_read`; jogo/portal leem por `SELECT` herdado | `gerado/audit_log.md` |
+| `ops.login_attempt` (0002) | tentativa de autenticação com identificador **hasheado**, origem, IP e resultado | jogo e portal (`INSERT` só) | `wyd_read` | `gerado/login_attempt.md` |
 
 ## Garantias do schema
 

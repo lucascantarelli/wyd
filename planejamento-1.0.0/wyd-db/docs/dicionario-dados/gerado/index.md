@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **44 de 97** páginas escritas (2026-11-21). A produção é manual, em lotes (`M26`), sem
+**Estado:** **46 de 97** páginas escritas (2026-11-21). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -65,6 +65,15 @@ no build.
 | `portal.kingdom_cape_price` | [kingdom_cape_price](kingdom_cape_price.md) | `0011-game-economy` |
 | `portal.donate_credit` | [donate_credit](donate_credit.md) | `0011-game-economy` |
 | `portal.donate_debit` | [donate_debit](donate_debit.md) | `0011-game-economy` |
+
+## Lote 3 — configuração do mundo (`0019`), 2 de 13 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.game_setting` | [game_setting](game_setting.md) | `0019-content-world` |
+| `content.game_matrix` | [game_matrix](game_matrix.md) | `0019-content-world` |
+
+As outras 11 tabelas de `0019` ainda não têm página.
 
 ## Próximos lotes
 

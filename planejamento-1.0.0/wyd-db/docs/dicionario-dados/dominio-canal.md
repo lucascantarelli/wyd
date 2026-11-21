@@ -19,11 +19,11 @@ O domínio tem uma tabela só. A sessão que ocupa o canal (`game.session`) é a
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `game.server_channel` (0007) | topologia: grupo 0–9 e canal 0–10, com host, capacidade e papel | operação (fora da série) | jogo, portal (status), `wyd_read` |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.server_channel` (0007) | topologia: grupo 0–9 e canal 0–10, com host, capacidade e papel | operação (fora da série) | jogo, portal (status), `wyd_read` | `gerado/server_channel.md` |
 
-Colunas, `CHECK`s e trigger vivem em `migrations/0007-game-session.md`; esta página lê o significado.
+A forma (coluna, `CHECK`, trigger) vive em `migrations/0007-game-session.md`; esta página lê o significado.
 
 ## Relações
 

@@ -17,13 +17,13 @@ todas filhas de `game.character` e escritas pelo jogo enquanto roda.
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `game.character_skill` (0008) | maestria por skill: `(character_id, skill_index)` com 0–320 | jogo | jogo |
-| `game.character_learned_skill` (0008) | skills aprendidas por categoria, em máscara de 8 bits | jogo | jogo |
-| `game.character_lineage` (0008) | linhagem escolhida e sua maestria | jogo | jogo |
-| `game.character_affect` (0008) | afeto/estado ativo com nível e ticks restantes | jogo | jogo |
-| `game.character_chaos` (0008) | contador de chaos em pontos de caos (-75 a 75) | jogo | jogo |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.character_skill` (0008) | maestria por skill: `(character_id, skill_index)` com 0–320 | jogo | jogo | `gerado/character_skill.md` |
+| `game.character_learned_skill` (0008) | skills aprendidas por categoria, em máscara de 8 bits | jogo | jogo | `gerado/character_learned_skill.md` |
+| `game.character_lineage` (0008) | linhagem escolhida e sua maestria | jogo | jogo | `gerado/character_lineage.md` |
+| `game.character_affect` (0008) | afeto/estado ativo com nível e ticks restantes | jogo | jogo | `gerado/character_affect.md` |
+| `game.character_chaos` (0008) | contador de chaos em pontos de caos (-75 a 75) | jogo | jogo | `gerado/character_chaos.md` |
 
 ## Relações
 

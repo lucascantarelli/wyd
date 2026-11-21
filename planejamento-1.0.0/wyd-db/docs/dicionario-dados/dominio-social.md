@@ -17,12 +17,12 @@ Kefra (`dominio-eventos`) nem personagem ([personagem](dominio-personagem.md)).
 
 ## Tabela de tabelas
 
-| Tabela | Papel em uma linha | Escreve | Lê |
-|---|---|---|---|
-| `game.guild` (0010) | guilda com nome único dobrado | jogo | jogo, portal (ranking) |
-| `game.guild_member` (0010) | vínculo personagem↔guilda, com papel | jogo | jogo |
-| `game.guild_relation` (0010) | relação `ally` ou `hostile` entre duas guildas | jogo | jogo |
-| `game.guild_tower` (0010) | linha única (`id = 1`) do estado da torre | jogo | jogo |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.guild` (0010) | guilda com nome único dobrado | jogo | jogo, portal (ranking) | `gerado/guild.md` |
+| `game.guild_member` (0010) | vínculo personagem↔guilda, com papel | jogo | jogo | `gerado/guild_member.md` |
+| `game.guild_relation` (0010) | relação `ally` ou `hostile` entre duas guildas | jogo | jogo | `gerado/guild_relation.md` |
+| `game.guild_tower` (0010) | linha única (`id = 1`) do estado da torre | jogo | jogo | `gerado/guild_tower.md` |
 
 ## Relações
 
