@@ -54,7 +54,7 @@ O planejamento não documenta o significado de cada motivo.
 |---|---|
 | `ix_city_tax_ledger_cidade (city_code, occurred_at DESC)` | imposto recente de uma cidade |
 
-Sem `updated_at` e sem trigger de atualização: a tabela não guarda marca de alteração.
+Sem `updated_at` nem trigger: o carimbo é só `occurred_at`.
 
 ## Papéis
 
