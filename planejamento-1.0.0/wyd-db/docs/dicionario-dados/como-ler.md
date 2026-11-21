@@ -66,7 +66,7 @@ existe para evitar.
 ## Como as páginas nascem
 
 **Escritas à mão, em lotes** (`M26`, 2026-11-21): sem gerador, sem `Makefile` e sem script. Um lote por
-domínio, depois do DDL do arquivo fechado, e cada página entra conferida contra a página de
+faixa de `migrations/`, ao fim do DDL do arquivo, e cada página entra conferida contra a página de
 `migrations/` dona da forma. `gerado/index.md` é o índice auxiliar, fora da contagem das 97.
 
 ## Checklist de pronto de uma página
