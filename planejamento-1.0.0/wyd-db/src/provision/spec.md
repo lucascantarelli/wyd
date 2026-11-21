@@ -48,7 +48,7 @@ existe só em `adapter/pg.rs` (§5).
 A ordem da tabela **é** a ordem de emissão do SQL e não pode mudar sem regenerar o golden (§4).
 
 **`wyd_admin` entrou em 2026-11-21 (`M27`):** o dono escolheu **A + S1 + C1 + D1** em
-`docs/arquitetura/seguranca.md` §"Proposta — papel `wyd_admin`" — papel com `LOGIN`, sem membership,
+`docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`" — papel com `LOGIN`, sem membership,
 `USAGE` em `game`/`ops` e `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, com o
 `GRANT` no arquivo novo `0032_admin_grants.sql` (31 → 32 na série). Nenhum privilégio de schema mora
 nesta página (§1): o papel entra em `ROLES` e no golden, o `GRANT` entra na série.

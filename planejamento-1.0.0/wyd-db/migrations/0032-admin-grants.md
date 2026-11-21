@@ -1,7 +1,7 @@
 > Pergunta: "quem escreve as sete tabelas do C4 e o `ops.audit_log`, e com que privilégio?"
 > Público: Desenvolvedor novo e segurança
 > Dono: equipe do `wyd-db`
-> Base: `lacunas.md` `M27` (decidida em 2026-11-21); `ddl-confirmado.md` §5.32; `docs/arquitetura/seguranca.md` §"Proposta — papel `wyd_admin`"; `wyd-admin/docs/arquitetura/contrato-c4.md` §4
+> Base: `lacunas.md` `M27` (decidida em 2026-11-21); `ddl-confirmado.md` §5.32; `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`"; `wyd-admin/docs/arquitetura/contrato-c4.md` §4
 > Revisado em: 2026-11-21
 
 Trigésimo segundo arquivo da série e o único sem tabela: só `GRANT`s para o papel `wyd_admin`. O papel

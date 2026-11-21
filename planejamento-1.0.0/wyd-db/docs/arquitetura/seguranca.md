@@ -27,8 +27,8 @@ privilégio de cluster e a série roda como `wyd_migrator`. O runner recusa cone
 sempre logada.
 
 `wyd_admin` entrou em 2026-11-21, quando o dono fechou `M27` na opção A + S1 + C1 + D1: a forma do
-papel, o privilégio por tabela e o arquivo do `GRANT` estão na seção "Proposta — papel `wyd_admin`
-(`LAC-ADM-01`)", abaixo, que passa a registrar a decisão em vez de uma recomendação.
+papel, o privilégio por tabela e o arquivo do `GRANT` estão na seção "Decisão — papel `wyd_admin`
+(`LAC-ADM-01`)", abaixo, que registra a escolha e as alternativas recusadas.
 
 As DSNs são **segredo** — a senha viaja dentro da string, e nunca são logadas em claro. Nome, leitor de
 cada DSN e a classificação segredo × dado de instalação estão em `src/provision/spec.md` §3; a regra de
@@ -40,7 +40,7 @@ um deles — **não** são lidos pelo `wyd-db` e não entram no contrato de ambi
 precisar de segredo de assinatura nenhum; se algum sobreviver, é do portal, e esta página não é o dono
 do nome.
 
-## Proposta — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
+## Decisão — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
 
 **Estado: decidida em 2026-11-21 — A + S1 + C1 + D1.** O papel entrou em `ROLES`
 (`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032_admin_grants.sql`
