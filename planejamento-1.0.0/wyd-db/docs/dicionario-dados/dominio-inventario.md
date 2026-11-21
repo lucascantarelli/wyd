@@ -28,13 +28,12 @@ contador de piedade de refino. O item é identificado por `item_index` do client
 ```mermaid
 erDiagram
     character ||--o{ character_item : "carrega"
-    character ||--o{ vault_item : "baú"
+    account ||--o{ vault_item : "baú"
     character ||--o| refine_pity : "piedade"
 ```
 
-`character_item` e `refine_pity` são filhos possuídos (`CASCADE`). `vault_item` é do **baú**: a chave é
-do personagem, mas o conteúdo é compartilhado pela conta na leitura do jogo — a decisão de escopo está na
-página do lote.
+`character_item` e `refine_pity` são filhos possuídos (`CASCADE`). `vault_item` é do **baú** e a chave é
+da conta de jogo (`account_id → account`, `CASCADE`), não do personagem — decisão de §5.12, escolha 1.
 
 ## Ciclo de vida do dado
 
@@ -46,9 +45,9 @@ página do lote.
 
 ## O que o schema garante
 
-- **posição é chave:** `(character_id, slot)` em `character_item` e `(character_id, slot)` em
+- **posição é chave:** `(character_id, slot)` em `character_item` e `(account_id, slot)` em
   `vault_item`; duas linhas na mesma posição são impossíveis.
-- **faixas do cliente:** mochila 0–79, baú 0–127, refino 0–15.
+- **faixas do cliente:** personagem 0–79 (0–15 equipamento, 16–79 mochila), baú 0–127, refino 0–15.
 - **quantidade positiva:** `qty >= 1` — item com zero é ausência de linha, não linha zerada.
 - **gema coerente:** `gem_effect` 0–4, `gem_value >= 0` e `(gem_effect = 0) = (gem_value = 0)` — efeito
   sem valor e valor sem efeito são impossíveis.
@@ -71,5 +70,4 @@ página do lote.
 |---|---|
 | `flags` bit a bit | `STRUCT_ITEM` do cliente, sem trace no planejamento novo |
 | regra de `pity` (quando sobe, quando zera) | contador é schema; a regra é do runtime e não foi reverificada |
-| escopo do baú (personagem × conta) | a chave é do personagem; o compartilhamento é regra de jogo |
 | gema em item `ancient` sem refino 10 | o `CHECK` permite; a regra de jogo por trás não tem trace |
