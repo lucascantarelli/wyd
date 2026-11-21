@@ -4,10 +4,14 @@
 > Base: `ddl-confirmado.md`, `lacunas.md`, `migrations-checklist.md`, `padrao-banco.md`, `plano-migrations.md`, `rascunho-accounts.md`
 > Revisado em: 2026-11-18
 
-**Estado:** proposta (2026-11-18)
+**Estado:** proposta (2026-11-18), com os números do dicionário revisados em 2026-11-21.
+
+> **Revisão de 2026-11-21:** as **19 páginas de domínio** estão escritas. O que esta página afirma
+> sobre elas foi atualizado — total de **147** páginas autorais, **21** em `dicionario-dados/` e
+> **69** bloqueadas. O censo de `migrations/`, `src/` e dos demais grupos continua o de 2026-11-18.
 
 Esta página é a ponte entre as seis fontes de planejamento e a árvore de `docs/` de
-`wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 146 páginas autorais de `docs/`, quantas já
+`wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 147 páginas autorais de `docs/`, quantas já
 podem ser escritas sem inventar desenho, com que fonte e com que lacuna declarada.** Ela não escreve
 página nenhuma e não decide lacuna: aponta dono e marco, como `lacunas.md`.
 
@@ -50,13 +54,13 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 
 ## 2. O que já está escrito (medido em 2026-11-18)
 
-**15 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
+**35 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
 
 | Pasta | Páginas escritas |
 |---|---|
 | raiz | `index.md`, `convencoes.md`, `glossario.md` |
 | `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md` |
-| `dicionario-dados/` | `dominio-acesso.md` |
+| `dicionario-dados/` | `index.md`, `como-ler.md` e as 19 páginas `dominio-*.md` — escritas em 2026-11-21 |
 | `planos/` | `plano-de-implantacao.md` |
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md` |
 | `guia-teste/` | `testes-de-sistema.md` |
@@ -105,7 +109,7 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 | §4 `0004` | `migrations/0004-portal-access.md` (escrita; cita esta seção) | — |
 | §5.1–§5.7 DDL | `migrations/0003`, `0004`, `0005`, `0002`, `0007` (o `up`/`down` e a tabela de colunas) | — |
 | §5.1–§5.7 significado | `dicionario-dados/dominio-acesso.md` §Tabela de tabelas, §Ciclo de vida do dado e §Regras e armadilhas (escrita) | **existe** (nota em §5, cobre as seis) |
-| §5.3, §5.4 e o canal de §5.5 | `dominio-auditoria.md` e `dominio-canal.md` — nenhuma escrita | — |
+| §5.3, §5.4 e o canal de §5.5 | `dominio-auditoria.md` e `dominio-canal.md` — escritas em 2026-11-21 | — |
 | §6 adaptações contra o rascunho | não se publica: é comparação com desenho descartado; o que vale já está em §3 e nas páginas | — |
 | §7 provas | `guia-teste/testes-de-contrato.md` + seção "verificação" de cada página de migration | — |
 
@@ -193,14 +197,15 @@ própria página — não é pendência escondida.
 | `estados/sessao.md` | aberta, única, expirada, encerrada; `ux_session_viva_por_conta` (`ddl-confirmado.md` §5.5 — o nome em `padrao-banco.md` §3 e em `plano-migrations.md` §3.2 é forma antiga); reaper de 60 s com `stale` de 180 s e sem `released_reason` (`A10`); 5 contas da mesma pessoa em paralelo (`rascunho-accounts.md` §3) | — |
 | `index.md` | mapa das 8 páginas, convenção de ID citada de `wyd-db-1.0.0.md` §9.1, nascimento e retirada de requisito (§9.3) | — |
 
-### 4.3 `dicionario-dados/` (4)
+### 4.3 `dicionario-dados/` (21)
 
 | Página | O que já está confirmado (fonte) | Declara em aberto |
 |---|---|---|
-| `index.md` | 97 tabelas planejadas e a distribuição por arquivo (`plano-migrations.md` §3); estado derivado de `migrations-checklist.md` §1.2 | a distribuição domínio × tabela é `P` até as páginas por tabela serem escritas |
-| `como-ler.md` | anatomia da página de tabela (`wyd-db-1.0.0.md` §6.8), forma na migration × significado no texto, `V`/`H`/`P` (`convencoes.md`), regra da divergência (§8.2) | as 97 páginas por tabela são escritas à mão (`M26`, 2026-11-21) e nenhuma existe |
+| `index.md` | 97 tabelas planejadas, a distribuição por arquivo (`plano-migrations.md` §3) e a distribuição por domínio, uma menção por tabela (`dominio-*.md`, 2026-11-21); estado derivado de `migrations-checklist.md` §1.2 | quantas das 97 páginas por tabela existem é de `docs/dicionario-dados/gerado/index.md`, dono da contagem; as demais entram em lotes |
+| `como-ler.md` | anatomia da página de tabela (`wyd-db-1.0.0.md` §6.8), forma na migration × significado no texto, `V`/`H`/`P` (`convencoes.md`), regra da divergência (§8.2) | as 97 páginas por tabela são escritas à mão (`M26`, 2026-11-21); quantas existem é de `docs/dicionario-dados/gerado/index.md`, dono da contagem |
 | `dominio-canal.md` | `game.server_channel` com `max_players`/`maintenance`/`role` e `ck_server_channel_jogavel` (`ddl-confirmado.md` §5.5, `M23`) | capacidade e manutenção em operação: sem medição |
 | `dominio-auditoria.md` | `ops.audit_log` com ator tripartido, 3 CHECKs, `ix_audit_actor` e sem FK (`M18-A`, `ddl-confirmado.md` §5.3); `ops.login_attempt` com `identifier_hash`, `surface`, `ip INET` (`M6`, `ddl-confirmado.md` §5.4) | retenção: `M22` |
+| as outras 17 páginas `dominio-*.md` | DDL fechado de `ddl-confirmado.md` §5.1–§5.31, uma página por domínio com propósito, relações, ciclo de vida e garantias | cada página marca o seu `H`; os abertos de retenção, operação e semântica não fecham com o DDL |
 
 ### 4.4 `planos/` (5)
 
@@ -259,9 +264,13 @@ Escrever agora **limitando o escopo declarado**. O recorte é a única defesa co
 | `guia-documentacao/estrutura-e-navegacao.md` | nome de arquivo (`P8`), uma página por pasta com `index.md`, árvore citada de `§4` | `nav` do mkdocs: não existe config |
 | `guia-documentacao/revisao-e-publicacao.md` | fluxo de revisão e checklist de pronto (`§10`) | publicação: `D-B` removeu a config; build é `EXT` |
 
-## 6. Páginas bloqueadas (84)
+## 6. Páginas bloqueadas (69)
 
 Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
+
+**Saíram da lista em 2026-11-21:** as **19 páginas de domínio**, escritas no dicionário. Na proposta
+original de 2026-11-18, 15 delas formavam o grupo "dicionário — 15 domínios"; o bloqueio de 84 cai
+para **69**. As 97 páginas por tabela continuam fora desta conta; quantas já existem é de `gerado/index.md`, dono da contagem.
 
 | Grupo | Páginas | Bloqueio | Dono / marco |
 |---|---|---|---|
@@ -270,8 +279,7 @@ Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
 | specs — qualidade e matriz | `requisitos-nao-funcionais.md`, `rastreabilidade.md` | nenhum limiar medido; porta, teste e issue não existem para preencher a matriz | arquitetura, ondas 3/7/8 |
 | specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | `0006`, `0009`, `0011`, `0012` e `0021` têm DDL fechado desde 2026-11-21; `A14`, `A19`, `M16` e `M17` estão fechadas — resta o texto do fluxo | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | ator → requisito exige `RF-DB` com número, que nascem na onda 3 | onda 3 |
-| dicionário — 15 domínios | `dominio-personagem`, `inventario`, `social`, `mundo`, `catalogo`, `combate`, `refino`, `economia`, `quests`, `eventos`, `arena`, `progressao`, `moderacao`, `configuracao`, `ponte-web-jogo` | colunas já fechadas (`ddl-confirmado.md` §5); falta o texto de ciclo de vida, regras e armadilhas de cada domínio | arquitetura (redação) |
-| dicionário — páginas por tabela (**fora das 146**) | uma página por cada uma das 97 tabelas planejadas em `plano-migrations.md` §3; `gerado/index.md` é índice auxiliar e não conta como página de tabela | **escritas à mão em lotes** (`M26`, 2026-11-21): sem gerador e sem `Makefile`; cada página resume e liga para a de `migrations/`; nenhuma existe ainda | arquitetura + documentação, onda 4 |
+| dicionário — páginas por tabela (**fora das 147**) | uma página por cada uma das 97 tabelas planejadas em `plano-migrations.md` §3; `gerado/index.md` é índice auxiliar e não conta como página de tabela | **escritas à mão em lotes** (`M26`, 2026-11-21): sem gerador e sem `Makefile`; cada página resume e liga para a de `migrations/`; quantas das 97 estão escritas é de `gerado/index.md`, dono da contagem | arquitetura + documentação, onda 4 |
 | planos — documentação | `plano-de-documentacao.md` | `D-A` aberta: duas numerações de onda concorrentes | arquitetura, marco `P2` |
 | planos — manutenção e métrica | `plano-de-manutencao.md`, `metricas.md` | rotina depende de retenção; número medido só depois da série | operação (marco `P3`) / arquitetura (`M20`, marco `P2`) |
 | roadmap | `index.md` + 40 `WYDDB-nnn` | a distribuição das 40 issues é `D-7`, não aprovada; issue sem DoD executável não entra | produto, onda 8 |
@@ -288,13 +296,13 @@ Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
 | `src/` | 0 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
 | `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
 
-## 8. Ordem proposta (5 lotes; lote 1 escrito, 26 páginas restantes)
+## 8. Ordem proposta (5 lotes; lotes 1 e 4 escritos)
 
 ```mermaid
 flowchart LR
     L1["1 · padrão<br/>3 páginas"] --> L2["2 · identidade<br/>7 páginas"]
     L2 --> L3["3 · série e operação<br/>8 páginas"]
-    L2 --> L4["4 · dicionário<br/>4 páginas"]
+    L2 --> L4["4 · dicionário<br/>21 páginas"]
     L3 --> L5["5 · índices e escrita<br/>7 páginas"]
     L4 --> L5
 ```
@@ -304,7 +312,7 @@ flowchart LR
 | **1 · padrão** | `padroes-postgres`, `integridade-e-constraints`, `como-adicionar-tabela` | **escrito em 2026-11-18** — o vocabulário de modelagem que todas as outras citam; `padrao-banco.md` §1–§6 e §11 deixam de ser a única porta (a página enuncia o **critério**; a **lista fechada** de tipos, índices e antipadrões fica aqui, em §4/§6/§11) |
 | **2 · identidade** | `restricoes-e-premissas`, `requisitos-funcionais`*, `regras-de-negocio`*, `casos-de-uso`*, `estados/conta-e-moderacao`, `estados/sessao`, `fluxos/login-e-sessao` | o bloco de identidade inteiro, de requisito a estado; `rascunho-accounts.md` sai da raiz e o aberto fica só em `lacunas.md` |
 | **3 · série e operação** | `contexto-c4`, `visao-geral`, `riscos`, `plano-de-dados-e-seeds`, `plano-de-qualidade-e-gates`, `configuracao`, `testes-de-contrato`, `registro-de-execucao` | `plano-migrations.md` e `lacunas.md` §4 saem da raiz |
-| **4 · dicionário** | `dicionario-dados/index`, `como-ler`, `dominio-canal`, `dominio-auditoria` | o dicionário passa a ter porta de entrada e 3 dos 18 domínios |
+| **4 · dicionário** | `dicionario-dados/index`, `como-ler` e as 19 páginas de domínio | **escrito em 2026-11-21** — o dicionário tem porta de entrada, regra de leitura e os 19 domínios |
 | **5 · índices e escrita** | `arquitetura/index`, `specs/index`, `planos/index`, `guia-administrador/index`, `guia-documentacao/index`, `estilo-e-linguagem`, `checklist-de-pr` | as pastas com conteúdo passam a ter índice de verdade, e a regra de escrita sai de `convencoes.md` |
 
 `*` página de recorte (§5): entra no lote já com a seção "o que não cobre" preenchida.
