@@ -10,7 +10,7 @@
 
 ## 1. Responsabilidade
 
-Fixar em código os cinco papéis de cluster e suas memberships, e gerar deles o texto de `db/roles.sql`
+Fixar em código os seis papéis de cluster e suas memberships, e gerar deles o texto de `db/roles.sql`
 — mais o bloco fixo de `public` que o ledger pressupõe (`spec.md` §4). O código é a fonte para os
 papéis; o `.sql` é artefato. Zero I/O, zero ambiente, zero erro.
 

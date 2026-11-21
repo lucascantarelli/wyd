@@ -5,7 +5,7 @@
 > Revisado em: 2026-11-21
 
 Este é o **único controle** do andamento da documentação da série `migrations/`. Ele diz, para
-cada um dos 31 arquivos planejados, qual página deve existir, quantas tabelas o arquivo cria (`—` quando
+cada um dos 32 arquivos planejados, qual página deve existir, quantas tabelas o arquivo cria (`—` quando
 o arquivo é só seed) e se há bloqueio para escrevê-la. O plano (`plano-migrations.md`) é o dono da
 **ordem e do escopo**; o texto DDL fechado é dono de `ddl-confirmado.md`; a **decisão** de cada
 bloqueio é dona de `lacunas.md`. Aqui não se decide nada: aqui se acompanha.
@@ -72,7 +72,7 @@ aplica a derivação por domínio e cita esta seção, nunca o valor. Aqui ficam
 tabela e o **estado de cada arquivo** (§2). Regra nova de derivação entra só aqui; estado novo (a
 palavra) é decisão de `convencoes` e aparece nas duas na mesma entrega.
 
-## 2. Checklist (31 arquivos; 97 tabelas)
+## 2. Checklist (32 arquivos; 97 tabelas)
 
 O `0012` fechou em 2026-11-20 com o desenho de `ddl-confirmado.md` §5.16 e a decisão `M25` (dreno por
 `SKIP LOCKED`, expurgo de 30 dias), e o `0030` fechou na mesma data, com o desenho de §5.15 aprovado
@@ -80,7 +80,9 @@ pelo dono. `0013`, `0014` e `0015` fecharam em 2026-11-20 (`ddl-confirmado.md` �
 `0019` e `0021` fecharam em 2026-11-20 (§5.21 e §5.22) e o `0024` em 2026-11-21 (§5.24). Em
 **2026-11-21** o dono aprovou os cinco lotes restantes — `0022` (§5.23), `0025` (§5.25), `0026`
 (§5.26), `0028` (§5.28) e `0029` (§5.29) —, então os 25 arquivos de DDL estão `concluída` e só os 6
-seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.md` §4).
+seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.md` §4). Em
+**2026-11-21** o dono decidiu `M27` e o `0032` entrou só com `GRANT`s: os arquivos `concluída` passam a
+26 e `Tab.` continua 97.
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|
@@ -115,6 +117,7 @@ seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.
 | 29 | `0029-views.md` | — | `concluída` | — (DDL de §5.29 aprovado em 2026-11-21, sem `GRANT` novo; página escrita e conferida) |
 | 30 | `0030-portal-content.md` | 4 | `concluída` | — (DDL de §5.15 aprovado em 2026-11-20; página escrita e conferida) |
 | 31 | `0031-portal-mfa.md` | 1 | `concluída` | — (DDL de §5.20 aprovado em 2026-11-20; página escrita e conferida) |
+| 32 | `0032-admin-grants.md` | — | `concluída` | — (`M27` decidida em 2026-11-21: `GRANT`s de §5.32 ao papel `wyd_admin`, sem tabela; página escrita e conferida) |
 
 ## 3. Bloqueios agrupados
 

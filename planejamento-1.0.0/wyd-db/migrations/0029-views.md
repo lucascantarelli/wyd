@@ -19,7 +19,7 @@ leitura cruzada prometidas por `P-17`: presença para o portal e identidade mín
 | Número | `0029` (checklist, linha 113) |
 | Arquivo | `crates/wyd-db/migrations/0029_views.sql` |
 | Schema | `game` e `portal` (2 views, 0 tabelas) |
-| Posição | 29 de 31 |
+| Posição | 29 de 32 |
 | Depende de | `0001`; `0003` (`portal.person`); `0006` (`game.character`); `0007` (`game.session`) |
 | É dependência de | nenhuma da série (último objeto de leitura) |
 | Objetos criados | 2 views, 0 tabelas, 0 índices, 0 triggers |

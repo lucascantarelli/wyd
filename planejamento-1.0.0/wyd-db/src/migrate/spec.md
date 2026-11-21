@@ -381,7 +381,7 @@ Consequências que o desenho aceita:
 - **A biblioteca não emite `DROP` que não esteja num arquivo da série.** Instrução destrutiva fora do
   `up`/`down` seria SQL de controle escondido na orquestração, o oposto do invariante (c).
 - **Reset não substitui banco novo.** `down --to 0` devolve os quatro schemas e esvazia o ledger, mas
-  não desfaz o que é de ambiente: o estado de `public` e os cinco papéis continuam como o
+  não desfaz o que é de ambiente: o estado de `public` e os seis papéis continuam como o
   provisionamento os deixou (`src/provision/spec.md` §4; `ADR-DB-0001`, item 8). Em CI e teste, banco
   descartável (`WYD_DB_URL_TEST`, `src/provision/spec.md` §3) continua sendo o caminho; `down --to 0` é
   para o ambiente de desenvolvimento com banco vivo.

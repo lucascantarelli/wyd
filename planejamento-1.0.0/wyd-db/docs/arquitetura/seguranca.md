@@ -18,6 +18,7 @@ o resto dá errado). Papel mal escolhido anula as outras duas.
 | `wyd_migrator` | aplicar a série | DDL no schema, escrita no ledger | servir requisição de jogo ou portal |
 | `wyd_game` | servidor de jogo | escrever o estado vivo do jogo | ler dado de pessoa do portal, fazer DDL |
 | `wyd_portal` | BFF do portal | ler identidade/sessão e escrever em `ops` | escrever estado vivo; conceder item direto (só via `delivery_queue`) |
+| `wyd_admin` | serviço `wyd-admin` (staff) | escrever as sete tabelas do C4 em `game` e `INSERT` em `ops.audit_log` | escrever em `portal`/`content`, `DELETE`, DDL |
 | `wyd_read` | operação e BI | `SELECT` nas views | escrever qualquer coisa |
 
 Os papéis nascem **fora da série**, no provisionamento (`ADR-DB-0001`), porque criar papel exige
@@ -25,8 +26,9 @@ privilégio de cluster e a série roda como `wyd_migrator`. O runner recusa cone
 `wyd_migrator`; a única saída é `WYD_MIGRATE_ALLOW_SUPERUSER=1`, restrita a desenvolvimento e
 sempre logada.
 
-`wyd_admin` **não** está nessa tabela: é proposta pendente na seção "Proposta — papel
-`wyd_admin` (`LAC-ADM-01`)", abaixo, e nenhuma linha desta página o antecipa.
+`wyd_admin` entrou em 2026-11-21, quando o dono fechou `M27` na opção A + S1 + C1 + D1: a forma do
+papel, o privilégio por tabela e o arquivo do `GRANT` estão na seção "Proposta — papel `wyd_admin`
+(`LAC-ADM-01`)", abaixo, que passa a registrar a decisão em vez de uma recomendação.
 
 As DSNs são **segredo** — a senha viaja dentro da string, e nunca são logadas em claro. Nome, leitor de
 cada DSN e a classificação segredo × dado de instalação estão em `src/provision/spec.md` §3; a regra de
@@ -40,10 +42,10 @@ do nome.
 
 ## Proposta — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
 
-**Estado: `proposta`.** O papel **não existe** no `provision`, não está em `ROLES`
-(`src/provision/spec.md` §2) e não entra em `db/roles.sql` antes do "sim" do dono. A lacuna
-`LAC-ADM-01` do `wyd-admin` continua aberta; o registro desta decisão pendente é `M27` em
-`lacunas.md` §2.3. Nenhum `GRANT` desta seção foi escrito em `ddl-confirmado.md`.
+**Estado: decidida em 2026-11-21 — A + S1 + C1 + D1.** O papel entrou em `ROLES`
+(`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032_admin_grants.sql`
+(`ddl-confirmado.md` §5.32, página `migrations/0032-admin-grants.md`). `M27` está fechada em
+`lacunas.md` §2.3 e `LAC-ADM-01` fechou com ela; `M28` continua **aberta**.
 
 **O que o serviço `wyd-admin` precisa.** As sete rotas de ação do C4 (`wyd-admin/docs/arquitetura/contrato-c4.md`
 §4) escrevem em sete tabelas de `game` e em `ops.audit_log`; `POST /broadcasts` (§4.5) não grava tabela
@@ -97,19 +99,20 @@ tabela. Nenhuma rota pede `DELETE`.
 
 ### Recomendação
 
-**A + S1 + C1 + D1.** Um papel `wyd_admin` com `LOGIN`, `USAGE` em `game` e em `ops`, `SELECT` e
+**Decidido em 2026-11-21 pelo dono: A + S1 + C1 + D1.** Um papel `wyd_admin` com `LOGIN`, `USAGE` em `game` e em `ops`, `SELECT` e
 `INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, mais `INSERT` em `ops.audit_log`; o `GRANT`
 entra em arquivo novo da série. Isso mantém a escrita de staff separada da do jogo e do portal, não
 reabre DDL aprovado e não cria tabela.
 
-**O que a decisão muda:** `ROLES` e o golden `db/roles.sql` (`src/provision/spec.md`), a DSN nova
+**O que a decisão mudou:** `ROLES` e o golden `db/roles.sql` (`src/provision/spec.md`), a DSN nova
 (`WYD_DB_URL_ADMIN`) em `wyd-ops`, o arquivo `0032` (31 → 32 na série, `Tab.` 97), as citações de
 contagem dos dashboards e o teste de `wyd-admin` que hoje depende deste papel. **O que ela não muda:** tabela, coluna ou índice —
 as sete tabelas já existem.
 
-**O que fecha `LAC-ADM-01`:** o "sim" do dono a A/S/C/D, o papel em `ROLES`, o `GRANT` no arquivo
-escolhido, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão. Sem isso, a lacuna
-continua aberta e nenhum `GRANT` é escrito.
+**O que fechou `LAC-ADM-01`:** o "sim" do dono a A/S1/C1/D1 (2026-11-21), o papel em `ROLES`, o `GRANT`
+no `0032`, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão. `M28` não entrou nesta
+rodada: a redação de §5.15 e de `0030` §8 continua aberta, e até lá só a primeira oração de §5.15
+mudou, porque sem isso ela seria falsa com o papel existindo.
 
 **Divergência observada, não corrigida:** `ddl-confirmado.md` §5.15 afirma que a API interna usa a
 credencial `wyd_portal` até ganhar papel próprio. `wyd_portal` não tem `USAGE` em `game` (`0001`), então
@@ -119,8 +122,12 @@ corrigi-la exige a decisão do dono junto com A/S/C/D; a divergência está regi
 
 ### Duas redações para fechar `M28`
 
-As duas substituem **só prosa** — nenhum `GRANT`, nenhuma linha de DDL — e fecham `M28` na mesma
-rodada de A/S/C/D de `M27`; até lá a lacuna continua `aberta` e os arquivos de DDL não mudam.
+As duas substituem **só prosa** — nenhum `GRANT`, nenhuma linha de DDL — e fecham `M28` em rodada
+própria, depois de `M27`; até lá a lacuna continua `aberta` e os arquivos de DDL não mudam.
+
+**`M28` segue aberta em 2026-11-21:** nenhuma das duas redações foi aplicada. Com `M27` fechada, as
+duas precisam trocar o "Se o `wyd-admin` ganhar papel próprio, o `GRANT` vem em lote novo" pelo
+presente — o papel existe e o `GRANT` está no `0032` — antes de entrar.
 
 **O que sai hoje.**
 
@@ -173,8 +180,8 @@ quatro.
 | Quem escreve as quatro tabelas | BFF, com `wyd_portal` | BFF, com `wyd_portal`; o texto diz que o admin não escreve |
 | Tamanho da edição | uma frase em §5.15 e o parágrafo de §8 | uma frase em §5.15, o rótulo e o parágrafo de §8 |
 
-Nas duas, o papel do `wyd-admin` em `game`/`ops.audit_log` continua sendo `M27`. A escolha é do dono, na
-mesma rodada de `M27`.
+Nas duas, o papel do `wyd-admin` em `game`/`ops.audit_log` continua sendo `M27`. A escolha é do dono, em
+rodada própria: `M27` fechou em 2026-11-21 sem ela.
 
 ## O que é hash e com que algoritmo
 

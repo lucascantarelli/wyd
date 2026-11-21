@@ -54,7 +54,7 @@
 | `docs/guia-administrador/` | 0 | 8 | |
 | `docs/guia-teste/` | 1 | 7 | |
 | `docs/guia-documentacao/` | 0 | 8 | |
-| `migrations/` | 25 | 33 | 2 páginas de seção (por escrever) + 31 arquivos, 25 escritos |
+| `migrations/` | 26 | 34 | 2 páginas de seção (por escrever) + 32 arquivos, 26 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
 | `tests/` | 0 | 12 | |
 | `prompts/` | 0 | 9 | |
@@ -74,7 +74,7 @@
 | Tabelas com DDL fechado | 97 de 97 | `ddl-confirmado.md` §1 |
 | Tabelas desenhadas e aguardando aprovação | 0 | `ddl-confirmado.md` §1 |
 | Arquivos com DDL inteiro fechado | 20 (`0001`–`0015`, `0019`, `0021`, `0024`, `0030` e `0031`) | `migrations-checklist.md` §4 |
-| `SCHEMA_VERSION` alvo | 31 | `plano-migrations.md` §6 |
+| `SCHEMA_VERSION` alvo | 32 | `plano-migrations.md` §6 |
 
 ### 1.4 Repositório, GitHub e operação
 
@@ -140,7 +140,7 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 | Lacunas `B`/`A`/`M` | 2 pendentes | `M27` (proposta) e `M28` (aberta) em 2026-11-21; 28 fecharam; a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
-| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; 31 arquivos de migration para 97 tabelas (31/97, `plano-migrations.md` §3, 2026-11-21); os cinco lotes foram aprovados em 2026-11-21 e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
+| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; 32 arquivos de migration para 97 tabelas (32/97, `plano-migrations.md` §3, 2026-11-21); os cinco lotes foram aprovados em 2026-11-21 e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
 | ADR de fronteira pessoa × conta | sem número | citada em `lacunas.md` §0.2 e `rascunho-accounts.md` |
 
 ---
@@ -213,7 +213,7 @@ Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ord
 - [ ] Criar `tests/` e `prompts/`/`skills/` do sistema.
 - [ ] Validar o site: `mkdocs build --strict` sem link morto nem diagrama inválido.
 
-**Gate:** 31 páginas de migration + 19 páginas de domínio + 97 páginas por tabela (**44/97** escritas até 2026-11-21, `wyd-db-1.0.0.md` §6.8); `planos/metricas.md` mede o
+**Gate:** 32 páginas de migration + 19 páginas de domínio + 97 páginas por tabela (**44/97** escritas até 2026-11-21, `wyd-db-1.0.0.md` §6.8); `planos/metricas.md` mede o
 fechamento; nenhuma afirmação de comportamento sem `V`; site estrito passa.
 
 ### Fase 3 — Planejar os 12 sistemas restantes

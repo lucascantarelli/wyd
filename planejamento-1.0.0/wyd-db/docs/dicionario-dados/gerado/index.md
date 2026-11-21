@@ -4,7 +4,7 @@
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
-**Páginas de migration não publicadas (`V`, 2026-11-21):** as 25 páginas escritas (de 31 em
+**Páginas de migration não publicadas (`V`, 2026-11-21):** as 26 páginas escritas (de 32 em
 `migrations-checklist.md` §2; as outras 6 seguem `bloqueada`) ficam em
 `planejamento-1.0.0/wyd-db/migrations/`, o lugar que `convencoes.md` lhes dá. O site monta só
 `planejamento-1.0.0/<sistema>/docs/`, então essas páginas ficam de fora — falta publicação, não árvore.

@@ -47,7 +47,7 @@ de linha — a linha envelhece a cada edição, a seção não.
 | 1.2 | Duas séries convivem | — (citada em `adr-db-0002`, Contexto) | — |
 | 1.3 | Critério de pronto do PR | — (citada em `como-adicionar-tabela.md` §6) | — |
 | 2 | Formato e numeração | `como-adicionar-migration.md` §Regra da série + `migracoes.md` §2 | **existe** (nota de §2) |
-| 3 | A série (31 arquivos, 97 tabelas) | — (a ordem e a contagem são daqui; `migrations-checklist.md` §2 é o estado) | — |
+| 3 | A série (32 arquivos, 97 tabelas) | — (a ordem e a contagem são daqui; `migrations-checklist.md` §2 é o estado) | — |
 | 3.1 | Por que esta ordem | — (citada em `integridade-e-constraints.md` §6) | — |
 | 3.2 | Corte vertical | — | — |
 | 4 | Seeds: 26 viram 6 | — (citada em `como-adicionar-migration.md` §Regra da série, `plano-de-implantacao.md` §Ordem) | — |
@@ -85,7 +85,7 @@ de linha — a linha envelhece a cada edição, a seção não.
 | 1 | Como ler este checklist | — | — |
 | 1.1 | Nomes de página | — (citada em `como-adicionar-migration.md` passo 6) | — |
 | 1.2 | Estado de tabela — derivado daqui | `docs/convencoes.md` §Estados (significado dos três estados; aponta §1.2 sem copiar o mapeamento) + `dominio-acesso.md` (aplica por domínio) | **existe** (nota de §1.2) |
-| 2 | Checklist (31 arquivos, 97 tabelas) | 25 das 31 páginas de `migrations/` escritas; restam os 6 seeds (`migrations-checklist.md` §4) | — |
+| 2 | Checklist (32 arquivos, 97 tabelas) | 26 das 32 páginas de `migrations/` escritas; restam os 6 seeds (`migrations-checklist.md` §4) | — |
 | 3 | Bloqueios agrupados | — (`specs/restricoes-e-premissas.md` não escrito) | — |
 | 4 | Contagem | — (`planos/metricas.md` não escrito) | — |
 | 5 | O que toda página de migration tem | — (citada, não reproduzida, em `como-adicionar-migration.md` e `como-adicionar-tabela.md` §4) | — |

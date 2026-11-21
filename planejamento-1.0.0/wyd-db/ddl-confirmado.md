@@ -64,7 +64,7 @@ aprovados em 2026-11-21, com as escolhas de forma registradas no fim de cada se�
 
 ---
 
-## 2. Veredito por arquivo (31)
+## 2. Veredito por arquivo (32)
 
 O estado de cada linha é o de `migrations-checklist.md` §2, citado por arquivo: a derivação é o mapa
 de §1.2 daquele documento, e a coluna `Estado` de lá é a dona. Esta página não mantém escala própria —
@@ -103,6 +103,7 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 29 | `0029_views.sql` | `concluída` | §5.29 | — (aprovado em 2026-11-21, sem `GRANT` novo; página `0029-views.md` escrita e conferida) |
 | 30 | `0030_portal_content.sql` (adendo) | `concluída` | §5.15 | — (aprovado em 2026-11-20; página `0030-portal-content.md` escrita e conferida) |
 | 31 | `0031_portal_mfa.sql` (adendo) | `concluída` | §5.20 | — (aprovado em 2026-11-20; página `0031-portal-mfa.md` escrita e conferida) |
+| 32 | `0032_admin_grants.sql` | `concluída` | §5.32 | — (decidido em 2026-11-21 em `M27`: só `GRANT`, sem tabela; página `0032-admin-grants.md` escrita e conferida) |
 
 **Leitura do estado:** nenhuma tabela da série fica sem desenho e nenhum lote espera aprovação. O que
 resta `bloqueada` são os seis arquivos de seed (`0016`, `0017`, `0018`, `0020`, `0023` e `0027`), presos
@@ -110,8 +111,9 @@ na verificação do dado de origem — não no gerador: os arquivos são escrito
 conferido (`plano-migrations.md` §4).
 
 A linha 30 é **adendo**, não parte dos 29 originais: o arquivo `0030_portal_content.sql` foi proposto
-em 2026-11-20 para as quatro tabelas de conteúdo do portal e aprovado pelo dono na mesma data; a soma
-de §1 fica em 31 arquivos e 97 tabelas.
+em 2026-11-20 para as quatro tabelas de conteúdo do portal e aprovado pelo dono na mesma data. A linha
+32, decidida em 2026-11-21 (`M27`), é o único arquivo sem tabela: concede privilégio ao papel
+`wyd_admin`, que o provision cria. A soma de §1 fica em **32 arquivos e 97 tabelas**.
 
 ---
 
@@ -2083,8 +2085,9 @@ DROP TABLE portal.news;
 
 **Permissões.** Nenhum `GRANT` novo: default privileges de `0001` em `portal` dão
 `SELECT, INSERT, UPDATE, DELETE` a `wyd_portal`; `wyd_read` tem `USAGE` mas não `SELECT` por default;
-`wyd_game` não alcança. Não existe papel `wyd_admin` no `provision` — a API interna usa a credencial
-`wyd_portal` até ganhar papel próprio em lote novo.
+`wyd_game` não alcança. O papel `wyd_admin` existe desde 2026-11-21 (`M27`, `0032_admin_grants.sql`),
+mas não alcança estas quatro tabelas — a API interna usa a credencial `wyd_portal` até ganhar papel
+próprio em lote novo.
 
 **O que este lote não fecha:** histórico de revisão do texto, prazo de expurgo e papel de banco do
 `wyd-admin` — listados em `migrations/0030-portal-content.md` §11.
@@ -4250,6 +4253,59 @@ enquanto". As duas views passam a existir e ficam ilegíveis para o outro domín
 monitoramento (`wyd-portal`, `LAC-POR-06`); se a view ganha `security_invoker` (depende da permissão
 acima); e a criação de view materializada, que `P-17` proíbe até haver medição.
 
+### 5.32 Lote `0032` — `GRANT`s do papel `wyd_admin` (DDL confirmado em 2026-11-21)
+
+**Decidido em 2026-11-21 (`M27`, opção A + S1 + C1 + D1).** O papel nasce fora da série, em
+`db/roles.sql` (`src/provision/spec.md` §2 e §4); este arquivo só concede. **Sem tabela, sem índice e
+sem objeto:** `Tab.` continua 97 e a série passa a 32 arquivos.
+
+```sql
+-- migrate:up
+GRANT USAGE ON SCHEMA game TO wyd_admin;
+GRANT USAGE ON SCHEMA ops TO wyd_admin;
+
+GRANT SELECT, INSERT, UPDATE ON game.account_moderation TO wyd_admin;
+GRANT SELECT, UPDATE ON game.account_wallet TO wyd_admin;
+GRANT SELECT, INSERT ON game.account_ledger TO wyd_admin;
+GRANT SELECT, UPDATE ON game.server_channel TO wyd_admin;
+GRANT SELECT, UPDATE ON game.session TO wyd_admin;
+GRANT SELECT, UPDATE ON game.city TO wyd_admin;
+GRANT SELECT, UPDATE ON game.item_price TO wyd_admin;
+
+GRANT INSERT ON ops.audit_log TO wyd_admin;
+GRANT SELECT (id) ON ops.audit_log TO wyd_admin;
+
+-- migrate:down
+REVOKE SELECT (id) ON ops.audit_log FROM wyd_admin;
+REVOKE INSERT ON ops.audit_log FROM wyd_admin;
+REVOKE SELECT, UPDATE ON game.item_price FROM wyd_admin;
+REVOKE SELECT, UPDATE ON game.city FROM wyd_admin;
+REVOKE SELECT, UPDATE ON game.session FROM wyd_admin;
+REVOKE SELECT, UPDATE ON game.server_channel FROM wyd_admin;
+REVOKE SELECT, INSERT ON game.account_ledger FROM wyd_admin;
+REVOKE SELECT, UPDATE ON game.account_wallet FROM wyd_admin;
+REVOKE SELECT, INSERT, UPDATE ON game.account_moderation FROM wyd_admin;
+REVOKE USAGE ON SCHEMA ops FROM wyd_admin;
+REVOKE USAGE ON SCHEMA game FROM wyd_admin;
+```
+
+**Por que esses privilégios.** `USAGE` abre o schema; a escrita vem da tabela. `SELECT` nas sete tabelas
+cobre `expected_*`, `WHERE` e `RETURNING` sem depender de outra leitura (S1). `DELETE` fica de fora
+porque nenhuma rota do C4 pede. Em `ops.audit_log`, `INSERT` é a auditoria (C1) e `SELECT (id)` existe
+porque o `200` de §4.1–§4.4 devolve `audit_id`; nenhuma outra coluna é legível.
+
+**Por que arquivo novo (D1).** Reabrir `0001` obrigaria a reescrever DDL já aplicado, e `db/roles.sql`
+não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0032` não reordena nada: só
+`0031` o precede e nenhuma view o lê.
+
+**O que não muda:** as sete tabelas, `Tab.` 97, e o `INSERT` de `wyd_game`/`wyd_portal` em
+`ops.audit_log` (`0002`). Tabela criada depois da troca **não** herda estes privilégios: não há
+`ALTER DEFAULT PRIVILEGES` aqui.
+
+**Aberto, fora deste lote:** `M28` — se a "API interna" de §5.15 e de `migrations/0030-portal-content.md`
+§8 é o BFF do portal ou o serviço `wyd-admin`. Só a primeira oração de §5.15 mudou nesta rodada, porque
+sem isso ela seria falsa com o papel existindo.
+
 ---
 
 ## 6. Adaptações obrigatórias em relação ao rascunho
@@ -4356,7 +4412,8 @@ Consequências:
 - O lote `0010` (`guild` e os três satélites) fechou em 2026-11-20 (§5.13) e o `0011` (economia, 10
   tabelas) fechou na mesma data (§5.14).
 - O adendo `0030` (conteúdo do portal: `news`, `banner`, `guide`, `launcher_release`) foi desenhado e
-  aprovado em 2026-11-20 (§5.15); com o `0031`, a série está em 31 arquivos / 97 tabelas.
+  aprovado em 2026-11-20 (§5.15); com o `0031` e o `0032` (só `GRANT`), a série está em 32 arquivos /
+  97 tabelas.
 - O lote `0012` (`ops.delivery_queue`) fechou em 2026-11-20 (§5.16), com `M25`: o dreno usa
   `SELECT … FOR UPDATE SKIP LOCKED` e a linha fechada é expurgada 30 dias após `closed_at`.
 - Nenhum lote segue pendente: o `0021` (cinco tabelas) fechou em 2026-11-20 (§5.22) e o `0024` (mapa

@@ -20,7 +20,7 @@ aparecerem no legado.
 | Número | `0024` (checklist, linha 108) |
 | Arquivo | `crates/wyd-db/migrations/0024_content_maps.sql` |
 | Schema | `content` (2 tabelas) |
-| Posição | 24 de 31 |
+| Posição | 24 de 32 |
 | Depende de | `0001` (schema, privilégios); `0014` (`content.item_catalog`); `0019` (`content.region`, `content.npc_definition`) |
 | É dependência de | `0020` (seed do mundo) e `0026` (`quest_step.map_id`, segundo a ficha de `map_definition`; `H`) |
 | Tabelas criadas | `map_definition`, `teleport_route` |

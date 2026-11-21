@@ -36,8 +36,9 @@ linha que registra a versão do conteúdo.
 
 ## 3. Pré-requisitos de ambiente
 
-Os cinco papéis de cluster — `wyd_owner`, `wyd_migrator`, `wyd_game`, `wyd_portal` e `wyd_read` —
-precisam existir **antes** deste arquivo, junto com a membership `wyd_migrator` → `wyd_owner`: sem eles
+Os seis papéis de cluster — `wyd_owner`, `wyd_migrator`, `wyd_game`, `wyd_portal`, `wyd_admin` e
+`wyd_read` — precisam existir **antes** deste arquivo, junto com a membership `wyd_migrator` →
+`wyd_owner`: sem eles
 o `0001` falha em `AUTHORIZATION` e em `GRANT` com `role "wyd_owner" does not exist`. O estado
 desejado dos papéis e o artefato `db/roles.sql` — gerado por `wyd-db provision render`, nunca escrito à
 mão — estão especificados em `planejamento-1.0.0/wyd-db/src/provision/spec.md` (marca **planejamento**);

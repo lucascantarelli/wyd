@@ -9,8 +9,9 @@
 > o rascunho foi reduzido a histórico de requisitos.
 > **Medido no dia:** 53 migrations, 87 tabelas, 625 colunas, `SCHEMA_VERSION = 53`.
 
-Números deste plano são **planejados**: **31 arquivos e 97 tabelas** — 92 originais mais as 4 do
-adendo `0030` e a do adendo `0031`, aprovados em 2026-11-20. O número real sai do catálogo
+Números deste plano são **planejados**: **32 arquivos e 97 tabelas** — 92 originais mais as 4 do
+adendo `0030`, a do adendo `0031` e o `0032`, que só concede `GRANT` ao papel `wyd_admin` (`M27`,
+decidida em 2026-11-21). O número real sai do catálogo
 depois que a série existir — e **não é meta** (é consequência das decisões).
 
 ---
@@ -41,8 +42,8 @@ três, e falham em silêncio ou com erro obscuro.
 > tabelas de conteúdo do portal (`portal.news`, `banner`, `guide` e `launcher_release`) ficam como
 > estão: o DDL é o de `ddl-confirmado.md` §5.15, a página é `migrations/0030-portal-content.md` e o
 > lote conta como `concluída` no checklist. Reabrir o desenho exigiria proposta de revisão própria com
-> o delta nomeado, que não foi pedida. A série continua em **31 arquivos e 97 tabelas**; nenhum arquivo
-> `0032` nasce desta conclusão.
+> o delta nomeado, que não foi pedida. Naquela data a série continuava em **31 arquivos e 97 tabelas**;
+> o `0032` nasceu depois, com a decisão `M27` (2026-11-21), e não cria tabela.
 
 | Arquivo | O que muda | Por quê |
 |---|---|---|
@@ -147,10 +148,10 @@ mesmo resultado de antes do PR.
 | 1.0.0 | `crates/wyd-db/migrations/`, na branch `serie-1.0.0` | nasce agora | PG17 efêmero do `migrate-cycle` e o corte vertical de §3.2 |
 
 A 1.0.0 **não** ganha diretório próprio: a pasta é `crates/wyd-db/migrations/` antes e depois da
-troca — o que muda é o conteúdo. Enquanto a troca não acontecer, os 31 arquivos vivem na branch
+troca — o que muda é o conteúdo. Enquanto a troca não acontecer, os 32 arquivos vivem na branch
 `serie-1.0.0` e `develop` segue com os 53 herdados. O que isso custa: uma branch, e o gate que crava
 contagem (`tools/content/check-migrations.mjs`, `{ migrations: 53, tables: 87 }`) reprovando na branch
-com 31 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
+com 32 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
 continua 53 em `develop`.
 
 ### 1.3 Critério de pronto do PR de ferramentas
@@ -194,7 +195,7 @@ ferramenta** e o **critério de pronto** de §1.3, que é o aceite do PR quando 
   `);` sozinho no fim — o parser do catálogo depende disso e quebra alto fora desse estilo.
 - Sem `ALTER TABLE` no `up`; sem tabela partida entre arquivos; sem FK para arquivo posterior.
 - Seed em arquivo próprio, imediatamente depois do DDL do domínio (não no fim da série).
-- `SCHEMA_VERSION` acompanha o total de arquivos da série e muda **só na troca** (§6): **31**.
+- `SCHEMA_VERSION` acompanha o total de arquivos da série e muda **só na troca** (§6): **32**.
   Enquanto a série herdada é a que roda, a constante continua 53. `down` derruba **no mesmo arquivo** o
   que o `up` criou.
 - Arquivo aplicado é imutável: o runner compara arquivo e ledger e acusa drift (`src/migrate/spec.md`
@@ -209,14 +210,14 @@ entrega.
 
 ---
 
-## 3. A série (31 arquivos; 97 tabelas)
+## 3. A série (32 arquivos; 97 tabelas)
 
 Antes do arquivo 1 existe a **etapa 0**, que não é migration: `db/roles.sql`, os papéis do cluster —
 artefato gerado por `wyd-db provision render`, especificado em `src/provision/spec.md`
 (**planejamento**) e decidido em ADR-DB-0001. Ela não entra nesta tabela nem na contagem, porque papel
 não é objeto do banco e não tem `up`/`down`.
 
-O andamento de cada uma destas 31 páginas é controlado em `migrations-checklist.md`, na raiz desta
+O andamento de cada uma destas 32 páginas é controlado em `migrations-checklist.md`, na raiz desta
 pasta de planejamento — e não em `migrations/`, que guarda só página de migration.
 
 | # | Arquivo | Schema | Cria | Tab. |
@@ -252,8 +253,9 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 | 29 | `0029_views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
 | 30 | `0030_portal_content.sql` | `portal` | `news`, `banner`, `guide`, `launcher_release` — CMS e launcher do `wyd-portal` (aprovado em 2026-11-20) | 4 |
 | 31 | `0031_portal_mfa.sql` | `portal` | `person_authenticator` — segundo fator de staff do `wyd-portal` (`A20`, aprovado em 2026-11-20) | 1 |
+| 32 | `0032_admin_grants.sql` | `game` + `ops` | `GRANT`s do papel `wyd_admin` (`M27`, decidida em 2026-11-21): `USAGE` nos dois schemas, `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4 e `INSERT` em `ops.audit_log` | — |
 
-**Total: 31 arquivos, 97 tabelas** e 6 arquivos de seed.
+**Total: 32 arquivos, 97 tabelas** e 6 arquivos de seed.
 
 O `0030` nasceu da decisão de 2026-11-20 no `wyd-portal` (`LAC-POR-02`/`LAC-POR-03`): quatro tabelas
 em `portal` para notícia, banner, guia e versão de launcher. Ele vem **depois** de `0029` porque não
@@ -265,7 +267,8 @@ O `0031` é o segundo adendo (2026-11-20) e fecha a última peça que o `wyd-por
 FK de saída e nenhuma view o lê, então entra no fim. O número **coincide** com o `0031` da série
 herdada, absorvido por `0001` (`wyd-db-1.0.0.md`): são séries distintas, e a nova é contígua por `B2`.
 
-**DDL já decidido:** **25 dos 31 arquivos** fecham inteiros hoje — **97 de 97 tabelas** —, com o texto
+**DDL já decidido:** **26 dos 32 arquivos** fecham inteiros hoje — 25 deles criam as **97 de 97
+tabelas** e o `0032` só concede privilégio —, com o texto
 completo em `ddl-confirmado.md`. Nome de tabela nesta lista **não** é DDL: dos 97 nomes, nenhum fica
 sem coluna desenhada e nenhum aguarda aprovação. Os seis restantes são seeds, bloqueados por dado de
 origem não verificado (§4), não por desenho.
@@ -397,15 +400,15 @@ banco de desenvolvimento de quem usa a stack.
 
 | Item | Hoje (série herdada) | Na troca |
 |---|---|---|
-| diretório vivo | `migrations/` (53 arquivos, em `develop`) | `migrations/` (31 arquivos, no commit da troca) |
-| `SCHEMA_VERSION` | `53` | `31` |
+| diretório vivo | `migrations/` (53 arquivos, em `develop`) | `migrations/` (32 arquivos, no commit da troca) |
+| `SCHEMA_VERSION` | `53` | `32` |
 | `make migrations-apply` | série herdada | série nova |
 | catálogo/doc | `public`, 87 tabelas | 4 schemas, 97 tabelas + 2 views |
 | imagem/runner | `WYD_MIGRATIONS_DIR=/migrations` | mesmo caminho, conteúdo novo |
 
 Procedimento da troca, **quando `0001`–`0007` estiverem verdes** (não executar antes): (1) `git tag pre-serie-1.0.0` no
-commit atual; (2) commit só da troca: os 53 saem e os 31 entram na mesma pasta `migrations/`, vindos
-da branch; (3) `SCHEMA_VERSION = 31`; (4) `provision render` + `provision apply` antes das migrations e `make stack-config && make
+commit atual; (2) commit só da troca: os 53 saem e os 32 entram na mesma pasta `migrations/`, vindos
+da branch; (3) `SCHEMA_VERSION = 32`; (4) `provision render` + `provision apply` antes das migrations e `make stack-config && make
 stack-up` com banco recriado (`down -v` só com pedido explícito); (5) `make migrations-apply`
 (up/down/up), `make banco-catalogo && make banco-verify`; (6) docs na mesma entrega (`modelo-banco.md`,
 `banco-catalogo.md`, `03-progresso.md`, issue no `roadmap-rust/`, `changelog.md`).
@@ -420,7 +423,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 
 | Gate | Critério |
 |---|---|
-| estrutura | 31 arquivos contíguos; 0 tabela ao fim do `down` (somando os 4 schemas) |
+| estrutura | 32 arquivos contíguos; 0 tabela ao fim do `down` (somando os 4 schemas) |
 | catálogo | 97 tabelas + 2 views no documento gerado, todas com schema, nota e fonte |
 | tipos | nenhum `serial`, `timestamp`, `money`, `varchar`, `enum` na série |
 | constraints | 100% nomeadas; toda constraint tem teste que a viola e recebe o erro esperado |

@@ -8,7 +8,7 @@
 
 > **Revisão de 2026-11-21:** as **19 páginas de domínio** estão escritas, e o dicionário passou a
 > **21** autorais. O censo foi remedido no `HEAD` desta data: **36** páginas com corpo em `docs/`,
-> **25 de 31** em `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **18
+> **26 de 32** em `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **18
 > escrevíveis**, **24 de recorte** e **69 bloqueadas** — **147** páginas autorais, o teto de
 > `wyd-db-1.0.0.md` §4 com o 19º domínio.
 
@@ -31,8 +31,8 @@ cada seção de cada uma aterrissa; a página que não recebe nada é página qu
 Duas regras valem para as três colunas:
 
 1. **Dado do legado não é fonte de decisão.** Contagem, volume e comportamento da série herdada não
-   entram como afirmação; o número permitido é o **planejado** (`plano-migrations.md` §3: 31 arquivos,
-   97 tabelas, `SCHEMA_VERSION = 31` na troca) ou o **medido depois** da série (`M20`). Página que só
+   entram como afirmação; o número permitido é o **planejado** (`plano-migrations.md` §3: 32 arquivos,
+   97 tabelas, `SCHEMA_VERSION = 32` na troca) ou o **medido depois** da série (`M20`). Página que só
    existiria para descrever o legado não entra — é o caso de `guia-teste/dados-de-teste.md`.
 2. **Nada de valor redigitado.** A página cita a seção dona. `padrao-banco.md` §1 enuncia a decisão de
    forma; a página de arquitetura cita "P-03" e não recopia o DDL.
@@ -67,7 +67,7 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md` |
 | `guia-teste/` | `testes-de-sistema.md` |
 
-Fora de `docs/`: **25 de 31** em `migrations/` e **0 de 59** em `src/`.
+Fora de `docs/`: **26 de 32** em `migrations/` e **0 de 59** em `src/`.
 
 **Os outros 8 arquivos `index.md` são título de uma linha** — `arquitetura`, `specs`, `planos`,
 `roadmap`, `guia-desenvolvedor`, `guia-administrador`, `guia-teste`, `guia-documentacao`. Eles não
@@ -125,7 +125,7 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 |---|---|---|
 | §1 ferramentas que recusam o desenho | `guia-desenvolvedor/como-adicionar-tabela.md` §6 (estado `V` do gate, escrito) + `plano-de-implantacao.md` §Pré-requisitos + `planos/riscos.md` (a escrever) | **existe** (nota de §1) |
 | §2 formato e numeração | `migrations/serie-e-regras.md` (regra, a escrever) + `arquitetura/migracoes.md` §2 (porquê, escrito) | **existe** (nota de §2) |
-| §3 a série (31/97) | `migrations/index.md` (lista) + `dicionario-dados/index.md` (contagem `P`) | — |
+| §3 a série (32/97) | `migrations/index.md` (lista) + `dicionario-dados/index.md` (contagem `P`) | — |
 | §3.1 por que esta ordem | `migrations/serie-e-regras.md` | — |
 | §3.2 corte vertical | `planos/plano-de-testes.md` (critério de saída) | — |
 | §4 seeds | `planos/plano-de-dados-e-seeds.md` | — |
@@ -186,8 +186,8 @@ própria página — não é pendência escondida.
 
 | Página | O que já está confirmado (fonte) | Declara em aberto |
 |---|---|---|
-| `contexto-c4.md` | três consumidores com poderes diferentes (`padrao-banco.md` §0), schema × dono × escrita × leitura (§2), cinco papéis (`seguranca.md`), uma DSN por papel (`src/provision/spec.md` §3) | — |
-| `visao-geral.md` | escopo da edição (`wyd-db-1.0.0.md` §1.2), 31/97/31 planejados (`plano-migrations.md` §3) | os três números são `P`; o runtime assíncrono do crate não está decidido em documento |
+| `contexto-c4.md` | três consumidores com poderes diferentes (`padrao-banco.md` §0), schema × dono × escrita × leitura (§2), seis papéis (`seguranca.md`), uma DSN por papel (`src/provision/spec.md` §3) | — |
+| `visao-geral.md` | escopo da edição (`wyd-db-1.0.0.md` §1.2), 32/97/32 planejados (`plano-migrations.md` §3) | os três números são `P`; o runtime assíncrono do crate não está decidido em documento |
 | `index.md` | mapa das 13 páginas e ordem de leitura (`wyd-db-1.0.0.md` §6.2) | estado de cada página, que muda por escrita |
 
 ### 4.2 `specs/` (5)
@@ -225,7 +225,7 @@ conta e medidas por `docs/dicionario-dados/gerado/index.md`, dono da contagem.
 
 | Página | O que já está confirmado (fonte) | Declara em aberto |
 |---|---|---|
-| `guia-administrador/index.md` | mapa dos 7 guias; nível de acesso por tarefa pelos cinco papéis (`seguranca.md`), com o modelo de permissão de `padrao-banco.md` §8, e uma DSN por papel (`src/provision/spec.md` §3) | — |
+| `guia-administrador/index.md` | mapa dos 7 guias; nível de acesso por tarefa pelos seis papéis (`seguranca.md`), com o modelo de permissão de `padrao-banco.md` §8, e uma DSN por papel (`src/provision/spec.md` §3) | — |
 | `guia-administrador/configuracao.md` | o contrato de ambiente de `src/provision/spec.md` §3 — que variáveis existem, qual papel conecta, qual é dado de instalação e o que fazer sem DSN — e a regra de credencial de §7; a página **cita**, não redigita a tabela | valores e rotação: ato do operador |
 | `guia-teste/testes-de-contrato.md` | o que o contrato prova: série contígua, toda tabela derrubada no `down` do próprio arquivo, nenhuma FK para arquivo posterior, seed só em tabela criada, 100% das constraints nomeadas, nenhum tipo proibido (`padrao-banco.md` §10); fixture e gates (`plano-migrations.md` §1.1) | o teste é `P`: nenhum alvo existe |
 | `guia-documentacao/index.md` | mapa dos 7 guias por tarefa (`wyd-db-1.0.0.md` §6.14) | — |
@@ -290,7 +290,7 @@ para **69**. As 97 páginas por tabela continuam fora desta conta; quantas já e
 
 | Pasta | Escrito | O que já dá para escrever | O que não dá |
 |---|---|---|---|
-| `migrations/` | 25 de 31 | `index.md` e `serie-e-regras.md`; as páginas `0003-portal-person` e `0007-game-session` (DDL fechado); `0002-ops-audit` e `0005-game-account` só com as tabelas fechadas, declarando o resto | 0 páginas de arquivo com DDL aberto; restam as 6 de seed, bloqueadas pelo dado de origem |
+| `migrations/` | 26 de 32 | `index.md` e `serie-e-regras.md`; as páginas `0003-portal-person` e `0007-game-session` (DDL fechado); `0002-ops-audit` e `0005-game-account` só com as tabelas fechadas, declarando o resto | 0 páginas de arquivo com DDL aberto; restam as 6 de seed, bloqueadas pelo dado de origem |
 | `src/` | 0 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
 | `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
 
@@ -327,7 +327,7 @@ ondas.
    o estado do registro; as demais foram fechadas em 2026-11-19.
 3. **Não numera requisito.** Os `RF-DB`/`RN-DB` do lote 2 nascem com o próximo número livre, na hora da
    escrita; esta proposta só diz que o conteúdo existe.
-4. **Não mede nada.** 31, 97 e a distribuição por arquivo são planejados (`plano-migrations.md` §3);
+4. **Não mede nada.** 32, 97 e a distribuição por arquivo são planejados (`plano-migrations.md` §3);
    o medido sai do catálogo depois da série.
 5. **Não substitui `metricas.md`.** Ela diz o que dá para escrever; quanto está escrito continua sendo
    contagem de página com cabeçalho, como em §2.

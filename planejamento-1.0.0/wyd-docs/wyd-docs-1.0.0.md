@@ -609,7 +609,7 @@ ferramenta é criada; 44 das 97 páginas existem em 2026-11-21** (lotes `0001`�
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **44 das 97 páginas existem em 2026-11-21:** `gerado/` tem as páginas de tabela dos lotes `0001`–`0007` e `0008`–`0011` e o `index.md` de navegação, que lista as 44 existentes. A cobertura não é pré-requisito do site atual: o site passa com **117 páginas** (medido em 2026-11-21 pelo build) e publica as que existem (`V`, 2026-11-21).
+**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **44 das 97 páginas existem em 2026-11-21:** `gerado/` tem as páginas de tabela dos lotes `0001`–`0007` e `0008`–`0011` e o `index.md` de navegação, que lista as 44 existentes. A cobertura não é pré-requisito do site atual: o site passa com **119 páginas** (medido em 2026-11-21 pelo build) e publica as que existem (`V`, 2026-11-21).
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 

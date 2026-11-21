@@ -20,7 +20,7 @@ dado, não o inventa.
 | Número | `0026` (checklist, linha 110) |
 | Arquivo | `crates/wyd-db/migrations/0026_content_quests_events.sql` |
 | Schema | `content` (6 tabelas) |
-| Posição | 26 de 31 |
+| Posição | 26 de 32 |
 | Depende de | `0001`; `0013` (`content.game_class`); `0014` (`content.item_catalog`); `0024` (`content.map_definition`) |
 | É dependência de | `0027` (seed) e `0028` (`character_quest`, `event_participation`, `arena_*`) |
 | Tabelas criadas | `quest`, `quest_step`, `quest_reward`, `world_event`, `event_schedule`, `arena` |

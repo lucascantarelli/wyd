@@ -21,7 +21,7 @@ portal. **Mecanismo não reaberto:** TOTP, só `admin`/`moderator`, `member` for
 | Número | `0031` (confirmado em 2026-11-20; próximo livre depois de `0030`) |
 | Arquivo | `crates/wyd-db/migrations/0031_portal_mfa.sql` |
 | Schema | `portal` (1 tabela) |
-| Posição | 31 de 31 (segundo fator de staff) |
+| Posição | 31 de 32 (segundo fator de staff) |
 | Depende de | `0001` (schema `portal`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, dono da credencial) |
 | É dependência de | nada na série: nenhuma view de `0029` e nenhuma tabela de `game` a leem |
 | Tabelas criadas | 1 (`person_authenticator`) |

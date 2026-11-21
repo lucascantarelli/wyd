@@ -19,7 +19,7 @@ Vigésimo quinto arquivo da série: 4 tabelas no schema `content`. As fichas de 
 | Número | `0025` (checklist, linha 109) |
 | Arquivo | `crates/wyd-db/migrations/0025_content_combat.sql` |
 | Schema | `content` (4 tabelas) |
-| Posição | 25 de 31 |
+| Posição | 25 de 32 |
 | Depende de | `0001` (schema, privilégios); `0014` (`content.item_catalog`); `0019` (`content.npc_template`) |
 | É dependência de | `0026` (`quest_step` não usa estas tabelas) — nenhuma da série |
 | Tabelas criadas | `mob_template_stat`, `mob_template_equip`, `drop_rate_override`, `content_rate_override` |

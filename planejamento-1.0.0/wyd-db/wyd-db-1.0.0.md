@@ -58,7 +58,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **31 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 31` na troca — **planejado** em 2026-11-17, dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-21 (`0032`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -345,7 +345,7 @@ planejamento-1.0.0/wyd-db/
 → **teto de páginas autorais + 97 de tabela + 1 dado de apoio**, mais este plano diretor.
 
 **Fonte dos números (2026-11-18):** os totais que **derivam da série** — **97 páginas de tabela** (uma
-por tabela, escritas à mão desde `M26`) e **33 em `migrations/`** (2 páginas de seção + 31 arquivos) — são **planejados** e vêm de
+por tabela, escritas à mão desde `M26`) e **34 em `migrations/`** (2 páginas de seção + 32 arquivos) — são **planejados** e vêm de
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
 
@@ -361,7 +361,7 @@ em 2026-11-18. Os dois índices que não tinham cabeçalho — `docs/index.md` e
 — receberam o bloco de §7.1 na revisão de 2026-11-18; antes traziam só o título. Os outros **8
 arquivos `index.md` são título de uma linha** e não contam como página (§2);
 `dicionario-dados/gerado/index.md` é o índice auxiliar das páginas por tabela, também fora da
-contagem. Fora de `docs/`: **25 de 31** em `migrations/` e **0 de 59** em `src/` — os dois `spec.md`
+contagem. Fora de `docs/`: **26 de 32** em `migrations/` e **0 de 59** em `src/` — os dois `spec.md`
 de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
 **O que dá para escrever agora, página a página:** `proposta-paginas.md` (proposta de 2026-11-18)
@@ -814,8 +814,8 @@ A tabela de slugs da **série do rascunho descartada** saiu desta seção quando
 dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
 é schemas + `content_version`) e continuam no histórico do git, não como vocabulário vigente.
 
-**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 31 arquivos, contíguos de `0001` a
-`0031`, e `SCHEMA_VERSION = 31` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
+**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 32 arquivos, contíguos de `0001` a
+`0032`, e `SCHEMA_VERSION = 32` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
 vira `0007`, de modo que **quatro** arquivos do legado deixam de existir como arquivo próprio.
 
 ### 6.16 `src/*.md`
@@ -1254,7 +1254,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **31 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 31` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
 | `D-2` | dicionário em duas camadas: 19 páginas de domínio + **97** geradas | aprovar (§6.8) | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**29** arquivos), sem SQL na pasta | aprovar (§6.15) | Onda 5 |

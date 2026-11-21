@@ -4,13 +4,12 @@
 > Base: [contrato C4](docs/arquitetura/contrato-c4.md); `wyd-portal/docs/arquitetura/fronteira.md`; `AGENTS.md` §5.8
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-21). Cinco lacunas abertas; nenhuma foi fechada por suposição.
+**Estado:** proposto (2026-11-21). Quatro lacunas abertas; nenhuma foi fechada por suposição.
 
 ## Abertas
 
 | ID | Lacuna | Por que importa | Dono | Fecha com |
 |---|---|---|---|---|
-| `LAC-ADM-01` | Não existe papel `wyd_admin` no `provision`; o `0001` concede escrita em `game` a `wyd_game`, não a um papel de staff | sem papel próprio, a API não pode escrever em `game` sem usar credencial de outro runtime | `wyd-db` + `wyd-ops` | decisão de papel e `GRANT` (`USAGE` em `game`, `INSERT/UPDATE` nas tabelas do C4, `INSERT` em `ops.audit_log`), registrada em `lacunas.md` do `wyd-db` — **proposta `M27` apresentada em 2026-11-21** (`wyd-db/docs/arquitetura/seguranca.md` §"Proposta — papel `wyd_admin`"); aguarda o dono |
 | `LAC-ADM-02` | Não há tabela para o registro de idempotência | sem armazenamento durável, retry duplica escrita; memória não sobrevive a restart | `wyd-db` | decisão entre tabela nova em `ops` (muda contagem de 97) ou reutilização de chave natural já única; DDL e contagem atualizada |
 | `LAC-ADM-03` | Não existe contrato de controle com o `wyd-server` (kick, broadcast, manutenção) | `ADM-08` não pode ser implementada; “chamar o processo” hoje é intenção | arquitetura + `wyd-server` | porta/protocolo, ack, timeout e erro; página no `wyd-server` |
 | `LAC-ADM-04` | Autenticação portal → admin não decidida: token de serviço, mTLS ou assinatura do ator | `RN-ADM-002` e `RN-ADM-005` dependem disso; sem forma, `ADM-02` para | arquitetura + `wyd-ops` | mecanismo, rotação de segredo e o que vai no cabeçalho |
@@ -23,6 +22,7 @@
 | — | Executor único de escrita em `game` | `LAC-POR-01`: portal chama o `wyd-admin` por HTTP/JSON; nunca SQL direto | 2026-11-20 |
 | — | Transporte do C4 | HTTP/JSON interno com timeout, chave de idempotência e erro tipado | 2026-11-20 |
 | `LAC-ADM-05` | Escrita de `game.account_moderation` | É do `wyd-admin`, por `POST /accounts/{account_id}/moderation` (C4 §4.1); o portal só lê, pela via autorizada de `P-17`. O documento do portal foi corrigido e o C4 não mudou | 2026-11-21 |
+| `LAC-ADM-01` | Papel de banco do `wyd-admin` | `M27` fechada no `wyd-db` em A + S1 + C1 + D1: `wyd_admin` com `LOGIN` em `ROLES`/golden, `USAGE` em `game`/`ops` e os `GRANT`s no `0032_admin_grants.sql` (`ddl-confirmado.md` §5.32), sem `DELETE` | 2026-11-21 |
 
 ## Como uma lacuna fecha
 

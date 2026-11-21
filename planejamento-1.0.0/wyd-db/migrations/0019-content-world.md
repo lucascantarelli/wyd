@@ -24,7 +24,7 @@ e os campos de ciclo de vida que são padrão da série.
 | Número | `0019` (próximo lote sem desenho, `migrations-checklist.md` §2, linha 102) |
 | Arquivo | `crates/wyd-db/migrations/0019_content_world.sql` |
 | Schema | `content` (13 tabelas) |
-| Posição | 19 de 31 (mundo do conteúdo) |
+| Posição | 19 de 32 (mundo do conteúdo) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges), `0013` (`content.fn_fold`, `content.game_class`), `0014` (`content.item_catalog`) |
 | É dependência de | `0020` (seed do mundo, gerado), `0024`/`0026` por conteúdo, `0028` (estado de guerra de `guild_zone`) |
 | Tabelas criadas | 13: `content_source`, `npc_template`, `npc_definition`, `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`, `game_matrix`, `region`, `world_item_seed`, `guild_zone` |

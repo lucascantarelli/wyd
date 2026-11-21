@@ -39,8 +39,8 @@ redefinem.
   `docs/arquitetura/consumo-do-banco.md` §4 e `docs/specs/requisitos.md` (`RF-POR-007`).
 - **Reconfirmada em 2026-11-20, com a expansão do monitoramento:** o dono manteve a consulta limitada
   com cache de 60 s no BFF e recusou view materializada em `game` e tabela de cache em `portal`.
-  Consequência: nenhuma tabela nem view nova pelo monitoramento; com o lote `0031`, a série está em
-  31/97 e o catálogo de tabelas citadas, em 40 (39 com DDL) + 2 views.
+  Consequência: nenhuma tabela nem view nova pelo monitoramento; com os lotes `0031` e `0032`, a série está em
+  32/97 e o catálogo de tabelas citadas, em 40 (39 com DDL) + 2 views.
 
 ### LAC-POR-05 — Segundo fator para staff (`fechada`)
 
@@ -119,7 +119,7 @@ rota pública nem permissão de banco: acrescentou seis rotas de staff (38–43)
 novas** em `portal`, que não existem nas 92 de `plano-migrations.md` §3. O lote
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
 `planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` e `ddl-confirmado.md` §5.15 —, e a série
-passa a **31 arquivos / 97 tabelas**, com as cinco tabelas dos dois adendos entre as 77 de 97 com DDL fechado. As duas
+passa a **32 arquivos / 97 tabelas**, com as cinco tabelas dos dois adendos entre as 77 de 97 com DDL fechado. As duas
 contagens citadas aqui concordam com as do `wyd-db`.
 `LAC-POR-06` **não** acrescenta tabela: a telemetria vem do `wyd-ops` e o `wyd-db` não ganha schema de
 métrica. O monitoramento inteiro (métrica, log, painel e evento de launcher) segue a mesma regra; a

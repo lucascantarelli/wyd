@@ -97,7 +97,7 @@ Ajuste manual de saldo (`account_wallet.coin`) **não** é escrita direta de tel
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 e está em
 `planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` (texto DDL em `ddl-confirmado.md` §5.15),
 com colunas, `PK`/`FK`, `DEFAULT`, índices e constraints. Com a aprovação, a série ficou em **30
-arquivos / 96 tabelas** naquela data; com o lote `0031`, são **31 arquivos / 97 tabelas**, e as cinco tabelas dos dois adendos têm DDL fechado. É o número que este planejamento cita.
+arquivos / 96 tabelas** naquela data; com os lotes `0031` e `0032`, são **32 arquivos / 97 tabelas**, e as cinco tabelas dos dois adendos têm DDL fechado. É o número que este planejamento cita.
 
 ## 6. Configuração do servidor
 
@@ -125,7 +125,8 @@ das quais 39 têm DDL fechado**, + 2 views, medido neste arquivo em 2026-11-20.
 
 O monitoramento **não acrescenta tabela**: presença vem da view `game.v_live_session`, e métrica, log,
 painel e telemetria do launcher vêm de API externa ou de log estruturado (`monitoramento.md` §3/§6).
-O lote `0031` acrescenta `portal.person_authenticator`: a série passa a 31 arquivos / 97 tabelas, e o
+O lote `0031` acrescenta `portal.person_authenticator` e o `0032` só concede `GRANT`: a série passa a 32
+arquivos / 97 tabelas, e o
 catálogo sobe de 39 para **40 citadas**.
 
 ## 8. O que esta página não decide

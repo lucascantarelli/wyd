@@ -18,7 +18,7 @@ Vigésimo oitavo arquivo da série: 7 tabelas no schema `game`. É o único bloc
 | Número | `0028` (checklist, linha 112) |
 | Arquivo | `crates/wyd-db/migrations/0028_game_quests_events.sql` |
 | Schema | `game` (7 tabelas) |
-| Posição | 28 de 31 |
+| Posição | 28 de 32 |
 | Depende de | `0001`; `0006` (`game.character`); `0010` (`game.guild`); `0011` (`game.city`); `0026` (`content.quest`, `content.world_event`, `content.arena`) |
 | É dependência de | `0029` (view de presença não lê estas tabelas) — nenhuma |
 | Tabelas criadas | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` |

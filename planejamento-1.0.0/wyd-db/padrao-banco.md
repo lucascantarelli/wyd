@@ -218,8 +218,9 @@ objetos que ele cria e precisam ser versionados com ele; o estado de `public`, q
 série, vai no mesmo artefato (`src/provision/spec.md` §4). Ordem do ambiente: `provision render` →
 `provision apply` → migrations.
 
-Os cinco papéis são `wyd_owner` (dono dos schemas), `wyd_migrator` (roda a série), `wyd_game`,
-`wyd_portal` e `wyd_read` (um por fronteira); atributos de login e membership são de
+Os seis papéis são `wyd_owner` (dono dos schemas), `wyd_migrator` (roda a série), `wyd_game`,
+`wyd_portal`, `wyd_admin` (staff, `M27`) e `wyd_read` (um por fronteira); atributos de login e
+membership são de
 `src/provision/spec.md`. O DDL do
 `db/roles.sql` **não se copia aqui**: ele é **gerado** por `wyd-db provision render` a partir da fonte
 única descrita em `src/provision/spec.md` (**planejamento**:
@@ -258,7 +259,7 @@ O formato do ator de `ops.audit_log` está **decidido** (`M18-A`, 2026-11-17): `
 e nunca bloqueia nem cascateia. O DDL, o índice e o porquê das alternativas rejeitadas têm um dono só:
 `lacunas.md` §2.3. Nomear a coluna aqui sem repetir a decisão é deliberado.
 
-**Enunciação (2026-11-18):** a tabela de **quem pode o quê** — os cinco papéis, com o que cada um pode
+**Enunciação (2026-11-18):** a tabela de **quem pode o quê** — os seis papéis, com o que cada um pode
 e não pode — passou a ser enunciada em `docs/arquitetura/seguranca.md`, na mesma página que enuncia o
 hash, o que nunca é gravado, a auditoria e a ameaça × controle. Aqui fica o **modelo de permissão** que
 aquela tabela não explica: `USAGE` × *default privileges*, leitura cruzada só por view, append-only por
