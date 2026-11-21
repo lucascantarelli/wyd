@@ -66,10 +66,10 @@ A view não escapa disso — `0029` §8.3 decidiu, em 2026-11-21, nascer sem `GR
 página espera o mesmo `42501`. Resta uma pergunta que esta página não responde: `A7` decidiu que a
 conta de jogo **nasce no portal** depois do `email_verify`, mas nenhuma migration dá ao portal caminho
 de escrita em `game`, então quem escreve ali hoje é `wyd_game` e a criação pelo portal ainda não tem
-prova de execução. `M28` (a "API interna" de `ddl-confirmado.md` §5.15 é o BFF do portal ou o
-`wyd-admin`?) e `M27` (papel `wyd_admin` com escrita em sete tabelas de `game` e em `ops.audit_log`)
-são o fecho do assunto, e a escolha de um muda a redação do outro. `game.pin_reset` continua escrito
-pelo portal no desenho e cai na mesma pergunta; a célula fica como está até `M27`/`M28` responderem.
+prova de execução. `M27` e `M28` fecharam em 2026-11-21: a escrita de staff em `game` é do `wyd_admin`
+(`0032`) e a "API interna" é o serviço `wyd-admin` (redação B). `game.pin_reset` continua escrito pelo
+portal no desenho e cai na mesma pergunta; a célula continua com o papel porque a criação pelo portal
+segue sem prova de execução.
 
 `game.session` depende de `game.character` (`0006`, ainda sem coluna desenhada): a FK para personagem
 é `planejado` como o resto, mas não pode virar SQL antes de `0006` — esta página não antecipa essa

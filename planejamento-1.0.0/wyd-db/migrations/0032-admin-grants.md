@@ -99,7 +99,7 @@ REVOKE USAGE ON SCHEMA game FROM wyd_admin;
 - **Não cria o papel.** `CREATE ROLE` é do provisionamento (`ADR-DB-0001`); se `db/roles.sql` não rodou,
   o `GRANT` falha com `role "wyd_admin" does not exist`.
 - **Não alcança `portal` nem `content`.** As quatro tabelas do `0030` continuam do BFF com `wyd_portal`;
-  a divergência de prosa sobre quem é a "API interna" é `M28`, ainda aberta.
+  a divergência de prosa sobre quem é a "API interna" foi fechada em `M28` (redação B, 2026-11-21).
 - **Não vale para tabela futura.** Não há `ALTER DEFAULT PRIVILEGES` aqui: os 97 objetos já existem e a
   série fecha em `0032`. Tabela nova depois da troca exige `GRANT` no arquivo que a cria.
 - **Não tira nada de outro papel.** O `INSERT` em `ops.audit_log` de `wyd_game`/`wyd_portal` (`0002`)

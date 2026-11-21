@@ -19,8 +19,10 @@
 > do dicionário deixou de ser gerador presumido e passou a ser escrita à mão, em lotes. Na mesma
 > data, `M27` entrou como **`proposta`** — o papel `wyd_admin` do serviço `wyd-admin` — e **fechou na
 > mesma data** na opção A + S1 + C1 + D1 (`docs/arquitetura/seguranca.md`, `0032_admin_grants.sql`).
-> Ainda em 2026-11-21, `M28` entrou **aberta**: a frase que atribui a "API interna" a credencial
-> `wyd_portal` não se sustenta para escrita em `game` (a prosa continua em rodada própria).
+> Ainda em 2026-11-21, `M28` entrou **aberta** — a frase que atribui a "API interna" a credencial
+> `wyd_portal` não se sustenta para escrita em `game` — e **fechou na mesma data** na **redação B**:
+> a "API interna" é o serviço `wyd-admin`, as quatro tabelas de `portal` ficam com o BFF do portal e
+> `wyd_portal` não serve para `game` (§2.3; `ddl-confirmado.md` §5.15; `migrations/0030-portal-content.md` §8).
 > Nenhum teste ou Postgres foi executado: as contagens vêm de `grep` nas migrations do legado e da
 > lista nominal do §11 do rascunho.
 
@@ -74,7 +76,7 @@ por decisão minha sozinha.
 
 | Grupo | Quantas | Abertas (`aberta`/`proposta`) | `externa` | Fechadas |
 |---|---:|---:|---:|---:|
-| Lacunas (`B`/`A`/`M`) | 33 | 1 (`M28`) | 3 (`A11`, `A20`, `M21`) | 29 (`B1`, `B2`, `B3`, `B4`, `B5`, `A7`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `A21`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`, `M25`, `M26`, `M27`) |
+| Lacunas (`B`/`A`/`M`) | 33 | 0 (—) | 3 (`A11`, `A20`, `M21`) | 30 (`B1`, `B2`, `B3`, `B4`, `B5`, `A7`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `A21`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`, `M25`, `M26`, `M27`, `M28`) |
 | Divergências do plano diretor (`P`) | 11 | 0 (—) | — | 11 (`P1`, `P2`, `P3`, `P4`, `P5`, `P6`, `P7`, `P8`, `P9`, `P10`, `P11`) |
 | Achados estruturais (`D-A`, `D-B`, `D-C`) | 3 | 0 | — | 3 (`D-A`, `D-B`, `D-C`) |
 
@@ -233,7 +235,7 @@ real, o endereço original fica livre para um cadastro novo, e o histórico anti
 | **M25** | Consumo e retenção da fila de entrega: como o dreno toma a linha em `ops.delivery_queue` e por quanto tempo a linha fechada fica guardada | arquitetura + frente `wyd-server` | **decidida em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta e marca `claimed`/`claimed_at` antes de aplicar; `applied`/`failed` são expurgadas **30 dias após `closed_at`** e `pending` nunca é expurgada. Recusadas: dreno único sem lock (pode entregar duas vezes) e expurgo de tudo em 90 dias | DDL de `0012` (`ddl-confirmado.md` §5.16), página `0012-ops-delivery.md`, `docs/arquitetura/padroes-postgres.md` §6 e `planos/retencao-e-capacidade.md` | **P3** | fechada |
 | **M26** | Dicionário de dados: como nascem as 97 páginas por tabela (`dicionario-dados/gerado/<tabela>.md`), que o plano tratava como saída de um gerador `make dicionario-dados` | arquitetura + documentação | **decidida em 2026-11-21: escritas à mão, em lotes, ao fim do DDL.** Uma página curta por tabela, sem gerador e sem `Makefile` novo; cada uma aponta para a página de `migrations/`, que continua dona da forma, e a página por tabela resume e liga, sem copiar o DDL. Recusadas na mesma rodada: manter o gerador como projeto próprio (exigiria aprovar ferramenta e escrever código antes de existir página), adiar as páginas por tabela (deixaria a cobertura por tabela ausente sem data) e cancelar as 97 páginas (revogaria `LPDOC-09`). **Nada é gerado:** as primeiras **46 das 97** páginas já foram escritas à mão, em lotes (`0001`–`0011` e `0019`), até 2026-11-21; as demais entram em lotes | `dicionario-dados/` (onda 4), `LPDOC-09` do `wyd-docs`, gate do site; o formato da página é de `wyd-db-1.0.0.md` §6.8 | **P3** | fechada |
 | **M27** | Papel `wyd_admin`: o serviço `wyd-admin` não tem papel próprio para escrever em `game` nem em `ops.audit_log` | `wyd-db` + `wyd-ops` | **decidida em 2026-11-21: A + S1 + C1 + D1** — `wyd_admin` com `LOGIN` e DSN própria (`WYD_DB_URL_ADMIN`), `USAGE` em `game` e em `ops`, `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4 (`account_moderation`, `account_wallet`, `account_ledger`, `server_channel`, `session`, `city`, `item_price`), sem `DELETE`, e `INSERT` + `SELECT (id)` em `ops.audit_log`; `GRANT` em arquivo novo (`0032`) | `seguranca.md` (papel na tabela e decisão registrada); `src/provision/spec.md` §2/§4 (6º papel em `ROLES` e no golden); `0032_admin-grants.md` e `ddl-confirmado.md` §5.32; série 31 → 32 em `plano-migrations.md`, `migrations-checklist.md` e contagens; `LAC-ADM-01` do `wyd-admin`; `M28` **não** entrou | **P3** | fechada |
-| **M28** | "API interna" sem dono: `ddl-confirmado.md` §5.15 e `migrations/0030-portal-content.md` §8 dizem que ela usa a credencial `wyd_portal`, mas esse papel não tem `USAGE` em `game`; o §9 da mesma página já separa conteúdo (`wyd_portal`) de ação em `game` (que é do `wyd-admin`) | arquitetura + `wyd-db` | **aberta em 2026-11-21:** decidir se "API interna" nomeia o BFF administrativo do portal (aí a credencial é `wyd_portal` e o texto diz que não cobre `game`) ou o serviço `wyd-admin` (aí a credencial dele é a de `M27` e nunca é `wyd_portal` para `game`); corrigir **só o texto**, sem DDL nem `GRANT`; as duas redações estão em `docs/arquitetura/seguranca.md` §"Duas redações para fechar `M28`" (A: "API interna" = BFF; B: "API interna" = `wyd-admin`), em rodada própria — `M27` fechou em 2026-11-21 sem ela, e as duas redações precisam do ajuste de tempo verbal antes de aplicar | `ddl-confirmado.md` §5.15, `migrations/0030-portal-content.md` §8–§9; teste de fronteira (`wyd_portal` sem `USAGE` em `game`) | **P3** | **aberta** |
+| **M28** | "API interna" sem dono: `ddl-confirmado.md` §5.15 e `migrations/0030-portal-content.md` §8 dizem que ela usa a credencial `wyd_portal`, mas esse papel não tem `USAGE` em `game`; o §9 da mesma página já separa conteúdo (`wyd_portal`) de ação em `game` (que é do `wyd-admin`) | arquitetura + `wyd-db` | **decidida em 2026-11-21: redação B** — a "API interna" é o serviço `wyd-admin`; as quatro tabelas de `portal` são escritas pelo BFF do portal com `wyd_portal`; o `wyd-admin` não as escreve e, para `game` e `ops.audit_log`, usa o papel de `M27` (`0032`), nunca `wyd_portal`. Recusada a redação A, que chamava o próprio BFF de "API interna" e divergia de `fronteira.md` §1–§2 do `wyd-admin`. Correção **só de prosa**, sem DDL nem `GRANT` | `ddl-confirmado.md` §5.15 e `migrations/0030-portal-content.md` §8 (redação B aplicada); teste de fronteira (`wyd_portal` sem `USAGE` em `game`) | **P3** | fechada |
 
 `M16` e `M17` ficam no marco `P3`, não no `P4`: as duas bloqueiam **schema** — `M16` o bloco `0005`
 (`ddl-confirmado.md` §5.2, uma das razões de o arquivo ser `parcial`) e `M17` os arquivos
@@ -291,12 +293,12 @@ não se encaixe em `person`/`account`/`system` volta aqui antes de virar `INSERT
 | **P0** | 0 | — |
 | **P1** | 0 | — |
 | **P2** | 0 | — |
-| **P3** | 1 | `M28` |
+| **P3** | 0 | — |
 | **P4** | 0 | — |
 | **EXT** | 3 | `A11`, `A20`, `M21` |
 
-A tabela é o **saldo**, não o histórico: as **29** lacunas fechadas saíram dos marcos e continuam em
-§2.1–§2.3 com a data e a evidência. Restam **3 `externa`**, **0 `proposta`** e **1 `aberta`** (`M28`) — `A7` e `A21`
+A tabela é o **saldo**, não o histórico: as **30** lacunas fechadas saíram dos marcos e continuam em
+§2.1–§2.3 com a data e a evidência. Restam **3 `externa`**, **0 `proposta`** e **0 `aberta`** — `A7` e `A21`
 fecharam em 2026-11-20, `M21` teve a decisão de escopo registrada na mesma data e continua `externa`
 porque a execução é do `wyd-portal`, e `M25` entrou e fechou no mesmo dia, com o desenho do lote
 `0012`: o dreno usa `SKIP LOCKED` e a linha fechada é expurgada em 30 dias.

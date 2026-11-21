@@ -45,7 +45,7 @@ do nome.
 **Estado: decidida em 2026-11-21 — A + S1 + C1 + D1.** O papel entrou em `ROLES`
 (`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032_admin_grants.sql`
 (`ddl-confirmado.md` §5.32, página `migrations/0032-admin-grants.md`). `M27` está fechada em
-`lacunas.md` §2.3 e `LAC-ADM-01` fechou com ela; `M28` continua **aberta**.
+`lacunas.md` §2.3 e `LAC-ADM-01` fechou com ela; `M28` fechou na mesma data com a redação **B**.
 
 **O que o serviço `wyd-admin` precisa.** As sete rotas de ação do C4 (`wyd-admin/docs/arquitetura/contrato-c4.md`
 §4) escrevem em sete tabelas de `game` e em `ops.audit_log`; `POST /broadcasts` (§4.5) não grava tabela
@@ -110,36 +110,35 @@ contagem dos dashboards e o teste de `wyd-admin` que hoje depende deste papel. *
 as sete tabelas já existem.
 
 **O que fechou `LAC-ADM-01`:** o "sim" do dono a A/S1/C1/D1 (2026-11-21), o papel em `ROLES`, o `GRANT`
-no `0032`, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão. `M28` não entrou nesta
-rodada: a redação de §5.15 e de `0030` §8 continua aberta, e até lá só a primeira oração de §5.15
-mudou, porque sem isso ela seria falsa com o papel existindo.
+no `0032`, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão. `M28` fechou na mesma
+data, em rodada própria, com a redação **B** aplicada em §5.15 e em `0030` §8.
 
-**Divergência de prosa ainda aberta (`M28`):** `ddl-confirmado.md` §5.15 atribui à "API interna" a
-credencial `wyd_portal` para uma escrita que não alcança `game` (`0001`). A escolha de redação A/B fica
-para a rodada própria de `M28`, registrada em `lacunas.md` §2.3; ela não reabre nem condiciona as
-decisões A + S1 + C1 + D1 de `M27`.
+**Divergência de prosa resolvida (`M28`, redação B):** `ddl-confirmado.md` §5.15 atribuía à "API
+interna" a credencial `wyd_portal` para uma escrita que não alcança `game` (`0001`). A redação B, de
+2026-11-21, corrigiu a prosa sem tocar DDL nem `GRANT` e não altera as decisões A + S1 + C1 + D1 de
+`M27`.
 
-### Duas redações para fechar `M28`
+### Redação aplicada para fechar `M28`
 
-As duas substituem **só prosa** — nenhum `GRANT`, nenhuma linha de DDL — e fecham `M28` em rodada
-própria, depois de `M27`; até lá a lacuna continua `aberta` e os arquivos de DDL não mudam.
+As duas alternativas substituíam **só prosa** — nenhum `GRANT`, nenhuma linha de DDL. A **B** foi a
+escolhida e está aplicada; a **A** fica registrada como não escolhida. Os arquivos de DDL não mudaram.
 
-**`M28` segue aberta em 2026-11-21:** nenhuma das duas redações foi aplicada. As alternativas abaixo
-continuam sem escolha; seus trechos sobre `M27` já refletem o papel existente e o `GRANT` em `0032`.
-A rodada de `M28` ainda precisa decidir a quem o texto chama de "API interna" e aplicar uma das duas
-redações, sem reabrir `M27`.
+**`M28` fechou em 2026-11-21 com a redação B.** A "API interna" nomeia o serviço `wyd-admin`; as
+quatro tabelas de `portal` são escritas pelo BFF do portal com `wyd_portal`; o `wyd-admin` não as
+escreve e, para `game` e `ops.audit_log`, usa o papel de `M27` (`0032`), nunca `wyd_portal` para `game`.
+A redação A foi recusada por chamar o próprio BFF de "API interna" e divergir de `fronteira.md` §1–§2
+do `wyd-admin`.
 
-**Trechos de origem que `M28` ainda precisa resolver (citações dos arquivos, não decisões sobre `M27`):**
+**Trechos de origem que a redação resolveu:**
 
-- `ddl-confirmado.md` §5.15: a oração restante atribui à "API interna" a credencial `wyd_portal` para
-  estas quatro tabelas, embora `wyd_portal` não alcance `game`.
-- `0030-portal-content.md` §8, sob o rótulo **"Escrita pelo `wyd-admin`"**, ainda atribui à "API interna"
-  a credencial `wyd_portal` e descreve o papel e o `GRANT` como condicionais; essa prosa precisa ser
-  resolvida por uma das redações abaixo, sem alterar o fato já decidido em `M27`.
+- `ddl-confirmado.md` §5.15: a oração que atribuía à "API interna" a credencial `wyd_portal` para estas
+  quatro tabelas foi substituída pela redação B.
+- `0030-portal-content.md` §8, antes sob o rótulo **"Escrita pelo `wyd-admin`"**: o rótulo e o parágrafo
+  passaram a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**, com o papel de `M27` nomeado.
 
-#### Redação A — "API interna" é o BFF administrativo do portal
+#### Redação A — não escolhida — "API interna" é o BFF administrativo do portal
 
-**`ddl-confirmado.md` §5.15 passaria a dizer:** "O papel `wyd_admin` existe para `game` e `ops.audit_log`
+**`ddl-confirmado.md` §5.15 diria:** "O papel `wyd_admin` existe para `game` e `ops.audit_log`
   (`M27`, `0032`). Estas quatro tabelas de `portal` são escritas pelo **BFF administrativo do portal**,
   com a credencial `wyd_portal`; essa credencial **não** alcança `game` (o `0001` não dá `USAGE` no
   schema a `wyd_portal`); as ações do C4 em `game` continuam sendo do `wyd-admin` (`LAC-POR-01`)."
@@ -154,22 +153,22 @@ C4. **Fontes:** `0030` §9 (as rotas `/admin/conteudo/*` e `/admin/launcher` esc
 estas tabelas não são estado de jogo) e `fronteira.md` §7 do `wyd-admin` (o admin não escreve em
 `portal`); o C4 §4.8 aplica o mesmo limite às três tabelas de economia, não a estas quatro.
 
-#### Redação B — "API interna" é o serviço `wyd-admin`
+#### Redação B — aplicada — "API interna" é o serviço `wyd-admin`
 
-**`ddl-confirmado.md` §5.15 passaria a dizer:** "O papel `wyd_admin` existe para `game` e
+**`ddl-confirmado.md` §5.15 diz:** "O papel `wyd_admin` existe para `game` e
   `ops.audit_log` (`M27`, `0032`). Estas quatro tabelas de `portal` são escritas pelo **BFF do portal**
   com a credencial `wyd_portal`; o serviço `wyd-admin` **não** as escreve. `wyd_portal` não serve para
   `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`)."
 
-**`0030-portal-content.md` §8, na redação B:** o rótulo passaria a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
-  e o parágrafo seria: "Estas quatro tabelas são escritas pelo BFF do portal com a credencial `wyd_portal`;
+**`0030-portal-content.md` §8, na redação B:** o rótulo passou a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
+  e o parágrafo ficou: "Estas quatro tabelas são escritas pelo BFF do portal com a credencial `wyd_portal`;
   o `wyd-admin` não as escreve e, para `game` e `ops.audit_log`, tem papel próprio (`M27`, `0032`) e não
   usa `wyd_portal` para `game`."
 
 **Efeito:** explicita a fronteira que `fronteira.md` §7 já declara ("o admin **não** escreve em
-`portal`") e nomeia o dono da escrita em `game`/`ops.audit_log`. **Custo:** mexe também no rótulo e
-repete a fronteira no texto; o C4 §4.8 é precedente (tabela de `portal` é do BFF), não a fonte destas
-quatro.
+`portal`") e nomeia o dono da escrita em `game`/`ops.audit_log`. **Custo aceito:** mexe também no
+rótulo e repete a fronteira no texto; o C4 §4.8 é precedente (tabela de `portal` é do BFF), não a
+fonte destas quatro.
 
 | Critério | Redação A | Redação B |
 |---|---|---|
@@ -178,7 +177,7 @@ quatro.
 | Tamanho da edição | uma frase em §5.15 e o parágrafo de §8 | uma frase em §5.15, o rótulo e o parágrafo de §8 |
 
 Nas duas alternativas, o papel do `wyd-admin` em `game`/`ops.audit_log` já existe por `M27` (`0032`).
-A escolha entre A e B é do dono, em rodada própria; `M28` continua aberta.
+A escolha foi a **B**, decidida em 2026-11-21; `M28` está fechada em `lacunas.md` §2.3.
 
 ## O que é hash e com que algoritmo
 

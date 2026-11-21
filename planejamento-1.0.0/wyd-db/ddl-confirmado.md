@@ -2086,11 +2086,12 @@ DROP TABLE portal.news;
 **Permissões.** Nenhum `GRANT` novo: default privileges de `0001` em `portal` dão
 `SELECT, INSERT, UPDATE, DELETE` a `wyd_portal`; `wyd_read` tem `USAGE` mas não `SELECT` por default;
 `wyd_game` não alcança. O papel `wyd_admin` existe desde 2026-11-21 (`M27`, `0032_admin_grants.sql`),
-mas não alcança estas quatro tabelas — a API interna usa a credencial `wyd_portal` até ganhar papel
-próprio em lote novo.
+mas não alcança estas quatro tabelas. Elas são escritas pelo **BFF do portal** com a credencial
+`wyd_portal`; o serviço `wyd-admin` **não** as escreve. `wyd_portal` não serve para `game` (o `0001`
+não dá `USAGE` no schema a `wyd_portal`).
 
-**O que este lote não fecha:** histórico de revisão do texto, prazo de expurgo e papel de banco do
-`wyd-admin` — listados em `migrations/0030-portal-content.md` §11.
+**O que este lote não fecha:** histórico de revisão do texto e prazo de expurgo, listados em
+`migrations/0030-portal-content.md` §11.
 
 ### 5.16 Lote `0012` — `ops.delivery_queue` (DDL confirmado em 2026-11-20)
 
@@ -4302,9 +4303,9 @@ não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0
 `ops.audit_log` (`0002`). Tabela criada depois da troca **não** herda estes privilégios: não há
 `ALTER DEFAULT PRIVILEGES` aqui.
 
-**Aberto, fora deste lote:** `M28` — se a "API interna" de §5.15 e de `migrations/0030-portal-content.md`
-§8 é o BFF do portal ou o serviço `wyd-admin`. Só a primeira oração de §5.15 mudou nesta rodada, porque
-sem isso ela seria falsa com o papel existindo.
+**Fechado fora deste lote:** `M28` — decidida em 2026-11-21 na redação B: a "API interna" de §5.15 e de
+`migrations/0030-portal-content.md` §8 é o serviço `wyd-admin`; as quatro tabelas de `portal` ficam com
+o BFF do portal. A correção é só de prosa, sem `GRANT` nem DDL.
 
 ---
 

@@ -334,15 +334,15 @@ Nenhum `GRANT`/`REVOKE` novo: valem os default privileges de `0001` §3.
 
 | Papel | Efeito |
 |---|---|
-| `wyd_portal` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` nas quatro tabelas — é quem serve o site e o BFF administrativo. |
+| `wyd_portal` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` nas quatro tabelas — é quem serve o site e o BFF do portal. |
 | `wyd_read` | tem `USAGE` em `portal`, mas **não** recebe `SELECT` por default neste schema; leitura pública passa pelo BFF. |
 | `wyd_game` | nenhum: jogo não lê conteúdo editorial. |
 | `wyd_migrator` | dono da criação; aplica o arquivo. |
 
-**Escrita pelo `wyd-admin`:** não existe papel `wyd_admin` no `provision` (`src/provision/spec.md` não
-cria papel de serviço além dos quatro). Hoje a API interna usa a credencial `wyd_portal`; se o
-`wyd-admin` ganhar papel próprio, o `GRANT` vem em lote novo — este arquivo **não** inventa papel.
-Nenhuma escrita parte do navegador: o BFF grava e registra autor em `ops.audit_log`.
+**Escrita pelo BFF do portal (não pelo `wyd-admin`):** estas quatro tabelas são escritas pelo BFF do
+portal com a credencial `wyd_portal`; o `wyd-admin` não as escreve. Para `game` e `ops.audit_log`, o
+`wyd-admin` tem papel próprio (`M27`, `0032`) e não usa `wyd_portal` para `game`. Nenhuma escrita parte
+do navegador: o BFF grava e registra autor em `ops.audit_log`.
 
 ## 9. Retenção, leitura e escrita
 
@@ -383,7 +383,7 @@ Nenhuma escrita parte do navegador: o BFF grava e registra autor em `ops.audit_l
 |---|---|
 | histórico de revisão de notícia/guia (versão anterior do texto) | produto; hoje só `updated_by` + auditoria |
 | prazo de expurgo de conteúdo arquivado | `wyd-ops` (política de retenção) |
-| papel de banco próprio do `wyd-admin` | `provision`/`wyd-admin`, quando planejado |
+| escrita do `wyd-admin` nestas quatro tabelas | decidido em `M28` (2026-11-21): não escreve; o BFF do portal é o dono |
 | RLS por linha | fora do escopo da `1.0.0`; permissão é por papel |
 | renderização e sanitização do Markdown | `wyd-portal` (BFF), não o banco |
 
