@@ -117,7 +117,8 @@ find planejamento-1.0.0/wyd-portal -type f \( -name '*.ts' -o -name '*.tsx' -o -
 cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site
 ```
 
-O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate de 2026-11-20 publicou
-  `sistemas/wyd-portal/` e passou com **46 páginas** e **44 fontes** verificadas. As páginas de
+O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
+  `sistemas/wyd-portal/` e, na última medição (2026-11-21), passou com **117 páginas** e **115 fontes**
+  verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.

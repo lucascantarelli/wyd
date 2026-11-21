@@ -47,7 +47,7 @@
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
 | `docs/arquitetura/` | 7 | 17 | faltam C4, modelo conceitual/lógico, retenção, fronteira |
 | `docs/specs/` | 0 | 20 | nenhum requisito com ID existe ainda |
-| `docs/dicionario-dados/` | 1 | 20 (+97 de tabela) | só `dominio-acesso`; as 97 páginas por tabela são escritas à mão em lotes (`M26`) |
+| `docs/dicionario-dados/` | 21 | 21 (+97 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 97 por tabela são manuais (`M26`) e **44 existem** (lotes `0001`–`0011`, 2026-11-21) |
 | `docs/planos/` | 1 | 10 | só `plano-de-implantacao` |
 | `docs/roadmap/` | 0 | 42 | 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
 | `docs/guia-desenvolvedor/` | 2 | 11 | |
@@ -60,8 +60,8 @@
 | `prompts/` | 0 | 9 | |
 | `skills/` | 0 | 9 | |
 
-**Totais planejados:** 146 páginas autorais em `docs/` + 97 geradas (uma por tabela planejada) + 33 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 15 em `docs/`, 25 em
+**Totais planejados:** 147 páginas autorais em `docs/` + 97 por tabela, escritas à mão (`M26`) + 33 de migration + 59 de `src/`
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 35 em `docs/`, 25 em
 `migrations/`, 37 em `src/`.
 
 ### 1.3 Série de migrations
@@ -137,10 +137,10 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 0 | `B1`, `A17`, `M16`, `M17` e `M25` fecharam; a lista completa está em `wyd-db/lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | 2 pendentes | `M27` (proposta) e `M28` (aberta) em 2026-11-21; 28 fecharam; a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
-| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; faltam o "sim" de cinco lotes e o gerador dos seis seeds |
+| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; 31 arquivos de migration para 97 tabelas (31/97, `plano-migrations.md` §3, 2026-11-21); os cinco lotes foram aprovados em 2026-11-21 e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
 | ADR de fronteira pessoa × conta | sem número | citada em `lacunas.md` §0.2 e `rascunho-accounts.md` |
 
 ---
@@ -157,7 +157,7 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 | D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
 | D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
 | D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-19**: a estrutura existe (labels, formulários, board); falta criar as issues, que dependem de página com DoD |
-| D6 | O plano diretor declara 146 páginas autorais, mas 84 estão bloqueadas por falta de decisão | `proposta-paginas.md` §1 | escrever mais rápido exige fechar lacuna, não escrever autour |
+| D6 | O plano diretor declara 147 páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **69 seguem** desde que as 19 páginas de domínio ficaram escritas | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
 | D7 | Não existe `mkdocs.yml` em lugar nenhum, mas `wyd-docs` é dono do site e o guia do `wyd-db` já prescreve recursos do MkDocs — **resolvido em 2026-11-19**: site em MkDocs 2.0 no `wyd-docs/`, sem `mkdocs.yml`; recursos do MkDocs 1.x convertidos na origem (§2.2 e `LPDOC-14`) | `find . -iname 'mkdocs*.yml'` sem resultado | site não publicável; exigência sem base executável |
 | D8 | `docs/` na raiz não existe; no legado, `docs/` é referência — **resolvido em 2026-11-19**: a documentação publicada sai de `planejamento-1.0.0/*/docs/` por `wyd-docs/`, e o legado não é publicado | `ls` | risco de alguém publicar o legado como doc oficial |
 
@@ -207,13 +207,13 @@ Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ord
 - [ ] Escrever as 6 páginas de migration restantes (seeds), quando o dado de origem estiver verificado; os arquivos são escritos à mão, sem gerador (`plano-migrations.md` §4).
 - [x] Aprovar os cinco lotes propostos (`0022`, `0025`, `0026`, `0028`, `0029`) em `ddl-confirmado.md` antes da página — aprovados em 2026-11-21; nenhum lote aguarda aprovação.
 - [ ] Escrever `specs/` (requisitos, regras, NFR, casos de uso, fluxos, estados, rastreabilidade).
-- [ ] Escrever as 17 páginas de domínio do dicionário e, em lotes, as 97 páginas por tabela (`M26`: à mão, sem gerador).
+- [ ] Concluir as 97 páginas por tabela (`M26`: à mão, sem gerador; **44/97** escritas até 2026-11-21); as **19** páginas de domínio já estão escritas (2026-11-21).
 - [ ] Escrever `planos/` (testes, dados, qualidade, métricas, riscos, execução).
 - [ ] Escrever `guia-administrador/`, `guia-documentacao/` e o restante de `guia-teste/`.
 - [ ] Criar `tests/` e `prompts/`/`skills/` do sistema.
 - [ ] Validar o site: `mkdocs build --strict` sem link morto nem diagrama inválido.
 
-**Gate:** 31 páginas de migration + 18 de domínio + 97 geradas (uma por tabela planejada); `planos/metricas.md` mede o
+**Gate:** 31 páginas de migration + 19 páginas de domínio + 97 páginas por tabela (**44/97** escritas até 2026-11-21, `wyd-db-1.0.0.md` §6.8); `planos/metricas.md` mede o
 fechamento; nenhuma afirmação de comportamento sem `V`; site estrito passa.
 
 ### Fase 3 — Planejar os 12 sistemas restantes
@@ -347,8 +347,8 @@ pode ser declarada completa, por mais páginas que o planejamento feche. Executa
 `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7 e é passo de `usuário`, não de automação.
 
 **Próxima ação imediata:** as duas filas correm em paralelo. Na documentação, executar o próximo
-passo ativo da fila do sistema dono — no `wyd-docs`, o gerador `wyd-db-pages` das 97 páginas
-planejadas, especificado em `planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md` §9.1 e alinhado à
-contagem de tabelas do `wyd-db`; nenhuma página gerada existe ainda. Na cobertura, a ação é a decisão
-do catálogo acima; o gerador fecha planejamento, não a `1.0.0`. O pacote anterior já foi mesclado no
+passo ativo da fila do sistema dono — no `wyd-docs`, o próximo lote manual das 97 páginas por
+tabela (`M26`, 2026-11-21), escritas em `wyd-db/docs/dicionario-dados/gerado/`; **44/97** já
+existem. Na cobertura, a ação é a decisão do catálogo acima; o dicionário fecha planejamento, não a
+`1.0.0`. O pacote anterior já foi mesclado no
 PR #48 (`e08f7d1`, 2026-11-19), portanto não há commit, push nem PR pendente daquela entrega.

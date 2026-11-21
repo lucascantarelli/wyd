@@ -36,6 +36,13 @@ três, e falham em silêncio ou com erro obscuro.
 > pré-requisito do planejamento nem da série. Ferramenta ou gerador novo, inclusive dentro de
 > `tools/content/`, só entra com aprovação explícita e pedido próprio — nenhum está previsto nesta
 > rodada (`migrations-checklist.md` §3). A ordem de 2026-11-20 continua valendo para o resto.
+>
+> **Decisão de 2026-11-21 (dono): o lote `0030` permanece aprovado e não há lote novo.** As quatro
+> tabelas de conteúdo do portal (`portal.news`, `banner`, `guide` e `launcher_release`) ficam como
+> estão: o DDL é o de `ddl-confirmado.md` §5.15, a página é `migrations/0030-portal-content.md` e o
+> lote conta como `concluída` no checklist. Reabrir o desenho exigiria proposta de revisão própria com
+> o delta nomeado, que não foi pedida. A série continua em **31 arquivos e 97 tabelas**; nenhum arquivo
+> `0032` nasce desta conclusão.
 
 | Arquivo | O que muda | Por quê |
 |---|---|---|

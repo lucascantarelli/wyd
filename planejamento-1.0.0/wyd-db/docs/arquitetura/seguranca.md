@@ -2,7 +2,7 @@
 > Público: Arquiteto de schema e operação
 > Dono: equipe do wyd-db
 > Base: `padrao-banco.md` §2, §8, `ddl-confirmado.md`, `docs/arquitetura/adr/adr-db-0001-provisionamento-de-papel-fora-da-serie.md`
-> Revisado em: 2026-11-18
+> Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-18)
 
@@ -25,6 +25,9 @@ privilégio de cluster e a série roda como `wyd_migrator`. O runner recusa cone
 `wyd_migrator`; a única saída é `WYD_MIGRATE_ALLOW_SUPERUSER=1`, restrita a desenvolvimento e
 sempre logada.
 
+`wyd_admin` **não** está nessa tabela: é proposta pendente na seção "Proposta — papel
+`wyd_admin` (`LAC-ADM-01`)", abaixo, e nenhuma linha desta página o antecipa.
+
 As DSNs são **segredo** — a senha viaja dentro da string, e nunca são logadas em claro. Nome, leitor de
 cada DSN e a classificação segredo × dado de instalação estão em `src/provision/spec.md` §3; a regra de
 credencial, em §7.
@@ -34,6 +37,144 @@ um deles — **não** são lidos pelo `wyd-db` e não entram no contrato de ambi
 (`src/provision/spec.md` §3 e §7). Com cookie opaco e só o `sha256` no banco (`A16`), a 1.0.0 pode não
 precisar de segredo de assinatura nenhum; se algum sobreviver, é do portal, e esta página não é o dono
 do nome.
+
+## Proposta — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
+
+**Estado: `proposta`.** O papel **não existe** no `provision`, não está em `ROLES`
+(`src/provision/spec.md` §2) e não entra em `db/roles.sql` antes do "sim" do dono. A lacuna
+`LAC-ADM-01` do `wyd-admin` continua aberta; o registro desta decisão pendente é `M27` em
+`lacunas.md` §2.3. Nenhum `GRANT` desta seção foi escrito em `ddl-confirmado.md`.
+
+**O que o serviço `wyd-admin` precisa.** As sete rotas de ação do C4 (`wyd-admin/docs/arquitetura/contrato-c4.md`
+§4) escrevem em sete tabelas de `game` e em `ops.audit_log`; `POST /broadcasts` (§4.5) não grava tabela
+de jogo. O `USAGE` em `game` abre o schema, não a escrita: o privilégio vem de `INSERT`/`UPDATE` por
+tabela. Nenhuma rota pede `DELETE`.
+
+| Tabela | Rota do C4 | Privilégio mínimo | Por que |
+|---|---|---|---|
+| `game.account_moderation` | §4.1 | `SELECT`, `INSERT`, `UPDATE` | upsert do bloqueio, conferindo `expected_blocked` |
+| `game.account_wallet` | §4.2 | `SELECT`, `UPDATE` | trava, confere `expected_coin` e grava o saldo |
+| `game.account_ledger` | §4.2 | `SELECT`, `INSERT` | linha de lançamento com `balance_after`, devolvida no `200` |
+| `game.server_channel` | §4.3 | `SELECT`, `UPDATE` | estado do canal 1–10 |
+| `game.session` | §4.4 | `SELECT`, `UPDATE` | `released_at`/`released_reason` só depois do ack |
+| `game.city` | §4.6 | `SELECT`, `UPDATE` | alíquota com `expected_tax_rate_bps` |
+| `game.item_price` | §4.7 | `SELECT`, `UPDATE` | preços com os dois `expected_*` |
+| `ops.audit_log` | todas | `INSERT` (+ `SELECT` em `id` se o `200` devolver `audit_id`) | auditoria da ação |
+
+### Opções para o dono
+
+#### 1. Forma do papel
+
+| Opção | Forma | Consequência |
+|---|---|---|
+| **A (recomendada)** | `wyd_admin` com `LOGIN`, sem membership, senha própria por ambiente e DSN nova (`WYD_DB_URL_ADMIN`) | papel separado e atribuível, como os outros quatro; custo é mais um segredo para provisionar e rotacionar (`wyd-ops`) |
+| B | `wyd_admin` sem `LOGIN`, com o processo do admin fazendo `SET ROLE` a partir de uma credencial existente | economiza uma DSN, mas o runtime passa a carregar a credencial mais ampla e o `SET ROLE` vira parte do contrato |
+| C (recusada) | conceder a escrita em `game` a `wyd_game`, sem papel novo | amplia o runtime de jogo com escrita de staff e mistura duas atribuições; contraria `ADR-DB-0001` e o princípio de credencial por runtime |
+
+#### 2. Leitura nas tabelas do C4
+
+| Opção | Forma | Consequência |
+|---|---|---|
+| **S1 (recomendada)** | `SELECT` nas sete tabelas | cobre `expected_*`, `WHERE` e `RETURNING` sem depender de leitura em outra tabela; é o menor conjunto que faz o contrato funcionar |
+| S2 | `SELECT` por coluna, só nas conferidas e devolvidas | menos leitura, mas cada mudança de resposta do C4 vira mudança de `GRANT` |
+| S3 (recusada) | nenhum `SELECT` | `RETURNING` e `expected_*` exigem leitura; sem ela, §4.1–§4.7 não fecham |
+
+#### 3. Auditoria
+
+| Opção | Forma | Consequência |
+|---|---|---|
+| **C1 (recomendada)** | `USAGE` em `ops` + `INSERT` em `ops.audit_log` (e `SELECT` em `id`, se o `audit_id` continuar na resposta) | `USAGE` dá acesso ao schema, não às tabelas; nenhum DDL novo |
+| C2 | função `SECURITY DEFINER` em `ops`, com `EXECUTE` para `wyd_admin` e sem `USAGE` em `ops` | tira do papel o `INSERT` direto, mas cria objeto novo e um caminho de escrita a mais; exige DDL e revisão própria |
+| C3 | `INSERT` sem `RETURNING` | dispensa `SELECT` em `audit_log`, mas o `200` do C4 perde `audit_id` — é mudança de contrato, não de banco |
+
+#### 4. Onde o `GRANT` mora
+
+| Opção | Forma | Consequência |
+|---|---|---|
+| **D1 (recomendada)** | arquivo novo `0032_admin_grants.sql` | não reabre `0001`; a série passa de 31 para 32 arquivos, `Tab.` continua 97 e as citações de contagem e gates mudam na mesma entrega |
+| D2 | dentro de `0001_bootstrap.sql` | mantém 31 arquivos, mas reabre o DDL de `0001`, que o registro trata como congelável |
+| D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` só cria papel e mexe em `public` |
+
+### Recomendação
+
+**A + S1 + C1 + D1.** Um papel `wyd_admin` com `LOGIN`, `USAGE` em `game` e em `ops`, `SELECT` e
+`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, mais `INSERT` em `ops.audit_log`; o `GRANT`
+entra em arquivo novo da série. Isso mantém a escrita de staff separada da do jogo e do portal, não
+reabre DDL aprovado e não cria tabela.
+
+**O que a decisão muda:** `ROLES` e o golden `db/roles.sql` (`src/provision/spec.md`), a DSN nova
+(`WYD_DB_URL_ADMIN`) em `wyd-ops`, o arquivo `0032` (31 → 32 na série, `Tab.` 97), as citações de
+contagem dos dashboards e o teste de `wyd-admin` que hoje depende deste papel. **O que ela não muda:** tabela, coluna ou índice —
+as sete tabelas já existem.
+
+**O que fecha `LAC-ADM-01`:** o "sim" do dono a A/S/C/D, o papel em `ROLES`, o `GRANT` no arquivo
+escolhido, `M27` fechada com data e a linha do `wyd-admin` apontando a decisão. Sem isso, a lacuna
+continua aberta e nenhum `GRANT` é escrito.
+
+**Divergência observada, não corrigida:** `ddl-confirmado.md` §5.15 afirma que a API interna usa a
+credencial `wyd_portal` até ganhar papel próprio. `wyd_portal` não tem `USAGE` em `game` (`0001`), então
+a frase não se sustenta com o DDL aprovado; ela é anterior a esta proposta e não foi alterada aqui —
+corrigi-la exige a decisão do dono junto com A/S/C/D; a divergência está registrada como `M28` em
+`lacunas.md` §2.3.
+
+### Duas redações para fechar `M28`
+
+As duas substituem **só prosa** — nenhum `GRANT`, nenhuma linha de DDL — e fecham `M28` na mesma
+rodada de A/S/C/D de `M27`; até lá a lacuna continua `aberta` e os arquivos de DDL não mudam.
+
+**O que sai hoje.**
+
+- `ddl-confirmado.md` §5.15: "Não existe papel `wyd_admin` no `provision` — a API interna usa a
+  credencial `wyd_portal` até ganhar papel próprio em lote novo."
+- `0030-portal-content.md` §8, sob o rótulo **"Escrita pelo `wyd-admin`"**: "Hoje a API interna usa a
+  credencial `wyd_portal`; se o `wyd-admin` ganhar papel próprio, o `GRANT` vem em lote novo — este
+  arquivo **não** inventa papel."
+
+#### Redação A — "API interna" é o BFF administrativo do portal
+
+**`ddl-confirmado.md` §5.15 passa a dizer:** "Não existe papel `wyd_admin` no `provision`. Estas quatro
+  tabelas de `portal` são escritas pelo **BFF administrativo do portal**, com a credencial `wyd_portal`;
+  essa credencial **não** alcança `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`); as ações do
+  C4 em `game` continuam sendo do `wyd-admin` (`LAC-POR-01`). Se o `wyd-admin` ganhar papel próprio, o
+  `GRANT` vem em lote novo."
+
+**`0030-portal-content.md` §8:** o rótulo passa a **"Escrita pelo BFF do portal"** e o parágrafo vira:
+  "Não existe papel `wyd_admin` no `provision` (`src/provision/spec.md` não cria papel de serviço para
+  o `wyd-admin`). Hoje as rotas `/admin/conteudo/*` e `/admin/launcher` usam a credencial `wyd_portal`;
+  ela **não** cobre `game`, cujas ações do C4 são do `wyd-admin` (`LAC-POR-01`). Se o `wyd-admin`
+  ganhar papel próprio, o `GRANT` vem em lote novo."
+
+**Efeito:** o texto fica verdadeiro para as quatro tabelas, sem sugerir que a mesma credencial serve ao
+C4. **Fontes:** `0030` §9 (as rotas `/admin/conteudo/*` e `/admin/launcher` escrevem com `wyd_portal`, e
+estas tabelas não são estado de jogo) e `fronteira.md` §7 do `wyd-admin` (o admin não escreve em
+`portal`); o C4 §4.8 aplica o mesmo limite às três tabelas de economia, não a estas quatro.
+
+#### Redação B — "API interna" é o serviço `wyd-admin`
+
+**`ddl-confirmado.md` §5.15 passa a dizer:** "Não existe papel `wyd_admin` no `provision`. Estas quatro
+  tabelas de `portal` são escritas pelo **BFF do portal** com a credencial `wyd_portal`; o serviço
+  `wyd-admin` **não** as escreve. Para `game` e `ops.audit_log`, o `wyd-admin` tem papel próprio
+  (`M27`), e `wyd_portal` não serve para `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`). O
+  `GRANT` do papel novo vem em lote novo."
+
+**`0030-portal-content.md` §8:** o rótulo passa a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
+  e o parágrafo vira: "Não existe papel `wyd_admin` no `provision`. Estas quatro tabelas são escritas
+  pelo BFF do portal com a credencial `wyd_portal`; o `wyd-admin` não as escreve e, para `game` e
+  `ops.audit_log`, tem papel próprio (`M27`) e não usa `wyd_portal` para `game`."
+
+**Efeito:** explicita a fronteira que `fronteira.md` §7 já declara ("o admin **não** escreve em
+`portal`") e nomeia o dono da escrita em `game`/`ops.audit_log`. **Custo:** mexe também no rótulo e
+repete a fronteira no texto; o C4 §4.8 é precedente (tabela de `portal` é do BFF), não a fonte destas
+quatro.
+
+| Critério | Redação A | Redação B |
+|---|---|---|
+| "API interna" nomeia | BFF administrativo do portal | serviço `wyd-admin` |
+| Quem escreve as quatro tabelas | BFF, com `wyd_portal` | BFF, com `wyd_portal`; o texto diz que o admin não escreve |
+| Tamanho da edição | uma frase em §5.15 e o parágrafo de §8 | uma frase em §5.15, o rótulo e o parágrafo de §8 |
+
+Nas duas, o papel do `wyd-admin` em `game`/`ops.audit_log` continua sendo `M27`. A escolha é do dono, na
+mesma rodada de `M27`.
 
 ## O que é hash e com que algoritmo
 

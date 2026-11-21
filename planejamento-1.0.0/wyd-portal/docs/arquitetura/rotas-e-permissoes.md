@@ -28,7 +28,7 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | # | Rota | Tela | Acesso | Dado |
 |---:|---|---|---|---|
 | 1 | `/` | Home (destaques, status, rankings resumidos) | `público` | `content`, agregados |
-| 2 | `/noticias` | Lista de notícias | `público` | `portal.news` (lote novo) |
+| 2 | `/noticias` | Lista de notícias | `público` | `portal.news` (lote `0030`, aprovado em 2026-11-20) |
 | 3 | `/noticias/[slug]` | Notícia | `público` | `portal.news` |
 | 4 | `/rankings` | Rankings (nível, PvP, guilda) | `público` | `game.character`, `game.guild` |
 | 5 | `/wydpedia` | Entrada da enciclopédia e busca | `público` | `content` |
@@ -36,10 +36,10 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | 7 | `/wydpedia/itens/[index]` | Item, tooltip e drops | `público` | `content`, `game` agregado |
 | 8 | `/wydpedia/skills` | Skills e linhagens | `público` | `content.skill_catalog` |
 | 9 | `/wydpedia/mobs` | Bestiário | `público` | `content.npc_*`, `mob_template_stat` |
-| 10 | `/wydpedia/guias/[slug]` | Guia/manual editorial | `público` | `portal.guide` (lote novo) |
+| 10 | `/wydpedia/guias/[slug]` | Guia/manual editorial | `público` | `portal.guide` (lote `0030`, aprovado em 2026-11-20) |
 | 11 | `/atlas` | Atlas de mapas | `público` | `content.map_definition` |
 | 12 | `/atlas/[mapa]` | Mapa com pins | `público` | `content`, `0019` |
-| 13 | `/download` | Download e requisitos | `público` | `portal.launcher_release` (lote novo) |
+| 13 | `/download` | Download e requisitos | `público` | `portal.launcher_release` (lote `0030`, aprovado em 2026-11-20) |
 | 14 | `/login` | Login | `público` | `portal.person` |
 | 15 | `/cadastro` | Cadastro (nasce `pending`) | `público` | `portal.person` |
 | 16 | `/recuperar-senha` | Pedido de recuperação | `público` | `person_token` |
@@ -62,9 +62,9 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | 28 | `/admin/economia` | Visão econômica e inflação | `staff` | `account_wallet`, `city_tax_ledger`, `0009` |
 | 29 | `/admin/economia/cidades` | Cidades, imposto e lojas | `admin` | `city`, `personal_shop`, `city_tax_ledger`, `item_price` |
 | 30 | `/admin/conteudo` | Painel de conteúdo | `staff` | `content.*` |
-| 31 | `/admin/conteudo/noticias` | CMS de notícias e banners | `admin` | `portal.news`, `portal.banner` (lote novo) |
+| 31 | `/admin/conteudo/noticias` | CMS de notícias e banners | `admin` | `portal.news`, `portal.banner` (lote `0030`, aprovado em 2026-11-20) |
 | 32 | `/admin/conteudo/wydpedia` | Revisão do catálogo | `admin` | `content.item_catalog`, `skill_catalog` |
-| 33 | `/admin/launcher` | Versões, manifesto e notas | `admin` | `portal.launcher_release` (lote novo) |
+| 33 | `/admin/launcher` | Versões, manifesto e notas | `admin` | `portal.launcher_release` (lote `0030`, aprovado em 2026-11-20) |
 | 34 | `/admin/logs` | Auditoria e tentativas de login | `staff` | `ops.audit_log`, `ops.login_attempt` |
 | 35 | `/admin/seguranca` | Staff, papéis, bloqueios e recuperação de segundo fator | `admin` | `person`, `person_session`, `account_moderation`, `person_authenticator` |
 | 36 | `/admin/config` | Configuração do servidor por revisão | `admin` | `ops.config_revision`, `ops.config_change` |

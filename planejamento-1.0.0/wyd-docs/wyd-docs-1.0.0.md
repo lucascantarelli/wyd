@@ -69,7 +69,7 @@
 | Sistema | Fornece ao site | Exige do site |
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
-| `wyd-db` | 15 páginas escritas + 92 geradas (teto da `LPDOC-09`; projeto em §9.1) | seção própria e ordem de leitura preservada |
+| `wyd-db` | estado das páginas de migration: `migrations-checklist.md` §2/§4; escopo da série: `plano-migrations.md` §3; resumo consolidado: `wyd-1.0.0.md` §1 | seção própria e ordem de leitura preservada |
 | `wyd-protocol` | 2 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
@@ -585,20 +585,20 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
 | 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
 | 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `verificar.py`); busca decidida e métrica aceita em 2026-11-19 |
-| 5 | 97 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; a escrita ainda não começou |
+| 5 | 97 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; **44 escritas** em 2026-11-21 (lotes `0001`–`0007` e `0008`–`0011`) |
 
 ### 9.1 As 97 páginas por tabela — escritas à mão (`M26`)
 
 **Estado: decidido em 2026-11-21.** O dono recusou o gerador (`make dicionario-dados`, projeto
 `tools/wyd-db-pages`): as 97 páginas são escritas à mão, em lotes, no `wyd-db`, e o site apenas publica
 o que existir. A decisão é a lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3). **Nenhuma
-ferramenta é criada e nenhuma página existe ainda.**
+ferramenta é criada; 44 das 97 páginas existem em 2026-11-21** (lotes `0001`–`0007` e `0008`–`0011`; índice em `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/index.md`).
 
 | Item | Definição |
 |---|---|
 | Projeto | nenhum: o gerador `wyd-db-pages` foi recusado em `M26` (2026-11-21); a produção é manual e mora no `wyd-db` |
 | Entrada | migrations e DDL confirmado do `wyd-db`; o formato da página é de `planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md` §6.8, e cada campo declara sua origem, sem copiar valor do legado como fato |
-| Saída | `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/`: **97 páginas escritas à mão**, uma por tabela planejada em `plano-migrations.md` §3, + `gerado/index.md` (índice de navegação, fora da contagem) |
+| Saída | `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/`: **97 páginas, escritas à mão**, uma por tabela planejada em `plano-migrations.md` §3, + `gerado/index.md` (índice de navegação, fora da contagem) |
 | Teto | **97 páginas**, uma por tabela planejada em `plano-migrations.md` §3; o `index.md` não amplia o teto. A 98ª página é defeito de escopo, não página nova por conveniência |
 | Fora do escopo | editar página manual, decidir coluna, publicar direto no Pages e gerar catálogo de opcodes (`LPDOC-10`) |
 
@@ -609,7 +609,7 @@ ferramenta é criada e nenhuma página existe ainda.**
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **Nenhuma das 97 páginas existe:** `gerado/` tem só o `index.md` de navegação, vazio. A cobertura não é pré-requisito do site atual: o site passa com 46 páginas e não afirma que elas existem (`V`, 2026-11-21).
+**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **44 das 97 páginas existem em 2026-11-21:** `gerado/` tem as páginas de tabela dos lotes `0001`–`0007` e `0008`–`0011` e o `index.md` de navegação, que lista as 44 existentes. A cobertura não é pré-requisito do site atual: o site passa com **117 páginas** (medido em 2026-11-21 pelo build) e publica as que existem (`V`, 2026-11-21).
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 

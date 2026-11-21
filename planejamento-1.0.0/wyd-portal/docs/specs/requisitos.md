@@ -100,7 +100,7 @@ renumera o que já existe.
 - **Saída:** ficha com inventário, baú, skills, guilda e histórico; bloqueio/desbloqueio de conta.
 - **Aceitação:** `password_hash`/`pin_hash`/`token_hash` nunca saem na resposta; bloqueio sem motivo
   é recusado (`ck_account_moderation_motivo`); toda ação aparece em `audit_log` com autor.
-- **Contrato:** C1 + C3 + C4 (`0005`, `0006`, `0008`–`0010`); bloqueio de conta é escrita em `portal`/`ops`, kick é `wyd-admin`.
+- **Contrato:** C1 + C3 + C4 (`0005`, `0006`, `0008`–`0010`); bloqueio de conta é escrita em `game.account_moderation` pelo `wyd-admin` (C4 §4.1), não pelo portal; kick também é `wyd-admin`.
 
 ### RF-POR-012 — Configuração do servidor com revisão
 - **Entrada:** chave, valor novo e justificativa.

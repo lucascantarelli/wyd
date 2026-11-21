@@ -2,9 +2,9 @@
 > Público: Desenvolvedor novo e arquitetura
 > Dono: arquitetura + `wyd-db`
 > Base: `wyd-db/ddl-confirmado.md` §1/§2/§5.2/§5.5/§5.9–§5.14; `0001` (permissões); `0029` (views)
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-21
 
-**Estado:** aceito (2026-11-20)
+**Estado:** aceito (2026-11-20); §3 corrigida em 2026-11-21 (`LAC-ADM-05`)
 
 O que a área administrativa consome do `wyd-db`, tela por tela. Tabela citada sem arquivo é dívida:
 as contagens confirmada/proposta estão em `plano-migrations.md` §3 e as que já têm DDL, em
@@ -16,6 +16,7 @@ as contagens confirmada/proposta estão em `plano-migrations.md` §3 e as que j�
 |---|---|
 | `wyd_portal` não tem `USAGE` em `game` (`P-17`) | leitura de jogo só pela view `game.v_live_session`/`portal.v_person_identity` (`0029`), quando existir |
 | Escrita administrativa em `game` | **bloqueada** por permissão; o BFF chama o `wyd-admin`, único executor (`LAC-POR-01`, decidida em 2026-11-20) |
+| Coluna “Escreve” de §2–§6 | nomeia a **tabela afetada**, não quem executa o SQL: tabela de `game` é escrita pelo `wyd-admin` (C4); tabela de `portal`/`ops`, pelo BFF |
 | Escrita em `portal` e `ops` | permitida ao `wyd_portal` pelo default privilege do `0001` |
 | toda mutação | grava `ops.audit_log` na mesma transação |
 | PII | e-mail e telefone nunca em log; tela mostra o mínimo e o acesso é auditado |
@@ -49,8 +50,16 @@ estão em `monitoramento.md` §2/§8.
 | `/admin/jogadores` | `game.character` (join por conta), `game.session` | — | `0006`, `0007` |
 | `/admin/jogadores/[id]` | `character`, `character_item`, `vault_item`, `character_skill`, `character_affect`, `guild_member`, `ops.audit_log` | — (somente leitura) | `0006`, `0008`, `0009`, `0010` |
 | `/admin/contas` | `game.account`, `portal.person` (via view) | — | `0005`, `0003`, `0029` |
-| `/admin/contas/[id]` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `ops.login_attempt` | `account_moderation` (bloqueio/desbloqueio) | `0005`, `0002` |
-| `/admin/seguranca` | `portal.person`, `person_session`, `account_moderation`, `person_authenticator` | `person_session` (revogar), `account_moderation`, `person_authenticator` (reset de staff) | `0003`, `0004`, `0005`, `0031` |
+| `/admin/contas/[id]` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `ops.login_attempt` | — (bloqueio/desbloqueio executado pelo `wyd-admin`, C4 §4.1) | `0005`, `0002` |
+| `/admin/seguranca` | `portal.person`, `person_session`, `account_moderation`, `person_authenticator` | `person_session` (revogar), `person_authenticator` (reset de staff); bloqueio/desbloqueio de conta pelo `wyd-admin` (C4 §4.1) | `0003`, `0004`, `0005`, `0031` |
+
+**Corrigido em 2026-11-21 (`LAC-ADM-05`, fechada no `wyd-admin`):** a escrita de
+`game.account_moderation` é do `wyd-admin`, nunca do portal. `P-17` nega `USAGE` em `game` a
+`wyd_portal`, e o C4 fixa `POST /accounts/{account_id}/moderation` como única via
+(`fronteira.md` §3; `wyd-admin/docs/arquitetura/contrato-c4.md` §4.1). Ler a moderação segue a via
+autorizada de leitura (`P-17`, adapter do `wyd-db` como em `LAC-POR-04`), não conexão SQL do BFF. A
+correção é de documento: nenhuma coluna, constraint, índice ou `GRANT` mudou — a tabela continua a de
+`0005` (`ddl-confirmado.md` §5.2).
 
 **Segundo fator:** `admin`/`moderator` autentica com senha **e** TOTP (`LAC-POR-05`, `A20`); o
 segredo do autenticador nunca é exibido nem logado, e a recuperação é ato de staff. `member` não tem

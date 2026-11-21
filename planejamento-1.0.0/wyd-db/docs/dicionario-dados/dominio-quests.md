@@ -56,7 +56,9 @@ o progresso junto (a ficha do legado dizia `CASCADE`).
   recompensas de ouro para a mesma quest são impossíveis.
 - **item só quando é item:** `(kind = 'item') = (item_index IS NOT NULL)`.
 - **valor positivo:** `amount > 0`.
-- **progresso coerente:** `step > 0`, `progress >= 0` e conclusão só com instante posterior ao início.
+- **progresso coerente:** `step > 0` e `progress >= 0`; `completed_at` é nulo ou **não anterior** a
+  `started_at` (`>=`) — posterior é permitido, anterior não. O schema **não** deriva conclusão de
+  `progress`/`step`: chegar ao último passo não preenche `completed_at` sozinho.
 
 ## Armadilhas de leitura
 
@@ -76,3 +78,4 @@ o progresso junto (a ficha do legado dizia `CASCADE`).
 | semântica de `requires` | formato do pré-requisito no legado, sem trace |
 | efeito de `cooldown_seconds` por tipo | runtime, não schema |
 | conclusão de quest diária | regra de reset do dia não verificada |
+| ligação entre conclusão e progresso | não há `CHECK` que amarre `completed_at` a `progress` ou ao último passo; quem marca é o runtime |

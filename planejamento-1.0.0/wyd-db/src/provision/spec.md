@@ -46,6 +46,11 @@ existe só em `adapter/pg.rs` (§5).
 
 A ordem da tabela **é** a ordem de emissão do SQL e não pode mudar sem regenerar o golden (§4).
 
+**`wyd_admin` fora desta tabela (`M27`, 2026-11-21):** o papel de staff do `wyd-admin` é `proposta`
+pendente e **não** entra em `ROLES`, na contagem de cinco nem no golden antes do "sim" do dono; as
+opções (forma do papel, `SELECT`, auditoria e arquivo do `GRANT`) estão em
+`docs/arquitetura/seguranca.md` §"Proposta — papel `wyd_admin`". Este documento não o antecipa.
+
 ```rust
 /// Um papel de cluster, com a membership **direta** que ele precisa ter.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

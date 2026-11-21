@@ -137,6 +137,7 @@ contradizer as 97 tabelas da série.
 | cash e loja no `portal`; jogo em `game` | decidido em `A19` |
 | chave de idempotência | decidida em `M17` |
 | caminho da escrita no jogo | decidido em 2026-11-20 (`LAC-POR-01`) |
+| dono da escrita de `game.account_moderation` | decidido em 2026-11-21: leitura no portal, escrita no `wyd-admin` (C4 §4.1); `docs/arquitetura/consumo-do-banco.md` §3 e `RF-POR-011` corrigidos, sem mudança de DDL |
 | CMS e launcher | decididos em 2026-11-20 (`LAC-POR-02`, `LAC-POR-03`) |
 | monitoramento (seis telas) | decidido em `LAC-POR-06`, reconfirmada em 2026-11-20; fonte externa, sem tabela |
 

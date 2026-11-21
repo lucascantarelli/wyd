@@ -1882,6 +1882,9 @@ conferida contra este texto.
     `0030_portal_content.sql` como 30º arquivo e a página `migrations/0030-portal-content.md` está
     `concluída` no checklist.
 
+**Reafirmado em 2026-11-21:** o lote permanece como está e **não há lote novo** para estas quatro
+tabelas. O texto abaixo continua sendo o único DDL delas; a decisão está em `plano-migrations.md` §1.
+
 O dono decidiu em 2026-11-20 **quais** tabelas o CMS e o launcher precisam (`LAC-POR-02`,
 `LAC-POR-03`, em `wyd-portal/lacunas.md` §3): três de conteúdo editorial e uma de versão. O desenho
 abaixo é o confirmado nesta data e é o que a página de migration copia.
