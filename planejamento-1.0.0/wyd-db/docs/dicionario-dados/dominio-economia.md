@@ -18,21 +18,28 @@ carteira da conta ([acesso](dominio-acesso.md)), refino como custo (`dominio-ref
 
 ## Tabela de tabelas
 
-| Tabela | Schema | Papel em uma linha | Colunas |
-|---|---|---|---|
-| `game.city` | game | cidade, capital e alíquota em bps | `gerado/city.md` |
-| `game.item_price` | game | preço de compra e venda por `(item_index, npc_id)` | `gerado/item_price.md` |
-| `game.personal_shop` | game | loja de personagem, uma aberta por vez | `gerado/personal_shop.md` |
-| `game.city_tax_ledger` | game | imposto arrecadado por cidade, com motivo | `gerado/city_tax_ledger.md` |
-| `game.account_ledger` | game | lançamento de moeda com saldo e motivo | `gerado/account_ledger.md` |
-| `portal.donate_shop_item` | portal | item de loja cash, com preço em créditos | `gerado/donate_shop_item.md` |
-| `portal.daily_reward_item` | portal | item do bônus diário, por dia 1–7 | `gerado/daily_reward_item.md` |
-| `portal.daily_reward_claim` | portal | resgate do bônus, um por conta/dia | `gerado/daily_reward_claim.md` |
-| `portal.kingdom_cape_price` | portal | linha única do preço da capa de reino | `gerado/kingdom_cape_price.md` |
-| `portal.donate_credit` | portal | crédito de cash, idempotente | `gerado/donate_credit.md` |
-| `portal.donate_debit` | portal | débito de cash, idempotente, com motivo | `gerado/donate_debit.md` |
+| Tabela | Papel em uma linha | Escreve | Lê | Colunas |
+|---|---|---|---|---|
+| `game.city` | cidade, capital e alíquota em bps | `wyd_game` | `wyd_game`, `wyd_read` | `gerado/city.md` |
+| `game.item_price` | preço de compra e venda por `(item_index, npc_id)` | `wyd_game` | `wyd_game`, `wyd_read` | `gerado/item_price.md` |
+| `game.personal_shop` | loja de personagem, uma aberta por vez | `wyd_game` | `wyd_game`, `wyd_read` | `gerado/personal_shop.md` |
+| `game.city_tax_ledger` | imposto arrecadado por cidade, com motivo | `wyd_game` | `wyd_game`, `wyd_read` | `gerado/city_tax_ledger.md` |
+| `game.account_ledger` | lançamento de moeda com saldo e motivo | `wyd_game` | `wyd_game`, `wyd_read` | `gerado/account_ledger.md` |
+| `portal.donate_shop_item` | item de loja cash, com preço em créditos | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/donate_shop_item.md` |
+| `portal.daily_reward_item` | item do bônus diário, por dia 1–7 | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/daily_reward_item.md` |
+| `portal.daily_reward_claim` | resgate do bônus, um por conta/dia | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/daily_reward_claim.md` |
+| `portal.kingdom_cape_price` | linha única do preço da capa de reino | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/kingdom_cape_price.md` |
+| `portal.donate_credit` | crédito de cash, idempotente | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/donate_credit.md` |
+| `portal.donate_debit` | débito de cash, idempotente, com motivo | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/donate_debit.md` |
 
-`A19` mantém seis tabelas em `portal` e quatro em `game`; o ledger da conta é `game`.
+`A19` mantém seis tabelas em `portal` e quatro em `game`; o ledger da conta é `game`, herdado de
+`0005`.
+
+Escreve e lê são de `0011` §8, dono da permissão das dez: `wyd_game` escreve as quatro de `game`,
+`wyd_portal` escreve as seis de `portal` e `wyd_read` lê as dez. `account_ledger`, de `0005`, fica no
+mesmo `game` e herda o mesmo default privilege — por isso a quinta linha de `wyd_game`. Nenhuma tabela
+deste domínio tem escritor dos dois lados: `wyd_portal` não tem `USAGE` em `game` e `wyd_game` não tem
+em `portal` (`P-17`), e o cruzamento falha com `42501` (`0011` §9, item 15).
 
 ## Relações
 
