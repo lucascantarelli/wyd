@@ -15,7 +15,7 @@ que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único 
 
 | Domínio | Cobre | Tabelas |
 |---|---|---:|
-| [acesso](dominio-acesso.md) | pessoa, perfil, consentimento, sessão e token do portal, conta, carteira, bloqueio de conta, reset de PIN e sessão de jogo | 10 |
+| [acesso](dominio-acesso.md) | pessoa, perfil, consentimento, sessão e token do portal, conta, carteira, reset de PIN e sessão de jogo | 9 |
 | [canal](dominio-canal.md) | topologia de servidor: grupo, canal, capacidade e papel | 1 |
 | [auditoria](dominio-auditoria.md) | trilha de ação e tentativa de login | 2 |
 | [configuração](dominio-configuracao.md) | versão do conteúdo, revisão de configuração e ajuste por seção | 5 |
@@ -37,10 +37,10 @@ que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único 
 
 ## Cobertura
 
-As 19 páginas cobrem **97 tabelas distintas** — **nenhuma fica sem domínio**. A coluna `Tabelas` soma
-**98** porque `game.account_moderation` aparece em duas páginas: o dono é [moderação](dominio-moderacao.md)
-e [acesso](dominio-acesso.md) ainda a lista entre as tabelas de `0005`. As cinco tabelas de `0030`/`0031`
-passaram a ter dono com a criação do 19º domínio, [conteúdo do portal](dominio-conteudo-portal.md).
+As 19 páginas cobrem **97 tabelas distintas**, uma menção por tabela — **nenhuma fica sem domínio**.
+`game.account_moderation` pertence a [moderação](dominio-moderacao.md), e [acesso](dominio-acesso.md)
+apenas aponta para lá. As cinco tabelas de `0030`/`0031` passaram a ter dono com a criação do 19º
+domínio, [conteúdo do portal](dominio-conteudo-portal.md).
 
 ## Como ler
 
