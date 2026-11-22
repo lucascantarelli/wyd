@@ -34,7 +34,7 @@ grupo coeso de tabelas.
    rodar `up` → `down` → `up` deixa o banco idêntico.
 4. **Gate local.** Rode o gate de `plano-migrations.md` §7 (estrutura, tipos, constraints,
    catálogo) e `make check` quando o `Makefile` da série existir.
-5. **Catálogo e dicionário.** Não são pré-requisito: as 97 páginas por tabela são escritas à mão em
+5. **Catálogo e dicionário.** Não são pré-requisito: as 109 páginas por tabela são escritas à mão em
    lotes (`M26`, `lacunas.md` §2.3) e não há gerador aprovado.
 6. **Página.** Abra a página da migration no molde de `wyd-db-1.0.0.md` §7.2 e registre linha em
    `migrations-checklist.md`.

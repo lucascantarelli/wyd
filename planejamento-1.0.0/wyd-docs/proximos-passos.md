@@ -30,7 +30,7 @@ páginas não pertence àquele PR e permanece nas alterações locais atuais.
 
 | # | Item e o que destrava | Dono | Tamanho | Recomendação e impacto | Pronto quando |
 |---:|---|---|---|---|---|
-| 1 | **97 páginas por tabela do `wyd-db`** — produção a decidir na lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3); o gerador `wyd-db-pages` deixou de ser presumido e só existiria com aprovação explícita | arquitetura + documentação | bloqueado por decisão, não por projeto | nenhuma ferramenta é proposta por esta fila; as opções (à mão em lotes, gerador, adiar ou cancelar) estão em `M26` | decisão registrada e, se houver páginas, `gerado/index.md` + gate verde |
+| 1 | **109 páginas por tabela do `wyd-db`** — produção a decidir na lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3); o gerador `wyd-db-pages` deixou de ser presumido e só existiria com aprovação explícita | arquitetura + documentação | bloqueado por decisão, não por projeto | nenhuma ferramenta é proposta por esta fila; as opções (à mão em lotes, gerador, adiar ou cancelar) estão em `M26` | decisão registrada e, se houver páginas, `gerado/index.md` + gate verde |
 | 2 | **Próxima rodada de decisões** — `A21` (troca de e-mail) e `P3` (`planos/riscos.md`) | usuário (produto + arquitetura) | rápido — 1 resposta por ID | **nenhuma resposta inventada**; são as duas de maior desbloqueio entre as que ainda esperam palavra do dono — as demais de §5.3 são de outro dono ou de onda posterior | respostas registradas e linhas fechadas |
 | 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`), `LPRT-06` (encoding/terminador) e `LPRT-09` (build-alvo); detalhe do que medir em §6 | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida em 2026-11-20 e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
 
@@ -144,8 +144,8 @@ Nenhuma delas muda o schema do `wyd-db`.
 | Divergências `P` / achados `D` | **11 fechadas** / **3 fechadas** | `lacunas.md` §1 |
 | Estado atual das páginas | consultar `migrations-checklist.md` §2/§4 |
 
-O número de tabelas não sobe ao escrever página: página é documentação; as **97 de 97** tabelas têm
-DDL fechado, e **97** é o total planejado da série, não uma contagem medida do catálogo. Nenhum Postgres
+O número de tabelas não sobe ao escrever página: página é documentação; as **109 de 109** tabelas têm
+DDL fechado, e **109** é o total planejado da série, não uma contagem medida do catálogo. Nenhum Postgres
 rodou nesta rodada.
 
 ---

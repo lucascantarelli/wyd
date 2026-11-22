@@ -32,7 +32,7 @@ audita e responde.
 | `wyd-admin` é o único executor de escrita em `game` | **decidido** (`LAC-POR-01`, 2026-11-20) | arquitetura |
 | Transporte HTTP/JSON interno, com timeout, chave de idempotência e erro tipado | **decidido em direção**; forma nesta árvore | arquitetura + `wyd-admin` |
 | Rotas, payload, códigos e prazos | **proposto** (2026-11-21); custódia de item em 2026-11-22 (§4.9–§4.13) | `wyd-admin` |
-| Armazenamento de idempotência, canal com o `wyd-server`, retenção e schema de custódia | **aberto** — `lacunas.md` na raiz do sistema (`LAC-ADM-02` a `LAC-ADM-07`) | `wyd-db`, arquitetura |
+| Canal com o `wyd-server` e autenticação portal → admin | **aberto** — `lacunas.md` na raiz do sistema (`LAC-ADM-03` e `LAC-ADM-04`); armazenamento de idempotência, retenção e schema de custódia fecharam em 2026-11-22 | arquitetura, `wyd-db` |
 
 Nada aqui foi implementado: nenhuma rota responde, nenhum papel existe no `provision` e nenhuma
 tabela nova foi proposta como aprovada.

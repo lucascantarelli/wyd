@@ -12,7 +12,7 @@
 > implementado em `wyd-docs/redirects.tsv`), `LPDOC-14` (a ponte foi removida em 2026-11-19),
 > `LPDOC-08` (arquitetura aprova sistema novo e a entrada em `SISTEMAS`; documentação publica),
 > `LPDOC-02` (não publicar `AGENTS.md` nem o panorama), `LPDOC-03` (publicar `proposto` com aviso
-> visível), `LPDOC-07` (só pt-BR na `1.0.0`), `LPDOC-09` (gerar e publicar as 97 páginas, uma por tabela planejada) e
+> visível), `LPDOC-07` (só pt-BR na `1.0.0`), `LPDOC-09` (gerar e publicar as 109 páginas, uma por tabela planejada) e
 > `LPDOC-11` (manter `2.0.dev6` fixo até a próxima dev), decididas em 2026-11-19. O site foi montado
 > em MkDocs 2.0 pré-release
 > e publicado/validado em GitHub Pages em 2026-11-19. O dono aprovou GitHub Pages como hospedagem
@@ -85,7 +85,7 @@
 |---|---|---|---|---|---|---|
 | `LPDOC-02` | `AGENTS.md` e o panorama entram como página? | são normativos e úteis ao contribuidor, mas também expõem processo interno | documentação | `A` | fechada | decisão do dono (`V`, 2026-11-19): **não publicar** — processo interno fica no repositório e a cópia montada por `preparar.py` não é criada |
 | `LPDOC-03` | Página com estado `proposto` aparece publicada? | esconder rascunho deixa o site incompleto; publicar sem aviso faz leitor citar intenção como regra | documentação | `A` | fechada | decisão do dono (`V`, 2026-11-19): **publicar com aviso visível** — `site.js` insere o aviso "Página em proposta" no topo; o estado continua no cabeçalho |
-| `LPDOC-09` | As 97 páginas por tabela do `wyd-db` entram no site? | é o maior volume do site; a publicação está decidida, mas a **produção** das páginas voltou à mesa em 2026-11-21 | arquitetura + documentação | `P3` | fechada (publicação); produção em `M26` | decisão do dono (`V`, 2026-11-19), reconciliada com `plano-migrations.md` §3: **publicar uma página para cada uma das 97 tabelas planejadas**; não há exceção de tabela, e `gerado/index.md` é índice auxiliar fora do teto. O **modo de produção** é a lacuna `M26` do `wyd-db` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3): o gerador deixou de ser presumido e nenhuma ferramenta é criada sem aprovação. Nenhuma das 97 páginas existe hoje |
+| `LPDOC-09` | As 109 páginas por tabela do `wyd-db` entram no site? | é o maior volume do site; a publicação está decidida, mas a **produção** das páginas voltou à mesa em 2026-11-21 | arquitetura + documentação | `P3` | fechada (publicação); produção em `M26` | decisão do dono (`V`, 2026-11-19), reconciliada com `plano-migrations.md` §3: **publicar uma página para cada uma das 109 tabelas planejadas**; não há exceção de tabela, e `gerado/index.md` é índice auxiliar fora do teto. O **modo de produção** é a lacuna `M26` do `wyd-db` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3): o gerador deixou de ser presumido e nenhuma ferramenta é criada sem aprovação. Nenhuma das 109 páginas existe hoje |
 
 ### 2.3 URL, versão e idioma
 

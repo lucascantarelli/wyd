@@ -58,7 +58,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-21 (`0032`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-22 (`0033`/`0034`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -109,7 +109,7 @@ linha desta tabela não é escrita.
 3. **Schema não se escreve duas vezes.** Coluna, tipo, nulidade, PK, FK, CHECK e índice vivem no DDL
    de `ddl-confirmado.md` e na página de `migrations/` do arquivo dono — hoje a única fonte da forma, já
    que o catálogo não existe. As páginas por tabela (`M26`) **resumem e ligam**, não copiam o DDL:
-   **71 das 97** já estão escritas à mão, em lotes (`0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021` em parte e `0024`), até 2026-11-22. Texto manual sobre
+   **71 das 109** já estão escritas à mão, em lotes (`0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021` em parte e `0024`), até 2026-11-22. Texto manual sobre
    coluna é dívida declarada e só é aceito no campo "observação"
    (regra de negócio, provisório, armadilha).
 4. **Nível de evidência em toda afirmação de comportamento.** `V` verificado por comando/arquivo,
@@ -232,7 +232,7 @@ planejamento-1.0.0/wyd-db/
 │   │   ├── dominio-ponte-web-jogo.md            ▲
 │   │   └── gerado/
 │   │       ├── index.md                         ◆
-│   │       └── <tabela>.md  (uma por tabela: 97) ◆
+│   │       └── <tabela>.md  (uma por tabela: 109) ◆
 │   ├── planos/
 │   │   ├── index.md                             ▲
 │   │   ├── plano-de-documentacao.md             ▲
@@ -339,13 +339,13 @@ planejamento-1.0.0/wyd-db/
 ```
 
 **Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
-`specs/` · 21 autorais + 97 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
+`specs/` · 21 autorais + 109 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
 11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · 8 em
-`guia-documentacao/` · 34 em `migrations/` (2 páginas de seção + 32 de migration) · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
-→ **teto de páginas autorais + 97 de tabela + 1 dado de apoio**, mais este plano diretor.
+`guia-documentacao/` · 36 em `migrations/` (2 páginas de seção + 34 de migration) · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
+→ **teto de páginas autorais + 109 de tabela + 1 dado de apoio**, mais este plano diretor.
 
-**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **97 páginas de tabela** (uma
-por tabela, escritas à mão desde `M26`) e **34 em `migrations/`** (2 páginas de seção + 32 arquivos) — são **planejados** e vêm de
+**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **109 páginas de tabela** (uma
+por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas de seção + 34 arquivos) — são **planejados** e vêm de
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
 
@@ -361,7 +361,7 @@ em 2026-11-18. Os dois índices que não tinham cabeçalho — `docs/index.md` e
 — receberam o bloco de §7.1 na revisão de 2026-11-18; antes traziam só o título. Os outros **8
 arquivos `index.md` são título de uma linha** e não contam como página (§2);
 `dicionario-dados/gerado/index.md` é o índice auxiliar das páginas por tabela, também fora da
-contagem. Fora de `docs/`: **26 de 32** em `migrations/` e **0 de 59** em `src/` — os dois `spec.md`
+contagem. Fora de `docs/`: **28 de 34** em `migrations/` (2026-11-22) e **0 de 59** em `src/` — os dois `spec.md`
 de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
 **O que dá para escrever agora, página a página:** `proposta-paginas.md` (proposta de 2026-11-18)
@@ -421,7 +421,7 @@ Ver §6.5–§6.7.
 - **Fronteira:** significado e regra. A **forma** (coluna, tipo, nulidade, índice) é dona das páginas
   de `migrations/`, que trazem o DDL e a tabela de colunas de cada tabela; a página por tabela, se
   existir, resume e aponta para elas.
-- **Duas camadas:** 19 páginas por domínio (escritas, com contexto e decisão) + as 97 páginas por
+- **Duas camadas:** 19 páginas por domínio (escritas, com contexto e decisão) + as 109 páginas por
   tabela (`plano-migrations.md` §3), **escritas à mão em lotes** (`M26`, decidida em 2026-11-21);
   nenhuma ferramenta é usada e nada é gerado.
 
@@ -642,12 +642,12 @@ Domínios (um arquivo cada): `acesso`, `personagem`, `inventario`, `social`, `mu
 `combate`, `refino`, `economia`, `quests`, `eventos`, `arena`, `progressao`, `canal`, `moderacao`,
 `auditoria`, `configuracao`, `ponte-web-jogo`, `conteudo-portal`.
 
-**`gerado/<tabela>.md` (97 páginas por tabela) — escritas à mão (`M26`, 2026-11-21).** O gerador
+**`gerado/<tabela>.md` (109 páginas por tabela) — escritas à mão (`M26`, 2026-11-21).** O gerador
 `make dicionario-dados` saiu do plano: as páginas nascem em lotes, ao fim do DDL, como qualquer outra
 página — sem ferramenta e sem `Makefile` novo. Cada uma traz papel em uma linha, colunas com
 tipo/nulidade/default, PK, FKs de saída e de entrada, unicidade, CHECKs, índices, quem escreve/lê e a
 migration que criou a tabela, e **liga para a página de `migrations/`**, que é dona da forma, em vez
-de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **71 das 97 existem**
+de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **71 das 109 existem**
 (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021` em parte e `0024`, 2026-11-22) e nada é gerado.
 
 **Por que 19 páginas de domínio existem.** Elas cobrem o que a página por tabela não responde: por que
@@ -813,13 +813,15 @@ A lista abaixo registra os 32 pares; o estado de escrita de cada página é acom
 | 30 | `0030_portal_content.sql` | `0030-portal-content.md` |
 | 31 | `0031_portal_mfa.sql` | `0031-portal-mfa.md` |
 | 32 | `0032_admin_grants.sql` | `0032-admin-grants.md` |
+| 33 | `0033_ops_idempotency.sql` | `0033-ops-idempotency.md` |
+| 34 | `0034_portal_market.sql` | `0034-portal-market.md` |
 
 A tabela de slugs da **série do rascunho descartada** saiu desta seção quando `P8` fechou: os nomes
 dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
 é schemas + `content_version`) e continuam no histórico do git, não como vocabulário vigente.
 
-**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 32 arquivos, contíguos de `0001` a
-`0032`, e `SCHEMA_VERSION = 32` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
+**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 34 arquivos, contíguos de `0001` a
+`0034`, e `SCHEMA_VERSION = 34` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
 vira `0007`, de modo que **quatro** arquivos do legado deixam de existir como arquivo próprio.
 
 ### 6.16 `src/*.md`
@@ -1227,14 +1229,14 @@ tabela, depois o procedimento.
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
-| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 97 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 97 | 97 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **71 das 97 escritas** em 2026-11-22 |
-| **5. Histórico de schema** | `migrations/`: `index.md` + `serie-e-regras.md` (2) + 32 páginas, uma por arquivo de `0001` a `0032`; mais `arquitetura/migracoes` e `retencao-e-capacidade` | 36 | as 32 páginas de migration têm `down` e verificação, com nomes 1:1 conforme §6.15 e a série de `plano-migrations.md` §3; política da série em um único dono |
+| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 109 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 109 | 109 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **71 das 109 escritas** em 2026-11-22 |
+| **5. Histórico de schema** | `migrations/`: `index.md` + `serie-e-regras.md` (2) + 34 páginas, uma por arquivo de `0001` a `0034`; mais `arquitetura/migracoes` e `retencao-e-capacidade` | 38 | as 34 páginas de migration têm `down` e verificação, com nomes 1:1 conforme §6.15 e a série de `plano-migrations.md` §3; política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
 | **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
-**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **97** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); **36 das 97 ainda não existem** em 2026-11-22 e entram em lotes.
+**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **109** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); **38 das 109 ainda não existem** em 2026-11-22 e entram em lotes.
 
 **Dependências duras:** Onda 3 depende de 1–2 (requisito cita entidade do modelo); Onda 4 depende
 de 2 (domínio cita entidade); Onda 7 depende de 4–5 (módulo cita tabela e migration); Onda 8
@@ -1244,7 +1246,7 @@ depende de 3 (issue cita requisito).
 
 A release de documentação fecha quando **todas** forem verdadeiras ao mesmo tempo:
 
-- todas as páginas contadas em `planos/metricas.md` (autorais + **97** geradas) estão `aceito` ou
+- todas as páginas contadas em `planos/metricas.md` (autorais + **109** geradas) estão `aceito` ou
   `retirado` com justificativa;
 - nenhuma página cita número sem fonte e data;
 - nenhum link relativo sem destino (`mkdocs build --strict` verde);
@@ -1258,8 +1260,8 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
-| `D-2` | dicionário em duas camadas: 19 páginas de domínio + **97** geradas | aprovar (§6.8) | Onda 4 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-2` | dicionário em duas camadas: 19 páginas de domínio + **109** geradas | aprovar (§6.8) | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**32** arquivos, `0001`–`0032`), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | aprovar | Ondas 3 e 8 |

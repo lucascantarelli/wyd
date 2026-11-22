@@ -8,7 +8,7 @@
 
 O dicionário tem duas camadas: **domínio** (esta pasta) explica o assunto e as regras que atravessam
 tabelas; **tabela** (`gerado/<tabela>.md`) resume uma tabela e aponta para a página de `migrations/` dona
-da forma. As páginas por tabela são escritas à mão em lotes (`M26`), sem gerador; quantas das 97 já existem, e em
+da forma. As páginas por tabela são escritas à mão em lotes (`M26`), sem gerador; quantas das 109 já existem, e em
 que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único da contagem.
 
 ## Os 19 domínios
@@ -17,7 +17,7 @@ que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único 
 |---|---|---:|
 | [acesso](dominio-acesso.md) | pessoa, perfil, consentimento, sessão e token do portal, conta, carteira, reset de PIN e sessão de jogo | 9 |
 | [canal](dominio-canal.md) | topologia de servidor: grupo, canal, capacidade e papel | 1 |
-| [auditoria](dominio-auditoria.md) | trilha de ação e tentativa de login | 2 |
+| [auditoria](dominio-auditoria.md) | trilha de ação, tentativa de login e registro de idempotência | 3 |
 | [configuração](dominio-configuracao.md) | versão do conteúdo, revisão de configuração e ajuste por seção | 5 |
 | [personagem](dominio-personagem.md) | identidade do personagem e satélites de estado | 5 |
 | [progressão](dominio-progressao.md) | skills, linhagem, afetos e chaos | 5 |
@@ -27,7 +27,7 @@ que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único 
 | [catálogo](dominio-catalogo.md) | taxonomias, item e skill | 7 |
 | [combate](dominio-combate.md) | stats de inimigo, equipamento e drop | 4 |
 | [refino](dominio-refino.md) | refino, SANC, composição, gema, acessório e overrides | 8 |
-| [economia](dominio-economia.md) | cidade, preço, loja, imposto, cash e ledger | 11 |
+| [economia](dominio-economia.md) | cidade, preço, loja, imposto, cash, ledger e o mercado entre jogadores | 22 |
 | [quests](dominio-quests.md) | definição, passo, recompensa e progresso | 4 |
 | [eventos](dominio-eventos.md) | evento, agenda, participação, Kefra e castelo | 5 |
 | [arena](dominio-arena.md) | modo, partida, round e placar | 4 |
@@ -37,10 +37,12 @@ que lote cada uma entrou, diz [`gerado/index.md`](gerado/index.md), dono único 
 
 ## Cobertura
 
-As 19 páginas cobrem **97 tabelas distintas**, uma menção por tabela — **nenhuma fica sem domínio**.
+As 19 páginas cobrem **109 tabelas distintas**, uma menção por tabela — **nenhuma fica sem domínio**.
 `game.account_moderation` pertence a [moderação](dominio-moderacao.md), e [acesso](dominio-acesso.md)
 apenas aponta para lá. As cinco tabelas de `0030`/`0031` passaram a ter dono com a criação do 19º
-domínio, [conteúdo do portal](dominio-conteudo-portal.md).
+domínio, [conteúdo do portal](dominio-conteudo-portal.md), e as onze do mercado (`0034`) e a de
+idempotência (`0033`) entraram em [economia](dominio-economia.md) e [auditoria](dominio-auditoria.md)
+em 2026-11-22 — a segunda, por não ser tabela de dinheiro nem de conteúdo.
 
 ## Como ler
 

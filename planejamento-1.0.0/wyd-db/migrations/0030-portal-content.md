@@ -11,8 +11,9 @@ Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que 
 !!! note "Aprovado em 2026-11-20"
     O **conjunto** das quatro tabelas foi decidido em 2026-11-20 (`LAC-POR-02`, `LAC-POR-03`) e o
     **desenho de coluna** foi aprovado pelo dono na mesma data, na opção "Sim, aprovar o desenho como
-    está". A série passou a **30 arquivos / 96 tabelas** naquela data; hoje são 32/97 com o `0031` e o `0032` (só `GRANT`). As quatro tabelas entram na conta de
-    DDL fechado (`ddl-confirmado.md` §1) — 49 na época da aprovação, 57 hoje — e esta página
+    está". A série passou a **30 arquivos / 96 tabelas** naquela data; hoje são 34/109, com os lotes
+    `0031` a `0034` (o `0032` só concede `GRANT`). As quatro tabelas entram na conta de
+    DDL fechado (`ddl-confirmado.md` §1) — 49 na época da aprovação, 109 hoje — e esta página
     está `concluída` em `migrations-checklist.md`.
 
 ## 1. Identificação

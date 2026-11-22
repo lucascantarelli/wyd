@@ -10,7 +10,7 @@ Vigésimo quinto arquivo da série: 4 tabelas no schema `content`. As fichas de 
 !!! note "Aprovado em 2026-11-21"
     O dono aprovou o conjunto em 2026-11-21, com `RESTRICT` na FK do item e teto `1.000.000` em
     `content_rate_override.rate_bps` (§8). O lote está `concluída` em `migrations-checklist.md` §2 e as
-    quatro tabelas contam entre as 97 com DDL fechado.
+    quatro tabelas contam entre as 109 com DDL fechado.
 
 ## 1. Identificação
 

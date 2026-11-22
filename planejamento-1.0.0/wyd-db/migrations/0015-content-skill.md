@@ -12,7 +12,7 @@ lê e os vínculos de classe e linhagem que o portal filtra.
     O dono aprovou as três escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **`delay` e `affect_time` gravados brutos** (o runtime converte), **`class_slug` e
     `lineage_slug` anuláveis** com FK (`NULL` = vínculo não provado) e **`skill_index SMALLINT` como
-    PK** (0–247). A tabela entra na conta de §1 (75 de 97) e a página `migrations/0015-content-skill.md`
+    PK** (0–247). A tabela entra na conta de §1 (75 na época; hoje 109 de 109) e a página `migrations/0015-content-skill.md`
     fica `concluída` no checklist.
 
 ## 1. Identificação

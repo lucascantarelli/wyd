@@ -120,7 +120,7 @@ decidida em 2026-11-20).
 | `/admin/jogadores/[id]` | kick/ban por SQL | ação vai pelo `wyd-admin`; o portal não tem `USAGE` em `game` |
 | `/admin/canais` | reiniciar processo | o portal altera configuração; reinício é ação do `wyd-admin` |
 | `/admin/launcher` | publicar patch ou binário | o portal publica versão, notas e URL do manifesto; arquivo é `wyd-ops` |
-| `/admin/conteudo/*` | publicar antes do lote | `news`/`banner`/`guide` estão no lote `0030`, aprovado em 2026-11-20 (série 31/97) |
+| `/admin/conteudo/*` | publicar antes do lote | `news`/`banner`/`guide` estão no lote `0030`, aprovado em 2026-11-20 (série 34/109) |
 | `/rankings` | ranking em tempo real garantido | cache/`ISR`; o número é “última medição”, não promessa de instante |
 | `/admin` | guardar série ou substituir o Grafana | telemetria histórica, retenção e alerta são do `wyd-ops`; o portal consulta a API e mostra “não medido” quando ela falha (`LAC-POR-06`) |
 | `/admin/monitoramento/grafana` | redesenhar os gráficos no portal | os dashboards são provisionados por arquivo no `wyd-ops`; o portal embute o painel |

@@ -53,9 +53,9 @@ O portal é a autoridade de **quem** é o staff; o admin é a autoridade de **o 
 
 | Persistente | Onde | Dono |
 |---|---|---|
-| Efeito da ação (bloqueio, lançamento, capacidade, preço, custódia de item) | tabelas de `game` (`market_escrow` ainda sem DDL aprovado, `LAC-ADM-07`) | `wyd-db` |
+| Efeito da ação (bloqueio, lançamento, capacidade, preço, custódia de item) | tabelas de `game` (`market_escrow` no lote `0034`, `ddl-confirmado.md` §5.34) | `wyd-db` |
 | Trilha da ação | `ops.audit_log` | `wyd-db` |
-| Registro de idempotência | **aberto** (`LAC-ADM-02`); não há tabela aprovada | `wyd-db` |
+| Registro de idempotência | `ops.idempotency_record` (`0033`, `ddl-confirmado.md` §5.33), decidido em 2026-11-22 (`M30`) | `wyd-db` |
 
 Efêmero: pool de conexões, cache de configuração lida, `trace_id` e o corpo da requisição em memória.
 O admin **não** mantém fila durável própria na `1.0.0`; ação que não concluiu não é “depois”.
@@ -85,7 +85,7 @@ O admin **não** mantém fila durável própria na `1.0.0`; ação que não conc
 |---|---|
 | Rotas, payload, códigos e prazos | [contrato C4](contrato-c4.md) (proposta de 2026-11-21) |
 | Papel e `GRANT` de escrita | `LAC-ADM-01` — `wyd-db` |
-| Armazenamento e retenção da idempotência | `LAC-ADM-02` e `LAC-ADM-06` — `wyd-db` |
+| Armazenamento e retenção da idempotência | **fechados em 2026-11-22** (`M30`): tabela em `ops`, 7 dias após `created_at`; ver `lacunas.md` |
 | Canal com o `wyd-server` | `LAC-ADM-03` — arquitetura |
 | Autenticação portal → admin | `LAC-ADM-04` — arquitetura + `wyd-ops` |
 | Dono da escrita de `account_moderation` | **decidido em 2026-11-21** (`LAC-ADM-05`): é do `wyd-admin` (contrato C4 §4.1); o doc do portal foi corrigido e o portal só lê |

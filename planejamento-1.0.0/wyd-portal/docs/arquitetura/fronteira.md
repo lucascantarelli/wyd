@@ -91,7 +91,7 @@ mas não pode substituí-lo por escrita direta. `P-17` continua valendo: o porta
 | Assunto | Onde fecha |
 |---|---|
 | Forma do contrato HTTP do `wyd-admin` (rotas, payload, códigos) | planejamento do `wyd-admin`, ainda inexistente |
-| Tabelas de CMS e de launcher no `wyd-db` | lote `0030` aprovado em 2026-11-20: 4 tabelas em `portal`; série 32 arquivos / 97 tabelas (`lacunas.md` §3) |
+| Tabelas de CMS e de launcher no `wyd-db` | lote `0030` aprovado em 2026-11-20: 4 tabelas em `portal`; série 34 arquivos / 109 tabelas (`lacunas.md` §3) |
 | Autenticação de staff com segundo fator | decidido em `LAC-POR-05` (TOTP em `portal.person_authenticator`), com DDL no lote `0031` (`ddl-confirmado.md` §5.20) |
 | Telemetria de CPU/RAM/latência, logs e painéis | decidido em `LAC-POR-06` (reconfirmada em 2026-11-20): Prometheus, Loki e Grafana do `wyd-ops`; portal consulta a API — fonte e degradação em `monitoramento.md` |
 | Forma do contrato de métricas (URL, credencial, intervalo, retenção) | `monitoramento.md` §4/§6 fixa nomes e fontes; o valor e a retenção definitiva são do `wyd-ops` |

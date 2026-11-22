@@ -28,7 +28,7 @@ páginas abaixo respondem perguntas específicas.
 
 - O escopo foi decidido em 2026-11-20 (`M21`): portal público **e** área administrativa, com o
   administrador configurando o servidor pelo portal.
-- O banco é o do `wyd-db` (`1.0.0`, 32 arquivos e 97 tabelas planejadas); este plano **não** cria
+- O banco é o do `wyd-db` (`1.0.0`, 34 arquivos e 109 tabelas planejadas); este plano **não** cria
   tabela.
 - O monitoramento (seis telas de staff) lê Prometheus, Loki e Grafana do `wyd-ops` por HTTP e a
   presença em `game.v_live_session`; nada de série, log ou evento vira tabela no banco.

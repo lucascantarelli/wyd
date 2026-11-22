@@ -4,7 +4,7 @@
 > Base: `wyd-db-1.0.0.md` §6.8, §10; `docs/convencoes.md`; `lacunas.md` §2.3 (`M26`)
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-21) — as páginas por tabela são escritas à mão; quantas das 97 existem diz
+**Estado:** proposto (2026-11-21) — as páginas por tabela são escritas à mão; quantas das 109 existem diz
 [`gerado/index.md`](gerado/index.md), dono único da contagem.
 
 ## Duas camadas, um dono cada
@@ -67,7 +67,7 @@ existe para evitar.
 
 **Escritas à mão, em lotes** (`M26`, 2026-11-21): sem gerador, sem `Makefile` e sem script. Um lote por
 faixa de `migrations/`, ao fim do DDL do arquivo, e cada página entra conferida contra a página de
-`migrations/` dona da forma. `gerado/index.md` é o índice auxiliar, fora da contagem das 97.
+`migrations/` dona da forma. `gerado/index.md` é o índice auxiliar, fora da contagem das 109.
 
 ## Checklist de pronto de uma página
 

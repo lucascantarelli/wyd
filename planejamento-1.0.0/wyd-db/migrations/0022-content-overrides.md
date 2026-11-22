@@ -10,7 +10,7 @@ provadas por aparecerem no legado.
 
 !!! note "Aprovado em 2026-11-21"
     O dono aprovou o conjunto em 2026-11-21 ("Sim, aprovar como está"), sobre as decisões de forma de
-    §8. O lote está `concluída` em `migrations-checklist.md` §2 e as três tabelas contam entre as 97 com
+    §8. O lote está `concluída` em `migrations-checklist.md` §2 e as três tabelas contam entre as 109 com
     DDL fechado.
 
 ## 1. Identificação

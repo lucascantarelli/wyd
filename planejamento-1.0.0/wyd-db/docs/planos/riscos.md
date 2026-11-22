@@ -37,9 +37,9 @@ da tabela de §2 e fica em §3, com a evidência que o encerrou.
 
 ## 3. Riscos encerrados
 
-`R-1` **encerrado em 2026-11-21:** as 97 tabelas da série têm coluna desenhada e aprovada — **97 de 97**
-com DDL fechado em `ddl-confirmado.md` §1, depois do "sim" do dono aos lotes §5.23/§5.25/§5.26/§5.28 e
-à §5.29. Os 6 arquivos que seguem `bloqueada` são seeds, presos no dado de origem
+`R-1` **encerrado em 2026-11-21 e recontado em 2026-11-22:** as 109 tabelas da série têm coluna desenhada
+e aprovada — **109 de 109** com DDL fechado em `ddl-confirmado.md` §1, depois do "sim" do dono aos lotes
+§5.23/§5.25/§5.26/§5.28, à §5.29 e às §5.33/§5.34 (2026-11-22). Os 6 arquivos que seguem `bloqueada` são seeds, presos no dado de origem
 (`plano-migrations.md` §4), não desenho de coluna.
 
 Risco encerrado entra aqui com a data e a evidência que o encerrou, em vez de ser apagado.

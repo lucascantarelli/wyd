@@ -166,6 +166,12 @@ para 32 arquivos com `0032` (`plano-migrations.md` §3; `migrations/0032-admin-g
 atualiza os números de estado, sem reescrever a decisão original: as menções a cinco papéis acima
 registram o desenho considerado no aceite de 2026-11-17.
 
+**Revisão de estado — 2026-11-22 (`M30`/`M31`).** O `0032` foi emendado com os `GRANT` da custódia
+(`game.character_item`, `game.character`) e a série fechou em **34 arquivos e 109 tabelas** com os lotes
+`0033` e `0034` (`plano-migrations.md` §3; `migrations/0032-admin-grants.md`, `0033-ops-idempotency.md`
+e `0034-portal-market.md`). O papel e a forma da decisão não mudaram: só o escopo de privilégio de um
+arquivo e o total da série.
+
 - Revisar quando: houver mais de um banco por cluster com séries diferentes; entrar réplica de leitura
   ou RLS (`P-18`, multi-servidor); ou o provisionamento passar a gerenciar senha e rotação.
 - Sinais de que envelheceu: papel novo pedido em produção sem rodar `provision apply`; `42501` recorrente

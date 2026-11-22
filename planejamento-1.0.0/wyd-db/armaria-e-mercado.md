@@ -1,12 +1,13 @@
 > Pergunta: "que views e tabelas o banco precisa criar para a armaria e o mercado global do portal, com que chave, invariante e índice?"
 > Público: arquitetura, `wyd-db` e desenvolvedor novo
 > Dono: `wyd-db` (forma) com arquitetura (fronteira)
-> Base: `padrao-banco.md` (`P-03`, `P-06`, `P-13`, `P-17`, `M16`, `M17`, `M25`); `0009`; `0029` §10; `0014`; `ddl-confirmado.md`; `planejamento-1.0.0/wyd-portal/armaria-e-mercado.md`
+> Base: `padrao-banco.md` (`P-03`, `P-06`, `P-13`, `P-17`, `M16`, `M17`, `M25`); `0009`; `0029` §10; `0014`; `ddl-confirmado.md`; `lacunas.md` `M31`; `planejamento-1.0.0/wyd-portal/armaria-e-mercado.md`
 > Revisado em: 2026-11-22
 
-**Estado:** proposta de forma (2026-11-22). Não é migration: nenhum número de lote foi reservado, nenhuma
-contagem da série foi alterada, e este documento não substitui `ddl-confirmado.md` nem a página do lote
-que o dono escrever.
+**Estado:** forma aprovada em 2026-11-22 (`M31`, fechando `LAC-ADM-07`). O lote é o
+`0034_portal_market.sql`, o texto do DDL é `ddl-confirmado.md` §5.34 e a série passa a **34 arquivos e
+109 tabelas**. Este documento continua sendo a **razão** da forma — fronteira, relação e consulta —, não
+o texto executável.
 
 ## 1. Fronteira aplicada
 
@@ -272,9 +273,10 @@ A forma das quatro operações (`custodiar`, `entregar`, `devolver`, `cancelar`)
 não transfere instância existente de um personagem para outro. Usá-la deixaria o anúncio ativo sem
 garantia de que o item saiu do inventário — o caminho foi rejeitado, não adiado.
 
-O executor está definido desde 2026-11-22 (`LAC-POR-07` fechada). O que falta é schema: `game.market_escrow`
-e `portal.market_*` dependem de lote aprovado (`LAC-ADM-07`) — etapa desta própria página, não lacuna de
-fronteira.
+O executor está definido desde 2026-11-22 (`LAC-POR-07` fechada) e o schema também: `game.market_escrow` e as
+dez `portal.market_*` entraram no lote `0034` (`M31`, `ddl-confirmado.md` §5.34). O `0034` **emenda o
+`0032`**: a custódia exige `SELECT, INSERT, DELETE` em `game.character_item` e `SELECT` em
+`game.character` para `wyd_admin`, que a primeira versão dos `GRANT` não concedia.
 
 ## 6. Índices que sustentam busca, filtro e escala
 
@@ -290,6 +292,9 @@ fronteira.
 | `ix_market_notification_conta_nao_lida` | `(account_id)` parcial `WHERE read_at IS NULL` | badge de avisos |
 | `ix_market_dispute_estado_aberta` | `(state, created_at)` parcial `WHERE state IN ('aberta','em_analise')` | fila de staff |
 | `ix_market_escrow_estado` (`game`) | `(state, created_at)` | conferência de custódia pendente |
+| `ux_market_bid_comprador_ativo` | `(listing_id, bidder_account_id)` único parcial `WHERE status = 'ativo'` | um lance ativo por comprador e anúncio |
+| `ux_market_dispute_aberta` | `(transaction_id)` único parcial `WHERE state IN ('aberta','em_analise')` | uma disputa viva por transação |
+| `ix_market_bid_ledger`, `ix_market_dispute_transaction`, `ix_market_escrow_character` | coluna da FK | integridade das três chaves estrangeiras (`P-15`) |
 
 Sem partição e sem tabela agregada de vitrine na `1.0.0`: paginação por cursor (`price, id` ou
 `ends_at, id`), não por `OFFSET`. Se a medição mostrar que não basta, a partição entra como decisão
@@ -297,10 +302,10 @@ própria, com número na mão.
 
 ## 7. O que este documento não faz
 
-- Não reserva número de lote nem altera `plano-migrations.md`: a série e a contagem de tabelas mudam
-  quando o dono escrever a página da migration.
-- Não escreve `DDL` executável: colunas, chaves e invariantes aqui são forma, e `ddl-confirmado.md` é o
-  dono do texto final.
+- Não é o dono do número: o lote `0034` foi reservado em `plano-migrations.md` §3 (`M31`) e a série está
+  contada lá e em `migrations-checklist.md` §2.
+- Não escreve `DDL` executável: colunas, chaves e invariantes aqui são forma, e `ddl-confirmado.md` §5.34 é
+  o dono do texto final.
 - Não decide execução de permissão: `USAGE` cruzado continua proibido (`P-17`) e o adapter é o caminho.
 - Não fecha `LAC-POR-08` (estatísticas), que precisa do trace. O executor saiu daqui em 2026-11-22:
-  `LAC-POR-07` foi fechada com o contrato do `wyd-admin`; o que resta é o lote aprovado (`LAC-ADM-07`).
+  `LAC-POR-07` foi fechada com o contrato do `wyd-admin` e o schema saiu em `M31` (`LAC-ADM-07` fechada).
