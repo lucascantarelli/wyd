@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **57 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **61 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -87,9 +87,28 @@ no build.
 As 11 páginas restantes fecharam o arquivo em 2026-11-22; a forma das 13 está em
 `0019-content-world.md`.
 
+## Lote 4 — entrega assíncrona (`0012`), 1 tabela
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `ops.delivery_queue` | [delivery_queue](delivery_queue.md) | `0012-ops-delivery` |
+
+## Lote 5 — catálogo de item (`0014`), 1 tabela
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.item_catalog` | [item_catalog](item_catalog.md) | `0014-content-item` |
+
+## Lote 6 — mapas (`0024`), 2 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.map_definition` | [map_definition](map_definition.md) | `0024-content-maps` |
+| `content.teleport_route` | [teleport_route](teleport_route.md) | `0024-content-maps` |
+
 ## Próximos lotes
 
-Faltam **40 das 97**: `0012`–`0015` (entrega, taxonomia e catálogo — os seeds `0016`–`0018` não criam
-tabela), `0021` e `0022` (regras e sobrescritas), `0024`–`0026` (mapas, combate e quests/eventos) e
-`0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é proposto por
-arquivo de migration, como o de `0019`.
+Faltam **36 das 97**: `0013` (taxonomia) e `0015` (catálogo de skill) — os seeds `0016`–`0018` não
+criam tabela —, `0021` e `0022` (regras e sobrescritas), `0025` e `0026` (combate e quests/eventos) e
+`0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é
+proposto por arquivo de migration, como o de `0019`.
