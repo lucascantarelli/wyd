@@ -89,5 +89,5 @@ O admin **não** mantém fila durável própria na `1.0.0`; ação que não conc
 | Armazenamento e retenção da idempotência | **fechados em 2026-11-22** (`M30`): tabela em `ops`, 7 dias após `created_at`; ver `lacunas.md` |
 | Canal com o `wyd-server` | **decidido em 2026-11-22** (`LAC-ADM-03`): HTTP interno síncrono com ack ([autenticação e controle](autenticacao-e-controle.md) §3) |
 | Autenticação portal → admin | **decidido em 2026-11-22** (`LAC-ADM-04`): token de serviço por ambiente com rotação de dois valores (§2 da mesma página) |
-| Emissão e rotação do segredo de cada elo | `wyd-ops`; a página de proposta só nomeia as variáveis |
+| Emissão e rotação do segredo de cada elo | `wyd-ops`; [autenticação e controle](autenticacao-e-controle.md) só nomeia as variáveis |
 | Dono da escrita de `account_moderation` | **decidido em 2026-11-21** (`LAC-ADM-05`): é do `wyd-admin` (contrato C4 §4.1); o doc do portal foi corrigido e o portal só lê |

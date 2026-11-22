@@ -11,9 +11,9 @@ aberto, **nenhum código escrito**, nenhuma issue criada.
 
 API HTTP/JSON interna, server-to-server, que o BFF do portal chama para **escrever em `game`**: moderação
 de conta, carteira, canal, imposto, preço e **custódia de item do mercado global** (`custodiar`,
-`entregar`, `devolver`, `cancelar`). Kick e broadcast entram quando o controle com o `wyd-server` for
-aprovado (`LAC-ADM-03`, proposta em 2026-11-22). O admin não tem tela, não atende navegador e não escreve
-em `portal`.
+`entregar`, `devolver`, `cancelar`). Kick e broadcast entram na fatia `ADM-08`, com o elo de `LAC-ADM-03`
+**decidido em 2026-11-22** (HTTP interno síncrono com ack). O admin não tem tela, não atende navegador e
+não escreve em `portal`.
 
 A direção está decidida (`LAC-POR-01`, 2026-11-20); a **forma** do contrato é proposta desta árvore:
 7 rotas de ação de staff, 4 de custódia e 3 utilitárias, com `Idempotency-Key`, erro tipado e prazos.
