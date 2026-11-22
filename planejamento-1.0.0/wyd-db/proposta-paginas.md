@@ -2,13 +2,13 @@
 > Público: Produto / gestão
 > Dono: equipe do `wyd-db`
 > Base: `ddl-confirmado.md`, `lacunas.md`, `migrations-checklist.md`, `padrao-banco.md`, `plano-migrations.md`, `rascunho-accounts.md`
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
-**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-21.
+**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-21 e as migrations recontadas em 2026-11-22.
 
-> **Revisão de 2026-11-21:** as **19 páginas de domínio** estão escritas, e o dicionário passou a
+> **Revisão de 2026-11-22:** as **19 páginas de domínio** estão escritas, e o dicionário passou a
 > **21** autorais. O censo foi remedido no `HEAD` desta data: **36** páginas com corpo em `docs/`,
-> **26 de 32** em `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **18
+> **28 de 34** em `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **18
 > escrevíveis**, **24 de recorte** e **69 bloqueadas** — **147** páginas autorais, o teto de
 > `wyd-db-1.0.0.md` §4 com o 19º domínio.
 
@@ -45,7 +45,7 @@ Duas regras valem para as três colunas:
 | `ddl-confirmado.md` | texto DDL de `0001`, `0003`, `0004` e `0007` + 6 tabelas em arquivo `parcial` | `migrations/` (5 páginas), dicionário (2), `integridade-e-constraints` | a série for escrita; o texto passa a ser o dos `.sql` |
 | `plano-migrations.md` | ordem, escopo, seeds, gates e riscos da série | `migrations/` (2), `planos/` (4), `arquitetura/migracoes` | a série for aplicada e `metricas.md` medir |
 | `migrations-checklist.md` | estado por arquivo e derivação do estado de tabela (§1.2) | `migrations/index.md`, `planos/metricas.md`, dicionário | a série existir; o estado passa a vir do ledger |
-| `lacunas.md` | o que falta, com dono e marco | `specs/restricoes-e-premissas.md`, `planos/riscos.md`, ADRs, `specs/estados/*` | as 17 linhas abertas fecharem |
+| `lacunas.md` | o que falta, com dono e marco | `specs/restricoes-e-premissas.md`, `planos/riscos.md`, ADRs, `specs/estados/*` | as 3 linhas externas fecharem |
 | `rascunho-accounts.md` | requisitos de identidade (`R1`–`R16`), multibox, defeitos que não voltam | `specs/requisitos-funcionais.md`, `regras-de-negocio.md`, `estados/*` | `R1`–`R16` virarem `RF-DB-nnn` |
 
 Duas fontes **fora das seis** já estão fechadas e são citadas como donas, não repetidas aqui:
@@ -67,7 +67,7 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md` |
 | `guia-teste/` | `testes-de-sistema.md` |
 
-Fora de `docs/`: **26 de 32** em `migrations/` e **0 de 59** em `src/`.
+Fora de `docs/`: **28 de 34** em `migrations/` e **0 de 59** em `src/`.
 
 **Os outros 8 arquivos `index.md` são título de uma linha** — `arquitetura`, `specs`, `planos`,
 `roadmap`, `guia-desenvolvedor`, `guia-administrador`, `guia-teste`, `guia-documentacao`. Eles não
@@ -141,7 +141,7 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 | Seção | Aterrissa em | Nota |
 |---|---|---|
 | §1 estados e §1.2 derivação | `migrations/index.md` (tabela da série com a coluna de estado); hoje `docs/convencoes.md` §Estados define o significado dos três estados e aponta §1.2 como dono único da derivação, **sem copiar o mapeamento** | **existe** (nota de §1.2) |
-| §2 checklist dos 29 | `migrations/index.md` | — |
+| §2 checklist dos 34 | `migrations/index.md` | — |
 | §3 bloqueios agrupados | `specs/restricoes-e-premissas.md` (por ID) | — |
 | §4 contagem | `planos/metricas.md` (quando houver medido) | — |
 | §5 o que toda página de migration tem | `guia-desenvolvedor/como-adicionar-migration.md` (escrito; cita o molde, não reproduz) | — |
@@ -158,7 +158,7 @@ o ponteiro passa a `migrations/index.md`.
 |---|---|---|
 | §0 estados, marcos e donos | `specs/restricoes-e-premissas.md` (abertura) | — |
 | §1 decisões fechadas | a página dona de cada uma (coluna "Refletida em"), não uma lista nova | — |
-| §2.1–§2.3 as 29 lacunas | `restricoes-e-premissas.md` (as 17 abertas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
+| §2.1–§2.3 as 36 lacunas | `restricoes-e-premissas.md` (as 3 externas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
 | §2.4 resumo por marco | `restricoes-e-premissas.md` (a tabela de marcos) | coberta pela mesma nota |
 | §3 `P1`–`P11` | `planos/riscos.md` (as abertas: `P1`, `P3`, `P5`) | — |
 | §4 `D-A`, `D-B`, `D-C` | `planos/riscos.md` + `planos/plano-de-documentacao.md` (`D-A`) | — |
@@ -290,7 +290,7 @@ para **69**. As 109 páginas por tabela continuam fora desta conta; quantas já 
 
 | Pasta | Escrito | O que já dá para escrever | O que não dá |
 |---|---|---|---|
-| `migrations/` | 26 de 32 | `index.md` e `serie-e-regras.md`; as páginas `0003-portal-person` e `0007-game-session` (DDL fechado); `0002-ops-audit` e `0005-game-account` só com as tabelas fechadas, declarando o resto | 0 páginas de arquivo com DDL aberto; restam as 6 de seed, bloqueadas pelo dado de origem |
+| `migrations/` | 28 de 34 | `index.md` e `serie-e-regras.md`; as páginas `0003-portal-person` e `0007-game-session` (DDL fechado); `0002-ops-audit` e `0005-game-account` só com as tabelas fechadas, declarando o resto | 0 páginas de arquivo com DDL aberto; restam as 6 de seed, bloqueadas pelo dado de origem |
 | `src/` | 0 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
 | `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
 

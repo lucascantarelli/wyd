@@ -20,7 +20,7 @@ categoria, maestria por linhagem, afetos (buffs/debuffs) e os pontos de chaos.
 | Número | `0008` |
 | Arquivo | `crates/wyd-db/migrations/0008_game_skills.sql` |
 | Schema | `game` |
-| Posição | 8 de 29 (segundo arquivo do bloco de estado do jogador) |
+| Posição | 8 de 34 (segundo arquivo do bloco de estado do jogador) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges) e `0006` (`game.character` — todas as cinco tabelas têm FK para ela) |
 | É dependência de | nenhum arquivo da série: `skill_index` e `lineage_code` **não** têm FK para o catálogo, que só nasce em `0013`/`0015` |
 | Tabelas criadas | 5 (`character_skill`, `character_learned_skill`, `character_lineage`, `character_affect`, `character_chaos`) |

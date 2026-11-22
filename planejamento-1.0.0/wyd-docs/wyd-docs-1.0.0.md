@@ -70,7 +70,7 @@
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
 | `wyd-db` | estado das páginas de migration: `migrations-checklist.md` §2/§4; escopo da série: `plano-migrations.md` §3; resumo consolidado: `wyd-1.0.0.md` §1 | seção própria e ordem de leitura preservada |
-| `wyd-protocol` | 2 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
+| `wyd-protocol` | 5 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
 ---

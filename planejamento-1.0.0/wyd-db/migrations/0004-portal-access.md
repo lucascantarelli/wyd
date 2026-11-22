@@ -21,7 +21,7 @@ cliente 7662 nunca autentica por aqui.
 | Número | `0004` |
 | Arquivo | `crates/wyd-db/migrations/0004_portal_access.sql` |
 | Schema | `portal` |
-| Posição | 4 de 29 (4º do bloco de identidade) |
+| Posição | 4 de 34 (4º do bloco de identidade) |
 | Depende de | `0001_bootstrap` (schemas, `ops.fn_set_updated_at`, permissões) e `0003_portal_person` (`portal.person` — a FK e a coluna `password_changed_at` que o fluxo de troca de senha usa) |
 | É dependência de | nenhum arquivo da série: nada referencia estas duas tabelas por FK |
 | Tabelas criadas | 2 (`portal.person_session`, `portal.person_token`) |

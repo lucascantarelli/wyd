@@ -374,7 +374,7 @@ uma transação por arquivo, linha do ledger apagada arquivo por arquivo. Ao fim
 | os quatro schemas de domínio | não existem |
 | `public.schema_migrations` | existe, **vazia**, com a forma validada por `prepare` e ainda acessível por `wyd_migrator` — nenhum arquivo da série toca em `public` |
 | papéis do cluster | intactos (`ADR-DB-0001`, invariante (e): reset nunca toca papel) |
-| `apply` seguinte | aplica as 29 do zero, porque não há linha aplicada |
+| `apply` seguinte | aplica as 34 do zero, porque não há linha aplicada |
 
 Consequências que o desenho aceita:
 
@@ -617,7 +617,7 @@ pub struct Report {
 |---|---|
 | unidade | `Version`/`Slug`/`Checksum`/`Sql` (tabela de válidos e inválidos, incluindo vazio e `COMMIT`); parser dos marcadores; `plan` para os três casos e cada `DriftKind`; normalização `CRLF`→`LF` |
 | contrato | `run` com `FakeSource`/`FakeLedger`/`FakeExecutor`/`FakeLock`: ordem de aplicação, para no primeiro erro, `down` em ordem inversa, `down` até `Empty` deixando zero versão aplicada, `status --check` saindo `4` em drift, `commit` chamado uma vez por arquivo, `LockBusy` saindo `3` com o lock tomado |
-| sistema | contra PG17 real via `WYD_DB_URL_TEST`: aplica a série, ledger com 29 linhas, reaplica e não muda nada, drift de um byte falha, ledger pré-existente com coluna a menos é recusado por `Shape`, `down --to 1` deixa só a versão 1, `down --to 0` deixa os quatro schemas ausentes e ledger vazio, e um `apply` seguinte reaplica as 29, dois processos concorrentes → um aplica e o outro espera e termina sem aplicar, `CREATE TABLE` sem schema falha com `search_path` vazio, `status` num banco sem ledger lista as 29 pendentes e não cria a tabela |
+| sistema | contra PG17 real via `WYD_DB_URL_TEST`: aplica a série, ledger com 34 linhas, reaplica e não muda nada, drift de um byte falha, ledger pré-existente com coluna a menos é recusado por `Shape`, `down --to 1` deixa só a versão 1, `down --to 0` deixa os quatro schemas ausentes e ledger vazio, e um `apply` seguinte reaplica as 34, dois processos concorrentes → um aplica e o outro espera e termina sem aplicar, `CREATE TABLE` sem schema falha com `search_path` vazio, `status` num banco sem ledger lista as 34 pendentes e não cria a tabela |
 | proibido | `sleep` para sincronizar; teste que depende de ordem de execução; `SKIP` por variável ausente (falha nomeando) |
 
 ## 14. O que a `ADR-DB-0002` congela

@@ -20,7 +20,7 @@ provadas por aparecerem no legado.
 | Número | `0022` (checklist, linha 106) |
 | Arquivo | `crates/wyd-db/migrations/0022_content_overrides.sql` |
 | Schema | `content` (3 tabelas) |
-| Posição | 22 de 32 |
+| Posição | 22 de 34 |
 | Depende de | `0001` (schema, privilégios); `0021` (`content.refine_rate`, `content.sanc_rate`, `content.combine_value`) |
 | É dependência de | `0023` (seed das regras) |
 | Tabelas criadas | `refine_rate_override`, `sanc_rate_override`, `combine_value_override` |

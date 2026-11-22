@@ -22,7 +22,7 @@ cash ficam no `portal`; preço e imposto de jogo, em `game`.
 | Número | `0011` |
 | Arquivo | `crates/wyd-db/migrations/0011_game_economy.sql` |
 | Schema | `game` (4 tabelas) + `portal` (6 tabelas) |
-| Posição | 11 de 29 (economia e cash) |
+| Posição | 11 de 34 (economia e cash) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges), `0005` (conta citada por valor), `0006` (`game.character`, dono da loja e do imposto) e `0010` concluída não é pré-requisito |
 | É dependência de | `0012_ops_delivery` (entrega de item comprado), `0029_views` (leitura administrativa) |
 | Tabelas criadas | 10 (`city`, `item_price`, `personal_shop`, `city_tax_ledger` em `game`; `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit` em `portal`) |

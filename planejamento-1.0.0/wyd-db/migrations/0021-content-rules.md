@@ -20,7 +20,7 @@ por aparecerem no legado.
 | Número | `0021` (checklist, linha 105) |
 | Arquivo | `crates/wyd-db/migrations/0021_content_rules.sql` |
 | Schema | `content` (5 tabelas) |
-| Posição | 21 de 32 |
+| Posição | 21 de 34 |
 | Depende de | `0001` (schema, privilégios); `0013` (`content.item_effect`); `0014` (`content.item_catalog`) |
 | É dependência de | `0022` (overrides de três tabelas) e `0023` (seed das regras) |
 | Tabelas criadas | `refine_rate`, `refine_gem_effect`, `sanc_rate`, `combine_value`, `accessory_refine_rule` |

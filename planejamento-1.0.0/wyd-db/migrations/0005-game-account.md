@@ -20,7 +20,7 @@ identidades distintas; conta fechada não se apaga e devolve sua vaga para a pes
 | Número | `0005` |
 | Arquivo | `crates/wyd-db/migrations/0005_game_account.sql` |
 | Schema | `game` (com FK de autor/identidade para `portal.person`) |
-| Posição | 5 de 29 (conta e acesso do jogo) |
+| Posição | 5 de 34 (conta e acesso do jogo) |
 | Depende de | `0001_bootstrap` (schemas/permissões), `0003_portal_person` (pessoa e autor de moderação), `0004_portal_access` não cria FK usada aqui |
 | É dependência de | `0006_game_character` (`game.character.account_id`), `0007_game_session`, `0011_game_economy` |
 | Tabelas criadas | 5 (`account`, `account_wallet`, `account_ledger`, `account_moderation`, `pin_reset`) |
