@@ -2,7 +2,7 @@
 > Público: quem mantém o `wyd-docs`
 > Dono: equipe do wyd-docs
 > Base: `lacunas.md`; `wyd-docs-1.0.0.md` §9.1; `roadmap-fase-3-para-4.md` §2
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-19)
 
@@ -44,22 +44,24 @@ ninguém fez ainda — o que medir está em §6, e nenhum resultado está regist
 | O que | Onde | Por que agora |
 |---|---|---|
 | Rodar o gate antes do próximo PR que alterar documentação publicável | `wyd-docs/` (comando de `wyd-docs-1.0.0.md` §7.1) | evita introduzir página quebrada em uma mudança futura |
-| Conferir o total e o censo medidos | `wyd-docs-1.0.0.md` §9.1 | número que não bate com a montagem é defeito, não estimativa |
+| Conferir o total e o censo medidos | comando de §3; valor em `wyd-docs-1.0.0.md` §9.1 | número que não bate com a montagem é defeito, não estimativa |
 
 ## 3. Recontar o censo (um comando)
 
 ```bash
-for f in $(find wyd-docs/.build/docs -name '*.md'); do
-  if estado=$(grep -m1 -oE '^\*\*Estado:\*\* *[^ ]+' "$f"); then
-    printf '%s\n' "$estado" | sed -E 's/^\*\*Estado:\*\* *([^ ]+).*/\1/'
-  else
-    echo SEM
-  fi
-done | sort | uniq -c
+cd wyd-docs && ./.venv/Scripts/python.exe verificar-contagens.py
+# Linux/macOS: cd wyd-docs && .venv/bin/python verificar-contagens.py
 ```
 
-O resultado não se copia: total e censo são de `wyd-docs-1.0.0.md` §9.1, o único dono do
-número. Este comando reproduz o censo a qualquer momento, sem guardar cópia do resultado.
+O comando lê as fontes de sistema que a montagem publica (`planejamento-1.0.0/<sistema>/docs/**/*.md`,
+a mesma regra do `preparar.py`) e conta `aceito`, `proposto` e sem linha de estado, mais o total de
+fontes censadas. Ele compara as quatro grandezas com `wyd-docs-1.0.0.md` §9.1 — o único dono do
+número — e sai com `exit 1` quando qualquer uma diverge; `exit 2` é leitura impossível (arquivo,
+pasta ou declaração ausente), não divergência. Fonte publicada com estado fora de `aceito`/`proposto`
+reprova, salvo exceção declarada no próprio script (`CENSO_ESPECIAL`), que ele imprime com o motivo.
+
+O resultado não se copia para cá: total e censo continuam só em §9.1, e este comando é como o número
+se reproduz e se confere, sem leitura manual do artefato.
 
 ## 4. O que esta página não decide
 
