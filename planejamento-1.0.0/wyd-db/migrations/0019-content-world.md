@@ -15,7 +15,7 @@ e os campos de ciclo de vida que são padrão da série.
     definição; FK de item em `level_item`/`world_item_seed`; `map_id` em `world_item_seed`) e revisou
     as colunas `H` antes de aprovar: `merchant`, `eff1..eff3`/`effv1..effv3`, os cinco blocos crus,
     `rotate` e o grupo de gerador do NPC foram todos mantidos. O lote conta em `ddl-confirmado.md` §1
-    (75 de 97) e esta página fica `concluída` em `migrations-checklist.md` §2.
+    (75 na época; hoje 109 de 109) e esta página fica `concluída` em `migrations-checklist.md` §2.
 
 ## 1. Identificação
 

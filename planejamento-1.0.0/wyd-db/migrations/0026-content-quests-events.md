@@ -11,7 +11,7 @@ dado, não o inventa.
 !!! note "Aprovado em 2026-11-21"
     O dono aprovou o conjunto em 2026-11-21, com `start_minute SMALLINT` na agenda e `id` identity com
     `UNIQUE NULLS NOT DISTINCT` na recompensa (§8). O lote está `concluída` em `migrations-checklist.md`
-    §2 e as seis tabelas contam entre as 97 com DDL fechado.
+    §2 e as seis tabelas contam entre as 109 com DDL fechado.
 
 ## 1. Identificação
 
@@ -322,7 +322,7 @@ Sem `content_source`/`confidence`: proveniência fica em `content.content_source
 | `event_schedule.id INTEGER` | `BIGINT` identity | `P-03` |
 | `quest_step.pos_x/pos_y 0..4095` | `0..32767` | 4095 é teto do loader, não do banco (mesma decisão de §5.24) |
 | `content_source`/`confidence` | ausentes | proveniência em `content.content_source` (`0019`) |
-| `quest.requires TEXT[]` | mantido | lista de códigos não vira tabela sem sair do escopo de 97 nomes; integridade é do seed |
+| `quest.requires TEXT[]` | mantido | lista de códigos não vira tabela sem sair do escopo de 109 nomes; integridade é do seed |
 
 ## 8. Decisões de forma
 

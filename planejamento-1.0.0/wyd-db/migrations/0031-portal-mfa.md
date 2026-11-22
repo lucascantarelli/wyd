@@ -11,7 +11,7 @@ portal. **Mecanismo não reaberto:** TOTP, só `admin`/`moderator`, `member` for
 !!! note "Aprovado em 2026-11-20"
     O dono aprovou o desenho na rodada de perguntas de 2026-11-20, na opção "Sim, aprovar o desenho
     como está", depois de escolher `id` identity com único parcial e revogação que apaga o segredo. A
-    tabela entra na conta de `ddl-confirmado.md` §1 (75 de 97) e esta página fica `concluída` em
+    tabela entra na conta de `ddl-confirmado.md` §1 (75 na época; hoje 109 de 109) e esta página fica `concluída` em
     `migrations-checklist.md`.
 
 ## 1. Identificação

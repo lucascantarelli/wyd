@@ -32,7 +32,7 @@
 - **API:** `begin(key, caller, route, body_hash)`, `complete(status, body)`, `fail(code)`.
 - **Invariantes:** a chave é única por `(chamador, método, rota-modelo, chave)`; corpo diferente é
   `409`; `completed` devolve exatamente o corpo original; registro e ação commitam juntos.
-- **Depende de:** `banco` e do armazenamento de `LAC-ADM-02`.
+- **Depende de:** `banco` e do armazenamento de idempotência (`ops.idempotency_record`, `0033`).
 - **Testes:** repetição, concorrência de duas requisições com a mesma chave, corpo divergente.
 - **Risco:** alto — sem isso, retry do portal duplica lançamento.
 

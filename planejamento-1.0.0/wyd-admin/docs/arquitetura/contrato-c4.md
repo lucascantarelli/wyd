@@ -34,11 +34,19 @@ transação, que o personagem citado pertence a essa conta (`game.character.acco
 | Mesma chave, mesmo corpo, concluída | devolve **status e corpo gravados**, com `Idempotency-Replayed: true` |
 | Mesma chave, corpo diferente | `409 ADM_IDEMPOTENCY_KEY_REUSED` |
 | Mesma chave, ainda em execução | `409 ADM_IDEMPOTENCY_IN_PROGRESS`, `Retry-After: 1` |
-| Retenção do registro | 24 h (proposta; `LAC-ADM-06`) |
+| Retenção do registro | **7 dias** após a criação (`M30`, 2026-11-22; `LAC-ADM-06` fechada) |
 
-O corpo é comparado por `sha256` do JSON canônico (chaves ordenadas, sem espaço). O registro precisa ser
-**durável e transacional com a ação**; sem tabela aprovada, isso é `LAC-ADM-02` e bloqueia a
-implementação da idempotência — não a do contrato.
+O corpo é comparado por `sha256` do JSON canônico (chaves ordenadas, sem espaço). O registro é **durável e
+transacional com a ação**: mora em `ops.idempotency_record` (`0033`, `ddl-confirmado.md` §5.33; `LAC-ADM-02`
+fechada em 2026-11-22). A linha nasce `in_progress` **dentro da transação da ação** e é fechada nela como
+`completed` ou `failed`; o `COMMIT` nunca publica `in_progress`. Duas consequências que a implementação
+assume:
+
+1. **`409 ADM_IDEMPOTENCY_IN_PROGRESS` vem do bloqueio da chave**, não de um estado lido: a segunda
+   `INSERT` espera o `COMMIT` alheio e estoura o prazo de 2 s da transação. `in_progress` não é
+   observável por outra sessão, e não existe chave presa nem lease a expirar.
+2. **`failed` permite repetir** com a mesma chave, reusando a linha; `completed` devolve status e corpo
+   gravados.
 
 `GET /actions/{key}` permite reconciliação depois de timeout; não é replay e não escreve nada.
 
@@ -258,7 +266,7 @@ auditoria do admin.
 |---|---|
 | `GET /health` | `200 {"status":"ok"}` — processo vivo; não toca banco |
 | `GET /ready` | `200` quando banco e armazenamento de idempotência respondem; `503` com `ADM_DB_UNAVAILABLE` |
-| `GET /actions/{key}` | `200 {"state":"completed","status":200,"body":{…}}` ou `{"state":"in_progress"}`; `404` se expirou |
+| `GET /actions/{key}` | `200 {"state":"completed","status":200,"body":{…}}` ou `{"state":"failed","error":{…}}`; `404` quando não há registro — nunca executada, ou já expurgada pelos 7 dias. `in_progress` não é devolvido: ele nunca é commitado |
 
 ## 6. Prazos e repetição
 
@@ -279,9 +287,9 @@ repetindo com chave nova.
 | Assunto | Onde fecha |
 |---|---|
 | Papel de banco e `GRANT` de escrita em `game` | `LAC-ADM-01` |
-| Onde o registro de idempotência mora | `LAC-ADM-02` |
+| Onde o registro de idempotência mora | **fechado em 2026-11-22** (`LAC-ADM-02` e `LAC-ADM-06`): `ops.idempotency_record` (`0033`, `ddl-confirmado.md` §5.33), com retenção de 7 dias |
 | Canal real com o `wyd-server` (formato, porta, ack) | `LAC-ADM-03` |
 | Token de serviço, mTLS e assinatura do ator | `LAC-ADM-04` |
 | Dono da escrita de `account_moderation` | **fechado em 2026-11-21** (`LAC-ADM-05`): é este contrato, §4.1; o `wyd-portal` corrigiu `consumo-do-banco.md` §3 e só lê |
-| Schema de `game.market_escrow` e das tabelas `portal.market_*` | `wyd-db`: lote a abrir, forma em `armaria-e-mercado.md` §3 (`LAC-ADM-07`); sem a migration, §4.9–§4.12 é forma sem implementação |
+| Schema de `game.market_escrow` e das tabelas `portal.market_*` | **fechado em 2026-11-22** (`LAC-ADM-07`): lote `0034_portal_market.sql`, onze tabelas (`ddl-confirmado.md` §5.34), com os `GRANT` da custódia no `0032` emendado |
 | Verificação de que o personagem pertence à conta declarada | **fechado nesta proposta:** `game.character.account_id` lido na mesma transação; divergência é `403` |

@@ -32,25 +32,28 @@ de `lacunas.md` em **2026-11-18** (§2.2 de lá): as duas já eram decisão aber
 
 | Nível | Quantos | Quais |
 |---|---:|---|
-| arquivos 100% | **25** | `0001_bootstrap.sql`, `0002_ops_audit.sql`, `0003_portal_person.sql`, `0004_portal_access.sql`, `0005_game_account.sql`, `0006_game_character.sql`, `0007_game_session.sql`, `0008_game_skills.sql`, `0009_game_inventory.sql`, `0010_game_guild.sql`, `0011_game_economy.sql`, `0012_ops_delivery.sql`, `0013_content_taxonomy.sql`, `0014_content_item.sql`, `0015_content_skill.sql`, `0019_content_world.sql`, `0021_content_rules.sql`, `0022_content_overrides.sql`, `0024_content_maps.sql`, `0025_content_combat.sql`, `0026_content_quests_events.sql`, `0028_game_quests_events.sql`, `0029_views.sql`, `0030_portal_content.sql`, `0031_portal_mfa.sql` |
-| tabelas com DDL fechado no total | **97** | 1 de `0001` + 4 de `0002` + 3 de `0003` + 2 de `0004` + 5 de `0005` + 5 de `0006` + 2 de `0007` + 5 de `0008` + 3 de `0009` + 4 de `0010` + 10 de `0011` + 1 de `0012` + 5 de `0013` + 1 de `0014` + 1 de `0015` + 13 de `0019` + 5 de `0021` + 3 de `0022` + 2 de `0024` + 4 de `0025` + 6 de `0026` + 7 de `0028` + 4 de `0030` + 1 de `0031` |
-| tabelas desenhadas e **sem aprovação** | **0** | as 20 de §5.23, §5.25, §5.26 e §5.28 foram aprovadas em 2026-11-21; o `0029` é view e não conta |
-| tabelas da série | 97 | `plano-migrations.md` §3 (92 originais + 4 do adendo `0030` + 1 do adendo `0031`) |
+| arquivos 100% | **27** | `0001_bootstrap.sql`, `0002_ops_audit.sql`, `0003_portal_person.sql`, `0004_portal_access.sql`, `0005_game_account.sql`, `0006_game_character.sql`, `0007_game_session.sql`, `0008_game_skills.sql`, `0009_game_inventory.sql`, `0010_game_guild.sql`, `0011_game_economy.sql`, `0012_ops_delivery.sql`, `0013_content_taxonomy.sql`, `0014_content_item.sql`, `0015_content_skill.sql`, `0019_content_world.sql`, `0021_content_rules.sql`, `0022_content_overrides.sql`, `0024_content_maps.sql`, `0025_content_combat.sql`, `0026_content_quests_events.sql`, `0028_game_quests_events.sql`, `0029_views.sql`, `0030_portal_content.sql`, `0031_portal_mfa.sql`, `0033_ops_idempotency.sql`, `0034_portal_market.sql` |
+| tabelas com DDL fechado no total | **109** | 1 de `0001` + 4 de `0002` + 3 de `0003` + 2 de `0004` + 5 de `0005` + 5 de `0006` + 2 de `0007` + 5 de `0008` + 3 de `0009` + 4 de `0010` + 10 de `0011` + 1 de `0012` + 5 de `0013` + 1 de `0014` + 1 de `0015` + 13 de `0019` + 5 de `0021` + 3 de `0022` + 2 de `0024` + 4 de `0025` + 6 de `0026` + 7 de `0028` + 4 de `0030` + 1 de `0031` + 1 de `0033` + 11 de `0034` |
+| tabelas desenhadas e **sem aprovação** | **0** | as 20 de §5.23, §5.25, §5.26 e §5.28 foram aprovadas em 2026-11-21 e as 12 de §5.33/§5.34 em 2026-11-22; o `0029` é view e não conta |
+| tabelas da série | 109 | `plano-migrations.md` §3 (92 originais + 4 do adendo `0030` + 1 do adendo `0031` + 1 do `0033` + 11 do `0034`) |
 
 Estado de **documentação** e de **aplicação** não é daqui: esta página só diz se o DDL está fechado.
 Quem deriva `planejado`/`provisório`/`pronto` do estado do arquivo é `migrations-checklist.md` §1.2,
 dono único. A coluna `Estado` de §2 cita esse checklist arquivo a arquivo, sem escala própria.
 
-**97 de 97** têm DDL fechado. Os 25 arquivos vão de `0001` a `0024` mais os lotes `0025`, `0026`,
-`0028` e `0029`, e os adendos `0030` e `0031`, aprovados pelo dono em 2026-11-20 e 2026-11-21; a
-última rodada fechou as 20 tabelas que estavam desenhadas sem aprovação (§5.23, §5.25, §5.26 e
-§5.28). Nenhuma tabela da série fica sem coluna desenhada e nenhuma espera o "sim" do dono.
+**109 de 109** têm DDL fechado. Os 27 arquivos vão de `0001` a `0024` mais os lotes `0025`, `0026`,
+`0028` e `0029`, os adendos `0030` e `0031` e os lotes `0033` e `0034` de 2026-11-22; a
+rodada de 2026-11-21 fechou as 20 tabelas que estavam desenhadas sem aprovação (§5.23, §5.25, §5.26 e
+§5.28) e a de 2026-11-22, as 12 de §5.33/§5.34. Nenhuma tabela da série fica sem coluna desenhada e
+nenhuma espera o "sim" do dono.
 O que resta `bloqueada` são os seis arquivos de seed, presos na verificação do dado de origem — não no
 desenho e não em ferramenta (`migrations-checklist.md` §3).
 
 O adendo `0030` (§5.15) existe porque o `wyd-portal` decidiu, em 2026-11-20, quais tabelas o CMS e o
 launcher precisam. O **conjunto** é decisão de 2026-11-20; o **desenho de coluna** foi aprovado pelo
-dono na mesma data, e por isso a série passou a 30 arquivos / 96 tabelas naquela data e as quatro tabelas contam; com o adendo `0031` (§5.20) ela foi a 31 arquivos e 97 tabelas, e o `0032` (§5.32, `M27`) a levou a **32 arquivos e 97 tabelas**.
+dono na mesma data, e por isso a série passou a 30 arquivos / 96 tabelas naquela data e as quatro tabelas contam; com o adendo `0031` (§5.20) ela foi a 31 arquivos e 97 tabelas, e o `0032` (§5.32, `M27`) a levou a **32 arquivos e 97 tabelas**. Em 2026-11-22, `M30` acrescentou
+`ops.idempotency_record` (§5.33) e `M31` as onze tabelas do mercado (§5.34), e a série passou a **34
+arquivos e 109 tabelas**, com `SCHEMA_VERSION = 34` na troca.
 
 Os lotes de `0009`, `0010` e `0011` fecharam em 2026-11-20 (§5.12, §5.13 e §5.14), e o `0012`
 (`ops.delivery_queue`) fechou na mesma data (§5.16), junto com `M25` — dreno com `SKIP LOCKED` e
@@ -104,7 +107,9 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 29 | `0029_views.sql` | `concluída` | §5.29 | — (aprovado em 2026-11-21, sem `GRANT` novo; página `0029-views.md` escrita e conferida) |
 | 30 | `0030_portal_content.sql` (adendo) | `concluída` | §5.15 | — (aprovado em 2026-11-20; página `0030-portal-content.md` escrita e conferida) |
 | 31 | `0031_portal_mfa.sql` (adendo) | `concluída` | §5.20 | — (aprovado em 2026-11-20; página `0031-portal-mfa.md` escrita e conferida) |
-| 32 | `0032_admin_grants.sql` | `concluída` | §5.32 | — (decidido em 2026-11-21 em `M27`: só `GRANT`, sem tabela; página `0032-admin-grants.md` escrita e conferida) |
+| 32 | `0032_admin_grants.sql` | `concluída` | §5.32 | — (decidido em 2026-11-21 em `M27`: só `GRANT`, sem tabela; página `0032-admin-grants.md` escrita e conferida; emendado em 2026-11-22 com os dois `GRANT` da custódia) |
+| 33 | `0033_ops_idempotency.sql` | `concluída` | §5.33 | — (decidido em 2026-11-22 em `M30`: uma tabela em `ops`, 7 dias de retenção) |
+| 34 | `0034_portal_market.sql` | `concluída` | §5.34 | — (decidido em 2026-11-22 em `M31`: dez tabelas em `portal` e uma em `game`) |
 
 **Leitura do estado:** nenhuma tabela da série fica sem desenho e nenhum lote espera aprovação. O que
 resta `bloqueada` são os seis arquivos de seed (`0016`, `0017`, `0018`, `0020`, `0023` e `0027`), presos
@@ -114,7 +119,8 @@ conferido (`plano-migrations.md` §4).
 A linha 30 é **adendo**, não parte dos 29 originais: o arquivo `0030_portal_content.sql` foi proposto
 em 2026-11-20 para as quatro tabelas de conteúdo do portal e aprovado pelo dono na mesma data. A linha
 32, decidida em 2026-11-21 (`M27`), é o único arquivo sem tabela: concede privilégio ao papel
-`wyd_admin`, que o provision cria. A soma de §1 fica em **32 arquivos e 97 tabelas**.
+`wyd_admin`, que o provision cria. As linhas 33 e 34 são os lotes de 2026-11-22 (`M30` e `M31`). A
+soma de §1 fica em **34 arquivos e 109 tabelas**.
 
 ---
 
@@ -1881,7 +1887,7 @@ conferida contra este texto.
 
 !!! note "Aprovado em 2026-11-20"
     O dono aprovou o desenho na rodada de perguntas de 2026-11-20, na opção **"Sim, aprovar o desenho
-    como está"**. As quatro tabelas entram na conta de §1 (49 de 96 na época; hoje 97 de 97), a série passa a
+    como está"**. As quatro tabelas entram na conta de §1 (49 de 96 na época; hoje 109 de 109), a série passa a
     `0030_portal_content.sql` como 30º arquivo e a página `migrations/0030-portal-content.md` está
     `concluída` no checklist.
 
@@ -2529,7 +2535,7 @@ DROP FUNCTION content.fn_item_catalog_effects();
     O dono aprovou as três escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **`delay` e `affect_time` gravados brutos** (o runtime converte), **`class_slug` e
     `lineage_slug` anuláveis** com FK (`NULL` = vínculo não provado) e **`skill_index SMALLINT` como
-    PK** (0–247). A tabela entra na conta de §1 (75 de 97 na época) e a página `migrations/0015-content-skill.md`
+    PK** (0–247). A tabela entra na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0015-content-skill.md`
     fica `concluída` no checklist.
 
 Uma tabela, 154 linhas no seed de `0018` — 151 do cliente e 3 da Kersef (`plano-migrations.md` §3).
@@ -2627,7 +2633,7 @@ DROP TABLE content.skill_catalog;
     O dono aprovou as duas escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **`id` identity com único parcial `(person_id, kind) WHERE revoked_at IS NULL`** e
     **revogação com `revoked_at` + `secret_encrypted = NULL`**. Também aprovou o desenho completo na
-    opção "Sim, aprovar o desenho como está". A tabela entra na conta de §1 (75 de 97 na época) e a página
+    opção "Sim, aprovar o desenho como está". A tabela entra na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página
     `migrations/0031-portal-mfa.md` fica `concluída` no checklist.
 
 Uma tabela. Fecha a última peça de DDL que o `wyd-portal` pedia: a forma que `A20` reservou
@@ -2751,7 +2757,7 @@ regra do padrão é decisão do dono do padrão.
     definição, FK de item em duas das três tabelas e `map_id` em `world_item_seed`) e **revisou as
     colunas `H` antes de aprovar**: `merchant`, `eff1..eff3`/`effv1..effv3`, os cinco blocos crus,
     `rotate` e o grupo de gerador do NPC foram mantidos. As 13 tabelas entram na conta de §1
-    (75 de 97 na época) e a página `migrations/0019-content-world.md` fica `concluída` no checklist.
+    (75 na época, com alvo de 97; hoje 109) e a página `migrations/0019-content-world.md` fica `concluída` no checklist.
 
 As 13 tabelas de `plano-migrations.md` §3: `content_source`, `npc_template`, `npc_definition`,
 `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`,
@@ -3147,7 +3153,7 @@ normalização de `mob_merc.items` em tabela filha é lote futuro, não este; o 
 
 !!! note "Aprovado em 2026-11-20"
     O dono respondeu as decisões de forma e deu o "sim" ao conjunto em 2026-11-20. As cinco tabelas
-    entram na conta de §1 (75 de 97 na época) e a página `migrations/0021-content-rules.md` fica `concluída` no
+    entram na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0021-content-rules.md` fica `concluída` no
     checklist. As colunas seguem `H` até trace do servidor: aprovar o desenho não as promove a `P`.
 
 O escopo (cinco nomes e ordem) é `plano-migrations.md` §3, linha 21: `refine_rate`,
@@ -4259,7 +4265,8 @@ acima); e a criação de view materializada, que `P-17` proíbe até haver medi�
 
 **Decidido em 2026-11-21 (`M27`, opção A + S1 + C1 + D1).** O papel nasce fora da série, em
 `db/roles.sql` (`src/provision/spec.md` §2 e §4); este arquivo só concede. **Sem tabela, sem índice e
-sem objeto:** `Tab.` continua 97 e a série passa a 32 arquivos.
+sem objeto:** `Tab.` de `0032` é zero e a série passou a 32 arquivos (hoje 34, com os lotes `0033` e
+`0034` de 2026-11-22).
 
 ```sql
 -- migrate:up
@@ -4273,6 +4280,10 @@ GRANT SELECT, UPDATE ON game.server_channel TO wyd_admin;
 GRANT SELECT, UPDATE ON game.session TO wyd_admin;
 GRANT SELECT, UPDATE ON game.city TO wyd_admin;
 GRANT SELECT, UPDATE ON game.item_price TO wyd_admin;
+-- Custódia de item do mercado (C4 §4.9–§4.13, `LAC-ADM-07`): o item sai da mochila e volta para ela
+-- na mesma transação. `DELETE` existe só aqui, e só nesta tabela.
+GRANT SELECT, INSERT, DELETE ON game.character_item TO wyd_admin;
+GRANT SELECT ON game.character TO wyd_admin;
 
 GRANT INSERT ON ops.audit_log TO wyd_admin;
 GRANT SELECT (id) ON ops.audit_log TO wyd_admin;
@@ -4280,6 +4291,8 @@ GRANT SELECT (id) ON ops.audit_log TO wyd_admin;
 -- migrate:down
 REVOKE SELECT (id) ON ops.audit_log FROM wyd_admin;
 REVOKE INSERT ON ops.audit_log FROM wyd_admin;
+REVOKE SELECT ON game.character FROM wyd_admin;
+REVOKE SELECT, INSERT, DELETE ON game.character_item FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.item_price FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.city FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.session FROM wyd_admin;
@@ -4292,9 +4305,13 @@ REVOKE USAGE ON SCHEMA game FROM wyd_admin;
 ```
 
 **Por que esses privilégios.** `USAGE` abre o schema; a escrita vem da tabela. `SELECT` nas sete tabelas
-cobre `expected_*`, `WHERE` e `RETURNING` sem depender de outra leitura (S1). `DELETE` fica de fora
-porque nenhuma rota do C4 pede. Em `ops.audit_log`, `INSERT` é a auditoria (C1) e `SELECT (id)` existe
-porque o `200` de §4.1–§4.4 devolve `audit_id`; nenhuma outra coluna é legível.
+do C4 cobre `expected_*`, `WHERE` e `RETURNING` sem depender de outra leitura (S1). Em `ops.audit_log`,
+`INSERT` é a auditoria (C1) e `SELECT (id)` existe porque o `200` de §4.1–§4.4 devolve `audit_id`;
+nenhuma outra coluna é legível. **Emenda de 2026-11-22 (`M31`):** a custódia de item (`ADM-10`) escreve
+`game.character_item` e lê `game.character` para conferir o titular; sem esses dois privilégios o
+contrato aprovado não executava. `DELETE` continua fora de todas as outras tabelas, e a mochila é a
+única em que apagar linha é a operação — o item sai de `character_item` e nasce em
+`game.market_escrow` (§5.34) na mesma transação.
 
 **Por que arquivo novo (D1).** Reabrir `0001` obrigaria a reescrever DDL já aplicado, e `db/roles.sql`
 não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0032` não reordena nada: só
@@ -4307,6 +4324,487 @@ não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0
 **Fechado fora deste lote:** `M28` — decidida em 2026-11-21 na redação B: a "API interna" de §5.15 e de
 `migrations/0030-portal-content.md` §8 é o serviço `wyd-admin`; as quatro tabelas de `portal` ficam com
 o BFF do portal. A correção é só de prosa, sem `GRANT` nem DDL.
+
+### 5.33 Lote `0033` — `ops.idempotency_record` (DDL confirmado em 2026-11-22)
+
+**Decidido em 2026-11-22 (`M30`), fechando `LAC-ADM-02` e `LAC-ADM-06` do `wyd-admin`.** Uma tabela em
+`ops` guarda o registro de idempotência que o contrato C4 exige. A série passa a **33 arquivos** naquele
+lote e `Tab.` sobe de 97 para **98**.
+
+Alternativas recusadas: **a)** reutilizar a chave natural de cada rota — só `0011`, `0012` e `0034` têm
+coluna de chave, e as cinco tabelas restantes do C4 (`account_moderation`, `account_wallet`,
+`server_channel`, `session`, `city`, `item_price`) não têm onde guardá-la; **b)** índice único parcial em
+`ops.audit_log` — a auditoria é append-only e passaria a guardar corpo de resposta, exigindo `UPDATE` e
+`DELETE` na tabela que existe para não ser editada.
+
+```sql
+-- 0033_ops_idempotency: registro durável de idempotência do contrato do wyd-admin.
+-- Não tem FK para `ops.audit_log`: como o ator da auditoria, o registro sobrevive ao alvo e não bloqueia
+-- escrita. Depende de `0001` (schema `ops`) apenas.
+
+-- migrate:up
+CREATE TABLE ops.idempotency_record (
+    -- Quem chamou: identidade do serviço (hoje o BFF do portal). Compõe o escopo da chave do C4 §2.
+    caller        TEXT NOT NULL,
+    method        TEXT NOT NULL,
+    -- Rota-modelo, com o parâmetro literal (`/accounts/{account_id}/moderation`), não a URL concreta.
+    route         TEXT NOT NULL,
+    key           TEXT NOT NULL,
+    -- sha256 do JSON canônico do corpo: mesma chave com corpo diferente é 409, não replay.
+    body_sha256   TEXT NOT NULL,
+    state         TEXT NOT NULL,
+    status_code   SMALLINT,
+    response_body JSONB,
+    -- Id da linha de auditoria da mesma transação; sem FK, por desenho.
+    audit_id      BIGINT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    closed_at     TIMESTAMPTZ,
+    CONSTRAINT pk_idempotency_record PRIMARY KEY (caller, method, route, key),
+    CONSTRAINT ck_idempotency_record_metodo CHECK (method IN ('POST', 'PUT')),
+    CONSTRAINT ck_idempotency_record_chave CHECK (key ~ '^[A-Za-z0-9_-]{16,64}$'),
+    CONSTRAINT ck_idempotency_record_corpo CHECK (body_sha256 ~ '^[0-9a-f]{64}$'),
+    CONSTRAINT ck_idempotency_record_rota CHECK (char_length(route) BETWEEN 1 AND 128),
+    CONSTRAINT ck_idempotency_record_estado CHECK (state IN ('in_progress', 'completed', 'failed')),
+    -- Resultado e corpo andam juntos: `completed` tem os dois; `in_progress` e `failed`, nenhum.
+    CONSTRAINT ck_idempotency_record_resultado CHECK (
+        (state = 'completed') = (status_code IS NOT NULL AND response_body IS NOT NULL)
+    ),
+    -- `in_progress` é o único estado sem carimbo de fechamento — e ele nunca é commitado.
+    CONSTRAINT ck_idempotency_record_fechamento CHECK ((state = 'in_progress') = (closed_at IS NULL))
+);
+
+-- Expurgo por retenção: varre por idade, não por estado.
+CREATE INDEX ix_idempotency_record_criado ON ops.idempotency_record (created_at);
+
+-- O admin é o único escritor em runtime; a leitura de BI continua no default privilege de `0001`.
+GRANT SELECT, INSERT, UPDATE ON ops.idempotency_record TO wyd_admin;
+```
+
+```sql
+-- migrate:down
+REVOKE SELECT, INSERT, UPDATE ON ops.idempotency_record FROM wyd_admin;
+DROP INDEX ops.ix_idempotency_record_criado;
+DROP TABLE ops.idempotency_record;
+```
+
+**Como a transação fecha (`LAC-ADM-02`).** A linha nasce `in_progress` **dentro da transação da ação** e
+é fechada nela como `completed` (status e corpo gravados) ou `failed`; o `COMMIT` só existe com a linha
+já fechada. Consequências que o desenho assume:
+
+1. **`in_progress` nunca é lido por outra sessão** — ele não é commitado. O `409 ADM_IDEMPOTENCY_IN_PROGRESS`
+   do C4 §2 vem do bloqueio da `INSERT` duplicada na PK: quem chega depois espera o `COMMIT` alheio e,
+   se estourar o prazo de 2 s da transação, recebe o `409` com `Retry-After: 1`.
+2. **Não existe chave presa.** Transação abortada leva a linha junto; não há estado a limpar nem lease a
+   expirar.
+3. **Reenvio com a mesma chave** encontra a linha: `completed` devolve status e corpo gravados; corpo
+diferente é `409`; `failed` permite repetir, e a repetição reusa a linha na mesma transação.
+
+**Retenção (`LAC-ADM-06`).** **7 dias após `created_at`**, qualquer estado, por expurgo diário de
+operação (`DELETE … WHERE created_at < now() - interval '7 days'`). O piso é objetivo: a janela de replay
+do chamador é de 24 h (`M17`) e apagar antes disso permitiria o mesmo `Idempotency-Key` executar duas
+vezes. O teto é o custo: são ações de staff, de volume baixo, e o registro guarda corpo de resposta —
+sete dias cobrem a investigação de um incidente que aparece no dia seguinte ou depois de um fim de
+semana. O número é **decisão**, não medição; `planos/retencao-e-capacidade.md` o registra quando existir.
+Depois do expurgo, `GET /actions/{key}` responde `404` e a mesma chave deixa de ser reconhecida.
+
+**Permissões.** `ops` já dá `USAGE` a `wyd_admin` (`0032`) e `SELECT` a `wyd_read` por default privilege
+do `0001`. `INSERT` e `UPDATE` são deste arquivo; **`DELETE` não é de runtime** — o expurgo é rotina de
+operação, com papel de manutenção, como o da fila de entrega (`M25`).
+
+**Prova de execução.** Com `0001` e `0032` aplicados:
+
+| # | Prova | Comando | Esperado |
+|---:|---|---|---|
+| 1 | tabela existe | `SELECT count(*) FROM ops.idempotency_record;` | `0` |
+| 2 | chave fora do formato | `INSERT` com `key = 'curta'` | `23514` em `ck_idempotency_record_chave` |
+| 3 | corpo fora de sha256 | `body_sha256 = 'xyz'` | `23514` em `ck_idempotency_record_corpo` |
+| 4 | `completed` sem corpo | `state = 'completed', status_code = 200` | `23514` em `ck_idempotency_record_resultado` |
+| 5 | chave duplicada | duas linhas com o mesmo escopo e chave | segundo `23505` em `pk_idempotency_record` |
+| 6 | escrita do admin | `SET ROLE wyd_admin; INSERT` de linha fechada | `INSERT 0 1` |
+| 7 | portal não escreve | `SET ROLE wyd_portal; INSERT` na mesma tabela | `42501` |
+| 8 | expurgo | `EXPLAIN` do `DELETE` por `created_at` | varredura por `ix_idempotency_record_criado` |
+
+### 5.34 Lote `0034` — mercado e armaria (DDL confirmado em 2026-11-22)
+
+**Decidido em 2026-11-22 (`M31`), fechando `LAC-ADM-07` do `wyd-admin`.** Onze tabelas: dez em `portal`
+(o mercado do portal) e uma em `game` (a custódia do item). É o schema que a armaria e o mercado já
+descrevem em `armaria-e-mercado.md` §3; aqui ele vira texto. A série passa a **34 arquivos e 109
+tabelas**, e `SCHEMA_VERSION` acompanha em **34**.
+
+Alternativas recusadas: **a)** adiar o lote — `ADM-10` (C4 §4.9–§4.13) ficaria sem forma e a armaria do
+portal sem schema, com a página de forma descrevendo tabela que não existe; **b)** duas migrations, uma
+por schema — separaria a custódia da transação que a cria, e nenhum arquivo seria dono da fronteira
+entre o crédito do portal e o item do jogo.
+
+```sql
+-- 0034_portal_market: mercado do portal (10 tabelas em `portal`) e custódia do item (1 em `game`).
+-- Depende de `0009` (`game.character_item`, `game.character`) e de `0001` (`ops.fn_set_updated_at`).
+
+-- migrate:up
+CREATE TABLE portal.market_wallet (
+    account_id BIGINT NOT NULL,
+    currency   TEXT NOT NULL DEFAULT 'portal_credit',
+    balance    BIGINT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_wallet PRIMARY KEY (account_id),
+    CONSTRAINT ck_market_wallet_moeda CHECK (currency IN ('portal_credit')),
+    CONSTRAINT ck_market_wallet_saldo CHECK (balance >= 0)
+);
+CREATE TRIGGER trg_market_wallet_set_updated_at
+    BEFORE UPDATE ON portal.market_wallet
+    FOR EACH ROW EXECUTE FUNCTION ops.fn_set_updated_at();
+
+CREATE TABLE portal.market_ledger (
+    id              BIGINT GENERATED ALWAYS AS IDENTITY,
+    account_id      BIGINT NOT NULL,
+    kind            TEXT NOT NULL,
+    amount          BIGINT NOT NULL,
+    balance_after   BIGINT NOT NULL,
+    ref_kind        TEXT,
+    ref_id          BIGINT,
+    idempotency_key TEXT NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_ledger PRIMARY KEY (id),
+    CONSTRAINT ck_market_ledger_tipo CHECK (kind IN (
+        'recarga', 'compra', 'venda', 'taxa', 'retencao_lance', 'devolucao_lance', 'estorno'
+    )),
+    CONSTRAINT ck_market_ledger_valor CHECK (amount <> 0),
+    CONSTRAINT ck_market_ledger_saldo CHECK (balance_after >= 0),
+    CONSTRAINT ck_market_ledger_ref CHECK ((ref_kind IS NULL) = (ref_id IS NULL)),
+    CONSTRAINT ck_market_ledger_ref_tipo CHECK (
+        ref_kind IS NULL OR ref_kind IN ('anuncio', 'transacao', 'disputa', 'recarga')
+    ),
+    CONSTRAINT uq_market_ledger_idempotency UNIQUE (idempotency_key)
+);
+CREATE INDEX ix_market_ledger_conta_criado ON portal.market_ledger (account_id, created_at DESC);
+
+CREATE TABLE portal.market_fee_rule (
+    id                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    fee_bps              INTEGER NOT NULL,
+    effective_from       TIMESTAMPTZ NOT NULL,
+    created_by_person_id BIGINT,
+    note                 TEXT NOT NULL DEFAULT '',
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_fee_rule PRIMARY KEY (id),
+    CONSTRAINT uq_market_fee_rule_vigencia UNIQUE (effective_from),
+    CONSTRAINT ck_market_fee_rule_bps CHECK (fee_bps BETWEEN 0 AND 10000)
+);
+
+CREATE TABLE portal.market_listing (
+    id                BIGINT GENERATED ALWAYS AS IDENTITY,
+    seller_account_id BIGINT NOT NULL,
+    character_id      BIGINT NOT NULL,
+    item_index        INTEGER NOT NULL,
+    item_kind_slug    TEXT,
+    qty               INTEGER NOT NULL DEFAULT 1,
+    refine            SMALLINT NOT NULL DEFAULT 0,
+    ancient           BOOLEAN NOT NULL DEFAULT false,
+    gem_effect        SMALLINT NOT NULL DEFAULT 0,
+    gem_value         SMALLINT NOT NULL DEFAULT 0,
+    flags             INTEGER NOT NULL DEFAULT 0,
+    kind              TEXT NOT NULL,
+    price             BIGINT NOT NULL,
+    buyout_price      BIGINT,
+    fee_bps           INTEGER NOT NULL,
+    ends_at           TIMESTAMPTZ,
+    status            TEXT NOT NULL DEFAULT 'rascunho',
+    escrow_ref        BIGINT,
+    current_bid_id    BIGINT,
+    bid_count         INTEGER NOT NULL DEFAULT 0,
+    view_count        INTEGER NOT NULL DEFAULT 0,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_listing PRIMARY KEY (id),
+    CONSTRAINT ck_market_listing_tipo CHECK (kind IN ('venda', 'leilao')),
+    CONSTRAINT ck_market_listing_estado CHECK (status IN (
+        'rascunho', 'ativo', 'vendido', 'expirado', 'cancelado', 'disputa'
+    )),
+    CONSTRAINT ck_market_listing_preco CHECK (price > 0),
+    CONSTRAINT ck_market_listing_compra_ja CHECK (buyout_price IS NULL OR buyout_price >= price),
+    -- Prazo e leilão andam juntos: venda direta não tem `ends_at`, leilão não vive sem ele.
+    CONSTRAINT ck_market_listing_prazo CHECK ((kind = 'leilao') = (ends_at IS NOT NULL)),
+    -- Anúncio ativo sem custódia confirmada seria item à venda sem item no banco.
+    CONSTRAINT ck_market_listing_custodia CHECK (status <> 'ativo' OR escrow_ref IS NOT NULL),
+    CONSTRAINT ck_market_listing_qtd CHECK (qty >= 1),
+    CONSTRAINT ck_market_listing_refino CHECK (refine BETWEEN 0 AND 15),
+    CONSTRAINT ck_market_listing_taxa CHECK (fee_bps BETWEEN 0 AND 10000),
+    CONSTRAINT ck_market_listing_popularidade CHECK (bid_count >= 0 AND view_count >= 0),
+    CONSTRAINT ck_market_listing_categoria CHECK (
+        item_kind_slug IS NULL OR char_length(item_kind_slug) BETWEEN 1 AND 64
+    )
+);
+CREATE INDEX ix_market_listing_item_status_preco
+    ON portal.market_listing (item_index, status, price);
+CREATE INDEX ix_market_listing_kind_status_preco
+    ON portal.market_listing (item_kind_slug, status, price);
+CREATE INDEX ix_market_listing_status_popularidade
+    ON portal.market_listing (status, bid_count DESC, view_count DESC);
+CREATE INDEX ix_market_listing_status_prazo
+    ON portal.market_listing (status, ends_at) WHERE status = 'ativo';
+CREATE TRIGGER trg_market_listing_set_updated_at
+    BEFORE UPDATE ON portal.market_listing
+    FOR EACH ROW EXECUTE FUNCTION ops.fn_set_updated_at();
+
+CREATE TABLE portal.market_bid (
+    id                BIGINT GENERATED ALWAYS AS IDENTITY,
+    listing_id        BIGINT NOT NULL,
+    bidder_account_id BIGINT NOT NULL,
+    amount            BIGINT NOT NULL,
+    status            TEXT NOT NULL DEFAULT 'ativo',
+    hold_ledger_id    BIGINT,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_bid PRIMARY KEY (id),
+    CONSTRAINT fk_market_bid_listing FOREIGN KEY (listing_id)
+        REFERENCES portal.market_listing (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT fk_market_bid_ledger FOREIGN KEY (hold_ledger_id)
+        REFERENCES portal.market_ledger (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT ck_market_bid_valor CHECK (amount > 0),
+    CONSTRAINT ck_market_bid_estado CHECK (status IN (
+        'ativo', 'superado', 'vencedor', 'perdido', 'cancelado'
+    ))
+);
+-- Um lance ativo por comprador e anúncio: subir o lance é atualizar, não empilhar.
+CREATE UNIQUE INDEX ux_market_bid_comprador_ativo
+    ON portal.market_bid (listing_id, bidder_account_id) WHERE status = 'ativo';
+CREATE INDEX ix_market_bid_listing_criado ON portal.market_bid (listing_id, created_at DESC);
+CREATE INDEX ix_market_bid_ledger ON portal.market_bid (hold_ledger_id)
+    WHERE hold_ledger_id IS NOT NULL;
+
+CREATE TABLE portal.market_transaction (
+    id                BIGINT GENERATED ALWAYS AS IDENTITY,
+    listing_id        BIGINT NOT NULL,
+    buyer_account_id  BIGINT NOT NULL,
+    seller_account_id BIGINT NOT NULL,
+    price_gross       BIGINT NOT NULL,
+    fee_amount        BIGINT NOT NULL,
+    net_amount        BIGINT NOT NULL,
+    fee_bps           INTEGER NOT NULL,
+    escrow_ref        BIGINT,
+    settled_at        TIMESTAMPTZ NOT NULL,
+    idempotency_key   TEXT NOT NULL,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_transaction PRIMARY KEY (id),
+    CONSTRAINT fk_market_transaction_listing FOREIGN KEY (listing_id)
+        REFERENCES portal.market_listing (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT uq_market_transaction_listing UNIQUE (listing_id),
+    CONSTRAINT uq_market_transaction_idempotency UNIQUE (idempotency_key),
+    CONSTRAINT ck_market_transaction_partes CHECK (buyer_account_id <> seller_account_id),
+    -- Dinheiro conservado: o que sai do comprador é taxa + líquido do vendedor.
+    CONSTRAINT ck_market_transaction_soma CHECK (fee_amount + net_amount = price_gross),
+    CONSTRAINT ck_market_transaction_valores CHECK (
+        price_gross > 0 AND fee_amount >= 0 AND net_amount >= 0
+    )
+);
+CREATE INDEX ix_market_transaction_comprador
+    ON portal.market_transaction (buyer_account_id, settled_at DESC);
+CREATE INDEX ix_market_transaction_vendedor
+    ON portal.market_transaction (seller_account_id, settled_at DESC);
+
+CREATE TABLE portal.market_review (
+    id                  BIGINT GENERATED ALWAYS AS IDENTITY,
+    transaction_id      BIGINT NOT NULL,
+    reviewer_account_id BIGINT NOT NULL,
+    seller_account_id   BIGINT NOT NULL,
+    rating              SMALLINT NOT NULL,
+    comment             TEXT,
+    state               TEXT NOT NULL DEFAULT 'visivel',
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_review PRIMARY KEY (id),
+    CONSTRAINT fk_market_review_transaction FOREIGN KEY (transaction_id)
+        REFERENCES portal.market_transaction (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT uq_market_review_transaction UNIQUE (transaction_id),
+    CONSTRAINT ck_market_review_nota CHECK (rating BETWEEN 1 AND 5),
+    CONSTRAINT ck_market_review_comentario CHECK (
+        comment IS NULL OR char_length(comment) <= 500
+    ),
+    -- Moderação oculta, não apaga: a prova da transação continua.
+    CONSTRAINT ck_market_review_estado CHECK (state IN ('visivel', 'oculto'))
+);
+
+CREATE TABLE portal.market_reputation (
+    account_id      BIGINT NOT NULL,
+    sales_completed INTEGER NOT NULL DEFAULT 0,
+    sales_disputed  INTEGER NOT NULL DEFAULT 0,
+    disputes_lost   INTEGER NOT NULL DEFAULT 0,
+    rating_sum      BIGINT NOT NULL DEFAULT 0,
+    rating_count    INTEGER NOT NULL DEFAULT 0,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_reputation PRIMARY KEY (account_id),
+    CONSTRAINT ck_market_reputation_contadores CHECK (
+        sales_completed >= 0 AND sales_disputed >= 0 AND disputes_lost >= 0 AND rating_count >= 0
+    ),
+    -- Soma e contagem nascem e morrem juntas: média de zero avaliação não existe.
+    CONSTRAINT ck_market_reputation_notas CHECK ((rating_count = 0) = (rating_sum = 0))
+);
+CREATE TRIGGER trg_market_reputation_set_updated_at
+    BEFORE UPDATE ON portal.market_reputation
+    FOR EACH ROW EXECUTE FUNCTION ops.fn_set_updated_at();
+
+CREATE TABLE portal.market_notification (
+    id         BIGINT GENERATED ALWAYS AS IDENTITY,
+    account_id BIGINT NOT NULL,
+    kind       TEXT NOT NULL,
+    ref_kind   TEXT NOT NULL,
+    ref_id     BIGINT NOT NULL,
+    read_at    TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_notification PRIMARY KEY (id),
+    CONSTRAINT ck_market_notification_tipo CHECK (kind IN (
+        'lance_recebido', 'lance_superado', 'arrematado', 'vendido', 'expirado',
+        'disputa_aberta', 'disputa_decidida', 'avaliacao_recebida'
+    )),
+    CONSTRAINT ck_market_notification_ref CHECK (ref_kind IN ('anuncio', 'transacao', 'disputa'))
+);
+CREATE INDEX ix_market_notification_conta_nao_lida
+    ON portal.market_notification (account_id) WHERE read_at IS NULL;
+
+CREATE TABLE portal.market_dispute (
+    id                    BIGINT GENERATED ALWAYS AS IDENTITY,
+    transaction_id        BIGINT NOT NULL,
+    opened_by_account_id  BIGINT NOT NULL,
+    reason_code           TEXT NOT NULL,
+    description           TEXT NOT NULL,
+    state                 TEXT NOT NULL DEFAULT 'aberta',
+    resolution            TEXT,
+    decided_by_person_id  BIGINT,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT pk_market_dispute PRIMARY KEY (id),
+    CONSTRAINT fk_market_dispute_transaction FOREIGN KEY (transaction_id)
+        REFERENCES portal.market_transaction (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT ck_market_dispute_motivo CHECK (reason_code IN (
+        'nao_recebido', 'divergente', 'cobranca_indevida', 'outro'
+    )),
+    CONSTRAINT ck_market_dispute_estado CHECK (state IN (
+        'aberta', 'em_analise', 'resolvida_comprador', 'resolvida_vendedor', 'cancelada'
+    )),
+    -- Decidir exige desfecho escrito e autor: decisão sem os dois não é decisão.
+    CONSTRAINT ck_market_dispute_desfecho CHECK (
+        (state IN ('resolvida_comprador', 'resolvida_vendedor'))
+            = (resolution IS NOT NULL AND decided_by_person_id IS NOT NULL)
+    ),
+    CONSTRAINT ck_market_dispute_descricao CHECK (char_length(description) BETWEEN 1 AND 2000)
+);
+-- Uma disputa viva por transação; decidida, outra pode abrir.
+CREATE UNIQUE INDEX ux_market_dispute_aberta
+    ON portal.market_dispute (transaction_id) WHERE state IN ('aberta', 'em_analise');
+CREATE INDEX ix_market_dispute_estado_aberta
+    ON portal.market_dispute (state, created_at) WHERE state IN ('aberta', 'em_analise');
+CREATE INDEX ix_market_dispute_transaction ON portal.market_dispute (transaction_id);
+CREATE TRIGGER trg_market_dispute_set_updated_at
+    BEFORE UPDATE ON portal.market_dispute
+    FOR EACH ROW EXECUTE FUNCTION ops.fn_set_updated_at();
+
+CREATE TABLE game.market_escrow (
+    id              BIGINT GENERATED ALWAYS AS IDENTITY,
+    character_id    BIGINT NOT NULL,
+    item_index      INTEGER NOT NULL,
+    qty             INTEGER NOT NULL,
+    refine          SMALLINT NOT NULL,
+    ancient         BOOLEAN NOT NULL,
+    gem_effect      SMALLINT NOT NULL,
+    gem_value       SMALLINT NOT NULL,
+    flags           INTEGER NOT NULL,
+    state           TEXT NOT NULL DEFAULT 'retido',
+    listing_ref     BIGINT,
+    transaction_ref BIGINT,
+    idempotency_key TEXT NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    closed_at       TIMESTAMPTZ,
+    CONSTRAINT pk_market_escrow PRIMARY KEY (id),
+    CONSTRAINT fk_market_escrow_character FOREIGN KEY (character_id)
+        REFERENCES game.character (id) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    CONSTRAINT uq_market_escrow_idempotency UNIQUE (idempotency_key),
+    CONSTRAINT ck_market_escrow_estado CHECK (state IN ('retido', 'entregue', 'devolvido')),
+    CONSTRAINT ck_market_escrow_qtd CHECK (qty >= 1),
+    CONSTRAINT ck_market_escrow_refino CHECK (refine BETWEEN 0 AND 15),
+    -- Retido é o único estado aberto: entregue e devolvido têm carimbo.
+    CONSTRAINT ck_market_escrow_fechamento CHECK ((state = 'retido') = (closed_at IS NULL))
+);
+CREATE INDEX ix_market_escrow_estado ON game.market_escrow (state, created_at);
+CREATE INDEX ix_market_escrow_character ON game.market_escrow (character_id);
+
+-- Extrato do mercado é append-only, como `game.account_ledger` (`M16`): o default privilege de `portal`
+-- daria `UPDATE`/`DELETE` a `wyd_portal`, e o saldo é derivado dele.
+REVOKE UPDATE, DELETE ON portal.market_ledger FROM wyd_portal;
+-- Quem move item é o executor (`LAC-POR-01`), não o jogo: `wyd_game` continua sem escrever custódia.
+REVOKE INSERT, UPDATE, DELETE ON game.market_escrow FROM wyd_game;
+GRANT SELECT, INSERT, UPDATE ON game.market_escrow TO wyd_admin;
+```
+
+```sql
+-- migrate:down
+REVOKE SELECT, INSERT, UPDATE ON game.market_escrow FROM wyd_admin;
+DROP INDEX game.ix_market_escrow_character;
+DROP INDEX game.ix_market_escrow_estado;
+DROP TABLE game.market_escrow;
+DROP TRIGGER trg_market_dispute_set_updated_at ON portal.market_dispute;
+DROP INDEX portal.ix_market_dispute_transaction;
+DROP INDEX portal.ix_market_dispute_estado_aberta;
+DROP INDEX portal.ux_market_dispute_aberta;
+DROP TABLE portal.market_dispute;
+DROP INDEX portal.ix_market_notification_conta_nao_lida;
+DROP TABLE portal.market_notification;
+DROP TRIGGER trg_market_reputation_set_updated_at ON portal.market_reputation;
+DROP TABLE portal.market_reputation;
+DROP TABLE portal.market_review;
+DROP INDEX portal.ix_market_transaction_vendedor;
+DROP INDEX portal.ix_market_transaction_comprador;
+DROP TABLE portal.market_transaction;
+DROP INDEX portal.ix_market_bid_ledger;
+DROP INDEX portal.ix_market_bid_listing_criado;
+DROP INDEX portal.ux_market_bid_comprador_ativo;
+DROP TABLE portal.market_bid;
+DROP TRIGGER trg_market_listing_set_updated_at ON portal.market_listing;
+DROP INDEX portal.ix_market_listing_status_prazo;
+DROP INDEX portal.ix_market_listing_status_popularidade;
+DROP INDEX portal.ix_market_listing_kind_status_preco;
+DROP INDEX portal.ix_market_listing_item_status_preco;
+DROP TABLE portal.market_listing;
+DROP TABLE portal.market_fee_rule;
+DROP INDEX portal.ix_market_ledger_conta_criado;
+DROP TABLE portal.market_ledger;
+DROP TRIGGER trg_market_wallet_set_updated_at ON portal.market_wallet;
+DROP TABLE portal.market_wallet;
+```
+
+**Escolhas de forma decididas nesta rodada.**
+
+| # | Escolha | Decisão |
+|---|---|---|
+| 1 | Tipo de `ancient` no retrato da instância | `BOOLEAN`, igual a `game.character_item` (`0009`); o retrato copia a linha de origem sem reinterpretar |
+| 2 | Categoria do item no anúncio | `item_kind_slug` anulável, sem FK para `content.item_catalog` (`0014`): é cópia para filtro, e a integridade é do seed |
+| 3 | Disputa sem desfecho escrito | `ck_market_dispute_desfecho` exige `resolution` **e** autor nas duas resoluções; `cancelada` não exige nenhum dos dois |
+| 4 | `game.market_escrow` para o jogo | `REVOKE INSERT, UPDATE, DELETE` de `wyd_game`: custódia é do executor, e o jogo só lê |
+
+**Por que uma tabela em `game` no meio de dez em `portal`.** A custódia é o único ponto em que o item
+deixa de existir no inventário; ela precisa estar no schema em que o item vive e ser escrita por quem
+tem `DELETE` em `character_item` — o `wyd_admin` (`0032`, emendado nesta rodada). O resto do mercado é
+portal: crédito, anúncio, lance, transação e disputa não tocam `game`.
+
+**Prova de execução.** Com `0001`, `0005`, `0006` e `0032` aplicados e uma conta e um personagem de
+prova (ids 1):
+
+| # | Prova | Comando | Esperado |
+|---:|---|---|---|
+| 1 | onze tabelas | contar as tabelas novas por schema | `10` em `portal`, `1` em `game` |
+| 2 | anúncio ativo sem custódia | `INSERT` com `status = 'ativo'` e `escrow_ref` nulo | `23514` em `ck_market_listing_custodia` |
+| 3 | leilão sem prazo | `kind = 'leilao'` com `ends_at` nulo | `23514` em `ck_market_listing_prazo` |
+| 4 | soma da transação | `fee_amount + net_amount <> price_gross` | `23514` em `ck_market_transaction_soma` |
+| 5 | dois lances ativos | duas linhas ativas do mesmo comprador no mesmo anúncio | segundo `23505` em `ux_market_bid_comprador_ativo` |
+| 6 | duas disputas vivas | duas com `state = 'aberta'` na mesma transação | segundo `23505` em `ux_market_dispute_aberta` |
+| 7 | resolução sem autor | `state = 'resolvida_comprador'` com `decided_by_person_id` nulo | `23514` em `ck_market_dispute_desfecho` |
+| 8 | extrato append-only | `SET ROLE wyd_portal; UPDATE portal.market_ledger …` | `42501` |
+| 9 | jogo não move custódia | `SET ROLE wyd_game; INSERT INTO game.market_escrow …` | `42501` |
+| 10 | admin move custódia | `SET ROLE wyd_admin; INSERT …` e `DELETE FROM game.character_item …` | `INSERT 0 1` nas duas |
+| 11 | chave de custódia repetida | duas linhas com o mesmo `idempotency_key` | segundo `23505` em `uq_market_escrow_idempotency` |
+
+**O que este lote não decide:** as estatísticas de arma (`LAC-POR-08`, sem coluna e sem trace),
+`LAC-POR-06` (painel de monitoramento, do portal) e a retenção das tabelas de mercado — o mercado
+nasce como estado de jogador, como `game` e `portal` em `M22`, e crescer para sempre é decisão própria
+quando houver medição.
 
 ---
 
@@ -4373,17 +4871,14 @@ série parcial, o teste de "0 tabela ao fim do `down`" não tem o que medir.
    `migrations/`, e continua não autorizada a substituir a herdada (`plano-migrations.md` §6).
 3. **Não altera** `tools/`: o PR de ferramentas foi liberado em 2026-11-20 (`plano-migrations.md` §1)
    e é entrega própria; aqui só se escreve DDL.
-4. **Não mede** catálogo: as 15 tabelas daqui são contagem de documento, não de `information_schema`.
+4. **Não mede** catálogo: as tabelas contadas aqui são contagem de documento, não de `information_schema`.
 5. **Não fecha** `0003`/`0005` por ter as tabelas com DDL fechado: arquivo é unidade de aplicação; meio
    arquivo não roda.
 
-**Próximo passo de desenho, por ordem de retorno:** `0002` (`config_revision`/`config_change`) e
-`0006` (`character` e os quatro satélites, com `A14` na semântica do delete).
-`0001`, `0003`, `0004`, `0005` e `0007` estão fechados: **13 das 92** tabelas, e é o começo do corte vertical
-de `plano-migrations.md` §3.2. `server_channel` **não** é pendência de desenho: `M23` fundiu
-`channel_capacity` e `channel_role` na própria linha do canal (§5.5), e a FK de `game.session` só
-espera `game.character(id)` — `H` do `0006`, não deste arquivo. Fechados os três restantes, o corte
-tem schema completo e deixa de ser papel.
+**Próximo passo de desenho:** nenhum. As 109 tabelas da série têm coluna desenhada e aprovada, e o que
+resta `bloqueada` são os seis seeds, presos na verificação do dado de origem (`migrations-checklist.md`
+§3). O corte vertical de `plano-migrations.md` §3.2 é execução, não desenho: ele passa quando os oito
+primeiros arquivos forem escritos e aplicados em PG17 efêmero.
 
 ---
 
@@ -4414,14 +4909,14 @@ Consequências:
 - O lote `0010` (`guild` e os três satélites) fechou em 2026-11-20 (§5.13) e o `0011` (economia, 10
   tabelas) fechou na mesma data (§5.14).
 - O adendo `0030` (conteúdo do portal: `news`, `banner`, `guide`, `launcher_release`) foi desenhado e
-  aprovado em 2026-11-20 (§5.15); com o `0031` e o `0032` (só `GRANT`), a série está em 32 arquivos /
-  97 tabelas.
+  aprovado em 2026-11-20 (§5.15); com o `0031` e o `0032` (só `GRANT`), a série foi a 32 arquivos /
+  97 tabelas, e os lotes `0033` e `0034` de 2026-11-22 a levaram a **34 arquivos e 109 tabelas**.
 - O lote `0012` (`ops.delivery_queue`) fechou em 2026-11-20 (§5.16), com `M25`: o dreno usa
   `SELECT … FOR UPDATE SKIP LOCKED` e a linha fechada é expurgada 30 dias após `closed_at`.
 - Nenhum lote segue pendente: o `0021` (cinco tabelas) fechou em 2026-11-20 (§5.22) e o `0024` (mapa
   e teleporte) em 2026-11-21 (§5.24). Em 2026-11-21 o dono aprovou também os cinco últimos — `0022`
   (§5.23), `0025` (§5.25), `0026` (§5.26), `0028` (§5.28) e `0029` (§5.29) —, então as 97 tabelas da
-  série têm DDL confirmado.
+  série tiveram DDL confirmado; `M30` e `M31`, em 2026-11-22, fecharam as 12 restantes (§5.33, §5.34).
 - O lote `0013` (taxonomias do conteúdo: cinco tabelas e `fn_fold`) fechou em 2026-11-20 (§5.17), com
   as duas escolhas de forma aprovadas.
 - O lote `0014` (`content.item_catalog`) fechou em 2026-11-20 (§5.18), com as três escolhas de forma

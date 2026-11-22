@@ -72,7 +72,7 @@
 - **Aceitação:** repetir a mesma requisição com a mesma chave **não** cria segunda linha em
   `account_ledger` nem segundo evento em `audit_log`; corpo diferente devolve
   `409 ADM_IDEMPOTENCY_KEY_REUSED`; chave em execução devolve `409 ADM_IDEMPOTENCY_IN_PROGRESS`.
-- **Contrato:** C4 §2; dependência `LAC-ADM-02`. **Entrega:** `ADM-03`.
+- **Contrato:** C4 §2; tabela em `ops.idempotency_record` (`ddl-confirmado.md` §5.33; `LAC-ADM-02` fechada em 2026-11-22). **Entrega:** `ADM-03`.
 
 ### RF-ADM-009 — Auditar toda ação
 
@@ -93,9 +93,10 @@
 ### RF-ADM-011 — Consultar ação por chave
 
 - **Entrada:** `GET /actions/{key}`.
-- **Saída:** estado (`in_progress`/`completed`/`failed`) e corpo gravado.
-- **Aceitação:** após timeout de kick, a consulta devolve o desfecho real; chave expirada devolve
-  `404`; a consulta não escreve nada.
+- **Saída:** estado fechado (`completed`/`failed`) e corpo gravado; `404` quando a chave não existe —
+  nunca executada ou já expurgada. `in_progress` não é devolvido, porque não é commitado.
+- **Aceitação:** após timeout de kick, a consulta devolve o desfecho real; chave expirada (7 dias,
+  `LAC-ADM-06`) devolve `404`; a consulta não escreve nada.
 - **Contrato:** C4 §5. **Entrega:** `ADM-03`.
 
 ### RF-ADM-012 — Custodiar item do personagem
@@ -107,8 +108,8 @@
   transação; slot vazio devolve `404`; `expected_item_index` divergente devolve `409` sem escrita;
   repetir o mesmo `listing_ref` devolve `409 ADM_ITEM_ALREADY_HELD`; personagem de outra conta devolve
   `403`; repetir a chamada com a mesma chave não cria segunda custódia.
-- **Contrato:** C4 §4.9. **Entrega:** `ADM-10`. **Depende:** lote de `game.market_escrow`
-  (`LAC-ADM-07`).
+- **Contrato:** C4 §4.9. **Entrega:** `ADM-10`. **Depende:** `game.market_escrow` (`0034`,
+  `ddl-confirmado.md` §5.34; `LAC-ADM-07` fechada em 2026-11-22).
 
 ### RF-ADM-013 — Entregar item ao comprador
 
@@ -165,5 +166,6 @@
 `kick` e `broadcast` dependem de contrato com o `wyd-server` que não existe (`LAC-ADM-03`); até lá são
 requisitos **bloqueados**, não “a implementar depois”.
 
-A custódia (`RF-ADM-012` a `RF-ADM-015`) tem forma e contrato fechados, mas não é implementável antes do
-lote de `game.market_escrow` no `wyd-db` (`LAC-ADM-07`): bloqueada por schema, não por decisão.
+A custódia (`RF-ADM-012` a `RF-ADM-015`) tem forma, contrato e schema fechados: `game.market_escrow` entrou
+no lote `0034` em 2026-11-22 (`LAC-ADM-07`), e os `GRANT` que ela exige estão no `0032` emendado. Nada
+mais a bloqueia além da ordem de fatias do roadmap.

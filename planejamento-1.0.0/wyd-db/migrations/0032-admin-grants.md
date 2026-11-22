@@ -11,7 +11,13 @@ os outros cinco.
 !!! note "Decidido em 2026-11-21"
     O dono fechou `M27` na opção **A + S1 + C1 + D1**: `wyd_admin` com `LOGIN`, sem membership, `SELECT`
     nas sete tabelas do C4, auditoria por `INSERT` em `ops.audit_log` e `GRANT` em arquivo novo. A série
-    passa de **31 para 32 arquivos**, `Tab.` continua **97** e `SCHEMA_VERSION` vai a **32** na troca.
+    passa de **31 para 32 arquivos**, `Tab.` continua **97** e `SCHEMA_VERSION` iria a **32** na troca.
+
+!!! note "Emenda de 2026-11-22 (`M31`)"
+    A custódia de item do mercado (`ADM-10`, C4 §4.9–§4.13) escreve `game.character_item` e lê
+    `game.character`; sem esses dois privilégios o contrato aprovado não executava. O arquivo ganha
+    `SELECT, INSERT, DELETE` na mochila e `SELECT` no personagem. A série segue para **34 arquivos**
+    com os lotes `0033` e `0034` e `Tab.` vai a **109** — `SCHEMA_VERSION = 34` na troca.
 
 ## 1. Identificação
 
@@ -20,11 +26,11 @@ os outros cinco.
 | Número | `0032` (decidido em 2026-11-21; próximo livre depois de `0031`) |
 | Arquivo | `crates/wyd-db/migrations/0032_admin_grants.sql` |
 | Schema | `game` + `ops` (sem tabela) |
-| Posição | 32 de 32 (privilégio do papel de staff) |
+| Posição | 32 de 34 (privilégio do papel de staff; os lotes `0033` e `0034` vêm depois) |
 | Depende de | `0001` (schemas e default privileges), `0002` (`ops.audit_log`), `0005` (`account_moderation`, `account_wallet`, `account_ledger`), `0007` (`session`, `server_channel`), `0011` (`city`, `item_price`) e do papel `wyd_admin` já criado por `db/roles.sql` |
 | É dependência de | nada na série: nenhuma view de `0029` e nenhuma tabela o leem |
 | Tabelas criadas | 0 |
-| Objetos criados | 0 — 11 `GRANT`s (2 de schema, 8 de tabela e 1 de coluna) |
+| Objetos criados | 0 — 13 `GRANT`s (2 de schema, 10 de tabela e 1 de coluna) |
 | `SCHEMA_VERSION` | **não muda**: continua `53` até a troca de série (`plano-migrations.md` §6); na troca, o valor acompanha o total de arquivos |
 
 **Por que no fim da série:** privilégio é o último passo — ele precisa das tabelas e do papel. Nenhum
@@ -56,6 +62,10 @@ GRANT SELECT, UPDATE ON game.server_channel TO wyd_admin;
 GRANT SELECT, UPDATE ON game.session TO wyd_admin;
 GRANT SELECT, UPDATE ON game.city TO wyd_admin;
 GRANT SELECT, UPDATE ON game.item_price TO wyd_admin;
+-- Custódia de item do mercado (`M31`, C4 §4.9–§4.13): o item sai da mochila e volta para ela na mesma
+-- transação. `DELETE` existe só aqui, e só nesta tabela.
+GRANT SELECT, INSERT, DELETE ON game.character_item TO wyd_admin;
+GRANT SELECT ON game.character TO wyd_admin;
 
 GRANT INSERT ON ops.audit_log TO wyd_admin;
 GRANT SELECT (id) ON ops.audit_log TO wyd_admin;
@@ -66,6 +76,8 @@ GRANT SELECT (id) ON ops.audit_log TO wyd_admin;
 REVOKE SELECT (id) ON ops.audit_log FROM wyd_admin;
 REVOKE INSERT ON ops.audit_log FROM wyd_admin;
 
+REVOKE SELECT ON game.character FROM wyd_admin;
+REVOKE SELECT, INSERT, DELETE ON game.character_item FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.item_price FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.city FROM wyd_admin;
 REVOKE SELECT, UPDATE ON game.session FROM wyd_admin;
@@ -89,10 +101,14 @@ REVOKE USAGE ON SCHEMA game FROM wyd_admin;
 | `game.session` | §4.4 | `SELECT`, `UPDATE` | `released_at`/`released_reason` só depois do ack |
 | `game.city` | §4.6 | `SELECT`, `UPDATE` | alíquota com `expected_tax_rate_bps` |
 | `game.item_price` | §4.7 | `SELECT`, `UPDATE` | preços com os dois `expected_*` |
+| `game.character_item` | §4.9–§4.13 (emenda de 2026-11-22) | `SELECT`, `INSERT`, `DELETE` | custódia: a instância sai da mochila (`DELETE`) e volta na entrega/devolução (`INSERT`) |
+| `game.character` | §4.9–§4.13 (emenda de 2026-11-22) | `SELECT` | conferir o titular do item antes de custodiá-lo |
 | `ops.audit_log` | todas | `INSERT` + `SELECT (id)` | auditoria da ação; `audit_id` continua no `200`, então a coluna precisa ser lida |
 
-**Sem `DELETE` em tabela nenhuma:** nenhuma rota do C4 pede, e apagar estado vivo continua sendo do
-`wyd_game` (`0001` §7).
+**`DELETE` só na mochila.** `game.character_item` é a única tabela em que apagar linha **é** a operação:
+adquirir um item é tirá-lo do inventário, e a custódia é a transação que o faz (`ddl-confirmado.md`
+§5.34). Nas outras tabelas o `DELETE` não existe — nenhuma rota do C4 pede, e apagar estado vivo continua
+sendo do `wyd_game` (`0001` §7).
 
 ## 5. O que este arquivo não faz
 
@@ -110,7 +126,7 @@ REVOKE USAGE ON SCHEMA game FROM wyd_admin;
 
 | Invariante | Como é verificado |
 |---|---|
-| sete tabelas e um log, sem `DELETE` | `crates/wyd-db/tests/contrato/catalogo.rs` confere a lista de `GRANT` contra o C4 |
+| nove tabelas e um log, com `DELETE` só na mochila | `crates/wyd-db/tests/contrato/catalogo.rs` confere a lista de `GRANT` contra o C4 |
 | escrita de staff não alcança `portal`/`content` | tentativa de `INSERT` como `wyd_admin` numa tabela de `portal` devolve `42501 permission denied for schema portal` |
 | `USAGE` presente nos dois schemas | sem ele o `GRANT` de tabela falha; o teste aplica `0032` sobre `db/roles.sql` num PG17 efêmero |
 | `down` deixa zero privilégio | `REVOKE` de todos os `GRANT` do `up`, na ordem inversa; `has_schema_privilege`/`has_table_privilege` voltam a `false` |

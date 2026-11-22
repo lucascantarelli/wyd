@@ -2,10 +2,10 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §2, `lacunas.md` §2
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 Este é o **único controle** do andamento da documentação da série `migrations/`. Ele diz, para
-cada um dos 32 arquivos planejados, qual página deve existir, quantas tabelas o arquivo cria (`—` quando
+cada um dos 34 arquivos planejados, qual página deve existir, quantas tabelas o arquivo cria (`—` quando
 o arquivo é só seed) e se há bloqueio para escrevê-la. O plano (`plano-migrations.md`) é o dono da
 **ordem e do escopo**; o texto DDL fechado é dono de `ddl-confirmado.md`; a **decisão** de cada
 bloqueio é dona de `lacunas.md`. Aqui não se decide nada: aqui se acompanha.
@@ -18,7 +18,7 @@ página de migration, uma por arquivo `.sql` da série.
 | Estado | Significa |
 |---|---|
 | `pronta` | DDL do arquivo inteiro fechado em `ddl-confirmado.md`; a página pode ser escrita agora, do começo ao fim |
-| `aguardando aprovação` | DDL do arquivo inteiro **desenhado** e registrado em `ddl-confirmado.md` como proposta; espera o "sim" do dono. Não conta como `pronta` e não é `parcial`, porque não falta desenho. Nenhum arquivo está neste estado em 2026-11-21 |
+| `aguardando aprovação` | DDL do arquivo inteiro **desenhado** e registrado em `ddl-confirmado.md` como proposta; espera o "sim" do dono. Não conta como `pronta` e não é `parcial`, porque não falta desenho. Nenhum arquivo está neste estado em 2026-11-22 |
 | `bloqueada` | falta desenho de coluna, decisão de lacuna ou dado de seed verificado; a página **não** pode ser escrita inteira |
 | `parcial` | uma ou mais tabelas do arquivo têm DDL fechado, o resto não — ou todas as tabelas atuais estão fechadas mas o escopo do arquivo pode crescer por lacuna aberta (`0005`); a página só fecha quando o arquivo fecha |
 | `concluída` | página escrita em `migrations/`, conferida contra `ddl-confirmado.md` e com os 10 itens de §5 |
@@ -36,7 +36,7 @@ fica inequívoco:
 
 `0004_portal_access.sql` → `0004-portal-access.md`
 
-Nos 24 arquivos que criam tabela em um schema, o radical é `[numero]_[schema]_[nome]`, e a página sai
+Nos 26 arquivos que criam tabela em um schema, o radical é `[numero]_[schema]_[nome]`, e a página sai
 `[numero]-[schema]-[nome].md`. Dois casos não seguem essa forma: os 6 arquivos de seed, cujo segmento
 do meio é `seed` e não schema (`0016_seed_taxonomy.sql` → `0016-seed-taxonomy.md`, que semeia
 `content`); e `0001` e `0029`, que não têm schema próprio — `0001` cria os quatro schemas e `0029`
@@ -72,7 +72,7 @@ aplica a derivação por domínio e cita esta seção, nunca o valor. Aqui ficam
 tabela e o **estado de cada arquivo** (§2). Regra nova de derivação entra só aqui; estado novo (a
 palavra) é decisão de `convencoes` e aparece nas duas na mesma entrega.
 
-## 2. Checklist (32 arquivos; 97 tabelas)
+## 2. Checklist (34 arquivos; 109 tabelas)
 
 O `0012` fechou em 2026-11-20 com o desenho de `ddl-confirmado.md` §5.16 e a decisão `M25` (dreno por
 `SKIP LOCKED`, expurgo de 30 dias), e o `0030` fechou na mesma data, com o desenho de §5.15 aprovado
@@ -82,7 +82,9 @@ pelo dono. `0013`, `0014` e `0015` fecharam em 2026-11-20 (`ddl-confirmado.md` �
 (§5.26), `0028` (§5.28) e `0029` (§5.29) —, então os 25 arquivos de DDL estão `concluída` e só os 6
 seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.md` §4). Em
 **2026-11-21** o dono decidiu `M27` e o `0032` entrou só com `GRANT`s: os arquivos `concluída` passam a
-26 e `Tab.` continua 97.
+26 e `Tab.` continua 97. Em **2026-11-22** o dono fechou `M30` e `M31` (`LAC-ADM-02`, `LAC-ADM-06` e
+`LAC-ADM-07`): os lotes `0033` e `0034` entram com 1 e 11 tabelas, os arquivos `concluída` passam a 28 e
+`Tab.` a 109.
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|
@@ -117,7 +119,9 @@ seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.
 | 29 | `0029-views.md` | — | `concluída` | — (DDL de §5.29 aprovado em 2026-11-21, sem `GRANT` novo; página escrita e conferida) |
 | 30 | `0030-portal-content.md` | 4 | `concluída` | — (DDL de §5.15 aprovado em 2026-11-20; página escrita e conferida) |
 | 31 | `0031-portal-mfa.md` | 1 | `concluída` | — (DDL de §5.20 aprovado em 2026-11-20; página escrita e conferida) |
-| 32 | `0032-admin-grants.md` | — | `concluída` | — (`M27` decidida em 2026-11-21: `GRANT`s de §5.32 ao papel `wyd_admin`, sem tabela; página escrita e conferida) |
+| 32 | `0032-admin-grants.md` | — | `concluída` | — (`M27` decidida em 2026-11-21: `GRANT`s de §5.32 ao papel `wyd_admin`, sem tabela; página escrita e conferida; emendada em 2026-11-22 com os `GRANT` da custódia) |
+| 33 | `0033-ops-idempotency.md` | 1 | `concluída` | — (`M30` decidida em 2026-11-22: `ops.idempotency_record`, 7 dias de retenção; DDL de §5.33; página escrita e conferida) |
+| 34 | `0034-portal-market.md` | 11 | `concluída` | — (`M31` decidida em 2026-11-22: dez tabelas em `portal` e `game.market_escrow`; DDL de §5.34; página escrita e conferida) |
 
 ## 3. Bloqueios agrupados
 
@@ -128,6 +132,8 @@ O detalhe de cada decisão fica em `lacunas.md`; aqui está só o que **impede a
 | `A17` | **Fechada em 2026-11-19: não.** Conta não é transferível nem vendável; nenhum objeto em `0005` (`ddl-confirmado.md` §5.2). | `0005` | produto + arquitetura |
 | `M16` | `coin` precisa de razão de lançamento (ledger) ou snapshot auditado basta? | `0005`, `0011` | produto + arquitetura |
 | `M17` | **Fechada em 2026-11-19:** `UUID` gerado pelo BFF, único em `0011`/`0012`, replay de 24 h. Nenhum arquivo trava por ela. | `0011` (fechada), `0012` (desenho de §5.16) | arquitetura + frente `wyd-portal` |
+| `M30` | **Fechada em 2026-11-22:** registro de idempotência em `ops.idempotency_record`, escrito e fechado na transação da ação, retido 7 dias; `GET /actions/{key}` devolve `404` depois do expurgo. Nenhum arquivo trava por ela. | `0033` (fechada) | `wyd-db` + `wyd-ops` |
+| `M31` | **Fechada em 2026-11-22:** lote `0034_portal_market.sql`, dez tabelas em `portal` e uma em `game`, com a emenda de `GRANT` em `0032`. Nenhum arquivo trava por ela. | `0034` (fechada) | `wyd-db` + arquitetura |
 | `M25` | **Fechada em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta; `applied`/`failed` expurgadas 30 dias após `closed_at`, `pending` nunca. Nenhum arquivo trava por ela. | `0012` (fechada) | arquitetura + frente `wyd-server` |
 | `A19` | Loja e cash existem? Entra em `portal`, fica fora do schema, ou não existe. | `0011` | produto |
 | `A14` | Soft-delete de personagem derruba a sessão viva? | `0006` | arquitetura |
@@ -144,17 +150,17 @@ o token, que é rota e emissor, não coluna).
 
 | Medida | Valor | Fonte |
 |---|---:|---|
-| Arquivos planejados | 32 | `plano-migrations.md` §3 (29 originais + os adendos `0030`, `0031` e `0032`) |
-| Tabelas planejadas | 97 | soma da coluna `Tab.` acima |
+| Arquivos planejados | 34 | `plano-migrations.md` §3 (29 originais + os adendos `0030`, `0031` e `0032` + os lotes `0033` e `0034`) |
+| Tabelas planejadas | 109 | soma da coluna `Tab.` acima |
 | Arquivos de seed | 6 | `plano-migrations.md` §4 |
-| Páginas `concluída` hoje | 26 | `0001` a `0015` + `0019` + `0021` + `0022` + `0024` + `0025` + `0026` + `0028` + `0029` + `0030` + `0031` + `0032` |
+| Páginas `concluída` hoje | 28 | `0001` a `0015` + `0019` + `0021` + `0022` + `0024` + `0025` + `0026` + `0028` + `0029` + `0030` + `0031` + `0032` + `0033` + `0034` |
 | Páginas `pronta` (a escrever) | 0 | — |
 | Arquivos aguardando aprovação | 0 | os cinco lotes de 2026-11-21 foram aprovados |
 | Arquivos com DDL parcial | 0 | — |
 | Arquivos bloqueados | 6 | `0016`, `0017`, `0018`, `0020`, `0023` e `0027` (dado de seed não verificado) |
-| Soma que fecha | 32 | 26 `concluída` + 0 `pronta` + 0 `aguardando aprovação` + 0 `parcial` + 6 `bloqueada` |
-| Tabelas com DDL fechado | 97 de 97 | `ddl-confirmado.md` §1 |
-| Tabelas desenhadas e não confirmadas | 0 | — (as 20 de `0022`, `0025`, `0026` e `0028` foram aprovadas em 2026-11-21) |
+| Soma que fecha | 34 | 28 `concluída` + 0 `pronta` + 0 `aguardando aprovação` + 0 `parcial` + 6 `bloqueada` |
+| Tabelas com DDL fechado | 109 de 109 | `ddl-confirmado.md` §1 |
+| Tabelas desenhadas e não confirmadas | 0 | — (as 20 de `0022`, `0025`, `0026` e `0028` foram aprovadas em 2026-11-21 e as 12 de `0033`/`0034` em 2026-11-22) |
 
 Número é **planejado**, não medido: a contagem real sai do catálogo depois que a série existir
 (`M20`). Nenhum arquivo `.sql` desta série foi escrito e nenhum Postgres rodou.
@@ -200,10 +206,10 @@ página escrita por dedução virar DDL sem decisão.
   recusa. O `0030` fez o segundo caminho em 2026-11-20 e o `0024` em 2026-11-21.
 - Arquivo novo na série entra aqui com o próximo número livre e passa por `plano-migrations.md`
   antes; este checklist não cria migration.
-- A ordem de escrita não é a ordem da tabela: os arquivos `pronta` primeiro (`0003`, `0005`, `0007`),
-  depois o lote de `0002`, que destrava o corte vertical, depois o resto.
+- A ordem de escrita não foi a ordem da tabela: os arquivos `pronta` primeiro (`0003`, `0005`, `0007`),
+  depois o lote de `0002`, que destrava o corte vertical, depois o resto. Hoje só restam os 6 seeds.
 - Pré-requisito de ambiente (papel de cluster) **não** mora nesta pasta nem altera a contagem de 30
-  arquivos: é artefato gerado por `wyd-db provision render`, especificado em
+  arquivos: é artefato gerado por `wyd-db provision render` (hoje 34), especificado em
   `src/provision/spec.md` (**planejamento**). Se um pré-requisito passar a mudar schema, ele vira
   migration numerada — com `up`/`down` e decisão em `plano-migrations.md`.
 

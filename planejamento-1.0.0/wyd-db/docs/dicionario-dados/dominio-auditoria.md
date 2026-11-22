@@ -1,18 +1,20 @@
 > Pergunta: "o que o banco registra sobre o que aconteceu — ação de staff e tentativa de login — e o que ele não registra?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.3, §5.4, §5.8; `migrations-checklist.md` §2; `0002-ops-audit.md`
-> Revisado em: 2026-11-21
+> Base: `ddl-confirmado.md` §5.3, §5.4, §5.8, §5.33; `migrations-checklist.md` §2; `0002-ops-audit.md`
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.
+**Estado:** proposto (2026-11-22) — DDL fechado, série não aplicada.
 
 ## Propósito do domínio
 
-Auditoria é **a trilha do que aconteceu**, separada do estado atual. Duas perguntas diferentes, duas
+Auditoria é **a trilha do que aconteceu**, separada do estado atual. Três perguntas diferentes, três
 tabelas:
 
 - `ops.audit_log` — "quem fez o quê, quando", para ação de pessoa, conta ou processo.
 - `ops.login_attempt` — "quantas tentativas falharam para este identificador", para abuso e suporte.
+- `ops.idempotency_record` — "esta ação já rodou com esta chave, e o que ela devolveu", para o contrato
+do `wyd-admin` (`M30`, 2026-11-22).
 
 Nenhuma das duas é estado de jogo: elas **sobrevivem** ao ator. Por isso não há FK para `portal.person`
 nem para `game.account` — apagar ou fechar o ator não pode apagar a prova.
@@ -27,6 +29,7 @@ nem para `game.account` — apagar ou fechar o ator não pode apagar a prova.
 |---|---|---|---|---|
 | `ops.audit_log` (0002) | evento auditável com ator tripartido, ação, alvo e detalhe | jogo e portal (`INSERT` só) | `wyd_read`; jogo/portal leem por `SELECT` herdado | `gerado/audit_log.md` |
 | `ops.login_attempt` (0002) | tentativa de autenticação com identificador **hasheado**, origem, IP e resultado | jogo e portal (`INSERT` só) | `wyd_read` | `gerado/login_attempt.md` |
+| `ops.idempotency_record` (0033) | ação executada por chave, com status e corpo devolvidos | `wyd_admin` (`SELECT`, `INSERT`, `UPDATE`) | `wyd_read` | onda 4 |
 
 ## Garantias do schema
 
@@ -59,6 +62,20 @@ trocar privilégio, não só rodar SQL.
 
 Decisão `M22` (§5.8), não schema: `ops.audit_log` **730 dias**, append-only; o expurgo de
 `login_attempt` e de sessão segue o mesmo registro. Nenhum `DELETE` de runtime está previsto.
+
+`ops.idempotency_record` tem decisão própria (`M30`): **7 dias após `created_at`**, qualquer estado, por
+expurgo diário de operação. O piso é a janela de replay de 24 h do chamador (`M17`) e o teto é o custo de
+guardar corpo de resposta — ação de staff, volume baixo. `DELETE` também não é de runtime aqui.
+
+## O que o registro de idempotência **não** é
+
+- **Não é log de auditoria.** `audit_log` guarda a ação para sempre e sem corpo de resposta; o registro
+guarda o corpo por 7 dias para responder replay. Quem precisa da trilha consulta `audit_log` pelo
+`audit_id` que o registro carrega.
+- **Não é fila nem trava.** A linha nasce e fecha na mesma transação da ação: `in_progress` não é
+  commitado, então não há estado a expirar nem lease a renovar.
+- **Não guarda segredo.** O corpo é a resposta da API para a mesma conta; nenhuma senha, PIN ou código de
+  cerimônia entra ali, como em nenhuma tabela de `ops`.
 
 ## `H` — semântica não verificada
 

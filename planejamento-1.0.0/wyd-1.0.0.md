@@ -34,7 +34,7 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 189 | piloto parcial: 174 páginas com cabeçalho, **26 de 32** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; **71 das 97** páginas de tabela | `find`/`grep` em 2026-11-22 |
+| `wyd-db` | 191 | piloto parcial: 176 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; **71 das 109** páginas de tabela | `find`/`grep` em 2026-11-22 |
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-22 |
 | `wyd-docs` | 9 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/` | `wyd-docs-1.0.0.md`; `wyd-docs/`, 2026-11-22 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, 2 lacunas abertas (`08`, `09`) | `wyd-portal/`; `lacunas.md` §1, 2026-11-22 |
@@ -56,7 +56,7 @@
 | `docs/guia-administrador/` | 1 | 8 | só `index.md` |
 | `docs/guia-teste/` | 2 | 7 | |
 | `docs/guia-documentacao/` | 1 | 8 | só `index.md` |
-| `migrations/` | 26 | 34 | 2 páginas de seção (por escrever) + 32 arquivos, 26 escritos |
+| `migrations/` | 28 | 36 | 2 páginas de seção (por escrever) + 34 arquivos, 28 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
 | `tests/` | 0 | 12 | |
 | `prompts/` | 0 | 9 | |
@@ -71,12 +71,12 @@
 
 | Indicador | Valor | Fonte |
 |---|---:|---|
-| Arquivos da série | 32 (29 originais + os adendos `0030`, `0031` e `0032`) | `plano-migrations.md` §3 |
-| Tabelas | 97 | `plano-migrations.md` §3 (planejado) |
+| Arquivos da série | 34 (29 originais + os adendos `0030`, `0031` e `0032` + os lotes `0033`, `0034`) | `plano-migrations.md` §3 |
+| Tabelas | 109 | `plano-migrations.md` §3 (planejado) |
 | Arquivos de seed | 6 | idem |
-| Tabelas com DDL fechado | 97 de 97 | `ddl-confirmado.md` §1 |
+| Tabelas com DDL fechado | 109 de 109 | `ddl-confirmado.md` §1 |
 | Tabelas desenhadas e aguardando aprovação | 0 | `ddl-confirmado.md` §1 |
-| Arquivos com DDL inteiro fechado | 26 (todos menos os 6 seeds) | `migrations-checklist.md` §4, 2026-11-22 |
+| Arquivos com DDL inteiro fechado | 28 (todos menos os 6 seeds) | `migrations-checklist.md` §4, 2026-11-22 |
 | `SCHEMA_VERSION` alvo | 32 | `plano-migrations.md` §6 |
 
 ### 1.4 Repositório, GitHub e operação
@@ -140,10 +140,10 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 0 pendentes | `M27` e `M28` fecharam em 2026-11-21 e `M29` em 2026-11-22; 31 fecharam; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | 0 pendentes | `M27` e `M28` fecharam em 2026-11-21, `M29`, `M30` e `M31` em 2026-11-22; 33 fecharam; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
-| DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; 32 arquivos de migration para 97 tabelas (32/97, `plano-migrations.md` §3, 2026-11-21); os cinco lotes foram aprovados em 2026-11-21 e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
+| DDL não desenhado | 0 tabelas | todas as 109 têm coluna desenhada; 34 arquivos de migration para 109 tabelas (34/109, `plano-migrations.md` §3, 2026-11-22); os lotes `0022`, `0025`, `0026`, `0028` e `0029` foram aprovados em 2026-11-21, os `0033` e `0034` em 2026-11-22, e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
 | ADR de fronteira pessoa × conta | sem número | citada em `lacunas.md` §0.2 e `rascunho-accounts.md` |
 
 ---
@@ -210,13 +210,13 @@ Ordem derivada de `plano-migrations.md` §9 e `proposta-paginas.md`; não é ord
 - [ ] Escrever as 6 páginas de migration restantes (seeds), quando o dado de origem estiver verificado; os arquivos são escritos à mão, sem gerador (`plano-migrations.md` §4).
 - [x] Aprovar os cinco lotes propostos (`0022`, `0025`, `0026`, `0028`, `0029`) em `ddl-confirmado.md` antes da página — aprovados em 2026-11-21; nenhum lote aguarda aprovação.
 - [ ] Escrever `specs/` (requisitos, regras, NFR, casos de uso, fluxos, estados, rastreabilidade).
-- [ ] Concluir as 97 páginas por tabela (`M26`: à mão, sem gerador; **44/97** escritas até 2026-11-21); as **19** páginas de domínio já estão escritas (2026-11-21).
+- [ ] Concluir as 109 páginas por tabela (`M26`: à mão, sem gerador; **71/109** escritas até 2026-11-22); as **19** páginas de domínio já estão escritas (2026-11-22).
 - [ ] Escrever `planos/` (testes, dados, qualidade, métricas, riscos, execução).
 - [ ] Escrever `guia-administrador/`, `guia-documentacao/` e o restante de `guia-teste/`.
 - [ ] Criar `tests/` e `prompts/`/`skills/` do sistema.
 - [ ] Validar o site: `mkdocs build --strict` sem link morto nem diagrama inválido.
 
-**Gate:** 32 páginas de migration + 19 páginas de domínio + 97 páginas por tabela (**44/97** escritas até 2026-11-21, `wyd-db-1.0.0.md` §6.8); `planos/metricas.md` mede o
+**Gate:** 34 páginas de migration + 19 páginas de domínio + 109 páginas por tabela (**71/109** escritas até 2026-11-22, `wyd-db-1.0.0.md` §6.8); `planos/metricas.md` mede o
 fechamento; nenhuma afirmação de comportamento sem `V`; site estrito passa.
 
 ### Fase 3 — Planejar os 12 sistemas restantes
@@ -350,8 +350,8 @@ pode ser declarada completa, por mais páginas que o planejamento feche. Executa
 `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7 e é passo de `usuário`, não de automação.
 
 **Próxima ação imediata:** as duas filas correm em paralelo. Na documentação, executar o próximo
-passo ativo da fila do sistema dono — no `wyd-docs`, o próximo lote manual das 97 páginas por
-tabela (`M26`, 2026-11-21), escritas em `wyd-db/docs/dicionario-dados/gerado/`; **44/97** já
+passo ativo da fila do sistema dono — no `wyd-docs`, o próximo lote manual das 109 páginas por
+tabela (`M26`, 2026-11-22), escritas em `wyd-db/docs/dicionario-dados/gerado/`; **71/109** já
 existem. Na cobertura, a ação é a decisão do catálogo acima; o dicionário fecha planejamento, não a
 `1.0.0`. O pacote anterior já foi mesclado no
 PR #48 (`e08f7d1`, 2026-11-19), portanto não há commit, push nem PR pendente daquela entrega.

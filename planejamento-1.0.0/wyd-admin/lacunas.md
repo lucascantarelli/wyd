@@ -4,18 +4,16 @@
 > Base: [contrato C4](docs/arquitetura/contrato-c4.md); `wyd-portal/docs/arquitetura/fronteira.md`; `AGENTS.md` §5.8
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21); `LAC-ADM-07` aberta em 2026-11-22 com a custódia de item. Cinco
-lacunas abertas; nenhuma foi fechada por suposição.
+**Estado:** proposto (2026-11-21); `LAC-ADM-07` abriu em 2026-11-22 com a custódia de item e fechou na
+mesma data, junto de `LAC-ADM-02` e `LAC-ADM-06`. **Duas lacunas abertas** (`LAC-ADM-03` e `LAC-ADM-04`);
+nenhuma foi fechada por suposição.
 
 ## Abertas
 
 | ID | Lacuna | Por que importa | Dono | Fecha com |
 |---|---|---|---|---|
-| `LAC-ADM-02` | Não há tabela para o registro de idempotência | sem armazenamento durável, retry duplica escrita; memória não sobrevive a restart | `wyd-db` | decisão entre tabela nova em `ops` (muda contagem de 97) ou reutilização de chave natural já única; DDL e contagem atualizada |
 | `LAC-ADM-03` | Não existe contrato de controle com o `wyd-server` (kick, broadcast, manutenção) | `ADM-08` não pode ser implementada; “chamar o processo” hoje é intenção | arquitetura + `wyd-server` | porta/protocolo, ack, timeout e erro; página no `wyd-server` |
 | `LAC-ADM-04` | Autenticação portal → admin não decidida: token de serviço, mTLS ou assinatura do ator | `RN-ADM-002` e `RN-ADM-005` dependem disso; sem forma, `ADM-02` para | arquitetura + `wyd-ops` | mecanismo, rotação de segredo e o que vai no cabeçalho |
-| `LAC-ADM-06` | Retenção do registro de idempotência: a proposta usa 24 h, sem fonte | define tamanho, expurgo e o que `GET /actions/{key}` ainda responde | `wyd-db` + `wyd-ops` | prazo e rotina de expurgo, com data |
-| `LAC-ADM-07` | `game.market_escrow` e as tabelas `portal.market_*` não têm DDL aprovado | a custódia (`ADM-10`, C4 §4.9–§4.12) é forma sem implementação; o mercado inteiro do portal depende do mesmo lote | `wyd-db` | página de lote com a forma de `armaria-e-mercado.md` §3, texto em `ddl-confirmado.md` e contagem atualizada |
 
 ## Fechadas
 
@@ -24,7 +22,10 @@ lacunas abertas; nenhuma foi fechada por suposição.
 | — | Executor único de escrita em `game` | `LAC-POR-01`: portal chama o `wyd-admin` por HTTP/JSON; nunca SQL direto | 2026-11-20 |
 | — | Transporte do C4 | HTTP/JSON interno com timeout, chave de idempotência e erro tipado | 2026-11-20 |
 | `LAC-ADM-05` | Escrita de `game.account_moderation` | É do `wyd-admin`, por `POST /accounts/{account_id}/moderation` (C4 §4.1); o portal só lê, pela via autorizada de `P-17`. O documento do portal foi corrigido e o C4 não mudou | 2026-11-21 |
-| `LAC-ADM-01` | Papel de banco do `wyd-admin` | `M27` fechada no `wyd-db` em A + S1 + C1 + D1: `wyd_admin` com `LOGIN` em `ROLES`/golden, `USAGE` em `game`/`ops` e os `GRANT`s no `0032_admin_grants.sql` (`ddl-confirmado.md` §5.32), sem `DELETE` | 2026-11-21 |
+| `LAC-ADM-01` | Papel de banco do `wyd-admin` | `M27` fechada no `wyd-db` em A + S1 + C1 + D1: `wyd_admin` com `LOGIN` em `ROLES`/golden, `USAGE` em `game`/`ops` e os `GRANT`s no `0032_admin_grants.sql` (`ddl-confirmado.md` §5.32). O `0032` foi **emendado** em 2026-11-22 com os `GRANT` da custódia (`character_item`, `character`), que a decisão original não cobria | 2026-11-21 |
+| `LAC-ADM-02` | Tabela do registro de idempotência | `M30` fechada no `wyd-db`: **tabela nova** `ops.idempotency_record` no lote `0033` (`ddl-confirmado.md` §5.33), com PK composta `(caller, method, route, key)`, `body_sha256` e a linha escrita **e fechada na mesma transação da ação** — `in_progress` nunca é commitado, então o `409 IN_PROGRESS` vem do bloqueio da PK e não há chave presa. A contagem da série vai de 97 para 109 tabelas com os dois lotes de 2026-11-22 | 2026-11-22 |
+| `LAC-ADM-06` | Retenção do registro de idempotência | `M30`, mesma decisão: **7 dias após `created_at`**, qualquer estado, por expurgo diário de operação. O piso é a janela de replay de 24 h de `M17` — apagar antes permitiria executar duas vezes — e o teto é o custo de guardar corpo de resposta de ação de staff. Depois do expurgo, `GET /actions/{key}` responde `404`; `in_progress` não é um estado observável de outra sessão. O número é **decisão**, não medição | 2026-11-22 |
+| `LAC-ADM-07` | DDL de `game.market_escrow` e de `portal.market_*` | `M31` fechada no `wyd-db`: lote `0034_portal_market.sql`, **onze tabelas** — dez em `portal` (carteira, extrato, taxa, anúncio, lance, transação, avaliação, reputação, notificação, disputa) e `game.market_escrow` para a custódia — no texto de `ddl-confirmado.md` §5.34 e na página `migrations/0034-portal-market.md`; a série passa a **34 arquivos e 109 tabelas** e o `0032` é emendado com os dois `GRANT` da custódia | 2026-11-22 |
 
 ## Como uma lacuna fecha
 

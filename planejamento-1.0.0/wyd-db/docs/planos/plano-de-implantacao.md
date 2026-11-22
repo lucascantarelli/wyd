@@ -16,7 +16,7 @@ nenhuma delas é idempotente por acidente.
 |---|---|
 | PostgreSQL | 17, com um administrador de cluster disponível **só** para o provisionamento |
 | binário | `wyd-db` (subcomandos de `provision` e o runner) na máquina que executa |
-| série | `WYD_MIGRATIONS_DIR` apontando para os 32 arquivos, íntegros e na ordem de `plano-migrations.md` §3 |
+| série | `WYD_MIGRATIONS_DIR` apontando para os 34 arquivos, íntegros e na ordem de `plano-migrations.md` §3 |
 | ambiente | arquivo com as seis DSNs preenchidas (nomes em `src/provision/spec.md` §3; valores fora do git) |
 | banco | vazio, ou com backup verificado se houver dado a preservar |
 | rede | porta do banco fora do loopback **só** com justificativa registrada; desenvolvimento é loopback |

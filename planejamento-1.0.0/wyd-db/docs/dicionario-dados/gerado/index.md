@@ -1,10 +1,10 @@
 # wyd-db — referência por tabela
 
-**Estado:** **71 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **71 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
-**Páginas de migration não publicadas (`V`, 2026-11-21):** as 26 páginas escritas (de 32 em
+**Páginas de migration não publicadas (`V`, 2026-11-22):** as 28 páginas escritas (de 34 em
 `migrations-checklist.md` §2; as outras 6 seguem `bloqueada`) ficam em
 `planejamento-1.0.0/wyd-db/migrations/`, o lugar que `convencoes.md` lhes dá. O site monta só
 `planejamento-1.0.0/<sistema>/docs/`, então essas páginas ficam de fora — falta publicação, não árvore.
@@ -134,7 +134,8 @@ O `0015` cria uma tabela só, então o lote completou as cinco com quatro das ci
 
 ## Próximos lotes
 
-Faltam **26 das 97**: `0021` (`accessory_refine_rule`) — os seeds `0016`–`0018`, `0020`, `0023` e
-`0027` não criam tabela —, `0022` (as três sobrescritas), `0025` e `0026` (combate e quests/eventos) e
-`0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é
-proposto por arquivo de migration, como o de `0019`.
+Faltam **38 das 109**, por arquivo: `0021` (1, `accessory_refine_rule`), `0022` (3 sobrescritas),
+`0025` (4 de combate), `0026` (6 de quests e eventos), `0028` (7 de estado de jogo), `0030` (4 do CMS),
+`0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do mercado) — 1 + 3 + 4
+\+ 6 + 7 + 4 + 1 + 1 + 11 = 38. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não
+entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.

@@ -11,8 +11,9 @@
 > **Correção de 2026-11-20 — contagens.** O texto abaixo é o de 2026-11-18 e **não** foi reescrito: ele
 > registra a decisão, não o andamento. As contagens mudaram depois do aceite e têm dono noutro lugar:
 > a série passou a **31 arquivos e 97 tabelas** com os adendos `0030` e `0031`, aprovados em 2026-11-20
-> (`plano-migrations.md` §3), e tem **97 tabelas com DDL fechado** e nenhuma sem coluna desenhada ou aguardando aprovação
-> (`ddl-confirmado.md` §1). Onde este arquivo diz "29 arquivos",
+> (`plano-migrations.md` §3), e tem **109 tabelas com DDL fechado** e nenhuma sem coluna desenhada ou aguardando aprovação
+> (`ddl-confirmado.md` §1) — 109 porque os lotes `0033` e `0034` de 2026-11-22 acrescentaram 12 tabelas e
+> levaram a série a **34 arquivos**. Onde este arquivo diz "29 arquivos",
 > "92 tabelas" ou "os 29", leia-se o número vigente do plano; a decisão — runner próprio, ledger por
 > versão, lock `0x5759_4404` — não mudou.
 
@@ -183,6 +184,11 @@ concede privilégios a `wyd_admin` e não altera o número de tabelas (`plano-mi
 `M27` (`src/provision/spec.md` §2; `lacunas.md` §2.3). Esta nota atualiza os números de estado, sem
 reescrever a decisão original: contagens e menções anteriores refletem o desenho considerado no aceite
 de 2026-11-18.
+
+**Revisão de estado — 2026-11-22 (`M30`/`M31`).** A série fechou em **34 arquivos e 109 tabelas**:
+`0033` (idempotência) e `0034` (mercado) acrescentaram 12 tabelas, e `SCHEMA_VERSION` acompanha em 34 na
+troca (`plano-migrations.md` §3 e §6). O runner, o ledger e o lock não mudaram — nenhum dos dois lotes
+pede recurso além de `CREATE TABLE`/`CREATE INDEX`/`GRANT`.
 
 Revisar quando: houver mais de uma série no mesmo banco (exige coluna de série no ledger e muda a
 chave), entrar réplica de leitura com migrations (o lock é por cluster, não por nó), ou algum processo

@@ -61,6 +61,8 @@ tabela. Nenhuma rota pede `DELETE`.
 | `game.session` | §4.4 | `SELECT`, `UPDATE` | `released_at`/`released_reason` só depois do ack |
 | `game.city` | §4.6 | `SELECT`, `UPDATE` | alíquota com `expected_tax_rate_bps` |
 | `game.item_price` | §4.7 | `SELECT`, `UPDATE` | preços com os dois `expected_*` |
+| `game.character_item` | §4.9–§4.13 (emenda de 2026-11-22) | `SELECT`, `INSERT`, `DELETE` | custódia: a instância sai da mochila e volta na entrega/devolução |
+| `game.character` | §4.9–§4.13 (emenda de 2026-11-22) | `SELECT` | conferir o titular do item antes de custodiá-lo |
 | `ops.audit_log` | todas | `INSERT` + `SELECT (id)` | auditoria da ação e retorno do `audit_id` |
 
 ### Decisões registradas e alternativas (M27)
@@ -93,7 +95,7 @@ tabela. Nenhuma rota pede `DELETE`.
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos, `Tab.` continua 97 e as citações de contagem e gates foram atualizadas na mesma entrega |
+| **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos e as citações de contagem e gates foram atualizadas na mesma entrega. Em 2026-11-22 o `0032` foi **emendado** com os `GRANT` da custódia (`character_item`, `character`) e a série fechou em **34 arquivos e 109 tabelas** |
 | D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
 | D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` cria papel e mexe em `public` |
 
@@ -104,8 +106,15 @@ tabela. Nenhuma rota pede `DELETE`.
 `ops.audit_log`; o `GRANT` entrou no arquivo novo `0032`. Isso mantém a escrita de staff separada da do jogo e do portal, não
 reabre DDL aprovado e não cria tabela.
 
+**Emenda de 2026-11-22 (`M31`):** a custódia de item do mercado (`ADM-10`, C4 §4.9–§4.13) escreve
+`game.character_item` e lê `game.character`; sem os dois privilégios o contrato aprovado não executava.
+O `DELETE` existe **só** na mochila, porque tirar o item do inventário é a operação, e continua fora de
+todas as outras tabelas. `game.market_escrow` é escrita por `wyd_admin` e lida (nunca escrita) por
+`wyd_game` (`ddl-confirmado.md` §5.34).
+
 **O que a decisão mudou:** `ROLES` e o golden `db/roles.sql` (`src/provision/spec.md`), a DSN nova
-(`WYD_DB_URL_ADMIN`) em `wyd-ops`, o arquivo `0032` (31 → 32 na série, `Tab.` 97), as citações de
+(`WYD_DB_URL_ADMIN`) em `wyd-ops`, o arquivo `0032` (31 → 32 na série; hoje 34 arquivos e `Tab.` 109, com a
+emenda da custódia), as citações de
 contagem dos dashboards e o teste de `wyd-admin` que hoje depende deste papel. **O que ela não muda:** tabela, coluna ou índice —
 as sete tabelas já existem.
 

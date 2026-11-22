@@ -97,7 +97,7 @@ Ajuste manual de saldo (`account_wallet.coin`) **não** é escrita direta de tel
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 e está em
 `planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` (texto DDL em `ddl-confirmado.md` §5.15),
 com colunas, `PK`/`FK`, `DEFAULT`, índices e constraints. Com a aprovação, a série ficou em **30
-arquivos / 96 tabelas** naquela data; com os lotes `0031` e `0032`, são **32 arquivos / 97 tabelas**, e as cinco tabelas dos dois adendos têm DDL fechado. É o número que este planejamento cita.
+arquivos / 96 tabelas** naquela data; com os lotes `0031` a `0034`, são **34 arquivos / 109 tabelas**, e as cinco tabelas dos dois adendos têm DDL fechado. É o número que este planejamento cita.
 
 ## 6. Configuração do servidor
 
@@ -108,38 +108,36 @@ arquivos / 96 tabelas** naquela data; com os lotes `0031` e `0032`, são **32 ar
 Contrato já decidido: revisão com autor tripartido (`M18-A`), valores antes/depois em linhas
 nomeadas, sem `JSONB`. A tela não inventa “chave mágica”: lista as chaves que o servidor consome.
 
-## 7. Catálogo de tabelas citadas (41 + 2 views)
+## 7. Catálogo de tabelas citadas (52 + 2 views)
 
 | Schema | Tabelas |
 |---|---|
-| `portal` | `person`, `person_profile`, `person_consent`, `person_session`, `person_token`, `person_authenticator`, `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit`, `news`, `banner`, `guide`, `launcher_release` |
-| `game` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `character`, `character_item`, `vault_item`, `character_skill`, `character_learned_skill`, `character_affect`, `guild`, `guild_member`, `session`, `server_channel`, `city`, `item_price`, `personal_shop`, `city_tax_ledger` |
+| `portal` | `person`, `person_profile`, `person_consent`, `person_session`, `person_token`, `person_authenticator`, `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit`, `news`, `banner`, `guide`, `launcher_release`, `market_wallet`, `market_ledger`, `market_fee_rule`, `market_listing`, `market_bid`, `market_transaction`, `market_review`, `market_reputation`, `market_notification`, `market_dispute` |
+| `game` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `character`, `character_item`, `vault_item`, `character_skill`, `character_learned_skill`, `character_affect`, `guild`, `guild_member`, `session`, `server_channel`, `city`, `item_price`, `personal_shop`, `city_tax_ledger`, `market_escrow` |
 | `ops` | `audit_log`, `login_attempt`, `config_revision`, `config_change` |
 | `content` | `item_catalog`, `skill_catalog`, `npc_definition` (previstas) |
 | views | `game.v_live_session`, `portal.v_person_identity` (`0029`, previstas) |
 
-A lista por tela repete tabela entre telas; acima estão as **tabelas distintas** citadas: 16 de
-`portal`, todas com DDL, 18 de `game`, 4 de `ops` e 3 de
-`content` (2 com DDL e `npc_definition` prevista em `0019`), mais as 2 views de `0029` — **41 citadas,
-das quais 40 têm DDL fechado**, + 2 views, medido neste arquivo em 2026-11-22 (`character_learned_skill`
-entrou com a armaria; tem DDL em `0008`).
+A lista por tela repete tabela entre telas; acima estão as **tabelas distintas** citadas: 26 de
+`portal`, todas com DDL, 19 de `game`, 4 de `ops` e 3 de
+`content` (2 com DDL e `npc_definition` prevista em `0019`), mais as 2 views de `0029` — **52 citadas,
+das quais 51 têm DDL fechado**, + 2 views, medido neste arquivo em 2026-11-22 (`character_learned_skill`
+entrou com a armaria e as 11 do mercado com o lote `0034`).
 
 O monitoramento **não acrescenta tabela**: presença vem da view `game.v_live_session`, e métrica, log,
 painel e telemetria do launcher vêm de API externa ou de log estruturado (`monitoramento.md` §3/§6).
-O lote `0031` acrescenta `portal.person_authenticator` e o `0032` só concede `GRANT`: a série passa a 32
-arquivos / 97 tabelas, e o
-catálogo subiu de 39 para **40 citadas** e, com a armaria, para **41**.
+O lote `0031` acrescentou `portal.person_authenticator`, o `0032` só concede `GRANT` e o `0034` trouxe o
+mercado: a série está em **34 arquivos / 109 tabelas**, e o catálogo subiu de 39 para **52 citadas** (51
+com DDL).
 
-### 7.1 Conjunto proposto por armaria e mercado (F7–F11)
+### 7.1 Views propostas pela armaria (F7–F11)
 
-Dez tabelas e quatro views que ainda **não têm DDL** e por isso ficam fora da contagem acima. A forma é
-de `wyd-db/armaria-e-mercado.md` §2 e §3; a aprovação, de `LAC-ADM-07`. Quando o lote fechar, esta seção
-some e os objetos entram na tabela principal.
+Quatro views que ainda **não têm DDL** e por isso ficam fora da contagem acima: a forma é de
+`wyd-db/armaria-e-mercado.md` §2 e a reserva de lote é decisão de `wyd-db`. As onze **tabelas** da armaria
+e do mercado entraram na tabela principal em 2026-11-22, com o lote `0034` (`M31`).
 
 | Schema | Objetos |
 |---|---|
-| `portal` | `market_wallet`, `market_ledger`, `market_fee_rule`, `market_listing`, `market_bid`, `market_transaction`, `market_review`, `market_reputation`, `market_notification`, `market_dispute` |
-| `game` | `market_escrow` |
 | views | `game.v_character_armory`, `game.v_character_equipment`, `game.v_character_skill`, `content.v_item_sheet` |
 
 ## 8. O que esta página não decide

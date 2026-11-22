@@ -9,7 +9,7 @@ Vigésimo oitavo arquivo da série: 7 tabelas no schema `game`. É o único bloc
 
 !!! note "Aprovado em 2026-11-21"
     O dono aprovou o conjunto em 2026-11-21, sem alterar as quatro decisões de §8. O lote está
-    `concluída` em `migrations-checklist.md` §2 e as sete tabelas contam entre as 97 com DDL fechado.
+    `concluída` em `migrations-checklist.md` §2 e as sete tabelas contam entre as 109 com DDL fechado.
 
 ## 1. Identificação
 

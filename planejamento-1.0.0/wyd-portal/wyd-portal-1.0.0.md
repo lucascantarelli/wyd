@@ -102,7 +102,7 @@ aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5.10).
 |---|---|---|
 | ~~Aprovar o plano diretor e as páginas~~ — **aprovado em 2026-11-20** | dono do produto | páginas em `aceito` |
 | ~~`LAC-POR-01`~~ — **decidida:** escrita e ação no jogo só pelo `wyd-admin` | arquitetura | BFF não tem `USAGE` em `game`; contrato HTTP ainda sem forma |
-| ~~`LAC-POR-02`/`03`~~ — **decididas:** `news`, `banner`, `guide` e `launcher_release` em `portal` | arquitetura + produto | lotes `0030`/`0031` aprovados no `wyd-db` em 2026-11-20, mais o `0032` (só `GRANT`, 2026-11-21); série 32 arquivos / 97 tabelas |
+| ~~`LAC-POR-02`/`03`~~ — **decididas:** `news`, `banner`, `guide` e `launcher_release` em `portal` | arquitetura + produto | lotes `0030`/`0031` aprovados no `wyd-db` em 2026-11-20, mais o `0032` (só `GRANT`, 2026-11-21); série 34 arquivos / 109 tabelas |
 | ~~`LAC-POR-04`~~ — **decidida:** ranking direto de `game` com `LIMIT` e cache BFF de 60 s | arquitetura | sem tabela/view materializada nova |
 | ~~`LAC-POR-05`~~ — **decidida:** TOTP em `portal.person_authenticator`, só staff | produto + segurança | `RF-POR-013`; DDL no lote `0031` do `wyd-db` |
 | ~~`LAC-POR-06`~~ — **decidida:** telemetria vem do `/metrics` Prometheus do `wyd-server`, coletado pelo `wyd-ops`; o portal consulta a API | `wyd-ops` + arquitetura | NOC mostra CPU/RAM/latência com instante da amostra; sem tabela nova no `wyd-db` |

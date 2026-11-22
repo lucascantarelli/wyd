@@ -28,7 +28,7 @@ A direção está decidida (`LAC-POR-01`, 2026-11-20); a **forma** do contrato �
 | Requisitos não funcionais | 5 | idem |
 | Rotas no contrato | 14 | 7 de ação de staff + 4 de custódia + `health`, `ready`, `actions/{key}` |
 | Fatias de roadmap | 10 | `docs/roadmap/roadmap.md` |
-| Lacunas abertas | 5 | `lacunas.md` §Abertas (`02`, `03`, `04`, `06`, `07`) |
+| Lacunas abertas | 2 | `lacunas.md` §Abertas (`03`, `04`); `02`, `06` e `07` fecharam em 2026-11-22 |
 | Arquivos de código | 0 | `find src tests -type f` (só `.gitkeep`) |
 | Issues criadas | 0 | nenhuma ação no GitHub |
 
@@ -56,16 +56,15 @@ O gate do site inclui o `wyd-admin` no `SISTEMAS`; link relativo quebrado reprov
 
 ## 5. Bloqueios antes da primeira linha
 
-1. `LAC-ADM-01` — papel `wyd_admin` e `GRANT` de escrita em `game`; proposta `M27` apresentada em
-   2026-11-21 no `wyd-db` (`seguranca.md`), aguardando decisão do dono.
-2. `LAC-ADM-02` — armazenamento durável da idempotência.
-3. `LAC-ADM-04` — autenticação portal → admin.
-4. `LAC-ADM-03` — controle com o `wyd-server` (só para `ADM-08`).
-5. `LAC-ADM-07` — lote de `game.market_escrow` e `portal.market_*` no `wyd-db` (só para `ADM-10`).
+1. `LAC-ADM-04` — autenticação portal → admin.
+2. `LAC-ADM-03` — controle com o `wyd-server` (só para `ADM-08`).
 
-`LAC-ADM-05` não bloqueia mais: foi fechada em 2026-11-21 — a escrita de `game.account_moderation` é
-deste sistema (C4 §4.1) e o documento do portal foi corrigido. `ADM-01` (esqueleto e saúde) pode
-começar sem 1–4; `ADM-02` depende de 3 (`LAC-ADM-04`) e `ADM-03` depende de 2 (`LAC-ADM-02`).
+Os três bloqueios de schema e de papel fecharam: `LAC-ADM-01` em 2026-11-21 (papel `wyd_admin` e `GRANT`
+no `0032`), `LAC-ADM-02` e `LAC-ADM-06` em 2026-11-22 (`ops.idempotency_record`, `0033`, retenção de 7
+dias) e `LAC-ADM-07` em 2026-11-22 (`game.market_escrow` e as dez `portal.market_*`, `0034`). `LAC-ADM-05`
+não bloqueia desde 2026-11-21 — a escrita de `game.account_moderation` é deste sistema (C4 §4.1) e o
+documento do portal foi corrigido. `ADM-01` (esqueleto e saúde) pode começar sem 1–2; `ADM-02` depende de
+1 (`LAC-ADM-04`) e `ADM-08` de 2 (`LAC-ADM-03`).
 
 ## 6. Próximo passo
 

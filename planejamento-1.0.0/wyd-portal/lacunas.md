@@ -40,9 +40,9 @@ redefinem.
   `docs/arquitetura/consumo-do-banco.md` §4 e `docs/specs/requisitos.md` (`RF-POR-007`).
 - **Reconfirmada em 2026-11-20, com a expansão do monitoramento:** o dono manteve a consulta limitada
   com cache de 60 s no BFF e recusou view materializada em `game` e tabela de cache em `portal`.
-  Consequência: nenhuma tabela nem view nova pelo monitoramento; com os lotes `0031` e `0032`, a série está em
-  32/97 e o catálogo de tabelas citadas ficou em 40 (39 com DDL) + 2 views — **41** desde 2026-11-22, com a
-  armaria (`consumo-do-banco.md` §7).
+  Consequência: nenhuma tabela nem view nova pelo monitoramento; com os lotes `0031` a `0034`, a série está
+  em 34/109 e o catálogo de tabelas citadas ficou em **52** (51 com DDL) + 2 views, medido em 2026-11-22
+  (`consumo-do-banco.md` §7).
 
 ### LAC-POR-05 — Segundo fator para staff (`fechada`)
 
@@ -65,7 +65,8 @@ redefinem.
 - **Reconfirmada em 2026-11-20:** o dono manteve TOTP em credencial separada em `portal`, ligada a
   `portal.person`, e recusou segundo fator em `game.account` e o adiamento para a 1.1. O DDL de
   `portal.person_authenticator` está fechado no lote `0031` do `wyd-db` (`ddl-confirmado.md` §5.20,
-  aprovado em 2026-11-20); a tabela entra na conta, que passa a 97.
+  aprovado em 2026-11-20); a tabela entrou na conta, que passou a 97 e hoje é **109**, com os lotes `0033`
+  e `0034`.
 
 ### LAC-POR-06 — Telemetria de canal (CPU, RAM, latência) (`fechada`)
 
@@ -174,14 +175,15 @@ rota pública nem permissão de banco: acrescentou seis rotas de staff (38–43)
 novas** em `portal`, que não existem nas 92 de `plano-migrations.md` §3. O lote
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
 `planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` e `ddl-confirmado.md` §5.15 —, e a série
-passa a **32 arquivos / 97 tabelas**, com as cinco tabelas dos dois adendos entre as 77 de 97 com DDL fechado. As duas
-contagens citadas aqui concordam com as do `wyd-db`.
+passou a **31 arquivos / 97 tabelas** naquela data — hoje **34 arquivos / 109 tabelas**, com os lotes
+`0033` e `0034` de 2026-11-22 —, e as cinco tabelas dos dois adendos estão entre as de DDL fechado. As
+duas contagens citadas aqui concordam com as do `wyd-db`.
 `LAC-POR-06` **não** acrescenta tabela: a telemetria vem do `wyd-ops` e o `wyd-db` não ganha schema de
 métrica. O monitoramento inteiro (métrica, log, painel e evento de launcher) segue a mesma regra; a
 presença vem da view `game.v_live_session` de `0029`. Por isso o catálogo de tabelas citadas por este
-planejamento está em **41 (40 com DDL) + 2 views** (`docs/arquitetura/consumo-do-banco.md` §7), sem
-contradizer as 97 tabelas da série; as onze tabelas e quatro views da armaria/mercado ficam à parte, em
-§7.1, porque ainda não têm DDL (`LAC-ADM-07`).
+planejamento está em **52 (51 com DDL) + 2 views** (`docs/arquitetura/consumo-do-banco.md` §7), sem
+contradizer as 109 tabelas da série; as onze tabelas de armaria e mercado entraram nele em 2026-11-22, com
+o lote `0034` (`M31`, que fechou `LAC-ADM-07`), e só as quatro views seguem em §7.1.
 
 ## 4. O que **não** é lacuna
 

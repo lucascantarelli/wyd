@@ -10,7 +10,7 @@ por aparecerem no legado.
 
 !!! note "Aprovado em 2026-11-20"
     O dono respondeu as decisões de §8 e aprovou o conjunto em 2026-11-20. As cinco tabelas entram na
-    conta de `ddl-confirmado.md` §1 (75 de 97) e esta página fica `concluída` na checklist. As colunas
+    conta de `ddl-confirmado.md` §1 (75 na época; hoje 109 de 109) e esta página fica `concluída` na checklist. As colunas
     seguem `H` até trace do servidor — aprovar o desenho não as promove a `P`.
 
 ## 1. Identificação

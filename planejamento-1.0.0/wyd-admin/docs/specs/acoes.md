@@ -12,13 +12,17 @@ escrito; a forma é a de `ddl-confirmado.md`.
 Toda ação roda em **uma transação** com isolamento `READ COMMITTED`:
 
 1. valida cabeçalhos, papel (ou titular, nas rotas de §8) e corpo — nada toca o banco antes disso;
-2. abre transação, registra a chave de idempotência como `in_progress`;
+2. abre transação, registra a chave de idempotência como `in_progress` em `ops.idempotency_record`;
 3. executa a escrita com conferência otimista (`expected_*`) quando a rota exige;
 4. grava `ops.audit_log` com o mesmo `trace_id`;
 5. marca a chave como `completed` com o corpo de resposta;
 6. `COMMIT`. Falha em qualquer passo = `ROLLBACK` e chave `failed` (permite repetir).
 
-Sem o passo 2 não há idempotência; ele depende de `LAC-ADM-02`.
+**O `COMMIT` nunca publica `in_progress`:** a linha nasce aberta e é fechada dentro da mesma transação, e
+só o estado fechado é visível a outra sessão. É por isso que a segunda chamada com a mesma chave espera o
+`COMMIT` alheio e, estourando os 2 s, recebe `409 ADM_IDEMPOTENCY_IN_PROGRESS` — não existe chave presa
+nem lease a expirar. Tabela, colunas e retenção (7 dias) estão em `ddl-confirmado.md` §5.33 (`0033`,
+`LAC-ADM-02` e `LAC-ADM-06` fechadas em 2026-11-22).
 
 ## 1. Moderação de conta
 
@@ -90,9 +94,9 @@ Sem o passo 2 não há idempotência; ele depende de `LAC-ADM-02`.
 ## 8. Custódia de item do mercado
 
 Rotas 8–11 de §4.9–§4.12 do [contrato C4](../arquitetura/contrato-c4.md). O ator é a conta do jogador
-(`X-Actor-Account-Id`), não staff, e nenhuma delas chama o `wyd-server`. A tabela `game.market_escrow`
-ainda **não tem DDL aprovado** — forma em `wyd-db/armaria-e-mercado.md` §3.11 e lote a abrir no
-`wyd-db` (`LAC-ADM-07`).
+(`X-Actor-Account-Id`), não staff, e nenhuma delas chama o `wyd-server`. A tabela `game.market_escrow` tem
+DDL aprovado em 2026-11-22: lote `0034_portal_market.sql`, texto em `ddl-confirmado.md` §5.34 e forma em
+`wyd-db/armaria-e-mercado.md` §3.11 (`LAC-ADM-07` fechada em `M31`).
 
 ### 8.1 Custodiar (`POST /characters/{character_id}/escrow`)
 
