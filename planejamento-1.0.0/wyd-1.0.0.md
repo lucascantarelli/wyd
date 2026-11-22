@@ -34,7 +34,7 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 229 | piloto parcial: 214 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find`/`grep` em 2026-11-22 |
+| `wyd-db` | 245 | piloto parcial: 235 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find`/`grep` em 2026-11-22 |
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-22 |
 | `wyd-docs` | 9 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/` | `wyd-docs-1.0.0.md`; `wyd-docs/`, 2026-11-22 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, 0 lacunas abertas (8 fechadas; `09` em proposta) | `wyd-portal/`; `lacunas.md` §1, 2026-11-22 |
@@ -47,15 +47,15 @@
 | Pasta | Escritas | Planejadas | Observação |
 |---|---:|---:|---|
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
-| `docs/arquitetura/` | 8 | 17 | faltam C4, modelo conceitual/lógico, retenção, fronteira |
-| `docs/specs/` | 1 | 20 | só `index.md`; nenhum requisito com ID existe ainda |
-| `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **75 existem** (arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022` e `0024`, 2026-11-22) |
-| `docs/planos/` | 3 | 10 | `index`, `plano-de-implantacao` e `riscos` |
+| `docs/arquitetura/` | 10 | 17 | `index` + 9; faltam C4 de componentes, implantação, fronteira, fluxo, modelo conceitual/lógico e retenção |
+| `docs/specs/` | 8 | 20 | `index` + 7 escritos; faltam 4 de topo, 5 fluxos e 3 estados |
+| `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **109 existem** (2026-11-22) |
+| `docs/planos/` | 6 | 10 | `index` + 5 planos escritos |
 | `docs/roadmap/` | 1 | 42 | só `index.md`; 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
-| `docs/guia-desenvolvedor/` | 3 | 11 | |
-| `docs/guia-administrador/` | 1 | 8 | só `index.md` |
-| `docs/guia-teste/` | 2 | 7 | |
-| `docs/guia-documentacao/` | 1 | 8 | só `index.md` |
+| `docs/guia-desenvolvedor/` | 4 | 11 | 2 páginas + `checklist-de-pr` + `index` |
+| `docs/guia-administrador/` | 2 | 8 | `index` + `configuracao` |
+| `docs/guia-teste/` | 3 | 7 | `index` + `testes-de-sistema` + `testes-de-contrato` |
+| `docs/guia-documentacao/` | 2 | 8 | `index` + `estilo-e-linguagem` |
 | `migrations/` | 28 | 36 | 2 páginas de seção (por escrever) + 34 arquivos, 28 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
 | `tests/` | 0 | 12 | |
@@ -63,9 +63,9 @@
 | `skills/` | 0 | 9 | |
 
 **Totais planejados:** 147 páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 44 em `docs/` (fora de
-`gerado/`, que reúne 76 arquivos: as 75 páginas de tabela e o índice), 28 em `migrations/`, 37 em
-`src/` (2026-11-22).
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **57 páginas autorais com
+corpo** em `docs/` (60 arquivos, 3 índices de uma linha), fora de `gerado/`, que reúne **110 arquivos**
+(as 109 páginas de tabela e o índice); 28 em `migrations/`, 37 em `src/` (2026-11-22).
 
 ### 1.3 Série de migrations
 
@@ -92,7 +92,7 @@
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
 | CI | `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
-| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **197 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
+| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **199 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos em `wyd-client/files/`, ignorado | `find` |
 
 ### 1.5 Cobertura funcional da `1.0.0`

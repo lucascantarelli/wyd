@@ -75,10 +75,10 @@ segue sem prova de execução.
 é `planejado` como o resto, mas não pode virar SQL antes de `0006` — esta página não antecipa essa
 forma.
 
-As páginas `gerado/<tabela>.md` existem em parte: são escritas à mão em lotes (`M26`, decidida em
-2026-11-21), sem gerador, e cada uma aponta para a página de `migrations/` como dona da forma. Quantas
-existem diz [`gerado/index.md`](gerado/index.md), dono único da contagem.
-Até lá, coluna, tipo, nulidade, default e índice vivem em `ddl-confirmado.md`, e esta página só os cita
+As páginas `gerado/<tabela>.md` existem (**109/109**, 2026-11-22): são escritas à mão em lotes
+(`M26`, decidida em 2026-11-21), sem gerador, e cada uma aponta para a página de `migrations/` como
+dona da forma. A contagem e o lote de cada página estão em [`gerado/index.md`](gerado/index.md), dono
+único do número; esta página só cita a forma
 ([`../convencoes.md`](../convencoes.md) §*Nota de enunciação*).
 
 ## Ciclo de vida do dado
@@ -147,8 +147,8 @@ da mesma página.
 Os IDs nasceram em 2026-11-22 em [requisitos-funcionais](../specs/requisitos-funcionais.md) e
 [regras-de-negocio](../specs/regras-de-negocio.md). O que este domínio cobre e já tem ID:
 
-- criação, limite e fechamento de conta por vaga: `RF-DB-001`, `RF-DB-012`; `RN-DB-001`,
-  `RN-DB-005`;
+- criação, limite e fechamento de conta por vaga: `RF-DB-001`, `RF-DB-012`; `RN-DB-001`;
+- saldo da conta e teto de 32 bits: `RF-DB-003`; `RN-DB-005`;
 - login do jogo com senha e PIN, com contagem de falhas: `RF-DB-002`; `RN-DB-007`;
 - sessão única de jogo por conta e por personagem, com cinco contas da mesma pessoa: `RF-DB-006`,
   `RF-DB-014`; `RN-DB-002`, `RN-DB-003`;
@@ -156,7 +156,8 @@ Os IDs nasceram em 2026-11-22 em [requisitos-funcionais](../specs/requisitos-fun
 - bloqueio de conta por staff com motivo e autor: `RF-DB-007`; `RN-DB-006`;
 - fechamento que anonimiza o e-mail: `RN-DB-004`.
 
-O que o domínio cobre e **ainda não tem `RF-DB`** nesta leva: cadastro, verificação de e-mail,
-consentimento, login e sessão do portal, logout e recuperação de senha. Esses requisitos nascem com
-o fluxo dono, na próxima leva; a ausência está declarada em [casos-de-uso](../specs/casos-de-uso.md)
-§O que estes casos não cobrem, não escondida.
+O que o domínio cobre e **ainda não tem `RF-DB` próprio**: cadastro, verificação de e-mail,
+consentimento, login e sessão do portal, logout e recuperação de senha. O login do portal tem caso de
+uso ([`UC-DB-001`](../specs/casos-de-uso.md)) mas nenhum `RF-DB`; os demais ainda não têm fluxo
+escrito, e a ausência está declarada em
+[casos-de-uso](../specs/casos-de-uso.md) §O que estes casos não cobrem, não escondida.

@@ -70,7 +70,8 @@ Fases, prioridades e a página de cada issue `WYDDB-nnn` com o seu critério de 
 
 ---
 
-Ambiente, mapa do crate, portas e contratos, como adicionar migration e como escrever teste.
+Ambiente, mapa do crate, portas e contratos, como adicionar migration, como escrever teste e o
+checklist de PR.
 
 [Abrir guia do desenvolvedor →](guia-desenvolvedor/index.md)
 
