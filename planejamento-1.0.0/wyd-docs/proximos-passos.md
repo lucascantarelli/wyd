@@ -13,8 +13,8 @@ Esta é a **fonte única da fila** do site. O critério de saída da fase 4 é d
 `wyd-docs-1.0.0.md` §9 e o estado de cada lacuna é de `lacunas.md` §1; nenhum dos três é
 recontado aqui.
 
-O total e o censo são de `wyd-docs-1.0.0.md` §9.1: **200 páginas** e **15 `aceito` · 175
-`proposto` · 7 sem linha de estado** (2026-11-22). Item concluído não entra nesta fila: o que fechou em
+O total e o censo são de `wyd-docs-1.0.0.md` §9.1: **259 páginas** e **15 `aceito` · 237
+`proposto` · 4 sem linha de estado** (2026-11-22). Item concluído não entra nesta fila: o que fechou em
 2026-11-19 está em `lacunas.md` §1, `wyd-docs-1.0.0.md` §9/§10 e `docs/planos/metricas.md`.
 
 A fila é ordenada por **ganho de desbloqueio × custo**, não por facilidade. **Dono** diz quem

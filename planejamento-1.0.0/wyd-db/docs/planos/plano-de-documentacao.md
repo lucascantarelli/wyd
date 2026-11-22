@@ -55,14 +55,14 @@ fechada.
 
 ## 3. Fila de escrita e o que já foi entregue
 
-`proposta-paginas.md` §8 tem os **cinco lotes** de escrita (padrão, identidade, série e operação,
-dicionário, índices). Eles não são uma sexta trilha: são a ordem em que as páginas com fonte já
+`proposta-paginas.md` §8 tem os **seis lotes** de escrita (padrão, identidade, série e operação,
+dicionário, índices, recortes e roadmap). Eles não são uma trilha separada: são a ordem em que as páginas com fonte já
 verificada foram **puxadas para a frente** dentro das ondas. Uma página escrita cedo continua
 pertencendo à onda de §11; o que muda é a data de escrita, não o critério de aceite.
 
-**Estado medido em 2026-11-22:** **58 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
-**21 de recorte** e **68 bloqueadas** — **147** páginas autorais. Os cinco lotes estão escritos;
-`specs/index` foi antecipado no lote 2; esta página é a primeira fora dos lotes.
+**Estado medido em 2026-11-22:** **120 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
+**0 de recorte** e **27 bloqueadas** — **147** páginas autorais. Os seis lotes estão escritos;
+`specs/index` foi antecipado no lote 2; as 21 de recorte e as 40 `WYDDB-nnn` fecharam no lote 6.
 
 **Por que esta página veio depois dos lotes:** `§4` não tinha mais escrevível e, em `§6`,
 `plano-de-documentacao.md` era o primeiro item cuja condição de bloqueio já estava resolvida
