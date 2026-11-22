@@ -127,3 +127,23 @@ Execute o projeto seguindo rigorosamente estas etapas, apresentando relatórios 
    - Implemente os dashboards de monitoramento, gráficos, contadores, gestão de jogadores, CMS e controle avançado do launcher.
 5. **Etapa 5 — Polimento Final, Animações e Revisão de Qualidade:**
    - Revise responsividade, fluidez das animações, contraste nos temas Claro e Escuro, performance de carregamento e integridade de todos os links e dados.
+
+---
+
+## 9. Escopo decidido em 2026-11-20
+
+**Decisão do dono (2026-11-20), registrada ao fechar `M21`:** o portal da `1.0.0` é o portal público
+**e** a área administrativa inteira descrita em §5 e §6 — o administrador configura o servidor pelo
+portal, não só o monitora.
+
+| Item | O que entra na `1.0.0` |
+|---|---|
+| Portal público | home, notícias, rankings, WYDpedia e atlas (§5) |
+| Área administrativa | NOC, jogadores e contas, economia, conteúdo/CMS, launcher, logs e segurança (§6.1) |
+| Configuração do servidor | taxas, eventos, canais, manutenção e demais parâmetros editáveis pela área administrativa, com trilha de auditoria |
+| Monitoramento e métricas | dashboards, KPIs e séries históricas (§6.2) |
+
+O legado tem rascunho de parte dessas telas e funcionalidades; ele é **referência (`H`)**, não fonte —
+cada tela é reformulada para o projeto atual. O detalhe por tela, rota e permissão é do planejamento
+do `wyd-portal`, que ainda não existe: esta decisão fixa **escopo**, não desenho, e a lista de telas
+segue aberta como página, não como lacuna (`M21`, `wyd-db/lacunas.md` §2.3).

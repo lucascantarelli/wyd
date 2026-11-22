@@ -8,6 +8,14 @@
 
 # ADR-DB-0002 — Runner de migrations próprio, com ledger por versão
 
+> **Correção de 2026-11-20 — contagens.** O texto abaixo é o de 2026-11-18 e **não** foi reescrito: ele
+> registra a decisão, não o andamento. As contagens mudaram depois do aceite e têm dono noutro lugar:
+> a série passou a **31 arquivos e 97 tabelas** com os adendos `0030` e `0031`, aprovados em 2026-11-20
+> (`plano-migrations.md` §3), e tem **97 tabelas com DDL fechado** e nenhuma sem coluna desenhada ou aguardando aprovação
+> (`ddl-confirmado.md` §1). Onde este arquivo diz "29 arquivos",
+> "92 tabelas" ou "os 29", leia-se o número vigente do plano; a decisão — runner próprio, ledger por
+> versão, lock `0x5759_4404` — não mudou.
+
 Quatro níveis de afirmação convivem aqui:
 
 - **`P`** — o que a série 1.0.0 projeta: os 29 arquivos, os quatro schemas, as 92 tabelas e o runner
@@ -168,6 +176,13 @@ Cada prova é um teste do módulo (`src/migrate/spec.md` §13), não uma confer�
 - Issues: `WYDDB-nnn` entram quando a série for aberta no `roadmap-rust/`.
 
 ## Revisão
+
+**Revisão de estado — 2026-11-21 (`M27`/`0032`).** A série passou de 31 para 32 arquivos; `0032`
+concede privilégios a `wyd_admin` e não altera o número de tabelas (`plano-migrations.md` §3;
+`migrations/0032-admin-grants.md`). O total vigente de papéis passou de cinco para seis com a decisão
+`M27` (`src/provision/spec.md` §2; `lacunas.md` §2.3). Esta nota atualiza os números de estado, sem
+reescrever a decisão original: contagens e menções anteriores refletem o desenho considerado no aceite
+de 2026-11-18.
 
 Revisar quando: houver mais de uma série no mesmo banco (exige coluna de série no ledger e muda a
 chave), entrar réplica de leitura com migrations (o lock é por cluster, não por nó), ou algum processo

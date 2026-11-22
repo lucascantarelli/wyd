@@ -160,6 +160,12 @@ Regras que a decisão implica (`P`, nada implementado):
 
 ## Revisão
 
+**Revisão de estado — 2026-11-21 (`M27`/`0032`).** O total vigente passou de cinco para seis papéis
+com a inclusão de `wyd_admin` (`src/provision/spec.md` §2; `lacunas.md` §2.3). A série passou de 31
+para 32 arquivos com `0032` (`plano-migrations.md` §3; `migrations/0032-admin-grants.md`). Esta nota
+atualiza os números de estado, sem reescrever a decisão original: as menções a cinco papéis acima
+registram o desenho considerado no aceite de 2026-11-17.
+
 - Revisar quando: houver mais de um banco por cluster com séries diferentes; entrar réplica de leitura
   ou RLS (`P-18`, multi-servidor); ou o provisionamento passar a gerenciar senha e rotação.
 - Sinais de que envelheceu: papel novo pedido em produção sem rodar `provision apply`; `42501` recorrente

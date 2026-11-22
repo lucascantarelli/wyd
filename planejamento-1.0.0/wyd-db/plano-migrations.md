@@ -9,7 +9,9 @@
 > o rascunho foi reduzido a histórico de requisitos.
 > **Medido no dia:** 53 migrations, 87 tabelas, 625 colunas, `SCHEMA_VERSION = 53`.
 
-Números deste plano são **planejados**: 29 arquivos, 92 tabelas. O número real sai do catálogo
+Números deste plano são **planejados**: **32 arquivos e 97 tabelas** — 92 originais mais as 4 do
+adendo `0030`, a do adendo `0031` e o `0032`, que só concede `GRANT` ao papel `wyd_admin` (`M27`,
+decidida em 2026-11-21). O número real sai do catálogo
 depois que a série existir — e **não é meta** (é consequência das decisões).
 
 ---
@@ -23,6 +25,25 @@ três, e falham em silêncio ou com erro obscuro.
 > `tools/` é alterado e as ferramentas não são adotadas por enquanto. A série é escrita à mão contra
 > `padrao-banco.md`, e os gates de §7 viram **conferência manual** até o PR ser autorizado. §1.3 não
 > some: vira o critério do dia em que ele for liberado.
+>
+> **Decisão de 2026-11-20 (dono): o PR de ferramentas está liberado** — as mudanças de §1.1 são o
+> escopo dele. **Ferramenta não é pré-requisito do DDL** (corrigido em 2026-11-21): a série é escrita e
+> conferida à mão, como já era desde 2026-11-17, e a ordem de aplicação é `provision render` →
+> `provision apply` → `0001`…`0029` → catálogo → gates. O PR de ferramentas, quando autorizado, entra
+> antes do **catálogo**; nenhum arquivo `.sql` espera por ele.
+>
+> **Decisão de 2026-11-21 (dono): não há gerador de seed.** Os seis arquivos de seed são escritos à
+> mão, como qualquer outra migration, quando o dado de origem estiver conferido; gerar arquivo não é
+> pré-requisito do planejamento nem da série. Ferramenta ou gerador novo, inclusive dentro de
+> `tools/content/`, só entra com aprovação explícita e pedido próprio — nenhum está previsto nesta
+> rodada (`migrations-checklist.md` §3). A ordem de 2026-11-20 continua valendo para o resto.
+>
+> **Decisão de 2026-11-21 (dono): o lote `0030` permanece aprovado e não há lote novo.** As quatro
+> tabelas de conteúdo do portal (`portal.news`, `banner`, `guide` e `launcher_release`) ficam como
+> estão: o DDL é o de `ddl-confirmado.md` §5.15, a página é `migrations/0030-portal-content.md` e o
+> lote conta como `concluída` no checklist. Reabrir o desenho exigiria proposta de revisão própria com
+> o delta nomeado, que não foi pedida. Naquela data a série continuava em **31 arquivos e 97 tabelas**;
+> o `0032` nasceu depois, com a decisão `M27` (2026-11-21), e não cria tabela.
 
 | Arquivo | O que muda | Por quê |
 |---|---|---|
@@ -34,9 +55,9 @@ três, e falham em silêncio ou com erro obscuro.
 | `tools/content/verify-schema.mjs` | `information_schema` por schema; coluna `schema` no relatório | prova banco real ↔ documento |
 | `docker-compose.yml` / bootstrap | `db/roles.sql` gerado por `provision render` e aplicado por `provision apply` antes das migrations; conexões com role própria | permissão é o que faz a fronteira valer, e o arquivo não é escrito à mão |
 
-**Ordem:** ferramentas → `provision render` (gera `db/roles.sql`) → `provision apply` → `0001` →
-… → `0029` → catálogo → gates. Um PR para as
-ferramentas, antes de qualquer SQL, evita escrever 29 arquivos contra um leitor que não os entende.
+**Ordem:** `provision render` (gera `db/roles.sql`) → `provision apply` → `0001` → … → `0029` →
+catálogo → gates. As ferramentas de §1.1 não entram nessa fila: são conferência automatizada do que já
+existe e só rodam se o PR for autorizado — até lá, os gates de §7 são conferência manual.
 
 ### 1.1 O que muda em cada arquivo, concretamente
 
@@ -127,10 +148,10 @@ mesmo resultado de antes do PR.
 | 1.0.0 | `crates/wyd-db/migrations/`, na branch `serie-1.0.0` | nasce agora | PG17 efêmero do `migrate-cycle` e o corte vertical de §3.2 |
 
 A 1.0.0 **não** ganha diretório próprio: a pasta é `crates/wyd-db/migrations/` antes e depois da
-troca — o que muda é o conteúdo. Enquanto a troca não acontecer, os 29 arquivos vivem na branch
+troca — o que muda é o conteúdo. Enquanto a troca não acontecer, os 32 arquivos vivem na branch
 `serie-1.0.0` e `develop` segue com os 53 herdados. O que isso custa: uma branch, e o gate que crava
 contagem (`tools/content/check-migrations.mjs`, `{ migrations: 53, tables: 87 }`) reprovando na branch
-com 29 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
+com 32 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
 continua 53 em `develop`.
 
 ### 1.3 Critério de pronto do PR de ferramentas
@@ -147,8 +168,8 @@ continua 53 em `develop`.
 Só depois disso se escreve SQL. Enquanto 1–5 não fecham, qualquer migration nova é escrita contra um
 leitor que a ignora.
 
-**Estado (2026-11-17): em espera por decisão do dono.** O PR não foi autorizado; 1–5 continuam sendo
-o aceite dele e **não** são pré-requisito de `0001`–`0007` nesta rodada. Consequência aceita:
+**Estado (2026-11-21): em espera por decisão do dono.** O PR não foi executado; 1–5 continuam sendo
+o aceite dele e **não** são pré-requisito de nenhum arquivo da série. Consequência aceita:
 `make migrations-check` reprova na série nova por contagem (`{ migrations: 53, tables: 87 }` cravado
 em `tools/content/check-migrations.mjs`) e `banco-parse` não enxerga `CREATE TABLE game.account (`
 — nenhum dos dois vira gate da série nova enquanto isso, e o corte vertical de §3.2 é provado por
@@ -174,8 +195,9 @@ ferramenta** e o **critério de pronto** de §1.3, que é o aceite do PR quando 
   `);` sozinho no fim — o parser do catálogo depende disso e quebra alto fora desse estilo.
 - Sem `ALTER TABLE` no `up`; sem tabela partida entre arquivos; sem FK para arquivo posterior.
 - Seed em arquivo próprio, imediatamente depois do DDL do domínio (não no fim da série).
-- `SCHEMA_VERSION = 29` **só na troca** (§6). Enquanto a série herdada é a que roda, a constante
-  continua 53. `down` derruba **no mesmo arquivo** o que o `up` criou.
+- `SCHEMA_VERSION` acompanha o total de arquivos da série e muda **só na troca** (§6): **32**.
+  Enquanto a série herdada é a que roda, a constante continua 53. `down` derruba **no mesmo arquivo** o
+  que o `up` criou.
 - Arquivo aplicado é imutável: o runner compara arquivo e ledger e acusa drift (`src/migrate/spec.md`
   §4). Erro de desenho antes de aplicar = reescrever; depois = arquivo novo.
 
@@ -188,14 +210,14 @@ entrega.
 
 ---
 
-## 3. A série (29 arquivos, 92 tabelas)
+## 3. A série (32 arquivos; 97 tabelas)
 
 Antes do arquivo 1 existe a **etapa 0**, que não é migration: `db/roles.sql`, os papéis do cluster —
 artefato gerado por `wyd-db provision render`, especificado em `src/provision/spec.md`
 (**planejamento**) e decidido em ADR-DB-0001. Ela não entra nesta tabela nem na contagem, porque papel
 não é objeto do banco e não tem `up`/`down`.
 
-O andamento de cada uma destas 29 páginas é controlado em `migrations-checklist.md`, na raiz desta
+O andamento de cada uma destas 32 páginas é controlado em `migrations-checklist.md`, na raiz desta
 pasta de planejamento — e não em `migrations/`, que guarda só página de migration.
 
 | # | Arquivo | Schema | Cria | Tab. |
@@ -229,14 +251,45 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 | 27 | `0027_seed_quests_events.sql` | `content` | quests de campo, 3 `world_event` + agenda, 2 `arena` (gerado) | — |
 | 28 | `0028_game_quests_events.sql` | `game` | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` | 7 |
 | 29 | `0029_views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
+| 30 | `0030_portal_content.sql` | `portal` | `news`, `banner`, `guide`, `launcher_release` — CMS e launcher do `wyd-portal` (aprovado em 2026-11-20) | 4 |
+| 31 | `0031_portal_mfa.sql` | `portal` | `person_authenticator` — segundo fator de staff do `wyd-portal` (`A20`, aprovado em 2026-11-20) | 1 |
+| 32 | `0032_admin_grants.sql` | `game` + `ops` | `GRANT`s do papel `wyd_admin` (`M27`, decidida em 2026-11-21): `USAGE` nos dois schemas, `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4 e `INSERT` em `ops.audit_log` | — |
 
-**Total: 29 arquivos, 92 tabelas, 6 arquivos de seed.**
+**Total: 32 arquivos, 97 tabelas** e 6 arquivos de seed.
 
-**DDL já decidido:** `0001_bootstrap.sql`, `0003_portal_person.sql`, `0004_portal_access.sql` e
-`0007_game_session.sql` fecham inteiros hoje, mais 6 tabelas prontas dentro de arquivos abertos —
-**15 de 92** no total, com o texto completo em `ddl-confirmado.md`. Nome de tabela nesta lista **não**
-é DDL: os outros 78 nomes
-não têm coluna desenhada em documento aprovado.
+O `0030` nasceu da decisão de 2026-11-20 no `wyd-portal` (`LAC-POR-02`/`LAC-POR-03`): quatro tabelas
+em `portal` para notícia, banner, guia e versão de launcher. Ele vem **depois** de `0029` porque não
+tem FK de saída e nenhuma view o lê; renumerar as views não mudaria dependência e quebraria a citação
+de `0029` em vinte páginas. A ordem de §3.1 continua valendo para os 29 originais.
+
+O `0031` é o segundo adendo (2026-11-20) e fecha a última peça que o `wyd-portal` pedia:
+`portal.person_authenticator`, a credencial de segundo fator que `A20` reservou. Como o `0030`, não tem
+FK de saída e nenhuma view o lê, então entra no fim. O número **coincide** com o `0031` da série
+herdada, absorvido por `0001` (`wyd-db-1.0.0.md`): são séries distintas, e a nova é contígua por `B2`.
+
+**DDL já decidido:** **26 dos 32 arquivos** fecham inteiros hoje — 25 deles criam as **97 de 97
+tabelas** e o `0032` só concede privilégio —, com o texto
+completo em `ddl-confirmado.md`. Nome de tabela nesta lista **não** é DDL: dos 97 nomes, nenhum fica
+sem coluna desenhada e nenhum aguarda aprovação. Os seis restantes são seeds, bloqueados por dado de
+origem não verificado (§4), não por desenho.
+
+Os lotes de `0002` (`ops.config_revision`/`ops.config_change`), de `0006` (`game.character` e os
+quatro satélites) e de `0008` (`character_skill` e os quatro satélites) foram aprovados em 2026-11-20
+e contam na série, assim como o de `0009` (`character_item`, `vault_item` e `refine_pity`), aprovado em
+2026-11-20 (§5.12), o de `0010` (`guild`, `guild_member`, `guild_relation` e `guild_tower`), aprovado
+na mesma data (§5.13), e o de `0011` (economia, 10 tabelas), aprovado em §5.14.
+
+O `0012` (`ops.delivery_queue`) fechou em 2026-11-20 (`ddl-confirmado.md` §5.16), junto com `M25`:
+dreno com `SKIP LOCKED` e expurgo de 30 dias após `closed_at`. O `0013` (`content.taxonomy`: cinco
+tabelas e `fn_fold`) fechou em 2026-11-20 (`ddl-confirmado.md` §5.17), com `slug` como PK e
+`item_effect` como look-up. O `0014` (`content.item_catalog`) fechou na mesma data
+(`ddl-confirmado.md` §5.18), e o `0015` (`content.skill_catalog`) também (§5.19). Os seeds `0016`–`0018`
+seguem `bloqueada` pelo dado de origem (§4); o `0019` (`content.world`, 13 tabelas) fechou em
+2026-11-20 (`ddl-confirmado.md` §5.21) e o `0021` (`content.rules`, 5 tabelas) também (§5.22).
+O `0024` (`content.maps`, 2 tabelas) fechou em 2026-11-21 (§5.24) e, na mesma data, o dono aprovou os
+cinco lotes que faltavam: `0022` (`content.overrides`, 3 tabelas, §5.23), `0025` (combate, 4, §5.25),
+`0026` (quests, eventos e arena, 6, §5.26), `0028` (estado de jogo, 7, §5.28) e `0029` (views, §5.29).
+Nenhum arquivo de DDL espera aprovação; restam os seis seeds.
 
 ### 3.1 Por que esta ordem
 
@@ -266,7 +319,8 @@ Com `0001`–`0007` aplicados em PG17 efêmero (7 arquivos, 21 tabelas):
 As linhas de `game.server_channel` do teste vêm da **fixture** de `ddl-confirmado.md` §5.5, não de
 seed: a série não semeia canal (grupo/`host`/`status_url` são dado de instalação).
 
-Passar aqui é o que autoriza escrever os 22 arquivos restantes. Sem isso, o plano é papel.
+Passar aqui é o que autoriza escrever os 24 arquivos restantes (22 dos 29 originais + os adendos
+`0030` e `0031`). Sem isso, o plano é papel.
 
 ---
 
@@ -274,19 +328,31 @@ Passar aqui é o que autoriza escrever os 22 arquivos restantes. Sem isso, o pla
 
 A série herdada tem **26 arquivos de seed**, dos quais **7 são patch** (`seed_campo_*`,
 `seed_correcao_catalogo_game12_15`, `seed_sem_duplicatas`, `seed_campo_nomes`,
-`seed_limpeza_fixtures_campo`). Patch de dado é dívida do gerador, não da série.
+`seed_limpeza_fixtures_campo`). Patch de dado é dívida do dado de origem, não da série.
 
 | Regra | Efeito |
 |---|---|
-| Correção de dado entra em `tools/content/` (gerador/sanitização), não em migration | a série nova não tem `seed_correcao_*` |
+| Correção de dado é feita no dado de origem, antes de o seed ser escrito, e não vira migration | a série nova não tem `seed_correcao_*` |
 | Um arquivo por dataset gerado (taxonomia, item, skill, mundo, regras, quests/eventos) | 6 arquivos em vez de 26 |
 | `content_version` incrementa uma vez por seed aplicado | continua sendo a versão do conteúdo |
-| `content_source` (`path`, `sha256`, `size`, `rows`) acompanha cada dataset | proveniência preservada |
+| `content_source` (`path`, `sha256`, `size_bytes`, `row_count`) acompanha cada dataset | proveniência preservada |
 | Idempotência por `ON CONFLICT DO NOTHING` só onde o dataset é reaplicável | seed roda uma vez; reaplicar não duplica |
 
 Contagens a preservar (medidas em 2026-11-08/15): 3.220 itens, 55 efeitos, 154 skills (63 com
 linhagem), 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens
 de chão, 14 passos de refino, 4 gemas, 4 cidades, 2 arenas, 3 eventos, `content_version = 7`.
+
+**O que falta em cada seed (2026-11-21)** — dado de origem, nunca ferramenta: `0016` reconferir as
+contagens de taxonomia; `0017` recontar itens e efeitos do catálogo; `0018` curadoria de classe e
+linhagem das skills; `0020` recontar templates, NPCs, lojas, níveis, regiões e itens de chão; `0023`
+conferir valores de refino, gemas, SANC e composição; `0027` fechar a cadeia de quests do 7662 e o
+calendário de eventos. Enquanto o dado não estiver conferido, o arquivo não é escrito.
+
+**Como os 6 seeds nascem (2026-11-21):** à mão, arquivo por arquivo, a partir do DDL fechado e do dado
+conferido na fonte. Cada linha é escrita e revisada como qualquer outra da série — não há gerador, não
+há saída de script e não há dependência de ferramenta para liberar `0016`–`0027`. O bloqueio é de
+**dado**: enquanto a contagem e o valor não estiverem verificados, a página declara `H` e o arquivo não
+é escrito, porque inventar linha de conteúdo seria pior que a lacuna.
 
 ---
 
@@ -304,10 +370,11 @@ de chão, 14 passos de refino, 4 gemas, 4 cidades, 2 arenas, 3 eventos, `content
 `content.arena` separado de `game.arena_*` (definição × partida), `ops.config_revision`/`config_change`
 (overlay com revisão e autoria, em vez de sobrescrever a taxa base).
 
-**Decisões de produto abertas que mudam tabela** (não travam o corte vertical):
-`game.account.person_id` aceita transferência e, se aceitar, a titularidade vai em tabela no `0005` ou
-em coluna de instante em `game.account`? (`A17`) e loja/cash entra em `portal` ou fica fora (`A19`). `A18` está aberta e **não** entra nesta lista: decide fronteira, não tabela (`lacunas.md`
-§2.2).
+**Decisões que mexeram nesta lista e já fecharam** (corte vertical não travado por nenhuma): `A17`
+— conta não é transferível nem vendável, então `0005` não tem objeto de titularidade; `A19` — loja e
+cash existem, com 6 tabelas em `portal` e 4 em `game`, e `0011` mantém as 10; e `A18` — a conta nasce
+só no portal e `game.account.person_id NOT NULL` é a fronteira. As três fecharam em 2026-11-19
+(`lacunas.md` §2.2).
 
 ---
 
@@ -333,15 +400,15 @@ banco de desenvolvimento de quem usa a stack.
 
 | Item | Hoje (série herdada) | Na troca |
 |---|---|---|
-| diretório vivo | `migrations/` (53 arquivos, em `develop`) | `migrations/` (29 arquivos, no commit da troca) |
-| `SCHEMA_VERSION` | `53` | `29` |
+| diretório vivo | `migrations/` (53 arquivos, em `develop`) | `migrations/` (32 arquivos, no commit da troca) |
+| `SCHEMA_VERSION` | `53` | `32` |
 | `make migrations-apply` | série herdada | série nova |
-| catálogo/doc | `public`, 87 tabelas | 4 schemas, 92 tabelas + 2 views |
+| catálogo/doc | `public`, 87 tabelas | 4 schemas, 97 tabelas + 2 views |
 | imagem/runner | `WYD_MIGRATIONS_DIR=/migrations` | mesmo caminho, conteúdo novo |
 
 Procedimento da troca, **quando `0001`–`0007` estiverem verdes** (não executar antes): (1) `git tag pre-serie-1.0.0` no
-commit atual; (2) commit só da troca: os 53 saem e os 29 entram na mesma pasta `migrations/`, vindos
-da branch; (3) `SCHEMA_VERSION = 29`; (4) `provision render` + `provision apply` antes das migrations e `make stack-config && make
+commit atual; (2) commit só da troca: os 53 saem e os 32 entram na mesma pasta `migrations/`, vindos
+da branch; (3) `SCHEMA_VERSION = 32`; (4) `provision render` + `provision apply` antes das migrations e `make stack-config && make
 stack-up` com banco recriado (`down -v` só com pedido explícito); (5) `make migrations-apply`
 (up/down/up), `make banco-catalogo && make banco-verify`; (6) docs na mesma entrega (`modelo-banco.md`,
 `banco-catalogo.md`, `03-progresso.md`, issue no `roadmap-rust/`, `changelog.md`).
@@ -356,8 +423,8 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 
 | Gate | Critério |
 |---|---|
-| estrutura | 29 arquivos contíguos; 0 tabela ao fim do `down` (somando os 4 schemas) |
-| catálogo | 92 tabelas + 2 views no documento gerado, todas com schema, nota e fonte |
+| estrutura | 32 arquivos contíguos; 0 tabela ao fim do `down` (somando os 4 schemas) |
+| catálogo | 97 tabelas + 2 views no documento gerado, todas com schema, nota e fonte |
 | tipos | nenhum `serial`, `timestamp`, `money`, `varchar`, `enum` na série |
 | constraints | 100% nomeadas; toda constraint tem teste que a viola e recebe o erro esperado |
 | fronteira | `permission denied` para portal escrevendo em `game`; jogo lendo `portal.person` |
@@ -375,7 +442,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 | `search_path` ausente na conexão do servidor | query de `game.account` cai na tabela homônima de outro schema (ou falha) | schema explícito em toda query ou role com `search_path` fixo; teste de fronteira |
 | Big bang sem build verde até `0007` | semanas sem `cargo test` útil | corte vertical de §3.2 como primeiro gate |
 | Conteúdo escrito antes do corte vertical | retrabalho se o modelo de conta mudar | conteúdo é independente: só começa depois de `0001`–`0007` verdes |
-| Seed regenerado divergir do medido | perda silenciosa de itens/NPCs | comparar contagens antes/depois; `sha256` por dataset em `content_source` |
+| Seed escrito divergir do medido | perda silenciosa de itens/NPCs | conferir contagem e `sha256` por dataset em `content_source` antes de escrever o arquivo |
 | Renomear 87 tabelas antigas | links e docs quebrados | catálogo gerado + `check-docs-consistency` + `modelo-banco.md` na mesma entrega |
 | Série antiga apagada cedo demais | perde referência de comparação | não é apagada (§6): fica congelada em `migrations/` como referência e rollback |
 | Duas séries divergirem em silêncio | ferramenta valida uma e a outra apodrece | todo alvo de verificação aceita `SERIE` e o PR de ferramentas roda nas duas (§1.3) |
@@ -385,7 +452,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 ## 9. Etapas de código (a execução da série)
 
 1. **[adiado em 2026-11-17]** PR de ferramentas (`banco-parse`, `check-migrations`, `pg`, `catalogo.rs`,
-   `src/migrate/`, geradores)
+   `src/migrate/`)
    + fixture, com o critério de pronto de §1.3 nas **duas** séries. Sem autorização, este passo não
    existe: o próximo é o 2.
 2. `provision render` (gera `db/roles.sql`) + `provision apply` no banco (papéis e o estado de

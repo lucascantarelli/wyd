@@ -344,5 +344,6 @@ pendência de fechamento.
 
 ## Quando a página está errada
 
-Registre o defeito com página, trecho e fonte correta. O destino é `planos/riscos.md`, que ainda
-não existe: até lá, o registro vai na issue do roadmap (`WYDDB-nnn`) que cobre a página.
+Registre o defeito com página, trecho e fonte correta. O destino é `planos/riscos.md` (criado em
+2026-11-20), que é o dono do registro, do defeito e do risco; a issue do roadmap (`WYDDB-nnn`) só
+existe depois da página, então não serve de registro provisório.

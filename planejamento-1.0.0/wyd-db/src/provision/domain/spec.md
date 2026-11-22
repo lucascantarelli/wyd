@@ -10,7 +10,7 @@
 
 ## 1. Responsabilidade
 
-Fixar em código os cinco papéis de cluster e suas memberships, e gerar deles o texto de `db/roles.sql`
+Fixar em código os seis papéis de cluster e suas memberships, e gerar deles o texto de `db/roles.sql`
 — mais o bloco fixo de `public` que o ledger pressupõe (`spec.md` §4). O código é a fonte para os
 papéis; o `.sql` é artefato. Zero I/O, zero ambiente, zero erro.
 
@@ -42,12 +42,13 @@ pub fn memberships() -> impl Iterator<Item = (&'static str, &'static str)>;
 | 2 | `wyd_migrator` | `true` | `["wyd_owner"]` |
 | 3 | `wyd_game` | `true` | `[]` |
 | 4 | `wyd_portal` | `true` | `[]` |
-| 5 | `wyd_read` | `true` | `[]` |
+| 5 | `wyd_admin` | `true` | `[]` |
+| 6 | `wyd_read` | `true` | `[]` |
 
 Acompanha o `const`:
 
 ```rust
-const _: () = assert!(ROLES.len() == 5);
+const _: () = assert!(ROLES.len() == 6);
 ```
 
 É a prova em tempo de compilação de que papel novo exige golden novo (spec §2).
@@ -88,7 +89,7 @@ Implementação: `String` com `push_str`/`writeln!` (nunca `format!` aninhado). 
 | `spec_table_is_consistent` | nomes únicos, prefixo `wyd_`, só `owner` é `NOLOGIN`, `member_of` de um nível aponta para papel existente, sem auto-membership |
 | `render_matches_golden` | igual ao golden de §4 |
 | `render_is_stable` | duas chamadas iguais; sem `\r`; termina em um `\n` |
-| `every_role_is_guarded_and_created` | 5 `IF NOT EXISTS` e 5 `CREATE ROLE` |
+| `every_role_is_guarded_and_created` | 6 `IF NOT EXISTS` e 6 `CREATE ROLE` |
 | `migrator_is_member_of_owner` | o `GRANT wyd_owner TO wyd_migrator;` existe |
 | `render_emits_no_forbidden_sql` | sem `PASSWORD`, `ALTER ROLE`, `DROP`; `GRANT … ON` só no bloco de `public` |
 | `render_emits_public_block` | o bloco de `public` vem depois das memberships e na ordem de `spec.md` §4 |

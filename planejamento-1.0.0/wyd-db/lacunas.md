@@ -4,7 +4,7 @@
 > decisão pendente, bloqueio e prazo. Quando dois documentos divergirem, vale este registro, com a
 > evidência anexada na linha.
 >
-> **O que este arquivo cobre:** as **29 lacunas** registradas (5 bloqueantes `B`, 15 altas `A`, 9
+> **O que este arquivo cobre:** as **33 lacunas** registradas (5 bloqueantes `B`, 15 altas `A`, 13
 > médias `M`), as **11 divergências** internas do plano diretor (`P1`–`P11`) e os **3 achados
 > estruturais** desta rodada (`D-A`, `D-B`, `D-C`).
 >
@@ -12,7 +12,17 @@
 > **o que** precisa ser decidido; a decisão entra no rascunho, no ADR ou no plano, e volta aqui como
 > uma linha fechada com data.
 >
-> Medido em **2026-11-17** e recontado em **2026-11-18**, quando `A17`–`A21` entraram (§2.2).
+> Medido em **2026-11-17**, recontado em **2026-11-18**, quando `A17`–`A21` entraram (§2.2), em
+> **2026-11-20**, quando `A7`, `A21` e `M21` fecharam (§2.2/§2.3) e `P3` fechou com elas (§3), e de
+> novo em 2026-11-20, quando `M25` entrou e fechou com o desenho do lote `0012` (§2.3), e em
+> **2026-11-21**, quando `M26` entrou e fechou na mesma rodada: a produção das 97 páginas por tabela
+> do dicionário deixou de ser gerador presumido e passou a ser escrita à mão, em lotes. Na mesma
+> data, `M27` entrou como **`proposta`** — o papel `wyd_admin` do serviço `wyd-admin` — e **fechou na
+> mesma data** na opção A + S1 + C1 + D1 (`docs/arquitetura/seguranca.md`, `0032_admin_grants.sql`).
+> Ainda em 2026-11-21, `M28` entrou **aberta** — a frase que atribui a "API interna" a credencial
+> `wyd_portal` não se sustenta para escrita em `game` — e **fechou na mesma data** na **redação B**:
+> a "API interna" é o serviço `wyd-admin`, as quatro tabelas de `portal` ficam com o BFF do portal e
+> `wyd_portal` não serve para `game` (§2.3; `ddl-confirmado.md` §5.15; `migrations/0030-portal-content.md` §8).
 > Nenhum teste ou Postgres foi executado: as contagens vêm de `grep` nas migrations do legado e da
 > lista nominal do §11 do rascunho.
 
@@ -66,16 +76,16 @@ por decisão minha sozinha.
 
 | Grupo | Quantas | Abertas (`aberta`/`proposta`) | `externa` | Fechadas |
 |---|---:|---:|---:|---:|
-| Lacunas (`B`/`A`/`M`) | 29 | 2 (`A7`, `A21`) | 3 (`A11`, `A20`, `M21`) | 24 (`B1`, `B2`, `B3`, `B4`, `B5`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`) |
-| Divergências do plano diretor (`P`) | 11 | 1 (`P3`) | — | 10 (`P1`, `P2`, `P4`, `P5`, `P6`, `P7`, `P8`, `P9`, `P10`, `P11`) |
+| Lacunas (`B`/`A`/`M`) | 33 | 0 (—) | 3 (`A11`, `A20`, `M21`) | 30 (`B1`, `B2`, `B3`, `B4`, `B5`, `A7`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `A21`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`, `M25`, `M26`, `M27`, `M28`) |
+| Divergências do plano diretor (`P`) | 11 | 0 (—) | — | 11 (`P1`, `P2`, `P3`, `P4`, `P5`, `P6`, `P7`, `P8`, `P9`, `P10`, `P11`) |
 | Achados estruturais (`D-A`, `D-B`, `D-C`) | 3 | 0 | — | 3 (`D-A`, `D-B`, `D-C`) |
 
 As decisões abaixo entram aqui só pelo **índice**: o texto que as descreve mora no arquivo dono. A
 revisão de 2026-11-17 comparou o bloco de identidade com OWASP (Authentication, Password Storage,
 Session Management, Forgot Password, MFA), NIST SP 800-63B-4 e os schemas públicos de Supabase
 Auth/GoTrue, Ory Kratos e Keycloak. `M1`–`M7` e `M9` foram aprovados, `M8` deferido; nenhuma decisão
-cria tabela nova além das duas já previstas em `P-22`, e a série continua em
-**92 tabelas** (`plano-migrations.md` §3).
+cria tabela nova além das duas já previstas em `P-22`, e a série fica em **97 tabelas**, com as 4 do
+adendo `0030` e a do `0031`, aprovadas em 2026-11-20 (`plano-migrations.md` §3).
 
 | ID | Decisão | Por que | Refletida em |
 |---|---|---|---|
@@ -87,7 +97,7 @@ cria tabela nova além das duas já previstas em `P-22`, e a série continua em
 | **M6** | `ops.login_attempt` guarda `identifier_hash` (sha256), `surface`, `ip INET` e `result` fechado | `ops` é lido por `wyd_read`: e-mail/login crus ali seriam PII fora de `portal`; o hash ainda responde "quantas falhas neste identificador por hora" | §5.4 |
 | **M7** | entram `portal.person_profile` e `portal.person_consent`, enxutas; **`P-22` vence o `D5`** | PII em `portal` e prova de consentimento **com versão** do documento aceito (LGPD/GDPR); sem tabela não há onde guardar nome de exibição sem sujar `person` | §5.6, §5.7 |
 | **M9** | senha do portal **15–128**, sem regra de composição, sem expiração periódica, com blocklist; `argon2id m=19456, t=2, p=1` | NIST 800-63B-4 e OWASP pedem comprimento e blocklist, não "maiúscula+número+símbolo"; 10 caracteres era abaixo do mínimo vigente sem MFA | `B3` (metade da senha) |
-| **M8** | MFA **não** entra na 1.0.0 (**deferido em 2026-11-17**); a forma fica reservada para `portal.person_authenticator` | sem consumidor medido (`D5`), mas staff `admin`/`moderator` precisa de segundo fator antes de o portal ir a público | `A20` (escopo e prazo, `externo`) |
+| **M8** | MFA **não** entra na 1.0.0 (**deferido em 2026-11-17**); a forma fica reservada para `portal.person_authenticator`, com DDL no lote `0031` (`A20`) | sem consumidor medido (`D5`), mas staff `admin`/`moderator` precisa de segundo fator antes de o portal ir a público | `A20` (escopo e prazo, `externo`) |
 
 **Demais decisões fechadas — com dono fora deste registro:** a coluna do meio nomeia a questão
 fechada, não a resposta; assinatura, tipo e código moram só na página dona.
@@ -128,7 +138,7 @@ fechadas em 2026-11-19.
 
 ---
 
-## 2. Lacunas (29)
+## 2. Lacunas (31)
 
 ### 2.1 Bloqueantes
 
@@ -165,7 +175,7 @@ respondem perguntas diferentes.
 
 | ID | O que falta | Dono | Decisão necessária | O que bloqueia | Prazo | Estado |
 |---|---|---|---|---|---|---|
-| **A7** | Cadastro de pessoa não existe (rota, regra, verificação) | produto | autocadastro × criado por staff; `pending` exige clique no e-mail? | rota de cadastro do §9, teste "cadastro cria pessoa + conta", onda 6 | **P4** | aberta |
+| **A7** | Cadastro de pessoa não existe (rota, regra, verificação) | produto | **decidida em 2026-11-20: autocadastro no portal, com a pessoa em `pending` até o clique no link `email_verify`; a conta de jogo só nasce depois da ativação** e o endereço não verificado não abre conta | rota de cadastro do §9, teste "cadastro cria pessoa + conta", onda 6 | **P4** | fechada |
 | **A8** | `failed_logins`/`locked_until` existem e ninguém os move | produto + arquitetura | **decidida em 2026-11-19:** mesmo limiar do PIN — 5 falhas/10 min, desbloqueio por tempo, sem intervenção de staff; os contadores existentes passam a ser movidos no login | login do portal (onda 4), prova de lockout | **P1** | fechada |
 | **A9** | `updated_at` não se atualiza sozinho | arquitetura | **decidido:** trigger `set_updated_at()` criado uma vez em `0001`, uma função para a série | DDL de `0001`, teste que prova a coluna andando | — | **fechada** |
 | **A10** | Sessão órfã de jogo: quem libera | `wyd-server` + operação | **fechada em 2026-11-18 e revisada em 2026-11-19 por `A14`:** canal libera no disconnect; reaper 60 s com `stale 180 s`; **`game.session.released_reason` passa a existir** (`disconnect`, `reaper`, `character_deleted`, `admin`) e o evento continua em `ops.audit_log` (`actor_kind = 'system'`) | `ddl-confirmado.md` §5.5 | **P0** | fechada |
@@ -178,8 +188,8 @@ respondem perguntas diferentes.
 | **A17** | Conta de jogo pode ser transferida ou vendida entre pessoas | produto + arquitetura | **decidida em 2026-11-19: não** — conta não é transferível nem vendável; nenhum objeto novo e `0005` fecha sem coluna de titularidade | fechar `0005` (página `0005-game-account.md`, onda 5) e o dicionário `dominio-acesso.md` (onda 4) | **P3** | fechada |
 | **A18** | Cadastro de conta pode nascer dentro do jogo, além do portal | produto | **decidida em 2026-11-19: não** — conta nasce só no portal; `game.account.person_id NOT NULL` continua sendo a fronteira e não há rota de cadastro no cliente | ADR de fronteira pessoa × conta, onda 6; **não** muda `0005` | **P1** | fechada |
 | **A19** | Loja e cash no `1.0.0`: se existem e onde moram | produto | **decidida em 2026-11-19:** existem; loja e cash ficam no schema `portal` — `donate_*`, `daily_reward_*`, `kingdom_cape_price` e `donate_shop_item` (6 tabelas) em `portal`; `city`, `city_tax_ledger`, `item_price` e `personal_shop` (4) seguem em `game`; `0011` mantém as 10 tabelas | `0011` (10 tabelas; página `0011-game-economy.md`, onda 5) e `dominio-economia.md` | **P3** | fechada |
-| **A20** | MFA fora da 1.0.0 (`M8`): quando e para quem o segundo fator existe | produto + arquitetura | **escopo e prazo decididos em 2026-11-18:** obrigatório para **staff** (`admin`/`moderator` do portal) **antes** de o portal ir a público; `member` fica fora da 1.0.0 e só volta em 1.1 com consumidor medido. Forma reservada: `portal.person_authenticator (person_id, kind, secret_encrypted, confirmed_at, last_used_step)`, TOTP como `kind` inicial; recuperação do segundo fator é fluxo de staff, nunca autoatendimento do titular | telas e rotas do portal (frente `wyd-portal`), onda 6 | **EXT** | **externa** |
-| **A21** | Troca de e-mail da pessoa não tem fluxo nem decisão registrada | produto | a troca entra na 1.0.0? quem pode pedir; como o endereço novo é verificado; o que o endereço antigo recebe; se a troca encerra sessões como a senha (`M4`) | rota de troca de endereço e emissor do token `email_change` (frente `wyd-portal`, onda 6) | **P4** | aberta |
+| **A20** | MFA fora da 1.0.0 (`M8`): quando e para quem o segundo fator existe | produto + arquitetura | **escopo e prazo decididos em 2026-11-18:** obrigatório para **staff** (`admin`/`moderator` do portal) **antes** de o portal ir a público; `member` fica fora da 1.0.0 e só volta em 1.1 com consumidor medido. Forma reservada: `portal.person_authenticator (person_id, kind, secret_encrypted, confirmed_at, last_used_step)`, TOTP como `kind` inicial; recuperação do segundo fator é fluxo de staff, nunca autoatendimento do titular; DDL no lote `0031` (`ddl-confirmado.md` §5.20, aprovado em 2026-11-20) | telas e rotas do portal (frente `wyd-portal`), onda 6 | **EXT** | **externa** |
+| **A21** | Troca de e-mail da pessoa não tem fluxo nem decisão registrada | produto | **decidida em 2026-11-20: a troca entra na 1.0.0** — o titular pede autenticado, o token `email_change` vai para o endereço novo, o endereço antigo recebe aviso, e a conclusão revoga as sessões do portal como a troca de senha (`M4`); `ux_person_email` continua total | rota de troca de endereço e emissor do token `email_change` (frente `wyd-portal`, onda 6) | **P4** | fechada |
 
 `A17`–`A19` entraram neste registro em 2026-11-18: já eram citadas como decisão aberta em
 `plano-migrations.md` §5 e em `migrations-checklist.md` §3, sem linha aqui. `A21` entrou no mesmo dia,
@@ -217,18 +227,23 @@ real, o endereço original fica livre para um cadastro novo, e o histórico anti
 | **M17** | Chave de idempotência sem dono | arquitetura + `wyd-portal` | **decidida em 2026-11-19:** o BFF gera UUID; a chave é única em `0011`/`0012`; janela de replay de 24 h | `0011`/`0012` e as ações `accounts/donate*` da onda 4 | **P3** | fechada |
 | **M18** | `audit_log.actor` sem formato | arquitetura | **decidido em 2026-11-17 (M18-A):** `actor_kind` (`person`/`account`/`system`) + `actor_id` + `actor_ref`, com 3 CHECKs de coerência e **sem FK, por desenho** (ver nota) | DDL de `0002_ops_audit.sql`, consulta de auditoria, índice `ix_audit_actor` | **P1** | **fechada** |
 | **M19** | Seed sem senha de dev documentada | arquitetura | **decidida em 2026-11-19:** senha fixa `dev-only`, documentada no próprio seed; nunca vale fora de desenvolvimento | gate da onda 2, teste manual | **P1** | fechada |
-| **M20** | Contagens medidas, não estimadas | arquitetura | **fechada em 2026-11-18:** o **planejado** é **29 arquivos / 92 tabelas**, dono único `plano-migrations.md` §3; o **medido** sai do catálogo depois que a série existir e é o único número que pode entrar em `planos/metricas.md` | `planos/metricas.md` (não pode ser escrito antes) | **P2** | **fechada** |
-| **M21** | Telas do portal não mapeadas | frente `wyd-portal` | cadastro, recuperação, lista de contas: quais telas existem | rotas do §9, onda 6, `planejamento-1.0.0/wyd-portal` (vazia) | **EXT** | externa |
+| **M20** | Contagens medidas, não estimadas | arquitetura | **fechada em 2026-11-18:** o **planejado** é **29 arquivos / 92 tabelas**, dono único `plano-migrations.md` §3; ampliado em 2026-11-20 pelo adendo `0030`, aprovado na mesma data, para **30 / 96**; ampliado em 2026-11-20 pelo adendo `0031`, aprovado na mesma data, para **31 / 97**; o **medido** sai do catálogo depois que a série existir e é o único número que pode entrar em `planos/metricas.md` | `planos/metricas.md` (não pode ser escrito antes) | **P2** | **fechada** |
+| **M21** | Telas do portal não mapeadas | frente `wyd-portal` | **decidida em 2026-11-20: escopo completo** — portal público e área administrativa inteira (NOC, jogadores e contas, economia, conteúdo/CMS, launcher, logs e segurança), com configuração do servidor pelo portal, monitoramento, métricas e dashboards; as telas do legado são referência `H` e são reformuladas, e a lista por tela é do planejamento do `wyd-portal` | rotas do §9, onda 6, `planejamento-1.0.0/wyd-portal` (vazia) | **EXT** | externa |
 | **M22** | `portal.person_session`, `game.session` e `ops.audit_log` crescem sem política | operação | **decidida em 2026-11-19:** retenção por tabela — `person_session` 30 dias após `expires_at`; `game.session` 365 dias após `released_at`; `ops.audit_log` 730 dias, append-only | `planos/retencao-e-capacidade.md`, backup | **P3** | fechada |
 | **M23** | `channel_capacity` e `channel_role` eram 1:1 com `server_channel`, sem ciclo de vida próprio | arquitetura | **fechada em 2026-11-18:** fundidas em `game.server_channel` (`max_players`, `maintenance`, `role`), com `ck_server_channel_jogavel` para `channel = 0` e sem `DEFAULT`; a separação só existia porque o legado proibia `ALTER TABLE` no `up` (`0040`/`0041`) | DDL de `0007`, contagem da série (93 → 92) | — | **fechada** |
 | **M24** | Contrato de ambiente do `wyd-db`: quais variáveis o crate consome, com que nomes, e o que é segredo | arquitetura | **fechada em 2026-11-18:** o contrato inteiro vive em `src/provision/spec.md` §3 (variáveis e quem lê) e §7 (segredo) — esta linha só registra | implementação de `crates/wyd-db` (onda 1); gate de ambiente em `plano-migrations.md` §7 | **P4** | **fechada** |
+| **M25** | Consumo e retenção da fila de entrega: como o dreno toma a linha em `ops.delivery_queue` e por quanto tempo a linha fechada fica guardada | arquitetura + frente `wyd-server` | **decidida em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta e marca `claimed`/`claimed_at` antes de aplicar; `applied`/`failed` são expurgadas **30 dias após `closed_at`** e `pending` nunca é expurgada. Recusadas: dreno único sem lock (pode entregar duas vezes) e expurgo de tudo em 90 dias | DDL de `0012` (`ddl-confirmado.md` §5.16), página `0012-ops-delivery.md`, `docs/arquitetura/padroes-postgres.md` §6 e `planos/retencao-e-capacidade.md` | **P3** | fechada |
+| **M26** | Dicionário de dados: como nascem as 97 páginas por tabela (`dicionario-dados/gerado/<tabela>.md`), que o plano tratava como saída de um gerador `make dicionario-dados` | arquitetura + documentação | **decidida em 2026-11-21: escritas à mão, em lotes, ao fim do DDL.** Uma página curta por tabela, sem gerador e sem `Makefile` novo; cada uma aponta para a página de `migrations/`, que continua dona da forma, e a página por tabela resume e liga, sem copiar o DDL. Recusadas na mesma rodada: manter o gerador como projeto próprio (exigiria aprovar ferramenta e escrever código antes de existir página), adiar as páginas por tabela (deixaria a cobertura por tabela ausente sem data) e cancelar as 97 páginas (revogaria `LPDOC-09`). **Nada é gerado:** **61 das 97** páginas já foram escritas à mão, em lotes (`0001`–`0012`, `0014`, `0019` e `0024`), até 2026-11-22; as demais entram em lotes | `dicionario-dados/` (onda 4), `LPDOC-09` do `wyd-docs`, gate do site; o formato da página é de `wyd-db-1.0.0.md` §6.8 | **P3** | fechada |
+| **M27** | Papel `wyd_admin`: o serviço `wyd-admin` não tem papel próprio para escrever em `game` nem em `ops.audit_log` | `wyd-db` + `wyd-ops` | **decidida em 2026-11-21: A + S1 + C1 + D1** — `wyd_admin` com `LOGIN` e DSN própria (`WYD_DB_URL_ADMIN`), `USAGE` em `game` e em `ops`, `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4 (`account_moderation`, `account_wallet`, `account_ledger`, `server_channel`, `session`, `city`, `item_price`), sem `DELETE`, e `INSERT` + `SELECT (id)` em `ops.audit_log`; `GRANT` em arquivo novo (`0032`) | `seguranca.md` (papel na tabela e decisão registrada); `src/provision/spec.md` §2/§4 (6º papel em `ROLES` e no golden); `0032_admin-grants.md` e `ddl-confirmado.md` §5.32; série 31 → 32 em `plano-migrations.md`, `migrations-checklist.md` e contagens; `LAC-ADM-01` do `wyd-admin`; `M28` **não** entrou | **P3** | fechada |
+| **M28** | "API interna" sem dono: `ddl-confirmado.md` §5.15 e `migrations/0030-portal-content.md` §8 dizem que ela usa a credencial `wyd_portal`, mas esse papel não tem `USAGE` em `game`; o §9 da mesma página já separa conteúdo (`wyd_portal`) de ação em `game` (que é do `wyd-admin`) | arquitetura + `wyd-db` | **decidida em 2026-11-21: redação B** — a "API interna" é o serviço `wyd-admin`; as quatro tabelas de `portal` são escritas pelo BFF do portal com `wyd_portal`; o `wyd-admin` não as escreve e, para `game` e `ops.audit_log`, usa o papel de `M27` (`0032`), nunca `wyd_portal`. Recusada a redação A, que chamava o próprio BFF de "API interna" e divergia de `fronteira.md` §1–§2 do `wyd-admin`. Correção **só de prosa**, sem DDL nem `GRANT` | `ddl-confirmado.md` §5.15 e `migrations/0030-portal-content.md` §8 (redação B aplicada); teste de fronteira (`wyd_portal` sem `USAGE` em `game`) | **P3** | fechada |
 
 `M16` e `M17` ficam no marco `P3`, não no `P4`: as duas bloqueiam **schema** — `M16` o bloco `0005`
 (`ddl-confirmado.md` §5.2, uma das razões de o arquivo ser `parcial`) e `M17` os arquivos
 `0011`/`0012` (`migrations-checklist.md` §3) —, o que `P4` exclui por definição; quem as fecha é a onda
 de documentação que registra o assunto, como `A17`/`A19` (§2.2).
 
-`M20` fecha em **92 tabelas** planejadas (`plano-migrations.md` §3). A derivação do rascunho —
+`M20` fecha em **97 tabelas** planejadas (`plano-migrations.md` §3): 92 originais mais as 4 do adendo
+`0030` e a do `0031`, aprovadas em 2026-11-20. A derivação do rascunho —
 `0001_contas` com 1 tabela, `0031`/`0034`/`0053` com 1 cada, 87 − 4 + 7 = 90 — fica registrada como
 história do desenho **descartado**, não como número vigente: o padrão aprovado mudou o desenho. A
 contagem continua **planejada**, não medida: o número real sai do catálogo depois da série.
@@ -276,21 +291,26 @@ não se encaixe em `person`/`account`/`system` volta aqui antes de virar `INSERT
 | Marco | Lacunas abertas | São elas |
 |---|---|---|
 | **P0** | 0 | — |
-| **P1** | 6 | `B3`, `A8`, `A13`, `A14`, `A18`, `M19` |
-| **P2** | 1 | `B1` |
-| **P3** | 5 | `A17`, `A19`, `M16`, `M17`, `M22` |
-| **P4** | 2 | `A7`, `A21` |
+| **P1** | 0 | — |
+| **P2** | 0 | — |
+| **P3** | 0 | — |
+| **P4** | 0 | — |
 | **EXT** | 3 | `A11`, `A20`, `M21` |
 
-As 17 linhas acima são as lacunas **não fechadas**: **14** `aberta`/`proposta` mais **3** `externa`
-(`A11`, `A20`, `M21`), a mesma partição da tabela de §1.
+A tabela é o **saldo**, não o histórico: as **30** lacunas fechadas saíram dos marcos e continuam em
+§2.1–§2.3 com a data e a evidência. Restam **3 `externa`**, **0 `proposta`** e **0 `aberta`** — `A7` e `A21`
+fecharam em 2026-11-20, `M21` teve a decisão de escopo registrada na mesma data e continua `externa`
+porque a execução é do `wyd-portal`, e `M25` entrou e fechou no mesmo dia, com o desenho do lote
+`0012`: o dreno usa `SKIP LOCKED` e a linha fechada é expurgada em 30 dias.
 
-Ordem de execução que isso implica: **P0 está fechado** — o DDL de `0001` e de `0007` já reflete as
-decisões que o travavam (`ddl-confirmado.md` §3 e §5.5), ressalvada a `H` de `game.character(id)` do
-`0006` (declarada em `ddl-confirmado.md` §2 e §5.5), que segue decisão do dono e não é linha deste
-registro —, então `0001`/`0007` podem **congelar**; depois **P1** (6 decisões, nenhuma mexe em
-tabela), e só então a ADR de fronteira pessoa × conta pode ser escrita.
-`P2` vem na reconciliação do plano; `P3`/`P4`/`EXT` não travam o corte vertical.
+Ordem de execução que isso implica: `0001`/`0007` podem **congelar** — o DDL dos dois já reflete o
+que os travava (`ddl-confirmado.md` §3 e §5.5), ressalvada a `H` de `game.character(id)` do `0006`,
+declarada em `ddl-confirmado.md` §2 e §5.5 —, e a ADR de fronteira pessoa × conta pode ser escrita.
+O que resta aberto não é decisão de produto nem desta série: `A11` é medição do cliente, `A20` é
+execução da frente do portal sobre escopo já decidido e `M21` é a lista de telas do planejamento do
+`wyd-portal`. O que ainda trava arquivo da série é **desenho de coluna** (§3 de
+`migrations-checklist.md`), e nada mais: `M17` fechou em 2026-11-19 e `M25` em 2026-11-20, com o
+lote `0012` aprovado.
 
 **Enunciação (2026-11-18):** a **decisão** de cada item fechado vive na página dona — `M7` e `M23` em
 `docs/guia-desenvolvedor/como-adicionar-tabela.md` §2, as demais onde a própria linha aponta — e é
@@ -309,10 +329,10 @@ não em 11 patches — o motivo é `D-A` abaixo.
 |---|---|---|---|---|---|---|---|
 | **P1** | §7.1 | dizia "4 linhas" e listava 5 campos de cabeçalho | arquitetura | **decidido em 2026-11-19: 5 campos** — `Pergunta`, `Público`, `Dono`, `Base`, `Revisado em`; o plano e `docs/convencoes.md` já usam esse número | toda página nasce ambígua | **P2** | fechada |
 | **P2** | §7.3/§10 | exige Mermaid que a config não habilitava | arquitetura | resolvido no desenho; a config do site é item do `wyd-docs` (`EXT`) — `custom_fences` obrigatório quando o site for montado | — | — | **fechada** |
-| **P3** | `docs/convencoes.md` | manda defeito para `planos/riscos.md`, que não existe | arquitetura | criar `planos/riscos.md` na onda que o plano já prevê | defeito sem dono até a onda 6 | **P2** | aberta |
+| **P3** | `docs/convencoes.md` | manda defeito para `planos/riscos.md`, que não existe | arquitetura | **decidida em 2026-11-20: `docs/planos/riscos.md` criado na mesma data, dono arquitetura**, com defeito de página e risco no mesmo registro | defeito sem dono até a onda 6 | **P2** | fechada |
 | **P4** | §4, §6.4, §11 onda 9 | "ADRs (14)" × §6.4 com 12 decisões | arquitetura | **decidido (2026-11-18):** catálogo de 12 ADRs removido da árvore e de §6.4; ADR nasce na ordem em que a decisão é tomada — hoje `ADR-DB-0001` (aceito) e `ADR-DB-0002` (runner, `aceito`); onda 9 conta só as existentes | árvore de §4, §6.4, onda 9 | **P2** | **fechada** (2026-11-18) |
 | **P5** | §12 `D-1` | escopo = schema aplicado hoje (`0053`) | produto | **decidido em 2026-11-19:** escopo = série reescrita do zero, identidade primeiro (`D-1` aprovada) | a decisão que o modelo novo derruba | **P2** | fechada |
-| **P6** | §1.2 `D-1`, §4, §6.8, §6.15, §11, §12 `D-1`/`D-2`/`D-4` | números da série herdada **e** da série do rascunho: "87 geradas", "53 páginas", "262 + 88", "50 arquivos", "90 tabelas", "`SCHEMA_VERSION = 50`" | arquitetura | **fechada em 2026-11-18:** fonte única `plano-migrations.md` §3 — **29 arquivos, 92 tabelas**, `SCHEMA_VERSION = 29` na troca. O plano diretor **cita**, não digita; o medido entra só depois da série. Os nomes de página fecharam em `P8` (2026-11-18) | catálogo, dicionário, `metricas.md` | **P2** | **fechada** |
+| **P6** | §1.2 `D-1`, §4, §6.8, §6.15, §11, §12 `D-1`/`D-2`/`D-4` | números da série herdada **e** da série do rascunho: "87 geradas", "53 páginas", "262 + 88", "50 arquivos", "90 tabelas", "`SCHEMA_VERSION = 50`" | arquitetura | **fechada em 2026-11-18:** fonte única `plano-migrations.md` §3 — **29 arquivos, 92 tabelas**, `SCHEMA_VERSION = 29` na troca (hoje **31 / 97** e `SCHEMA_VERSION = 31`, desde os adendos `0030`/`0031` aprovados em 2026-11-20). O plano diretor **cita**, não digita; o medido entra só depois da série. Os nomes de página fecharam em `P8` (2026-11-18) | catálogo, dicionário, `metricas.md` | **P2** | **fechada** |
 | **P7** | §12 `D-3`, §6.16 | "20 páginas de módulo", `model-account.md`, `repo-accounts.md` | arquitetura | **fechada em 2026-11-18:** §6.16 lista as **26** páginas, `D-3` e a árvore de §4 dizem 26, e as sete que faltavam entraram na tabela (§6.16 é o dono da lista); `model-account`/`repo-accounts` não aparecem em página nenhuma. **Reaberta e refechada em 2026-11-18:** o dono pediu página por arquivo em `src/migrate/` e `src/provision/`; §6.16 passou a **58 páginas** (24 + 34), as duas páginas de módulo em camadas viraram índice e `D-3`/árvore foram revistas | onda 7 (`src/` com 58 páginas) | **P2** | **fechada** (2026-11-18) |
 | **P8** | §6.15 | slugs das 29 páginas sem nome aprovado — a série, a contagem e a ordem já estavam em `plano-migrations.md` §3; faltava o nome de cada página | arquitetura | **fechada em 2026-11-18: os 29 slugs aprovados, um por arquivo, derivados do nome do arquivo** (`0001_bootstrap.sql` → `0001-bootstrap.md`; regra: sem o prefixo numérico, `_` → `-`, `kebab-case` sem acento). Lista nominal: `0001-bootstrap`, `0002-ops-audit`, `0003-portal-person`, `0004-portal-access`, `0005-game-account`, `0006-game-character`, `0007-game-session`, `0008-game-skills`, `0009-game-inventory`, `0010-game-guild`, `0011-game-economy`, `0012-ops-delivery`, `0013-content-taxonomy`, `0014-content-item`, `0015-content-skill`, `0016-seed-taxonomy`, `0017-seed-item-catalog`, `0018-seed-skill-catalog`, `0019-content-world`, `0020-seed-world`, `0021-content-rules`, `0022-content-overrides`, `0023-seed-rules`, `0024-content-maps`, `0025-content-combat`, `0026-content-quests-events`, `0027-seed-quests-events`, `0028-game-quests-events`, `0029-views`; tabela arquivo × página em `wyd-db-1.0.0.md` §6.15 | escrita das 29 páginas e de `migrations/index.md`, que reproduz a coluna **arquivo** de `wyd-db-1.0.0.md` §6.15, não a lista de páginas (onda 5) | **P2** | **fechada** (2026-11-18) |
 | **P9** | §4 | árvore lista `0001-....md … 0053-....md` | arquitetura | **fechada em 2026-11-18:** a árvore mostra `0001-….md … 0029-….md (29)`, mais `index.md` e `serie-e-regras.md` — 31 em `migrations/`. Lista **nominal de página** não é trabalho de `P9`: os slugs saíram em `P8` (2026-11-18) e §6.15 manda `migrations/index.md` reproduzir a lista de **arquivos** de `plano-migrations.md` §3 | árvore publicável | — | **fechada** (2026-11-18) |

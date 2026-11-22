@@ -34,8 +34,8 @@ grupo coeso de tabelas.
    rodar `up` → `down` → `up` deixa o banco idêntico.
 4. **Gate local.** Rode o gate de `plano-migrations.md` §7 (estrutura, tipos, constraints,
    catálogo) e `make check` quando o `Makefile` da série existir.
-5. **Regenerar.** `make banco-catalogo` e o gerador do dicionário; nunca edite `gerado/` à mão —
-   gerado × escrito é de `wyd-db-1.0.0.md` §3, item 3, e a divergência é defeito registrado (§8.2).
+5. **Catálogo e dicionário.** Não são pré-requisito: as 97 páginas por tabela são escritas à mão em
+   lotes (`M26`, `lacunas.md` §2.3) e não há gerador aprovado.
 6. **Página.** Abra a página da migration no molde de `wyd-db-1.0.0.md` §7.2 e registre linha em
    `migrations-checklist.md`.
 
@@ -59,12 +59,12 @@ de conexão) em `src/migrate/error.md` §2–§3.
 - Tabela no plural, coluna `varchar`/`char`, ou `text` guardando número (`padrao-banco.md` §1 `P-02`,
   §4 e §11).
 
-## Como regenerar catálogo e dicionário
+## Catálogo e dicionário: o que existe hoje
 
-O catálogo (`docs/dicionario-dados/banco-catalogo.md`) e as páginas `gerado/<tabela>.md` vêm do
-banco aplicado, não da sua memória do DDL. Depois de aplicar a série: gere, confira o diff e
-commite o resultado junto com o arquivo. Divergência entre `gerado/` e a migration é defeito de
-entrega, não detalhe de formatação.
+O catálogo (`docs/dicionario-dados/banco-catalogo.md`) depende do PR de ferramentas e não existe; as
+páginas `gerado/<tabela>.md` são escritas à mão em lotes (`M26`, `lacunas.md` §2.3), também sem
+gerador. Até as duas coisas existirem, a forma de cada tabela mora na página de `migrations/` — e
+conferir o DDL contra o banco é o passo de `plano-migrations.md` §7, feito à mão.
 
 ## Gate
 

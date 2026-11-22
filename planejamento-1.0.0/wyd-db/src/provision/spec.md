@@ -42,9 +42,16 @@ existe só em `adapter/pg.rs` (§5).
 | `wyd_migrator` | `true` | `["wyd_owner"]` | Aplica a série e cria os objetos; é o dono das tabelas |
 | `wyd_game` | `true` | `[]` | Servidor de jogo: escreve `game`, lê `content`, escreve `ops` append-only |
 | `wyd_portal` | `true` | `[]` | Portal/BFF: escreve `portal`, lê `content` |
+| `wyd_admin` | `true` | `[]` | Serviço `wyd-admin` (staff): escreve sete tabelas de `game` e `ops.audit_log` pelo C4 (`M27`) |
 | `wyd_read` | `true` | `[]` | Leitura de operação/BI: lê os quatro schemas, não escreve |
 
 A ordem da tabela **é** a ordem de emissão do SQL e não pode mudar sem regenerar o golden (§4).
+
+**`wyd_admin` entrou em 2026-11-21 (`M27`):** o dono escolheu **A + S1 + C1 + D1** em
+`docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`" — papel com `LOGIN`, sem membership,
+`USAGE` em `game`/`ops` e `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, com o
+`GRANT` no arquivo novo `0032_admin_grants.sql` (31 → 32 na série). Nenhum privilégio de schema mora
+nesta página (§1): o papel entra em `ROLES` e no golden, o `GRANT` entra na série.
 
 ```rust
 /// Um papel de cluster, com a membership **direta** que ele precisa ter.
@@ -55,7 +62,7 @@ pub struct RoleSpec {
     pub member_of: &'static [&'static str],   // membership direta, um nível, sem repetição
 }
 
-/// Os cinco papéis da série 1.0.0, na ordem de emissão do SQL.
+/// Os seis papéis da série 1.0.0, na ordem de emissão do SQL.
 pub const ROLES: &[RoleSpec];
 
 /// Nome do papel que possui os schemas.
@@ -78,7 +85,7 @@ o `const` exige. `MIGRATOR` é a mesma constante que o runner usa como `EXPECTED
 (`src/migrate/spec.md` §9): um nome de papel, uma fonte — e por isso o root a reexporta
 (`crate::provision::MIGRATOR`), que é o caminho citado pelo runner.
 
-`const _: () = assert!(ROLES.len() == 5);` acompanha a tabela: acrescentar ou remover papel sem atualizar
+`const _: () = assert!(ROLES.len() == 6);` acompanha a tabela: acrescentar ou remover papel sem atualizar
 o golden quebra a compilação antes de qualquer teste rodar.
 
 **O bloco de `public` não deriva de `ROLES`.** `render()` emite, depois das memberships, um bloco fixo
@@ -109,7 +116,7 @@ superusuário do container, que satisfaz as duas condições.
 A DSN é `crate::dsn::Dsn` (`src/dsn.md`), o tipo único do crate: parse e `Debug` redigido moram lá,
 uma vez. O módulo não define `Dsn`, não lê ambiente e não escolhe a DSN de nenhum papel.
 
-**Não existe `DATABASE_URL` na 1.0.0.** Um nome único para cinco papéis é como um superusuário entra em
+**Não existe `DATABASE_URL` na 1.0.0.** Um nome único para todos os papéis é como um superusuário entra em
 runtime sem ninguém notar; o preflight do runner recusa conexão que não seja `wyd_migrator`. DSN ausente
 = erro que **nomeia** a variável, nunca `localhost` silencioso. `WYD_MIGRATIONS_DIR` (diretório da
 série; **único com default: `/migrations`**, o caminho que as imagens copiam) e `WYD_ENV_FILE` (caminho
@@ -148,6 +155,9 @@ BEGIN
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'wyd_portal') THEN
     CREATE ROLE wyd_portal LOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'wyd_admin') THEN
+    CREATE ROLE wyd_admin LOGIN;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'wyd_read') THEN
     CREATE ROLE wyd_read LOGIN;
@@ -346,7 +356,7 @@ papel (`ADR-DB-0001`).
 
 | Invariante | Como é garantido |
 |---|---|
-| exatamente cinco papéis | `assert!` em `const` (§2), verificado no build |
+| exatamente seis papéis | `assert!` em `const` (§2), verificado no build |
 | nomes únicos, prefixo `wyd_`, só `wyd_owner` é `NOLOGIN`, membership de um nível | `spec_table_is_consistent` |
 | todo `member_of` aponta para papel existente, sem auto-membership | `spec_table_is_consistent` |
 | `render()` é determinístico e não emite `\r` | `render_is_stable` |

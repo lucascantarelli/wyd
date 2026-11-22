@@ -12,7 +12,7 @@
 > implementado em `wyd-docs/redirects.tsv`), `LPDOC-14` (a ponte foi removida em 2026-11-19),
 > `LPDOC-08` (arquitetura aprova sistema novo e a entrada em `SISTEMAS`; documentação publica),
 > `LPDOC-02` (não publicar `AGENTS.md` nem o panorama), `LPDOC-03` (publicar `proposto` com aviso
-> visível), `LPDOC-07` (só pt-BR na `1.0.0`), `LPDOC-09` (gerar e publicar as 91 páginas) e
+> visível), `LPDOC-07` (só pt-BR na `1.0.0`), `LPDOC-09` (gerar e publicar as 97 páginas, uma por tabela planejada) e
 > `LPDOC-11` (manter `2.0.dev6` fixo até a próxima dev), decididas em 2026-11-19. O site foi montado
 > em MkDocs 2.0 pré-release
 > e publicado/validado em GitHub Pages em 2026-11-19. O dono aprovou GitHub Pages como hospedagem
@@ -85,7 +85,7 @@
 |---|---|---|---|---|---|---|
 | `LPDOC-02` | `AGENTS.md` e o panorama entram como página? | são normativos e úteis ao contribuidor, mas também expõem processo interno | documentação | `A` | fechada | decisão do dono (`V`, 2026-11-19): **não publicar** — processo interno fica no repositório e a cópia montada por `preparar.py` não é criada |
 | `LPDOC-03` | Página com estado `proposto` aparece publicada? | esconder rascunho deixa o site incompleto; publicar sem aviso faz leitor citar intenção como regra | documentação | `A` | fechada | decisão do dono (`V`, 2026-11-19): **publicar com aviso visível** — `site.js` insere o aviso "Página em proposta" no topo; o estado continua no cabeçalho |
-| `LPDOC-09` | As 91 páginas geradas do `wyd-db` entram no site? | é o maior volume do site e depende de gerador que ainda não existe | arquitetura + documentação | `P3` | fechada | decisão do dono (`V`, 2026-11-19): **gerar as 91 páginas e publicá-las**; o gerador é projeto próprio, com teto e critério de pronto em `wyd-docs-1.0.0.md` §9.1, e vira item da fila em `proximos-passos.md` — nenhuma página gerada existe ainda |
+| `LPDOC-09` | As 97 páginas por tabela do `wyd-db` entram no site? | é o maior volume do site; a publicação está decidida, mas a **produção** das páginas voltou à mesa em 2026-11-21 | arquitetura + documentação | `P3` | fechada (publicação); produção em `M26` | decisão do dono (`V`, 2026-11-19), reconciliada com `plano-migrations.md` §3: **publicar uma página para cada uma das 97 tabelas planejadas**; não há exceção de tabela, e `gerado/index.md` é índice auxiliar fora do teto. O **modo de produção** é a lacuna `M26` do `wyd-db` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3): o gerador deixou de ser presumido e nenhuma ferramenta é criada sem aprovação. Nenhuma das 97 páginas existe hoje |
 
 ### 2.3 URL, versão e idioma
 
@@ -99,7 +99,7 @@
 
 | ID | Pergunta | Por que importa | Dono | Marco | Estado | Evidência |
 |---|---|---|---|---|---|---|
-| `LPDOC-10` | O catálogo de opcodes e o dicionário de dados são publicados como página gerada? | catálogo mantido à mão diverge do código; gerado exige pipeline no `preparar.py` | arquitetura | `P3` | fechada | decisão do dono (`V`, 2026-11-19): **não publicar catálogo gerado na `1.0.0`**; o catálogo escrito à mão fica como está e o gerador vem depois. `preparar.py` não tem gerador — `_copiar_paginas` só copia `docs/`; a resposta fecha o lado do site do `LPRT-20` (`wyd-protocol/lacunas.md` §2), que segue aberta por depender de `LPRT-01` |
+| `LPDOC-10` | O catálogo de opcodes e o dicionário de dados são publicados como página gerada? | catálogo mantido à mão diverge do código; gerado exige pipeline no `preparar.py` | arquitetura | `P3` | fechada | decisão do dono (`V`, 2026-11-19): **não publicar catálogo gerado na `1.0.0`**; o catálogo escrito à mão fica como está e o gerador vem depois. `preparar.py` não tem gerador — `_copiar_paginas` só copia `docs/`; a resposta fecha o lado do site do `LPRT-20` (`wyd-protocol/lacunas.md` §2), cuja linha fechou em 2026-11-20 junto com `LPRT-01` |
 | `LPDOC-11` | Quando atualizar o `mkdocs 2.0.dev6`? | é pré-release sem data de lançamento; atualizar sem teste pode quebrar tema e navegação | arquitetura + operação | `P3` | fechada | decisão do dono (`V`, 2026-11-19): **manter `2.0.dev6` fixo e revisar quando a próxima dev for publicada**, com build e `verificar.py` antes de subir |
 | `LPDOC-12` | O build é só Linux/CI ou precisa rodar no Windows? | `mkdocs 2.0.dev6` instancia `PosixPath` e falha no Windows; hoje o build local exige Docker | operação | `P1` | fechada | decisão do dono (`V`, 2026-11-19): build suportado = Linux/container, Windows fora de escopo; falha reproduzida em 2026-11-19 (`UnsupportedOperation: cannot instantiate 'PosixPath' on your system`) e o mesmo comando passou em container Linux nos commits `2378b62b` e `0d765858` (30 páginas, exit 0); §7.1 declara o escopo |
 | `LPDOC-13` | Busca de texto completo existe? | a 2.0 não tem plugin de busca; o site tem só filtro de navegação | arquitetura + produto | `P3` | fechada | decisão do dono (`V`, 2026-11-19): **não ter busca de texto completo na `1.0.0`**; o filtro de navegação é a navegação e busca entra se o volume de páginas justificar. `requirements.txt` sem plugin de busca, `verificar.py` sem checagem de busca (`grep -c 'busca\|search'` = 0, 2026-11-19) e nenhum índice gerado |

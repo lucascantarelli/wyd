@@ -3,7 +3,8 @@
 Instruções para agentes de IA e para quem entra no repositório sem contexto. Este arquivo vale para
 todo o repositório. Ele **não** repete regra de sistema: aponta o dono.
 
-**Estado:** planejamento da `1.0.0`, sem código de produção. Medido em **2026-11-19**.
+**Estado:** planejamento da `1.0.0`, sem código de produção. Medido em **2026-11-19**; estado dos
+sistemas de §6 recontado em **2026-11-22**.
 
 ---
 
@@ -109,13 +110,13 @@ inventar”.
 | `wyd-server` | composição do servidor; um processo por canal | vazio |
 | `wyd-sim` | fórmulas, curvas e simulações determinísticas | vazio |
 | `wyd-db` | PostgreSQL 17, migrations, repositórios, filas | **piloto**, parcial |
-| `wyd-admin` | administração, HTTP/JSON interno, staff | vazio |
-| `wyd-portal` | portal Next.js: site, login, cadastro, BFF | só o prompt de produto |
+| `wyd-admin` | administração, HTTP/JSON interno, staff | **planejado**: contrato C4 e custódia de item do mercado propostos (2026-11-22); código vazio |
+| `wyd-portal` | portal Next.js: site, login, cadastro, BFF | **planejado**: 11 páginas de planejamento, 33 `RF-POR`, armaria e mercado em F7–F11 (2026-11-22); código vazio |
 | `wyd-launcher` | launcher Tauri: patch, manifesto, serverlist/itemlist | vazio |
 | `wyd-client` | patches e arquivos de configuração do cliente | vazio (cliente em `wyd-client/files/`) |
 | `wyd-bots` | bots de QA, carga e convivência | vazio |
 | `wyd-docs` | site MkDocs 2.0 de toda a documentação oficial | **site implementado**; plano aberto |
-| `wyd-ops` | CI, imagens, deploy, ambientes, monitoramento | proposta de gestão |
+| `wyd-ops` | CI, imagens, deploy, ambientes, monitoramento | **propostas** de gestão de GitHub/ambientes e de versões/cobertura; sem plano diretor (2026-11-22) |
 
 Publicação no site é ato à parte: **arquitetura aprova** o sistema novo (nome, fronteira e entrada
 em `SISTEMAS` de `wyd-docs/preparar.py`); **documentação publica**. Decisão de 2026-11-19

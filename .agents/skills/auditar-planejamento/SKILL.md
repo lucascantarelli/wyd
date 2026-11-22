@@ -59,11 +59,11 @@ sem ID é omissão, não hipótese.
 ### 4. Conferir dono único do número
 
 ```bash
-grep -rnE '\b(29|91|53|87|146|40)\b' planejamento-1.0.0 --include='*.md' | grep -v 'plano-migrations.md'
+grep -rnE '\b(29|92|53|87|146|40)\b' planejamento-1.0.0 --include='*.md' | grep -v 'plano-migrations.md'
 ```
 
 Número repetido em duas páginas sem citação do dono é achado. Os números da 1.0.0 são **29
-migrations, 91 tabelas, 6 seeds**; os do legado são **53 migrations, 87 tabelas** e não podem ser
+migrations, 92 tabelas, 6 seeds**; os do legado são **53 migrations, 87 tabelas** e não podem ser
 apresentados como estado atual.
 
 ### 5. Procurar contaminação do legado

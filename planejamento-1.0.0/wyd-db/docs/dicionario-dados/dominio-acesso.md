@@ -6,13 +6,12 @@
 
 **Estado:** proposto (2026-11-18)
 
-Esqueleto de página: as dez tabelas e as relações estão fechadas, mas a série ainda não foi aplicada
-e duas delas esperam decisão. O que não estiver escrito aqui **não** é omissão de redação — é
+Esqueleto de página: as nove tabelas e as relações estão fechadas; a série ainda não foi aplicada. O que não estiver escrito aqui **não** é omissão de redação — é
 dicionário ainda não gerado.
 
 Três níveis de afirmação convivem aqui, e cada um se reconhece:
 
-- **`P`** — o que está desenhado e ainda não aplicado: as dez tabelas, as views e os `GRANT`.
+- **`P`** — o que está desenhado e ainda não aplicado: as nove tabelas, as views e os `GRANT`.
 - **`H`** — semântica não verificada, na tabela do fim da página, com o ID que a reabre.
 - **sem marca** — comportamento do PostgreSQL: índice parcial, FK composta, `CHECK` de coerência.
 
@@ -23,8 +22,8 @@ de cada uma e a sessão viva. É o único domínio em que `portal` e `game` comp
 desenho: a pessoa autentica no portal, a conta autentica no cliente 7662, e o vínculo entre as duas é
 uma FK, não uma cópia de e-mail.
 
-**Não cobre:** personagem e inventário (`dominio-personagem`, `dominio-inventario`), moderação como
-assunto de operação (`dominio-moderacao`), auditoria de login (`dominio-auditoria`) nem configuração
+**Não cobre:** personagem e inventário (`dominio-personagem`, `dominio-inventario`), o bloqueio de
+conta ([moderação](dominio-moderacao.md)), auditoria de login (`dominio-auditoria`) nem configuração
 do dono (`dominio-configuracao`). Papel de canal é `game.server_channel` (`dominio-canal`).
 
 ## Diagrama de relações
@@ -36,9 +35,7 @@ erDiagram
     person ||--o| person_profile : "tem perfil"
     person ||--o{ person_consent : "aceita termo"
     person ||--o{ account : "possui até 5 vagas"
-    person ||--o{ account_moderation : "bloqueia (autor)"
     account ||--o| account_wallet : "tem carteira"
-    account ||--o| account_moderation : "é bloqueada"
     account ||--o{ pin_reset : "pede reset de PIN"
     account ||--o{ session : "abre sessão de jogo"
 ```
@@ -56,17 +53,31 @@ dono único da derivação: as tabelas de `0003`, `0004`, `0005` e `0007` estão
 | `portal.person_consent` (0003) | aceite versionado de termo, privacidade e marketing, com revogação | portal | portal | `gerado/person_consent.md` |
 | `portal.person_session` (0004) | sessão revogável do portal: hash do cookie, expiração absoluta | portal | portal | `gerado/person_session.md` |
 | `portal.person_token` (0004) | token de cerimônia (`email_verify`, `password_reset`, `email_change`) | portal | portal | `gerado/person_token.md` |
-| `game.account` (0005) | conta de jogo na vaga 1–5 da pessoa, com login e PIN próprios | portal (cria/fecha), jogo (último login, contadores) | jogo, portal | `gerado/account.md` |
-| `game.account_wallet` (0005) | carteira 1:1 da conta; `coin` no teto do campo do fio | jogo | jogo, portal | `gerado/account_wallet.md` |
-| `game.account_moderation` (0005) | bloqueio 1:1 da conta, com autor, motivo e instante coerentes | portal | jogo, portal | `gerado/account_moderation.md` |
+| `game.account` (0005) | conta de jogo na vaga 1–5 da pessoa, com login e PIN próprios | `wyd_game` | `wyd_game, wyd_read` | `gerado/account.md` |
+| `game.account_wallet` (0005) | carteira 1:1 da conta; `coin` no teto do campo do fio | `wyd_game` | `wyd_game, wyd_read` | `gerado/account_wallet.md` |
 | `game.pin_reset` (0005) | pedido de reset de PIN: hash do token, origem e consumo | portal | portal | `gerado/pin_reset.md` |
-| `game.session` (0007) | sessão viva do jogador num canal da topologia | jogo | jogo, portal (via view) | `gerado/session.md` |
+| `game.session` (0007) | sessão viva do jogador num canal da topologia | `wyd_game` | `wyd_game, wyd_read` | `gerado/session.md` |
+
+**Papel, não sistema.** `account`, `account_wallet` e `session` nomeiam o papel porque a fronteira é de
+schema, não de serviço: `0001` §7 concede `USAGE` em `game` a `wyd_game` e `wyd_read`, e `0005` §8 registra
+`wyd_portal` **sem** `USAGE` ali. A prova é o item "portal não cruza fronteira" de `0005` §9:
+`SET ROLE wyd_portal; SELECT * FROM game.account;` responde `42501 permission denied for schema game`.
+A view não escapa disso — `0029` §8.3 decidiu, em 2026-11-21, nascer sem `GRANT`, e o §9.4 da mesma
+página espera o mesmo `42501`. Resta uma pergunta que esta página não responde: `A7` decidiu que a
+conta de jogo **nasce no portal** depois do `email_verify`, mas nenhuma migration dá ao portal caminho
+de escrita em `game`, então quem escreve ali hoje é `wyd_game` e a criação pelo portal ainda não tem
+prova de execução. `M27` e `M28` fecharam em 2026-11-21: a escrita de staff em `game` é do `wyd_admin`
+(`0032`) e a "API interna" é o serviço `wyd-admin` (redação B). `game.pin_reset` continua escrito pelo
+portal no desenho e cai na mesma pergunta; a célula continua com o papel porque a criação pelo portal
+segue sem prova de execução.
 
 `game.session` depende de `game.character` (`0006`, ainda sem coluna desenhada): a FK para personagem
 é `planejado` como o resto, mas não pode virar SQL antes de `0006` — esta página não antecipa essa
 forma.
 
-As páginas `gerado/<tabela>.md` só existem depois do gerador do dicionário (`make dicionario-dados`).
+As páginas `gerado/<tabela>.md` existem em parte: são escritas à mão em lotes (`M26`, decidida em
+2026-11-21), sem gerador, e cada uma aponta para a página de `migrations/` como dona da forma. Quantas
+existem diz [`gerado/index.md`](gerado/index.md), dono único da contagem.
 Até lá, coluna, tipo, nulidade, default e índice vivem em `ddl-confirmado.md`, e esta página só os cita
 ([`../convencoes.md`](../convencoes.md) §*Nota de enunciação*).
 
@@ -84,7 +95,6 @@ tabela lê a política por tabela, neste domínio.
 | `person_token` | pedido de cerimônia | `used_at`, `attempt_count` | expiração, consumo, reemissão ou `CASCADE` |
 | `account` | criação pelo portal, na vaga livre | login, senha, PIN, contadores, `last_login_at` | `closed_at`; nunca `DELETE` |
 | `account_wallet` | criação da conta, 1:1 | crédito/débito de `coin` | não morre: `RESTRICT` |
-| `account_moderation` | primeiro bloqueio | desbloqueio | não morre: `RESTRICT` |
 | `pin_reset` | pedido de reset | `used_at` | expiração ou consumo; histórico fica |
 | `session` | handshake do jogo | `renewed_at`, `character_id` na seleção | `released_at` pelo canal ou pelo reaper |
 

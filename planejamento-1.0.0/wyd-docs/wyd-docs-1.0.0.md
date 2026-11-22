@@ -69,7 +69,7 @@
 | Sistema | Fornece ao site | Exige do site |
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
-| `wyd-db` | 15 páginas escritas + 91 geradas (teto da `LPDOC-09`; projeto em §9.1) | seção própria e ordem de leitura preservada |
+| `wyd-db` | estado das páginas de migration: `migrations-checklist.md` §2/§4; escopo da série: `plano-migrations.md` §3; resumo consolidado: `wyd-1.0.0.md` §1 | seção própria e ordem de leitura preservada |
 | `wyd-protocol` | 2 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
@@ -585,32 +585,31 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
 | 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
 | 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `verificar.py`); busca decidida e métrica aceita em 2026-11-19 |
-| 5 | gerador das 91 páginas do `wyd-db` como projeto próprio | pendente; nenhuma página gerada existe hoje — entrega separada, especificada em §9.1 |
+| 5 | 97 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; **61 escritas** em 2026-11-22 (lotes `0001`–`0012`, `0014`, `0019` e `0024`) |
 
-### 9.1 Gerador das 91 páginas — projeto próprio
+### 9.1 As 97 páginas por tabela — escritas à mão (`M26`)
 
-O gerador não é uma página do site nem parte do `wyd-docs`: é um **projeto separado**, com dono
-`arquitetura + documentação`, entrada e saída próprias. O site apenas coleta o diretório gerado;
-não edita, completa nem cria página gerada.
+**Estado: decidido em 2026-11-21.** O dono recusou o gerador (`make dicionario-dados`, projeto
+`tools/wyd-db-pages`): as 97 páginas são escritas à mão, em lotes, no `wyd-db`, e o site apenas publica
+o que existir. A decisão é a lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3). **Nenhuma
+ferramenta é criada; 61 das 97 páginas existem em 2026-11-22** (lotes `0001`–`0012`, `0014`, `0019` e `0024`; índice em `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/index.md`).
 
 | Item | Definição |
 |---|---|
-| Projeto | `wyd-db-pages` (nome de trabalho), executável fora de `wyd-docs/`; a entrada pública é `make dicionario-dados`. A implementação fica em `tools/wyd-db-pages/` (**planejada**, ainda não existe) |
-| Entrada | migrations, DDL confirmado e catálogo do `wyd-db`; cada campo gerado declara sua origem, sem copiar valor do legado como fato |
-| Saída | `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/`: **91 páginas geradas** + `gerado/index.md` (índice de navegação) |
-| Teto | **91 páginas geradas**; o `index.md` não amplia o teto. A 92ª página é falha de geração, não uma página nova por conveniência |
+| Projeto | nenhum: o gerador `wyd-db-pages` foi recusado em `M26` (2026-11-21); a produção é manual e mora no `wyd-db` |
+| Entrada | migrations e DDL confirmado do `wyd-db`; o formato da página é de `planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md` §6.8, e cada campo declara sua origem, sem copiar valor do legado como fato |
+| Saída | `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/`: **97 páginas, escritas à mão**, uma por tabela planejada em `plano-migrations.md` §3, + `gerado/index.md` (índice de navegação, fora da contagem) |
+| Teto | **97 páginas**, uma por tabela planejada em `plano-migrations.md` §3; o `index.md` não amplia o teto. A 98ª página é defeito de escopo, não página nova por conveniência |
 | Fora do escopo | editar página manual, decidir coluna, publicar direto no Pages e gerar catálogo de opcodes (`LPDOC-10`) |
 
-**Critério de pronto do projeto** (todos os itens):
+**Critério de pronto das páginas** (todos os itens, quando escritas):
 
-1. `make dicionario-dados` roda em checkout limpo e produz exatamente **91 páginas + `gerado/index.md`**, com código de saída 0.
-2. A segunda execução não altera byte nenhum da saída — o gerador é determinístico.
-3. Cada página tem cabeçalho de 5 campos, título, links/âncoras que resolvem e origem declarada; não contém PII nem segredo.
-4. O CI reprova saída ausente, página extra acima do teto, diff depois de regenerar e edição manual de `gerado/`.
-5. `preparar.py` e `verificar.py` passam com a saída presente. Sem a saída, o site continua com as 34 páginas atuais e **nenhum stub afirma que as 91 existem**.
+1. Exatamente **97 páginas + `gerado/index.md`**, uma por tabela de `plano-migrations.md` §3; a 98ª é defeito de escopo.
+2. Cada página tem cabeçalho de 5 campos, título, referência explícita à página de `migrations/` dona da forma (em `code`, porque `migrations/` não é publicado) e origem declarada; não contém PII nem segredo.
+3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
+4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Estado (2026-11-19):** nenhuma das 91 páginas de tabela existe. `gerado/index.md` é apenas o índice
-vazio de navegação; o projeto é pré-requisito da `LPDOC-09`, não do site atual.
+**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **61 das 97 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0014`, `0019` e `0024` e o `index.md` de navegação, que lista as 61 existentes. A cobertura não é pré-requisito do site atual: o site passa com **134 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22).
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 
@@ -637,7 +636,7 @@ com o rollback validado (§7.3), e `LPDOC-04`: sem domínio próprio na `1.0.0`,
 obrigatório), `LPDOC-10` (sem catálogo gerado), `LPDOC-13` (sem busca de texto completo), `LPDOC-08`
 (arquitetura aprova o sistema novo e a entrada em `SISTEMAS`; documentação publica), `LPDOC-02`
 (não publicar `AGENTS.md` nem o panorama), `LPDOC-03` (publicar `proposto` com aviso visível),
-`LPDOC-07` (só pt-BR), `LPDOC-09` (gerar e publicar as 91 páginas) e `LPDOC-11` (manter `2.0.dev6`
+`LPDOC-07` (só pt-BR), `LPDOC-09` (gerar e publicar as 97 páginas, uma por tabela planejada; ver §9.1) e `LPDOC-11` (manter `2.0.dev6`
 fixo até a próxima dev).
 
 | # | Decisão | Lacuna |
@@ -650,7 +649,7 @@ fixo até a próxima dev).
 | 6 | Redirect ao renomear página: obrigatório, mapa em `wyd-docs/redirects.tsv` (decidido e implementado em 2026-11-19) | `LPDOC-06` |
 | 7 | Só pt-BR na `1.0.0`; i18n fora desta versão (decidido em 2026-11-19) | `LPDOC-07` |
 | 8 | Arquitetura aprova sistema novo e a entrada em `SISTEMAS`; documentação publica (decidido em 2026-11-19) | `LPDOC-08` |
-| 9 | Gerar as 91 páginas do `wyd-db` e publicá-las; o gerador é projeto próprio e pré-requisito (decidido em 2026-11-19; §9.1) | `LPDOC-09` |
+| 9 | Publicar as 97 páginas do `wyd-db`, uma por tabela planejada (decidido em 2026-11-19); a **produção** voltou à mesa em 2026-11-21 como `M26` do `wyd-db`, sem gerador presumido (§9.1) | `LPDOC-09` |
 | 10 | Não publicar catálogo de opcodes gerado na `1.0.0` (decidido em 2026-11-19) | `LPDOC-10` |
 | 11 | Manter `2.0.dev6` fixo; revisar quando a próxima dev for publicada, com build e `verificar.py` antes (decidido em 2026-11-19) | `LPDOC-11` |
 | 12 | Build no Windows ou só em Linux/CI | `LPDOC-12` |

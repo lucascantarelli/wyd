@@ -58,7 +58,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **29 arquivos**, **92 tabelas** e `SCHEMA_VERSION = 29` na troca — **planejado** em 2026-11-17, dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-21 (`0032`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -106,9 +106,12 @@ linha desta tabela não é escrita.
    páginas puderem divergir sobre o mesmo número, uma delas está errada por construção.
 2. **Número só com fonte e data.** Toda contagem cita o comando ou o arquivo que a produziu e a
    data da medição. Número sem fonte é hipótese e leva a marca `H`.
-3. **Schema gerado não se escreve à mão.** Coluna, tipo, nulidade, PK, FK, CHECK e índice vêm de
-   `banco-catalogo.md` e das páginas geradas do dicionário. Texto manual sobre coluna é dívida
-   declarada e só é aceito no campo "observação" (regra de negócio, provisório, armadilha).
+3. **Schema não se escreve duas vezes.** Coluna, tipo, nulidade, PK, FK, CHECK e índice vivem no DDL
+   de `ddl-confirmado.md` e na página de `migrations/` do arquivo dono — hoje a única fonte da forma, já
+   que o catálogo não existe. As páginas por tabela (`M26`) **resumem e ligam**, não copiam o DDL:
+   **61 das 97** já estão escritas à mão, em lotes (`0001`–`0012`, `0014`, `0019` e `0024`), até 2026-11-22. Texto manual sobre
+   coluna é dívida declarada e só é aceito no campo "observação"
+   (regra de negócio, provisório, armadilha).
 4. **Nível de evidência em toda afirmação de comportamento.** `V` verificado por comando/arquivo,
    `H` hipótese explícita, `P` planejado (ainda não existe). Sem `V`, o verbo é "pretende",
    "deveria", nunca "funciona".
@@ -229,7 +232,7 @@ planejamento-1.0.0/wyd-db/
 │   │   ├── dominio-ponte-web-jogo.md            ▲
 │   │   └── gerado/
 │   │       ├── index.md                         ◆
-│   │       └── <tabela>.md  (uma por tabela: 92) ◆
+│   │       └── <tabela>.md  (uma por tabela: 97) ◆
 │   ├── planos/
 │   │   ├── index.md                             ▲
 │   │   ├── plano-de-documentacao.md             ▲
@@ -336,34 +339,37 @@ planejamento-1.0.0/wyd-db/
 ```
 
 **Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
-`specs/` · 20 autorais + 92 geradas em `dicionario-dados/` · 10 em `planos/` · 42 em `roadmap/` ·
+`specs/` · 21 autorais + 97 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
 11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · 8 em
-`guia-documentacao/` · 31 em `migrations/` · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
-→ **teto de páginas autorais + 92 geradas + 1 dado de apoio**, mais este plano diretor.
+`guia-documentacao/` · 32 em `migrations/` · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
+→ **teto de páginas autorais + 97 de tabela + 1 dado de apoio**, mais este plano diretor.
 
-**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **92 geradas** (uma por
-tabela) e **31 em `migrations/`** (2 páginas de seção + 29 arquivos) — são **planejados** e vêm de
+**Fonte dos números (2026-11-18):** os totais que **derivam da série** — **97 páginas de tabela** (uma
+por tabela, escritas à mão desde `M26`) e **34 em `migrations/`** (2 páginas de seção + 32 arquivos) — são **planejados** e vêm de
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
 
-**Teto × escrito (2026-11-18):** os totais acima contam páginas **planejadas** e já incluem as
+**Teto × escrito (2026-11-21):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **15 páginas com corpo em `docs/`**, todas com o
+medição de `planos/metricas.md`. **Medido:** **36 páginas com corpo em `docs/`**, todas com o
 cabeçalho de §7.1 — as **3 de raiz** (`index`, `convencoes`, `glossario`), **7 em `arquitetura/`**
 (`migracoes`, `seguranca`, `adr/index`, `adr/adr-db-0001`, `adr/adr-db-0002`, `padroes-postgres`,
-`integridade-e-constraints`), `dicionario-dados/dominio-acesso.md`,
-`planos/plano-de-implantacao.md`, **2 em `guia-desenvolvedor/`** (`como-adicionar-migration`,
-`como-adicionar-tabela`) e `guia-teste/testes-de-sistema.md`. Os dois índices
-que não tinham cabeçalho — `docs/index.md` e `arquitetura/adr/index.md` — receberam o bloco de §7.1
-nesta revisão (2026-11-18); antes traziam só o título. Os outros **10
-arquivos `index.md` são título de uma linha** e não contam como página (§2). Fora de `docs/`: **2 de
-31** em `migrations/` (`0001-bootstrap`, `0004-portal-access`) e **0 de 59** em `src/` — os dois
-`spec.md` de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
+`integridade-e-constraints`), **21 em `dicionario-dados/`** (`index`, `como-ler` e as 19 de domínio),
+`planos/plano-de-implantacao.md`, `planos/riscos.md`, **2 em `guia-desenvolvedor/`**
+(`como-adicionar-migration`, `como-adicionar-tabela`) e `guia-teste/testes-de-sistema.md`; eram **15**
+em 2026-11-18. Os dois índices que não tinham cabeçalho — `docs/index.md` e `arquitetura/adr/index.md`
+— receberam o bloco de §7.1 na revisão de 2026-11-18; antes traziam só o título. Os outros **8
+arquivos `index.md` são título de uma linha** e não contam como página (§2);
+`dicionario-dados/gerado/index.md` é o índice auxiliar das páginas por tabela, também fora da
+contagem. Fora de `docs/`: **26 de 32** em `migrations/` e **0 de 59** em `src/` — os dois `spec.md`
+de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
 **O que dá para escrever agora, página a página:** `proposta-paginas.md` (proposta de 2026-11-18)
-mapeia as **146** páginas autorais de `docs/` em **23 escrevíveis**, **24 de recorte** e **84
-bloqueadas**, com a fonte de cada uma e o mapa de diluição das seis fontes de planejamento. O
-**lote 1** dela (padrão) está escrito: os três títulos contam nas 15 acima.
+mapeia as **147** páginas autorais de `docs/` em **18 escrevíveis**, **24 de recorte** e **69
+bloqueadas** — eram 146, 23 e 84 na medição de 2026-11-18, antes de as **19 páginas de domínio**
+ficarem escritas (15 delas estavam na lista de bloqueadas) —, com a fonte de cada uma e o
+mapa de diluição das seis fontes de planejamento. O
+**lote 1** dela (padrão) está escrito: os três títulos contam nas 36 acima.
 
 ---
 
@@ -412,14 +418,14 @@ Ver §6.5–§6.7.
 ### 5.4 `docs/dicionario-dados/` — o que cada tabela significa
 
 - **Pergunta:** "para que serve esta tabela, quem escreve, o que é provisório e o que ela exige?"
-- **Fronteira:** significado e regra. **Forma** (coluna, tipo, nulidade, índice) é gerada e não se
-  escreve à mão.
-- **Duas camadas, de propósito:** 18 páginas por domínio (escritas, com contexto e decisão) +
-  uma página gerada por tabela (92 planejadas hoje; `planos/metricas.md` e `plano-migrations.md` §3),
-  derivadas das migrations e do catálogo. A página de domínio é a porta de entrada; a gerada é a referência
-  exata de campo.
+- **Fronteira:** significado e regra. A **forma** (coluna, tipo, nulidade, índice) é dona das páginas
+  de `migrations/`, que trazem o DDL e a tabela de colunas de cada tabela; a página por tabela, se
+  existir, resume e aponta para elas.
+- **Duas camadas:** 19 páginas por domínio (escritas, com contexto e decisão) + as 97 páginas por
+  tabela (`plano-migrations.md` §3), **escritas à mão em lotes** (`M26`, decidida em 2026-11-21);
+  nenhuma ferramenta é usada e nada é gerado.
 
-Ver §6.8, onde está o motivo de não existir uma página manual por tabela.
+Ver §6.8, onde estão o molde da página manual por tabela e a contagem das já escritas.
 
 ### 5.5 `docs/planos/` — como o trabalho é planejado e medido
 
@@ -620,7 +626,7 @@ estado geral (`pronto`/`provisório`).
 página de tabela; o que é gerado × o que é escrito; marcações `V`/`H`/`P`; o que fazer quando a
 página gerada e a migration divergirem (prevalece a migration, e isso é defeito a corrigir).
 
-**18 páginas de domínio** — pergunta: "quais tabelas cuidam deste assunto e como se relacionam?".
+**19 páginas de domínio** — pergunta: "quais tabelas cuidam deste assunto e como se relacionam?".
 Seções obrigatórias, nesta ordem:
 
 1. **Propósito do domínio** e o que ele não cobre.
@@ -634,21 +640,20 @@ Seções obrigatórias, nesta ordem:
 
 Domínios (um arquivo cada): `acesso`, `personagem`, `inventario`, `social`, `mundo`, `catalogo`,
 `combate`, `refino`, `economia`, `quests`, `eventos`, `arena`, `progressao`, `canal`, `moderacao`,
-`auditoria`, `configuracao`, `ponte-web-jogo`.
+`auditoria`, `configuracao`, `ponte-web-jogo`, `conteudo-portal`.
 
-**`gerado/<tabela>.md`** — uma página por tabela, produzida por script a partir das migrations e do
-catálogo; o total é uma página por tabela — **92** planejadas (`plano-migrations.md` §3), e o número
-final é o medido do catálogo (`planos/metricas.md`).
-Conteúdo fixo: papel em uma linha, colunas com tipo/nulidade/default, PK, FKs de saída e de
-entrada, unicidade, CHECKs, índices, quem escreve/lê (quando declarado na fonte), arquivo de
-migration que a criou. Cabeçalho obrigatório: "gerado; não editar; regenerar com
-`make dicionario-dados`". `gerado/index.md` lista todas, com o domínio de cada uma.
+**`gerado/<tabela>.md` (97 páginas por tabela) — escritas à mão (`M26`, 2026-11-21).** O gerador
+`make dicionario-dados` saiu do plano: as páginas nascem em lotes, ao fim do DDL, como qualquer outra
+página — sem ferramenta e sem `Makefile` novo. Cada uma traz papel em uma linha, colunas com
+tipo/nulidade/default, PK, FKs de saída e de entrada, unicidade, CHECKs, índices, quem escreve/lê e a
+migration que criou a tabela, e **liga para a página de `migrations/`**, que é dona da forma, em vez
+de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **61 das 97 existem**
+(lotes `0001`–`0012`, `0014`, `0019` e `0024`, 2026-11-22) e nada é gerado.
 
-**Por que 18 páginas escritas e não uma por tabela.** Uma página manual por tabela duplicaria o que o gerador
-já produz e divergiria na primeira migration, sem que ninguém percebesse. O que o gerador não sabe
-— por que a tabela existe, o que é provisório, o que quebra se mudar — é exatamente o que as 18
-páginas de domínio cobrem. Assim: **forma vem do gerador, significado vem do texto**, e o leitor
-chega ao campo exato por um link.
+**Por que 19 páginas de domínio existem.** Elas cobrem o que a página por tabela não responde: por que
+a tabela existe, o que é provisório, o que quebra se mudar. A divisão prevista é **forma na página da
+migration, significado no texto**, e o leitor chega ao campo exato por um link — sem duplicar DDL em
+dois lugares que podem divergir.
 
 ### 6.9 `docs/planos/*.md`
 
@@ -809,8 +814,8 @@ A tabela de slugs da **série do rascunho descartada** saiu desta seção quando
 dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
 é schemas + `content_version`) e continuam no histórico do git, não como vocabulário vigente.
 
-**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 29 arquivos, contíguos de `0001` a
-`0029`, e `SCHEMA_VERSION = 29` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
+**Série fechada (decisão `B2`, `plano-migrations.md` §3):** 32 arquivos, contíguos de `0001` a
+`0032`, e `SCHEMA_VERSION = 32` na troca. `0001` absorve `0001`/`0031`/`0034`/`0053` da série herdada e `0030`
 vira `0007`, de modo que **quatro** arquivos do legado deixam de existir como arquivo próprio.
 
 ### 6.16 `src/*.md`
@@ -1218,14 +1223,14 @@ tabela, depois o procedimento.
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
-| **4. Dicionário** | `dicionario-dados/` (2 + 18) + gerador `make dicionario-dados` + 92 geradas | 20 + 92 | 92 tabelas cobertas; índice sem número digitado; gerador roda no gate |
+| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 97 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 97 | 97 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **61 das 97 escritas** em 2026-11-22 |
 | **5. Histórico de schema** | `migrations/` (2 + 29) + `arquitetura/migracoes` + `retencao-e-capacidade` | 31 | 29 páginas com `down` e verificação, nomes fechados na decisão `P8` (`plano-migrations.md` §3); política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
 | **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
-**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; geradas = **92** planejadas (uma por tabela, `plano-migrations.md` §3) + 1 dado de apoio.
+**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **97** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); nada delas existe hoje.
 
 **Dependências duras:** Onda 3 depende de 1–2 (requisito cita entidade do modelo); Onda 4 depende
 de 2 (domínio cita entidade); Onda 7 depende de 4–5 (módulo cita tabela e migration); Onda 8
@@ -1235,7 +1240,7 @@ depende de 3 (issue cita requisito).
 
 A release de documentação fecha quando **todas** forem verdadeiras ao mesmo tempo:
 
-- todas as páginas contadas em `planos/metricas.md` (autorais + **92** geradas) estão `aceito` ou
+- todas as páginas contadas em `planos/metricas.md` (autorais + **97** geradas) estão `aceito` ou
   `retirado` com justificativa;
 - nenhuma página cita número sem fonte e data;
 - nenhum link relativo sem destino (`mkdocs build --strict` verde);
@@ -1249,8 +1254,8 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **29 arquivos**, **92 tabelas** e `SCHEMA_VERSION = 29` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
-| `D-2` | dicionário em duas camadas: 18 páginas de domínio + **92** geradas | aprovar (§6.8) | Onda 4 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-2` | dicionário em duas camadas: 19 páginas de domínio + **97** geradas | aprovar (§6.8) | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**29** arquivos), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | aprovar | Ondas 3 e 8 |
