@@ -10,7 +10,7 @@
 > **Stack decidida pelo time:** **MkDocs 2.0** com **Python 3.15**. Medido em **2026-11-19**:
 > `mkdocs 2.0.dev6` é a única versão 2.0 publicada (pré-release de 2026-09-15), roda em Python 3.15
 > e **não tem** `mkdocs.yml`, plugin, tema embutido, configuração de Markdown, modo estrito nem
-> suporte a Windows (§2). O site daquela entrega foi a primeira montagem real: **30 páginas** (histórico; o número atual está em §7.2), build e
+> suporte a Windows (§2). O site daquela entrega foi a primeira montagem real: **30 páginas** (histórico; o número atual está em §9.1), build e
 > verificação executados (§7.1).
 >
 > **Evidência de publicação (`V`, 2026-11-19):** o PR [#44](https://github.com/lucascantarelli/wyd/pull/44)
@@ -194,7 +194,7 @@ planejamento-1.0.0/wyd-docs/
 │   ├── planos/
 │   │   ├── index.md                  ▲
 │   │   ├── plano-de-documentacao.md  ▲
-│   │   └── metricas.md               ● definição da métrica (valor em §7.2)
+│   │   └── metricas.md               ● definição da métrica (valor em §9.1)
 │   ├── roadmap/
 │   │   ├── index.md                  ▲
 │   │   ├── fases.md                  ▲
@@ -270,7 +270,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | redirect | origem do `redirects.tsv` sem página-stub, destino inexistente, `refresh`/`canonical` fora do destino, destino que é outro stub ou origem duplicada |
 | sintaxe 1.x | fonte publicada em `planejamento-1.0.0/*/docs` com `!!!`, `=== "…"`, `???`, atributo de link `](pagina.md){ … }` ou `<div class="grid cards" markdown>` fora de bloco de código e de code span |
 
-**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Este é o único dono do total e do censo; `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam esta seção em vez de repetir os números.
+**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Esta é a medição histórica de 2026-11-19; o total e o censo vigentes estão em §9.1, e `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam aquela seção em vez de repetir os números.
 
 ### 7.3 Publicação
 
@@ -609,7 +609,7 @@ ferramenta é criada; 61 das 97 páginas existem em 2026-11-22** (lotes `0001`�
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **61 das 97 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0014`, `0019` e `0024` e o `index.md` de navegação, que lista as 61 existentes. A cobertura não é pré-requisito do site atual: o site passa com **134 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22).
+**Reconciliação e estado (2026-11-21):** não há exceção de tabela — as páginas, quando escritas, cobrem as 97 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 97 são contagem planejada, não medida de catálogo aplicado. **61 das 97 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0014`, `0019` e `0024` e o `index.md` de navegação, que lista as 61 existentes. A cobertura não é pré-requisito do site atual: o site passa com **134 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22). O censo das 132 fontes na mesma data é **14 `aceito` · 105 `proposto` · 12 sem linha de estado**, mais o `gerado/index.md` de navegação. Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números.
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 

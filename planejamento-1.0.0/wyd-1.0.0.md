@@ -238,7 +238,7 @@ com DoD; nenhum sistema depende de tabela de outro sem contrato.
 - [ ] Criar o workspace Rust na raiz com `Cargo.toml`, `rust-toolchain.toml` e `Makefile`.
 - [ ] Implementar na ordem de dependência, uma issue por PR, TDD, cobertura ≥ 85%.
 - [ ] Substituir o CI stub por workflows reutilizáveis + actions compostas.
-- [ ] Rodar o corte vertical do `wyd-db` (`0001`–`0007`, 22 tabelas) antes dos 23 arquivos restantes.
+- [ ] Rodar o corte vertical do `wyd-db` (`0001`–`0007`, 22 tabelas) antes dos 25 arquivos restantes da série.
 - [ ] Provar isolamento entre `portal` e `game` por `permission denied`, não por revisão.
 
 **Gate:** `fmt`, `clippy -D warnings`, testes, cobertura, migrations e build verdes em PR; E2E do

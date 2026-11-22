@@ -22,7 +22,7 @@ lê e os vínculos de classe e linhagem que o portal filtra.
 | Número | `0015` (confirmado em 2026-11-20) |
 | Arquivo | `crates/wyd-db/migrations/0015_content_skill.sql` |
 | Schema | `content` (1 tabela) |
-| Posição | 15 de 30 (terceiro do bloco de conteúdo, `0013`–`0027`) |
+| Posição | 15 de 32 (terceiro do bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges) e `0013` (`content.fn_fold`, `content.game_class`, `content.skill_lineage`). **Nada** de `portal`/`game`: não há FK de saída |
 | É dependência de | `0018` (seed das 154 skills) e da migração aditiva que, se um dia houver, ligar progressão ao catálogo |
 | Tabelas criadas | 1 (`skill_catalog`) |

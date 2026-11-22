@@ -20,7 +20,7 @@ Este é o contrato de **escrita** de quem publica página no site. O contrato de
 que cada marca significa no domínio deles. Aqui só entra o que é do site.
 
 > [!TIP] A regra que resolve quase tudo
-> A página nasce no sistema dono, em `planejamento-1.0.0/<sistema>/docs/`, e o site a publica sem editar (`V`, 2026-11-19; páginas montadas e censo em `wyd-docs-1.0.0.md` §7.2). Se a correção precisa acontecer dentro de `wyd-docs/`, a página está no lugar errado.
+> A página nasce no sistema dono, em `planejamento-1.0.0/<sistema>/docs/`, e o site a publica sem editar (`V`, 2026-11-19; páginas montadas e censo em `wyd-docs-1.0.0.md` §9.1). Se a correção precisa acontecer dentro de `wyd-docs/`, a página está no lugar errado.
 
 ## 0. Como a fase 3 se divide
 
@@ -115,7 +115,7 @@ Número sem fonte e data é hipótese, mesmo quando está correto. Formato:
 ```
 
 Contagem de página, arquivo ou sistema **não se copia** de outro documento: cita-se a seção dona
-(`AGENTS.md` §4; total e censo do site em `wyd-docs-1.0.0.md` §7.2), porque duas cópias divergem na
+(`AGENTS.md` §4; total e censo do site em `wyd-docs-1.0.0.md` §9.1), porque duas cópias divergem na
 primeira edição. Quando o número é histórico — o resultado de uma validação de commit antigo —, ele
 **não** é atualizado: trocar o número medido numa tabela de validação de `0d765858…` falsificaria a
 medição daquele commit.
@@ -127,7 +127,7 @@ medição daquele commit.
 | outra página publicada | link relativo, ex.: `../guia-autor/index.md` |
 | código ou arquivo interno | texto simples em `code`, com caminho: `wyd-docs/preparar.py` |
 | página planejada que ainda não existe | caminho em `code`, sem link: `docs/arquitetura/publicacao.md` |
-| seção de documento dono | caminho + `§`: `wyd-docs-1.0.0.md` §7.2 |
+| seção de documento dono | caminho + `§`: `wyd-docs-1.0.0.md` §9.1 |
 | âncora dentro da página | `#secao-em-minusculas-com-hifen` |
 
 Link que não resolve é defeito; caminho em `code` significa "vai existir e mora aqui". Trocar um pelo
@@ -141,7 +141,7 @@ outro para o build passar é o erro que o próprio gate precisa pegar: se o alvo
 | o que o site publica, montagem, gate, publicação | `wyd-docs-1.0.0.md` |
 | lacuna, dono e estado de decisão do site | `lacunas.md` |
 | conteúdo de domínio | `planejamento-1.0.0/<sistema>/docs/` |
-| número de página, arquivo e sistema | `AGENTS.md` §4; total e censo do site em `wyd-docs-1.0.0.md` §7.2 |
+| número de página, arquivo e sistema | `AGENTS.md` §4; total e censo do site em `wyd-docs-1.0.0.md` §9.1 |
 | marca de evidência no domínio | `convencoes.md` do sistema dono |
 
 Esta página não repete DDL, opcode, regra de jogo nem contagem: aponta a seção. Página que copia o

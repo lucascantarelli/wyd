@@ -49,7 +49,7 @@ presos na verificação do dado de origem — não no desenho e não em ferramen
 
 O adendo `0030` (§5.15) existe porque o `wyd-portal` decidiu, em 2026-11-20, quais tabelas o CMS e o
 launcher precisam. O **conjunto** é decisão de 2026-11-20; o **desenho de coluna** foi aprovado pelo
-dono na mesma data, e por isso a série passou a 30 arquivos / 96 tabelas naquela data e as quatro tabelas contam; com o adendo `0031` (§5.20), são 31 arquivos e 97 tabelas.
+dono na mesma data, e por isso a série passou a 30 arquivos / 96 tabelas naquela data e as quatro tabelas contam; com o adendo `0031` (§5.20) ela foi a 31 arquivos e 97 tabelas, e o `0032` (§5.32, `M27`) a levou a **32 arquivos e 97 tabelas**.
 
 Os lotes de `0009`, `0010` e `0011` fecharam em 2026-11-20 (§5.12, §5.13 e §5.14), e o `0012`
 (`ops.delivery_queue`) fechou na mesma data (§5.16), junto com `M25` — dreno com `SKIP LOCKED` e

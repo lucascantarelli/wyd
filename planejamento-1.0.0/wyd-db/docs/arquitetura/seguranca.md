@@ -94,7 +94,7 @@ tabela. Nenhuma rota pede `DELETE`.
 | Opção | Forma | Consequência |
 |---|---|---|
 | **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos, `Tab.` continua 97 e as citações de contagem e gates foram atualizadas na mesma entrega |
-| D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria 31 arquivos, mas reabriria o DDL de `0001`, que o registro trata como congelável |
+| D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
 | D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` cria papel e mexe em `public` |
 
 ### Decisão registrada

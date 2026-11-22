@@ -60,7 +60,7 @@ comprova é comportamento — perfil público, slots, ficha do item, filtro — 
 | Falta | Medição | Como o pacote resolve |
 |---|---|---|
 | menção a armaria/mercado no planejamento | `grep -rni "armaria\|mercado\|leilão"` em `planejamento-1.0.0`: 0 antes de 2026-11-22 | requisitos §4, fatias F7–F11 e este documento |
-| rota pública de personagem | 43 rotas até 2026-11-22, nenhuma pública de personagem | `RF-POR-019`; rotas 44–50 acrescentadas em `rotas-e-permissoes.md` (total 50) |
+| rota pública de personagem | nenhuma rota pública de personagem até 2026-11-22 | `RF-POR-019`; rotas 44–50 acrescentadas em `rotas-e-permissoes.md` (total 50) |
 | view de personagem, item e inventário | `0029` cria só `game.v_live_session` e `portal.v_person_identity` | 4 views em `wyd-db/armaria-e-mercado.md` §2 |
 | estatística de arma | sem coluna de dano, alcance ou durabilidade | `RF-POR-021` + caminho de verificação (§4 da página de banco); `LAC-POR-08` |
 | carteira do portal | só `donate_credit`/`donate_debit` | `market_wallet` + `market_ledger` (§3.1–3.2 da página de banco) |

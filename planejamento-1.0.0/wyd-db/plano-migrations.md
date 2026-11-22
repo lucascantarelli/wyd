@@ -307,7 +307,7 @@ Nenhum arquivo de DDL espera aprovação; restam os seis seeds.
 
 ### 3.2 Corte vertical (o que provar antes de continuar)
 
-Com `0001`–`0007` aplicados em PG17 efêmero (7 arquivos, 21 tabelas):
+Com `0001`–`0007` aplicados em PG17 efêmero (7 arquivos, 22 tabelas):
 
 - uma pessoa com e-mail e senha de portal autentica no BFF e recebe sessão viva — token opaco, só o `sha256` no banco (`A16`);
 - cria a 1ª conta na vaga 1; a 6ª falha por `ux_account_slot`;
@@ -319,8 +319,9 @@ Com `0001`–`0007` aplicados em PG17 efêmero (7 arquivos, 21 tabelas):
 As linhas de `game.server_channel` do teste vêm da **fixture** de `ddl-confirmado.md` §5.5, não de
 seed: a série não semeia canal (grupo/`host`/`status_url` são dado de instalação).
 
-Passar aqui é o que autoriza escrever os 24 arquivos restantes (22 dos 29 originais + os adendos
-`0030` e `0031`). Sem isso, o plano é papel.
+Passar aqui é o que autoriza escrever o que falta: hoje as seis páginas de seed (`0016`, `0017`, `0018`,
+`0020`, `0023` e `0027`), que esperam o dado de origem; as demais estão `concluída`. Sem isso, o plano é
+papel.
 
 ---
 

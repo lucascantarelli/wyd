@@ -1,7 +1,7 @@
 > Pergunta: "qual é o próximo passo do site, em ordem de desbloqueio ÷ custo?"
 > Público: quem mantém o `wyd-docs`
 > Dono: equipe do wyd-docs
-> Base: `lacunas.md`; `wyd-docs-1.0.0.md` §7.2 e §9; `roadmap-fase-3-para-4.md` §2
+> Base: `lacunas.md`; `wyd-docs-1.0.0.md` §9.1; `roadmap-fase-3-para-4.md` §2
 > Revisado em: 2026-11-20
 
 **Estado:** proposto (2026-11-19)
@@ -13,8 +13,8 @@ Esta é a **fonte única da fila** do site. O critério de saída da fase 4 é d
 `wyd-docs-1.0.0.md` §9 e o estado de cada lacuna é de `lacunas.md` §1; nenhum dos três é
 recontado aqui.
 
-O total e o censo são de `wyd-docs-1.0.0.md` §7.2: **34 páginas, 12 `proposto` · 16 sem linha
-de estado · 6 `aceito`** (2026-11-19). Item concluído não entra nesta fila: o que fechou em
+O total e o censo são de `wyd-docs-1.0.0.md` §9.1: **134 páginas** e **14 `aceito` · 105
+`proposto` · 12 sem linha de estado** (2026-11-22). Item concluído não entra nesta fila: o que fechou em
 2026-11-19 está em `lacunas.md` §1, `wyd-docs-1.0.0.md` §9/§10 e `docs/planos/metricas.md`.
 
 A fila é ordenada por **ganho de desbloqueio × custo**, não por facilidade. **Dono** diz quem
@@ -44,7 +44,7 @@ ninguém fez ainda — o que medir está em §6, e nenhum resultado está regist
 | O que | Onde | Por que agora |
 |---|---|---|
 | Rodar o gate antes do próximo PR que alterar documentação publicável | `wyd-docs/` (comando de `wyd-docs-1.0.0.md` §7.1) | evita introduzir página quebrada em uma mudança futura |
-| Conferir o total e o censo medidos | `wyd-docs-1.0.0.md` §7.2 | número que não bate com a montagem é defeito, não estimativa |
+| Conferir o total e o censo medidos | `wyd-docs-1.0.0.md` §9.1 | número que não bate com a montagem é defeito, não estimativa |
 
 ## 3. Recontar o censo (um comando)
 
@@ -58,7 +58,7 @@ for f in $(find wyd-docs/.build/docs -name '*.md'); do
 done | sort | uniq -c
 ```
 
-O resultado não se copia: total e censo são de `wyd-docs-1.0.0.md` §7.2, o único dono do
+O resultado não se copia: total e censo são de `wyd-docs-1.0.0.md` §9.1, o único dono do
 número. Este comando reproduz o censo a qualquer momento, sem guardar cópia do resultado.
 
 ## 4. O que esta página não decide

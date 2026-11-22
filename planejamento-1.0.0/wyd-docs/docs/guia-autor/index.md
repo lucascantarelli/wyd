@@ -15,7 +15,7 @@
 
 > [!TIP] O caminho é sempre o mesmo
 > Você escreve no sistema dono, roda o gate, abre PR com a saída do gate e pede revisão a quem não
-> escreveu. O site não tem editor: publica o que o sistema entregou (`V`, 2026-11-19; total em `wyd-docs-1.0.0.md` §7.2).
+> escreveu. O site não tem editor: publica o que o sistema entregou (`V`, 2026-11-19; total em `wyd-docs-1.0.0.md` §9.1).
 
 ## 1. Antes de escrever: a página está prevista?
 
@@ -30,7 +30,7 @@ Página **fora do teto** não se escreve direto: entra como proposta no plano do
 pergunta que responde e o lugar na árvore. Publicar sistema novo no site exige aprovação de
 arquitetura (nome, fronteira e entrada em `SISTEMAS`) e publicação pela documentação — decidido em
 2026-11-19 (`LPDOC-08` fechada). O ato técnico é a lista de `preparar.py:23-37`: pasta fora dela não
-é copiada (`preparar.py:196-201`); total de páginas em `wyd-docs-1.0.0.md` §7.2.
+é copiada (`preparar.py:196-201`); total de páginas em `wyd-docs-1.0.0.md` §9.1.
 
 ## 2. Onde a página mora
 
