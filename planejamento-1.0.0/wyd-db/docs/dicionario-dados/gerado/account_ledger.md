@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.2; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -55,6 +55,8 @@ Nenhuma além da PK: o mesmo motivo pode lançar várias vezes.
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`.
 - **Não lê:** `wyd_portal`.
+- **Administra:** `wyd_admin` — `SELECT, INSERT` concedidos por `0032`; o extrato não se corrige, então
+  `UPDATE` e `DELETE` ficam fora.
 
 ## Migration
 

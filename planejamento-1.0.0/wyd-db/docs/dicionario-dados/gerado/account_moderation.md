@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.2; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -57,6 +57,7 @@ Desbloquear força `blocked_at` nulo; `reason` e `blocked_by` podem permanecer �
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`.
 - **Não lê:** `wyd_portal` (o portal chega ao bloqueio por API, não por SQL).
+- **Administra:** `wyd_admin` — `SELECT, INSERT, UPDATE` concedidos por `0032`; `DELETE` fica fora.
 
 Dono do assunto no dicionário: [moderação](../dominio-moderacao.md).
 

@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.5; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -56,13 +56,15 @@ Só a PK.
 
 ## Índices
 
-Nenhum além da PK: a leitura é sempre por `(group_id, channel)`.
+Nenhum além da PK: a leitura é sempre por `(group_id, channel)`. Trigger
+`trg_server_channel_set_updated_at` mantém `updated_at`.
 
 ## Papéis
 
 - **Escreve:** `wyd_game`; na prática, **operação**, não a série — `0007` não semeia canal.
 - **Lê:** `wyd_game`, `wyd_read`.
 - **Não lê:** `wyd_portal`.
+- **Administra:** `wyd_admin` — `SELECT, UPDATE` concedidos por `0032`; sem `INSERT`/`DELETE`.
 
 `host` e `status_url` são dado de instalação: cada ambiente tem os seus, e migration com IP/host fixo
 seria mentira sobre o segundo ambiente.

@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.12; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -71,6 +71,8 @@ Trigger `trg_character_item_set_updated_at`.
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`.
 - **Não lê:** `wyd_portal` (sem `USAGE` em `game`).
+- **Administra:** `wyd_admin` — `SELECT, INSERT, DELETE` concedidos por `0032`: a custódia (`ADM-10`)
+  tira o item da mochila e o devolve na mesma transação. É a única tabela com `DELETE` para o papel.
 
 ## Migration
 

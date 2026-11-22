@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.6; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -47,7 +47,8 @@ O futuro em `birth_date` **não** é `CHECK`: `CURRENT_DATE` não é `IMMUTABLE`
 
 ## Índices
 
-Nenhum além da PK — a tabela é lida pela chave.
+Nenhum além da PK — a tabela é lida pela chave. Trigger `trg_person_profile_set_updated_at` mantém
+`updated_at`.
 
 ## Papéis
 

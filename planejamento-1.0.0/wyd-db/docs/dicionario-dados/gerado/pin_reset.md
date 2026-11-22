@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.2; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -46,7 +46,11 @@ Token de redefinição de PIN da conta, com hash, validade e consumo; o e-mail v
 
 ## Índices
 
-Nenhum além da PK e do único do token: o acesso é por hash.
+| Índice | Consulta que justifica |
+|---|---|
+| `ix_pin_reset_account (account_id, created_at DESC)` | pedidos de uma conta, do mais recente para o mais antigo |
+
+O resgate é por `token_hash` (o único); o índice de leitura é o da conta.
 
 ## Papéis
 

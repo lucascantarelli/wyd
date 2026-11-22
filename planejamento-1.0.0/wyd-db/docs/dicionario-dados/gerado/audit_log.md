@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.3; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -56,6 +56,8 @@ Nenhuma além da PK: eventos iguais em sequência são legítimos.
 
 - **Escreve:** `wyd_game` e `wyd_portal` só com `INSERT`; `wyd_read` lê.
 - **Não escreve:** nenhum runtime recebe `UPDATE`/`DELETE`; o append-only vem do `GRANT`, não de trigger.
+- **Administra:** `wyd_admin` — `INSERT` e `SELECT (id)` concedidos por `0032`; só o `id` é legível, e
+  `UPDATE`/`DELETE` ficam fora.
 
 ## Migration
 
