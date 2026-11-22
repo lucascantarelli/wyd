@@ -4,30 +4,17 @@ on:
   push:
     branches: [develop, main]
     paths:
-      - "planejamento-1.0.0/**/docs/**"
-      - "planejamento-1.0.0/wyd-1.0.0.md"
-      # Arquivos que o gate de contagens lê: número sem esses paths mudaria sem check.
-      - "planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md"
-      - "planejamento-1.0.0/wyd-db/migrations-checklist.md"
-      - "planejamento-1.0.0/wyd-db/ddl-confirmado.md"
-      - "planejamento-1.0.0/wyd-db/plano-migrations.md"
-      - "planejamento-1.0.0/wyd-portal/wyd-portal-1.0.0.md"
-      - "planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md"
+      # A árvore de planejamento inteira, não uma lista de arquivos: o gate monta páginas de
+      # `*/docs/`, censa estado e confere citações em dashboards, `lacunas.md` e `migrations/`.
+      # Enumerar deixou passar o #51, que mudou `wyd-db/ddl-confirmado.md` sem check.
+      - "planejamento-1.0.0/**"
       - "AGENTS.md"
       - "wyd-docs/**"
       - ".github/workflows/docs.yml"
       - ".github/actions/docs-check/**"
   pull_request:
     paths:
-      - "planejamento-1.0.0/**/docs/**"
-      - "planejamento-1.0.0/wyd-1.0.0.md"
-      # Arquivos que o gate de contagens lê: número sem esses paths mudaria sem check.
-      - "planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md"
-      - "planejamento-1.0.0/wyd-db/migrations-checklist.md"
-      - "planejamento-1.0.0/wyd-db/ddl-confirmado.md"
-      - "planejamento-1.0.0/wyd-db/plano-migrations.md"
-      - "planejamento-1.0.0/wyd-portal/wyd-portal-1.0.0.md"
-      - "planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md"
+      - "planejamento-1.0.0/**"
       - "AGENTS.md"
       - "wyd-docs/**"
       - ".github/workflows/docs.yml"
