@@ -59,8 +59,9 @@ edição viva, quando existir, vai por `content_rate_override` com auditoria em 
 - `content_rate_override` é **override do valor base**, e o base continua em `content.game_setting`;
   a multiplicação é do runtime, não do banco.
 - `rate_bps` tem teto **1.000.000**, não 10.000: 10.000 é 100%, e o teto permite multiplicar até 100×.
-- `mob_template_stat` e `mob_template_equip` não têm FK para `content.npc_template`; o elo com o NPC é
-  pelo nome do template, sem constraint entre os dois lotes.
+- `mob_template_stat` e `mob_template_equip` usam `template_name` como chave e têm FK para
+  `content.npc_template` com `CASCADE` (`0025` §4); o que não existe é FK entre `mob_template_stat` e
+  `mob_template_equip` — os dois são irmãos, filhos do mesmo template.
 - nenhum `GRANT` novo: `0001` já dá `SELECT` em `content`, e nenhum runtime escreve estas tabelas.
 
 ## `H` — semântica não verificada

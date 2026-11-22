@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **75 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **79 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -144,10 +144,21 @@ O `0015` cria uma tabela só; o lote completou as cinco com quatro das cinco do 
 O `0021` fecha com a quinta tabela; as três de `0022` são a camada de edição do staff, com `GRANT` de
 escrita para `wyd_portal` e reset por `DELETE`.
 
+## Lote 10 — combate (`0025`), 4 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.mob_template_stat` | [mob_template_stat](mob_template_stat.md) | `0025-content-combat` |
+| `content.mob_template_equip` | [mob_template_equip](mob_template_equip.md) | `0025-content-combat` |
+| `content.drop_rate_override` | [drop_rate_override](drop_rate_override.md) | `0025-content-combat` |
+| `content.content_rate_override` | [content_rate_override](content_rate_override.md) | `0025-content-combat` |
+
+As duas primeiras são filhas do template, com `CASCADE`; as duas de regra usam item com `RESTRICT` e
+família de taxa fechada em `kind`, com `rate_bps` até `1.000.000`.
+
 ## Próximos lotes
 
-Faltam **34 das 109**, por arquivo: `0025` (4 de combate), `0026` (6 de quests e eventos), `0028` (7 de
-estado de jogo), `0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1,
-`idempotency_record`) e `0034` (11 do mercado) — 4 + 6 + 7 + 4 + 1 + 1 + 11 = 34. Os seeds `0016`–`0018`,
-`0020`, `0023` e `0027` não criam tabela e não entram. Cada lote novo é proposto por arquivo de
-migration, como o de `0019`.
+Faltam **30 das 109**, por arquivo: `0026` (6 de quests e eventos), `0028` (7 de estado de jogo),
+`0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do
+mercado) — 6 + 7 + 4 + 1 + 1 + 11 = 30. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela
+e não entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.
