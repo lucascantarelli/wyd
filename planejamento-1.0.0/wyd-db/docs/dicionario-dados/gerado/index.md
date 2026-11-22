@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **61 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **66 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -106,9 +106,22 @@ As 11 páginas restantes fecharam o arquivo em 2026-11-22; a forma das 13 está 
 | `content.map_definition` | [map_definition](map_definition.md) | `0024-content-maps` |
 | `content.teleport_route` | [teleport_route](teleport_route.md) | `0024-content-maps` |
 
+## Lote 7 — taxonomias (`0013`), 5 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.game_system` | [game_system](game_system.md) | `0013-content-taxonomy` |
+| `content.game_class` | [game_class](game_class.md) | `0013-content-taxonomy` |
+| `content.skill_lineage` | [skill_lineage](skill_lineage.md) | `0013-content-taxonomy` |
+| `content.item_kind` | [item_kind](item_kind.md) | `0013-content-taxonomy` |
+| `content.item_effect` | [item_effect](item_effect.md) | `0013-content-taxonomy` |
+
+As cinco fecharam em 2026-11-22; a forma delas está em `migrations/0013-content-taxonomy.md`, e a
+função `content.fn_fold` do mesmo arquivo não tem página própria (não é tabela).
+
 ## Próximos lotes
 
-Faltam **36 das 97**: `0013` (taxonomia) e `0015` (catálogo de skill) — os seeds `0016`–`0018` não
+Faltam **31 das 97**: `0015` (catálogo de skill) — os seeds `0016`–`0018` não
 criam tabela —, `0021` e `0022` (regras e sobrescritas), `0025` e `0026` (combate e quests/eventos) e
 `0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é
 proposto por arquivo de migration, como o de `0019`.

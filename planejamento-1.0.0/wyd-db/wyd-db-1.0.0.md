@@ -109,7 +109,7 @@ linha desta tabela não é escrita.
 3. **Schema não se escreve duas vezes.** Coluna, tipo, nulidade, PK, FK, CHECK e índice vivem no DDL
    de `ddl-confirmado.md` e na página de `migrations/` do arquivo dono — hoje a única fonte da forma, já
    que o catálogo não existe. As páginas por tabela (`M26`) **resumem e ligam**, não copiam o DDL:
-   **61 das 97** já estão escritas à mão, em lotes (`0001`–`0012`, `0014`, `0019` e `0024`), até 2026-11-22. Texto manual sobre
+   **66 das 97** já estão escritas à mão, em lotes (`0001`–`0012`, `0013`, `0014`, `0019` e `0024`), até 2026-11-22. Texto manual sobre
    coluna é dívida declarada e só é aceito no campo "observação"
    (regra de negócio, provisório, armadilha).
 4. **Nível de evidência em toda afirmação de comportamento.** `V` verificado por comando/arquivo,
@@ -647,8 +647,8 @@ Domínios (um arquivo cada): `acesso`, `personagem`, `inventario`, `social`, `mu
 página — sem ferramenta e sem `Makefile` novo. Cada uma traz papel em uma linha, colunas com
 tipo/nulidade/default, PK, FKs de saída e de entrada, unicidade, CHECKs, índices, quem escreve/lê e a
 migration que criou a tabela, e **liga para a página de `migrations/`**, que é dona da forma, em vez
-de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **61 das 97 existem**
-(lotes `0001`–`0012`, `0014`, `0019` e `0024`, 2026-11-22) e nada é gerado.
+de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **66 das 97 existem**
+(lotes `0001`–`0012`, `0013`, `0014`, `0019` e `0024`, 2026-11-22) e nada é gerado.
 
 **Por que 19 páginas de domínio existem.** Elas cobrem o que a página por tabela não responde: por que
 a tabela existe, o que é provisório, o que quebra se mudar. A divisão prevista é **forma na página da
@@ -1223,7 +1223,7 @@ tabela, depois o procedimento.
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
-| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 97 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 97 | 97 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **61 das 97 escritas** em 2026-11-22 |
+| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 97 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 97 | 97 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **66 das 97 escritas** em 2026-11-22 |
 | **5. Histórico de schema** | `migrations/` (2 + 29) + `arquitetura/migracoes` + `retencao-e-capacidade` | 31 | 29 páginas com `down` e verificação, nomes fechados na decisão `P8` (`plano-migrations.md` §3); política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
