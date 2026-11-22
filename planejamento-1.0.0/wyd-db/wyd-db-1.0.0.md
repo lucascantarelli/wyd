@@ -289,7 +289,7 @@ planejamento-1.0.0/wyd-db/
 ├── migrations/
 │   ├── index.md                                 ▲
 │   ├── serie-e-regras.md                        ▲
-│   └── 0001-….md … 0029-….md  (29)  ▲
+│   └── 0001-….md … 0032-….md  (32)  ▲
 ├── src/
 │   ├── index.md                                 ▲
 │   ├── 24 páginas de módulo (raiz, model, pool, repo, transfer) ▲
@@ -341,7 +341,7 @@ planejamento-1.0.0/wyd-db/
 **Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
 `specs/` · 21 autorais + 97 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
 11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · 8 em
-`guia-documentacao/` · 32 em `migrations/` · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
+`guia-documentacao/` · 34 em `migrations/` (2 páginas de seção + 32 de migration) · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
 → **teto de páginas autorais + 97 de tabela + 1 dado de apoio**, mais este plano diretor.
 
 **Fonte dos números (2026-11-18):** os totais que **derivam da série** — **97 páginas de tabela** (uma
@@ -764,19 +764,20 @@ do `down` de seed; o comando de cada camada de verificação (estrutural, contra
 ciclo); o que fazer quando uma migration já rodou em produção. O **porquê** de cada regra fica em
 `arquitetura/migracoes.md` e nos ADRs correspondentes.
 
-**29 páginas `NNNN-<slug>.md`, uma por arquivo da série nova** (slug aprovado em 2026-11-18, decisão
-`P8`; a série, a ordem e a contagem são de `plano-migrations.md` §3)
-— pergunta: "o que este arquivo faz e como reverto?". Formato fixo:
+**32 páginas `NNNN-<slug>.md`, uma por arquivo da série nova** (os 29 nomes originais foram
+aprovados em `P8` em 2026-11-18; a série vigente, sua ordem e os três adendos são de
+`plano-migrations.md` §3) — pergunta: "o que este arquivo faz e como reverto?". Formato fixo:
 `objetivo` (1–3 linhas), `tabelas criadas/alteradas` (com link para `gerado/`), `seeds inseridos`
 (origem e reversão), `dependências` (migration anterior exigida), `down` (o que faz exatamente),
 `risco de rollback`, `verificação` (comando).
 
-**Nomes de página: fechados em 2026-11-18 (`P8`).** O slug é o nome do arquivo sem o prefixo
-numérico, com `_` → `-`, em `kebab-case` sem acento (§6.14, `estrutura-e-navegacao.md`). A página é 1:1
-com o arquivo, na mesma ordem lexicográfica da série, e o prefixo de 4 dígitos garante que um `0030`
-futuro entre depois sem renomear nada. `index.md` reproduz a coluna **arquivo**; a coluna **página** é
-o nome do arquivo em `migrations/`. Nenhuma página foi criada ainda — a escrita é da onda 5 e o
-andamento fica em `migrations-checklist.md`.
+**Nomes de página:** `P8` fechou os slugs da série original em 2026-11-18. Os três
+adendos `0030`–`0032` têm correspondência 1:1 com os arquivos adicionados à série no fim
+(`plano-migrations.md` §3). Em todos, o slug é o nome do arquivo sem o prefixo numérico, com `_` → `-`,
+em `kebab-case` sem acento (§6.14, `estrutura-e-navegacao.md`). A ordem das páginas acompanha a série;
+`index.md` reproduz a coluna **arquivo** e a coluna **página** corresponde ao nome em `migrations/`.
+A lista abaixo registra os 32 pares; o estado de escrita de cada página é acompanhado em
+`migrations-checklist.md`.
 
 | # | Arquivo da série | Página |
 |---:|---|---|
@@ -809,6 +810,9 @@ andamento fica em `migrations-checklist.md`.
 | 27 | `0027_seed_quests_events.sql` | `0027-seed-quests-events.md` |
 | 28 | `0028_game_quests_events.sql` | `0028-game-quests-events.md` |
 | 29 | `0029_views.sql` | `0029-views.md` |
+| 30 | `0030_portal_content.sql` | `0030-portal-content.md` |
+| 31 | `0031_portal_mfa.sql` | `0031-portal-mfa.md` |
+| 32 | `0032_admin_grants.sql` | `0032-admin-grants.md` |
 
 A tabela de slugs da **série do rascunho descartada** saiu desta seção quando `P8` fechou: os nomes
 dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
@@ -1224,7 +1228,7 @@ tabela, depois o procedimento.
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
 | **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 97 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 97 | 97 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **71 das 97 escritas** em 2026-11-22 |
-| **5. Histórico de schema** | `migrations/` (2 + 29) + `arquitetura/migracoes` + `retencao-e-capacidade` | 31 | 29 páginas com `down` e verificação, nomes fechados na decisão `P8` (`plano-migrations.md` §3); política da série em um único dono |
+| **5. Histórico de schema** | `migrations/`: `index.md` + `serie-e-regras.md` (2) + 32 páginas, uma por arquivo de `0001` a `0032`; mais `arquitetura/migracoes` e `retencao-e-capacidade` | 36 | as 32 páginas de migration têm `down` e verificação, com nomes 1:1 conforme §6.15 e a série de `plano-migrations.md` §3; política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
@@ -1257,7 +1261,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 | `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **32 arquivos**, **97 tabelas** e `SCHEMA_VERSION = 32` na troca — planejado, fonte `plano-migrations.md` §3 | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
 | `D-2` | dicionário em duas camadas: 19 páginas de domínio + **97** geradas | aprovar (§6.8) | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
-| `D-4` | uma página por arquivo da série nova (**29** arquivos), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
+| `D-4` | uma página por arquivo da série nova (**32** arquivos, `0001`–`0032`), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | aprovar | Ondas 3 e 8 |
 | `D-6` | `docs/` é a fonte do site; `migrations/`, `src/`, `tests/`, `prompts/`, `skills/` não são publicados | aprovar | Onda 9 |
 | `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | aprovar a distribuição | Onda 8 |
