@@ -68,7 +68,8 @@ o progresso junto (a ficha do legado dizia `CASCADE`).
   é nulo em recompensa de ouro/EXP.
 - `character_quest` guarda `step`, não a lista de passos concluídos: passo vencido não deixa histórico.
 - a FK de `character_quest` para `content.quest` é `RESTRICT`; o `CASCADE` é só com o personagem.
-- `content.quest` não tem FK para classe: `class_code` é texto e a ligação é do seed.
+- `content.quest.class_code` tem FK para `content.game_class (slug)` com `RESTRICT` (`0026` §4); `NULL`
+  é "todas as classes", não ausência de ligação.
 
 ## `H` — semântica não verificada
 

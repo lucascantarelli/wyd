@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **79 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **85 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -156,9 +156,23 @@ escrita para `wyd_portal` e reset por `DELETE`.
 As duas primeiras são filhas do template, com `CASCADE`; as duas de regra usam item com `RESTRICT` e
 família de taxa fechada em `kind`, com `rate_bps` até `1.000.000`.
 
+## Lote 11 — quests e eventos (`0026`), 6 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.quest` | [quest](quest.md) | `0026-content-quests-events` |
+| `content.quest_step` | [quest_step](quest_step.md) | `0026-content-quests-events` |
+| `content.quest_reward` | [quest_reward](quest_reward.md) | `0026-content-quests-events` |
+| `content.world_event` | [world_event](world_event.md) | `0026-content-quests-events` |
+| `content.event_schedule` | [event_schedule](event_schedule.md) | `0026-content-quests-events` |
+| `content.arena` | [arena](arena.md) | `0026-content-quests-events` |
+
+Quest, passo e recompensa formam uma cadeia com `CASCADE` no filho; evento e agenda repetem a relação com
+horário em minuto do dia; a arena é definição fechada, sem partida — o estado dela é de `0028`.
+
 ## Próximos lotes
 
-Faltam **30 das 109**, por arquivo: `0026` (6 de quests e eventos), `0028` (7 de estado de jogo),
-`0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do
-mercado) — 6 + 7 + 4 + 1 + 1 + 11 = 30. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela
-e não entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.
+Faltam **24 das 109**, por arquivo: `0028` (7 de estado de jogo), `0030` (4 do CMS), `0031` (1,
+`person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do mercado) —
+7 + 4 + 1 + 1 + 11 = 24. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não entram.
+Cada lote novo é proposto por arquivo de migration, como o de `0019`.
