@@ -4302,7 +4302,7 @@ não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0
 
 **O que não muda:** as sete tabelas, `Tab.` 97, e o `INSERT` de `wyd_game`/`wyd_portal` em
 `ops.audit_log` (`0002`). Tabela criada depois da troca **não** herda estes privilégios: não há
-`ALTER DEFAULT PRIVILEGES` aqui.
+`ALTER DEFAULT PRIVILEGES` aqui (decisão `M29`, 2026-11-22; regra em `docs/arquitetura/seguranca.md`).
 
 **Fechado fora deste lote:** `M28` — decidida em 2026-11-21 na redação B: a "API interna" de §5.15 e de
 `migrations/0030-portal-content.md` §8 é o serviço `wyd-admin`; as quatro tabelas de `portal` ficam com

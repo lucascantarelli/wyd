@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo e segurança
 > Dono: equipe do `wyd-db`
 > Base: `lacunas.md` `M27` (decidida em 2026-11-21); `ddl-confirmado.md` §5.32; `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`"; `wyd-admin/docs/arquitetura/contrato-c4.md` §4
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 Trigésimo segundo arquivo da série e o único sem tabela: só `GRANT`s para o papel `wyd_admin`. O papel
 **não** nasce aqui — é criado fora da série por `db/roles.sql` (`src/provision/spec.md` §2 e §4), como
@@ -100,8 +100,9 @@ REVOKE USAGE ON SCHEMA game FROM wyd_admin;
   o `GRANT` falha com `role "wyd_admin" does not exist`.
 - **Não alcança `portal` nem `content`.** As quatro tabelas do `0030` continuam do BFF com `wyd_portal`;
   a divergência de prosa sobre quem é a "API interna" foi fechada em `M28` (redação B, 2026-11-21).
-- **Não vale para tabela futura.** Não há `ALTER DEFAULT PRIVILEGES` aqui: os 97 objetos já existem e a
-  série fecha em `0032`. Tabela nova depois da troca exige `GRANT` no arquivo que a cria.
+- **Não vale para tabela futura.** Não há `ALTER DEFAULT PRIVILEGES` aqui — decisão `M29` (2026-11-22);
+  a regra para tabela nova e a medição estão em `docs/arquitetura/seguranca.md`, e a decisão, em
+  `lacunas.md` §2.3.
 - **Não tira nada de outro papel.** O `INSERT` em `ops.audit_log` de `wyd_game`/`wyd_portal` (`0002`)
   continua como está; o `down` revoga só o que este arquivo concedeu.
 
