@@ -144,13 +144,19 @@ da mesma página.
 
 ## Requisitos atendidos
 
-Os IDs `RF-DB`/`RN-DB` nascem em `specs/` (onda 3) e ainda não existem; esta seção lista o que o
-domínio cobre para que a rastreabilidade os ligue depois, sem inventar identificador agora:
+Os IDs nasceram em 2026-11-22 em [requisitos-funcionais](../specs/requisitos-funcionais.md) e
+[regras-de-negocio](../specs/regras-de-negocio.md). O que este domínio cobre e já tem ID:
 
-- cadastro de pessoa, verificação de e-mail e aceite de termo;
-- login do portal, sessão revogável e logout;
-- criação, limite e fechamento de conta de jogo por vaga;
-- login do jogo com senha e PIN, com contagem de falhas e bloqueio temporário;
-- reset de PIN por token;
-- sessão única de jogo por conta e por personagem;
-- bloqueio de conta por staff com motivo e autor.
+- criação, limite e fechamento de conta por vaga: `RF-DB-001`, `RF-DB-012`; `RN-DB-001`,
+  `RN-DB-005`;
+- login do jogo com senha e PIN, com contagem de falhas: `RF-DB-002`; `RN-DB-007`;
+- sessão única de jogo por conta e por personagem, com cinco contas da mesma pessoa: `RF-DB-006`,
+  `RF-DB-014`; `RN-DB-002`, `RN-DB-003`;
+- reset de PIN e token de cerimônia como hash: `RF-DB-010`, `RF-DB-013`;
+- bloqueio de conta por staff com motivo e autor: `RF-DB-007`; `RN-DB-006`;
+- fechamento que anonimiza o e-mail: `RN-DB-004`.
+
+O que o domínio cobre e **ainda não tem `RF-DB`** nesta leva: cadastro, verificação de e-mail,
+consentimento, login e sessão do portal, logout e recuperação de senha. Esses requisitos nascem com
+o fluxo dono, na próxima leva; a ausência está declarada em [casos-de-uso](../specs/casos-de-uso.md)
+§O que estes casos não cobrem, não escondida.
