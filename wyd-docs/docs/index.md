@@ -17,8 +17,8 @@ oficial da `1.0.0`, sistema por sistema, do jeito que o sistema dono escreveu.
 | `wyd-server` | composição do servidor; um processo por canal | não iniciado |
 | `wyd-sim` | fórmulas, curvas e simulações determinísticas | não iniciado |
 | [`wyd-db`](sistemas/wyd-db/index.md) | PostgreSQL 17, migrations, repositórios, filas | piloto |
-| `wyd-admin` | administração, HTTP/JSON interno, staff | não iniciado |
-| `wyd-portal` | portal Next.js: site, login, cadastro, BFF | só o prompt de produto |
+| `wyd-admin` | administração, HTTP/JSON interno, staff | planejado |
+| `wyd-portal` | portal Next.js: site, login, cadastro, BFF | planejado |
 | `wyd-launcher` | launcher Tauri: patch, manifesto, serverlist/itemlist | não iniciado |
 | `wyd-client` | patches e arquivos de configuração do cliente | não iniciado |
 | `wyd-bots` | bots de QA, carga e convivência | não iniciado |

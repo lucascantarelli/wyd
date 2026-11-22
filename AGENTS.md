@@ -55,7 +55,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Sistemas | os sistemas, um por pasta de `planejamento-1.0.0/`, e o estado de planejamento de cada um estão em §6; as contagens por sistema, em `planejamento-1.0.0/wyd-1.0.0.md` §1 |
 | `wyd-db` | piloto parcial; arquivos, páginas com cabeçalho e migrations documentadas em `planejamento-1.0.0/wyd-1.0.0.md` §1; 2 ADRs aceitos (§5.3) |
 | `wyd-protocol` | 2º piloto aberto; teto de páginas em `planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4, escritas e lacunas em `planejamento-1.0.0/wyd-1.0.0.md` §1 e `planejamento-1.0.0/wyd-protocol/lacunas.md` §1; nenhum ADR |
-| `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: páginas montadas e censo por estado em `wyd-docs-1.0.0.md` §7.2 (2026-11-19), build e verificação verdes; lacunas com estado e dono em `planejamento-1.0.0/wyd-docs/lacunas.md` §1 |
+| `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: páginas montadas e censo por estado em `wyd-docs-1.0.0.md` §9.1 (2026-11-22), build e verificação verdes; lacunas com estado e dono em `planejamento-1.0.0/wyd-docs/lacunas.md` §1 |
 | Lacunas do `wyd-db` | registradas por estado em `planejamento-1.0.0/wyd-db/lacunas.md` §1 |
 | Código Rust | apenas em `deprecated/crates/`, **ignorado pelo git**; `crates/*` só tem `.gitkeep` (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml` ou `Makefile` |

@@ -40,7 +40,7 @@ A fase só fecha quando os quatro itens do gate de `wyd-docs-1.0.0.md` §9 valer
 - **A fila não está aqui.** Itens, ordem por desbloqueio ÷ custo, tempo, arquivos tocados e o que
   cada passo destrava estão em [`proximos-passos.md`](proximos-passos.md). Se a fila mudar,
   só ela muda.
-- **A contagem não está aqui.** Páginas montadas e censo por estado são de `wyd-docs-1.0.0.md` §7.2.
+- **A contagem não está aqui.** Páginas montadas e censo por estado são de `wyd-docs-1.0.0.md` §9.1.
 - **O estado das lacunas não está aqui.** Dono, marco, estado e evidência de cada uma estão em
   `lacunas.md`.
 

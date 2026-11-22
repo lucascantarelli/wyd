@@ -41,7 +41,8 @@ redefinem.
 - **Reconfirmada em 2026-11-20, com a expansão do monitoramento:** o dono manteve a consulta limitada
   com cache de 60 s no BFF e recusou view materializada em `game` e tabela de cache em `portal`.
   Consequência: nenhuma tabela nem view nova pelo monitoramento; com os lotes `0031` e `0032`, a série está em
-  32/97 e o catálogo de tabelas citadas, em 40 (39 com DDL) + 2 views.
+  32/97 e o catálogo de tabelas citadas ficou em 40 (39 com DDL) + 2 views — **41** desde 2026-11-22, com a
+  armaria (`consumo-do-banco.md` §7).
 
 ### LAC-POR-05 — Segundo fator para staff (`fechada`)
 
@@ -72,7 +73,8 @@ redefinem.
   Prometheus; a pilha do `wyd-ops` (Prometheus + Grafana) coleta, retém e alerta; o portal **consulta
   a API HTTP do Prometheus** pelo BFF e **não** guarda série.
 - **Consequência:** nenhuma tabela nova em `portal` nem em `ops` e nenhum DDL de telemetria; o
-  catálogo de `docs/arquitetura/consumo-do-banco.md` §7 fica em **40 (39 com DDL) + 2 views**. O
+  catálogo de `docs/arquitetura/consumo-do-banco.md` §7 fica em **40 (39 com DDL) + 2 views** naquela data —
+  **41** desde 2026-11-22, com a armaria. O
   BFF chama `/api/v1/query` (e `query_range` para a janela do card) com timeout curto, sem credencial
   de banco, e cada card mostra o instante da amostra. Quando a consulta falha ou a métrica não
   existe, o card mostra **“não medido”** — nunca `0`, nunca valor estimado.

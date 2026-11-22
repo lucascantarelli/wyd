@@ -32,9 +32,10 @@ antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 | site MkDocs 2.0 montado em `wyd-docs/` | código de produção em `crates/` (só `.gitkeep`) |
 | plano do `wyd-db` (piloto) com páginas, ADRs e lacunas registrados | migrations da `1.0.0` (a série é planejada, não escrita) |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
+| planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
 | workflow principal `.github/workflows/full-workflow.yml` limitado ao `Get Info`; o workflow `docs.yml` faz build/verificação e publica Pages | CI de código com build, teste e cobertura |
 
-Números medidos em **2026-11-19** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
+Números medidos em **2026-11-22** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.
 
 O site oficial de documentação está publicado em [GitHub Pages](https://lucascantarelli.github.io/wyd/).
@@ -49,6 +50,7 @@ Em **2026-11-19**, o PR #44 corrigiu o carregamento do bundle browser do Highlig
 | **vai trabalhar no banco** | [`wyd-db-1.0.0.md`](planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md), [`lacunas.md`](planejamento-1.0.0/wyd-db/lacunas.md) e [`convencoes.md`](planejamento-1.0.0/wyd-db/docs/convencoes.md) |
 | **vai trabalhar no fio** | [`wyd-protocol-1.0.0.md`](planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md) e [`lacunas.md`](planejamento-1.0.0/wyd-protocol/lacunas.md) |
 | **vai mexer no site** | [`wyd-docs-1.0.0.md`](planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md) e [`guia de contribuição`](wyd-docs/docs/contribuir/index.md) |
+| **vai trabalhar no admin ou no portal** | [`wyd-admin-1.0.0.md`](planejamento-1.0.0/wyd-admin/wyd-admin-1.0.0.md) e [`wyd-portal-1.0.0.md`](planejamento-1.0.0/wyd-portal/wyd-portal-1.0.0.md) |
 
 ## Estrutura
 
@@ -58,6 +60,9 @@ planejamento-1.0.0/      # fonte de verdade nível 1: um sistema por pasta
 ├── wyd-db/              # piloto: PostgreSQL, migrations, portas, filas
 ├── wyd-protocol/        # segundo piloto: CPSock, opcodes, payloads, goldens
 ├── wyd-docs/            # site: montagem, tema, gate e publicação
+├── wyd-admin/           # API interna: contrato C4 e custódia de item
+├── wyd-portal/          # portal: páginas, requisitos e roadmap
+├── wyd-ops/             # propostas de gestão, versões e ambientes
 └── <demais sistemas>    # só .gitkeep: não planejado, não "livre para inventar"
 wyd-docs/                # projeto do site MkDocs 2.0 (tema, montagem, verificação)
 wyd-portal/              # portal Next.js (ainda sem código)

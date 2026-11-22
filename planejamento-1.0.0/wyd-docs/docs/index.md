@@ -9,7 +9,7 @@
 O `wyd-docs` publica a documentação oficial da `1.0.0` como site estático em **MkDocs 2.0** e
 **Python 3.15**. Ele não escreve conteúdo de domínio: monta as páginas de
 `planejamento-1.0.0/<sistema>/docs/` e publica com verificação própria
-(`V`, 2026-11-19: o gate em container Linux passou no `verificar.py`; total e censo em `wyd-docs-1.0.0.md` §7.2).
+(`V`, 2026-11-19: o gate em container Linux passou no `verificar.py`; total e censo em `wyd-docs-1.0.0.md` §9.1).
 
 > [!ABSTRACT] Regra que vale para todo o site
 > A página é escrita no sistema dono e publicada como está. O site não edita, não resume e não

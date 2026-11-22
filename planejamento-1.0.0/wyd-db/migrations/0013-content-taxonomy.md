@@ -22,7 +22,7 @@ item — e a **função de dobra** usada nas colunas geradas de busca.
 | Número | `0013` (confirmado em 2026-11-20) |
 | Arquivo | `crates/wyd-db/migrations/0013_content_taxonomy.sql` |
 | Schema | `content` (5 tabelas + 1 função) |
-| Posição | 13 de 30 (abre o bloco de conteúdo, `0013`–`0027`) |
+| Posição | 13 de 32 (abre o bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges). **Nada** de `portal`/`game`: não há FK de saída |
 | É dependência de | `0014` (`fn_fold` em `name_fold`, `item_kind`/`item_effect`), `0015` (classe e linhagem de skill), `0016` (seed das quatro taxonomias) e `0017` (seed dos 55 `EF_*`) |
 | Tabelas criadas | 5 (`game_system`, `game_class`, `skill_lineage`, `item_kind`, `item_effect`) |

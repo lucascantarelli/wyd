@@ -144,10 +144,10 @@ o token, que é rota e emissor, não coluna).
 
 | Medida | Valor | Fonte |
 |---|---:|---|
-| Arquivos planejados | 31 | `plano-migrations.md` §3 (29 originais + os adendos `0030`/`0031`) |
+| Arquivos planejados | 32 | `plano-migrations.md` §3 (29 originais + os adendos `0030`, `0031` e `0032`) |
 | Tabelas planejadas | 97 | soma da coluna `Tab.` acima |
 | Arquivos de seed | 6 | `plano-migrations.md` §4 |
-| Páginas `concluída` hoje | 25 | `0001` a `0015` + `0019` + `0021` + `0022` + `0024` + `0025` + `0026` + `0028` + `0029` + `0030` + `0031` |
+| Páginas `concluída` hoje | 26 | `0001` a `0015` + `0019` + `0021` + `0022` + `0024` + `0025` + `0026` + `0028` + `0029` + `0030` + `0031` + `0032` |
 | Páginas `pronta` (a escrever) | 0 | — |
 | Arquivos aguardando aprovação | 0 | os cinco lotes de 2026-11-21 foram aprovados |
 | Arquivos com DDL parcial | 0 | — |
