@@ -1,8 +1,8 @@
 # wyd-db — referência por tabela
 
-**Estado:** **98 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
-gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
-lista as páginas de `plano-migrations.md` §3 conforme elas existem.
+**Estado:** **109 de 109** páginas escritas (2026-11-22) — o dicionário está **completo**. A produção foi
+manual, em lotes (`M26`), sem gerador: cada página resume a tabela e aponta para a página de `migrations/`
+dona da forma. Este índice lista as páginas de `plano-migrations.md` §3, todas existentes.
 
 **Páginas de migration não publicadas (`V`, 2026-11-22):** as 28 páginas escritas (de 34 em
 `migrations-checklist.md` §2; as outras 6 seguem `bloqueada`) ficam em
@@ -209,7 +209,28 @@ Duas migrations, uma tabela cada: o segundo fator TOTP do staff, com segredo cif
 `UPDATE`, e o registro de idempotência do contrato C4, cuja PK é o escopo da chave e que o `wyd_admin`
 escreve por `GRANT` próprio.
 
-## Próximos lotes
+## Lote 15 — mercado e armaria (`0034`), 11 tabelas
 
-Faltam **11 das 109**, todas no `0034` (mercado e armaria) — o lote que fecha o dicionário. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não entram. Cada lote novo
-é proposto por arquivo de migration, como o de `0019`.
+| Tabela | Página | Migration |
+|---|---|---|
+| `portal.market_wallet` | [market_wallet](market_wallet.md) | `0034-portal-market` |
+| `portal.market_ledger` | [market_ledger](market_ledger.md) | `0034-portal-market` |
+| `portal.market_fee_rule` | [market_fee_rule](market_fee_rule.md) | `0034-portal-market` |
+| `portal.market_listing` | [market_listing](market_listing.md) | `0034-portal-market` |
+| `portal.market_bid` | [market_bid](market_bid.md) | `0034-portal-market` |
+| `portal.market_transaction` | [market_transaction](market_transaction.md) | `0034-portal-market` |
+| `portal.market_review` | [market_review](market_review.md) | `0034-portal-market` |
+| `portal.market_reputation` | [market_reputation](market_reputation.md) | `0034-portal-market` |
+| `portal.market_notification` | [market_notification](market_notification.md) | `0034-portal-market` |
+| `portal.market_dispute` | [market_dispute](market_dispute.md) | `0034-portal-market` |
+| `game.market_escrow` | [market_escrow](market_escrow.md) | `0034-portal-market` |
+
+Dez em `portal` e uma em `game`: crédito, extrato append-only, taxa versionada, anúncio com retrato da
+instância, lance, liquidação com dinheiro conservado, avaliação, reputação, aviso e disputa; e a custódia
+do item, escrita pelo `wyd_admin` com `INSERT`/`UPDATE` e **sem** `DELETE`.
+
+## Fila restante
+
+**Nenhuma.** As 109 tabelas de `plano-migrations.md` §3 têm página, e nenhuma das 34 migrations fica sem
+dono coberto: os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não entram na contagem.
+Cada lote novo, se a série mudar, é proposto por arquivo de migration, como o de `0019`.
