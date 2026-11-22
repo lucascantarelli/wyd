@@ -6,13 +6,14 @@
 
 **Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-22 e as migrations recontadas na mesma data.
 
-> **Revisão de 2026-11-22 (lotes 2, 3 e 5 escritos):** o lote de identidade fechou — 7 páginas e o
-> `specs/index`; o de série e operação, 7 páginas, com `riscos` já escrito desde 2026-11-20; o de
-> índices fechou os 6 que faltavam. O censo no `HEAD` desta data: **57** páginas com corpo em `docs/`,
-> **28 de 34** em `migrations/` e **37 de 59** em `src/`. O que falta escrever fica em **0
-> escrevíveis**, **21 de recorte** e **69 bloqueadas** — **147** páginas autorais, o teto de
-> `wyd-db-1.0.0.md` §4 com o 19º domínio. A revisão anterior (19 domínios, 36 páginas) fica no
-> histórico do git.
+> **Revisão de 2026-11-22 (lotes 1–5 escritos, mais o plano de documentação):** o lote de identidade
+> fechou — 7 páginas e o `specs/index`; o de série e operação, 7 páginas, com `riscos` já escrito
+> desde 2026-11-20; o de índices fechou os 6 que faltavam. Depois deles, `planos/plano-de-documentacao`
+> foi escrito porque era o primeiro item de §6 sem bloqueio de fonte. O censo no `HEAD` desta data:
+> **58** páginas com corpo em `docs/`, **28 de 34** em `migrations/` e **37 de 59** em `src/`. O que
+> falta escrever fica em **0 escrevíveis**, **21 de recorte** e **68 bloqueadas** — **147** páginas
+> autorais, o teto de `wyd-db-1.0.0.md` §4 com o 19º domínio. A revisão anterior (19 domínios, 36
+> páginas) fica no histórico do git.
 
 Esta página é a ponte entre as seis fontes de planejamento e a árvore de `docs/` de
 `wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 147 páginas autorais de `docs/`, quantas já
@@ -58,14 +59,14 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 
 ## 2. O que já está escrito (medido em 2026-11-22)
 
-**57 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
+**58 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
 
 | Pasta | Páginas escritas |
 |---|---|
 | raiz | `index.md`, `convencoes.md`, `glossario.md` |
 | `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md`, `contexto-c4.md`, `visao-geral.md`, `index.md` — as três últimas escritas em 2026-11-22 |
 | `dicionario-dados/` | `index.md`, `como-ler.md` e as 19 páginas `dominio-*.md` — escritas em 2026-11-21 |
-| `planos/` | `plano-de-implantacao.md`, `riscos.md`, `plano-de-dados-e-seeds.md`, `plano-de-qualidade-e-gates.md`, `registro-de-execucao.md`, `index.md` — as quatro últimas escritas em 2026-11-22 |
+| `planos/` | `plano-de-implantacao.md`, `riscos.md`, `plano-de-dados-e-seeds.md`, `plano-de-qualidade-e-gates.md`, `registro-de-execucao.md`, `index.md`, `plano-de-documentacao.md` — as cinco últimas escritas em 2026-11-22 |
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md`, `checklist-de-pr.md` — o último escrito em 2026-11-22 |
 | `guia-administrador/` | `configuracao.md`, `index.md` — escritos em 2026-11-22 |
 | `guia-teste/` | `testes-de-sistema.md`, `testes-de-contrato.md` — o último escrito em 2026-11-22 |
@@ -78,7 +79,7 @@ Fora de `docs/`: **28 de 34** em `migrations/` e **37 de 59** em `src/`.
 `guia-teste`. Eles não contam como página: são o marcador de que a pasta existe. Índice só é página
 quando responde à pergunta de §6.2/§6.5/§6.8/§6.9. As seis portas escritas — `dicionario-dados/index`,
 `specs/index`, `arquitetura/index`, `planos/index`, `guia-administrador/index` e
-`guia-documentacao/index` — estão nas 57; `dicionario-dados/gerado/index.md` é o índice auxiliar das
+`guia-documentacao/index` — estão nas 58; `dicionario-dados/gerado/index.md` é o índice auxiliar das
 páginas por tabela, fora da contagem, e não entra.
 
 ## 3. Mapa de diluição das seis fontes
@@ -187,7 +188,7 @@ o ponteiro passa a `migrations/index.md`.
 Nenhuma página autoral resta na lista de escrevíveis: as **6** que fechavam em 2026-11-22 foram
 escritas com o lote 5 (§8) — `arquitetura/index`, `planos/index`, `checklist-de-pr`,
 `guia-administrador/index`, `guia-documentacao/index` e `estilo-e-linguagem`. A distribuição por pasta
-está em §2; o que falta é recorte (§5) ou bloqueio (§6), e a soma continua **147** (57 + 0 + 21 + 69).
+está em §2; o que falta é recorte (§5) ou bloqueio (§6), e a soma continua **147** (58 + 0 + 21 + 68).
 
 ### 4.1 `arquitetura/` (0)
 
@@ -210,8 +211,9 @@ conta e medidas por `docs/dicionario-dados/gerado/index.md`, dono da contagem.
 
 ### 4.4 `planos/` (0)
 
-`index.md` foi escrito em 2026-11-22 com o lote 5; a pasta tem **6** páginas com corpo (5 + o
-índice). Os três planos do lote 3 e o índice estão escritos; o que resta é recorte ou bloqueio.
+`index.md` foi escrito em 2026-11-22 com o lote 5 e `plano-de-documentacao.md` no mesmo dia; a pasta
+tem **7** páginas com corpo (5 + o índice + este plano). Os três planos do lote 3, `riscos`, o índice
+e o plano de documentação estão escritos; o que resta é recorte ou bloqueio.
 
 ### 4.5 `guia-desenvolvedor/` (0)
 
@@ -252,13 +254,18 @@ Escrever agora **limitando o escopo declarado**. O recorte é a única defesa co
 | `guia-documentacao/estrutura-e-navegacao.md` | nome de arquivo (`P8`), uma página por pasta com `index.md`, árvore citada de `§4` | `nav` do mkdocs: não existe config |
 | `guia-documentacao/revisao-e-publicacao.md` | fluxo de revisão e checklist de pronto (`§10`) | a publicação é do `wyd-docs` (`LPDOC`), não desta pasta; a página fecharia só o fluxo de revisão |
 
-## 6. Páginas bloqueadas (69)
+## 6. Páginas bloqueadas (68)
 
 Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
 
+**Saiu da lista em 2026-11-22:** `planos/plano-de-documentacao.md`, escrito depois do lote 5 porque
+`D-A` já estava fechada e ele era o primeiro item de §6 sem bloqueio de fonte. A página foi para §2 e
+não fecha a Onda 8; o critério dela continua em `planos/plano-de-documentacao.md` §2.
+
 **Saíram da lista em 2026-11-21:** as **19 páginas de domínio**, escritas no dicionário. Na proposta
 original de 2026-11-18, 15 delas formavam o grupo "dicionário — 15 domínios"; o bloqueio de 84 cai
-para **69**. As 109 páginas por tabela continuam fora desta conta; quantas já existem é de `gerado/index.md`, dono da contagem.
+para **69** com as 19 páginas de domínio, e o plano de documentação escrito em 2026-11-22 leva a
+**68**. As 109 páginas por tabela continuam fora desta conta; quantas já existem é de `gerado/index.md`, dono da contagem.
 
 | Grupo | Páginas | Bloqueio | Dono / marco |
 |---|---|---|---|
@@ -267,7 +274,6 @@ para **69**. As 109 páginas por tabela continuam fora desta conta; quantas já 
 | specs — qualidade e matriz | `requisitos-nao-funcionais.md`, `rastreabilidade.md` | nenhum limiar medido; porta, teste e issue não existem para preencher a matriz | arquitetura, ondas 3/7/8 |
 | specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | `0006`, `0009`, `0011`, `0012` e `0021` têm DDL fechado desde 2026-11-21; `A14`, `A19`, `M16` e `M17` estão fechadas — resta o texto do fluxo | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | os 16 `RF-DB` do bloco de identidade existem; falta a matriz ator → requisito dos demais domínios | onda 3 |
-| planos — documentação | `plano-de-documentacao.md` | não escrita; a timeline única foi decidida (`D-A`, fechada em 2026-11-19), falta o texto da página | arquitetura, marco `P2` |
 | planos — manutenção e métrica | `plano-de-manutencao.md`, `metricas.md` | a retenção está decidida (`M22`); faltam a rotina que a executa e o número medido, que só existe depois da série (`M20`) | operação (marco `P3`) / arquitetura (`M20`, marco `P2`) |
 | roadmap | `index.md` + 40 `WYDDB-nnn` | a distribuição das 40 issues é `D-7`, não aprovada; issue sem DoD executável não entra | produto, onda 8 |
 | guia do administrador | `backup-e-restore.md`, `manutencao-rotineira.md`, `recuperacao-de-desastre.md`, `sustentacao.md` | política de backup não decidida; a retenção está decidida (`M22`), falta a rotina e o inventário organizacional | operação |
@@ -285,7 +291,7 @@ para **69**. As 109 páginas por tabela continuam fora desta conta; quantas já 
 | `src/` | 37 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
 | `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
 
-## 8. Ordem proposta (5 lotes; lotes 1 a 5 escritos)
+## 8. Ordem proposta (5 lotes; lotes 1 a 5 escritos, mais 1 página fora dos lotes)
 
 ```mermaid
 flowchart LR
@@ -324,6 +330,13 @@ sozinho deixaria oito páginas sem índice. O lote 5 fechou os seis restantes �
 foram escritos primeiro, porque são a porta que os outros conteúdos citam, e depois `checklist-de-pr`
 e `estilo-e-linguagem`, que fecham o caminho de quem escreve. Nenhuma página do lote ficou bloqueada:
 as páginas que seguem fora são recorte ou bloqueio de §5–§6, não item deste lote.
+
+**Página fora dos lotes (2026-11-22):** com os cinco lotes escritos, §4 ficou em **0 escrevíveis**.
+O primeiro item de §6 sem bloqueio de fonte era `planos/plano-de-documentacao`: `D-A` foi fechada em
+2026-11-19, a timeline única está decidida e nenhum dado de origem falta. Ele pertence à **Onda 8**,
+mas foi escrito antes das outras páginas da onda porque é o próprio plano que define a timeline;
+escrevê-lo **não fecha** a Onda 8 nem conta como entrega de roadmap. Os demais itens de §6 continuam
+bloqueados por medição da série, suíte, issues ou decisão de operação, e não foram tocados.
 
 **Regra de parada de cada lote:** página nova só entra quando as anteriores do lote estão com `Base:`
 preenchido, link conferido e a citação de número com fonte e data. Lote não se abre com página do lote

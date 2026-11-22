@@ -45,7 +45,7 @@ entrega.
 |---|---|
 | `provision render` / `provision apply` executados | decisão de lacuna — é de `lacunas.md` |
 | aplicação de `0001`…`0034` e o resultado do ledger | criação de issue ou mudança de roadmap |
-| corte vertical de `0001`–`0007` no PG17 efêmero | onda de documentação — é de `proposta-paginas.md` |
+| corte vertical de `0001`–`0007` no PG17 efêmero | onda de documentação — é de `plano-de-documentacao.md` §2 |
 | catálogo regenerado e gates de `plano-de-qualidade-e-gates.md` | risco ou defeito de página — é de `riscos.md` |
 | troca da série e o `SCHEMA_VERSION` resultante | medição de cobertura funcional — é de `metricas.md` |
 | incidente operacional com comando e resultado | opinião, estimativa ou “quase pronto” |
