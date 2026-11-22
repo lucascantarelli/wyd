@@ -4,8 +4,9 @@
 > Base: `docs/arquitetura/fronteira.md`; `docs/arquitetura/consumo-do-banco.md`; `M21`; `AGENTS.md` §5.4
 > Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22 e
-fecharam `LAC-POR-07` no mesmo dia — **2 abertas**, `LAC-POR-08` e `LAC-POR-09`
+**Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22.
+`LAC-POR-07` e `LAC-POR-08` fecharam; `LAC-POR-09` está em **proposta** com recomendação registrada —
+**0 abertas**, 8 fechadas, 1 proposta
 
 Registro único de lacuna do `wyd-portal`. Lacuna sem dono não entra; lacuna fechada leva data e
 evidência. Este arquivo é o único lugar onde o ID da lacuna é definido — as páginas citam, não
@@ -17,8 +18,13 @@ redefinem.
 
 | Estado | Quantas | Quais |
 |---|---:|---|
-| Aberta | 2 | `LAC-POR-08`, `LAC-POR-09` |
-| Fechada | 7 | `LAC-POR-01` a `LAC-POR-07` |
+| Aberta | 0 | — |
+| Proposta | 1 | `LAC-POR-09` |
+| Fechada | 8 | `LAC-POR-01` a `LAC-POR-08` |
+
+`proposta` significa recomendação técnica registrada com opções e trade-off, aguardando o “sim” do
+dono — o mesmo vocabulário de `wyd-db/lacunas.md` §0.1. `P-POR-08` não é lacuna aberta: é o
+enriquecimento aditivo de dano/alcance, sem bloquear a F7.
 
 ## 2. Registro das lacunas
 
@@ -124,40 +130,65 @@ redefinem.
 - **Dono:** arquitetura + `wyd-admin`. **Evidência:** contrato e requisitos escritos em 2026-11-22
   (arquivos citados acima, ainda não commitados).
 
-### LAC-POR-08 — Origem de dano, alcance e durabilidade (`aberta`)
+### LAC-POR-08 — Origem de dano, alcance e durabilidade (`fechada`)
 
-- **O que falta:** o dado real por trás das estatísticas que a missão exige. `content.item_catalog` não
-  tem coluna de dano, alcance nem durabilidade, e `game.character_item` não guarda durabilidade; só o
-  vetor `EF_*` existe, e ele nomeia efeito sem expor valor por instância.
-- **Por que trava:** a fatia F7 não fecha exibindo número inventado. Publicar a armaria exige os quatro
-  campos com origem declarada; enquanto a origem não é provada, a ficha mostra o efeito pelo símbolo e
-  declara a estatística como não medida.
-- **Passo de fechamento:** trace da decodificação do item no `wyd-server` (qual campo vira dano, qual vira
-  alcance, se há durabilidade persistida ou só em memória do cliente), confronto com os símbolos `EF_*`
-  do catálogo e escolha da forma: coluna no catálogo, tabela de efeito 1:N ou view calculada. O roteiro
-  está em `wyd-db/armaria-e-mercado.md` §4.
-- **Fecha quando:** o trace terminar e a forma for registrada na página do lote. Se o número não existir
-  em lugar nenhum, esta lacuna fecha com essa decisão e o requisito `RF-POR-021` continua válido exibindo
-  o que é provado.
-- **Dono:** `wyd-server` + `wyd-db`. **Evidência da abertura:** `0014` (colunas do catálogo) e `0009`
-  (§6.1, colunas de `character_item`), medidos em 2026-11-22.
+- **Decisão (2026-11-22):** a ficha publica **só o que o dado prova**. **Durabilidade não é exibida
+  como número**: o cliente não a tem e o lote `0009` decidiu que ela não vira coluna (`0009` §10,
+  item 3; `ddl-confirmado.md` §5.12, item 3). **Dano e alcance não são publicados** enquanto não
+  houver origem numérica provada: `content.item_catalog` e `game.character_item` não têm coluna, e
+  `content.item_effect` guarda só o símbolo, sem magnitude (`item_effect.md`, “Papel”). A ficha mostra
+  o efeito pelo símbolo, entrega `stat_source = 'effect_names'` e declara a estatística como **não
+  medida**; `RF-POR-021` continua válido sem número inventado.
+- **Por que fecha agora:** o bloqueio da F7 era publicar número inventado, não a existência do número.
+  A fatia entrega a ficha com a origem declarada; a captura de dano/alcance é enriquecimento aditivo,
+  registrado em `P-POR-08`, e não impede a armaria de entrar na `1.0.0`.
+- **O que foi medido:** `0014` (colunas do catálogo) e `0009` §6.1 (colunas de `character_item`) não
+  têm dano, alcance nem durabilidade; `content.item_effect` não guarda magnitude; `wyd-server` está
+  vazio (`.gitkeep`), então o trace do struct não é executável nesta data.
+- **Dono:** `wyd-server` + `wyd-db`. **Evidência:** `0014`, `0009` §10, `ddl-confirmado.md` §5.12,
+  `item_effect.md`, `armaria-e-mercado.md` D1 e `requisitos.md` `RF-POR-021` (2026-11-22).
 
-### LAC-POR-09 — Dono do fechamento de leilão (`aberta`)
+#### P-POR-08 — Captura de dano e alcance (`proposta`; dono `wyd-server` + `wyd-db`)
 
-- **O que falta:** onde roda o job que fecha leilão vencido, expira anúncio sem lance e devolve custódia —
-  no BFF do portal ou no `wyd-ops`.
-- **Por que trava:** a missão exige leilão com prazo, e prazo exige fechamento idempotente. Sem dono, a
-  fatia F9 não tem onde rodar e duas instâncias poderiam liquidar o mesmo leilão.
-- **Forma necessária:** job com dreno concorrente seguro (`FOR UPDATE SKIP LOCKED`, `M25`) e idempotência
-  por chave (`M17`), com métrica de atraso e alerta.
-- **Fecha quando:** arquitetura decidir o dono e o agendamento; a garantia de não liquidar duas vezes já
-  está no schema (`uq_market_transaction_listing`), o que falta é a operação.
+- **O que falta:** provar se o struct de item do cliente/servidor carrega dano e alcance e escolher a
+  forma de publicação. O roteiro está em `wyd-db/armaria-e-mercado.md` §4.
+- **Opções:** (A) fazer o trace quando o `wyd-server` existir e, se o valor existir, publicar por
+  coluna no catálogo, tabela `content.item_effect_value` 1:N ou view calculada; (B) manter só
+  `effect_names` e não publicar número. (A) atende melhor a missão; (B) é o que a ficha faz hoje.
+- **Trade-off:** (A) acrescenta DDL e depende de captura datada, mas entrega a estatística que a missão
+  pede; (B) não inventa número e mantém a ficha honesta, mas deixa dano e alcance como “não medido”.
+- **Fecha quando:** o trace terminar e o dono de `wyd-db` aprovar a forma. Nada disso reabre a decisão
+  de `LAC-POR-08`: número não provado não entra.
+
+### LAC-POR-09 — Dono do fechamento de leilão (`proposta`)
+
+- **O que falta:** onde roda o job que fecha leilão vencido, expira anúncio sem lance e devolve
+  custódia, e quem o agenda.
+- **O que já está decidido:** o fechamento é idempotente, usa dreno concorrente seguro
+  (`FOR UPDATE SKIP LOCKED`, `M25`) e uma transação por anúncio (`uq_market_transaction_listing`);
+  leilão sem lance expira e devolve a custódia; o vencedor recebe o item e o perdedor recebe a reserva
+  (D4, `RF-POR-025`, `RNF-POR-009`). Nada disso depende do dono do job.
+- **Recomendação (`P-POR-09`):** o **corpo do fechamento é do portal/BFF** — é quem escreve `portal` e
+  chama o `wyd-admin` —, e o **relógio é do `wyd-ops`** (gatilho agendado + métrica/alerta), sem papel
+  de banco novo em `portal`. O BFF reivindica lote com `SKIP LOCKED`, fecha um anúncio por transação e
+  chama `entregar`/`devolver` com `Idempotency-Key`.
+- **Opções e trade-off:**
+
+  | Opção | Como funciona | Prós | Contras |
+  |---|---|---|---|
+  | A (recomendada) | rota interna autenticada do BFF; `wyd-ops` agenda e alerta | mantém `LAC-POR-01`/`P-17` (só o BFF escreve `portal`); reusa o cliente do admin; sem `GRANT` novo | depende do runtime web; o lote precisa de teto de tempo e ser reentrante; se o BFF cai, o fechamento atrasa |
+  | B | worker do `wyd-ops` com papel próprio em `portal` | independente do web; agendamento e métrica nativos | novo papel/`GRANT` em `portal`; duplica cliente e autenticação do admin; dois escritores do estado do mercado |
+  | C | job no `wyd-admin` | — | recusada: o admin não escreve `portal`; exigiria escrita cruzada e contrariaria `LAC-POR-01`/`M28` |
+  | D | fechar no acesso, sem job | — | recusada em D4: não notifica, não escala e não garante fechamento |
+
+- **Fecha quando:** `wyd-ops` confirmar o agendamento e o alerta da opção A, ou escolher B com o
+  `GRANT` aprovado no `wyd-db`. A recomendação não é decisão: falta o “sim” do dono de operação.
 - **Dono:** arquitetura + `wyd-ops`. **Evidência da abertura:** `RF-POR-025`; `roadmap.md` F9;
-  `armaria-e-mercado.md` D4.
+  `armaria-e-mercado.md` D4. **Revisado em:** 2026-11-22.
 
 ## 3. Lacunas fechadas
 
-| ID | Decisão (2026-11-20) | Onde ficou registrada |
+| ID | Decisão | Onde ficou registrada |
 |---|---|---|
 | `LAC-POR-01` | O portal **não** escreve estado de jogo: toda ação e escrita em `game` passa pelo `wyd-admin` por HTTP/JSON, com chave de idempotência; o BFF só lê pelo adapter do `wyd-db` e grava `portal`/`ops`. | `docs/arquitetura/fronteira.md` §3 (C4) |
 | `LAC-POR-02` | CMS em `portal`, com **três** tabelas: `news`, `banner` e `guide`, com `slug`, estado de publicação e autor. | `docs/arquitetura/consumo-do-banco.md` §5 |
@@ -165,6 +196,7 @@ redefinem.
 | `LAC-POR-04` | Rankings consultam `game` diretamente com `LIMIT` e cache de 60 s no BFF; nenhuma tabela/view materializada nova. | `docs/arquitetura/consumo-do-banco.md` §4 |
 | `LAC-POR-05` | MFA de staff: TOTP em `portal.person_authenticator`, ligado a `portal.person`, obrigatório para `admin`/`moderator`; `member` fora da `1.0.0`. | `docs/specs/requisitos.md` (`RF-POR-013`) |
 | `LAC-POR-06` | Telemetria de canal vem da fonte externa: `/metrics` Prometheus do `wyd-server`, coletado pela pilha do `wyd-ops`; o portal consulta a API do Prometheus e mostra “não medido” quando falha. Nenhuma tabela. | `docs/arquitetura/consumo-do-banco.md` §2 |
+| `LAC-POR-08` | Ficha sem número inventado: durabilidade não existe no cliente e não vira coluna; dano e alcance só entram com origem provada. Enquanto não houver captura, `stat_source = 'effect_names'` e a ficha declara a estatística como não medida. | `armaria-e-mercado.md` D1; `docs/specs/requisitos.md` `RF-POR-021`; `docs/roadmap/roadmap.md` F7; `0009` §10 e `ddl-confirmado.md` §5.12 |
 
 **Reconfirmação de 2026-11-20 (expansão do monitoramento):** as três decisões de arquitetura foram
 levadas de novo ao dono, com alternativas, e mantidas — ranking com `LIMIT` e cache de 60 s, TOTP em
@@ -205,4 +237,6 @@ o lote `0034` (`M31`, que fechou `LAC-ADM-07`), e só as quatro views seguem em 
 1. Dono responde a pergunta com a opção escolhida e a data.
 2. A decisão vai para a página dona (`fronteira.md`, `consumo-do-banco.md` ou `rotas-e-permissoes.md`),
    não para este arquivo.
-3. Aqui, a linha muda para `fechada` com data e link da evidência.
+3. Proposta técnica entra com opções e trade-off e fica `proposta` até o “sim” do dono; sem ele, não
+   vira `fechada`.
+4. Aqui, a linha muda para `fechada` com data e link da evidência.

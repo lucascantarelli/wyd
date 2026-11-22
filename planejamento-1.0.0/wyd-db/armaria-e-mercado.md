@@ -239,7 +239,7 @@ A missão exige dano, alcance, durabilidade e habilidades especiais. O que exist
 | nome, categoria, grau, efeitos `EF_*`, requisitos | `content.item_catalog` (`0014`) | `V` — verificável na página do lote |
 | habilidades especiais como símbolo | `effect_names` | `V` — o símbolo existe; o **valor** que ele aplica não está em coluna |
 | dano, alcance | — | **não existe coluna** em `content.item_catalog` nem em `game.character_item` |
-| durabilidade | — | não existe coluna; se existir no cliente, é estado de instância e morre com a sessão |
+| durabilidade | — | não existe no cliente e não vira coluna (`0009` §10, item 3); não há valor a publicar |
 
 Caminho de verificação, obrigatório antes de fechar a fatia da armaria:
 
@@ -249,11 +249,13 @@ Caminho de verificação, obrigatório antes de fechar a fatia da armaria:
    marcador.
 3. Só então decidir a forma: coluna em `content.item_catalog`, tabela `content.item_effect_value`
    1:N por item, ou view que calcula a partir do efeito.
-4. Registrar o resultado na página `migrations/00NN` do lote e fechar `LAC-POR-08`.
+4. Registrar o resultado na página `migrations/00NN` do lote; a proposta `P-POR-08` do portal fecha
+   quando a forma for aprovada. `LAC-POR-08` fechou em 2026-11-22 com a ficha publicando só o provado.
 
-Enquanto o trace não existir, `content.v_item_sheet` entrega `stat_source = 'effect_names'` e a ficha
+Enquanto a captura não existir, `content.v_item_sheet` entrega `stat_source = 'effect_names'` e a ficha
 exibe **o efeito pelo nome**, declarando que o número não foi medido. Nunca zero, nunca estimativa,
-nunca remoção silenciosa do requisito.
+nunca remoção silenciosa do requisito. A decisão do portal está em `lacunas.md` `LAC-POR-08` e em
+`armaria-e-mercado.md` D1.
 
 ## 5. Contrato exigido de fora do portal
 
@@ -307,5 +309,6 @@ própria, com número na mão.
 - Não escreve `DDL` executável: colunas, chaves e invariantes aqui são forma, e `ddl-confirmado.md` §5.34 é
   o dono do texto final.
 - Não decide execução de permissão: `USAGE` cruzado continua proibido (`P-17`) e o adapter é o caminho.
-- Não fecha `LAC-POR-08` (estatísticas), que precisa do trace. O executor saiu daqui em 2026-11-22:
+- Não é dono da ficha: `LAC-POR-08` fechou em 2026-11-22 com a decisão de publicar só o provado, e a
+  captura de dano/alcance segue em `P-POR-08`. O executor saiu daqui em 2026-11-22:
   `LAC-POR-07` foi fechada com o contrato do `wyd-admin` e o schema saiu em `M31` (`LAC-ADM-07` fechada).

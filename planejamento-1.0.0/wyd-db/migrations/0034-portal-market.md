@@ -560,7 +560,8 @@ DROP TABLE portal.market_wallet;
 
 - **Retenção do mercado.** As tabelas nascem como estado de jogador; expurgo de notificação e de anúncio
   expirado é decisão própria, com medição (`M22` cobre sessão e auditoria, não mercado).
-- **Estatísticas de arma** (`LAC-POR-08`): sem coluna e sem trace.
+- **Estatísticas de arma** (`P-POR-08`): sem coluna e sem captura; a ficha publica só o provado desde
+  `LAC-POR-08` (fechada em 2026-11-22).
 - **Recarga do crédito.** `market_ledger.kind = 'recarga'` existe, mas a origem do crédito é do portal.
 - **Separação de `ADM-10`.** A custódia é o contrato do `wyd-admin` (`LAC-ADM-07`, fechada em `M31`); aqui
   está só a forma que ele escreve.
