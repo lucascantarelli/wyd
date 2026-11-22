@@ -42,10 +42,11 @@ Quem deriva `planejado`/`provisório`/`pronto` do estado do arquivo é `migratio
 dono único. A coluna `Estado` de §2 cita esse checklist arquivo a arquivo, sem escala própria.
 
 **97 de 97** têm DDL fechado. Os 25 arquivos vão de `0001` a `0024` mais os lotes `0025`, `0026`,
-`0028` e `0029`, aprovados pelo dono em 2026-11-20 e 2026-11-21; a última rodada fechou as 20 tabelas
-que estavam desenhadas sem aprovação (§5.23, §5.25, §5.26 e §5.28). Nenhuma tabela da série fica sem
-coluna desenhada e nenhuma espera o "sim" do dono. O que resta `bloqueada` são os seis arquivos de seed,
-presos na verificação do dado de origem — não no desenho e não em ferramenta (`migrations-checklist.md` §3).
+`0028` e `0029`, e os adendos `0030` e `0031`, aprovados pelo dono em 2026-11-20 e 2026-11-21; a
+última rodada fechou as 20 tabelas que estavam desenhadas sem aprovação (§5.23, §5.25, §5.26 e
+§5.28). Nenhuma tabela da série fica sem coluna desenhada e nenhuma espera o "sim" do dono.
+O que resta `bloqueada` são os seis arquivos de seed, presos na verificação do dado de origem — não no
+desenho e não em ferramenta (`migrations-checklist.md` §3).
 
 O adendo `0030` (§5.15) existe porque o `wyd-portal` decidiu, em 2026-11-20, quais tabelas o CMS e o
 launcher precisam. O **conjunto** é decisão de 2026-11-20; o **desenho de coluna** foi aprovado pelo
