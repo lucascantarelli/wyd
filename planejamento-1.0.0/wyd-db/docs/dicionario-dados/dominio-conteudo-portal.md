@@ -58,8 +58,8 @@ canal, então publicar a próxima exige revogar a vigente na mesma transação.
 
 ## O que o schema garante
 
-- **`slug` é identidade editorial:** único em `news` e em `guide`, `snake_case` com hífen, 3–120
-  caracteres.
+- **`slug` é identidade editorial:** único em `news` e em `guide`, minúsculas, dígitos e hífen
+  (`^[a-z0-9]+(-[a-z0-9]+)*$`), 3–120 caracteres.
 - **estado coerente:** `draft`/`published`/`archived` com carimbo — publicado tem `published_at`,
   arquivado tem `archived_at`; notícia fixada (`pinned`) só pode estar publicada.
 - **banner disciplinado:** posição em `home_hero`/`home_side`/`login`/`launcher`, prioridade 0–999,

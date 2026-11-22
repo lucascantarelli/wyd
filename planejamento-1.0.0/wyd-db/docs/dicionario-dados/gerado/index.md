@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **92 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **96 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -185,9 +185,21 @@ horário em minuto do dia; a arena é definição fechada, sem partida — o est
 É o único bloco de `game` que referencia `content`: progresso, histórico e placar usam `RESTRICT` para a
 definição e `CASCADE`/`SET NULL` para o dono da linha. Kefra e castelo são linha única com `CHECK (id = 1)`.
 
+## Lote 13 — conteúdo do portal (`0030`), 4 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `portal.news` | [news](news.md) | `0030-portal-content` |
+| `portal.banner` | [banner](banner.md) | `0030-portal-content` |
+| `portal.guide` | [guide](guide.md) | `0030-portal-content` |
+| `portal.launcher_release` | [launcher_release](launcher_release.md) | `0030-portal-content` |
+
+É o CMS e o launcher: notícia e guia com estado editorial e `slug` único, banner com janela e prioridade,
+e versão de launcher com **uma** publicada por canal (`ux_launcher_release_vigente`). Autoria em
+`portal.person` com `RESTRICT`, e `featured_character_id` sem FK porque `portal` não alcança `game`.
+
 ## Próximos lotes
 
-Faltam **17 das 109**, por arquivo: `0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1,
-`idempotency_record`) e `0034` (11 do mercado) — 4 + 1 + 1 + 11 = 17. Os seeds `0016`–`0018`, `0020`,
-`0023` e `0027` não criam tabela e não entram. Cada lote novo é proposto por arquivo de migration, como
-o de `0019`.
+Faltam **13 das 109**, por arquivo: `0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`)
+e `0034` (11 do mercado) — 1 + 1 + 11 = 13. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam
+tabela e não entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.
