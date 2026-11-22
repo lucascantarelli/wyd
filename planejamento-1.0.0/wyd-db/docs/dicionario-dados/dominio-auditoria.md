@@ -16,7 +16,7 @@ tabelas:
 - `ops.idempotency_record` — "esta ação já rodou com esta chave, e o que ela devolveu", para o contrato
 do `wyd-admin` (`M30`, 2026-11-22).
 
-Nenhuma das duas é estado de jogo: elas **sobrevivem** ao ator. Por isso não há FK para `portal.person`
+Nenhuma das três é estado de jogo: elas **sobrevivem** ao ator. Por isso não há FK para `portal.person`
 nem para `game.account` — apagar ou fechar o ator não pode apagar a prova.
 
 **Não cobre:** estado operacional de sessão (`released_reason` em `game.session`, ver
@@ -29,7 +29,7 @@ nem para `game.account` — apagar ou fechar o ator não pode apagar a prova.
 |---|---|---|---|---|
 | `ops.audit_log` (0002) | evento auditável com ator tripartido, ação, alvo e detalhe | jogo e portal (`INSERT` só) | `wyd_read`; jogo/portal leem por `SELECT` herdado | `gerado/audit_log.md` |
 | `ops.login_attempt` (0002) | tentativa de autenticação com identificador **hasheado**, origem, IP e resultado | jogo e portal (`INSERT` só) | `wyd_read` | `gerado/login_attempt.md` |
-| `ops.idempotency_record` (0033) | ação executada por chave, com status e corpo devolvidos | `wyd_admin` (`SELECT`, `INSERT`, `UPDATE`) | `wyd_read` | onda 4 |
+| `ops.idempotency_record` (0033) | ação executada por chave, com status e corpo devolvidos | `wyd_admin` (`SELECT`, `INSERT`, `UPDATE`) | `wyd_read` | `gerado/idempotency_record.md` |
 
 ## Garantias do schema
 

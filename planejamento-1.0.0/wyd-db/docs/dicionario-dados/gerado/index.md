@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **96 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **98 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -198,8 +198,18 @@ definição e `CASCADE`/`SET NULL` para o dono da linha. Kefra e castelo são li
 e versão de launcher com **uma** publicada por canal (`ux_launcher_release_vigente`). Autoria em
 `portal.person` com `RESTRICT`, e `featured_character_id` sem FK porque `portal` não alcança `game`.
 
+## Lote 14 — MFA e idempotência (`0031` + `0033`), 2 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `portal.person_authenticator` | [person_authenticator](person_authenticator.md) | `0031-portal-mfa` |
+| `ops.idempotency_record` | [idempotency_record](idempotency_record.md) | `0033-ops-idempotency` |
+
+Duas migrations, uma tabela cada: o segundo fator TOTP do staff, com segredo cifrado e revogação por
+`UPDATE`, e o registro de idempotência do contrato C4, cuja PK é o escopo da chave e que o `wyd_admin`
+escreve por `GRANT` próprio.
+
 ## Próximos lotes
 
-Faltam **13 das 109**, por arquivo: `0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`)
-e `0034` (11 do mercado) — 1 + 1 + 11 = 13. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam
-tabela e não entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.
+Faltam **11 das 109**, todas no `0034` (mercado e armaria) — o lote que fecha o dicionário. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não entram. Cada lote novo
+é proposto por arquivo de migration, como o de `0019`.
