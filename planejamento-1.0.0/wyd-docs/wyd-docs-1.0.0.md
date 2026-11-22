@@ -276,7 +276,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 | Etapa | Onde | Condição |
 |---|---|---|
-| gate | `.github/actions/docs-check/` | todo PR que toca `planejamento-1.0.0/**/docs/**` ou `wyd-docs/**` |
+| gate | `.github/actions/docs-check/` | todo PR que toca `planejamento-1.0.0/**` (a árvore inteira, sem lista de arquivos) ou `wyd-docs/**` |
 | publicação | `.github/workflows/docs.yml` | push em `develop` e `main` |
 | artefato | GitHub Pages | estático, sem servidor |
 
