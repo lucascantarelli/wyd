@@ -372,9 +372,10 @@ provedor. Até lá, free tier é vitrine de portal e banco de homologação.
 | 7 | Usar runner hospedado e proibir self-hosted em PR | sim |
 | 8 | Homologar portal no Vercel Hobby e banco no Neon | sim, com dado sintético |
 | 9 | Definir produção só após decisão de custo | sim, registrar como risco |
-| 10 | Migrar as 40 issues do `wyd-db` para o GitHub | só depois das páginas com DoD |
+| 10 | Migrar as 40 issues do `wyd-db` para o GitHub | **executada em 2026-11-22:** páginas com DoD e issues #82–#121 no board |
 
-Nenhuma dessas ações foi executada. Criar label, milestone, project ou issue exige pedido explícito.
+As ações de estrutura 1–4, 7 e 9 foram executadas em 2026-11-19; a ação 10, em 2026-11-22. A ação 6
+(CI real) continua pendente por decisão de fase. Criar recurso novo no GitHub exige pedido explícito.
 
 ---
 
@@ -420,7 +421,8 @@ Aprovada pelo time nesta data. O que foi criado no GitHub, por API e `gh`:
 | Labels `area/*` | 13 criadas | uma por sistema |
 | Labels `estado/*` | 3 criadas | `bloqueada`, `aguardando-decisao`, `em-revisao` |
 | Outras labels | 3 criadas | `origem/legado`, `risco/seguranca`, `risco/dados` |
-| Milestones | 6 criados | `M0 — Fundação` a `M5 — Operação` (nº 1–6) |
+| Milestones | 13 criados | `M0`–`M5` (nº 1–6) + fases `F1`–`F7` (nº 7–13), criadas em 2026-11-22 para as 40 issues |
+| Issues `WYDDB` | 40 criadas | #82–#121, uma por página com DoD; labels `area/wyd-db` e milestone de fase |
 | Formulários de issue | 4 criados | `bug`, `planejamento`, `decisao`, `tarefa` + `config.yml` |
 | Template de PR | criado | `.github/pull_request_template.md` |
 | Ruleset de `develop` | ativo | PR obrigatório, sem deleção, sem force-push, thread resolvida |
@@ -435,10 +437,10 @@ Aprovada pelo time nesta data. O que foi criado no GitHub, por API e `gh`:
 | Sem aprovação obrigatória de revisor | o repositório tem um mantenedor; exigir aprovação travaria o próprio dono | quando houver segundo revisor |
 | Sem views customizadas no project | a API cria view sem filtro; view sem filtro não é a view prometida em §3.5 | quando o project tiver itens reais |
 | Labels padrão do GitHub mantidas | remover `bug`/`enhancement` é destrutivo e o histórico pode depender delas | decisão do time; a regra de não duplicar tipo vale para issue nova |
-| Nenhuma issue criada | o roadmap do `wyd-db` (`WYDDB-nnn`) e o do `wyd-protocol` (`WYDPRT-nnn`) ainda não têm DoD aprovado em página existente | Fase 2 e 3, depois das páginas |
+| 40 issues criadas sem o formulário | o roadmap do `wyd-db` já tinha página com DoD; o formulário não aceita corpo tão longo nem milestone de fase | manter o formulário para issue nova; as 40 são migração de página existente |
 
 ### 10.2 O que continua pendente
 
 - Views do project e ajuste das opções de `Status`.
-- Migração das issues planejadas para issues reais, uma vez que as páginas com DoD existam.
+- CI real, que segue stub; não é bloqueio das 40 issues de planejamento.
 

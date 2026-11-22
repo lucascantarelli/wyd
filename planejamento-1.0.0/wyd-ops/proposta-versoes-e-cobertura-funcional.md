@@ -1,10 +1,10 @@
 # Versões no board e cobertura funcional da `1.0.0` — proposta
 
 > **Estado: proposta (`P`) com direção decidida em 2026-11-20; nada executado.** O dono escolheu as
-> quatro opções recomendadas (§9). Ainda assim, **nada foi criado nem alterado**: os 6 milestones
+> quatro opções recomendadas (§9). A migração de versões continua **não executada**: os 6 milestones
 > `M0`–`M5`, os campos do project, as labels e os formulários continuam como em
-> `proposta-gestao-github-e-ambientes.md` §10, e **nenhuma issue existe**. Escrever no GitHub exige
-> pedido explícito (`AGENTS.md` §5, invariante 9).
+> `proposta-gestao-github-e-ambientes.md` §10. Em 2026-11-22 foram criadas 7 milestones de fase
+> (`F1`–`F7`) e as 40 issues `WYDDB` #82–#121; isso não altera o eixo de versão, que segue pendente.
 >
 > Este documento pertence a `wyd-ops` porque trata de board, marco e sprint. Ele **não** decide
 > arquitetura, funcionalidade de jogo nem escopo de produto; a lista de funcionalidades de §7 é
@@ -16,10 +16,10 @@
 
 | Item | Estado | Fonte |
 |---|---|---|
-| Milestones | 6 criados: `M0 — Fundação` a `M5 — Operação` (nº 1–6) | `proposta-gestao-github-e-ambientes.md` §10 |
+| Milestones | 13 criados: `M0`–`M5` (nº 1–6) + `F1`–`F7` (nº 7–13) | `proposta-gestao-github-e-ambientes.md` §10 |
 | Campos do project `WYD 1.0.0` | `Sistema` (13), `Fase` (0–5), `Prioridade` (P0–P3), `Marco` (M0–M5), `Status` | idem |
 | Labels | 13 `area/*`, 3 `estado/*`, `origem/legado`, 2 `risco/*` | idem |
-| Issues | **0** | `wyd-1.0.0.md` §1.4 |
+| Issues | **40** `WYDDB` (#82–#121) no project `WYD 1.0.0` | `wyd-1.0.0.md` §1.4 |
 | Série de versões | só no `wyd-protocol`, `0.1.0` → `1.0.0` | `wyd-protocol-1.0.0.md` §9.1 |
 
 O board não tem hoje nenhum eixo de versão: versão existe em um sistema e não aparece no trabalho.

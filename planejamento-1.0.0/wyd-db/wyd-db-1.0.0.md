@@ -680,7 +680,7 @@ requisito, critério de saída e issues que contém; diagrama de dependência en
 comando/arquivo), `fora de escopo`, `risco`, `depende de`, `evidência ao fechar`. Issue sem DoD
 executável não entra na fila.
 
-Distribuição das 40 issues por fase. As páginas desta entrega usam `WYDDB-001`–`WYDDB-040`; a criação no GitHub é a Onda 8, depois do merge das páginas:
+Distribuição das 40 issues por fase. As páginas desta entrega usam `WYDDB-001`–`WYDDB-040`; as issues #82–#121 foram criadas no GitHub em 2026-11-22, com milestone `F1`–`F7`:
 
 | Fase | Escopo | Issues |
 |---|---|---|
@@ -1262,7 +1262,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 | `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | **aprovada em 2026-11-22** | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | **aprovada em 2026-11-22** | Ondas 3 e 8 |
 | `D-6` | `docs/` é a fonte do site; `migrations/`, `src/`, `tests/`, `prompts/`, `skills/` não são publicados | **aprovada em 2026-11-22** | Onda 9 |
-| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | **distribuição aprovada em 2026-11-22**; as 40 páginas `WYDDB-nnn` com DoD existem e são a origem das issues | Onda 8 |
+| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | **distribuição aprovada em 2026-11-22**; as 40 páginas `WYDDB-nnn` com DoD existem e as issues #82–#121 foram criadas no board | Onda 8 |
 | `D-8` | o teto de páginas autorais é o medido em `planos/metricas.md` (a série reescrita muda a contagem); página que não responder a §2 é descartada | **aprovada em 2026-11-22** | todas |
 
 ### 12.1 Checklist de aprovação
