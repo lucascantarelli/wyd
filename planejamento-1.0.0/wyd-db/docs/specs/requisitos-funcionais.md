@@ -16,9 +16,10 @@ prefixo e o formato são de `wyd-db-1.0.0.md` §9.1. O número **não** é reuti
 (§9.3).
 
 > [!NOTE]
-> A coluna de **issue** está vazia de propósito: o roadmap de 40 issues depende de `D-7`, não
-> aprovada (`lacunas.md` §3). Cada requisito aponta a onda que o entrega, e a issue nasce na onda 8,
-> quando o `roadmap/` existir. Isto é recorte declarado, não pendência escondida.
+> A coluna de **issue** está vazia de propósito: `D-7` foi aprovada em 2026-11-22, mas as 40 páginas
+> `WYDDB-nnn` com DoD ainda não existem, e issue sem DoD não entra. Cada requisito aponta a onda que
+> o entrega, e a issue nasce na onda 8, quando a página correspondente existir. Isto é recorte
+> declarado, não pendência escondida.
 
 ## Como ler cada bloco
 
@@ -39,7 +40,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   VALUES (1, 1, repeat('a', 17), '$argon2id$...')` falha com `23514` em `ck_account_login_len`;
   com 16 caracteres, insere.
 - **Tabela e porta:** `game.account` (`migrations/0005-game-account.md`); porta `accounts` (planejada).
-- **Issue:** a alocar na onda 8 (`roadmap/`, bloqueado por `D-7`).
+- **Issue:** a alocar na onda 8; `D-7` aprovada em 2026-11-22, página `WYDDB-nnn` ainda não escrita.
 
 ## RF-DB-002 — falha de PIN acumula e bloqueia
 
@@ -228,7 +229,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 | requisitos de personagem, inventário, economia, conteúdo e entrega | não foram levantados como `R`; só o desenho existe | ondas donas, com `RF-DB` próprio |
 | requisitos não funcionais (limiar, latência, capacidade) | nenhum limiar foi medido | `requisitos-nao-funcionais.md`, bloqueada |
 | matriz requisito → tabela → porta → teste → issue | porta, teste e issue ainda não existem | `rastreabilidade.md`, bloqueada |
-| issue de entrega | o roadmap depende de `D-7` | onda 8 |
+| issue de entrega | `D-7` aprovada; falta a página `WYDDB-nnn` com DoD | onda 8 |
 
 *Os `RF-DB-001`–`RF-DB-016` são a primeira numeração de requisito do `wyd-db`; o número 017 é o
 próximo livre.*

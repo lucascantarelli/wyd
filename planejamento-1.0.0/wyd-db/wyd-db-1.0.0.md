@@ -1,6 +1,6 @@
 # wyd-db 1.0.0 — plano diretor da documentação oficial
 
-> **Estado: RASCUNHO PARA APROVAÇÃO.** Este documento define **o que** a documentação oficial do
+> **Estado: APROVADO em 2026-11-22.** Este documento define **o que** a documentação oficial do
 > `wyd-db` contém, **em que arquivo** cada assunto mora, **quem** responde por ele e **em que
 > ordem** o material é produzido. Esta árvore é o **teto** da documentação, e não o seu estado:
 > página escrita se reconhece pelo cabeçalho de §7.1 e pelo estado (`proposto`/`aceito`); o que está
@@ -1268,25 +1268,29 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
 | `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
-| `D-2` | dicionário em duas camadas: 19 páginas de domínio + **109** geradas | aprovar (§6.8) | Onda 4 |
-| `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | aprovar (§6.16) | Onda 7 |
-| `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | aprovar (§6.15) | Onda 5 |
-| `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | aprovar | Ondas 3 e 8 |
-| `D-6` | `docs/` é a fonte do site; `migrations/`, `src/`, `tests/`, `prompts/`, `skills/` não são publicados | aprovar | Onda 9 |
-| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | aprovar a distribuição | Onda 8 |
-| `D-8` | o teto de páginas autorais é o medido em `planos/metricas.md` (a série reescrita muda a contagem); página que não responder a §2 é descartada | aprovar | todas |
+| `D-2` | dicionário em duas camadas: 19 páginas de domínio + **109** geradas | **aprovada em 2026-11-22** | Onda 4 |
+| `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | **aprovada em 2026-11-22** | Onda 7 |
+| `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | **aprovada em 2026-11-22** | Onda 5 |
+| `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | **aprovada em 2026-11-22** | Ondas 3 e 8 |
+| `D-6` | `docs/` é a fonte do site; `migrations/`, `src/`, `tests/`, `prompts/`, `skills/` não são publicados | **aprovada em 2026-11-22** | Onda 9 |
+| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | **distribuição aprovada em 2026-11-22**; as páginas `WYDDB-nnn` com DoD ainda não existem | Onda 8 |
+| `D-8` | o teto de páginas autorais é o medido em `planos/metricas.md` (a série reescrita muda a contagem); página que não responder a §2 é descartada | **aprovada em 2026-11-22** | todas |
 
 ### 12.1 Checklist de aprovação
 
 - [x] `D-1` escopo reescrito e limites de §1.2 (aprovada em 2026-11-19)
-- [ ] `D-2` dicionário em duas camadas
-- [ ] `D-3` páginas de módulo sem espelho de código
-- [ ] `D-4` página por migration
-- [ ] `D-5` prefixos de identificador
-- [ ] `D-6` fronteira de publicação
-- [ ] `D-7` distribuição das 40 issues por fase
-- [ ] `D-8` critério de descarte de página sem valor
+- [x] `D-2` dicionário em duas camadas (aprovada em 2026-11-22)
+- [x] `D-3` páginas de módulo sem espelho de código (aprovada em 2026-11-22)
+- [x] `D-4` página por migration (aprovada em 2026-11-22)
+- [x] `D-5` prefixos de identificador (aprovada em 2026-11-22)
+- [x] `D-6` fronteira de publicação (aprovada em 2026-11-22)
+- [x] `D-7` distribuição das 40 issues por fase (aprovada em 2026-11-22)
+- [x] `D-8` critério de descarte de página sem valor (aprovada em 2026-11-22)
 - [ ] ondas 1–9 na ordem de §11, uma por vez
+
+**Aprovação (2026-11-22):** o dono aprovou `D-2`–`D-8`. A aprovação não declara páginas
+escritas: o estado medido continua em §1.2. `D-7` aprova a distribuição; a criação de issue no
+GitHub só ocorre quando a página `WYDDB-nnn` correspondente tiver DoD verificável.
 
 ### 12.2 Decisões de arquitetura registradas (ADR-DB)
 

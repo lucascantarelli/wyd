@@ -1,6 +1,6 @@
 # wyd-docs 1.0.0 — plano diretor do site de documentação
 
-> **Estado: RASCUNHO PARA APROVAÇÃO (2026-11-19).** Este documento define **o que** o site oficial
+> **Estado: APROVADO em 2026-11-22** (rascunho de 2026-11-19). Este documento define **o que** o site oficial
 > publica, **de onde** cada página vem, **como** o site é montado e **qual** é o gate de publicação.
 >
 > Decisão do time em **2026-11-19**: a documentação oficial é publicada por este sistema, e tudo o

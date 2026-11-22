@@ -238,7 +238,7 @@ Escrever agora **limitando o escopo declarado**. O recorte é a única defesa co
 | `specs/visao-e-escolpo.md` | problema, escopo dentro/fora e o que a `1.0.0` entrega (`wyd-db-1.0.0.md` §1.2) | números só `P` até a série |
 | `specs/fluxos/carga-de-conteudo.md` | `content_version` (`0001`) e proveniência por dataset (`plano-migrations.md` §4) | a leitura no boot depende de `content.*` (13–27) e de `repo/content.rs` |
 | `planos/plano-de-testes.md` | escopo, 5 alvos planejados (`wyd-db-1.0.0.md` §6.17), ambiente e critério de saída da `1.0.0` (§6.9) | matriz `CAP-nn` não existe |
-| `roadmap/fases.md` | as 7 fases com escopo e critério de saída (`§6.10`) | a distribuição das 40 issues é `D-7`, não aprovada |
+| `roadmap/fases.md` | as 7 fases com escopo e critério de saída (`§6.10`) | `D-7` aprovada em 2026-11-22; a página ainda não foi escrita |
 | `guia-desenvolvedor/index.md` | trilha de leitura e pré-requisitos | os "3 comandos que provam o ambiente" não existem |
 | `guia-desenvolvedor/setup-ambiente.md` | variáveis por nome (`src/provision/spec.md` §3) e banco local | ferramentas, versões e comandos |
 | `guia-desenvolvedor/mapa-do-crate.md` | árvore planejada e a regra de dependência (`§6.16`) | o crate não existe; tudo é `P` |
@@ -275,7 +275,7 @@ para **69** com as 19 páginas de domínio, e o plano de documentação escrito 
 | specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | `0006`, `0009`, `0011`, `0012` e `0021` têm DDL fechado desde 2026-11-21; `A14`, `A19`, `M16` e `M17` estão fechadas — resta o texto do fluxo | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | os 16 `RF-DB` do bloco de identidade existem; falta a matriz ator → requisito dos demais domínios | onda 3 |
 | planos — manutenção e métrica | `plano-de-manutencao.md`, `metricas.md` | a retenção está decidida (`M22`); faltam a rotina que a executa e o número medido, que só existe depois da série (`M20`) | operação (marco `P3`) / arquitetura (`M20`, marco `P2`) |
-| roadmap | `index.md` + 40 `WYDDB-nnn` | a distribuição das 40 issues é `D-7`, não aprovada; issue sem DoD executável não entra | produto, onda 8 |
+| roadmap | `index.md` + 40 `WYDDB-nnn` | `D-7` aprovada em 2026-11-22; faltam as 40 páginas com DoD e a criação das issues; issue sem DoD executável não entra | produto, onda 8 |
 | guia do administrador | `backup-e-restore.md`, `manutencao-rotineira.md`, `recuperacao-de-desastre.md`, `sustentacao.md` | política de backup não decidida; a retenção está decidida (`M22`), falta a rotina e o inventário organizacional | operação |
 | guia de teste | `fixtures-e-factories.md`, `dados-de-teste.md` | desenho da suíte ausente; o catálogo de contas de teste não existe (`M19`, senha de dev, está fechada desde 2026-11-19) | QA + arquitetura |
 | guia do desenvolvedor — pool | `pool-e-transacoes.md` | pool, timeout e saturação sem desenho e sem medição | arquitetura, onda 7 |
