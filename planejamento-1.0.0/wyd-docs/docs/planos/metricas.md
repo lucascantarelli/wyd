@@ -2,7 +2,7 @@
 > Público: quem mantém o site e a documentação
 > Dono: equipe do wyd-docs
 > Base: `wyd-docs-1.0.0.md` §7.1 e §9.1; `proximos-passos.md` §3
-> Revisado em: 2026-11-19
+> Revisado em: 2026-11-22
 
 **Estado:** aceito (2026-11-19)
 
@@ -26,9 +26,10 @@ número e a data é o §9.1, para que duas páginas não possam divergir sobre o
 ## 2. Com que comando
 
 O gate de `wyd-docs-1.0.0.md` §7.1 monta, publica e verifica; ele imprime o total de páginas e
-reprova com `exit 1` quando há problema. O censo por estado sai do mesmo artefato pelo bloco de
-`proximos-passos.md` §3. Os dois comandos não são copiados para cá: esta página aponta o dono de
-cada um, e o resultado medido entra só no §9.1, com data.
+reprova com `exit 1` quando há problema. O censo por estado sai do mesmo conjunto de fontes pelo
+`wyd-docs/verificar-contagens.py`, que o compara com o §9.1 e reprova quando diverge (comando em
+`proximos-passos.md` §3). Os comandos não são copiados para cá: esta página aponta o dono de cada um,
+e o resultado medido entra só no §9.1, com data.
 
 ## 3. O que fica fora da métrica
 
