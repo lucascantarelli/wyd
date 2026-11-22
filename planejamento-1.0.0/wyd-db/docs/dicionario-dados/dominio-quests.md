@@ -9,8 +9,8 @@
 ## Propósito do domínio
 
 Quests são **definição em `content` e progresso em `game`**: a quest com seus passos e recompensas, e a
-linha que diz onde o personagem parou. Quatro tabelas, duas de cada lado, e o único bloco de definição
-que o estado de jogo referencia por FK.
+linha que diz onde o personagem parou. Quatro tabelas — três de definição em `content` e uma de estado em
+`game` —, e o único bloco de definição que o estado de jogo referencia por FK.
 
 **Não cobre:** eventos e arena (`dominio-eventos`, `dominio-arena`), item da recompensa
 ([catálogo](dominio-catalogo.md)) nem entrega do prêmio (`ops.delivery_queue`).

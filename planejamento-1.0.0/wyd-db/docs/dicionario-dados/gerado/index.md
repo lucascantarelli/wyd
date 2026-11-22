@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **85 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **92 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -170,9 +170,24 @@ família de taxa fechada em `kind`, com `rate_bps` até `1.000.000`.
 Quest, passo e recompensa formam uma cadeia com `CASCADE` no filho; evento e agenda repetem a relação com
 horário em minuto do dia; a arena é definição fechada, sem partida — o estado dela é de `0028`.
 
+## Lote 12 — estado de jogo (`0028`), 7 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `game.character_quest` | [character_quest](character_quest.md) | `0028-game-quests-events` |
+| `game.event_participation` | [event_participation](event_participation.md) | `0028-game-quests-events` |
+| `game.kefra_state` | [kefra_state](kefra_state.md) | `0028-game-quests-events` |
+| `game.castle_state` | [castle_state](castle_state.md) | `0028-game-quests-events` |
+| `game.arena_match` | [arena_match](arena_match.md) | `0028-game-quests-events` |
+| `game.arena_round` | [arena_round](arena_round.md) | `0028-game-quests-events` |
+| `game.arena_score` | [arena_score](arena_score.md) | `0028-game-quests-events` |
+
+É o único bloco de `game` que referencia `content`: progresso, histórico e placar usam `RESTRICT` para a
+definição e `CASCADE`/`SET NULL` para o dono da linha. Kefra e castelo são linha única com `CHECK (id = 1)`.
+
 ## Próximos lotes
 
-Faltam **24 das 109**, por arquivo: `0028` (7 de estado de jogo), `0030` (4 do CMS), `0031` (1,
-`person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do mercado) —
-7 + 4 + 1 + 1 + 11 = 24. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não entram.
-Cada lote novo é proposto por arquivo de migration, como o de `0019`.
+Faltam **17 das 109**, por arquivo: `0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1,
+`idempotency_record`) e `0034` (11 do mercado) — 4 + 1 + 1 + 11 = 17. Os seeds `0016`–`0018`, `0020`,
+`0023` e `0027` não criam tabela e não entram. Cada lote novo é proposto por arquivo de migration, como
+o de `0019`.

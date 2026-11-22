@@ -585,14 +585,14 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
 | 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
 | 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `verificar.py`); busca decidida e métrica aceita em 2026-11-19 |
-| 5 | 109 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; **85 escritas** em 2026-11-22 (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025` e `0026`) |
+| 5 | 109 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; **92 escritas** em 2026-11-22 (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026` e `0028`) |
 
 ### 9.1 As 109 páginas por tabela — escritas à mão (`M26`)
 
 **Estado: decidido em 2026-11-21.** O dono recusou o gerador (`make dicionario-dados`, projeto
 `tools/wyd-db-pages`): as 109 páginas são escritas à mão, em lotes, no `wyd-db`, e o site apenas publica
 o que existir. A decisão é a lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3). **Nenhuma
-ferramenta é criada; 85 das 109 páginas existem em 2026-11-22** (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025` e `0026`; índice em `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/index.md`).
+ferramenta é criada; 92 das 109 páginas existem em 2026-11-22** (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026` e `0028`; índice em `planejamento-1.0.0/wyd-db/docs/dicionario-dados/gerado/index.md`).
 
 | Item | Definição |
 |---|---|
@@ -609,7 +609,7 @@ ferramenta é criada; 85 das 109 páginas existem em 2026-11-22** (lotes `0001`�
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-22):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **85 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025` e `0026` e o `index.md` de navegação, que lista as 85 existentes. A cobertura não é pré-requisito do site atual: o site passa com **159 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22). O censo das 157 fontes na mesma data é **15 `aceito` · 129 `proposto` · 12 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 157 + 2 = 159 páginas montadas. Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
+**Reconciliação e estado (2026-11-22):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **92 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026` e `0028` e o `index.md` de navegação, que lista as 92 existentes. A cobertura não é pré-requisito do site atual: o site passa com **166 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22). O censo das 164 fontes na mesma data é **15 `aceito` · 136 `proposto` · 12 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 164 + 2 = 166 páginas montadas. Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 
