@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo e segurança
 > Dono: equipe do `wyd-db`
 > Base: `ddl-confirmado.md` §5.20 (aprovado em 2026-11-20); `lacunas.md` `A20`; `padrao-banco.md` §3/§4/§5; `wyd-portal/lacunas.md` `LAC-POR-05`
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Trigésimo primeiro arquivo da série, adendo ao fim como o `0030`. Cria `portal.person_authenticator`, a
 credencial separada de segundo fator que `A20` reservou e que `LAC-POR-05` decidiu para o staff do
@@ -49,6 +49,7 @@ revogação explícita, para o BFF exigir senha + código no login de `admin`/`m
 Texto de `ddl-confirmado.md` §5.20, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE portal.person_authenticator (
     id               BIGINT GENERATED ALWAYS AS IDENTITY,
     person_id        BIGINT NOT NULL,

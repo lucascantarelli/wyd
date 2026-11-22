@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.14 (confirmado); `padrao-banco.md` §1/§5/§9/§11; `lacunas.md` (`A19`, `M17`)
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Décimo primeiro arquivo. Cria a economia: quatro tabelas em `game` (cidade, preço por mercador, loja
 pessoal e livro do imposto) e seis em `portal` (loja de donate, recompensa diária, resgate diário,
@@ -47,6 +47,7 @@ diária e seu resgate único, o preço da capa por reino e os razões idempotent
 Texto de `ddl-confirmado.md` §5.14, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE game.city (
     code          TEXT NOT NULL,
     name          TEXT NOT NULL,

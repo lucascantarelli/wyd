@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.13 (confirmado); `padrao-banco.md` §1/§5/§9; `lacunas.md` §2.3
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Décimo arquivo da série. Cria a guilda, o vínculo de personagem com papel, as relações entre guildas
 e a linha única da GTorre. Zona de guilda, preço e spawn de guilda são conteúdo (`0019`), e não
@@ -46,6 +46,7 @@ a GTorre.
 Texto de `ddl-confirmado.md` §5.13, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE game.guild (
     id         BIGINT GENERATED ALWAYS AS IDENTITY,
     name       TEXT NOT NULL,
