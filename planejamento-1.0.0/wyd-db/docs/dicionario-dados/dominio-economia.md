@@ -52,7 +52,7 @@ carteira da conta ([acesso](dominio-acesso.md)), refino como custo (`dominio-ref
 | `portal.market_dispute` | disputa de uma transação, com desfecho e autor | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
 | `game.market_escrow` | custódia do item fora do inventário, escrita pelo executor | `wyd_admin` | `wyd_admin`, `wyd_game`, `wyd_read` | onda 4 |
 
-"onda 4" é o lote de páginas por tabela de `M26` (`71 das 109` escritas até 2026-11-22): nenhuma das onze
+"onda 4" é o lote de páginas por tabela de `M26` (`gerado/index.md` é o dono da contagem): nenhuma das onze
 tem página `gerado/` ainda, e o estado delas é `planejado`, derivado de `migrations-checklist.md` §2.
 
 Escreve e lê das onze primeiras são de `0011` §8, dono da permissão das dez: `wyd_game` escreve as

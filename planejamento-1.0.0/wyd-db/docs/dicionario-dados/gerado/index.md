@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **71 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **75 de 109** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -129,13 +129,25 @@ função `content.fn_fold` do mesmo arquivo não tem página própria (não é t
 | `content.sanc_rate` | [sanc_rate](sanc_rate.md) | `0021-content-rules` |
 | `content.combine_value` | [combine_value](combine_value.md) | `0021-content-rules` |
 
-O `0015` cria uma tabela só, então o lote completou as cinco com quatro das cinco do `0021`;
-`content.accessory_refine_rule` fica para o lote seguinte.
+O `0015` cria uma tabela só; o lote completou as cinco com quatro das cinco do `0021`, e a quinta
+(`accessory_refine_rule`) abre o lote 9.
+
+## Lote 9 — acessório e overrides (`0021` + `0022`), 4 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.accessory_refine_rule` | [accessory_refine_rule](accessory_refine_rule.md) | `0021-content-rules` |
+| `content.refine_rate_override` | [refine_rate_override](refine_rate_override.md) | `0022-content-overrides` |
+| `content.sanc_rate_override` | [sanc_rate_override](sanc_rate_override.md) | `0022-content-overrides` |
+| `content.combine_value_override` | [combine_value_override](combine_value_override.md) | `0022-content-overrides` |
+
+O `0021` fecha com a quinta tabela; as três de `0022` são a camada de edição do staff, com `GRANT` de
+escrita para `wyd_portal` e reset por `DELETE`.
 
 ## Próximos lotes
 
-Faltam **38 das 109**, por arquivo: `0021` (1, `accessory_refine_rule`), `0022` (3 sobrescritas),
-`0025` (4 de combate), `0026` (6 de quests e eventos), `0028` (7 de estado de jogo), `0030` (4 do CMS),
-`0031` (1, `person_authenticator`), `0033` (1, `idempotency_record`) e `0034` (11 do mercado) — 1 + 3 + 4
-\+ 6 + 7 + 4 + 1 + 1 + 11 = 38. Os seeds `0016`–`0018`, `0020`, `0023` e `0027` não criam tabela e não
-entram. Cada lote novo é proposto por arquivo de migration, como o de `0019`.
+Faltam **34 das 109**, por arquivo: `0025` (4 de combate), `0026` (6 de quests e eventos), `0028` (7 de
+estado de jogo), `0030` (4 do CMS), `0031` (1, `person_authenticator`), `0033` (1,
+`idempotency_record`) e `0034` (11 do mercado) — 4 + 6 + 7 + 4 + 1 + 1 + 11 = 34. Os seeds `0016`–`0018`,
+`0020`, `0023` e `0027` não criam tabela e não entram. Cada lote novo é proposto por arquivo de
+migration, como o de `0019`.
