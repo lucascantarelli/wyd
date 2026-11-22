@@ -2,9 +2,9 @@
 > Público: QA e desenvolvedor do `wyd-admin`
 > Dono: equipe do wyd-admin
 > Base: `AGENTS.md` §8; [contrato C4](../arquitetura/contrato-c4.md); [ações](../specs/acoes.md); [componentes](../arquitetura/componentes.md)
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21). Nenhum teste escrito.
+**Estado:** proposto (2026-11-21); alvo de custódia acrescentado em 2026-11-22. Nenhum teste escrito.
 
 ## Pirâmide e alvos
 
@@ -14,6 +14,7 @@
 | Contrato | `tests/contrato.rs` | cada rota devolve o envelope e o status de §3/§4 | banco efêmero por teste |
 | Integração | `tests/acoes.rs` | escrita, ledger, auditoria e rollback | banco efêmero + fixture de conta/canal |
 | Integração | `tests/idempotencia.rs` | replay, conflito, duas requisições simultâneas | banco efêmero |
+| Integração | `tests/custodia.rs` | item sai de `character_item` e entra em `market_escrow` na mesma transação; mochila cheia devolve `409` sem perda; as quatro rotas recusam estado inválido | banco efêmero + fixture de personagem com item; item devolvido ao espaço liberado |
 | Sistema | `tests/papel.rs` | `401`/`403` e `GRANT` real do papel | banco efêmero com o papel de `LAC-ADM-01` |
 | E2E | portal (Playwright) | tela → BFF → admin → banco | fora deste sistema; contrato coberto aqui |
 

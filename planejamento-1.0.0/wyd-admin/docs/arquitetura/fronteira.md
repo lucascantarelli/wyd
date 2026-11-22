@@ -10,7 +10,7 @@
 
 1. Expõe uma **API HTTP/JSON interna**, server-to-server, para o BFF do portal executar ações de staff.
 2. É o **único componente com credencial de escrita em `game`** (`LAC-POR-01`): moderação de conta,
-   carteira, canal, preço e imposto.
+   carteira, canal, preço, imposto e **custódia de item do mercado** (desde 2026-11-22, C4 §4.9–§4.12).
 3. Executa **uma ação por requisição**, em transação única, com `ops.audit_log` na mesma transação.
 4. Garante **idempotência** por chave enviada pelo chamador: repetir a chamada devolve o mesmo
    resultado, não a segunda escrita.
@@ -35,7 +35,7 @@ O `wyd-admin` **não** é um segundo BFF e **não** atende navegador: quem chama
 
 | Consumidor | O que consome | Garantia exigida |
 |---|---|---|
-| BFF do `wyd-portal` | as rotas de ação do [contrato C4](contrato-c4.md) | resposta tipada em até 5 s; repetição segura por `Idempotency-Key` |
+| BFF do `wyd-portal` | as rotas de ação de staff e as rotas de custódia de item do [contrato C4](contrato-c4.md) | resposta tipada em até 5 s; repetição segura por `Idempotency-Key`; nas rotas de custódia o ator é a conta do jogador, não o staff |
 | `wyd-server` (futuro) | recebe kick/broadcast/manutenção | contrato aberto em `LAC-ADM-03` |
 | `wyd-ops` | `GET /health` e `GET /ready` | 200/503 sem detalhe interno |
 
@@ -45,7 +45,7 @@ O `wyd-admin` **não** é um segundo BFF e **não** atende navegador: quem chama
 |---|---|---|
 | `wyd-db` | SQL transacional sob papel próprio | escrita em `game`, `ops.audit_log` e leitura de conferência |
 | `wyd-server` | canal de controle (aberto) | kick, broadcast e manutenção de processo |
-| `wyd-portal` | identidade do staff já autenticado, no cabeçalho | autoria da ação |
+| `wyd-portal` | identidade do staff já autenticado (`X-Staff-Person-Id`) ou a conta do jogador (`X-Actor-Account-Id`), no cabeçalho | autoria da ação |
 
 O portal é a autoridade de **quem** é o staff; o admin é a autoridade de **o que** pode ser escrito.
 
@@ -53,7 +53,7 @@ O portal é a autoridade de **quem** é o staff; o admin é a autoridade de **o 
 
 | Persistente | Onde | Dono |
 |---|---|---|
-| Efeito da ação (bloqueio, lançamento, capacidade, preço) | tabelas de `game` | `wyd-db` |
+| Efeito da ação (bloqueio, lançamento, capacidade, preço, custódia de item) | tabelas de `game` (`market_escrow` ainda sem DDL aprovado, `LAC-ADM-07`) | `wyd-db` |
 | Trilha da ação | `ops.audit_log` | `wyd-db` |
 | Registro de idempotência | **aberto** (`LAC-ADM-02`); não há tabela aprovada | `wyd-db` |
 

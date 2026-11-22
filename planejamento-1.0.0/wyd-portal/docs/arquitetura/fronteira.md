@@ -2,9 +2,9 @@
 > Público: Desenvolvedor novo e arquitetura
 > Dono: arquitetura
 > Base: `M21` (`wyd-db/lacunas.md` §2.3); `wyd-db/ddl-confirmado.md` §1/§2; `AGENTS.md` §5/§6; `wyd-portal-prompt.md` §5/§6
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20)
+**Estado:** aceito (2026-11-20); armaria e mercado no escopo em 2026-11-22
 
 O portal é a única superfície onde pessoa e staff tocam o sistema fora do cliente 7662. Ele **não**
 decide regra de jogo: lê estado e pede operação. Este texto fixa a fronteira, e o contrato de escrita
@@ -15,8 +15,9 @@ de estado de jogo foi decidido em 2026-11-20 (`LAC-POR-01`): **quem escreve em `
 
 1. Autentica pessoa no portal (e-mail/senha, sessão revogável e tokens de cerimônia) e mantém a
    conta de jogo ligada à pessoa.
-2. Serve o portal público: home, notícias, rankings, WYDpedia e atlas, com conteúdo do schema
-   `content` e agregados do jogo.
+2. Serve o portal público: home, notícias, rankings, WYDpedia, atlas, **armaria pública do personagem**
+   e **mercado global com leilão em crédito do portal** (F7–F11, decididos em 2026-11-22), com conteúdo
+   do schema `content` e agregados do jogo.
 3. Serve a área administrativa: NOC, jogadores e contas, economia, CMS, launcher, logs, segurança e as
    seis telas de monitoramento, além da configuração do servidor com trilha de auditoria (`M21`).
 4. Expõe o BFF: rotas de servidor que validam sessão, permissão e entrada antes de tocar o banco.

@@ -98,14 +98,54 @@
   `404`; a consulta não escreve nada.
 - **Contrato:** C4 §5. **Entrega:** `ADM-03`.
 
+### RF-ADM-012 — Custodiar item do personagem
+
+- **Entrada:** `character_id`, `slot` 0–79, `expected_item_index`, `listing_ref` e a conta do ator
+  (`X-Actor-Account-Id`).
+- **Saída:** `escrow_id` em `retido` com o retrato do item e `audit_id`.
+- **Aceitação:** a linha sai de `game.character_item` e nasce em `game.market_escrow` na **mesma**
+  transação; slot vazio devolve `404`; `expected_item_index` divergente devolve `409` sem escrita;
+  repetir o mesmo `listing_ref` devolve `409 ADM_ITEM_ALREADY_HELD`; personagem de outra conta devolve
+  `403`; repetir a chamada com a mesma chave não cria segunda custódia.
+- **Contrato:** C4 §4.9. **Entrega:** `ADM-10`. **Depende:** lote de `game.market_escrow`
+  (`LAC-ADM-07`).
+
+### RF-ADM-013 — Entregar item ao comprador
+
+- **Entrada:** `escrow_id`, `character_id` do comprador, `expected_state`.
+- **Saída:** custódia em `entregue`, slot de destino e `audit_id`.
+- **Aceitação:** o item entra no primeiro slot livre de 16–79 e existe em **um** lugar só; sem slot livre
+  devolve `409 ADM_INVENTORY_FULL` sem escrita e a custódia continua `retido`; `state` diferente de
+  `retido` devolve `409 ADM_ESCROW_STATE`; personagem de outra conta devolve `403`; a mesma chave não
+  entrega duas instâncias.
+- **Contrato:** C4 §4.10. **Entrega:** `ADM-10`.
+
+### RF-ADM-014 — Devolver item ao vendedor
+
+- **Entrada:** `escrow_id`, `expected_state = retido`, `reason` (`expirado`/`disputa_vendedor`).
+- **Saída:** custódia em `devolvido`, slot de destino e `audit_id`.
+- **Aceitação:** o item volta ao personagem de origem; mochila cheia devolve `409` e **não** perde o
+  item; motivo fora da lista devolve `422`; repetição idempotente não duplica a instância.
+- **Contrato:** C4 §4.11. **Entrega:** `ADM-10`.
+
+### RF-ADM-015 — Cancelar custódia de anúncio
+
+- **Entrada:** `escrow_id`, `expected_state = retido`.
+- **Saída:** custódia em `devolvido`, slot de destino e `audit_id`, com ação `admin.escrow.cancel`.
+- **Aceitação:** efeito de estado idêntico ao de `RF-ADM-014`, com ação de auditoria **distinta**;
+  o admin não consulta `portal.market_bid`; a pré-condição “sem lance ativo” é do portal e a chamada com
+  lance ativo **não** é detectada aqui (fica registrada como decisão de quem chama).
+- **Contrato:** C4 §4.12. **Entrega:** `ADM-10`.
+
 ## Regras de negócio
 
 | ID | Regra | Verificação |
 |---|---|---|
-| `RN-ADM-001` | Papel mínimo por rota: `moderator` para moderação/kick/broadcast; `admin` para carteira, canal, imposto e preço | teste de contrato 403 por papel |
-| `RN-ADM-002` | Toda escrita tem autor (`X-Staff-Person-Id`) e `trace_id`; sem eles, `400`/`401` | teste sem cabeçalho |
+| `RN-ADM-001` | Papel mínimo por rota: `moderator` para moderação/kick/broadcast; `admin` para carteira, canal, imposto e preço; nas rotas de custódia o papel é o **titular da conta** (`X-Actor-Account-Id`), nunca staff | teste de contrato 403 por papel e por conta |
+| `RN-ADM-002` | Toda escrita tem autor e `trace_id` — `X-Staff-Person-Id` para staff, `X-Actor-Account-Id` para custódia; sem eles, `400`/`401` | teste sem cabeçalho |
+| `RN-ADM-008` | Item em custódia não existe em inventário: `character_item` e `market_escrow` nunca contêm a mesma instância | teste conta as duas tabelas antes e depois de cada operação |
 | `RN-ADM-003` | Uma ação = uma transação; escrita e auditoria commitam juntas | teste que força rollback e confere ausência das duas linhas |
-| `RN-ADM-004` | Nenhuma ação apaga linha; estado é `UPDATE`/`upsert` | revisão de SQL + teste de contagem |
+| `RN-ADM-004` | Nenhuma ação apaga linha; estado é `UPDATE`/`upsert`. Exceção única: `custodiar` move a instância — sai de `character_item` e entra em `market_escrow` na mesma transação | revisão de SQL + teste de contagem nas duas tabelas |
 | `RN-ADM-005` | Payload, log e resposta não contêm hash, token, segredo TOTP nem PII além de id | teste de log e de resposta |
 | `RN-ADM-006` | Erro do admin não é compensado por escrita local no portal | teste de contrato com 503 |
 | `RN-ADM-007` | O admin não escreve em `portal`; preço de capa, donate e recompensa diária são do BFF | revisão de schema + teste de credencial |
@@ -124,3 +164,6 @@
 
 `kick` e `broadcast` dependem de contrato com o `wyd-server` que não existe (`LAC-ADM-03`); até lá são
 requisitos **bloqueados**, não “a implementar depois”.
+
+A custódia (`RF-ADM-012` a `RF-ADM-015`) tem forma e contrato fechados, mas não é implementável antes do
+lote de `game.market_escrow` no `wyd-db` (`LAC-ADM-07`): bloqueada por schema, não por decisão.

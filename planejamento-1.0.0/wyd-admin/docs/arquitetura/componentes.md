@@ -38,10 +38,12 @@
 
 ## `acoes`
 
-- **Responsabilidade:** executar as sete ações de §4 do contrato, cada uma em uma transação.
+- **Responsabilidade:** executar as sete ações de staff e as quatro de custódia do mercado (§4 do
+  contrato), cada uma em uma transação.
 - **API:** um executor por ação, todos com `execute(ctx, body) -> Response`.
-- **Invariantes:** conferência otimista obrigatória em carteira e preço; `account_ledger` sempre que
-  a carteira muda; auditoria na mesma transação; `DELETE` proibido.
+- **Invariantes:** conferência otimista obrigatória em carteira, preço e custódia; `account_ledger`
+  sempre que a carteira muda; auditoria na mesma transação; `DELETE` proibido, com a exceção única da
+  custódia — a linha de `character_item` sai e a instância entra em `market_escrow` na mesma transação.
 - **Depende de:** `banco`, `idempotencia`, `server` (kick/broadcast).
 - **Testes:** integração por ação, rollback forçado, concorrência.
 - **Risco:** alto — é onde a regra de escrita vive.

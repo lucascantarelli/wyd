@@ -18,6 +18,7 @@ fatias de planejamento, não itens de GitHub.
 | `ADM-07` | P2 | média | `PUT /cities/{code}/tax` e `PUT /items/{item_index}/prices/{npc_id}` | faixa e concorrência otimista provadas; `404` para alvo ausente | `ADM-03`, `LAC-ADM-01` |
 | `ADM-08` | P2 | baixa | `POST /sessions/{id}/kick` e `POST /broadcasts` | **bloqueada** até `LAC-ADM-03`; teste com dublê: sem ack não há escrita | `LAC-ADM-03`, `ADM-03` |
 | `ADM-09` | P2 | alta | Auditoria, log estruturado e gate de 85% | toda ação tem `audit_id`; log sem PII; `cargo llvm-cov … --fail-under-lines 85` exit 0 | `ADM-04`–`ADM-07` |
+| `ADM-10` | P1 | alta | Custódia de item do mercado: `POST /characters/{id}/escrow`, `POST /escrows/{id}/deliver`, `/return`, `/cancel` | duas chamadas com a mesma chave = **1** linha em `market_escrow`; o item nunca está em `character_item` e `market_escrow` ao mesmo tempo; entrega com mochila cheia = `409` sem perda e custódia continua `retido`; as quatro ações gravam `audit_log` | `ADM-03`, `LAC-ADM-01`, lote de `game.market_escrow` (`LAC-ADM-07`) |
 
 ## Fora de escopo da `1.0.0`
 
@@ -35,3 +36,5 @@ fatias de planejamento, não itens de GitHub.
 | Idempotência sem tabela | retry do portal duplica lançamento | `ADM-03` só fecha com `LAC-ADM-02` |
 | Contrato com `wyd-server` inexistente | kick/broadcast não saem do papel | `ADM-08` bloqueada, não “aproximada” |
 | Escrita duplicada de `account_moderation` | duas implementações para a mesma escrita | mitigado: `LAC-ADM-05` fechada em 2026-11-21 e doc do portal corrigido; resta impedir SQL direto em revisão |
+| Item em dois lugares na custódia | duplicação de item real e mercado sem lastro | as duas escritas na mesma transação (`RN-ADM-008`); mochila cheia devolve `409` e mantém `retido` |
+| Schema de custódia ausente | `ADM-10` não implementa | lote de `game.market_escrow` no `wyd-db` antes da fatia (`LAC-ADM-07`); nenhuma tabela improvisada no admin |

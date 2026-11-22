@@ -1,10 +1,11 @@
 > Pergunta: "qual é a forma exata do contrato C4 — rotas, payload, idempotência, códigos de erro e prazos?"
 > Público: Desenvolvedor do `wyd-admin` e do BFF do portal
 > Dono: `wyd-admin` (forma), arquitetura (direção)
-> Base: `wyd-portal/docs/arquitetura/fronteira.md` §3 (C4); `LAC-POR-01` (2026-11-20); `ddl-confirmado.md` §5.2/§5.5/§5.14
-> Revisado em: 2026-11-21
+> Base: `wyd-portal/docs/arquitetura/fronteira.md` §3 (C4); `LAC-POR-01` (2026-11-20); `ddl-confirmado.md` §5.2/§5.5/§5.14; `wyd-db/armaria-e-mercado.md` §5 (custódia de item)
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21) — a direção do C4 está decidida; esta forma aguarda aprovação.
+**Estado:** proposto (2026-11-21); custódia de item acrescentada em 2026-11-22 (§4.9–§4.12). A
+direção do C4 está decidida; esta forma aguarda aprovação.
 
 ## 1. Base e cabeçalhos
 
@@ -14,9 +15,14 @@
 - `X-Staff-Person-Id: <int>` — pessoa autenticada pelo portal; vira autor em `ops.audit_log`.
 - `X-Trace-Id: <uuid>` — obrigatório; repetido na resposta e no log. Sem ele, `400`.
 - `Idempotency-Key: <16–64 chars [A-Za-z0-9_-]>` — obrigatório em `POST`/`PUT`.
+- `X-Actor-Account-Id: <int>` — obrigatório **somente** nas rotas de custódia (§4.9–§4.12): é a conta
+do jogador em nome de quem o BFF chama. `X-Staff-Person-Id` nessas rotas devolve `403 ADM_FORBIDDEN`;
+staff não opera custódia de jogador.
 
 O admin **não** autentica pessoa: confia no token de serviço e no `X-Staff-Person-Id` assinado pelo
-portal. O mecanismo do token/assinatura é `LAC-ADM-04`.
+portal. O mecanismo do token/assinatura é `LAC-ADM-04`. Nas rotas de custódia a confiança é a mesma —
+token de serviço do portal — mas o ator declarado é a **conta do jogador**, e o admin confere, na mesma
+transação, que o personagem citado pertence a essa conta (`game.character.account_id`).
 
 ## 2. Idempotência
 
@@ -80,6 +86,14 @@ resultante.
 | 5 | `POST /broadcasts` | `moderator` |
 | 6 | `PUT /cities/{code}/tax` | `admin` |
 | 7 | `PUT /items/{item_index}/prices/{npc_id}` | `admin` |
+| 8 | `POST /characters/{character_id}/escrow` | titular da conta |
+| 9 | `POST /escrows/{escrow_id}/deliver` | titular da conta compradora |
+| 10 | `POST /escrows/{escrow_id}/return` | titular da conta vendedora |
+| 11 | `POST /escrows/{escrow_id}/cancel` | titular da conta vendedora |
+
+As rotas 1–7 são de staff e usam `X-Staff-Person-Id`. As rotas 8–11 são do **mercado**: o ator é a
+conta do jogador (`X-Actor-Account-Id`), a única autoridade sobre o item é o banco e nenhuma delas
+existe para staff. Elas não chamam o `wyd-server`.
 
 ### 4.1 `POST /accounts/{account_id}/moderation`
 
@@ -169,6 +183,75 @@ resultante.
 as escreve direto (C2) e **não** passam pelo admin. Se um dia o jogo precisar escrevê-las, é contrato
 novo — hoje a fronteira de §7 da [fronteira](fronteira.md) vale.
 
+### 4.9 `POST /characters/{character_id}/escrow` — custodiar
+
+```json
+{ "slot": 12, "expected_item_index": 1234, "listing_ref": 5001 }
+```
+
+- `slot`: 0–79 (0–15 equipado, 16–79 mochila), o mesmo intervalo de `ck_character_item_slot`.
+- `expected_item_index`: obrigatório; se o slot já não tiver esse item, `409` e nada é escrito.
+- `listing_ref`: id do anúncio em `portal.market_listing`; sem FK entre schemas, gravado para rastro.
+- Efeito: remove a linha de `game.character_item` e cria `game.market_escrow` em `retido`, na **mesma
+transação**; audita `admin.escrow.hold`.
+- `200`: `{ "escrow_id": 91, "state": "retido", "character_id": 7, "item_index": 1234, "qty": 1,
+  "refine": 9, "ancient": false, "gem_effect": 0, "gem_value": 0, "audit_id": 9101 }`.
+- Erros: `403 ADM_FORBIDDEN` (personagem de outra conta), `404` (personagem ou slot vazio), `409
+  ADM_STATE_MISMATCH` (`expected_item_index` divergiu), `409 ADM_ITEM_ALREADY_HELD` (o mesmo
+  `listing_ref` já tem custódia `retido`), `422 ADM_RULE_VIOLATION` (slot fora de 0–79).
+
+### 4.10 `POST /escrows/{escrow_id}/deliver` — entregar
+
+```json
+{ "character_id": 77, "expected_state": "retido" }
+```
+
+- `character_id`: personagem do comprador; precisa pertencer a `X-Actor-Account-Id`, senão `403`.
+- Efeito: insere a instância em `game.character_item` no **primeiro slot livre de 16–79** e passa a
+custódia para `entregue`; audita `admin.escrow.deliver`.
+- `200`: `{ "escrow_id": 91, "state": "entregue", "slot": 16, "audit_id": 9102 }`.
+- Erros: `403 ADM_FORBIDDEN` (personagem de outra conta), `404` (custódia ou personagem), `409
+  ADM_ESCROW_STATE` (não está `retido`), `409 ADM_INVENTORY_FULL` (sem slot livre: nada é escrito e a
+  custódia continua `retido`).
+
+### 4.11 `POST /escrows/{escrow_id}/return` — devolver
+
+```json
+{ "expected_state": "retido", "reason": "expirado" }
+```
+
+- `reason`: `expirado` (leilão sem lance) ou `disputa_vendedor` (desfecho a favor do vendedor).
+- Efeito: item volta ao personagem de origem e a custódia vira `devolvido`; audita
+`admin.escrow.return` com o motivo.
+- `200`: `{ "escrow_id": 91, "state": "devolvido", "slot": 16, "audit_id": 9103 }`.
+- Erros: `404`, `409 ADM_ESCROW_STATE`, `409 ADM_INVENTORY_FULL` (o item **permanece** `retido`; nunca é
+  descartado), `422` (motivo fora da lista).
+
+### 4.12 `POST /escrows/{escrow_id}/cancel` — cancelar
+
+```json
+{ "expected_state": "retido" }
+```
+
+- Efeito idêntico ao de §4.11 em estado (`retido → devolvido`), com ação de auditoria própria:
+`admin.escrow.cancel`.
+- **Por que rota separada:** a missão e `armaria-e-mercado.md` §5 nomeiam quatro operações, e a
+trilha precisa distinguir **desistência do anúncio** de **fim de leilão ou disputa**. A rota não
+consulta lances: `market_bid` vive em `portal`, e é o BFF que só chama `cancel` quando não há lance
+ativo. Alternativa recusada: uma rota única com `reason = cancelado`, que apagaria a distinção na
+auditoria do admin.
+- `200`: `{ "escrow_id": 91, "state": "devolvido", "slot": 16, "audit_id": 9104 }`.
+- Erros: `404`, `409 ADM_ESCROW_STATE`, `409 ADM_INVENTORY_FULL`.
+
+### 4.13 Invariantes das rotas de custódia
+
+1. O item existe em **um** lugar: `character_item`, `market_escrow` em `retido`, ou já entregue. As duas
+   escritas de cada operação acontecem na mesma transação; não há passo intermediário visível.
+2. Custódia não é apagada: `retido → entregue` ou `retido → devolvido`; estado terminal não volta.
+3. A pilha é custodiada inteira (`qty` copiado). Dividir pilha fica fora da `1.0.0`.
+4. Falha por mochila cheia não perde item: a custódia permanece `retido` e a operação pode ser repetida
+   com a mesma chave depois de liberar espaço.
+
 ## 5. Rotas de saúde e reconciliação
 
 | Método e rota | Resposta |
@@ -187,6 +270,10 @@ novo — hoje a fronteira de §7 da [fronteira](fronteira.md) vale.
 
 `GET` pode ser repetido livremente. `POST`/`PUT` só se repete com a mesma chave e o mesmo corpo.
 
+As rotas de custódia não têm perna com o `wyd-server`: o prazo útil delas é o de portal → admin (5 s) e
+o da transação (2 s). Timeout no meio é estado **incerto**: reconcilie por `GET /actions/{key}`, nunca
+repetindo com chave nova.
+
 ## 7. O que este contrato não decide
 
 | Assunto | Onde fecha |
@@ -196,3 +283,5 @@ novo — hoje a fronteira de §7 da [fronteira](fronteira.md) vale.
 | Canal real com o `wyd-server` (formato, porta, ack) | `LAC-ADM-03` |
 | Token de serviço, mTLS e assinatura do ator | `LAC-ADM-04` |
 | Dono da escrita de `account_moderation` | **fechado em 2026-11-21** (`LAC-ADM-05`): é este contrato, §4.1; o `wyd-portal` corrigiu `consumo-do-banco.md` §3 e só lê |
+| Schema de `game.market_escrow` e das tabelas `portal.market_*` | `wyd-db`: lote a abrir, forma em `armaria-e-mercado.md` §3 (`LAC-ADM-07`); sem a migration, §4.9–§4.12 é forma sem implementação |
+| Verificação de que o personagem pertence à conta declarada | **fechado nesta proposta:** `game.character.account_id` lido na mesma transação; divergência é `403` |

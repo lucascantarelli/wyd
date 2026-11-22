@@ -2,9 +2,9 @@
 > Público: Desenvolvedor novo, produto e QA
 > Dono: produto
 > Base: `M21`; `wyd-portal-prompt.md` §5/§6; `docs/arquitetura/rotas-e-permissoes.md`; `docs/arquitetura/consumo-do-banco.md`; `docs/arquitetura/monitoramento.md`
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20)
+**Estado:** aceito (2026-11-20); §4 (armaria e mercado) acrescentada em 2026-11-22 pela missão de produto
 
 Requisito sem critério de aceitação é intenção. Cada bloco tem entrada, saída, critério verificável e
 o contrato que usa. Numeração `RF-POR-nnn` (funcional) e `RNF-POR-nnn` (não funcional); não se
@@ -159,7 +159,135 @@ renumera o que já existe.
   histórica; nada identifica jogador.
 - **Contrato:** `monitoramento.md` §3; rota 43 e `POST /api/launcher/telemetria`.
 
-## 4. Requisitos não funcionais
+## 4. Armaria e mercado global
+
+Requisitos desta seção nascem da missão de produto de 2026-11-22 e são verificáveis na implementação. As
+decisões que os sustentam e as alternativas recusadas estão em `armaria-e-mercado.md`; a forma de
+banco, em `wyd-db/armaria-e-mercado.md`.
+
+### RF-POR-019 — Perfil público de personagem (armaria)
+- **Entrada:** identificador do personagem numa rota pública, sem sessão.
+- **Saída:** cabeçalho (nome, classe, nível, tier, guilda), equipamento, habilidades e ficha de cada item.
+- **Aceitação:** responde sem sessão; personagem com `deleted_at` devolve `404`; a resposta não contém
+  `account_id`, e-mail, IP, sessão nem ouro; a tela declara o instante da leitura e a janela de cache.
+- **Contrato:** `game.v_character_armory`, `game.v_character_equipment`, `game.v_character_skill` e
+  `content.v_item_sheet` (`wyd-db/armaria-e-mercado.md` §2), lidas pelo adapter do `wyd-db` (`P-17`).
+
+### RF-POR-020 — Equipamento e habilidades no perfil
+- **Entrada:** personagem da armaria.
+- **Saída:** os 16 slots de equipamento (0–15), com slot vazio declarado, e as habilidades por categoria.
+- **Aceitação:** slot vazio mostra “vazio”, não erro; `item_index` fora do catálogo mostra “item não
+  catalogado” sem quebrar a página; a ordem é estável por slot; atalhos (`character_short_skill`) não
+  aparecem, porque são interface do jogador.
+- **Contrato:** `game.v_character_equipment` e `game.v_character_skill` (`§2.2`, `§2.3`).
+
+### RF-POR-021 — Ficha do item com estatísticas
+- **Entrada:** item da armaria ou da WYDpedia.
+- **Saída:** nome, categoria, grau, efeitos pelo símbolo, refino, ancient, gema e — quando o trace
+  existir — dano, alcance e durabilidade.
+- **Aceitação:** nenhum número de dano, alcance ou durabilidade é inventado; enquanto `LAC-POR-08`
+  estiver aberta a ficha exibe `stat_source` e declara a estatística como não medida; fechada a lacuna,
+  os quatro campos aparecem e o teste cobre cada um deles.
+- **Contrato:** `content.v_item_sheet` (`§2.4`) e o caminho de verificação de `§4` do mesmo documento.
+
+### RF-POR-022 — Filtro e ordenação do equipamento
+- **Entrada:** slot ou categoria, grau e texto opcional.
+- **Saída:** lista filtrada e ordenada, paginada por cursor.
+- **Aceitação:** filtro combina com ordenação sem perder item; o desempate é por identificador e portanto
+  estável; resultado vazio tem estado vazio, não `404`.
+- **Contrato:** consulta sobre `§2.2`/`§2.4` no adapter; nenhuma tabela nova.
+
+### RF-POR-023 — Anúncio de venda com item real em custódia
+- **Entrada:** personagem, slot do item, tipo (`venda`/`leilao`), preço e, no leilão, `ends_at`.
+- **Saída:** anúncio `ativo` **somente** depois de custódia confirmada; o item deixa o inventário no mesmo
+  instante.
+- **Aceitação:** item inexistente, já retido ou de personagem de outra conta é recusado; nenhum anúncio
+  fica `ativo` sem `escrow_ref`; repetir a requisição com a mesma chave não cria segundo anúncio nem
+  segunda custódia.
+- **Contrato:** `portal.market_listing` (`§3.4`), `game.market_escrow` (`§3.11`) e `POST
+  /characters/{character_id}/escrow` do `wyd-admin` (C4 §4.9), proposto em 2026-11-22 (`LAC-POR-07`
+  fechada).
+
+### RF-POR-024 — Busca e filtro do mercado
+- **Entrada:** categoria, faixa de preço, ordenação (`recentes`, `preco`, `popularidade`) e texto.
+- **Saída:** vitrine paginada com preço, tipo e popularidade de cada anúncio.
+- **Aceitação:** cada filtro tem índice correspondente (`§6` do documento de banco); filtro por categoria
+  não faz varredura de tabela; popularidade sai de `bid_count`/`view_count`; paginação por cursor, sem
+  `OFFSET`.
+- **Contrato:** `ix_market_listing_item_status_preco`, `_kind_status_preco`, `_status_popularidade`.
+
+### RF-POR-025 — Leilão com prazo e lances
+- **Entrada:** lance em anúncio `leilao` ativo, antes de `ends_at`.
+- **Saída:** lance ativo com crédito reservado; no fechamento, um vencedor e uma cobrança.
+- **Aceitação:** lance menor ou igual ao maior ativo é recusado; lance sem saldo é recusado; lance depois
+  de `ends_at` é recusado; fechar duas vezes não cobra duas vezes (`uq_market_transaction_listing` mais
+  idempotência); perdedores têm a reserva devolvida e recebem aviso.
+- **Contrato:** `portal.market_bid` (`§3.5`), `portal.market_transaction` (`§3.6`); dono do fechamento em
+  `LAC-POR-09`.
+
+### RF-POR-026 — Carteira e extrato em crédito do portal
+- **Entrada:** conta do portal autenticada.
+- **Saída:** saldo e extrato com tipo, valor, saldo após, referência e instante.
+- **Aceitação:** saldo nunca negativo (`ck_market_wallet_saldo`); saldo sempre igual à soma do ledger da
+  conta; nenhuma leitura nem escrita em `game.account_wallet`; recarga vem de `portal.donate_credit`,
+  nunca de lançamento manual de staff.
+- **Contrato:** `portal.market_wallet` (`§3.1`) e `portal.market_ledger` (`§3.2`).
+
+### RF-POR-027 — Transação registrada e conservação do dinheiro
+- **Entrada:** compra imediata ou fechamento de leilão.
+- **Saída:** linha em `market_transaction` com bruto, taxa e líquido; item entregue ao comprador.
+- **Aceitação:** `taxa + líquido = bruto`; débito do comprador igual ao bruto; crédito do vendedor igual ao
+  líquido; falha na entrega reverte dinheiro e custódia na mesma transação; comprador e vendedor
+  consultam a transação no próprio extrato.
+- **Contrato:** `market_transaction` (`§3.6`) e a operação `entregar` do contrato de `§5`.
+
+### RF-POR-028 — Taxa e comissão
+- **Entrada:** regra de taxa vigente no instante do anúncio.
+- **Saída:** `fee_bps` no anúncio, `fee_amount` na transação e linha `taxa` no ledger.
+- **Aceitação:** mudar a regra não altera anúncio já ativo; a taxa não é creditada a conta nenhuma; a
+  linha de taxa aponta para a transação; taxa `0` é permitida e registrada como tal.
+- **Contrato:** `portal.market_fee_rule` (`§3.3`) e `kind = 'taxa'` em `market_ledger`.
+
+### RF-POR-029 — Reputação do vendedor
+- **Entrada:** avaliação do comprador depois de transação concluída.
+- **Saída:** nota de 1 a 5 com comentário opcional; agregado público do vendedor.
+- **Aceitação:** uma avaliação por transação (`uq_market_review_transaction`); só o comprador da
+  transação avalia; o agregado conta apenas transações concluídas e avaliações visíveis; a média aparece
+  com a contagem ao lado; avaliação oculta não soma.
+- **Contrato:** `portal.market_review` (`§3.7`) e `portal.market_reputation` (`§3.8`).
+
+### RF-POR-030 — Notificação de oferta, lance e venda
+- **Entrada:** evento do mercado (lance, lance superado, arremate, venda, expiração, disputa, avaliação).
+- **Saída:** aviso in-app com contador de não lidos e marcação de leitura.
+- **Aceitação:** cada evento gera exatamente um aviso por destinatário; marcar como lido não apaga;
+  o contador zera ao ler; nenhum aviso carrega dado de outra conta.
+- **Contrato:** `portal.market_notification` (`§3.9`) e `ix_market_notification_conta_nao_lida`.
+
+### RF-POR-031 — Acesso irrestrito ao mercado
+- **Entrada:** conta do portal com sessão válida.
+- **Saída:** vitrine, compra e venda liberadas.
+- **Aceitação:** nenhum gate de nível, tier, classe ou tempo de jogo; conta de jogo recém-criada compra e
+  vende; a única exigência é sessão de portal; `member` não recebe restrição adicional.
+- **Contrato:** rotas 45–50 de `rotas-e-permissoes.md` (acrescentadas em 2026-11-22); nenhum gate de
+  nível ou classe no servidor.
+
+### RF-POR-032 — Disputa e suporte
+- **Entrada:** comprador ou vendedor de transação concluída, com motivo e descrição.
+- **Saída:** disputa registrada e fila de staff com decisão e desfecho.
+- **Aceitação:** uma disputa aberta por transação (`uq_market_dispute_aberta`); só as partes abrem;
+  decidir exige staff com segundo fator (`RF-POR-013`) e grava `audit_log`; o desfecho aplica estorno ou
+  liberação e notifica as duas partes.
+- **Contrato:** `portal.market_dispute` (`§3.10`); `audit_log` (`M21`).
+
+### RF-POR-033 — Antifraude e limites
+- **Entrada:** toda escrita do mercado.
+- **Saída:** trilha auditável e limites aplicados no servidor.
+- **Aceitação:** toda escrita tem chave de idempotência (`M17`); limite de anúncios ativos por conta e de
+  lances por minuto é aplicado no servidor, não no cliente; compra da própria conta e ciclo de
+  transferência entre as mesmas contas são recusados; toda decisão de staff fica em `audit_log` com autor.
+- **Contrato:** `M17`, `audit_log`, `market_ledger` append-only (`§3.2`).
+
+## 5. Requisitos não funcionais
 
 | ID | Requisito | Critério verificável |
 |---|---|---|
@@ -170,8 +298,11 @@ renumera o que já existe.
 | RNF-POR-005 | Mutação administrativa é atômica com a auditoria | falha injetada no `audit_log` desfaz a mutação |
 | RNF-POR-006 | Cobertura mínima de 85% no portal | gate de cobertura do workspace |
 | RNF-POR-007 | Credencial e URL interna de observabilidade nunca chegam ao navegador | varredura de resposta HTML/JSON sem `PROMETHEUS_URL`, `LOKI_URL`, `GRAFANA_URL` e sem segredo |
+| RNF-POR-008 | Armaria e mercado refletem o dado com janela declarada | cada tela declara o instante da leitura e a janela de cache (≤ 60 s, como `RF-POR-007`); escrita aparece no carregamento seguinte |
+| RNF-POR-009 | Mercado escala com muitas transações | vitrine e busca com índice e cursor; `p95` ≤ 300 ms na listagem e ≤ 2 s no fechamento, medidos com 10 mil anúncios; fechamento concorrente não liquida duas vezes |
+| RNF-POR-010 | Escrita do mercado é segura e rastreável | nenhuma escrita sem idempotência; `UPDATE`/`DELETE` revogados em `market_ledger`; 100% das decisões de staff em `audit_log` |
 
-## 5. Rastreio rápido
+## 6. Rastreio rápido
 
 | Requisito | Rota | Tabela/contrato | Lacuna |
 |---|---|---|---|
@@ -186,3 +317,7 @@ renumera o que já existe.
 | RF-POR-018 | `/admin/monitoramento/launcher` | `POST /api/launcher/telemetria` + log estruturado no Loki | `LAC-POR-06`; sem tabela |
 | RF-POR-011 | `/admin/jogadores*`, `/admin/contas*` | `0005`–`0010` + C4 | contrato do `wyd-admin` |
 | RF-POR-012 | `/admin/config` | `0002` §5.9 | — |
+| RF-POR-019 a 022 | `/personagem/[id]` | Views `game.v_character_*` e `content.v_item_sheet` (`wyd-db/armaria-e-mercado.md` §2) | `LAC-POR-08` (estatísticas) |
+| RF-POR-023 a 029 | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira` | `portal.market_*` (`§3`); `game.market_escrow` (`§3.11`); contrato `wyd-admin` C4 §4.9–§4.13 | `LAC-POR-07` fechada (2026-11-22); `LAC-POR-09` (fechamento) |
+| RF-POR-030 a 033 | `/mercado/*`, `/admin/mercado` | `market_notification`, `market_dispute`, `audit_log` | — |
+| RNF-POR-008 a 010 | `/mercado*`, `/personagem/[id]` | índices de `§6`; `market_ledger` append-only | — |

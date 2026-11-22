@@ -1,16 +1,17 @@
 > Pergunta: "o que exatamente cada ação do admin grava em `game` e sob quais constraints?"
 > Público: Desenvolvedor do `wyd-admin` e revisor de schema
 > Dono: `wyd-admin` + `wyd-db`
-> Base: `ddl-confirmado.md` §5.2, §5.5, §5.14; `plano-migrations.md` §3; `padrao-banco.md` §11
-> Revisado em: 2026-11-21
+> Base: `ddl-confirmado.md` §5.2, §5.5, §5.14; `plano-migrations.md` §3; `padrao-banco.md` §11; `wyd-db/armaria-e-mercado.md` §3.11 e §5 (custódia de item)
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21). Nenhum SQL foi escrito; a forma é a de `ddl-confirmado.md`.
+**Estado:** proposto (2026-11-21); custódia de item acrescentada em 2026-11-22 (§8). Nenhum SQL foi
+escrito; a forma é a de `ddl-confirmado.md`.
 
 ## Regra comum
 
 Toda ação roda em **uma transação** com isolamento `READ COMMITTED`:
 
-1. valida cabeçalhos, papel e corpo (nada toca o banco antes disso);
+1. valida cabeçalhos, papel (ou titular, nas rotas de §8) e corpo — nada toca o banco antes disso;
 2. abre transação, registra a chave de idempotência como `in_progress`;
 3. executa a escrita com conferência otimista (`expected_*`) quando a rota exige;
 4. grava `ops.audit_log` com o mesmo `trace_id`;
@@ -86,10 +87,65 @@ Sem o passo 2 não há idempotência; ele depende de `LAC-ADM-02`.
   qualquer preço divergir do `expected_*`; `UPDATE`; 422 se negativo.
 - **Auditoria:** `action = 'admin.item.price'`, `target = 'item:<item_index>:<npc_id>'`.
 
+## 8. Custódia de item do mercado
+
+Rotas 8–11 de §4.9–§4.12 do [contrato C4](../arquitetura/contrato-c4.md). O ator é a conta do jogador
+(`X-Actor-Account-Id`), não staff, e nenhuma delas chama o `wyd-server`. A tabela `game.market_escrow`
+ainda **não tem DDL aprovado** — forma em `wyd-db/armaria-e-mercado.md` §3.11 e lote a abrir no
+`wyd-db` (`LAC-ADM-07`).
+
+### 8.1 Custodiar (`POST /characters/{character_id}/escrow`)
+
+- **Tabelas:** `game.character_item` (PK `(character_id, slot)`) e `game.market_escrow`.
+- **Sequência:** `422` se `slot` fora de 0–79; `SELECT … FROM character_item WHERE character_id = $1
+  AND slot = $2 FOR UPDATE`; `404` se não existir; `409 ADM_STATE_MISMATCH` se `item_index <>
+  expected_item_index`; lê `game.character.account_id` e recusa `403` se não for a conta do ator;
+  `409 ADM_ITEM_ALREADY_HELD` se já houver escrow `retido` com o mesmo `listing_ref`; `DELETE` da linha;
+  `INSERT market_escrow` com o retrato e `state = 'retido'`.
+- **Constraints que podem recusar:** `uq_market_escrow_idempotency`, `ck_market_escrow_estado`.
+- **Pilha:** `qty` vai inteiro para a custódia; dividir pilha fica fora da `1.0.0`.
+- **Auditoria:** `admin.escrow.hold`, `target = 'character:<id>:slot:<slot>'`, detalhe com
+  `item_index`, `qty`, `listing_ref` e `escrow_id`.
+
+### 8.2 Entregar (`POST /escrows/{escrow_id}/deliver`)
+
+- **Tabelas:** `game.market_escrow`, `game.character`, `game.character_item` (destino).
+- **Sequência:** `SELECT … FROM market_escrow WHERE id = $1 FOR UPDATE`; `404`; `409 ADM_ESCROW_STATE`
+  se `state <> 'retido'`; confere que o personagem de destino pertence à conta do ator (`403` se não);
+  calcula o menor slot livre em 16–79; sem slot livre devolve `409 ADM_INVENTORY_FULL` **sem escrita**;
+  `INSERT character_item` com o retrato; `UPDATE market_escrow SET state = 'entregue'`.
+- **Constraints:** `pk_character_item` impede colisão de slot; `ck_character_item_qtd`, `_refino` e
+  `_gema*` aceitam o retrato porque ele veio de uma linha válida na origem.
+- **Auditoria:** `admin.escrow.deliver`, `target = 'escrow:<id>'`, detalhe com `character_id` e `slot`.
+
+### 8.3 Devolver (`POST /escrows/{escrow_id}/return`)
+
+- **Sequência:** igual a 8.2, com o personagem de **origem**; `409 ADM_INVENTORY_FULL` mantém a custódia
+  em `retido` (o item nunca é descartado); `UPDATE market_escrow SET state = 'devolvido'`.
+- **Auditoria:** `admin.escrow.return`, `target = 'escrow:<id>'`, detalhe com `reason`
+  (`expirado`/`disputa_vendedor`) e `slot`.
+
+### 8.4 Cancelar (`POST /escrows/{escrow_id}/cancel`)
+
+- **Sequência:** igual a 8.3 em efeito (`retido → devolvido`); a pré-condição “sem lance ativo” é do
+  **portal**, porque `market_bid` é tabela dele; o admin não consulta `portal` (`RN-ADM-007`).
+- **Auditoria:** `admin.escrow.cancel`, mesmo `target`, sem `reason` de domínio.
+
+### Invariantes das quatro
+
+1. O item existe em um lugar só: `character_item`, escrow `retido` ou já entregue. As duas escritas de
+   cada operação acontecem na mesma transação.
+2. `market_escrow` não é apagada: `retido → entregue` ou `retido → devolvido`, estado terminal não volta.
+3. Mochila cheia não perde item: `409` sem escrita, repetível com a mesma chave depois de liberar espaço.
+4. Nenhuma delas compensa erro com fila ou escrita posterior; `ops.delivery_queue` **não** é usada para
+   custódia.
+
 ## O que nenhuma ação faz
 
 - Não escreve em `portal`: moderação de pessoa, sessão de portal, CMS e `portal.kingdom_cape_price`
   são do BFF.
-- Não apaga linha: bloqueio, kick e preço são estado, não `DELETE`.
+- Não apaga linha: bloqueio, kick e preço são estado, não `DELETE`. **Exceção única:** `custodiar`
+  (§8.1) remove a linha de `game.character_item` porque a instância passa a `game.market_escrow` na
+  mesma transação — é movimentação de item, não descarte de dado.
 - Não grava `ops.audit_log` em transação separada: se a ação não commita, a trilha não existe.
 - Não compensa erro com escrita local, fila ou “tentar de novo depois”.

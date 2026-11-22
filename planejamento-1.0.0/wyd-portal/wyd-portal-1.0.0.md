@@ -19,8 +19,9 @@
 
 O `wyd-portal` é a aplicação **Next.js** que serve duas superfícies com o mesmo login:
 
-1. **Portal público** — home, notícias, rankings, WYDpedia (itens, skills, mobs, guias) e atlas de
-   mapas, com dados de conteúdo do schema `content` e estado agregado do jogo;
+1. **Portal público** — home, notícias, rankings, WYDpedia (itens, skills, mobs, guias), atlas de
+   mapas, armaria do personagem (perfil público, somente leitura) e mercado global com leilão em
+   crédito do portal, com dados de conteúdo do schema `content` e estado agregado do jogo;
 2. **Área administrativa** — NOC, jogadores e contas, economia, conteúdo/CMS, launcher, logs e
    segurança; é onde o staff **opera e configura** o servidor, com trilha de auditoria.
 
@@ -35,7 +36,7 @@ estado pelos contratos do `wyd-db` e, quando a operação exigir ação no proce
 | O que faz | portal público + área administrativa, autenticação de pessoa, BFF e leitura/escrita de estado |
 | O que não faz | tick, combate, drop, progressão, protocolo de fio, patch do cliente, operação de banco |
 | Quem consome | jogador (navegador), staff (navegador), launcher (notícias e manifesto, quando houver contrato) |
-| O que consome | `wyd-db` (SQL pelo adapter), `wyd-admin` (HTTP/JSON interno, ainda não planejado), `content` (catálogo) |
+| O que consome | `wyd-db` (SQL pelo adapter), `wyd-admin` (HTTP/JSON interno: contrato C4 e custódia de item propostos em 2026-11-22), `content` (catálogo) |
 | Estado dele | sessão de portal (`portal.person_session`), token de cerimônia (`portal.person_token`), cache de página |
 | O que quebra se cair | login e área administrativa param; o jogo **não** para, porque sessão de jogo mora em `game.session` |
 
@@ -48,23 +49,24 @@ estado pelos contratos do `wyd-db` e, quando a operação exigir ação no proce
 | NOC, jogadores, contas, economia, CMS, launcher, logs e configuração | regra de jogo (tick, dano, drop) — `wyd-core`/`wyd-sim` |
 | leitura de estado do jogo e escrita administrativa com auditoria | migrations e DDL — `wyd-db` |
 | BFF do portal (rotas de servidor) | API interna de staff — `wyd-admin` |
+| armaria pública read-only e mercado global com leilão (F7–F11, decididos em 2026-11-22) | edição de personagem e inventário pelo jogador: armaria é só leitura |
 
 **Decidido em 2026-11-20 (`M21`):** o administrador configura o servidor pelo portal, incluindo
 taxas, eventos, canais e manutenção, com trilha de auditoria. Isso não é monitoramento só: é escrita.
 
 ## 4. Números deste planejamento
 
-Medido em 2026-11-20, neste diretório:
+Medido em 2026-11-20, neste diretório (a contagem de páginas foi recontada em 2026-11-22):
 
 | Medida | Valor | Fonte |
 |---|---:|---|
-| Páginas de planejamento escritas | 10 | `find planejamento-1.0.0/wyd-portal -name '*.md'` (exclui o prompt) |
+| Páginas de planejamento escritas | 11 | `find planejamento-1.0.0/wyd-portal -name '*.md'` (exclui o prompt; inclui a proposta de 2026-11-22) |
 | Páginas em `docs/` | 8 | `docs/index.md`, 4 de `arquitetura/`, 2 de `specs/`, 1 de `roadmap/` |
-| Requisitos funcionais | 18 | `docs/specs/requisitos.md` |
-| Requisitos não funcionais | 7 | `docs/specs/requisitos.md` §4 |
-| Lacunas abertas | 0 | `lacunas.md` §1 (6 fechadas, `LAC-POR-01` a `LAC-POR-06`; `04`–`06` reconfirmadas em 2026-11-20) |
-| Rotas mapeadas | 43 | `docs/arquitetura/rotas-e-permissoes.md` §2–§3 |
-| Tabelas do `wyd-db` citadas | 40 (39 com DDL) + 2 views | `docs/arquitetura/consumo-do-banco.md` §7 |
+| Requisitos funcionais | 33 | `docs/specs/requisitos.md` (18 de 2026-11-20 + 15 de armaria e mercado) |
+| Requisitos não funcionais | 10 | `docs/specs/requisitos.md` §5 (7 de 2026-11-20 + 3 de armaria e mercado) |
+| Lacunas abertas | 2 | `lacunas.md` §1 (7 fechadas, `LAC-POR-01` a `LAC-POR-07`; abertas: `08` e `09`) |
+| Rotas mapeadas | 50 | `docs/arquitetura/rotas-e-permissoes.md` §2–§3 (43 até 2026-11-22 + 7 de armaria/mercado) |
+| Tabelas do `wyd-db` citadas | 41 (40 com DDL) + 2 views; onze tabelas e quatro views propostas por armaria/mercado (F7–F11, sem DDL) | `docs/arquitetura/consumo-do-banco.md` §7 e §7.1 |
 | Issues criadas | **0** | nenhuma, por decisão desta rodada |
 
 Número sem fonte e data não entra: os valores acima saem dos arquivos citados, não de memória.
@@ -75,6 +77,7 @@ Número sem fonte e data não entra: os valores acima saem dos arquivos citados,
 planejamento-1.0.0/wyd-portal/
 ├── wyd-portal-1.0.0.md          # este dashboard
 ├── lacunas.md                   # registro único de lacuna e dono
+├── armaria-e-mercado.md         # armaria e mercado: D1–D10 decididas, fatias F7–F11 (2026-11-22)
 ├── wyd-portal-prompt.md         # orientação de produto recebida (H)
 └── docs/
     ├── index.md                 # porta de entrada
@@ -105,6 +108,10 @@ aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5.10).
 | ~~`LAC-POR-06`~~ — **decidida:** telemetria vem do `/metrics` Prometheus do `wyd-server`, coletado pelo `wyd-ops`; o portal consulta a API | `wyd-ops` + arquitetura | NOC mostra CPU/RAM/latência com instante da amostra; sem tabela nova no `wyd-db` |
 | Planejar o `wyd-admin` | arquitetura | forma do contrato C4 (rotas, payload, códigos) |
 | Contrato de observabilidade do `wyd-ops` | `wyd-ops` | valor de URL/credencial, intervalo de coleta, retenção definitiva e dashboards; fontes e nomes estão em `docs/arquitetura/monitoramento.md` |
+| ~~Decidir armaria e mercado~~ — **decididas:** D1–D10 em 2026-11-22 | produto + arquitetura | `armaria-e-mercado.md`, `requisitos.md` §4, `roadmap.md` F7–F11; schema proposto em `wyd-db/armaria-e-mercado.md` |
+| ~~Executor da transferência de item~~ — **fechada em 2026-11-22** | arquitetura + `wyd-admin` | contrato nas quatro rotas do C4 (`contrato-c4.md` §4.9–§4.13) e fatia `ADM-10`; F8 agora espera o lote de `game.market_escrow` (`LAC-ADM-07`) |
+| Origem de dano, alcance e durabilidade | `wyd-server` + `wyd-db` | `LAC-POR-08`; trace antes de publicar número na ficha |
+| Dono do fechamento de leilão | arquitetura + `wyd-ops` | `LAC-POR-09`; F9 precisa de job idempotente |
 
 ## 7. Gate
 
@@ -118,7 +125,7 @@ cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output sit
 ```
 
 O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
-  `sistemas/wyd-portal/` e, na última medição (2026-11-22), passou com **130 páginas** e **128 fontes**
+  `sistemas/wyd-portal/` e, na última medição (2026-11-22), passou com **134 páginas** e **132 fontes**
   verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.

@@ -2,9 +2,9 @@
 > Público: Desenvolvedor novo e arquitetura
 > Dono: arquitetura + `wyd-db`
 > Base: `wyd-db/ddl-confirmado.md` §1/§2/§5.2/§5.5/§5.9–§5.14; `0001` (permissões); `0029` (views)
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20); §3 corrigida em 2026-11-21 (`LAC-ADM-05`)
+**Estado:** aceito (2026-11-20); §3 corrigida em 2026-11-21 (`LAC-ADM-05`); §7.1 proposta em 2026-11-22
 
 O que a área administrativa consome do `wyd-db`, tela por tela. Tabela citada sem arquivo é dívida:
 as contagens confirmada/proposta estão em `plano-migrations.md` §3 e as que já têm DDL, em
@@ -108,32 +108,45 @@ arquivos / 96 tabelas** naquela data; com os lotes `0031` e `0032`, são **32 ar
 Contrato já decidido: revisão com autor tripartido (`M18-A`), valores antes/depois em linhas
 nomeadas, sem `JSONB`. A tela não inventa “chave mágica”: lista as chaves que o servidor consome.
 
-## 7. Catálogo de tabelas citadas (40 + 2 views)
+## 7. Catálogo de tabelas citadas (41 + 2 views)
 
 | Schema | Tabelas |
 |---|---|
 | `portal` | `person`, `person_profile`, `person_consent`, `person_session`, `person_token`, `person_authenticator`, `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit`, `news`, `banner`, `guide`, `launcher_release` |
-| `game` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `character`, `character_item`, `vault_item`, `character_skill`, `character_affect`, `guild`, `guild_member`, `session`, `server_channel`, `city`, `item_price`, `personal_shop`, `city_tax_ledger` |
+| `game` | `account`, `account_wallet`, `account_ledger`, `account_moderation`, `character`, `character_item`, `vault_item`, `character_skill`, `character_learned_skill`, `character_affect`, `guild`, `guild_member`, `session`, `server_channel`, `city`, `item_price`, `personal_shop`, `city_tax_ledger` |
 | `ops` | `audit_log`, `login_attempt`, `config_revision`, `config_change` |
 | `content` | `item_catalog`, `skill_catalog`, `npc_definition` (previstas) |
 | views | `game.v_live_session`, `portal.v_person_identity` (`0029`, previstas) |
 
 A lista por tela repete tabela entre telas; acima estão as **tabelas distintas** citadas: 16 de
-`portal`, todas com DDL, 17 de `game`, 4 de `ops` e 3 de
-`content` (2 com DDL e `npc_definition` prevista em `0019`), mais as 2 views de `0029` — **40 citadas,
-das quais 39 têm DDL fechado**, + 2 views, medido neste arquivo em 2026-11-20.
+`portal`, todas com DDL, 18 de `game`, 4 de `ops` e 3 de
+`content` (2 com DDL e `npc_definition` prevista em `0019`), mais as 2 views de `0029` — **41 citadas,
+das quais 40 têm DDL fechado**, + 2 views, medido neste arquivo em 2026-11-22 (`character_learned_skill`
+entrou com a armaria; tem DDL em `0008`).
 
 O monitoramento **não acrescenta tabela**: presença vem da view `game.v_live_session`, e métrica, log,
 painel e telemetria do launcher vêm de API externa ou de log estruturado (`monitoramento.md` §3/§6).
 O lote `0031` acrescenta `portal.person_authenticator` e o `0032` só concede `GRANT`: a série passa a 32
 arquivos / 97 tabelas, e o
-catálogo sobe de 39 para **40 citadas**.
+catálogo subiu de 39 para **40 citadas** e, com a armaria, para **41**.
+
+### 7.1 Conjunto proposto por armaria e mercado (F7–F11)
+
+Dez tabelas e quatro views que ainda **não têm DDL** e por isso ficam fora da contagem acima. A forma é
+de `wyd-db/armaria-e-mercado.md` §2 e §3; a aprovação, de `LAC-ADM-07`. Quando o lote fechar, esta seção
+some e os objetos entram na tabela principal.
+
+| Schema | Objetos |
+|---|---|
+| `portal` | `market_wallet`, `market_ledger`, `market_fee_rule`, `market_listing`, `market_bid`, `market_transaction`, `market_review`, `market_reputation`, `market_notification`, `market_dispute` |
+| `game` | `market_escrow` |
+| views | `game.v_character_armory`, `game.v_character_equipment`, `game.v_character_skill`, `content.v_item_sheet` |
 
 ## 8. O que esta página não decide
 
 | Assunto | Onde fecha |
 |---|---|
-| Forma do contrato HTTP do `wyd-admin` | planejamento do `wyd-admin` (não existe) |
+| Forma do contrato HTTP do `wyd-admin` | proposto em 2026-11-22 em `wyd-admin/docs/arquitetura/contrato-c4.md` (inclui a custódia de item, §4.9–§4.13) |
 | Lote das 4 tabelas novas em `portal` | `wyd-db` (dono da série) |
 | Séries históricas de métricas | `wyd-ops` (Prometheus/Grafana); o portal só consulta a API (`LAC-POR-06`) |
 | DDL de `portal.person_authenticator` | fechado no lote `0031` (`ddl-confirmado.md` §5.20); mecanismo em `LAC-POR-05` |

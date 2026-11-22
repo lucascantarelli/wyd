@@ -2,13 +2,15 @@
 > Público: Desenvolvedor novo, arquitetura e staff técnico
 > Dono: equipe do wyd-admin
 > Base: `wyd-portal/docs/arquitetura/fronteira.md` §3 (C4); `AGENTS.md` §5/§6
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21) — planejamento aberto, nenhum código escrito.
+**Estado:** proposto (2026-11-21); custódia de item do mercado acrescentada em 2026-11-22. Planejamento
+aberto, nenhum código escrito.
 
-O `wyd-admin` é a **API interna de staff**: o único componente autorizado a escrever em `game` em nome
-do portal (`LAC-POR-01`, decidida em 2026-11-20). Ele não tem tela, não serve HTML e não decide regra
-de jogo — recebe uma ação tipada, executa a escrita transacional, audita e responde.
+O `wyd-admin` é a **API interna de staff e de custódia de item do mercado**: o único componente
+autorizado a escrever em `game` em nome do portal (`LAC-POR-01`, decidida em 2026-11-20). Ele não tem
+tela, não serve HTML e não decide regra de jogo — recebe uma ação tipada, executa a escrita transacional,
+audita e responde.
 
 ## Ordem de leitura
 
@@ -29,8 +31,8 @@ de jogo — recebe uma ação tipada, executa a escrita transacional, audita e r
 |---|---|---|
 | `wyd-admin` é o único executor de escrita em `game` | **decidido** (`LAC-POR-01`, 2026-11-20) | arquitetura |
 | Transporte HTTP/JSON interno, com timeout, chave de idempotência e erro tipado | **decidido em direção**; forma nesta árvore | arquitetura + `wyd-admin` |
-| Rotas, payload, códigos e prazos | **proposto** (2026-11-21), sujeito à aprovação | `wyd-admin` |
-| Papel `wyd_admin`, armazenamento de idempotência, canal com o `wyd-server` | **aberto** — `lacunas.md` na raiz do sistema (`LAC-ADM-01` a `LAC-ADM-06`) | `wyd-db`, arquitetura |
+| Rotas, payload, códigos e prazos | **proposto** (2026-11-21); custódia de item em 2026-11-22 (§4.9–§4.13) | `wyd-admin` |
+| Armazenamento de idempotência, canal com o `wyd-server`, retenção e schema de custódia | **aberto** — `lacunas.md` na raiz do sistema (`LAC-ADM-02` a `LAC-ADM-07`) | `wyd-db`, arquitetura |
 
 Nada aqui foi implementado: nenhuma rota responde, nenhum papel existe no `provision` e nenhuma
 tabela nova foi proposta como aprovada.

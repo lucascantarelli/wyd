@@ -2,9 +2,10 @@
 > Público: Arquiteto, produto e operação
 > Dono: equipe do wyd-admin
 > Base: [contrato C4](docs/arquitetura/contrato-c4.md); `wyd-portal/docs/arquitetura/fronteira.md`; `AGENTS.md` §5.8
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-21). Quatro lacunas abertas; nenhuma foi fechada por suposição.
+**Estado:** proposto (2026-11-21); `LAC-ADM-07` aberta em 2026-11-22 com a custódia de item. Cinco
+lacunas abertas; nenhuma foi fechada por suposição.
 
 ## Abertas
 
@@ -14,6 +15,7 @@
 | `LAC-ADM-03` | Não existe contrato de controle com o `wyd-server` (kick, broadcast, manutenção) | `ADM-08` não pode ser implementada; “chamar o processo” hoje é intenção | arquitetura + `wyd-server` | porta/protocolo, ack, timeout e erro; página no `wyd-server` |
 | `LAC-ADM-04` | Autenticação portal → admin não decidida: token de serviço, mTLS ou assinatura do ator | `RN-ADM-002` e `RN-ADM-005` dependem disso; sem forma, `ADM-02` para | arquitetura + `wyd-ops` | mecanismo, rotação de segredo e o que vai no cabeçalho |
 | `LAC-ADM-06` | Retenção do registro de idempotência: a proposta usa 24 h, sem fonte | define tamanho, expurgo e o que `GET /actions/{key}` ainda responde | `wyd-db` + `wyd-ops` | prazo e rotina de expurgo, com data |
+| `LAC-ADM-07` | `game.market_escrow` e as tabelas `portal.market_*` não têm DDL aprovado | a custódia (`ADM-10`, C4 §4.9–§4.12) é forma sem implementação; o mercado inteiro do portal depende do mesmo lote | `wyd-db` | página de lote com a forma de `armaria-e-mercado.md` §3, texto em `ddl-confirmado.md` e contagem atualizada |
 
 ## Fechadas
 

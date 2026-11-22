@@ -2,9 +2,9 @@
 > Público: Desenvolvedor novo, produto e staff
 > Dono: produto + arquitetura
 > Base: `M21`; `0003`/`0004` (papéis e sessão); `wyd-portal-prompt.md` §5/§6; `consumo-do-banco.md`
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20)
+**Estado:** aceito (2026-11-20); rotas 44–50 de armaria e mercado em 2026-11-22
 
 Lista de telas da `1.0.0` com rota, dono do dado e nível de acesso. Rota que não está aqui não entra
 sem passar por esta página; tela sem permissão escrita é tela sem contrato.
@@ -23,7 +23,7 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | `admin` | `admin` apenas | `role = 'admin'`, após segundo fator (`LAC-POR-05`) |
 | `staff` (MFA) | `moderator`/`admin` com TOTP confirmado | `role IN ('moderator','admin')` **e** autenticador confirmado (`RF-POR-013`) |
 
-## 2. Portal público e conta (22 rotas)
+## 2. Portal público e conta (27 rotas)
 
 | # | Rota | Tela | Acesso | Dado |
 |---:|---|---|---|---|
@@ -49,8 +49,13 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | 20 | `/conta/personagens` | Personagens e vaga | `titular` | `game.character` (view) |
 | 21 | `/conta/seguranca` | Senha, sessões e PIN | `titular` | `person_session`, `0005` |
 | 22 | `/conta/consentimentos` | Consentimentos e revogação | `titular` | `person_consent` |
+| 44 | `/personagem/[id]` | Perfil público do personagem (armaria): equipamento, habilidades e ficha | `público` | `game.v_character_*` e `content.v_item_sheet` (propostas, F7) |
+| 45 | `/mercado` | Vitrine: busca, categoria, faixa de preço e popularidade | `member` | `portal.market_listing` (proposta, F8) |
+| 46 | `/mercado/[id]` | Anúncio, lance e compra imediata | `member` | `market_listing`, `market_bid`, `market_transaction` (F8/F9) |
+| 47 | `/mercado/minhas` | Meus anúncios, lances e compras | `titular` | `market_listing`, `market_bid`, `market_transaction` (F8) |
+| 48 | `/mercado/carteira` | Saldo e extrato em crédito do portal | `titular` | `market_wallet`, `market_ledger` (F8) |
 
-## 3. Área administrativa (21 rotas)
+## 3. Área administrativa (23 rotas)
 
 | # | Rota | Tela | Acesso | Dado |
 |---:|---|---|---|---|
@@ -75,9 +80,12 @@ O papel vem de `portal.person.role` (`0003`): `member`, `moderator`, `admin`. Pa
 | 41 | `/admin/monitoramento/grafana` | Catálogo de dashboards e painel embutido | `staff` | Grafana `/api/health`, `/api/search` |
 | 42 | `/admin/monitoramento/logs` | Volume, erros e avisos por serviço; export NDJSON | `staff` | Loki `query`, `query_range` |
 | 43 | `/admin/monitoramento/launcher` | Telemetria anônima por versão e operação | `staff` | `POST /api/launcher/telemetria` + log no Loki |
+| 49 | `/admin/mercado` | Taxa vigente, anúncios e sinais de fraude | `staff` (MFA) | `market_fee_rule`, `market_listing`, `market_reputation` (propostas, F11) |
+| 50 | `/admin/mercado/disputas` | Fila de disputas com desfecho auditado | `staff` (MFA) | `market_dispute`, `audit_log` (F11) |
 
-**Total: 43 rotas** — 22 públicas/de conta e 21 administrativas. Rota nova entra aqui antes de virar
-código. As seis de monitoramento (38–43) preservam, uma por uma, as telas do portal legado: a paridade
+**Total: 50 rotas** — 27 públicas/de conta e 23 administrativas. Rota nova entra aqui antes de virar
+código. As rotas 44–50 são de armaria e mercado (2026-11-22): a tela é desta fatia, a forma de banco
+está em `wyd-db/armaria-e-mercado.md` §2–§3 e a aprovação do lote em `LAC-ADM-07`. As seis de monitoramento (38–43) preservam, uma por uma, as telas do portal legado: a paridade
 e a fonte de cada número estão em `monitoramento.md` §1/§7.
 
 ## 4. Matriz de permissão por domínio
