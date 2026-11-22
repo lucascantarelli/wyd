@@ -1,6 +1,6 @@
 # wyd-protocol 1.0.0 — plano diretor da documentação oficial
 
-> **Estado: RASCUNHO PARA APROVAÇÃO (2026-11-19; decisões de escopo em 2026-11-20).** Este documento define **o que** a documentação
+> **Estado: APROVADO em 2026-11-22** (rascunho de 2026-11-19; decisões de escopo em 2026-11-20). Este documento define **o que** a documentação
 > oficial do `wyd-protocol` contém, **em que arquivo** cada assunto mora, **quem** responde por ele e
 > **em que ordem** o material é produzido. A árvore de §4 é o **teto**, não o estado: página escrita
 > se reconhece pelo cabeçalho de §6.1 e pelo estado; o que está pronto é medido em
