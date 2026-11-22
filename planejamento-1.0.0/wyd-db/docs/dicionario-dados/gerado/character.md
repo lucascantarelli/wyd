@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.10; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -52,7 +52,7 @@ Personagem do jogador: nome, classe, progressão e estado bruto do `STRUCT_MOB`,
   `character_affect`, `character_chaos`, `character_item`, `guild_member`, `personal_shop`,
   `character_quest` e `arena_score`.
 - **Entrada, `SET NULL`:** `city_tax_ledger` e `event_participation`.
-- **Entrada, `RESTRICT`:** `game.session` e `ops.delivery_queue`.
+- **Entrada, `RESTRICT`:** `game.session`, `ops.delivery_queue` e `game.market_escrow`.
 
 ## Unicidade
 
@@ -92,6 +92,8 @@ Trigger `trg_character_set_updated_at`.
 
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`; o portal lê por view de `0029` (sem `USAGE` em `game`).
+- **Administra:** `wyd_admin` — só `SELECT`, concedido por `0032` para conferir o titular na custódia
+  de item.
 
 ## Migration
 

@@ -52,7 +52,7 @@ Só a PK — nenhum único adicional; dois mapas podem ter o mesmo nome.
 
 | Índice | Consulta que justifica |
 |---|---|
-| `ix_map_definition_region (region_id)` parcial | FK nullable (`P-15`) e leitura dos mapas de uma região |
+| `ix_map_definition_region (region_id) WHERE region_id IS NOT NULL` | FK nullable (`P-15`) e leitura dos mapas de uma região |
 
 Sem carimbos e sem trigger: tabela base de seed, read-only em runtime.
 

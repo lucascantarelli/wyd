@@ -66,8 +66,8 @@ vender o mesmo trecho. `enabled` não entra no único: desligar a rota não libe
 
 | Índice | Consulta que justifica |
 |---|---|
-| `ix_teleport_route_npc (npc_id)` parcial | FK nullable (`P-15`) e rotas oferecidas por um NPC |
-| `ix_teleport_route_item (req_item_index)` parcial | FK nullable (`P-15`) e rotas que exigem um item |
+| `ix_teleport_route_npc (npc_id) WHERE npc_id IS NOT NULL` | FK nullable (`P-15`) e rotas oferecidas por um NPC |
+| `ix_teleport_route_item (req_item_index) WHERE req_item_index IS NOT NULL` | FK nullable (`P-15`) e rotas que exigem um item |
 | `ix_teleport_route_destino (to_map_id)` | chegadas por mapa de destino |
 
 `from_map_id` já é prefixo do único e não ganha índice próprio. Sem carimbos e sem trigger: tabela base

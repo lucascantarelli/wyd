@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.5; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -71,6 +71,7 @@ Motivos aceitos: `disconnect`, `reaper`, `character_deleted`, `admin`.
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`; o portal lê presença por `game.v_live_session` (`0029`).
 - **Não lê:** `wyd_portal` direto (sem `USAGE` em `game`).
+- **Administra:** `wyd_admin` — `SELECT, UPDATE` concedidos por `0032`; sem `INSERT`/`DELETE`.
 
 Retenção: 365 dias após `released_at` (`M22`).
 

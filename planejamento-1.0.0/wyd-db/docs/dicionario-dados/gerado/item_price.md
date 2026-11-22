@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` e revisor de schema
 > Dono: equipe do wyd-db
 > Base: `ddl-confirmado.md` §5.14; `migrations-checklist.md` §2; `plano-migrations.md` §3
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
@@ -60,6 +60,7 @@ Trigger `trg_item_price_set_updated_at`.
 - **Escreve:** `wyd_game`.
 - **Lê:** `wyd_game`, `wyd_read`.
 - **Não lê:** `wyd_portal` (sem `USAGE` em `game`).
+- **Administra:** `wyd_admin` — `SELECT, UPDATE` concedidos por `0032`; sem `INSERT`/`DELETE`.
 
 ## Migration
 

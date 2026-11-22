@@ -73,10 +73,10 @@ entrega em vez de enfileirar duas (`M17`).
 | Índice | Consulta que justifica |
 |---|---|
 | `ix_delivery_queue_pendentes (id) WHERE status = 'pending'` | dreno lê os pendentes em ordem, sem `Sort` |
-| `ix_delivery_queue_conta (account_id)` parcial | FK do lado filho (`P-15`) |
-| `ix_delivery_queue_personagem (character_id)` parcial | FK do lado filho (`P-15`) |
-| `ix_delivery_queue_autor (created_by_person_id)` parcial | FK do lado filho (`P-15`) |
-| `ix_delivery_queue_fechadas (closed_at)` parcial | expurgo por retenção varre só o que fechou |
+| `ix_delivery_queue_conta (account_id) WHERE account_id IS NOT NULL` | FK do lado filho (`P-15`); nulo não entra no índice |
+| `ix_delivery_queue_personagem (character_id) WHERE character_id IS NOT NULL` | FK do lado filho (`P-15`); nulo não entra no índice |
+| `ix_delivery_queue_autor (created_by_person_id) WHERE created_by_person_id IS NOT NULL` | FK do lado filho (`P-15`); nulo não entra no índice |
+| `ix_delivery_queue_fechadas (closed_at) WHERE closed_at IS NOT NULL` | expurgo por retenção varre só o que fechou |
 | `ix_delivery_queue_status (status, created_at DESC)` | acompanhamento por estado, mais recente primeiro |
 
 Trigger `trg_delivery_queue_set_updated_at`.
