@@ -14,8 +14,8 @@ fechamento. Issue sem página com DoD executável não entra na fila.
 
 | Prioridade | Issues | Foco |
 |---|---|---|
-| `P1` | `WYDDB-001`–`016` | baseline, contratos e portas; sem isso o restante não tem fronteira |
-| `P2` | `WYDDB-017`–`026` | filas, save, shutdown e diagnóstico |
+| `P1` | `WYDDB-001`–`015` | baseline, contratos e portas; sem isso o restante não tem fronteira |
+| `P2` | `WYDDB-016`–`026` | SQL de repositório, filas, save, shutdown e diagnóstico |
 | `P3` | `WYDDB-027`–`034` | suíte, fixtures e anti-skip |
 | `P3` | `WYDDB-035`–`040` | série, contrato de migrations e troca |
 
@@ -39,6 +39,12 @@ Nenhuma issue bloqueada é marcada como concluída por ter página.
 Cada `WYDDB-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar. O DoD cita comando, arquivo ou documento de saída; a evidência fica
 na issue do GitHub e o número é registrado no relatório de entrega.
+
+A dependência de cada página é **espelhada no GitHub como vínculo `blocked by`**, e não como checklist
+em texto: em 2026-11-22 são 63 vínculos entre as 40 issues, e `WYDDB-001` é a única sem bloqueador.
+Bloqueio por dado ou ambiente que não é outra issue (seed, captura, CI, matriz) fica na label
+`estado/bloqueada` e no `Status` do board, com o detalhe em
+`planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3.
 
 ## 4. O que esta página não cobre
 

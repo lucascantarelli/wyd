@@ -8,7 +8,7 @@
 
 **Estado:** proposto (2026-11-22)
 
-**Fase:** 2 — contratos e erros tipados
+**Fase:** 1 — higiene e baseline
 **Prioridade:** P1
 
 ## Contexto

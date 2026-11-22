@@ -84,7 +84,7 @@ corpo** em `docs/` (120 arquivos, incluindo os índices que já viraram página)
 | Fato | Valor | Fonte |
 |---|---|---|
 | Visibilidade / branch padrão | público / `develop` | API do GitHub, 2026-11-19 |
-| Issues / milestones / Projects | 40 abertas (#82–#121) / 13 milestones (M0–M5 + F1–F7) / habilitado, project `WYD 1.0.0` nº 10 | API do GitHub, 2026-11-22 |
+| Issues / milestones / Projects | 40 abertas (#82–#121) / 13 milestones (M0–M5 + F1–F7) / habilitado, project `WYD 1.0.0` nº 10 ligado ao repositório, 40 itens com `Sistema`, `Fase`, `Prioridade`, `Marco` e `Status` preenchidos e 63 vínculos `blocked by` | API do GitHub, 2026-11-22; detalhe em `wyd-ops` §10.3 |
 | Merge permitido | squash, branch apagada no merge | API do GitHub |
 | Secret scanning / Dependabot | ativos | API do GitHub |
 | `crates/*` | 9 pastas, só `.gitkeep` | `git ls-files` |
@@ -159,7 +159,7 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 | D2 | `crates/*` estão vazios, mas o README e o CI pressupõem workspace Rust | `find crates` | qualquer `cargo build` na raiz falha |
 | D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
 | D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
-| D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-22:** as 40 issues #82–#121 existem no board, com milestone de fase, DoD e labels |
+| D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-22:** as 40 issues #82–#121 existem no board, com milestone de fase, DoD, labels, os quatro campos preenchidos, 5 views e 63 vínculos `blocked by` (`wyd-ops` §10.3) |
 | D6 | O plano diretor declara 147 páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **27 seguem** depois das 21 de recorte e das 40 `WYDDB-nnn` | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
 | D7 | Não existe `mkdocs.yml` em lugar nenhum, mas `wyd-docs` é dono do site e o guia do `wyd-db` já prescreve recursos do MkDocs — **resolvido em 2026-11-19**: site em MkDocs 2.0 no `wyd-docs/`, sem `mkdocs.yml`; recursos do MkDocs 1.x convertidos na origem (§2.2 e `LPDOC-14`) | `find . -iname 'mkdocs*.yml'` sem resultado | site não publicável; exigência sem base executável |
 | D8 | `docs/` na raiz não existe; no legado, `docs/` é referência — **resolvido em 2026-11-19**: a documentação publicada sai de `planejamento-1.0.0/*/docs/` por `wyd-docs/`, e o legado não é publicado | `ls` | risco de alguém publicar o legado como doc oficial |
@@ -199,8 +199,8 @@ Proposta em `wyd-ops/proposta-gestao-github-e-ambientes.md` aprovada e executada
       existirem; as 40 páginas com DoD fecharam em 2026-11-22 e as issues #82–#121 foram criadas.
 
 **Gate:** uma issue do roadmap chega ao board com sistema, fase e prioridade; o board mostra 40
-itens, o mesmo número de páginas `WYDDB-nnn`. **Pendente:** views customizadas do project; os 40
-itens já existem.
+itens, o mesmo número de páginas `WYDDB-nnn`. **Fechado em 2026-11-22** (`V`, `wyd-ops` §10.3): 40
+itens com os cinco campos preenchidos, 5 views e o project ligado ao repositório.
 
 ### Fase 2 — Fechar o `wyd-db`
 

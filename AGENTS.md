@@ -59,7 +59,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Lacunas do `wyd-db` | registradas por estado em `planejamento-1.0.0/wyd-db/lacunas.md` §1 |
 | Código Rust | apenas em `deprecated/crates/`, **ignorado pelo git**; `crates/*` só tem `.gitkeep` (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml` ou `Makefile` |
-| GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4, estrutura criada conforme `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10 |
+| GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4; projeto `WYD 1.0.0` (40 itens com os campos preenchidos, 5 views, dependências como `blocked by`) em `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
 | CI | o gate de documentação roda em `.github/workflows/docs.yml` (PR e push em `develop`/`main`, disparado por qualquer mudança na árvore `planejamento-1.0.0/` ou em `wyd-docs/`, sem lista de arquivos — 2026-11-22); o CI de código ainda é stub: `full-workflow.yml` entrega `version`/`commit` vazios, sem build, teste ou cobertura (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
 | Cliente | `wyd-client/files/`, ignorado pelo git (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 
