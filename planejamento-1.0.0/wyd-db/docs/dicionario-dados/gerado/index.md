@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **66 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
+**Estado:** **71 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -119,9 +119,22 @@ As 11 páginas restantes fecharam o arquivo em 2026-11-22; a forma das 13 está 
 As cinco fecharam em 2026-11-22; a forma delas está em `migrations/0013-content-taxonomy.md`, e a
 função `content.fn_fold` do mesmo arquivo não tem página própria (não é tabela).
 
+## Lote 8 — catálogo de skill e regras de refino (`0015` + `0021`), 5 tabelas
+
+| Tabela | Página | Migration |
+|---|---|---|
+| `content.skill_catalog` | [skill_catalog](skill_catalog.md) | `0015-content-skill` |
+| `content.refine_rate` | [refine_rate](refine_rate.md) | `0021-content-rules` |
+| `content.refine_gem_effect` | [refine_gem_effect](refine_gem_effect.md) | `0021-content-rules` |
+| `content.sanc_rate` | [sanc_rate](sanc_rate.md) | `0021-content-rules` |
+| `content.combine_value` | [combine_value](combine_value.md) | `0021-content-rules` |
+
+O `0015` cria uma tabela só, então o lote completou as cinco com quatro das cinco do `0021`;
+`content.accessory_refine_rule` fica para o lote seguinte.
+
 ## Próximos lotes
 
-Faltam **31 das 97**: `0015` (catálogo de skill) — os seeds `0016`–`0018` não
-criam tabela —, `0021` e `0022` (regras e sobrescritas), `0025` e `0026` (combate e quests/eventos) e
+Faltam **26 das 97**: `0021` (`accessory_refine_rule`) — os seeds `0016`–`0018`, `0020`, `0023` e
+`0027` não criam tabela —, `0022` (as três sobrescritas), `0025` e `0026` (combate e quests/eventos) e
 `0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é
 proposto por arquivo de migration, como o de `0019`.
