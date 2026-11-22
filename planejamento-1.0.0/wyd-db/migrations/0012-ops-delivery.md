@@ -22,7 +22,7 @@ escreve em `game` (`LAC-POR-01`).
 | Número | `0012` |
 | Arquivo | `crates/wyd-db/migrations/0012_ops_delivery.sql` |
 | Schema | `ops` |
-| Posição | 12 de 29 (ponte Cold → Hot, depois do estado de jogador de leitura simples) |
+| Posição | 12 de 34 (ponte Cold → Hot, depois do estado de jogador de leitura simples) |
 | Depende de | `0001` (schema `ops`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, autor), `0005` (`game.account`, destino de `gold`) e `0006` (`game.character`, destino de `item`/`level`) |
 | É dependência de | `0011` (entrega do item comprado) e `0029` (leitura operacional da fila, quando existir) |
 | Tabelas criadas | 1 (`delivery_queue`) |

@@ -49,7 +49,7 @@
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
 | `docs/arquitetura/` | 8 | 17 | faltam C4, modelo conceitual/lógico, retenção, fronteira |
 | `docs/specs/` | 1 | 20 | só `index.md`; nenhum requisito com ID existe ainda |
-| `docs/dicionario-dados/` | 21 | 21 (+97 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 97 por tabela são manuais (`M26`) e **71 existem** (arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021` em parte e `0024`, 2026-11-22) |
+| `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **75 existem** (arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022` e `0024`, 2026-11-22) |
 | `docs/planos/` | 3 | 10 | `index`, `plano-de-implantacao` e `riscos` |
 | `docs/roadmap/` | 1 | 42 | só `index.md`; 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
 | `docs/guia-desenvolvedor/` | 3 | 11 | |
@@ -62,9 +62,9 @@
 | `prompts/` | 0 | 9 | |
 | `skills/` | 0 | 9 | |
 
-**Totais planejados:** 147 páginas autorais em `docs/` + 97 por tabela, escritas à mão (`M26`) + 33 de migration + 59 de `src/`
+**Totais planejados:** 147 páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
 + 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** 44 em `docs/` (fora de
-`gerado/`, que reúne 72 arquivos: as 71 páginas de tabela e o índice), 26 em `migrations/`, 37 em
+`gerado/`, que reúne 76 arquivos: as 75 páginas de tabela e o índice), 28 em `migrations/`, 37 em
 `src/` (2026-11-22).
 
 ### 1.3 Série de migrations
@@ -77,7 +77,7 @@
 | Tabelas com DDL fechado | 109 de 109 | `ddl-confirmado.md` §1 |
 | Tabelas desenhadas e aguardando aprovação | 0 | `ddl-confirmado.md` §1 |
 | Arquivos com DDL inteiro fechado | 28 (todos menos os 6 seeds) | `migrations-checklist.md` §4, 2026-11-22 |
-| `SCHEMA_VERSION` alvo | 32 | `plano-migrations.md` §6 |
+| `SCHEMA_VERSION` alvo | 34 | `plano-migrations.md` §6 |
 
 ### 1.4 Repositório, GitHub e operação
 

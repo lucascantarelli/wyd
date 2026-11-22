@@ -20,7 +20,7 @@ de versão do conteúdo. Tudo que vem depois pressupõe este arquivo aplicado.
 | Número | `0001` |
 | Arquivo | `crates/wyd-db/migrations/0001_bootstrap.sql` |
 | Schema | nenhum próprio — **cria** `content`, `game`, `portal`, `ops` |
-| Posição | 1 de 29 (primeiro da série) |
+| Posição | 1 de 34 (primeiro da série) |
 | Depende de | `db/roles.sql` aplicado por `wyd-db provision apply` (papéis e o estado de `public` não vão na série) |
 | É dependência de | todos os outros 28 arquivos |
 | Tabelas criadas | 1 (`content.content_version`) |

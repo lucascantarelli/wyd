@@ -140,7 +140,7 @@ Nenhuma delas muda o schema do `wyd-db`.
 | Arquivos da série / tabelas planejadas / seeds | consultar `plano-migrations.md` §3–§4; resumo em `wyd-1.0.0.md` §1 |
 | Tabelas com DDL fechado | consultar `ddl-confirmado.md` §1 e `migrations-checklist.md` §4; resumo em `wyd-1.0.0.md` §1 |
 | Estado das páginas de migration | consultar `migrations-checklist.md` §2/§4; resumo em `wyd-1.0.0.md` §1 |
-| Lacunas `B`/`A`/`M` | **31 fechadas, 0 proposta, 0 aberta, 3 externas (`A11`, `A20`, `M21`)** | `lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | **33 fechadas, 0 proposta, 0 aberta, 3 externas (`A11`, `A20`, `M21`)** | `lacunas.md` §1 |
 | Divergências `P` / achados `D` | **11 fechadas** / **3 fechadas** | `lacunas.md` §1 |
 | Estado atual das páginas | consultar `migrations-checklist.md` §2/§4 |
 

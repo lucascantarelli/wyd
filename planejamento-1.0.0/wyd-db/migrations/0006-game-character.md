@@ -20,12 +20,12 @@ aprendidas em `0008`, guilda em `0010`, e conteúdo nos arquivos `0013` em diant
 | Número | `0006` |
 | Arquivo | `crates/wyd-db/migrations/0006_game_character.sql` |
 | Schema | `game` (FK para `content.content_version`) |
-| Posição | 6 de 29 (personagem e estado-base) |
+| Posição | 6 de 34 (personagem e estado-base) |
 | Depende de | `0001` (schemas/função), `0005` (`game.account`), versão `content.content_version` semeada por `0016` antes da criação de personagem |
 | É dependência de | `0007` (`game.session.character_id`), `0008` (skills), `0009` (itens), `0010` (guilda) |
 | Tabelas criadas | 5 (`character`, `character_status`, `character_scores`, `character_special`, `character_short_skill`) |
 | Objetos criados | 5 tabelas, 4 índices, 1 trigger |
-| `SCHEMA_VERSION` | não muda aqui: a migração troca a série para `29` somente no procedimento de `plano-migrations.md` §6 |
+| `SCHEMA_VERSION` | não muda aqui: a migração troca a série para `34` somente no procedimento de `plano-migrations.md` §6 |
 
 ## 2. Objetivo
 

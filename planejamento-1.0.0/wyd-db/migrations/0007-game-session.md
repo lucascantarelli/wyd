@@ -20,12 +20,12 @@ reaper.
 | Número | `0007` |
 | Arquivo | `crates/wyd-db/migrations/0007_game_session.sql` |
 | Schema | `game` |
-| Posição | 7 de 29 (topologia de canais e sessão viva) |
+| Posição | 7 de 34 (topologia de canais e sessão viva) |
 | Depende de | `0001` (schemas/função), `0005` (`game.account`), `0006` (`game.character`) |
 | É dependência de | `0008`+ usam `game.character`; sessão referencia topologia criada aqui |
 | Tabelas criadas | 2 (`game.server_channel`, `game.session`) |
 | Objetos criados | 2 tabelas, 6 índices, 1 trigger |
-| `SCHEMA_VERSION` | não muda aqui: a troca para `29` acontece no procedimento de `plano-migrations.md` §6 |
+| `SCHEMA_VERSION` | não muda aqui: a troca para `34` acontece no procedimento de `plano-migrations.md` §6 |
 
 ## 2. Objetivo
 

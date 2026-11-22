@@ -20,7 +20,7 @@ moram em `content.item_catalog` (`0014`) e nas tabelas de economia (`0011`).
 | Número | `0009` |
 | Arquivo | `crates/wyd-db/migrations/0009_game_inventory.sql` |
 | Schema | `game` |
-| Posição | 9 de 29 (inventário e baú, primeiro arquivo depois das skills) |
+| Posição | 9 de 34 (inventário e baú, primeiro arquivo depois das skills) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges), `0005` (`game.account`, dono do baú) e `0006` (`game.character`, dono do inventário) |
 | É dependência de | `0010`/`0011` não referenciam estas tabelas; o catálogo de `0014` é referenciado por valor, não por FK |
 | Tabelas criadas | 3 (`character_item`, `vault_item`, `refine_pity`) |

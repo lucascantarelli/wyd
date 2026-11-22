@@ -25,7 +25,7 @@ ou `DELETE`.
 | Número | `0002` |
 | Arquivo | `crates/wyd-db/migrations/0002_ops_audit.sql` |
 | Schema | `ops` |
-| Posição | 2 de 29 (primeiro arquivo do bloco operacional) |
+| Posição | 2 de 34 (primeiro arquivo do bloco operacional) |
 | Depende de | `0001_bootstrap` — schemas, papéis e `ALTER DEFAULT PRIVILEGES`; sem ele o `GRANT` daqui falha com `42501` |
 | É dependência de | nenhum arquivo da série: nenhuma tabela de outro arquivo referencia `ops.config_*`, e as duas tabelas de auditoria não têm FK por desenho |
 | Tabelas criadas | 4 (`ops.audit_log`, `ops.login_attempt`, `ops.config_revision`, `ops.config_change`) |

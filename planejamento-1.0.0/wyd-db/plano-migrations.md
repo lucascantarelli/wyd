@@ -157,7 +157,7 @@ A 1.0.0 **não** ganha diretório próprio: a pasta é `crates/wyd-db/migrations
 troca — o que muda é o conteúdo. Enquanto a troca não acontecer, os 34 arquivos vivem na branch
 `serie-1.0.0` e `develop` segue com os 53 herdados. O que isso custa: uma branch, e o gate que crava
 contagem (`tools/content/check-migrations.mjs`, `{ migrations: 53, tables: 87 }`) reprovando na branch
-com 32 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
+com 34 arquivos — consequência aceita em §1.3. Nada renomeado, nada apagado, `SCHEMA_VERSION`
 continua 53 em `develop`.
 
 ### 1.3 Critério de pronto do PR de ferramentas
@@ -389,7 +389,7 @@ só no portal e `game.account.person_id NOT NULL` é a fronteira. As três fecha
 
 ## 6. Troca da série: decidida, execução pendente
 
-A troca está **decidida**: um commit tira os 53 herdados e põe os 29 na mesma pasta `migrations/`, e o
+A troca está **decidida**: um commit tira os 53 herdados e põe os 34 na mesma pasta `migrations/`, e o
 rollback é `git revert` desse commit ou a tag `pre-serie-1.0.0`. O que ficou **recusado em 2026-11-17**
 foi o corte imediato e destrutivo — `git tag` de corte, `git rm` das 53 migrations, `docker compose
 down -v`. A consequência está em §1.2: a série nova é escrita numa branch, na mesma pasta
@@ -401,7 +401,7 @@ diria de qual pasta veio. Coexistir com
 a herdada é problema de árvore, não de nome de pasta: resolve-se por **branch e tag**, como §1.2
 descreve, e o rollback é `git revert`, não variável de ambiente.
 
-**O que a execução pendente não impede:** escrever as 29 migrations na branch, aplicá-las num
+**O que a execução pendente não impede:** escrever as 34 migrations na branch, aplicá-las num
 PG17 efêmero, provar o corte vertical de §3.2 e medir o catálogo. Nada disso toca a série viva nem o
 banco de desenvolvimento de quem usa a stack.
 

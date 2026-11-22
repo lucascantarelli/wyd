@@ -22,7 +22,7 @@ deixaram para trás por ordem de arquivo.
 | Número | `0014` (confirmado em 2026-11-20) |
 | Arquivo | `crates/wyd-db/migrations/0014_content_item.sql` |
 | Schema | `content` (1 tabela + 1 função de trigger) |
-| Posição | 14 de 32 (segundo do bloco de conteúdo, `0013`–`0027`) |
+| Posição | 14 de 34 (segundo do bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges) e `0013` (`content.fn_fold`, `content.item_kind`, `content.item_effect`). **Nada** de `portal`/`game`: não há FK de saída |
 | É dependência de | `0017` (seed dos 3.220 itens) e da migração aditiva que trouxer as FKs de `0009`/`0011`/`0012` |
 | Tabelas criadas | 1 (`item_catalog`) |

@@ -21,7 +21,7 @@ entram aqui.
 | Número | `0010` |
 | Arquivo | `crates/wyd-db/migrations/0010_game_guild.sql` |
 | Schema | `game` |
-| Posição | 10 de 29 (primeiro arquivo de organização social) |
+| Posição | 10 de 34 (primeiro arquivo de organização social) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges) e `0006` (`game.character`, dono do vínculo) |
 | É dependência de | nenhum arquivo da série; `0019` cria `guild_zone` como conteúdo, sem FK para cá |
 | Tabelas criadas | 4 (`guild`, `guild_member`, `guild_relation`, `guild_tower`) |

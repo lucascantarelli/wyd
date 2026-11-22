@@ -23,7 +23,7 @@ Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que 
 | Número | `0030` (confirmado em 2026-11-20; próximo livre depois de `0029`) |
 | Arquivo | `crates/wyd-db/migrations/0030_portal_content.sql` |
 | Schema | `portal` (4 tabelas) |
-| Posição | 30 de 32 (conteúdo editorial do portal) |
+| Posição | 30 de 34 (conteúdo editorial do portal) |
 | Depende de | `0001` (schema `portal`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, autor das linhas) |
 | É dependência de | nada na série: `0029` (views) não lê estas tabelas |
 | Tabelas criadas | 4 (`news`, `banner`, `guide`, `launcher_release`) |

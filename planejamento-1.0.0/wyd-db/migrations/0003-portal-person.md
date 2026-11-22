@@ -21,7 +21,7 @@ jogo.
 | Número | `0003` |
 | Arquivo | `crates/wyd-db/migrations/0003_portal_person.sql` |
 | Schema | `portal` |
-| Posição | 3 de 29 (identidade da pessoa) |
+| Posição | 3 de 34 (identidade da pessoa) |
 | Depende de | `0001_bootstrap` (schema, `ops.fn_set_updated_at` e permissões) |
 | É dependência de | `0004_portal_access` (`person_session`/`person_token`) e `0005_game_account` (`game.account.person_id`) |
 | Tabelas criadas | 3 (`portal.person`, `portal.person_profile`, `portal.person_consent`) |
