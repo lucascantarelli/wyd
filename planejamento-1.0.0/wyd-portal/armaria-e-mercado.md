@@ -5,13 +5,16 @@
 > Revisado em: 2026-11-22
 
 **Estado:** decidido (2026-11-22) — D1–D10 fixadas pelo texto da missão de produto; pacote de
-planejamento fechado, implementação não iniciada.
+planejamento fechado, implementação não iniciada. A origem numérica de dano e alcance segue em
+`P-POR-08` e o dono do fechamento de leilão em `LAC-POR-09` (`proposta`); a primeira não bloqueia a
+F7, a segunda condiciona a F9 à confirmação de operação.
 
 As decisões abaixo não foram escolhidas por preferência: cada uma tem a frase da missão que a obriga e
 o registro da alternativa recusada. Não resta decisão de produto em aberto. O executor da transferência de
 item foi definido em 2026-11-22 (§8, `LAC-POR-07` fechada) e o schema dele fechou no mesmo dia no
 `wyd-db` (`LAC-ADM-07`, lote `0034`), e a credencial portal→admin foi decidida em 2026-11-22
-(`LAC-ADM-04`: token de serviço por ambiente). Nenhum bloqueio de outro dono resta neste caminho.
+(`LAC-ADM-04`: token de serviço por ambiente). O caminho da custódia não tem bloqueio de outro
+dono; o fechamento de leilão aguarda a confirmação de operação em `LAC-POR-09`.
 
 ## 1. O pedido normalizado
 
@@ -63,11 +66,11 @@ comprova é comportamento — perfil público, slots, ficha do item, filtro — 
 | menção a armaria/mercado no planejamento | `grep -rni "armaria\|mercado\|leilão"` em `planejamento-1.0.0`: 0 antes de 2026-11-22 | requisitos §4, fatias F7–F11 e este documento |
 | rota pública de personagem | nenhuma rota pública de personagem até 2026-11-22 | `RF-POR-019`; rotas 44–50 acrescentadas em `rotas-e-permissoes.md` (total 50) |
 | view de personagem, item e inventário | `0029` cria só `game.v_live_session` e `portal.v_person_identity` | 4 views em `wyd-db/armaria-e-mercado.md` §2 |
-| estatística de arma | sem coluna de dano, alcance ou durabilidade | `RF-POR-021` + caminho de verificação (§4 da página de banco); `LAC-POR-08` |
+| estatística de arma | sem coluna de dano, alcance ou durabilidade; durabilidade não existe no cliente | `RF-POR-021` publica só o provado; `LAC-POR-08` fechada em 2026-11-22; captura de dano/alcance em `P-POR-08` |
 | carteira do portal | só `donate_credit`/`donate_debit` | `market_wallet` + `market_ledger` (§3.1–3.2 da página de banco) |
 | anúncio, lance, transação, avaliação, aviso, disputa, taxa | nenhuma tabela | 10 tabelas em `portal` + `game.market_escrow` |
 | executor da transferência de item | contrato definido em 2026-11-22 | quatro rotas no C4 do `wyd-admin` (`contrato-c4.md` §4.9–§4.13); `LAC-POR-07` fechada |
-| fechamento de leilão | nenhum job planejado | `LAC-POR-09`; job idempotente na F9 |
+| fechamento de leilão | nenhum job planejado | `LAC-POR-09` em `proposta`; recomendação `P-POR-09` (BFF fecha, `wyd-ops` agenda/alerta); job idempotente na F9 |
 | rota e tela administrativa do mercado | `/admin/*` sem mercado | F11, com MFA e auditoria |
 
 ## 4. Fronteira aplicada
@@ -90,18 +93,25 @@ em `game.character_item`, é movido pelo executor autorizado. O portal manda `cu
 **Decidida pela missão:** "estatísticas detalhadas das armas e equipamentos, incluindo dano, alcance,
 durabilidade e habilidades especiais" e "os dados devem ser reais".
 
-**Decisão:** os quatro campos entram na ficha. A origem é o trace da decodificação do item no
-`wyd-server` cruzada com o vetor `EF_*` de `content.item_catalog`; a publicação exige o trace feito, e o
-resultado define a forma (coluna no catálogo, tabela de efeito 1:N ou view calculada). Habilidades
-especiais são exibidas pelo símbolo desde já, porque o símbolo existe (`V`).
+**Decisão:** a ficha exibe **só o que o dado prova**. Habilidades especiais saem pelo símbolo `EF_*`
+(`V`, `item_effect.md`). **Durabilidade não é exibida como número**: o cliente não a tem e o lote
+`0009` decidiu que ela não vira coluna (`0009` §10, item 3; `ddl-confirmado.md` §5.12, item 3).
+**Dano e alcance** não têm coluna em `content.item_catalog` nem em `game.character_item`, e o vetor
+`EF_*` não carrega magnitude (`item_effect.md`); enquanto não houver origem provada, a ficha mostra o
+efeito e declara a estatística como **não medida**, com `stat_source = 'effect_names'`.
 
-**Fallback honesto:** se o trace provar que o número não existe em lugar nenhum, a lacuna `LAC-POR-08`
-fecha com a decisão registrada e a ficha declara `stat_source = 'effect_names'`, mostrando só o efeito
-provado. Nunca zero, nunca estimativa, nunca remoção do requisito.
+**Proposta `P-POR-08` (captura de dano e alcance):** quando o `wyd-server` existir, fazer o trace do
+struct de item e escolher a forma — coluna no catálogo, `content.item_effect_value` 1:N ou view
+calculada. Opções: (A) publicar o número se o trace provar a origem; (B) manter só o símbolo. (A)
+atende melhor a missão; (B) é o que a ficha faz hoje. Dono: `wyd-server` + `wyd-db`; roteiro em
+`wyd-db/armaria-e-mercado.md` §4.
 
-**Recusadas:** publicar a armaria sem os campos (a missão os exige); estimar a partir de `grade` ou
-`base_price` (número inventado); adiar a armaria inteira até o trace (a missão pede a funcionalidade na
-`1.0.0`, e o fallback mantém a fatia de pé).
+**Por que não esperar:** o bloqueio da F7 era publicar número inventado, não a existência do número. A
+ficha com a origem declarada mantém `RF-POR-021` válido; a captura é enriquecimento aditivo e não
+condição de publicação. **Recusadas:** publicar a armaria sem os campos (a missão os exige); estimar a
+partir de `grade` ou `base_price` (número inventado); exibir durabilidade como zero (inventa um dado
+que o cliente não tem); adiar a armaria inteira até a captura (a missão pede a funcionalidade na
+`1.0.0`, e a ficha publica só o provado).
 
 ### D2 — Moeda do mercado (`RF-POR-026`)
 
@@ -136,7 +146,10 @@ limite para o término do leilão".
 
 **Decisão:** leilão está na `1.0.0`, na fatia F9. Prazo em `ends_at`; lance reserva o crédito
 (`retencao_lance`) e é devolvido quando superado; fechamento por job idempotente com
-`uq_market_transaction_listing`; leilão sem lance expira e devolve a custódia.
+`uq_market_transaction_listing`; leilão sem lance expira e devolve a custódia. O **dono do job** está
+em `LAC-POR-09` (`proposta`): recomendação `P-POR-09`, com o corpo no BFF e o relógio no `wyd-ops`;
+a alternativa de worker do `wyd-ops` com papel próprio em `portal` fica registrada com o custo de
+novo `GRANT`.
 
 **Recusadas:** só venda direta na `1.0.0` (contraria a missão); fechar "no acesso", sem job (não escala e
 não notifica ninguém); lance sem reserva (arremate pode falhar por saldo e a transação vira promessa).
@@ -222,9 +235,9 @@ O dono da ordem é `docs/roadmap/roadmap.md`; aqui fica só o recorte e o motivo
 | F10 | reputação e notificação | uma avaliação por transação; um aviso por evento |
 | F11 | disputa, antifraude e fechamento | staff decide com MFA e auditoria; limite e ciclo recusados |
 
-Todas dentro da `1.0.0`. O contrato do executor está fechado (`LAC-POR-07`), então o que segura a F8 é o
-lote de `game.market_escrow` (`LAC-ADM-07`); F9 não começa sem F8; F10 e F11 não começam sem transação
-concluída.
+Todas dentro da `1.0.0`. O contrato do executor e o lote `0034` estão fechados (`LAC-POR-07`,
+`LAC-ADM-07`); o que segura a F8 é aplicar a série e implementar. F9 não começa sem F8; F10 e F11 não
+começam sem transação concluída.
 
 ## 7. Requisitos
 
@@ -245,8 +258,8 @@ Quem executa a transferência de item é o `wyd-admin`, e o contrato existe desd
 jogador, nunca staff); a resposta é síncrona e o erro é tipado — em particular `409 ADM_INVENTORY_FULL`
 deixa o item `retido`, nunca descartado.
 
-O que ainda falta não é executor, e sim schema: `game.market_escrow` e `portal.market_*` precisam de lote
-aprovado no `wyd-db` (`LAC-ADM-07`).
+O executor e o schema estão definidos: `game.market_escrow` e `portal.market_*` fecharam no lote
+`0034` em 2026-11-22 (`M31`, `LAC-ADM-07` fechada). O que falta é aplicar a série e implementar.
 
 Por que síncrono: o anúncio não pode ficar `ativo` antes de o item sair do inventário; uma fila
 assíncrona devolveria "aceito" sem garantia de custódia, que é exatamente o furo que a missão proíbe.
@@ -255,36 +268,36 @@ assíncrona devolveria "aceito" sem garantia de custódia, que é exatamente o f
 
 | Sistema | Precisa | Estado |
 |---|---|---|
-| `wyd-db` | lote com quatro views e onze tabelas (`armaria-e-mercado.md`), texto em `ddl-confirmado.md` | forma proposta; número de lote não reservado |
-| `wyd-admin` | contrato de custódia e entrega de item | **proposto em 2026-11-22**: C4 §4.9–§4.13, `acoes.md` §8, `ADM-10`; falta o lote de schema |
-| `wyd-server` | aplicar custódia/entrega na transação; expor o dado de §5 | a planejar com o trace de `LAC-POR-08` |
-| `wyd-ops` | job de fechamento e expiração, métricas do mercado | dono em `LAC-POR-09` |
-| `wyd-docs` | publicar as páginas novas e realinhar contagens | quando o lote virar página |
+| `wyd-db` | lote com quatro views e onze tabelas (`armaria-e-mercado.md`), texto em `ddl-confirmado.md` | onze tabelas no lote `0034` aprovado em 2026-11-22 (`M31`, `LAC-ADM-07` fechada); quatro views seguem em §2 |
+| `wyd-admin` | contrato de custódia e entrega de item | **proposto em 2026-11-22**: C4 §4.9–§4.13, `acoes.md` §8, `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada) |
+| `wyd-server` | aplicar custódia/entrega na transação; expor o dado de §5 | a planejar; captura de dano/alcance em `P-POR-08` |
+| `wyd-ops` | job de fechamento e expiração, métricas do mercado | `LAC-POR-09` em `proposta`: agenda e alerta o fechamento (`P-POR-09`) |
+| `wyd-docs` | publicar as páginas novas e realinhar contagens | lote `0034` já tem página (`0034-portal-market.md`); realinhar contagens |
 
 ## 10. Lacunas
 
 | ID | Assunto | Fecha quando |
 |---|---|---|
 | `LAC-POR-07` | executor da transferência de item | **fechada em 2026-11-22**: contrato no C4 do `wyd-admin` (§4.9–§4.13) e fatia `ADM-10` |
-| `LAC-POR-08` | origem de dano, alcance e durabilidade | trace do struct de item concluído e forma decidida |
-| `LAC-POR-09` | dono do fechamento de leilão | decidido se o job mora no BFF ou no `wyd-ops` |
+| `LAC-POR-08` | origem de dano, alcance e durabilidade | **fechada em 2026-11-22**: ficha publica só o provado; durabilidade não existe; dano/alcance ficam em `P-POR-08` |
+| `LAC-POR-09` | dono do fechamento de leilão | **`proposta` em 2026-11-22**: `P-POR-09` recomenda BFF fecha e `wyd-ops` agenda/alerta; falta o “sim” de operação |
 
-Registradas em `lacunas.md` em 2026-11-22; `LAC-POR-07` foi fechada no mesmo dia, com o contrato escrito.
-As duas restantes não são decisão de produto em aberto: são dependências com dono e critério de
-fechamento.
+Registradas em `lacunas.md` em 2026-11-22; `LAC-POR-07` e `LAC-POR-08` fecharam no mesmo dia, a
+primeira com o contrato escrito e a segunda com a ficha publicando só o provado. `LAC-POR-09` está em
+`proposta` com recomendação e alternativas; a F9 só começa depois do “sim” de operação.
 
 ## 11. Riscos
 
 - **Item duplicado** entre inventário e anúncio é o risco que mata o mercado: a custódia é uma transação,
   e o anúncio não fica ativo sem `escrow_ref`.
-- **Schema de custódia atrasado** segura a F8: o executor está definido, falta o lote de
-  `game.market_escrow`; `delivery_queue` não é plano B.
+- **Custódia sem schema aplicado** segura a F8: executor e lote `0034` estão definidos; falta aplicar
+  a série. `delivery_queue` não é plano B.
 - **Leilão sem comprador** prende item: expiração devolve a custódia no mesmo job.
 - **Inflação**: a taxa precisa ser sumidouro, e o saldo de mercado nunca nasce de lançamento manual.
 - **PII no perfil**: nome real, e-mail e sessão nunca entram na rota pública.
 - **Escala**: filtro sem índice vira varredura; `p95` é medido, não prometido.
-- **Estatística inventada** destrói a confiança no perfil mais rápido do que a falta dela: por isso o
-  fallback declara o que não foi medido.
+- **Estatística inventada** destrói a confiança no perfil mais rápido do que a falta dela: por isso a
+  ficha publica só o provado e `P-POR-08` declara o que falta medir.
 
 ## 12. O que este documento não decide
 
@@ -295,3 +308,5 @@ fechamento.
 | Valor da taxa e política econômica | produto |
 | Biblioteca de UI e forma visual | fatia, com registro se mudar fronteira |
 | Detecção estatística de fraude | fase posterior, com dado medido |
+| Captura de dano e alcance (`P-POR-08`) | `wyd-server` + `wyd-db` |
+| Agendamento e alerta do fechamento (`LAC-POR-09`) | arquitetura + `wyd-ops` |

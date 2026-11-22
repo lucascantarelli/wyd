@@ -4801,7 +4801,8 @@ prova (ids 1):
 | 10 | admin move custódia | `SET ROLE wyd_admin; INSERT …` e `DELETE FROM game.character_item …` | `INSERT 0 1` nas duas |
 | 11 | chave de custódia repetida | duas linhas com o mesmo `idempotency_key` | segundo `23505` em `uq_market_escrow_idempotency` |
 
-**O que este lote não decide:** as estatísticas de arma (`LAC-POR-08`, sem coluna e sem trace),
+**O que este lote não decide:** as estatísticas numéricas de arma (`P-POR-08`, sem coluna e sem
+captura; `LAC-POR-08` fechou em 2026-11-22 com a ficha publicando só o provado),
 `LAC-POR-06` (painel de monitoramento, do portal) e a retenção das tabelas de mercado — o mercado
 nasce como estado de jogador, como `game` e `portal` em `M22`, e crescer para sempre é decisão própria
 quando houver medição.

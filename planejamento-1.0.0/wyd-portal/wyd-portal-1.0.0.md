@@ -64,9 +64,9 @@ Medido em 2026-11-20, neste diretório (a contagem de páginas foi recontada em 
 | Páginas em `docs/` | 8 | `docs/index.md`, 4 de `arquitetura/`, 2 de `specs/`, 1 de `roadmap/` |
 | Requisitos funcionais | 33 | `docs/specs/requisitos.md` (18 de 2026-11-20 + 15 de armaria e mercado) |
 | Requisitos não funcionais | 10 | `docs/specs/requisitos.md` §5 (7 de 2026-11-20 + 3 de armaria e mercado) |
-| Lacunas abertas | 2 | `lacunas.md` §1 (7 fechadas, `LAC-POR-01` a `LAC-POR-07`; abertas: `08` e `09`) |
+| Lacunas abertas | 0 | `lacunas.md` §1 (8 fechadas, `LAC-POR-01` a `LAC-POR-08`; `LAC-POR-09` em proposta com `P-POR-09`) |
 | Rotas mapeadas | 50 | `docs/arquitetura/rotas-e-permissoes.md` §2–§3 (43 até 2026-11-22 + 7 de armaria/mercado) |
-| Tabelas do `wyd-db` citadas | 41 (40 com DDL) + 2 views; onze tabelas e quatro views propostas por armaria/mercado (F7–F11, sem DDL) | `docs/arquitetura/consumo-do-banco.md` §7 e §7.1 |
+| Tabelas do `wyd-db` citadas | 52 (51 com DDL) + 2 views; as 11 do mercado têm DDL no lote `0034`; quatro views seguem em §7.1 | `docs/arquitetura/consumo-do-banco.md` §7 e §7.1 |
 | Issues criadas | **0** | nenhuma, por decisão desta rodada |
 
 Número sem fonte e data não entra: os valores acima saem dos arquivos citados, não de memória.
@@ -108,10 +108,10 @@ aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5.10).
 | ~~`LAC-POR-06`~~ — **decidida:** telemetria vem do `/metrics` Prometheus do `wyd-server`, coletado pelo `wyd-ops`; o portal consulta a API | `wyd-ops` + arquitetura | NOC mostra CPU/RAM/latência com instante da amostra; sem tabela nova no `wyd-db` |
 | Planejar o `wyd-admin` | arquitetura | forma do contrato C4 (rotas, payload, códigos) |
 | Contrato de observabilidade do `wyd-ops` | `wyd-ops` | valor de URL/credencial, intervalo de coleta, retenção definitiva e dashboards; fontes e nomes estão em `docs/arquitetura/monitoramento.md` |
-| ~~Decidir armaria e mercado~~ — **decididas:** D1–D10 em 2026-11-22 | produto + arquitetura | `armaria-e-mercado.md`, `requisitos.md` §4, `roadmap.md` F7–F11; schema proposto em `wyd-db/armaria-e-mercado.md` |
-| ~~Executor da transferência de item~~ — **fechada em 2026-11-22** | arquitetura + `wyd-admin` | contrato nas quatro rotas do C4 (`contrato-c4.md` §4.9–§4.13) e fatia `ADM-10`; F8 agora espera o lote de `game.market_escrow` (`LAC-ADM-07`) |
-| Origem de dano, alcance e durabilidade | `wyd-server` + `wyd-db` | `LAC-POR-08`; trace antes de publicar número na ficha |
-| Dono do fechamento de leilão | arquitetura + `wyd-ops` | `LAC-POR-09`; F9 precisa de job idempotente |
+| ~~Decidir armaria e mercado~~ — **decididas:** D1–D10 em 2026-11-22 | produto + arquitetura | `armaria-e-mercado.md`, `requisitos.md` §4, `roadmap.md` F7–F11; schema no lote `0034` (`LAC-ADM-07` fechada) |
+| ~~Executor da transferência de item~~ — **fechada em 2026-11-22** | arquitetura + `wyd-admin` | contrato nas quatro rotas do C4 (`contrato-c4.md` §4.9–§4.13) e fatia `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada); F8 espera aplicar a série |
+| ~~Origem de dano, alcance e durabilidade~~ — **fechada em 2026-11-22** | `wyd-server` + `wyd-db` | `LAC-POR-08`: ficha publica só o provado; durabilidade não existe; captura de dano/alcance em `P-POR-08` |
+| Dono do fechamento de leilão | arquitetura + `wyd-ops` | `LAC-POR-09` em **proposta**: `P-POR-09` recomenda BFF fecha e `wyd-ops` agenda/alerta; falta o “sim” de operação |
 
 ## 7. Gate
 

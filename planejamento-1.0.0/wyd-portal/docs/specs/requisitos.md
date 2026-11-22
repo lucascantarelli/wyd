@@ -4,7 +4,8 @@
 > Base: `M21`; `wyd-portal-prompt.md` §5/§6; `docs/arquitetura/rotas-e-permissoes.md`; `docs/arquitetura/consumo-do-banco.md`; `docs/arquitetura/monitoramento.md`
 > Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20); §4 (armaria e mercado) acrescentada em 2026-11-22 pela missão de produto
+**Estado:** aceito (2026-11-20); §4 (armaria e mercado) acrescentada em 2026-11-22 pela missão de produto;
+RF-POR-021 e RF-POR-025 alinhados às decisões de 2026-11-22
 
 Requisito sem critério de aceitação é intenção. Cada bloco tem entrada, saída, critério verificável e
 o contrato que usa. Numeração `RF-POR-nnn` (funcional) e `RNF-POR-nnn` (não funcional); não se
@@ -183,11 +184,12 @@ banco, em `wyd-db/armaria-e-mercado.md`.
 
 ### RF-POR-021 — Ficha do item com estatísticas
 - **Entrada:** item da armaria ou da WYDpedia.
-- **Saída:** nome, categoria, grau, efeitos pelo símbolo, refino, ancient, gema e — quando o trace
-  existir — dano, alcance e durabilidade.
-- **Aceitação:** nenhum número de dano, alcance ou durabilidade é inventado; enquanto `LAC-POR-08`
-  estiver aberta a ficha exibe `stat_source` e declara a estatística como não medida; fechada a lacuna,
-  os quatro campos aparecem e o teste cobre cada um deles.
+- **Saída:** nome, categoria, grau, efeitos pelo símbolo, refino, ancient, gema e, quando houver
+  origem provada, dano e alcance; durabilidade não é exibida como número.
+- **Aceitação:** nenhum número de dano, alcance ou durabilidade é inventado; a ficha exibe
+  `stat_source` e declara a estatística como não medida enquanto `P-POR-08` não provar a origem;
+  durabilidade não vira coluna nem número (`0009` §10, item 3); quando a captura fechar, o teste cobre
+  dano e alcance. `LAC-POR-08` fechada em 2026-11-22.
 - **Contrato:** `content.v_item_sheet` (`§2.4`) e o caminho de verificação de `§4` do mesmo documento.
 
 ### RF-POR-022 — Filtro e ordenação do equipamento
@@ -222,8 +224,9 @@ banco, em `wyd-db/armaria-e-mercado.md`.
 - **Aceitação:** lance menor ou igual ao maior ativo é recusado; lance sem saldo é recusado; lance depois
   de `ends_at` é recusado; fechar duas vezes não cobra duas vezes (`uq_market_transaction_listing` mais
   idempotência); perdedores têm a reserva devolvida e recebem aviso.
-- **Contrato:** `portal.market_bid` (`§3.5`), `portal.market_transaction` (`§3.6`); dono do fechamento em
-  `LAC-POR-09`.
+- **Contrato:** `portal.market_bid` (`§3.5`), `portal.market_transaction` (`§3.6`); fechamento
+  idempotente por job, com dono em `LAC-POR-09` (`proposta`: `P-POR-09` recomenda BFF fecha e
+  `wyd-ops` agenda/alerta).
 
 ### RF-POR-026 — Carteira e extrato em crédito do portal
 - **Entrada:** conta do portal autenticada.
@@ -299,7 +302,7 @@ banco, em `wyd-db/armaria-e-mercado.md`.
 | RNF-POR-006 | Cobertura mínima de 85% no portal | gate de cobertura do workspace |
 | RNF-POR-007 | Credencial e URL interna de observabilidade nunca chegam ao navegador | varredura de resposta HTML/JSON sem `PROMETHEUS_URL`, `LOKI_URL`, `GRAFANA_URL` e sem segredo |
 | RNF-POR-008 | Armaria e mercado refletem o dado com janela declarada | cada tela declara o instante da leitura e a janela de cache (≤ 60 s, como `RF-POR-007`); escrita aparece no carregamento seguinte |
-| RNF-POR-009 | Mercado escala com muitas transações | vitrine e busca com índice e cursor; `p95` ≤ 300 ms na listagem e ≤ 2 s no fechamento, medidos com 10 mil anúncios; fechamento concorrente não liquida duas vezes |
+| RNF-POR-009 | Mercado escala com muitas transações | vitrine e busca com índice e cursor; `p95` ≤ 300 ms na listagem e ≤ 2 s no fechamento, medidos com 10 mil anúncios; fechamento concorrente não liquida duas vezes; atraso do fechamento tem métrica e alerta |
 | RNF-POR-010 | Escrita do mercado é segura e rastreável | nenhuma escrita sem idempotência; `UPDATE`/`DELETE` revogados em `market_ledger`; 100% das decisões de staff em `audit_log` |
 
 ## 6. Rastreio rápido
@@ -317,7 +320,7 @@ banco, em `wyd-db/armaria-e-mercado.md`.
 | RF-POR-018 | `/admin/monitoramento/launcher` | `POST /api/launcher/telemetria` + log estruturado no Loki | `LAC-POR-06`; sem tabela |
 | RF-POR-011 | `/admin/jogadores*`, `/admin/contas*` | `0005`–`0010` + C4 | contrato do `wyd-admin` |
 | RF-POR-012 | `/admin/config` | `0002` §5.9 | — |
-| RF-POR-019 a 022 | `/personagem/[id]` | Views `game.v_character_*` e `content.v_item_sheet` (`wyd-db/armaria-e-mercado.md` §2) | `LAC-POR-08` (estatísticas) |
-| RF-POR-023 a 029 | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira` | `portal.market_*` (`§3`); `game.market_escrow` (`§3.11`); contrato `wyd-admin` C4 §4.9–§4.13 | `LAC-POR-07` fechada (2026-11-22); `LAC-POR-09` (fechamento) |
+| RF-POR-019 a 022 | `/personagem/[id]` | Views `game.v_character_*` e `content.v_item_sheet` (`wyd-db/armaria-e-mercado.md` §2) | `LAC-POR-08` fechada (2026-11-22); captura de dano/alcance em `P-POR-08` |
+| RF-POR-023 a 029 | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira` | `portal.market_*` (`§3`); `game.market_escrow` (`§3.11`); contrato `wyd-admin` C4 §4.9–§4.13 | `LAC-POR-07` fechada (2026-11-22); `LAC-POR-09` em proposta (`P-POR-09`) |
 | RF-POR-030 a 033 | `/mercado/*`, `/admin/mercado` | `market_notification`, `market_dispute`, `audit_log` | — |
 | RNF-POR-008 a 010 | `/mercado*`, `/personagem/[id]` | índices de `§6`; `market_ledger` append-only | — |

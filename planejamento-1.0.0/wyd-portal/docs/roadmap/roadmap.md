@@ -4,7 +4,7 @@
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/rotas-e-permissoes.md`; `M21`
 > Revisado em: 2026-11-22
 
-**Estado:** aceito (2026-11-20)
+**Estado:** aceito (2026-11-20); F7 e F9 alinhadas às decisões de 2026-11-22
 
 Fatias de entrega, cada uma com DoD executável. **Nenhuma issue foi criada**: o roadmap planeja
 ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nesta rodada.
@@ -101,9 +101,9 @@ ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nes
 |---|---|
 | Fase | 6 |
 | Requisitos | `RF-POR-019` a `RF-POR-022`, `RNF-POR-008` |
-| Depende de | F2; views de `wyd-db/armaria-e-mercado.md` §2 no lote; `LAC-POR-08` fechada quanto às estatísticas |
+| Depende de | F2; views de `wyd-db/armaria-e-mercado.md` §2 no lote; `LAC-POR-08` fechada em 2026-11-22 (ficha publica só o provado; captura em `P-POR-08`) |
 | Entrega | `/personagem/[id]` com cabeçalho, os 16 slots, habilidades, ficha do item, filtro e ordenação |
-| DoD | rota responde sem sessão; personagem apagado devolve `404`; resposta sem `account_id`, e-mail, IP ou ouro; slot vazio e item não catalogado não quebram a página; a ficha exibe dano, alcance, durabilidade e habilidades especiais com a origem declarada — se o trace provar que o número não existe, `LAC-POR-08` fecha com a decisão registrada e a ficha declara só o que é provado; nenhuma escrita do portal em `game` |
+| DoD | rota responde sem sessão; personagem apagado devolve `404`; resposta sem `account_id`, e-mail, IP ou ouro; slot vazio e item não catalogado não quebram a página; a ficha exibe habilidades especiais pelo símbolo e, quando houver origem provada, dano e alcance; durabilidade não aparece como número; `stat_source` declara o que não foi medido e nenhum número é inventado; nenhuma escrita do portal em `game` |
 | Fora | edição de perfil, importação manual de dado, simulador de build |
 
 ### F8 — Mercado: carteira e venda direta
@@ -123,9 +123,9 @@ ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nes
 |---|---|
 | Fase | 6 |
 | Requisitos | `RF-POR-025`, `RF-POR-030` (lance e arremate), `RNF-POR-009` |
-| Depende de | F8; dono do fechamento definido em `LAC-POR-09`; job idempotente |
+| Depende de | F8; `LAC-POR-09` confirmada (recomendação `P-POR-09`: BFF fecha, `wyd-ops` agenda/alerta); job idempotente |
 | Entrega | anúncio `leilao` com `ends_at`, lances com reserva de crédito, fechamento por job, aviso de arremate e de lance superado |
-| DoD | lance menor ou igual ao maior ativo é recusado; lance depois de `ends_at` é recusado; o job roda duas vezes e não cobra duas vezes; perdedor recebe a reserva de volta; vencedor recebe o item; leilão sem lance expira e devolve a custódia ao vendedor |
+| DoD | lance menor ou igual ao maior ativo é recusado; lance depois de `ends_at` é recusado; o job roda duas vezes e não cobra duas vezes; perdedor recebe a reserva de volta; vencedor recebe o item; leilão sem lance expira e devolve a custódia ao vendedor; atraso do fechamento tem métrica e alerta |
 | Fora | lance automático (proxy bid) e compra imediata em leilão sem `buyout_price` |
 
 ### F10 — Mercado: reputação e notificação
@@ -180,11 +180,12 @@ existência.
 | F4 | Loki ou Grafana fora | cada tela degrada isolada (`monitoramento.md` §8); presença e motor continuam e a tela diz qual fonte falhou |
 | F4 | telemetria do launcher sem histórico no banco | agregado em processo + log no Loki; a tela declara a janela “desde o boot” e não inventa número |
 | F6 | tela sem tabela | não começa antes do lote de schema no `wyd-db` |
-| F7 | estatística de arma inexistente no banco | `LAC-POR-08`: trace antes de publicar número; sem ele, a ficha declara o que é provado e a fatia não fecha |
+| F7 | estatística de arma inexistente no banco | `LAC-POR-08` fechada: a ficha publica só o provado; captura de dano/alcance em `P-POR-08` |
 | F8 | item duplicado entre inventário e anúncio | custódia na mesma transação (`armaria-e-mercado.md` §3.11); anúncio só fica `ativo` com `escrow_ref` |
-| F8 | schema de custódia atrasado | `LAC-ADM-07`: o contrato do `wyd-admin` está escrito (`LAC-POR-07` fechada), falta o lote de `game.market_escrow`; `delivery_queue` foi recusada para custódia |
-| F9 | leilão fechando duas vezes | job idempotente + `uq_market_transaction_listing` |
+| F8 | schema de custódia não aplicado | `LAC-ADM-07` fechada: contrato do `wyd-admin` escrito (`LAC-POR-07`) e lote `0034` aprovado; falta aplicar a série; `delivery_queue` foi recusada para custódia |
+| F9 | leilão fechando duas vezes | job idempotente + `uq_market_transaction_listing`; `P-POR-09` exige dreno `SKIP LOCKED` |
 | F9 | leilão sem comprador deixa item preso | expiração devolve a custódia ao vendedor no mesmo job |
+| F9 | fechamento parado ou atrasado | `P-POR-09`: métrica de atraso e alerta; o lote é reentrante e tem teto de tempo |
 | F10 | avaliação usada como retaliação | uma por transação, só pelo comprador, com moderação por estado `oculto` |
 | F11 | taxa alimentando inflação | taxa é sumidouro: linha `taxa` no ledger não é creditada a ninguém |
 
