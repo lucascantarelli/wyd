@@ -1230,7 +1230,7 @@ tabela, depois o procedimento.
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
 | **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
-**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **97** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); nada delas existe hoje.
+**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **97** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); **36 das 97 ainda não existem** em 2026-11-22 e entram em lotes.
 
 **Dependências duras:** Onda 3 depende de 1–2 (requisito cita entidade do modelo); Onda 4 depende
 de 2 (domínio cita entidade); Onda 7 depende de 4–5 (módulo cita tabela e migration); Onda 8
