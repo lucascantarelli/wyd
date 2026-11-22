@@ -140,7 +140,7 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 0 pendentes | `M27` e `M28` fecharam em 2026-11-21; 30 fecharam; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | 0 pendentes | `M27` e `M28` fecharam em 2026-11-21 e `M29` em 2026-11-22; 31 fecharam; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
 | DDL não desenhado | 0 tabelas | todas as 97 têm coluna desenhada; 32 arquivos de migration para 97 tabelas (32/97, `plano-migrations.md` §3, 2026-11-21); os cinco lotes foram aprovados em 2026-11-21 e os seis seeds são escritos à mão (`plano-migrations.md` §4) |

@@ -2,7 +2,7 @@
 > Público: Arquiteto de schema e operação
 > Dono: equipe do wyd-db
 > Base: `padrao-banco.md` §2, §8, `ddl-confirmado.md`, `docs/arquitetura/adr/adr-db-0001-provisionamento-de-papel-fora-da-serie.md`
-> Revisado em: 2026-11-21
+> Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-18)
 
@@ -178,6 +178,47 @@ fonte destas quatro.
 
 Nas duas alternativas, o papel do `wyd-admin` em `game`/`ops.audit_log` já existe por `M27` (`0032`).
 A escolha foi a **B**, decidida em 2026-11-21; `M28` está fechada em `lacunas.md` §2.3.
+
+### Tabela criada depois da troca não herda o `GRANT` (2026-11-22)
+
+**Pergunta:** o `0032` precisa de `ALTER DEFAULT PRIVILEGES` para que uma tabela criada depois dele
+herde os privilégios do `wyd_admin`? **Decisão: não** — nem precisa, nem deve.
+
+O privilégio do `wyd_admin` é **por rota do C4**, não por schema: `INSERT` aparece em duas das sete
+tabelas e `UPDATE` em seis (matriz acima), e `ops.audit_log` tem `INSERT` de tabela com `SELECT` de uma
+coluna só. `ALTER DEFAULT PRIVILEGES` é uniforme por schema e não conhece coluna, então qualquer
+default que cubra as rotas futuras concede a mais nas tabelas em que a rota não pede aquele verbo.
+
+| Opção | Forma | Consequência | Medição (2026-11-22) |
+|---|---|---|---|
+| **A (decidida em 2026-11-22)** | sem `ALTER DEFAULT PRIVILEGES`; cada tabela nova traz o seu `GRANT` no arquivo que a cria | tabela nova sem `GRANT` responde `42501` ao `wyd_admin`: falha fechada, visível antes do tráfego | tabela criada por `wyd_migrator` sem `GRANT` — `SELECT`, `INSERT`, `UPDATE`, `DELETE` = `f` |
+| B (recusada) | default `SELECT, INSERT, UPDATE` em `game` e `INSERT` em `ops` | toda tabela futura nasce gravável pelo staff, inclusive as que nenhuma rota do C4 alcança; o default não distingue `account_wallet` (sem `INSERT`) de `account_moderation` (com) | tabela nova com o default — `sel`/`ins`/`upd` = `t`/`t`/`t` em `game`, `f`/`t`/`f` em `ops` |
+| C (recusada) | default amplo + `REVOKE` no arquivo que cria cada tabela | volta a exigir trabalho por tabela e deixa uma janela em que o privilégio a mais existe; não economiza `GRANT`, só o inverte | — |
+
+**Por que B também não serviria para `ops.audit_log`:** `SELECT (id)` é privilégio de coluna, e
+`ALTER DEFAULT PRIVILEGES` não aceita coluna — o comando responde `0LP01 default privileges cannot be
+set for columns`. Um default de auditoria só poderia ser `SELECT` de tabela, que é exatamente o que C1
+recusou.
+
+**Obrigação que a decisão cria.** Tabela nova que ganhe rota do C4 entra com o `GRANT` explícito na
+mesma migration, com o privilégio mínimo daquela rota; o teste de ACL confere a matriz. Sem o `GRANT`,
+a rota falha no primeiro `INSERT`/`UPDATE` com `42501`, não em produção.
+
+**O que a decisão não muda.** `P-18` continua valendo para os runtimes: o default por schema segue
+dando os quatro verbos a `wyd_game` em `game` e a `wyd_portal` em `portal`, e `SELECT` a `wyd_read` em
+`ops` e `content` (`0001` §4). A exceção é o papel de staff, cujo privilégio é por tabela.
+
+**Medido em 2026-11-22** em PG 17.11 (`postgres:17-alpine`), com os três papéis, os dois schemas e os
+`GRANT USAGE` de `0001` reproduzidos: a tabela criada por `wyd_migrator` sem `GRANT` respondeu `f` aos
+quatro verbos para `wyd_admin`; com o default da opção B, a tabela nova nasceu com `SELECT`, `INSERT` e
+`UPDATE` em `game` e só `INSERT` em `ops`; e o default de coluna foi recusado com `0LP01 default
+privileges cannot be set for columns`.
+
+**Como verificar:** `has_table_privilege('wyd_admin', '<schema.tabela>', '<verbo>')` na tabela nova,
+tendo a matriz da seção "Decisão — papel `wyd_admin`" como lista fechada do que pode ser `true`.
+
+**Registrada:** `M29` em `lacunas.md` §2.3 (fechada em 2026-11-22); o escopo do `0032` fica em
+`migrations/0032-admin-grants.md` §5 e a nota de DDL em `ddl-confirmado.md` §5.32.
 
 ## O que é hash e com que algoritmo
 
