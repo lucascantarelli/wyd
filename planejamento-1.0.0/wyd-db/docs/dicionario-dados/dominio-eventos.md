@@ -35,8 +35,8 @@ erDiagram
     guild ||--o{ event_participation : "participa"
 ```
 
-`event_participation` aponta para `content.world_event` com **`RESTRICT`** e para personagem/guilda com
-`CASCADE`/`SET NULL`, conforme o dono da linha. `kefra_state.last_guild_id` e
+`event_participation` aponta para `content.world_event` com **`RESTRICT`** e para personagem e guilda com
+`SET NULL`: o histórico sobrevive aos dois, perdendo só a referência. `kefra_state.last_guild_id` e
 `castle_state.owner_guild_id` usam `SET NULL`: estado único sobrevive à guilda que o detinha.
 
 ## Ciclo de vida do dado
@@ -44,7 +44,7 @@ erDiagram
 | Tabela | Nasce | Muda | Morre |
 |---|---|---|---|
 | `world_event`, `event_schedule` | seed `0027` | nunca em runtime | com o seed |
-| `event_participation` | fim de participação | nunca | com o personagem |
+| `event_participation` | fim de participação | nunca | nunca: personagem e guilda viram `NULL` (`SET NULL`) |
 | `kefra_state` | primeira disputa | dono, contador | nunca (linha única) |
 | `castle_state` | primeira conquista | dono, cofre | nunca (linha única) |
 
