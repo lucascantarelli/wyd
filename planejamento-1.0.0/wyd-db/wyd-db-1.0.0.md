@@ -351,31 +351,20 @@ por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas 
 
 **Teto × escrito (2026-11-22):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **58 páginas com corpo em `docs/`**, todas com o
-cabeçalho de §7.1 — as **3 de raiz** (`index`, `convencoes`, `glossario`), **10 em `arquitetura/`**
-(`migracoes`, `seguranca`, `adr/index`, `adr/adr-db-0001`, `adr/adr-db-0002`, `padroes-postgres`,
-`integridade-e-constraints`, `contexto-c4`, `visao-geral`, `index`), **21 em `dicionario-dados/`**
-(`index`, `como-ler` e as 19 de domínio), **7 em `planos/`** (`plano-de-implantacao`, `riscos`,
-`plano-de-dados-e-seeds`, `plano-de-qualidade-e-gates`, `registro-de-execucao`, `index`,
-`plano-de-documentacao`), **3 em
-`guia-desenvolvedor/`** (`como-adicionar-migration`, `como-adicionar-tabela`, `checklist-de-pr`),
-**2 em `guia-teste/`** (`testes-de-sistema`, `testes-de-contrato`), **2 em `guia-administrador/`**
-(`configuracao`, `index`), **2 em `guia-documentacao/`** (`index`, `estilo-e-linguagem`) e **8 em
-`specs/`** (`index`, `restricoes-e-premissas`, `requisitos-funcionais`, `regras-de-negocio`,
-`casos-de-uso`, `estados/conta-e-moderacao`, `estados/sessao`, `fluxos/login-e-sessao`); eram **15**
-em 2026-11-18. Os dois índices que não tinham cabeçalho — `docs/index.md` e `arquitetura/adr/index.md`
-— receberam o bloco de §7.1 na revisão de 2026-11-18; antes traziam só o título. Os outros **3
-arquivos `index.md` são título de uma linha** — `roadmap`, `guia-desenvolvedor` e `guia-teste` — e não
-contam como página (§2); `dicionario-dados/gerado/index.md` é o índice auxiliar das páginas por
-tabela, também fora da contagem. Fora de `docs/`: **28 de 34** em `migrations/` (2026-11-22) e **37 de 59** em `src/` — os dois `spec.md`
-de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
+medição de `planos/metricas.md`. **Medido:** **120 páginas com corpo em `docs/`**, 116 com `**Estado:**` e 4 portas de navegação sem
+estado editorial — as **3 de raiz**, **13 em `arquitetura/`**, **21 em `dicionario-dados/`**, **8 em
+`planos/`**, **10 em `guia-desenvolvedor/`**, **4 em `guia-administrador/`**, **5 em `guia-teste/`**,
+**4 em `guia-documentacao/`**, **10 em `specs/`** e **42 em `roadmap/`** (índice, fases e as 40
+`WYDDB-nnn`). O lote 6 escreveu os 21 recortes e as 40 páginas de issue; os outros três índices que
+eram título de uma linha — `roadmap`, `guia-desenvolvedor` e `guia-teste` — agora são páginas. Fora de
+`docs/`: **28 de 34** em `migrations/` (2026-11-22) e **37 de 59** em `src/` — os dois `spec.md` de
+`src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
-**O que dá para escrever agora, página a página:** `proposta-paginas.md` (proposta de 2026-11-18)
-mapeia as **147** páginas autorais de `docs/` em **0 escrevíveis**, **21 de recorte** e **68
-bloqueadas** — eram 146 páginas, 23 escrevíveis e 84 bloqueadas na medição de 2026-11-18, antes de as
-**19 páginas de domínio** ficarem escritas (15 delas estavam na lista de bloqueadas) —, com a fonte de
-cada uma e o mapa de diluição das seis fontes de planejamento. Os **lotes 1 a 5** dela (padrão,
-identidade, série e operação, dicionário e índices) estão escritos: os títulos contam nas 58 acima.
+**O que dá para escrever agora, página a página:** `proposta-paginas.md` mapeia as **147** páginas
+autorais de `docs/` em **0 escrevíveis**, **0 de recorte** e **27 bloqueadas** — as 21 de recorte e as
+40 `WYDDB-nnn` foram escritas no lote 6. A fonte de cada bloqueio e o mapa de diluição das seis fontes
+continuam na proposta. Os **lotes 1 a 6** estão escritos: os títulos e as páginas novas contam nas 120
+acima.
 
 ---
 
@@ -691,7 +680,7 @@ requisito, critério de saída e issues que contém; diagrama de dependência en
 comando/arquivo), `fora de escopo`, `risco`, `depende de`, `evidência ao fechar`. Issue sem DoD
 executável não entra na fila.
 
-Distribuição inicial das 40 issues por fase (a numeração é criada na Onda 7, em ordem de execução):
+Distribuição das 40 issues por fase. As páginas desta entrega usam `WYDDB-001`–`WYDDB-040`; a criação no GitHub é a Onda 8, depois do merge das páginas:
 
 | Fase | Escopo | Issues |
 |---|---|---|
@@ -1273,7 +1262,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 | `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | **aprovada em 2026-11-22** | Onda 5 |
 | `D-5` | prefixos de ID de §9.1, independentes de qualquer numeração anterior | **aprovada em 2026-11-22** | Ondas 3 e 8 |
 | `D-6` | `docs/` é a fonte do site; `migrations/`, `src/`, `tests/`, `prompts/`, `skills/` não são publicados | **aprovada em 2026-11-22** | Onda 9 |
-| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | **distribuição aprovada em 2026-11-22**; as páginas `WYDDB-nnn` com DoD ainda não existem | Onda 8 |
+| `D-7` | 40 issues iniciais distribuídas nas 7 fases de §6.10 | **distribuição aprovada em 2026-11-22**; as 40 páginas `WYDDB-nnn` com DoD existem e são a origem das issues | Onda 8 |
 | `D-8` | o teto de páginas autorais é o medido em `planos/metricas.md` (a série reescrita muda a contagem); página que não responder a §2 é descartada | **aprovada em 2026-11-22** | todas |
 
 ### 12.1 Checklist de aprovação

@@ -47,15 +47,15 @@
 | Pasta | Escritas | Planejadas | Observação |
 |---|---:|---:|---|
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
-| `docs/arquitetura/` | 10 | 17 | `index` + 9; faltam C4 de componentes, implantação, fronteira, fluxo, modelo conceitual/lógico e retenção |
-| `docs/specs/` | 8 | 20 | `index` + 7 escritos; faltam 4 de topo, 5 fluxos e 3 estados |
+| `docs/arquitetura/` | 13 | 17 | `index` + 12; faltam implantação, fluxo, modelo conceitual e retenção |
+| `docs/specs/` | 10 | 20 | `index` + 9; faltam 4 de topo, 4 fluxos e 3 estados |
 | `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **109 existem** (2026-11-22) |
-| `docs/planos/` | 7 | 10 | `index` + 6 planos escritos, inclusive `plano-de-documentacao` |
-| `docs/roadmap/` | 1 | 42 | só `index.md`; 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
-| `docs/guia-desenvolvedor/` | 4 | 11 | 2 páginas + `checklist-de-pr` + `index` |
-| `docs/guia-administrador/` | 2 | 8 | `index` + `configuracao` |
-| `docs/guia-teste/` | 3 | 7 | `index` + `testes-de-sistema` + `testes-de-contrato` |
-| `docs/guia-documentacao/` | 2 | 8 | `index` + `estilo-e-linguagem` |
+| `docs/planos/` | 8 | 10 | `index` + 7 planos escritos, inclusive `plano-de-documentacao` e `plano-de-testes` |
+| `docs/roadmap/` | 42 | 42 | `index`, `fases` e as 40 `WYDDB-nnn` escritas; as issues nascem na Onda 8 |
+| `docs/guia-desenvolvedor/` | 10 | 11 | 3 páginas anteriores + 7 recortes; falta `pool-e-transacoes` |
+| `docs/guia-administrador/` | 4 | 8 | `index`, `configuracao`, `instalacao` e `diagnostico` |
+| `docs/guia-teste/` | 5 | 7 | `index`, contrato, sistema, `piramide-e-alvos` e `gates-e-anti-skip` |
+| `docs/guia-documentacao/` | 4 | 8 | `index`, `estilo-e-linguagem`, `estrutura-e-navegacao` e `revisao-e-publicacao` |
 | `migrations/` | 28 | 36 | 2 páginas de seção (por escrever) + 34 arquivos, 28 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
 | `tests/` | 0 | 12 | |
@@ -63,8 +63,8 @@
 | `skills/` | 0 | 9 | |
 
 **Totais planejados:** 147 páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **58 páginas autorais com
-corpo** em `docs/` (61 arquivos, 3 índices de uma linha), fora de `gerado/`, que reúne **110 arquivos**
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **120 páginas autorais com
+corpo** em `docs/` (120 arquivos, incluindo os índices que já viraram página), fora de `gerado/`, que reúne **110 arquivos**
 (as 109 páginas de tabela e o índice); 28 em `migrations/`, 37 em `src/` (2026-11-22).
 
 ### 1.3 Série de migrations
@@ -92,7 +92,7 @@ corpo** em `docs/` (61 arquivos, 3 índices de uma linha), fora de `gerado/`, qu
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
 | CI | `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
-| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **200 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
+| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **259 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos em `wyd-client/files/`, ignorado | `find` |
 
 ### 1.5 Cobertura funcional da `1.0.0`

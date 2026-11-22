@@ -1,0 +1,77 @@
+> Pergunta: "como provamos o `wyd-db` e quando a `1.0.0` pode sair?"
+> Público: QA, desenvolvedor, arquiteto e operação
+> Dono: equipe do `wyd-db`
+> Base: `wyd-db-1.0.0.md` §6.17 e §6.9; `plano-migrations.md` §7; `docs/guia-teste/`; `plano-de-qualidade-e-gates.md`
+> Revisado em: 2026-11-22
+
+**Estado:** proposto (2026-11-22)
+
+O plano de testes define **o que precisa ser provado**, em qual alvo e com qual dado. Ele não inventa
+uma matriz de capacidades que ainda não existe: os cinco alvos estão planejados, a suíte não foi
+implementada e a matriz `CAP-nn` é uma lacuna declarada. O critério de saída só vale quando o alvo
+existir e produzir evidência; "não rodou" não é verde.
+
+## 1. Escopo
+
+| Entra | Não entra |
+|---|---|
+| forma da série e do catálogo, sem banco | teste de balanceamento ou regra de jogo |
+| comportamento contra PostgreSQL 17 real | teste de interface do portal ou do cliente |
+| isolamento por papel e por sessão | carga, stress e capacidade sem volume medido |
+| ciclo `up` → `down` → `up` | ETL da base legada |
+| contrato do runner com portas falsas | CI real, enquanto o workflow não existir |
+
+## 2. Alvos planejados
+
+| Alvo | O que prova | Precisa de banco | Fonte |
+|---|---|---|---|
+| `contrato_catalogo` | o documento de catálogo e a série descrevem as mesmas tabelas | não | `guia-teste/testes-de-contrato.md` |
+| `contrato_migrations` | série contígua, `down` completo, FK para o futuro, seed fora de ordem, constraint anônima e tipo proibido | não | `guia-teste/testes-de-contrato.md` |
+| `sistema_pg` | aplicação, reaplicação, drift, ciclo de `down`, lock e concorrência | sim | `guia-teste/testes-de-sistema.md` |
+| `sistema_sessoes` | `permission denied` por papel e leitura cruzada só por view | sim | `guia-teste/testes-de-sistema.md` |
+| `sistema_stack_caps` | a matriz de capacidades, quando ela existir | sim | lacuna `CAP-nn` |
+
+Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; ainda não há `Cargo.toml` com esses alvos. A coluna
+“precisa de banco” separa o que pode rodar sem PostgreSQL do que exige um banco descartável.
+
+## 3. Matriz capacidade × alvo
+
+A matriz `CAP-nn → alvo → cenário → requisito` **não existe**. Ela não é substituída por uma tabela
+inventada nesta página: cada capacidade nova deve ser registrada na matriz e ligada a um alvo antes de
+o teste ser aceito. Até lá, a regra de cobertura é a de
+[`../guia-teste/gates-e-anti-skip.md`](../guia-teste/gates-e-anti-skip.md): nenhum teste sem
+capacidade, nenhuma capacidade sem teste.
+
+## 4. Dado e ambiente
+
+| Item | Regra |
+|---|---|
+| banco sem PostgreSQL | contrato lê a série como texto e não abre conexão |
+| banco real | PostgreSQL 17 descartável; DSN em `WYD_DB_URL_TEST` |
+| isolamento | cada teste usa chave própria e limpa o que criou; nada de estado global |
+| dado de conteúdo | fixture explícita; seed de desenvolvimento não é dado de produção |
+| segredo | nenhum valor real em fixture, log ou snapshot |
+| id | nada de id mágico; a factory devolve o identificador criado |
+
+O DSN de teste é o único ambiente que o alvo de sistema lê; a lista completa de variáveis por papel
+está em `src/provision/spec.md` §3, e o guia não a duplica.
+
+## 5. Critério de saída da `1.0.0`
+
+1. `contrato_migrations` e `contrato_catalogo` passam na série viva.
+2. `sistema_pg` prova aplicar, reaplicar, detectar drift e desfazer até zero.
+3. `sistema_sessoes` prova a fronteira de escrita e a leitura por view.
+4. Nenhum `SKIP`, `#[ignore]` novo ou filtro silencioso no caminho de aceite.
+5. O corte vertical de `plano-migrations.md` §3.2 passa com o cliente 7662 (evidência manual datada).
+6. A matriz `CAP-nn` está preenchida ou a lacuna está declarada no relatório de saída.
+
+Os itens 1–3 e 5 não podem ser marcados sem a suíte e a série; o item 6 depende da matriz, que ainda
+não existe. O que o plano **não** mede é cobertura por linha, tempo de execução ou custo por alvo.
+
+## 6. O que este plano não cobre
+
+- **Teste de carga, stress e capacidade:** não há volume nem limiar aprovado.
+- **Teste de interface e E2E:** pertencem aos sistemas consumidores, não ao crate.
+- **CI real:** é de `plano-ci-real.md` e será aplicado depois do primeiro código; o gate local de
+  docs não substitui teste do crate.
+- **Cobertura percentual:** a regra é por capacidade, não por linha; não há número de cobertura.
