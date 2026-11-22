@@ -110,7 +110,7 @@ inventar”.
 | `wyd-server` | composição do servidor; um processo por canal | vazio |
 | `wyd-sim` | fórmulas, curvas e simulações determinísticas | vazio |
 | `wyd-db` | PostgreSQL 17, migrations, repositórios, filas | **piloto**, parcial |
-| `wyd-admin` | administração, HTTP/JSON interno, staff | **planejado**: contrato C4 e custódia de item do mercado propostos (2026-11-22); código vazio |
+| `wyd-admin` | administração, HTTP/JSON interno, staff | **planejado**: contrato C4 e custódia de item propostos (2026-11-22), com a autenticação portal → admin e o canal de controle do `wyd-server` propostos na mesma data e aguardando o dono; código vazio |
 | `wyd-portal` | portal Next.js: site, login, cadastro, BFF | **planejado**: 11 páginas de planejamento, 33 `RF-POR`, armaria e mercado em F7–F11 (2026-11-22); código vazio |
 | `wyd-launcher` | launcher Tauri: patch, manifesto, serverlist/itemlist | vazio |
 | `wyd-client` | patches e arquivos de configuração do cliente | vazio (cliente em `wyd-client/files/`) |

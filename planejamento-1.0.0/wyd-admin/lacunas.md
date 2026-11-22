@@ -5,15 +5,21 @@
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21); `LAC-ADM-07` abriu em 2026-11-22 com a custódia de item e fechou na
-mesma data, junto de `LAC-ADM-02` e `LAC-ADM-06`. **Duas lacunas abertas** (`LAC-ADM-03` e `LAC-ADM-04`);
-nenhuma foi fechada por suposição.
+mesma data, junto de `LAC-ADM-02` e `LAC-ADM-06`. **Nenhuma lacuna `aberta`**; duas estão `proposta`
+(`LAC-ADM-03` e `LAC-ADM-04`), com opções, trade-off e recomendação escritas em
+`docs/arquitetura/autenticacao-e-controle.md` em 2026-11-22 — **aguardando o "sim" do dono**. Nenhuma
+foi fechada por suposição, e nenhuma decisão pendente virou schema.
 
-## Abertas
+## Propostas — aguardando aprovação do dono
 
-| ID | Lacuna | Por que importa | Dono | Fecha com |
+Estado `proposta`: existe recomendação técnica registrada e falta o "sim" (`AGENTS.md` §5.8). O texto
+das opções e do trade-off é de `docs/arquitetura/autenticacao-e-controle.md`, dono único; aqui fica só o
+índice.
+
+| ID | Lacuna | Por que importa | Dono | Proposta (2026-11-22) |
 |---|---|---|---|---|
-| `LAC-ADM-03` | Não existe contrato de controle com o `wyd-server` (kick, broadcast, manutenção) | `ADM-08` não pode ser implementada; “chamar o processo” hoje é intenção | arquitetura + `wyd-server` | porta/protocolo, ack, timeout e erro; página no `wyd-server` |
-| `LAC-ADM-04` | Autenticação portal → admin não decidida: token de serviço, mTLS ou assinatura do ator | `RN-ADM-002` e `RN-ADM-005` dependem disso; sem forma, `ADM-02` para | arquitetura + `wyd-ops` | mecanismo, rotação de segredo e o que vai no cabeçalho |
+| `LAC-ADM-03` | Não existe contrato de controle com o `wyd-server` (kick, broadcast, manutenção) | `ADM-08` não pode ser implementada; “chamar o processo” hoje é intenção | arquitetura + `wyd-server` | **A recomendada:** HTTP interno síncrono `POST /internal/v1/control` no processo do canal, ack `200` com `delivered_to`, mapa canal → URL em configuração do `wyd-ops` e segredo próprio do elo; **sem** mudar schema. Recusadas: fila `ops.server_command` (ack assíncrono, +1 tabela → 110/35) e broker externo (nova dependência de infraestrutura). Fecha com o "sim" + endpoint nomeado no plano do `wyd-server` |
+| `LAC-ADM-04` | Autenticação portal → admin não decidida: token de serviço, mTLS ou assinatura do ator | `RNF-ADM-002` e `RN-ADM-002` dependem disso; sem forma, `ADM-02` para | arquitetura + `wyd-ops` | **A recomendada:** token de serviço estático por ambiente em `Authorization: Bearer` sobre TLS, com **dois valores aceitos na rotação** e comparação em tempo constante; **sem** tabela nem `GRANT`. Recusadas: mTLS (PKI interna para um único chamador), HMAC por requisição (cache de nonce que a 1.0.0 não tem) e OIDC client credentials (provedor novo). Fecha com o "sim" + as variáveis nomeadas no `wyd-ops` |
 
 ## Fechadas
 
@@ -32,3 +38,5 @@ nenhuma foi fechada por suposição.
 1. O dono decide e a decisão entra no documento dono (aqui ou no `wyd-db`/`wyd-server`).
 2. A linha muda de seção com **data** e o ID citado no requisito afetado.
 3. Se a decisão mudar schema, contagem ou fronteira, ela passa pelo dono da série antes de virar DDL.
+4. `proposta` só vira `fechada` com o "sim" registrado no documento dono; sem ele, a linha continua
+   aqui — não existe fechamento por silêncio nem por escolha do agente.

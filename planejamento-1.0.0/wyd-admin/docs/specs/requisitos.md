@@ -39,7 +39,8 @@
 - **Saída:** `released_at` e `audit_id`.
 - **Aceitação:** sessão viva é liberada com `released_reason = 'admin'` **só depois** do ack do
   `wyd-server`; sessão já liberada devolve `409`; servidor fora devolve `503` sem escrita.
-- **Contrato:** C4 §4.4; dependência `LAC-ADM-03`. **Entrega:** `ADM-08`.
+- **Contrato:** C4 §4.4; dependência `LAC-ADM-03` (**proposta de 2026-11-22**, aguardando o dono:
+  `../arquitetura/autenticacao-e-controle.md` §3). **Entrega:** `ADM-08`.
 
 ### RF-ADM-005 — Enviar broadcast
 
@@ -47,7 +48,7 @@
 - **Saída:** contagem de destinos e `audit_id`.
 - **Aceitação:** mensagem vazia ou acima de 200 devolve `400`; servidor fora devolve `503`; nenhuma
   tabela de jogo é escrita.
-- **Contrato:** C4 §4.5; `LAC-ADM-03`. **Entrega:** `ADM-08`.
+- **Contrato:** C4 §4.5; `LAC-ADM-03` (proposta de 2026-11-22, aguardando o dono). **Entrega:** `ADM-08`.
 
 ### RF-ADM-006 — Alterar imposto de cidade
 
@@ -156,15 +157,15 @@
 | ID | Requisito | Critério |
 |---|---|---|
 | `RNF-ADM-001` | Prazo: 5 s portal→admin, 2 s por transação, 1,5 s admin→server | teste de timeout com dublê lento |
-| `RNF-ADM-002` | Autenticação de serviço obrigatória; sem token, `401` | teste de contrato |
+| `RNF-ADM-002` | Autenticação de serviço obrigatória; sem token, `401` | teste de contrato; mecanismo em `LAC-ADM-04` (proposta de 2026-11-22) |
 | `RNF-ADM-003` | Cobertura mínima de 85% no gate | `cargo llvm-cov` no alvo |
 | `RNF-ADM-004` | Log estruturado com `trace_id`, ação e resultado; sem corpo sensível | inspeção de log no teste |
 | `RNF-ADM-005` | Concorrência otimista obrigatória em carteira e preço | dois clientes simultâneos: um `200`, um `409` |
 
 ## O que ainda não é requisito
 
-`kick` e `broadcast` dependem de contrato com o `wyd-server` que não existe (`LAC-ADM-03`); até lá são
-requisitos **bloqueados**, não “a implementar depois”.
+`kick` e `broadcast` dependem do contrato de controle com o `wyd-server` (`LAC-ADM-03`), que tem proposta
+de 2026-11-22 e ainda não foi aprovado; até lá são requisitos **bloqueados**, não “a implementar depois”.
 
 A custódia (`RF-ADM-012` a `RF-ADM-015`) tem forma, contrato e schema fechados: `game.market_escrow` entrou
 no lote `0034` em 2026-11-22 (`LAC-ADM-07`), e os `GRANT` que ela exige estão no `0032` emendado. Nada
