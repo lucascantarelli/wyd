@@ -1,6 +1,6 @@
 # wyd-db — referência por tabela
 
-**Estado:** **46 de 97** páginas escritas (2026-11-21). A produção é manual, em lotes (`M26`), sem
+**Estado:** **57 de 97** páginas escritas (2026-11-22). A produção é manual, em lotes (`M26`), sem
 gerador: cada página resume a tabela e aponta para a página de `migrations/` dona da forma. Este índice
 lista as páginas de `plano-migrations.md` §3 conforme elas existem.
 
@@ -66,16 +66,30 @@ no build.
 | `portal.donate_credit` | [donate_credit](donate_credit.md) | `0011-game-economy` |
 | `portal.donate_debit` | [donate_debit](donate_debit.md) | `0011-game-economy` |
 
-## Lote 3 — configuração do mundo (`0019`), 2 de 13 tabelas
+## Lote 3 — mundo do conteúdo (`0019`), 13 tabelas
 
 | Tabela | Página | Migration |
 |---|---|---|
+| `content.content_source` | [content_source](content_source.md) | `0019-content-world` |
+| `content.npc_template` | [npc_template](npc_template.md) | `0019-content-world` |
+| `content.npc_definition` | [npc_definition](npc_definition.md) | `0019-content-world` |
+| `content.npc_shop_item` | [npc_shop_item](npc_shop_item.md) | `0019-content-world` |
+| `content.level_item` | [level_item](level_item.md) | `0019-content-world` |
+| `content.guard_spawn` | [guard_spawn](guard_spawn.md) | `0019-content-world` |
+| `content.guard_spawn_reward` | [guard_spawn_reward](guard_spawn_reward.md) | `0019-content-world` |
+| `content.mob_merc` | [mob_merc](mob_merc.md) | `0019-content-world` |
 | `content.game_setting` | [game_setting](game_setting.md) | `0019-content-world` |
 | `content.game_matrix` | [game_matrix](game_matrix.md) | `0019-content-world` |
+| `content.region` | [region](region.md) | `0019-content-world` |
+| `content.world_item_seed` | [world_item_seed](world_item_seed.md) | `0019-content-world` |
+| `content.guild_zone` | [guild_zone](guild_zone.md) | `0019-content-world` |
 
-As outras 11 tabelas de `0019` ainda não têm página.
+As 11 páginas restantes fecharam o arquivo em 2026-11-22; a forma das 13 está em
+`0019-content-world.md`.
 
 ## Próximos lotes
 
-`0012`–`0018` (entrega, taxonomia, catálogo e os três seeds), `0019`–`0027` (mundo, regras, mapas,
-combate, quests e eventos) e `0028`–`0031` (estado de jogo, views e os dois adendos do portal).
+Faltam **40 das 97**: `0012`–`0015` (entrega, taxonomia e catálogo — os seeds `0016`–`0018` não criam
+tabela), `0021` e `0022` (regras e sobrescritas), `0024`–`0026` (mapas, combate e quests/eventos) e
+`0028`–`0031` (estado de jogo, views e os dois adendos do portal). Cada lote novo é proposto por
+arquivo de migration, como o de `0019`.

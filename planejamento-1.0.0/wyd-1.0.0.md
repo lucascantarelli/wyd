@@ -47,7 +47,7 @@
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
 | `docs/arquitetura/` | 7 | 17 | faltam C4, modelo conceitual/lógico, retenção, fronteira |
 | `docs/specs/` | 0 | 20 | nenhum requisito com ID existe ainda |
-| `docs/dicionario-dados/` | 21 | 21 (+97 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 97 por tabela são manuais (`M26`) e **44 existem** (lotes `0001`–`0011`, 2026-11-21) |
+| `docs/dicionario-dados/` | 21 | 21 (+97 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 97 por tabela são manuais (`M26`) e **57 existem** (lotes `0001`–`0011` e `0019`, 2026-11-22) |
 | `docs/planos/` | 1 | 10 | só `plano-de-implantacao` |
 | `docs/roadmap/` | 0 | 42 | 40 issues `WYDDB-nnn` planejadas, nenhuma criada |
 | `docs/guia-desenvolvedor/` | 2 | 11 | |

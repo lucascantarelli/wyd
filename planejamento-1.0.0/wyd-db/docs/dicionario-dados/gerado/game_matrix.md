@@ -43,7 +43,7 @@ Só a PK: uma linha por posição, e o mesmo array pode se repetir em posições
 | `ck_game_matrix_secao` | `section` vazia, só com espaço, ou acima de 64 caracteres |
 | `ck_game_matrix_bloco` | `block_index` negativo |
 | `ck_game_matrix_linha` | `line_index` negativo |
-| `ck_game_matrix_valores` | `NULL` em qualquer posição de `row_values` |
+| `ck_game_matrix_valores` | array sem nenhuma posição, ou com `NULL` em alguma posição |
 | `ck_game_matrix_origem` | `source_line` menor ou igual a zero |
 
 O piso de tamanho dentro de `ck_game_matrix_valores` é `array_length(row_values, 1) >= 1`, e ele **não**
