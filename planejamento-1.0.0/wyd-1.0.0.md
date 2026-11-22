@@ -92,7 +92,7 @@
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
 | CI | `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
-| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **190 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
+| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **197 páginas montadas de 5 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos em `wyd-client/files/`, ignorado | `find` |
 
 ### 1.5 Cobertura funcional da `1.0.0`

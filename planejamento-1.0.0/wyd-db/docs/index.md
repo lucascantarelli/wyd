@@ -2,7 +2,7 @@
 > Público: todos os públicos de §2 do plano diretor — é a porta de entrada
 > Dono: equipe do `wyd-db`
 > Base: —
-> Revisado em: 2026-11-18
+> Revisado em: 2026-11-22
 
 # wyd-db — documentação oficial
 
@@ -26,8 +26,8 @@ operar o banco.
 
 ---
 
-Contexto, componentes, fronteira entre o tick e o banco, modelo conceitual e lógico, padrões
-de PostgreSQL e decisões registradas.
+Visão geral, contexto C4, componentes, fronteira entre o tick e o banco, modelo conceitual e lógico,
+padrões de PostgreSQL e decisões registradas.
 
 [Abrir arquitetura →](arquitetura/index.md)
 
@@ -53,7 +53,8 @@ migrations.
 
 ---
 
-Plano de documentação, testes, implantação, manutenção, qualidade, métricas e riscos.
+Plano de documentação, testes, implantação, manutenção, qualidade, dados e seeds, métricas, riscos e
+registro de execução.
 
 [Abrir planos →](planos/index.md)
 
