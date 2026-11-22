@@ -109,7 +109,7 @@ linha desta tabela não é escrita.
 3. **Schema não se escreve duas vezes.** Coluna, tipo, nulidade, PK, FK, CHECK e índice vivem no DDL
    de `ddl-confirmado.md` e na página de `migrations/` do arquivo dono — hoje a única fonte da forma, já
    que o catálogo não existe. As páginas por tabela (`M26`) **resumem e ligam**, não copiam o DDL:
-   **98 das 109** já estão escritas à mão, em lotes (`0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031` e `0033`), até 2026-11-22. Texto manual sobre
+   **109 das 109** já estão escritas à mão, em lotes (`0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034`), até 2026-11-22 — o dicionário está completo. Texto manual sobre
    coluna é dívida declarada e só é aceito no campo "observação"
    (regra de negócio, provisório, armadilha).
 4. **Nível de evidência em toda afirmação de comportamento.** `V` verificado por comando/arquivo,
@@ -647,8 +647,8 @@ Domínios (um arquivo cada): `acesso`, `personagem`, `inventario`, `social`, `mu
 página — sem ferramenta e sem `Makefile` novo. Cada uma traz papel em uma linha, colunas com
 tipo/nulidade/default, PK, FKs de saída e de entrada, unicidade, CHECKs, índices, quem escreve/lê e a
 migration que criou a tabela, e **liga para a página de `migrations/`**, que é dona da forma, em vez
-de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **98 das 109 existem**
-(lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031` e `0033`, 2026-11-22) e nada é gerado.
+de copiar o DDL. `gerado/index.md` lista todas com o domínio de cada uma. **109 das 109 existem**
+(lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034`, 2026-11-22) e nada é gerado: a fila do dicionário está vazia.
 
 **Por que 19 páginas de domínio existem.** Elas cobrem o que a página por tabela não responde: por que
 a tabela existe, o que é provisório, o que quebra se mudar. A divisão prevista é **forma na página da
@@ -1229,14 +1229,14 @@ tabela, depois o procedimento.
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
-| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 109 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 109 | 109 tabelas cobertas quando as páginas forem escritas; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **98 das 109 escritas** em 2026-11-22 |
+| **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 109 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 109 | **109 tabelas cobertas** em 2026-11-22; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **109 das 109 escritas**, fila vazia |
 | **5. Histórico de schema** | `migrations/`: `index.md` + `serie-e-regras.md` (2) + 34 páginas, uma por arquivo de `0001` a `0034`; mais `arquitetura/migracoes` e `retencao-e-capacidade` | 38 | as 34 páginas de migration têm `down` e verificação, com nomes 1:1 conforme §6.15 e a série de `plano-migrations.md` §3; política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
 | **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
 | **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
-**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **109** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); **11 das 109 ainda não existem** em 2026-11-22 e entram em lotes.
+**Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **109** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); as **109** estão escritas em 2026-11-22 — **nenhuma falta** e não há lote pendente.
 
 **Dependências duras:** Onda 3 depende de 1–2 (requisito cita entidade do modelo); Onda 4 depende
 de 2 (domínio cita entidade); Onda 7 depende de 4–5 (módulo cita tabela e migration); Onda 8

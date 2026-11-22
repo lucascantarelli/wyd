@@ -40,22 +40,22 @@ carteira da conta ([acesso](dominio-acesso.md)), refino como custo (`dominio-ref
 
 | Tabela | Papel em uma linha | Escreve | Lê | Colunas |
 |---|---|---|---|---|
-| `portal.market_wallet` | saldo de crédito do mercado, uma linha por conta | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_ledger` | extrato do crédito de mercado, append-only, idempotente | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_fee_rule` | taxa da casa em bps, com vigência por `effective_from` | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_listing` | anúncio de item real, com o retrato da instância e a taxa congelada | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_bid` | lance de leilão, com o crédito retido em `hold_ledger_id` | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_transaction` | liquidação de um anúncio, com taxa e líquido | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_review` | avaliação do comprador sobre a transação | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_reputation` | agregado de vendas e notas por conta | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_notification` | aviso do mercado para a conta | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `portal.market_dispute` | disputa de uma transação, com desfecho e autor | `wyd_portal` | `wyd_portal`, `wyd_read` | onda 4 |
-| `game.market_escrow` | custódia do item fora do inventário, escrita pelo executor | `wyd_admin` | `wyd_admin`, `wyd_game`, `wyd_read` | onda 4 |
+| `portal.market_wallet` | saldo de crédito do mercado, uma linha por conta | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_wallet.md` |
+| `portal.market_ledger` | extrato do crédito de mercado, append-only, idempotente | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_ledger.md` |
+| `portal.market_fee_rule` | taxa da casa em bps, com vigência por `effective_from` | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_fee_rule.md` |
+| `portal.market_listing` | anúncio de item real, com o retrato da instância e a taxa congelada | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_listing.md` |
+| `portal.market_bid` | lance de leilão, com o crédito retido em `hold_ledger_id` | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_bid.md` |
+| `portal.market_transaction` | liquidação de um anúncio, com taxa e líquido | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_transaction.md` |
+| `portal.market_review` | avaliação do comprador sobre a transação | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_review.md` |
+| `portal.market_reputation` | agregado de vendas e notas por conta | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_reputation.md` |
+| `portal.market_notification` | aviso do mercado para a conta | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_notification.md` |
+| `portal.market_dispute` | disputa de uma transação, com desfecho e autor | `wyd_portal` | `wyd_portal`, `wyd_read` | `gerado/market_dispute.md` |
+| `game.market_escrow` | custódia do item fora do inventário, escrita pelo executor | `wyd_admin` | `wyd_admin`, `wyd_game`, `wyd_read` | `gerado/market_escrow.md` |
 
-"onda 4" é o lote de páginas por tabela de `M26` (`gerado/index.md` é o dono da contagem): nenhuma das onze
-tem página `gerado/` ainda, e o estado delas é `planejado`, derivado de `migrations-checklist.md` §2.
+As onze têm página em `gerado/` desde o lote 15 (`M26`, 2026-11-22), com estado `proposto`: o DDL está
+fechado e a série não foi aplicada. `gerado/index.md` é o dono da contagem.
 
-Escreve e lê das onze primeiras são de `0011` §8, dono da permissão das dez: `wyd_game` escreve as
+Escreve e lê das dez primeiras são de `0011` §8, dono da permissão delas: `wyd_game` escreve as
 quatro de `game`, `wyd_portal` escreve as seis de `portal` e `wyd_read` lê as dez. As onze do mercado
 seguem o mesmo recorte, com uma diferença declarada: `game.market_escrow` é escrita por `wyd_admin`
 (`0032`), não por `wyd_game`, porque custódia é ato do executor (`LAC-POR-01`). `account_ledger`, de `0005`, fica no
@@ -123,6 +123,8 @@ do próprio schema: `daily_reward_claim.reward_item_id` tem FK `RESTRICT` para `
   `ux_market_bid_comprador_ativo` e `ux_market_dispute_aberta`.
 - **decisão de disputa tem autor:** as duas resoluções exigem `resolution` e `decided_by_person_id`.
 - **extrato não é editável:** `REVOKE UPDATE, DELETE` em `portal.market_ledger` para `wyd_portal`.
+- **custódia fecha, não apaga:** `game.market_escrow` recebe `SELECT, INSERT, UPDATE` para `wyd_admin` e
+  **nenhum `DELETE`**; o fim é `entregue` ou `devolvido` com `closed_at` (`ck_market_escrow_fechamento`).
 
 ## Armadilhas de leitura
 
