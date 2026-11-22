@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.1, §5.6 e §5.7; `padrao-banco.md` §2/§5/§8; `lacunas.md` (`B4`, `A12`, `M7`)
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Terceiro arquivo da série. Cria a identidade da pessoa do portal e, separadamente, os dados opcionais
 de perfil e o histórico versionado de consentimentos. A pessoa é a identidade única; a conta de jogo
@@ -25,7 +25,7 @@ jogo.
 | Depende de | `0001_bootstrap` (schema, `ops.fn_set_updated_at` e permissões) |
 | É dependência de | `0004_portal_access` (`person_session`/`person_token`) e `0005_game_account` (`game.account.person_id`) |
 | Tabelas criadas | 3 (`portal.person`, `portal.person_profile`, `portal.person_consent`) |
-| Objetos criados | 3 tabelas, 5 índices, 3 triggers |
+| Objetos criados | 3 tabelas, 5 índices, 2 triggers |
 | `SCHEMA_VERSION` | **não muda**: continua `53` até a troca de série (`plano-migrations.md` §6) |
 
 ## 2. Objetivo

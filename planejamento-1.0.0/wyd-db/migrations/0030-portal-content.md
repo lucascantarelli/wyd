@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3 (adendo); `ddl-confirmado.md` §5.15 (confirmado); `padrao-banco.md` §1/§5/§9/§11 (P-13, P-20); `wyd-portal/lacunas.md` (`LAC-POR-02`, `LAC-POR-03`)
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que o dono decidiu em
 2026-11-20: notícia (`news`), banner (`banner`), guia editorial (`guide`) e versão de launcher
@@ -51,6 +51,7 @@ vigente do launcher por canal, com autor, estado de publicação e janela de exi
 Texto de `ddl-confirmado.md` §5.15, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE portal.news (
     id                   BIGINT GENERATED ALWAYS AS IDENTITY,
     slug                 TEXT NOT NULL,

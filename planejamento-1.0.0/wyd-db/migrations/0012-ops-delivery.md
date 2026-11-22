@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.16 (confirmado); `padrao-banco.md` §1/§5/§8/§9/§11; `lacunas.md` (`M17`, `M25`); `rascunho-accounts.md` `R9`
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Décimo segundo arquivo da série. Cria a **fila única** pela qual a web pede algo ao jogo: item, ouro ou
 nível para uma conta ou personagem. O portal enfileira, o servidor drena e aplica; o portal nunca
@@ -48,6 +48,7 @@ um reenvio do navegador vire duas entregas.
 Texto de `ddl-confirmado.md` §5.16, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE ops.delivery_queue (
     id                   BIGINT GENERATED ALWAYS AS IDENTITY,
     -- Chave do pedido gerada pelo BFF: reenvio devolve a mesma entrega, nunca enfileira duas (M17).

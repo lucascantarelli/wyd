@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.12 (confirmado); `padrao-banco.md` §1/§5/§9; `lacunas.md` §2.3
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-22
 
 Nono arquivo da série. Cria o inventário do personagem, o baú da conta e o contador de piedade de
 refino. O catálogo de item não nasce aqui: `item_index` é número do cliente, e nome, preço e efeito
@@ -47,6 +47,7 @@ aconteceram — sem duplicar conteúdo de item e sem aceitar piedade órfã.
 Texto de `ddl-confirmado.md` §5.12, copiado sem alteração.
 
 ```sql
+-- migrate:up
 CREATE TABLE game.character_item (
     character_id BIGINT NOT NULL,
     slot         SMALLINT NOT NULL,
