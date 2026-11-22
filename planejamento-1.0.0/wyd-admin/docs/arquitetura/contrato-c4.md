@@ -19,8 +19,11 @@ direção do C4 está decidida; esta forma aguarda aprovação.
 do jogador em nome de quem o BFF chama. `X-Staff-Person-Id` nessas rotas devolve `403 ADM_FORBIDDEN`;
 staff não opera custódia de jogador.
 
-O admin **não** autentica pessoa: confia no token de serviço e no `X-Staff-Person-Id` assinado pelo
-portal. O mecanismo do token/assinatura é `LAC-ADM-04`. Nas rotas de custódia a confiança é a mesma —
+O admin **não** autentica pessoa: confia no token de serviço e no `X-Staff-Person-Id` afirmado pelo
+portal, que é a autoridade de quem é o staff. O mecanismo do token é `LAC-ADM-04`, com proposta
+registrada em 2026-11-22 (token de serviço por ambiente, dois valores aceitos na rotação) e aguardando o
+"sim" do dono em [autenticação e controle](autenticacao-e-controle.md) §2 — **nada nesta página depende
+dela para ser lida**, mas `ADM-02` só começa depois do "sim". Nas rotas de custódia a confiança é a mesma —
 token de serviço do portal — mas o ator declarado é a **conta do jogador**, e o admin confere, na mesma
 transação, que o personagem citado pertence a essa conta (`game.character.account_id`).
 
@@ -288,8 +291,8 @@ repetindo com chave nova.
 |---|---|
 | Papel de banco e `GRANT` de escrita em `game` | `LAC-ADM-01` |
 | Onde o registro de idempotência mora | **fechado em 2026-11-22** (`LAC-ADM-02` e `LAC-ADM-06`): `ops.idempotency_record` (`0033`, `ddl-confirmado.md` §5.33), com retenção de 7 dias |
-| Canal real com o `wyd-server` (formato, porta, ack) | `LAC-ADM-03` |
-| Token de serviço, mTLS e assinatura do ator | `LAC-ADM-04` |
+| Canal real com o `wyd-server` (formato, porta, ack) | `LAC-ADM-03`: **proposta em 2026-11-22** (HTTP interno síncrono com ack), aguardando o dono — `autenticacao-e-controle.md` §3; o endpoint em si é do plano do `wyd-server` |
+| Token de serviço, mTLS e assinatura do ator | `LAC-ADM-04`: **proposta em 2026-11-22** (token de serviço com rotação de dois valores), aguardando o dono — `autenticacao-e-controle.md` §2 |
 | Dono da escrita de `account_moderation` | **fechado em 2026-11-21** (`LAC-ADM-05`): é este contrato, §4.1; o `wyd-portal` corrigiu `consumo-do-banco.md` §3 e só lê |
 | Schema de `game.market_escrow` e das tabelas `portal.market_*` | **fechado em 2026-11-22** (`LAC-ADM-07`): lote `0034_portal_market.sql`, onze tabelas (`ddl-confirmado.md` §5.34), com os `GRANT` da custódia no `0032` emendado |
 | Verificação de que o personagem pertence à conta declarada | **fechado nesta proposta:** `game.character.account_id` lido na mesma transação; divergência é `403` |

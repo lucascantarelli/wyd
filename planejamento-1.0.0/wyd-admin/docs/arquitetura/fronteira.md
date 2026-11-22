@@ -14,7 +14,8 @@
 3. Executa **uma ação por requisição**, em transação única, com `ops.audit_log` na mesma transação.
 4. Garante **idempotência** por chave enviada pelo chamador: repetir a chamada devolve o mesmo
    resultado, não a segunda escrita.
-5. Encaminha as ações de **processo** (kick, broadcast) ao `wyd-server`, quando esse contrato existir.
+5. Encaminha as ações de **processo** (kick, broadcast) ao `wyd-server`, quando esse contrato existir —
+   proposta em 2026-11-22 e aguardando aprovação ([autenticação e controle](autenticacao-e-controle.md) §3).
 
 ## 2. O que ele não faz
 
@@ -36,7 +37,7 @@ O `wyd-admin` **não** é um segundo BFF e **não** atende navegador: quem chama
 | Consumidor | O que consome | Garantia exigida |
 |---|---|---|
 | BFF do `wyd-portal` | as rotas de ação de staff e as rotas de custódia de item do [contrato C4](contrato-c4.md) | resposta tipada em até 5 s; repetição segura por `Idempotency-Key`; nas rotas de custódia o ator é a conta do jogador, não o staff |
-| `wyd-server` (futuro) | recebe kick/broadcast/manutenção | contrato aberto em `LAC-ADM-03` |
+| `wyd-server` (futuro) | recebe kick/broadcast/manutenção | `LAC-ADM-03`: proposta em 2026-11-22 (HTTP interno síncrono com ack), aguardando o dono |
 | `wyd-ops` | `GET /health` e `GET /ready` | 200/503 sem detalhe interno |
 
 ## 4. O que ele consome
@@ -44,7 +45,7 @@ O `wyd-admin` **não** é um segundo BFF e **não** atende navegador: quem chama
 | Fornecedor | Contrato | Uso |
 |---|---|---|
 | `wyd-db` | SQL transacional sob papel próprio | escrita em `game`, `ops.audit_log` e leitura de conferência |
-| `wyd-server` | canal de controle (aberto) | kick, broadcast e manutenção de processo |
+| `wyd-server` | canal de controle (`LAC-ADM-03`, proposta de 2026-11-22) | kick, broadcast e manutenção de processo |
 | `wyd-portal` | identidade do staff já autenticado (`X-Staff-Person-Id`) ou a conta do jogador (`X-Actor-Account-Id`), no cabeçalho | autoria da ação |
 
 O portal é a autoridade de **quem** é o staff; o admin é a autoridade de **o que** pode ser escrito.
@@ -86,6 +87,7 @@ O admin **não** mantém fila durável própria na `1.0.0`; ação que não conc
 | Rotas, payload, códigos e prazos | [contrato C4](contrato-c4.md) (proposta de 2026-11-21) |
 | Papel e `GRANT` de escrita | `LAC-ADM-01` — `wyd-db` |
 | Armazenamento e retenção da idempotência | **fechados em 2026-11-22** (`M30`): tabela em `ops`, 7 dias após `created_at`; ver `lacunas.md` |
-| Canal com o `wyd-server` | `LAC-ADM-03` — arquitetura |
-| Autenticação portal → admin | `LAC-ADM-04` — arquitetura + `wyd-ops` |
+| Canal com o `wyd-server` | `LAC-ADM-03` — **proposta em 2026-11-22**, aguardando o dono ([autenticação e controle](autenticacao-e-controle.md) §3) |
+| Autenticação portal → admin | `LAC-ADM-04` — **proposta em 2026-11-22**, aguardando o dono (§2 da mesma página) |
+| Emissão e rotação do segredo de cada elo | `wyd-ops`; a página de proposta só nomeia as variáveis |
 | Dono da escrita de `account_moderation` | **decidido em 2026-11-21** (`LAC-ADM-05`): é do `wyd-admin` (contrato C4 §4.1); o doc do portal foi corrigido e o portal só lê |
