@@ -4,13 +4,13 @@
 > Base: `ddl-confirmado.md`, `lacunas.md`, `migrations-checklist.md`, `padrao-banco.md`, `plano-migrations.md`, `rascunho-accounts.md`
 > Revisado em: 2026-11-22
 
-**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-21 e as migrations recontadas em 2026-11-22.
+**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-22 e as migrations recontadas na mesma data.
 
-> **Revisão de 2026-11-22:** as **19 páginas de domínio** estão escritas, e o dicionário passou a
-> **21** autorais. O censo foi remedido no `HEAD` desta data: **36** páginas com corpo em `docs/`,
-> **28 de 34** em `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **18
-> escrevíveis**, **24 de recorte** e **69 bloqueadas** — **147** páginas autorais, o teto de
-> `wyd-db-1.0.0.md` §4 com o 19º domínio.
+> **Revisão de 2026-11-22 (lote 2 escrito):** o lote de identidade fechou — 7 páginas e o
+> `specs/index`. O censo no `HEAD` desta data: **44** páginas com corpo em `docs/`, **28 de 34** em
+> `migrations/` e **0 de 59** em `src/`. O que falta escrever fica em **13 escrevíveis**, **21 de
+> recorte** e **69 bloqueadas** — **147** páginas autorais, o teto de `wyd-db-1.0.0.md` §4 com o
+> 19º domínio. A revisão anterior (19 domínios, 36 páginas) fica no histórico do git.
 
 Esta página é a ponte entre as seis fontes de planejamento e a árvore de `docs/` de
 `wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 147 páginas autorais de `docs/`, quantas já
@@ -54,9 +54,9 @@ Duas fontes **fora das seis** já estão fechadas e são citadas como donas, nã
 e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migracoes.md` (escrita) e
 `ADR-DB-0001`/`ADR-DB-0002` (escritas).
 
-## 2. O que já está escrito (medido em 2026-11-21)
+## 2. O que já está escrito (medido em 2026-11-22)
 
-**36 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
+**44 páginas com corpo em `docs/`**, todas com cabeçalho de §7.1:
 
 | Pasta | Páginas escritas |
 |---|---|
@@ -66,15 +66,17 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 | `planos/` | `plano-de-implantacao.md`, `riscos.md` |
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md` |
 | `guia-teste/` | `testes-de-sistema.md` |
+| `specs/` | `index.md`, `restricoes-e-premissas.md`, `requisitos-funcionais.md`, `regras-de-negocio.md`, `casos-de-uso.md`, `estados/conta-e-moderacao.md`, `estados/sessao.md`, `fluxos/login-e-sessao.md` — escritas em 2026-11-22 |
 
 Fora de `docs/`: **28 de 34** em `migrations/` e **0 de 59** em `src/`.
 
-**Os outros 8 arquivos `index.md` são título de uma linha** — `arquitetura`, `specs`, `planos`,
+**Os outros 7 arquivos `index.md` são título de uma linha** — `arquitetura`, `planos`,
 `roadmap`, `guia-desenvolvedor`, `guia-administrador`, `guia-teste`, `guia-documentacao`. Eles não
 contam como página: são o marcador de que a pasta existe. Índice só é página quando responde à
-pergunta de §6.2/§6.5/§6.8/§6.9. `dicionario-dados/index.md` e `dicionario-dados/gerado/index.md`
-deixaram de ser título de uma linha: o primeiro é a porta do dicionário e entra nas 36; o segundo é o
-índice auxiliar das páginas por tabela, fora da contagem.
+pergunta de §6.2/§6.5/§6.8/§6.9. `dicionario-dados/index.md`, `dicionario-dados/gerado/index.md` e
+`specs/index.md` deixaram de ser título de uma linha: o primeiro é a porta do dicionário, o segundo é
+o índice auxiliar das páginas por tabela (fora da contagem) e o terceiro é a porta de `specs/`; a
+porta do dicionário e a de `specs/` estão nas 44, e o auxiliar não.
 
 ## 3. Mapa de diluição das seis fontes
 
@@ -177,7 +179,7 @@ o ponteiro passa a `migrations/index.md`.
 | §7 `UNVERIFIED` | `specs/restricoes-e-premissas.md` (premissa com o que a invalida) | — |
 | §8 seções removidas | morre com o arquivo | — |
 
-## 4. Páginas que já podem ser escritas (18)
+## 4. Páginas que já podem ser escritas (13)
 
 Cada linha é uma página que fecha **inteira** hoje. A coluna "declara em aberto" é seção obrigatória da
 própria página — não é pendência escondida.
@@ -190,15 +192,13 @@ própria página — não é pendência escondida.
 | `visao-geral.md` | escopo da edição (`wyd-db-1.0.0.md` §1.2), 34/109/34 planejados (`plano-migrations.md` §3) | os três números são `P`; o runtime assíncrono do crate não está decidido em documento |
 | `index.md` | mapa das 13 páginas e ordem de leitura (`wyd-db-1.0.0.md` §6.2) | estado de cada página, que muda por escrita |
 
-### 4.2 `specs/` (5)
+### 4.2 `specs/` (0)
 
-| Página | O que já está confirmado (fonte) | Declara em aberto |
-|---|---|---|
-| `restricoes-e-premissas.md` | a lacuna aberta (`M26`) e as três `externas` (`A11`, `A20`, `M21`) com dono e marco (`lacunas.md` §1), marcos `P0`–`P4`/`EXT` (§0.2), premissas `H` (`rascunho-accounts.md` §7) | nada: é a página que **recebe** o aberto |
-| `fluxos/login-e-sessao.md` | pessoa + sessão de portal com expiração absoluta e idle (`M4`, `ddl-confirmado.md` §4), token opaco e só `sha256` (`A16`), conta com senha e PIN (`§5.2`), sessão de jogo única por conta (`§5.5`, `A10`), falha de login em `ops.login_attempt` (`M6`) | recuperação de senha: entrega do link é `B1` |
-| `estados/conta-e-moderacao.md` | `status` `active`/`closed` (`M1`), bloqueio só em `account_moderation` (`ddl-confirmado.md` §5.2), suspensão da pessoa com motivo, autor e instante (`B4`, `ddl-confirmado.md` §5.1), quem libera a sessão no encerramento (`A10`) | fechar pessoa com conta viva é `A13` (`proposta`, marco `P1`): a página declara que o efeito fica em aberto |
-| `estados/sessao.md` | aberta, única, expirada, encerrada; `ux_session_viva_por_conta` (`ddl-confirmado.md` §5.5 — o nome em `padrao-banco.md` §3 e em `plano-migrations.md` §3.2 é forma antiga); reaper de 60 s com `stale` de 180 s e sem `released_reason` (`A10`); 5 contas da mesma pessoa em paralelo (`rascunho-accounts.md` §3) | — |
-| `index.md` | mapa das 8 páginas, convenção de ID citada de `wyd-db-1.0.0.md` §9.1, nascimento e retirada de requisito (§9.3) | — |
+As cinco páginas desta pasta que fechavam hoje — `restricoes-e-premissas.md`, `fluxos/login-e-sessao.md`,
+`estados/conta-e-moderacao.md`, `estados/sessao.md` e `index.md` — foram escritas em 2026-11-22 com o
+lote 2 (§8). Nenhuma página de `specs/` permanece na lista de escrevíveis; as quatro restantes da
+pasta — `visao-e-escolpo`, `stakeholders`, `requisitos-nao-funcionais` e `rastreabilidade` — seguem
+em §5 ou §6, e os fluxos e estados restantes, em §6.
 
 ### 4.3 `dicionario-dados/` (0)
 
@@ -231,7 +231,7 @@ conta e medidas por `docs/dicionario-dados/gerado/index.md`, dono da contagem.
 | `guia-documentacao/index.md` | mapa dos 7 guias por tarefa (`wyd-db-1.0.0.md` §6.14) | — |
 | `guia-documentacao/estilo-e-linguagem.md` | as 11 regras editoriais (`wyd-db-1.0.0.md` §3), o que reprova (`convencoes.md`), termos e voz | — |
 
-## 5. Páginas de recorte (24)
+## 5. Páginas de recorte (21)
 
 Escrever agora **limitando o escopo declarado**. O recorte é a única defesa contra inventar desenho.
 
@@ -241,9 +241,6 @@ Escrever agora **limitando o escopo declarado**. O recorte é a única defesa co
 | `arquitetura/fronteira-hot-cold.md` | o princípio (regra de jogo fora do banco, `padrao-banco.md` §0) e as duas views de leitura cruzada (`P-17`, §7) | a ponte única depende de `ops.delivery_queue`, desenhada e aprovada em `ddl-confirmado.md` §5.16 |
 | `arquitetura/modelo-logico.md` | ER das 109 tabelas com DDL fechado + as 2 views | todas as tabelas têm coluna desenhada e aprovada desde 2026-11-21 |
 | `specs/visao-e-escolpo.md` | problema, escopo dentro/fora e o que a `1.0.0` entrega (`wyd-db-1.0.0.md` §1.2) | números só `P` até a série |
-| `specs/requisitos-funcionais.md` | `R1`–`R16` de identidade (`rascunho-accounts.md` §2) com critério de aceitação verificável; molde em `wyd-db-1.0.0.md` §6.5 | personagem, inventário e economia não têm requisito levantado |
-| `specs/regras-de-negocio.md` | vaga 1..5 e `ux_account_slot` (`padrao-banco.md` §5, item 3), uma sessão viva por conta (`ddl-confirmado.md` §5.5), 5 contas em paralelo (`rascunho-accounts.md` §3), tombstone de e-mail (`A12`), moeda inteira com teto `i32::MAX` (`rascunho-accounts.md` §2, `R3`) | limiar de PIN é `B3` (`proposta`) e vira `H` na página |
-| `specs/casos-de-uso.md` | 3 casos — autenticar no portal, criar conta na vaga, abrir sessão de jogo — sobre `R1`–`R16` (`rascunho-accounts.md` §2); molde em `wyd-db-1.0.0.md` §6.5 | demais casos dependem de fluxo bloqueado |
 | `specs/fluxos/carga-de-conteudo.md` | `content_version` (`0001`) e proveniência por dataset (`plano-migrations.md` §4) | a leitura no boot depende de `content.*` (13–27) e de `repo/content.rs` |
 | `planos/plano-de-testes.md` | escopo, 5 alvos planejados (`wyd-db-1.0.0.md` §6.17), ambiente e critério de saída da `1.0.0` (§6.9) | matriz `CAP-nn` não existe |
 | `roadmap/fases.md` | as 7 fases com escopo e critério de saída (`§6.10`) | a distribuição das 40 issues é `D-7`, não aprovada |
@@ -294,7 +291,7 @@ para **69**. As 109 páginas por tabela continuam fora desta conta; quantas já 
 | `src/` | 0 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
 | `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
 
-## 8. Ordem proposta (5 lotes; lotes 1 e 4 escritos)
+## 8. Ordem proposta (5 lotes; lotes 1, 2 e 4 escritos)
 
 ```mermaid
 flowchart LR
@@ -308,12 +305,18 @@ flowchart LR
 | Lote | Páginas | O que fecha com ele |
 |---|---|---|
 | **1 · padrão** | `padroes-postgres`, `integridade-e-constraints`, `como-adicionar-tabela` | **escrito em 2026-11-18** — o vocabulário de modelagem que todas as outras citam; `padrao-banco.md` §1–§6 e §11 deixam de ser a única porta (a página enuncia o **critério**; a **lista fechada** de tipos, índices e antipadrões fica aqui, em §4/§6/§11) |
-| **2 · identidade** | `restricoes-e-premissas`, `requisitos-funcionais`*, `regras-de-negocio`*, `casos-de-uso`*, `estados/conta-e-moderacao`, `estados/sessao`, `fluxos/login-e-sessao` | o bloco de identidade inteiro, de requisito a estado; `rascunho-accounts.md` sai da raiz e o aberto fica só em `lacunas.md` |
+| **2 · identidade** | `restricoes-e-premissas`, `requisitos-funcionais`*, `regras-de-negocio`*, `casos-de-uso`*, `estados/conta-e-moderacao`, `estados/sessao`, `fluxos/login-e-sessao` | **escrito em 2026-11-22** — o bloco de identidade inteiro, de requisito a estado; `rascunho-accounts.md` sai da raiz e o aberto fica só em `lacunas.md` |
 | **3 · série e operação** | `contexto-c4`, `visao-geral`, `riscos`, `plano-de-dados-e-seeds`, `plano-de-qualidade-e-gates`, `configuracao`, `testes-de-contrato`, `registro-de-execucao` | `plano-migrations.md` e `lacunas.md` §4 saem da raiz |
 | **4 · dicionário** | `dicionario-dados/index`, `como-ler` e as 19 páginas de domínio | **escrito em 2026-11-21** — o dicionário tem porta de entrada, regra de leitura e os 19 domínios |
 | **5 · índices e escrita** | `arquitetura/index`, `specs/index`, `planos/index`, `guia-administrador/index`, `guia-documentacao/index`, `estilo-e-linguagem`, `checklist-de-pr` | as pastas com conteúdo passam a ter índice de verdade, e a regra de escrita sai de `convencoes.md` |
 
 `*` página de recorte (§5): entra no lote já com a seção "o que não cobre" preenchida.
+
+**`specs/index` antecipado do lote 5 (2026-11-22):** o índice da pasta foi escrito junto do lote 2,
+não no lote 5, porque `wyd-db-1.0.0.md` §6.5 exige que `specs/` tenha porta de entrada e o lote 2
+sozinho deixaria oito páginas sem índice. O resto do lote 5 — índices de `arquitetura`, `planos`,
+`guia-administrador` e `guia-documentacao`, `estilo-e-linguagem` e `checklist-de-pr` — **não** foi
+aberto; a dependência `L3 → L5` continua valendo para ele.
 
 **Regra de parada de cada lote:** página nova só entra quando as anteriores do lote estão com `Base:`
 preenchido, link conferido e a citação de número com fonte e data. Lote não se abre com página do lote
