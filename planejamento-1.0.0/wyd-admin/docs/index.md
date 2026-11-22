@@ -37,5 +37,6 @@ audita e responde.
 | Rotas, payload, códigos e prazos | **proposto** (2026-11-21); custódia de item em 2026-11-22 (§4.9–§4.13) | `wyd-admin` |
 | Canal com o `wyd-server` e autenticação portal → admin | **decididos em 2026-11-22** (`LAC-ADM-03` e `LAC-ADM-04`) — [autenticação e controle](arquitetura/autenticacao-e-controle.md); armazenamento de idempotência, retenção e schema de custódia fecharam na mesma data | arquitetura, `wyd-ops` |
 
-Nada aqui foi implementado: nenhuma rota responde, nenhum papel existe no `provision` e nenhuma
-tabela nova foi proposta como aprovada.
+Nada aqui foi implementado: nenhuma rota responde e nenhum arquivo `.rs` existe. O papel `wyd_admin` está
+planejado em `wyd-db/src/provision/spec.md` §2 (`M27`, 2026-11-21) e o schema da idempotência e da
+custódia é do `wyd-db` (`0033`/`0034`), não desta árvore.
