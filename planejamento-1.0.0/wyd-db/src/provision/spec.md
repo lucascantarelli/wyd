@@ -85,7 +85,7 @@ o `const` exige. `MIGRATOR` é a mesma constante que o runner usa como `EXPECTED
 (`src/migrate/spec.md` §9): um nome de papel, uma fonte — e por isso o root a reexporta
 (`crate::provision::MIGRATOR`), que é o caminho citado pelo runner.
 
-`const _: () = assert!(ROLES.len() == 5);` acompanha a tabela: acrescentar ou remover papel sem atualizar
+`const _: () = assert!(ROLES.len() == 6);` acompanha a tabela: acrescentar ou remover papel sem atualizar
 o golden quebra a compilação antes de qualquer teste rodar.
 
 **O bloco de `public` não deriva de `ROLES`.** `render()` emite, depois das memberships, um bloco fixo

@@ -88,8 +88,8 @@ invariante; o comentário da variante registra que o golden não o alcança.
 
 | Teste | Cenário | Esperado |
 |---|---|---|
-| `empty_cluster_creates_all` | `observed` vazio | 5 `CreateRole` + 1 `GrantMembership`, criações antes do grant |
-| `complete_cluster_is_empty` | 5 papéis iguais | `steps` e `drifts` vazios |
+| `empty_cluster_creates_all` | `observed` vazio | 6 `CreateRole` + 1 `GrantMembership`, criações antes do grant |
+| `complete_cluster_is_empty` | 6 papéis iguais | `steps` e `drifts` vazios |
 | `missing_role_is_created` | falta `wyd_portal` | 1 `CreateRole { wyd_portal, true }` |
 | `login_mismatch_is_drift` | `wyd_migrator` com `login = false` | `Drift { Login { expected: true, found: false } }`, **sem** `Step` |
 | `missing_membership_is_granted` | `wyd_migrator` sem owner | `GrantMembership { wyd_owner, wyd_migrator }` |

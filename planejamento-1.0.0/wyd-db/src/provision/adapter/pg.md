@@ -75,7 +75,7 @@ sessão, que é o que faz a membership valer. `sqlx::Error` → `ScriptError::{C
 | `observed_empty_cluster` | `Vec` vazio, sem erro |
 | `observed_reads_login_flag` | `wyd_migrator` com `login = true` |
 | `observed_reads_direct_membership` | `member_of` traz `wyd_owner` |
-| `apply_creates_roles` | `render()` aplicado cria os 5 papéis |
+| `apply_creates_roles` | `render()` aplicado cria os 6 papéis |
 | `apply_twice_is_idempotent` | segunda execução sem erro, cluster igual |
 | `apply_grants_membership` | `pg_auth_members` tem `owner → migrator` |
 | `connect_error_has_no_dsn` | `Display` sem senha |
