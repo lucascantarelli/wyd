@@ -46,7 +46,7 @@ ninguém fez ainda — o que medir está em §6, e nenhum resultado está regist
 | Rodar o gate antes do próximo PR que alterar documentação publicável | `wyd-docs/` (comando de `wyd-docs-1.0.0.md` §7.1) | evita introduzir página quebrada em uma mudança futura |
 | Conferir o total e o censo medidos | comando de §3; valor em `wyd-docs-1.0.0.md` §9.1 | número que não bate com a montagem é defeito, não estimativa |
 
-## 3. Recontar o censo (um comando)
+## 3. Censo por estado (um comando, rodado pelo CI)
 
 ```bash
 cd wyd-docs && ./.venv/Scripts/python.exe verificar-contagens.py
@@ -62,6 +62,12 @@ reprova, salvo exceção declarada no próprio script (`CENSO_ESPECIAL`), que el
 
 O resultado não se copia para cá: total e censo continuam só em §9.1, e este comando é como o número
 se reproduz e se confere, sem leitura manual do artefato.
+
+Quem impõe o número não é quem roda o comando à mão: o `docs-check` do CI
+(`.github/actions/docs-check/`) roda `verificar-contagens.py` logo depois do `verificar.py`, em todo
+PR e push que o workflow `docs` cobre — inclusive os painéis e os arquivos do `wyd-db` que o gate lê.
+Divergência de §9.1 derruba o check como um link quebrado; o comando local é a mesma medição,
+antecipada.
 
 ## 4. O que esta página não decide
 
