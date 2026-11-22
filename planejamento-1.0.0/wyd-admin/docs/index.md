@@ -18,8 +18,9 @@ audita e responde.
    se cair.
 2. [Contrato C4](arquitetura/contrato-c4.md) — rotas, payload, idempotência, erros, prazos e
    autenticação.
-3. [Autenticação e controle](arquitetura/autenticacao-e-controle.md) — as duas propostas que aguardam o
-   dono: token de serviço portal → admin e canal de controle com o `wyd-server`, com opções e trade-off.
+3. [Autenticação e controle](arquitetura/autenticacao-e-controle.md) — as duas decisões de transporte
+   tomadas em 2026-11-22: token de serviço portal → admin e canal de controle com o `wyd-server`, com as
+   alternativas recusadas.
 4. [Ações e efeito no banco](specs/acoes.md) — o que cada ação grava, em qual tabela e sob qual
    constraint.
 5. [Requisitos](specs/requisitos.md) — `RF-ADM`/`RN-ADM`/`RNF-ADM` com critério de aceitação.
@@ -34,7 +35,7 @@ audita e responde.
 | `wyd-admin` é o único executor de escrita em `game` | **decidido** (`LAC-POR-01`, 2026-11-20) | arquitetura |
 | Transporte HTTP/JSON interno, com timeout, chave de idempotência e erro tipado | **decidido em direção**; forma nesta árvore | arquitetura + `wyd-admin` |
 | Rotas, payload, códigos e prazos | **proposto** (2026-11-21); custódia de item em 2026-11-22 (§4.9–§4.13) | `wyd-admin` |
-| Canal com o `wyd-server` e autenticação portal → admin | **propostos em 2026-11-22, aguardando o dono** (`LAC-ADM-03` e `LAC-ADM-04`) — [autenticação e controle](arquitetura/autenticacao-e-controle.md); armazenamento de idempotência, retenção e schema de custódia fecharam em 2026-11-22 | arquitetura, `wyd-ops` |
+| Canal com o `wyd-server` e autenticação portal → admin | **decididos em 2026-11-22** (`LAC-ADM-03` e `LAC-ADM-04`) — [autenticação e controle](arquitetura/autenticacao-e-controle.md); armazenamento de idempotência, retenção e schema de custódia fecharam na mesma data | arquitetura, `wyd-ops` |
 
 Nada aqui foi implementado: nenhuma rota responde, nenhum papel existe no `provision` e nenhuma
 tabela nova foi proposta como aprovada.

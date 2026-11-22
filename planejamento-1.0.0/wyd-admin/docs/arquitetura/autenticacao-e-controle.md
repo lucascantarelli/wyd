@@ -4,11 +4,11 @@
 > Base: `contrato-c4.md` §1, §4.4, §4.5 e §7; `lacunas.md` `LAC-ADM-03` e `LAC-ADM-04`; `RNF-ADM-001`/`RNF-ADM-002`; `AGENTS.md` §5.8
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-22) — **decisão aguardando o dono**. Duas lacunas, uma por seção:
-`LAC-ADM-04` em §2 e `LAC-ADM-03` em §3. Nada nesta página está decidido; a recomendação é minha e o
-"sim" é do dono (`AGENTS.md` §5.8). Enquanto não fechar, nenhum `GRANT`, tabela ou migration depende
-dela, e `ADM-02` (autenticação) e `ADM-08` (kick/broadcast) seguem bloqueadas por decisão, não por
-schema.
+**Estado:** aceito (2026-11-22) — **decidido pelo dono em 2026-11-22**, nas duas opções
+recomendadas: **token de serviço por ambiente com dois valores na rotação** (`LAC-ADM-04`, §2) e
+**HTTP interno síncrono com ack** (`LAC-ADM-03`, §3). As duas lacunas fecharam na mesma data em
+`lacunas.md`; `ADM-02` e `ADM-08` deixaram de estar bloqueadas por decisão. Nenhuma das duas exige
+tabela, `GRANT` ou migration — a série segue em 34 arquivos e 109 tabelas.
 
 ## 1. Os dois elos, e o que eles **não** são
 
@@ -22,9 +22,10 @@ portal (`0003`/`0004`, `LAC-POR-05`). E nenhum dos dois é rota pública — o a
 internet e o endpoint de controle mora na rede interna (`wyd-ops`).
 
 Fronteira de confiança, explicitada porque é o que a decisão compra: **o admin não autentica pessoa**. Ele
-confia em `X-Staff-Person-Id` porque quem o assina é o único detentor do token de serviço. Se o token
-vazar, o atacante não ganha "ser o staff 42": ganha "ser o BFF", que é mais amplo. É esse o risco que a
-escolha precisa dimensionar, não a troca de um cabeçalho.
+confia em `X-Staff-Person-Id` porque quem o envia é o único detentor do token de serviço — a decisão de
+2026-11-22 (A) não assina o ator; ela autentica o chamador. Se o token vazar, o atacante não ganha "ser o
+staff 42": ganha "ser o BFF", que é mais amplo. Foi esse o risco ponderado na escolha, e é ele que
+justifica a rotação em dois passos de §2.3.
 
 ## 2. `LAC-ADM-04` — autenticação portal → admin
 
@@ -41,12 +42,12 @@ escolha precisa dimensionar, não a troca de um cabeçalho.
 
 | # | Forma | Custo de 1.0.0 | Impede | Não impede | Veredito |
 |---|---|---|---|---|---|
-| **A** | **Token de serviço estático por ambiente** em `Authorization: Bearer`, sobre TLS interno, com **dois valores aceitos** durante a rotação | um segredo por ambiente no `wyd-ops`; nenhuma infra nova; ~20 linhas no componente `auth` | chamada sem token; chamada de outro ambiente (token diferente); token de banco usado como API | nada contra token vazado, exceto a rotação; não amarra o corpo ao chamador | **recomendada** |
-| B | mTLS: o BFF apresenta certificado de cliente emitido por CA interna | PKI interna (emissão, distribuição, expiração e revogação) + validação no admin | tudo o que A impede, **e** não depende de segredo copiável | o mesmo: vazamento do certificado continua sendo "ser o BFF" | melhor tecnicamente, caro demais para o único chamador de 1.0.0 |
-| C | HMAC por requisição (`X-Signature` sobre método + rota + `sha256(corpo)` + `X-Staff-Person-Id` + timestamp) | código nos dois lados + janela de relógio; para anti-replay de `GET`, cache com estado | token vazado sozinho não basta (falta a chave de assinatura); corpo e ator amarrados | ainda é um segredo compartilhado; acrescenta o cache de nonce que a 1.0.0 não tem | evolução de A, não substituto |
-| D | OIDC client credentials com JWT verificado por JWKS | um provedor de identidade de serviço (novo componente e novo custo) | tudo de B, com rotação automática | — | fora de escopo: o stack é Postgres + 1 serviço por canal |
+| **A** | **Token de serviço estático por ambiente** em `Authorization: Bearer`, sobre TLS interno, com **dois valores aceitos** durante a rotação | um segredo por ambiente no `wyd-ops`; nenhuma infra nova; ~20 linhas no componente `auth` | chamada sem token; chamada de outro ambiente (token diferente); token de banco usado como API | nada contra token vazado, exceto a rotação; não amarra o corpo ao chamador | **decidida em 2026-11-22** |
+| B | mTLS: o BFF apresenta certificado de cliente emitido por CA interna | PKI interna (emissão, distribuição, expiração e revogação) + validação no admin | tudo o que A impede, **e** não depende de segredo copiável | o mesmo: vazamento do certificado continua sendo "ser o BFF" | não escolhida: melhor tecnicamente, caro demais para o único chamador de 1.0.0 |
+| C | HMAC por requisição (`X-Signature` sobre método + rota + `sha256(corpo)` + `X-Staff-Person-Id` + timestamp) | código nos dois lados + janela de relógio; para anti-replay de `GET`, cache com estado | token vazado sozinho não basta (falta a chave de assinatura); corpo e ator amarrados | ainda é um segredo compartilhado; acrescenta o cache de nonce que a 1.0.0 não tem | não escolhida: evolução de A, não substituto |
+| D | OIDC client credentials com JWT verificado por JWKS | um provedor de identidade de serviço (novo componente e novo custo) | tudo de B, com rotação automática | — | recusada: fora de escopo — o stack é Postgres + 1 serviço por canal |
 
-### 2.3 Recomendação (opção A), com o que a torna defensável
+### 2.3 Decisão (opção A), com o que a torna defensável
 
 - **Um token, um detentor:** `WYD_ADMIN_SERVICE_TOKEN` existe só no BFF e no admin, por ambiente
   (`dev`, `staging`, `prod`), com valor distinto em cada um. Ambiente trocado é `401`, não "funciona".
@@ -60,12 +61,12 @@ escolha precisa dimensionar, não a troca de um cabeçalho.
 - **O que o token autoriza é o papel, não a pessoa:** `RN-ADM-001` continua decidindo `moderator` ×
   `admin`, e nas rotas de custódia o ator é `X-Actor-Account-Id` com conferência de titular no banco.
 
-### 2.4 O que muda se o dono aprovar
+### 2.4 O que a decisão mudou
 
-`ADM-02` destrava (autenticação, papel mínimo e `trace_id`), `RNF-ADM-002` ganha o mecanismo, o
-componente `auth` de `componentes.md` deixa de depender de lacuna e o `wyd-ops` recebe duas variáveis por
-ambiente e um passo de rotação. **Nenhuma tabela, `GRANT` ou contagem de série muda** — a decisão é de
-transporte, não de schema.
+`ADM-02` destravou (autenticação, papel mínimo e `trace_id`), `RNF-ADM-002` ganhou o mecanismo, o
+componente `auth` de `componentes.md` deixou de depender de lacuna e o `wyd-ops` passa a emitir e
+rotacionar `WYD_ADMIN_SERVICE_TOKEN` + `WYD_ADMIN_SERVICE_TOKEN_NEXT` por ambiente. **Nenhuma tabela,
+`GRANT` ou contagem de série mudou** — a decisão é de transporte, não de schema.
 
 ## 3. `LAC-ADM-03` — canal de controle com o `wyd-server`
 
@@ -86,11 +87,11 @@ transporte, não de schema.
 
 | # | Forma | Ack | Custo | O que muda no banco | Veredito |
 |---|---|---|---|---|---|
-| **A** | **HTTP interno síncrono**: admin chama `POST /internal/v1/control` no processo do canal; `200` devolve `{delivered_to}`; o mapa canal → URL vem de **configuração do `wyd-ops`**, não de tabela | imediato, dentro de 1,5 s | um endpoint novo no `wyd-server`; nada de infra | **nada** — 34 arquivos / 109 tabelas continuam | **recomendada** |
-| B | **Fila de comando em `ops`** (`ops.server_command`), dreno com `SELECT … FOR UPDATE SKIP LOCKED` como `0012`; o processo confirma por `UPDATE` | no próximo tick (assíncrono) | tabela, dreno, expurgo e reconciliação | **+1 tabela e +1 arquivo** (110 / 35) e a promessa do C4 §4.4 vira "assíncrono com prazo" | reserva para quando o processo precisar receber comando com o servidor HTTP fora |
+| **A** | **HTTP interno síncrono**: admin chama `POST /internal/v1/control` no processo do canal; `200` devolve `{delivered_to}`; o mapa canal → URL vem de **configuração do `wyd-ops`**, não de tabela | imediato, dentro de 1,5 s | um endpoint novo no `wyd-server`; nada de infra | **nada** — 34 arquivos / 109 tabelas continuam | **decidida em 2026-11-22** |
+| B | **Fila de comando em `ops`** (`ops.server_command`), dreno com `SELECT … FOR UPDATE SKIP LOCKED` como `0012`; o processo confirma por `UPDATE` | no próximo tick (assíncrono) | tabela, dreno, expurgo e reconciliação | **+1 tabela e +1 arquivo** (110 / 35) e a promessa do C4 §4.4 vira "assíncrono com prazo" | não escolhida: fica como reserva se o processo precisar receber comando com o servidor HTTP fora; reabrir exige decisão nova no `wyd-db` |
 | C | Broker externo (NATS/Redis pub-sub) | imediato | serviço novo, com portas, credencial e operação próprias | nada | recusada: o stack é Postgres + processos; free tier não paga mais uma dependência |
 
-### 3.3 Recomendação (opção A), com o que a torna defensável
+### 3.3 Decisão (opção A), com o que a torna defensável
 
 - **"Sem ack, sem escrita"** continua literal: o admin chama, espera `200`, e só então abre a transação
   que grava `released_at` e a auditoria. Processo fora do ar é `503 ADM_SERVER_UNAVAILABLE` **sem
@@ -100,31 +101,32 @@ transporte, não de schema.
   faria o banco de jogo carregar endereço de processo.
 - **Autenticação do elo, mesmo padrão de §2:** segredo próprio (`WYD_SERVER_CONTROL_TOKEN`), distinto do
   token portal → admin — audiências diferentes não compartilham segredo. O `wyd-server` recusa comando
-  sem ele; o admin nunca manda `X-Staff-Person-Id` para o processo do jogo, só o resumo da ação.
+  sem ele (o `401` é do processo do jogo, não do admin); o admin nunca manda `X-Staff-Person-Id` para o
+  processo do jogo, só o resumo da ação.
 - **Broadcast idempotente pelo lado do admin:** repetir a chave não reenvia; o `200` com
   `delivered_to` é o resultado gravado no registro de idempotência (`0033`).
 - **Timeout é incerto, não sucesso:** `504` deixa a sessão como estava e a reconciliação é
   `GET /actions/{key}`, nunca chave nova.
 
-### 3.4 O que muda se o dono aprovar
+### 3.4 O que a decisão mudou
 
-`ADM-08` destrava, `RF-ADM-004`/`RF-ADM-005` ganham o elo, `componentes.md` (`acoes` → `server`) deixa de
-depender de lacuna, e o plano do `wyd-server` nasce com uma obrigação nomeada: endpoint de controle,
-autenticação pelo segredo, ack com contagem e erro tipado. **Nenhuma tabela, `GRANT` ou contagem muda**
-na opção A; a opção B acrescenta `ops.server_command` e passa a exigir decisão no `wyd-db` (uma lacuna
-nova lá, não uma tabela escrita por conta própria).
+`ADM-08` destravou, `RF-ADM-004`/`RF-ADM-005` ganharam o elo, `componentes.md` (`acoes` → `server`) deixou
+de depender de lacuna, e o plano do `wyd-server` nasce com uma obrigação nomeada: endpoint de controle,
+autenticação pelo segredo, ack com contagem e erro tipado. **Nenhuma tabela, `GRANT` ou contagem mudou**
+— 34 arquivos e 109 tabelas continuam.
 
-## 4. O que precisa do "sim"
+## 4. Decisão registrada
 
-| Lacuna | Aprovar | Consequência imediata |
+| Lacuna | Decidido em 2026-11-22 | O que fica fora |
 |---|---|---|
-| `LAC-ADM-04` | **opção A** (token de serviço com dois valores na rotação) — ou indicar B, C ou D | `ADM-02` destrava; `contrato-c4.md` §1 deixa de apontar lacuna; `wyd-ops` ganha as duas variáveis e o passo de rotação |
-| `LAC-ADM-03` | **opção A** (HTTP interno síncrono com ack) — ou indicar B ou C | `ADM-08` destrava; o plano do `wyd-server` recebe a obrigação do endpoint; opção B abre lacuna de schema no `wyd-db` |
+| `LAC-ADM-04` | **opção A**: token de serviço por ambiente, dois valores aceitos na rotação | mTLS (B), HMAC por requisição (C) e OIDC (D) não foram escolhidos; voltar a eles exige decisão nova |
+| `LAC-ADM-03` | **opção A**: HTTP interno síncrono `POST /internal/v1/control` com ack `200` | fila `ops.server_command` (B) e broker (C) não foram escolhidas; B abriria lacuna de schema no `wyd-db`, com lote e contagem próprios |
 
-Aprovar B em `LAC-ADM-03` **não** autoriza escrever `ops.server_command` aqui: a tabela nasce no `wyd-db`,
-com decisão registrada em `lacunas.md` de lá, como as anteriores (`M30`, `M31`).
+O "sim" foi dado pelo dono em 2026-11-22 para as duas recomendações, e as lacunas fecharam na mesma
+data em `lacunas.md`. Escrever `ops.server_command` continua fora desta página: se a opção B for reaberta,
+a tabela nasce no `wyd-db`, com decisão registrada lá, como as anteriores (`M30`, `M31`).
 
-## 5. Como se verifica depois de aceito
+## 5. Como se verifica
 
 | Elo | Prova | Esperado |
 |---|---|---|
@@ -145,4 +147,4 @@ com decisão registrada em `lacunas.md` de lá, como as anteriores (`M30`, `M31`
 | Formato do pacote de broadcast no fio do jogo (opcode, encode, limites) | `wyd-protocol` (2º piloto) e o plano do `wyd-server` |
 | Porta, bind e topologia dos processos de canal | `wyd-server` + `wyd-ops` |
 | Emissão, guarda e rotação dos segredos (cofre, `.env`, secret do runner) | `wyd-ops`; esta página só nomeia as variáveis |
-| Forma de `ops.server_command`, se a opção B for escolhida | `wyd-db` (`ddl-confirmado.md` + nova lacuna em `lacunas.md`) |
+| Forma de `ops.server_command`, se a opção B for reaberta | `wyd-db` (`ddl-confirmado.md` + nova lacuna em `lacunas.md`) |

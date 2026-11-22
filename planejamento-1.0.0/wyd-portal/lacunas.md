@@ -118,9 +118,9 @@ redefinem.
   instância); metadados só no portal com ação posterior (janela com o item em dois lugares); rota única de
   devolução com `reason` (perde a distinção de auditoria entre desistência e fim de leilão).
 - **O que continua aberto, sem reabrir esta lacuna:** o schema de `game.market_escrow` e de
-  `portal.market_*` foi fechado no `wyd-db` em 2026-11-22 (`LAC-ADM-07`), e a credencial portal→admin tem
-  proposta registrada na mesma data (`LAC-ADM-04`, aguardando o dono do `wyd-admin`). São dependências de
-  outro dono, não falta de executor.
+  `portal.market_*` foi fechado no `wyd-db` em 2026-11-22 (`LAC-ADM-07`) e a credencial portal→admin foi
+  decidida na mesma data (`LAC-ADM-04`: token de serviço por ambiente). São dependências de outro dono, não
+  falta de executor.
 - **Dono:** arquitetura + `wyd-admin`. **Evidência:** contrato e requisitos escritos em 2026-11-22
   (arquivos citados acima, ainda não commitados).
 

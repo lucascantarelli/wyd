@@ -20,10 +20,10 @@ do jogador em nome de quem o BFF chama. `X-Staff-Person-Id` nessas rotas devolve
 staff não opera custódia de jogador.
 
 O admin **não** autentica pessoa: confia no token de serviço e no `X-Staff-Person-Id` afirmado pelo
-portal, que é a autoridade de quem é o staff. O mecanismo do token é `LAC-ADM-04`, com proposta
-registrada em 2026-11-22 (token de serviço por ambiente, dois valores aceitos na rotação) e aguardando o
-"sim" do dono em [autenticação e controle](autenticacao-e-controle.md) §2 — **nada nesta página depende
-dela para ser lida**, mas `ADM-02` só começa depois do "sim". Nas rotas de custódia a confiança é a mesma —
+portal, que é a autoridade de quem é o staff. O mecanismo do token foi **decidido em 2026-11-22**
+(`LAC-ADM-04`, opção A): **token de serviço por ambiente**, em `Authorization: Bearer` sobre TLS, com
+dois valores aceitos durante a rotação e comparação em tempo constante
+([autenticação e controle](autenticacao-e-controle.md) §2). Nas rotas de custódia a confiança é a mesma —
 token de serviço do portal — mas o ator declarado é a **conta do jogador**, e o admin confere, na mesma
 transação, que o personagem citado pertence a essa conta (`game.character.account_id`).
 
@@ -149,7 +149,8 @@ existe para staff. Elas não chamam o `wyd-server`.
 ```
 
 - `note` opcional, até 200 caracteres; vai para o log do admin, não para o banco.
-- Efeito: pede o encerramento ao `wyd-server`; **só depois do ack** grava `released_at` e
+- Efeito: pede o encerramento ao `wyd-server` por `POST /internal/v1/control` no processo do canal
+  ([autenticação e controle](autenticacao-e-controle.md) §3); **só depois do ack** grava `released_at` e
   `released_reason = 'admin'`; audita.
 - `200`: `{ "session_id": 88, "released_at": "…", "audit_id": 9003 }`.
 - Erros: `404`, `409 ADM_SESSION_NOT_ALIVE`, `503 ADM_SERVER_UNAVAILABLE`, `504 ADM_UPSTREAM_TIMEOUT`
@@ -163,7 +164,7 @@ existe para staff. Elas não chamam o `wyd-server`.
 
 - `message`: 1–200 caracteres, texto puro (sem HTML).
 - `scope`: `{group_id, channel}` ou `{ "all": true }`.
-- Efeito: envia ao `wyd-server` e audita; **não** grava tabela de jogo.
+- Efeito: envia ao `wyd-server` pelo mesmo controle do §4.4 e audita; **não** grava tabela de jogo.
 - `200`: `{ "delivered_to": 1, "audit_id": 9004 }`.
 - Erros: `503`, `504`, `422` (escopo inválido).
 
@@ -291,8 +292,8 @@ repetindo com chave nova.
 |---|---|
 | Papel de banco e `GRANT` de escrita em `game` | `LAC-ADM-01` |
 | Onde o registro de idempotência mora | **fechado em 2026-11-22** (`LAC-ADM-02` e `LAC-ADM-06`): `ops.idempotency_record` (`0033`, `ddl-confirmado.md` §5.33), com retenção de 7 dias |
-| Canal real com o `wyd-server` (formato, porta, ack) | `LAC-ADM-03`: **proposta em 2026-11-22** (HTTP interno síncrono com ack), aguardando o dono — `autenticacao-e-controle.md` §3; o endpoint em si é do plano do `wyd-server` |
-| Token de serviço, mTLS e assinatura do ator | `LAC-ADM-04`: **proposta em 2026-11-22** (token de serviço com rotação de dois valores), aguardando o dono — `autenticacao-e-controle.md` §2 |
+| Canal real com o `wyd-server` (formato, porta, ack) | **decidido em 2026-11-22** (`LAC-ADM-03`, opção A): HTTP interno síncrono com ack — `autenticacao-e-controle.md` §3; o formato do endpoint é do plano do `wyd-server` |
+| Token de serviço, mTLS e assinatura do ator | **decidido em 2026-11-22** (`LAC-ADM-04`, opção A): token de serviço por ambiente com rotação de dois valores — `autenticacao-e-controle.md` §2 |
 | Dono da escrita de `account_moderation` | **fechado em 2026-11-21** (`LAC-ADM-05`): é este contrato, §4.1; o `wyd-portal` corrigiu `consumo-do-banco.md` §3 e só lê |
 | Schema de `game.market_escrow` e das tabelas `portal.market_*` | **fechado em 2026-11-22** (`LAC-ADM-07`): lote `0034_portal_market.sql`, onze tabelas (`ddl-confirmado.md` §5.34), com os `GRANT` da custódia no `0032` emendado |
 | Verificação de que o personagem pertence à conta declarada | **fechado nesta proposta:** `game.character.account_id` lido na mesma transação; divergência é `403` |

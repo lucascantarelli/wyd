@@ -10,8 +10,8 @@ planejamento fechado, implementação não iniciada.
 As decisões abaixo não foram escolhidas por preferência: cada uma tem a frase da missão que a obriga e
 o registro da alternativa recusada. Não resta decisão de produto em aberto. O executor da transferência de
 item foi definido em 2026-11-22 (§8, `LAC-POR-07` fechada) e o schema dele fechou no mesmo dia no
-`wyd-db` (`LAC-ADM-07`, lote `0034`); o que ainda depende de outro dono é só a credencial portal→admin,
-com proposta registrada em 2026-11-22 (`LAC-ADM-04`).
+`wyd-db` (`LAC-ADM-07`, lote `0034`), e a credencial portal→admin foi decidida em 2026-11-22
+(`LAC-ADM-04`: token de serviço por ambiente). Nenhum bloqueio de outro dono resta neste caminho.
 
 ## 1. O pedido normalizado
 
