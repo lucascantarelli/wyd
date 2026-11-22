@@ -29,3 +29,8 @@ runs:
       shell: bash
       working-directory: wyd-docs
       run: "${{ inputs.python }} verificar.py site"
+
+    - name: Verificar contagens da série e censo por estado
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} verificar-contagens.py"

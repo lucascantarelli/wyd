@@ -6,6 +6,13 @@ on:
     paths:
       - "planejamento-1.0.0/**/docs/**"
       - "planejamento-1.0.0/wyd-1.0.0.md"
+      # Arquivos que o gate de contagens lê: número sem esses paths mudaria sem check.
+      - "planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md"
+      - "planejamento-1.0.0/wyd-db/migrations-checklist.md"
+      - "planejamento-1.0.0/wyd-db/ddl-confirmado.md"
+      - "planejamento-1.0.0/wyd-db/plano-migrations.md"
+      - "planejamento-1.0.0/wyd-portal/wyd-portal-1.0.0.md"
+      - "planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md"
       - "AGENTS.md"
       - "wyd-docs/**"
       - ".github/workflows/docs.yml"
@@ -14,6 +21,13 @@ on:
     paths:
       - "planejamento-1.0.0/**/docs/**"
       - "planejamento-1.0.0/wyd-1.0.0.md"
+      # Arquivos que o gate de contagens lê: número sem esses paths mudaria sem check.
+      - "planejamento-1.0.0/wyd-db/wyd-db-1.0.0.md"
+      - "planejamento-1.0.0/wyd-db/migrations-checklist.md"
+      - "planejamento-1.0.0/wyd-db/ddl-confirmado.md"
+      - "planejamento-1.0.0/wyd-db/plano-migrations.md"
+      - "planejamento-1.0.0/wyd-portal/wyd-portal-1.0.0.md"
+      - "planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md"
       - "AGENTS.md"
       - "wyd-docs/**"
       - ".github/workflows/docs.yml"
