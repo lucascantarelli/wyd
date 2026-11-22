@@ -67,7 +67,8 @@ chave inexistente é impossível; apagar a linha base leva a edição junto.
 - **não existe default compilado como seed:** `sanc_rate` só recebe célula com fonte explícita.
 - o override é **substituição**, não delta: quem lê precisa escolher a linha do override quando ela
   existe, e a base quando não existe.
-- `effect_code` reusa o `slug` de `content.item_effect`, mas **sem FK** para o catálogo.
+- `effect_code` reusa o `slug` de `content.item_effect` **com FK** (`fk_refine_gem_effect_codigo`,
+  `RESTRICT`); quem não tem FK é `material_item` de `accessory_refine_rule`.
 - `coin` de composição é a moeda da **operação de refino**, não a carteira da conta.
 - `updated_at` é o único carimbo do override; **quem** editou e o valor anterior ficam em
   `ops.config_change`, e não há `updated_by` porque `content` não aponta para `portal`.

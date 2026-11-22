@@ -125,7 +125,7 @@ cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output sit
 ```
 
 O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
-  `sistemas/wyd-portal/` e, na última medição (2026-11-22), passou com **145 páginas** e **143 fontes**
+  `sistemas/wyd-portal/` e, na última medição (2026-11-22), passou com **149 páginas** e **147 fontes**
   verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.
