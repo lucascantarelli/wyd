@@ -38,7 +38,7 @@
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-22 |
 | `wyd-docs` | 9 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/` | `wyd-docs-1.0.0.md`; `wyd-docs/`, 2026-11-22 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, 2 lacunas abertas (`08`, `09`) | `wyd-portal/`; `lacunas.md` §1, 2026-11-22 |
-| `wyd-admin` | 11 | planejado: dashboard, `lacunas.md` e 9 páginas em `docs/`; contrato C4 com 14 rotas (7 de staff, 4 de custódia de item, 3 utilitárias); **15 `RF-ADM`**, 10 fatias; 2 lacunas `proposta` aguardando o dono (2026-11-22) | `wyd-admin/`, 2026-11-22 |
+| `wyd-admin` | 11 | planejado: dashboard, `lacunas.md` e 9 páginas em `docs/`; contrato C4 com 14 rotas (7 de staff, 4 de custódia de item, 3 utilitárias); **15 `RF-ADM`**, 10 fatias; zero lacunas abertas (as sete fecharam até 2026-11-22) | `wyd-admin/`, 2026-11-22 |
 | `wyd-ops` | 3 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional; sem plano diretor | `wyd-ops/`, 2026-11-22 |
 | `wyd-bots`, `wyd-client`, `wyd-core`, `wyd-launcher`, `wyd-net`, `wyd-server`, `wyd-sim` | 0 | não planejado; só `.gitkeep` | `find planejamento-1.0.0`, 2026-11-22 |
 

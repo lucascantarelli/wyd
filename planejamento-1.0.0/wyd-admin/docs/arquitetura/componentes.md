@@ -22,8 +22,8 @@
 - **API:** `authenticate(headers) -> Staff { person_id, role }`; `require_role(role, mínimo)`.
 - **Invariantes:** `X-Staff-Person-Id` sem token válido é `401`; papel insuficiente é `403`; o papel
   nunca vem do corpo.
-- **Depende de:** configuração de segredo — mecanismo proposto em 2026-11-22 para `LAC-ADM-04`
-  (token de serviço por ambiente), aguardando o dono.
+- **Depende de:** configuração de segredo — `LAC-ADM-04` decidida em 2026-11-22 (token de serviço por
+  ambiente, dois valores aceitos na rotação).
 - **Testes:** token inválido, papel `member`, persona de outro ambiente.
 - **Risco:** alto — é a única barreira entre o portal e a escrita em `game`.
 
@@ -45,8 +45,8 @@
 - **Invariantes:** conferência otimista obrigatória em carteira, preço e custódia; `account_ledger`
   sempre que a carteira muda; auditoria na mesma transação; `DELETE` proibido, com a exceção única da
   custódia — a linha de `character_item` sai e a instância entra em `market_escrow` na mesma transação.
-- **Depende de:** `banco`, `idempotencia` e `server` (kick/broadcast, com o elo de `LAC-ADM-03`
-  proposto em 2026-11-22 e aguardando o dono).
+- **Depende de:** `banco`, `idempotencia` e `server` (kick/broadcast pelo elo de `LAC-ADM-03`,
+  decidido em 2026-11-22).
 - **Testes:** integração por ação, rollback forçado, concorrência.
 - **Risco:** alto — é onde a regra de escrita vive.
 
@@ -65,10 +65,11 @@
 - **Responsabilidade:** cliente do canal de controle do `wyd-server` (kick, broadcast).
 - **API:** `kick(session_id)`, `broadcast(scope, message)`, com prazo de 1,5 s.
 - **Invariantes:** sem ack não há escrita em `game.session`; timeout não é sucesso.
-- **Depende de:** `LAC-ADM-03` — modelo de transporte proposto em 2026-11-22, aguardando o dono
-  ([autenticação e controle](autenticacao-e-controle.md) §3).
+- **Depende de:** contrato de controle de `LAC-ADM-03`, decidido em 2026-11-22 (HTTP interno síncrono
+  com ack — [autenticação e controle](autenticacao-e-controle.md) §3).
 - **Testes:** dublê que não responde, ack atrasado, ack duplicado.
-- **Risco:** alto — contrato inexistente; nada aqui pode ser implementado antes da decisão.
+- **Risco:** alto — o endpoint do processo do jogo ainda não tem plano (`wyd-server` vazio); o cliente é
+  escrito contra o contrato decidido e testado com dublê, nunca “aproximado”.
 
 ## `observabilidade`
 

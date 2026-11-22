@@ -52,5 +52,5 @@ comportamentos acima.
 ## Critério de saída da `1.0.0`
 
 Todos os testes de contrato, ação, idempotência e papel verdes; nenhum `#[ignore]` sem issue dona; os
-dois comandos acima exit 0. `kick` e `broadcast` só entram no critério depois de `LAC-ADM-03` ser
-aprovada (proposta de 2026-11-22, `../arquitetura/autenticacao-e-controle.md` §3).
+dois comandos acima exit 0. `kick` e `broadcast` entram no critério com o dublê do controle, porque o
+elo foi decidido em 2026-11-22 (`../arquitetura/autenticacao-e-controle.md` §3).
