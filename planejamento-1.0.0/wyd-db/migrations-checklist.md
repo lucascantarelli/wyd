@@ -152,7 +152,7 @@ o token, que é rota e emissor, não coluna).
 | Arquivos aguardando aprovação | 0 | os cinco lotes de 2026-11-21 foram aprovados |
 | Arquivos com DDL parcial | 0 | — |
 | Arquivos bloqueados | 6 | `0016`, `0017`, `0018`, `0020`, `0023` e `0027` (dado de seed não verificado) |
-| Soma que fecha | 31 | 25 `concluída` + 0 `pronta` + 0 `aguardando aprovação` + 0 `parcial` + 6 `bloqueada` |
+| Soma que fecha | 32 | 26 `concluída` + 0 `pronta` + 0 `aguardando aprovação` + 0 `parcial` + 6 `bloqueada` |
 | Tabelas com DDL fechado | 97 de 97 | `ddl-confirmado.md` §1 |
 | Tabelas desenhadas e não confirmadas | 0 | — (as 20 de `0022`, `0025`, `0026` e `0028` foram aprovadas em 2026-11-21) |
 
