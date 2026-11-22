@@ -73,6 +73,20 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: marco
+    attributes:
+      label: Marco
+      options:
+        - M0 — Fundação
+        - M1 — Planejamento
+        - M2 — wyd-db
+        - M3 — Sistemas
+        - M4 — 1.0.0
+        - M5 — Operação
+    validations:
+      required: true
+
   - type: checkboxes
     id: confirmacoes
     attributes:

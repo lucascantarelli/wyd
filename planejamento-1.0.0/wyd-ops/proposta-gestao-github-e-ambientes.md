@@ -1,8 +1,8 @@
 # Gestão do GitHub, CI e ambientes — proposta
 
-> **Estado: aprovada e executada em 2026-11-19.** §10 registra o que foi criado e o que ficou
-> pendente. As fontes externas foram consultadas em 2026-11-19 e estão listadas em §8; plano
-> gratuito muda sem aviso, então confira antes de executar.
+> **Estado: aprovada e executada em 2026-11-19; board do `wyd-db` fechado em 2026-11-22 (§10.3).**
+> §10 registra o que foi criado e o que ficou pendente. As fontes externas foram consultadas em
+> 2026-11-19 e estão listadas em §8; plano gratuito muda sem aviso, então confira antes de executar.
 >
 > Este documento pertence a `wyd-ops` porque descreve operação do repositório e dos ambientes. Ele
 > não decide arquitetura de jogo nem substitui `planejamento-1.0.0/wyd-1.0.0.md` §4.
@@ -28,9 +28,9 @@
 |---|---|---|
 | Visibilidade | público | API do GitHub |
 | Branch padrão | `develop` | API do GitHub |
-| Issues | habilitadas, **0 abertas** | API do GitHub |
+| Issues | habilitadas, **40 abertas** (#82–#121) | API do GitHub, 2026-11-22 |
 | Milestones | **6** (`M0 — Fundação` a `M5 — Operação`, nº 1–6) | API do GitHub, 2026-11-19; criação em §10 |
-| Projects do repositório | **habilitado** (`has_projects: true`), project `WYD 1.0.0` nº 10 | API do GitHub, 2026-11-19; criação em §10 |
+| Projects do repositório | **habilitado** (`has_projects: true`), project `WYD 1.0.0` nº 10 ligado ao repositório, 40 itens com `Sistema`, `Fase`, `Prioridade`, `Marco` e `Status` preenchidos, 5 views com filtro | API do GitHub, 2026-11-22; criação em §10, fechamento em §10.3 |
 | Projects da conta | o `WYD 1.0.0` (§10) e 1 de outro assunto (“GP-100 Pipeline”) | API do GitHub |
 | Merge | apenas squash (merge commit e rebase não permitidos); branch apagada no merge | API do GitHub |
 | Segurança | secret scanning e Dependabot ativos | API do GitHub |
@@ -148,10 +148,11 @@ Um project `WYD 1.0.0` com campos:
 | `Status` | single select | `Backlog`, `Pronto`, `Em andamento`, `Bloqueado`, `Em revisão`, `Done` |
 | `Sistema` | single select | os 13 sistemas |
 | `Fase` | single select | `0`–`5` do panorama |
-| `Priority` | single select | `P0`–`P3` |
+| `Prioridade` | single select | `P0`–`P3` |
 | `Marco` | single select | `M0`–`M5` |
 
-Views: **Roadmap** (por milestone), **Por sistema**, **Bloqueados**, **Minhas issues**. Auto-add
+Views: **Roadmap** (por milestone), **Por sistema**, **Bloqueados**, **Minhas issues** — a execução
+manteve a view padrão renomeada como **Fila** (`-status:Done`), e o estado medido está em §10.3. Auto-add
 filtrado por label `area/*`. O número de automações embutidas depende do plano: conte com uma e
 confirme o limite antes de depender de várias.
 
@@ -435,12 +436,49 @@ Aprovada pelo time nesta data. O que foi criado no GitHub, por API e `gh`:
 |---|---|---|
 | Sem *required status check* nos rulesets | o `Full Workflow` é verde sem build (§2.1) e o `docs` não avalia código | Fase 4, ao substituir o CI stub |
 | Sem aprovação obrigatória de revisor | o repositório tem um mantenedor; exigir aprovação travaria o próprio dono | quando houver segundo revisor |
-| Sem views customizadas no project | a API cria view sem filtro; view sem filtro não é a view prometida em §3.5 | quando o project tiver itens reais |
+| Sem views customizadas no project | a API cria view sem filtro; view sem filtro não é a view prometida em §3.5 | **corrigido em 2026-11-22**: `createProjectV2View` cria sem filtro e `updateProjectV2View` aplica (§10.3) |
 | Labels padrão do GitHub mantidas | remover `bug`/`enhancement` é destrutivo e o histórico pode depender delas | decisão do time; a regra de não duplicar tipo vale para issue nova |
 | 40 issues criadas sem o formulário | o roadmap do `wyd-db` já tinha página com DoD; o formulário não aceita corpo tão longo nem milestone de fase | manter o formulário para issue nova; as 40 são migração de página existente |
 
 ### 10.2 O que continua pendente
 
-- Views do project e ajuste das opções de `Status`.
 - CI real, que segue stub; não é bloqueio das 40 issues de planejamento.
+- Campo de data no project: sem ele a view `Roadmap` não plota linha do tempo (§10.3).
+
+### 10.3 Fechamento do board do `wyd-db` (`V`, 2026-11-22)
+
+O project `WYD 1.0.0` existia desde 2026-11-19 com os 40 itens e **nenhum campo preenchido**, sem
+vínculo com o repositório, sem view útil e sem `Status` de seis estados. O que foi escrito nele, e o
+estado medido no fim da execução:
+
+| Item | Estado final | Como verificar |
+|---|---|---|
+| Vínculo com o repositório | project ligado a `lucascantarelli/wyd` (`linkProjectV2ToRepository`) | aba **Projects** do repositório |
+| Itens | 40 (#82–#121), um por página `WYDDB-nnn` | `gh project item-list 10 --owner @me` |
+| Campos preenchidos | **40 de 40** com `Sistema`, `Fase`, `Prioridade`, `Marco` e `Status`; 0 incompletos | a mesma consulta, lida campo por campo |
+| `Sistema` | `wyd-db` nos 40 | — |
+| `Fase` | `4 — Implementação` nos 40: as issues implementam o crate, o fechamento do planejamento é a Fase 2 de `wyd-1.0.0.md` §4 | `wyd-1.0.0.md` §4 |
+| `Marco` | `M2` nos 40 | §3.4 |
+| `Prioridade` | `P1` **15** (`001`–`015`), `P2` **11** (`016`–`026`), `P3` **14** (`027`–`040`) | página de cada issue; `roadmap/index.md` §1 |
+| `Status` | `Pronto` **1** (`WYDDB-001`, sem dependência), `Backlog` **25**, `Bloqueado` **14** (`027`–`040`, os bloqueios de `roadmap/index.md` §2) | — |
+| Opções de `Status` | as seis de §3.5: `Backlog`, `Pronto`, `Em andamento`, `Bloqueado`, `Em revisão`, `Done` | `gh project field-list 10 --owner @me` |
+| Views | **5, todas com filtro**: `Fila` (`-status:Done`, é a view padrão renomeada), `Por sistema` (`sistema:wyd-db`), `Bloqueados` (`status:Bloqueado`), `Minhas issues` (`assignee:@me`) e `Roadmap` (`-status:Done`) | `gh api graphql` na consulta do project |
+| Descrição e README do project | preenchidos, cada linha apontando o documento dono do fato | página do project |
+| Tipo de issue | `Task` nas 40 | `gh api repos/lucascantarelli/wyd/issues/82 -q .type` |
+| Dependências | **63** vínculos `blocked by`, derivados do bloco "Depende de" das 40 páginas; 39 issues têm ao menos um bloqueador | `gh api repos/lucascantarelli/wyd/issues/{n}/dependencies/blocked_by` |
+| `estado/bloqueada` | 14 issues (`027`–`040`), as mesmas que `roadmap/index.md` §2 declara bloqueadas | `gh issue list --label estado/bloqueada` |
+| Formulário `planejamento.yml` | ganhou o campo obrigatório `Marco`, que §3.6 exige e o arquivo não tinha | `.github/ISSUE_TEMPLATE/planejamento.yml` |
+
+Três limites de API, medidos e não contornados:
+
+1. **`createProjectV2View` não aceita `filter`** (`argumentNotAccepted`), embora `updateProjectV2View`
+   aceite. Cada view filtrada custa duas chamadas: criar e depois filtrar.
+2. **Agrupamento não é exposto:** `ProjectV2ViewConfigurationInput` só aceita `visibleFieldIds`, então
+   a view "por sistema" é filtro, não agrupamento.
+3. **`Roadmap` é layout de data:** não há campo de data no project, então a linha do tempo não plota
+   nada. A view existe para quando houver data; a leitura por fase continua sendo o milestone, e por
+   dependência, o vínculo `blocked by`.
+
+O `Status` foi reescrito preservando o `id` de `Todo`, `In Progress` e `Done`; renomear com o mesmo
+`id` não perde valor de item. Nenhum item tinha valor antes, e a ordem das seis opções é a de §3.5.
 
