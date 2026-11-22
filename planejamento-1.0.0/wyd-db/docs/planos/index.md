@@ -14,7 +14,7 @@ dos nove planos da pasta e responde qual deles governa a fase atual.
 
 | Plano | Pergunta | Estado |
 |---|---|---|
-| `plano-de-documentacao.md` | como esta documentação é produzida? | não escrito |
+| [`plano-de-documentacao.md`](plano-de-documentacao.md) | como esta documentação é produzida? | escrito |
 | `plano-de-testes.md` | como provamos o banco? | recorte (§5) |
 | [`plano-de-implantacao.md`](plano-de-implantacao.md) | como isto entra no ar? | escrito |
 | [`plano-de-dados-e-seeds.md`](plano-de-dados-e-seeds.md) | que dado inicial existe? | escrito |
@@ -24,15 +24,15 @@ dos nove planos da pasta e responde qual deles governa a fase atual.
 | [`riscos.md`](riscos.md) | o que pode dar errado? | escrito |
 | [`registro-de-execucao.md`](registro-de-execucao.md) | o que já foi entregue? | escrito |
 
-Cinco páginas estão escritas e quatro não: caminho em `code` não é link. O estado de recorte ou de
+Seis páginas estão escritas e três não: caminho em `code` não é link. O estado de recorte ou de
 não escrita é o de `proposta-paginas.md` §5–§6; esta página só o reflete.
 
 ## 2. Qual plano é vigente
 
-**Hoje, o plano vigente é o de documentação** — `plano-de-documentacao.md` —, porque a fase é
-**planejamento**, não execução da série (`wyd-1.0.0.md` §4). Enquanto ele não está escrito, a fila
-executável é `proposta-paginas.md` §8, que distribui as páginas em lotes; a página de documentação,
-quando existir, passa a ser a timeline única (`D-A`, fechada em 2026-11-19).
+**Hoje, o plano vigente é o de documentação** — `plano-de-documentacao.md`, escrito em 2026-11-22 —,
+porque a fase é **planejamento**, não execução da série (`wyd-1.0.0.md` §4). A fila executável
+continua em `proposta-paginas.md` §8, que distribui as páginas em lotes; a página de documentação é a
+timeline única (`D-A`, fechada em 2026-11-19).
 
 | Fase | Plano que governa | Por quê |
 |---|---|---|

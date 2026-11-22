@@ -351,12 +351,13 @@ por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas 
 
 **Teto × escrito (2026-11-22):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **57 páginas com corpo em `docs/`**, todas com o
+medição de `planos/metricas.md`. **Medido:** **58 páginas com corpo em `docs/`**, todas com o
 cabeçalho de §7.1 — as **3 de raiz** (`index`, `convencoes`, `glossario`), **10 em `arquitetura/`**
 (`migracoes`, `seguranca`, `adr/index`, `adr/adr-db-0001`, `adr/adr-db-0002`, `padroes-postgres`,
 `integridade-e-constraints`, `contexto-c4`, `visao-geral`, `index`), **21 em `dicionario-dados/`**
-(`index`, `como-ler` e as 19 de domínio), **6 em `planos/`** (`plano-de-implantacao`, `riscos`,
-`plano-de-dados-e-seeds`, `plano-de-qualidade-e-gates`, `registro-de-execucao`, `index`), **3 em
+(`index`, `como-ler` e as 19 de domínio), **7 em `planos/`** (`plano-de-implantacao`, `riscos`,
+`plano-de-dados-e-seeds`, `plano-de-qualidade-e-gates`, `registro-de-execucao`, `index`,
+`plano-de-documentacao`), **3 em
 `guia-desenvolvedor/`** (`como-adicionar-migration`, `como-adicionar-tabela`, `checklist-de-pr`),
 **2 em `guia-teste/`** (`testes-de-sistema`, `testes-de-contrato`), **2 em `guia-administrador/`**
 (`configuracao`, `index`), **2 em `guia-documentacao/`** (`index`, `estilo-e-linguagem`) e **8 em
@@ -370,11 +371,11 @@ tabela, também fora da contagem. Fora de `docs/`: **28 de 34** em `migrations/`
 de `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
 **O que dá para escrever agora, página a página:** `proposta-paginas.md` (proposta de 2026-11-18)
-mapeia as **147** páginas autorais de `docs/` em **0 escrevíveis**, **21 de recorte** e **69
+mapeia as **147** páginas autorais de `docs/` em **0 escrevíveis**, **21 de recorte** e **68
 bloqueadas** — eram 146 páginas, 23 escrevíveis e 84 bloqueadas na medição de 2026-11-18, antes de as
 **19 páginas de domínio** ficarem escritas (15 delas estavam na lista de bloqueadas) —, com a fonte de
 cada uma e o mapa de diluição das seis fontes de planejamento. Os **lotes 1 a 5** dela (padrão,
-identidade, série e operação, dicionário e índices) estão escritos: os títulos contam nas 57 acima.
+identidade, série e operação, dicionário e índices) estão escritos: os títulos contam nas 58 acima.
 
 ---
 
@@ -1223,7 +1224,8 @@ fechamento.
 
 **Vocabulário (decidido em 2026-11-19):** **Onda** é a trilha de documentação (a tabela abaixo);
 **Etapa** é a trilha de código (`plano-migrations.md` §9). A timeline única, com as duas trilhas e o
-ponto de junção **Etapa 1 → Onda 3**, fica em `planos/plano-de-documentacao.md`, criado na onda 8.
+ponto de junção **Etapa 1 → Onda 3**, fica em `planos/plano-de-documentacao.md` (onda 8; escrito
+em 2026-11-22 antes das demais páginas da onda).
 
 Cada onda é uma entrega revisável. Nenhuma começa antes de a anterior fechar o critério de saída.
 A ordem segue dependência de conteúdo: primeiro o vocabulário, depois o requisito, depois a
