@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 19) e §4; `ddl-confirmado.md` §5.21 (aprovado em 2026-11-20); fichas de tabela do legado em `deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Décimo nono arquivo da série e o maior lote: **13 tabelas** de `content` para mundo, NPC, loja,
 configuração e zona de guilda. Todas as colunas são **`H`** — vêm das fichas do legado, não de
 documento de coluna do planejamento novo —, exceto as de `content_source` (`plano-migrations.md` §4)

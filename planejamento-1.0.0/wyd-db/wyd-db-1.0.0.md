@@ -665,6 +665,13 @@ dois lugares que podem divergir.
 | `riscos.md` | "o que pode dar errado?" | um item por risco com probabilidade, impacto, sinal de que aconteceu, antídoto, dono; risco aceito declarado |
 | `registro-de-execucao.md` | "o que já foi entregue?" | uma linha por entrega: data, item, comando/arquivo, resultado. Sem narrativa |
 
+**Decisão fora de `docs/`:** a política de dados pessoais e retenção está em
+`proposta-dados-pessoais-e-retencao.md` (`M32`, **decidida em 2026-11-23**, com as oito `Q-DP`
+respondidas pelo dono e registradas no §9 da própria página), na raiz do planejamento do sistema. Ela
+não entra nesta pasta nem na contagem de §4 porque não é plano de execução do banco: as finalidades,
+os responsáveis e a base legal são decisão do produto, e a página não declara conformidade nem
+substitui revisão jurídica.
+
 ### 6.10 `docs/roadmap/*.md`
 
 **`index.md`** — pergunta: "o que está aberto e em que ordem?". Obrigatório: fila por prioridade
@@ -1200,12 +1207,17 @@ Uma página só é `aceito` quando **todos** forem verdadeiros:
 7. nenhum segredo, DSN, token ou hash aparece;
 8. nenhum `TODO`, "em construção" ou seção vazia;
 9. foi revisada por alguém que não escreveu;
-10. está linkada no `index.md` da pasta e contabilizada em `planos/metricas.md`;
+10. está linkada no `index.md` da pasta; a contabilização em `planos/metricas.md` está suspensa até
+    `M20` destravar (suspensa em 2026-11-23, retomada quando o arquivo existir), sem dispensar o índice;
 11. tem `Base:` preenchido (bloco consultado ou `—`) e nenhuma afirmação pendurada em material
     externo à árvore.
 
 Página que falha em 1–4 volta para rascunho; 5–8 são defeito bloqueante; 9–11 são pendência de
 fechamento.
+
+**Suspensão de 2026-11-23 (`M33`, Q-M33-3).** Só a metade de `planos/metricas.md` está suspensa; a
+exigência de `index.md` continua. Quando `planos/metricas.md` existir, o aceite de toda página é
+revalidado contra a metade retomada.
 
 ---
 

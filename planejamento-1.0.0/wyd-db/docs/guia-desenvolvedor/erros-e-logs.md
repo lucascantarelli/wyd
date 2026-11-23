@@ -2,7 +2,7 @@
 > Público: Desenvolvedor, operador e revisor de segurança
 > Dono: equipe do `wyd-db`
 > Base: `src/migrate/spec.md` §11–§12; `src/provision/spec.md` §6; `wyd-db-1.0.0.md` §6.11
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -60,7 +60,9 @@ do driver trouxer a URL, ela é substituída por uma mensagem do módulo, não l
 ## 5. O que esta página não cobre
 
 - **Erros de `repo`, `pool`, `transfer` e runtime do jogo:** não têm taxonomia publicada.
-- **Formato de log estruturado, retenção e destino:** dependem do ambiente e do `wyd-ops`.
+- **Formato de log estruturado, retenção e destino:** dependem do ambiente e do `wyd-ops`. O que já
+  está decidido desde 2026-11-23 (`M32`, `Q-DP-6`): log não carrega e-mail, login ou PIN em claro —
+  use `person_id`, `account_id` ou hash; e retenção de log continua `pendente`, com dono `wyd-ops`.
 - **Mensagem exata de cada driver:** o módulo traduz para o seu erro; não há promessa de texto do
   `sqlx`.
 - **Diagnóstico de disco, pool ou conexões:** é de [`../guia-administrador/diagnostico.md`](../guia-administrador/diagnostico.md);

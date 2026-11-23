@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.13 (confirmado); `padrao-banco.md` §1/§5/§9; `lacunas.md` §2.3
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Décimo arquivo da série. Cria a guilda, o vínculo de personagem com papel, as relações entre guildas
 e a linha única da GTorre. Zona de guilda, preço e spawn de guilda são conteúdo (`0019`), e não
 entram aqui.

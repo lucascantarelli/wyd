@@ -36,18 +36,18 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 246 | piloto parcial: 236 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find`/`grep` em 2026-11-22 |
+| `wyd-db` | 308 | piloto parcial: 301 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-23 |
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-22 |
-| `wyd-docs` | 9 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/` | `wyd-docs-1.0.0.md`; `wyd-docs/`, 2026-11-22 |
+| `wyd-docs` | 10 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/`; proposta do gate de aceite em 2026-11-23 | `find planejamento-1.0.0/wyd-docs -name '*.md'`, 2026-11-23 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, 0 lacunas abertas (8 fechadas; `09` em proposta) | `wyd-portal/`; `lacunas.md` §1, 2026-11-22 |
 | `wyd-admin` | 11 | planejado: dashboard, `lacunas.md` e 9 páginas em `docs/`; contrato C4 com 14 rotas (7 de staff, 4 de custódia de item, 3 utilitárias); **15 `RF-ADM`**, 10 fatias; zero lacunas abertas (as sete fecharam até 2026-11-22) | `wyd-admin/`, 2026-11-22 |
 | `wyd-ops` | 5 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional + porta de entrada publicada e o plano da imagem do site; sem plano diretor e sem `RF-OPS` | `wyd-ops/`, 2026-11-22 |
 | `wyd-net` | 3 | aberto em 2026-11-22: fronteira, 7 contratos (4 herdados já decididos) e 4 lacunas abertas; sem `RF-NET` | `wyd-net/lacunas.md` §1, 2026-11-22 |
-| `wyd-core` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e 4 lacunas abertas; sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-22 |
-| `wyd-server` | 3 | aberto em 2026-11-22: fronteira, 6 contratos (2 já decididos por `LAC-ADM-03`) e 4 lacunas abertas | `wyd-server/lacunas.md` §1, 2026-11-22 |
+| `wyd-core` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e **2 lacunas abertas, 2 fechadas** (`LCORE-01`, `LCORE-03`); sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-23 |
+| `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura proposto) e 5 lacunas (**1 aberta, 4 fechadas**); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7; peer de A1 em `Q-SRV-5`) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md`, 2026-11-23 |
 | `wyd-sim` | 3 | aberto em 2026-11-22: fronteira, 4 contratos e 4 lacunas; nenhuma fórmula escrita | `wyd-sim/lacunas.md` §1, 2026-11-22 |
 | `wyd-launcher` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e 4 lacunas abertas | `wyd-launcher/lacunas.md` §1, 2026-11-22 |
-| `wyd-client` | 4 | aberto em 2026-11-22: fronteira, 5 contratos, 4 lacunas próprias + as 3 medições herdadas do protocolo; **registro medido** do cliente local | `wyd-client/registro-do-cliente.md`, 2026-11-22 |
+| `wyd-client` | 5 | aberto em 2026-11-22: fronteira, 5 contratos, **5 lacunas próprias** (a de uso/distribuição entrou como proposta em 2026-11-23) + as 3 medições herdadas do protocolo; **registro medido** do cliente local | `wyd-client/lacunas.md` §1 e `registro-do-cliente.md`, 2026-11-23 |
 | `wyd-bots` | 3 | aberto em 2026-11-22: fronteira, 5 contratos e 4 lacunas abertas | `wyd-bots/lacunas.md` §1, 2026-11-22 |
 
 ### 1.2 `wyd-db`, página por pasta
@@ -120,6 +120,11 @@ ainda é proposta: enquanto não for executada, esta tabela fica em “não medi
 | Funcionalidades `aceitas` | não medido | idem |
 | Cobertura | meta **100%**, não medida | §4.2 |
 
+**Escopo decidido em 2026-11-23 (`LCORE-01`):** a `1.0.0` continua jogo completo; o escopo é o
+catálogo completo medido no cliente 7662, e o primeiro domínio executável é entrar na cena com
+posição/estado inicial, sem inventário, combate ou chat. A lista completa continua sendo o catálogo,
+não uma lista fixa inventada; a cobertura segue **não medida**.
+
 Nenhum total é estimado antes do levantamento: os 13 sistemas técnicos não são 13 funcionalidades, a
 lista de domínios citada pelo dono (classes, skills, refinamento, guerras, cidadania, estados
 especiais, montarias, invocações, transformações, magias, quests, guildas) é pauta de levantamento,
@@ -140,7 +145,7 @@ alvo. Contagem de funcionalidade sem catálogo é `H`, nunca estimativa. Cobertu
 | `P-03`–`P-22` | PK identity, PK composta em filha, sem UUID, `TIMESTAMPTZ`, dinheiro inteiro, `TEXT`+`CHECK`, `INET`, coluna gerada, `NOT NULL` por padrão, constraint nomeada, índice parcial, FK indexada, trigger só mecânica, view de leitura, papéis separados, migration imutável, sem soft-delete genérico, retenção declarada, PII só em `portal` | 2026-11-17 |
 | `ADR-DB-0001` | provisionamento de papel é fase própria, fora da série | 2026-11-17 |
 | `ADR-DB-0002` | runner de migrations próprio, com ledger por versão | 2026-11-18 |
-| `M1`–`M25`, `A9`–`A16`, `D1`–`D14` | decisões de desenho fechadas, cada uma com evidência em `lacunas.md` | 2026-11-17/18 |
+| `M1`–`M7`, `M9`, `M16`–`M20`, `M22`–`M25`, `A9`–`A10`, `A12`–`A16`, `D1`–`D14` | decisões de desenho fechadas, cada uma com evidência em `lacunas.md`; `M8` deferida e `M21`/`A11` externas | 2026-11-17/18 |
 
 São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada, não de planejamento.
 
@@ -148,7 +153,7 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 0 pendentes | `M27` e `M28` fecharam em 2026-11-21, `M29`, `M30` e `M31` em 2026-11-22; 33 fecharam; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | 1 proposta (`M33`); 0 abertas | `M27` e `M28` fecharam em 2026-11-21, `M29`, `M30` e `M31` em 2026-11-22 e `M32` em 2026-11-23; 34 fecharam; `M33` segue `proposta`; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
 | DDL não desenhado | 0 tabelas | todas as 109 têm coluna desenhada; 34 arquivos de migration para 109 tabelas (34/109, `plano-migrations.md` §3, 2026-11-22); os lotes `0022`, `0025`, `0026`, `0028` e `0029` foram aprovados em 2026-11-21, os `0033` e `0034` em 2026-11-22, e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
@@ -335,7 +340,7 @@ entrada estão propostos em `wyd-ops/proposta-versoes-e-cobertura-funcional.md` 
 
 ---
 
-## 6. Próximos passos priorizados por ganho ÷ esforço (2026-11-19, revisto em 2026-11-20)
+## 6. Próximos passos priorizados por ganho ÷ esforço (2026-11-19, revisto em 2026-11-23)
 
 Ordem por **desbloqueio ÷ esforço**, não pela sequência das fases de §4. `automação` significa
 executável agora, sem decisão pendente; `usuário` significa que só o dono decide ou autoriza. Todo
@@ -357,13 +362,16 @@ pode ser declarada completa, por mais páginas que o planejamento feche. Executa
 `wyd-core`/`wyd-sim`/`wyd-db` e o molde de entrada está proposto em
 `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7 e é passo de `usuário`, não de automação.
 
-**Próxima ação imediata:** as duas filas correm em paralelo. Na documentação, executar o próximo
-passo ativo da fila do sistema dono — no `wyd-db`, as **109 das 109** páginas por tabela (`M26`,
-2026-11-22) estão escritas em `wyd-db/docs/dicionario-dados/gerado/`; o que resta da árvore são as seis
-páginas de migration dos seeds (`bloqueada`) e as pastas `specs/`, `planos/`, `tests/`, `prompts/` e
-`skills/`. Na cobertura, a ação é a decisão do catálogo acima; o dicionário fecha planejamento, não a
-`1.0.0`. O pacote anterior já foi mesclado no
-PR #48 (`e08f7d1`, 2026-11-19), portanto não há commit, push nem PR pendente daquela entrega.
+**Foco aprovado em 2026-11-23:** o caminho crítico é o fio; o `wyd-db` anda em paralelo. Ordem:
+(1) `M33` com as seis opções A e o início do aceite das 28 páginas, por página; (2) `LSRV-01` e
+`LSRV-02` fechadas (um processo por canal; 2 canais na `1.0.0`, 1 na primeira fatia) e `D3`–`D6`
+decididos (proxy gravador local `ECAP`; CLI Rust; bruto fora do repo por 30 dias; segunda leitura por
+QA/protocolo); (3) captura A em A1 (handshake) e A2 (mundo), com o peer de A1 ainda em `Q-SRV-5`,
+fechando `LPRT-03`/`LPRT-09`; (4)
+`LPRT-06` e `protocol 0.2.0`; (5) o catálogo completo segue como descoberta, com `LCORE-01` já fixando
+que a `1.0.0` é jogo completo e o primeiro domínio é a entrada na cena.
+As seis seeds do `wyd-db` e as propostas de `net`, `launcher`, `bots` e `client` não estão no caminho
+crítico agora.
 ---
 
 ## 7. Mapa dos sistemas, contratos e ordem de execução (2026-11-22)
@@ -384,14 +392,14 @@ tem dois donos e é defeito (§3).
 | `wyd-net` | conexão: aceite, sessão, ordem, timeout, limite, reação a erro | byte, opcode, regra | 3 páginas | proposto (2026-11-22) |
 | `wyd-core` | comportamento: tick, cena, entidades, combate, IA, estados | fórmula, SQL, fio | 3 páginas | proposto (2026-11-22) |
 | `wyd-sim` | cálculo puro e determinístico | quando aplicar, balanceamento | 3 páginas | proposto (2026-11-22) |
-| `wyd-db` | schema, migrations, DDL, transação, retenção | comportamento, fio, UI | 246 páginas | piloto: 109/109 tabelas, 28/34 migrations |
-| `wyd-server` | processo por canal, topologia, ciclo de vida, controle | regra, fio, deploy | 3 páginas | proposto (2026-11-22) |
+| `wyd-db` | schema, migrations, DDL, transação, retenção | comportamento, fio, UI | 308 páginas | piloto: 109/109 tabelas, 28/34 migrations |
+| `wyd-server` | processo por canal, topologia, ciclo de vida, controle, captura local | regra, fio, deploy, peer de A1 | 6 páginas | proposto (2026-11-22); fatia mínima e ECAP propostos em 2026-11-23 |
 | `wyd-admin` | backoffice de staff, custódia de item, auditoria | regra de jogo, UI pública | 11 páginas | planejado: 15 `RF-ADM`, 0 lacuna aberta |
 | `wyd-portal` | site público, conta web, armaria/mercado web, NOC | redirecionar ao admin, custódia | 12 páginas | planejado: 33 `RF-POR`, 0 lacuna aberta |
 | `wyd-launcher` | manifesto, patch aplicado, integridade local | conteúdo do patch, hospedagem | 3 páginas | proposto (2026-11-22) |
-| `wyd-client` | captura e registro do cliente real, artefato de cliente | fio, manifesto, regra | 4 páginas | proposto (2026-11-22), com registro medido |
+| `wyd-client` | captura e registro do cliente real, artefato de cliente | fio, manifesto, regra | 5 páginas | proposto (2026-11-22), com registro medido |
 | `wyd-bots` | cenário de QA de fio, carga e convivência | codec, ambiente, métrica | 3 páginas | proposto (2026-11-22) |
-| `wyd-docs` | publicação, gate editorial, contagens do site | conteúdo de sistema | 9 páginas + site | implementado, gate verde |
+| `wyd-docs` | publicação, gate editorial, contagens do site | conteúdo de sistema | 10 páginas + site | implementado, gate verde |
 | `wyd-ops` | CI, imagem, deploy, observabilidade, topologia de ambiente | regra, fio, escrita administrativa | 3 + 2 páginas | proposto: decisões sem plano diretor |
 
 ### 7.2 Grafo de dependência
@@ -405,7 +413,7 @@ flowchart LR
   protocol -->|codec| net[wyd-net]
   net -->|frame tipado| core[wyd-core]
   core -->|fórmula| sim[wyd-sim]
-  core -->|porta de repositório| db[(wyd-db)]
+  core -->|C4 CoreRepository| db[(wyd-db)]
   server[wyd-server] -->|compõe| net
   server -->|compõe| core
   admin[wyd-admin] -->|HTTP /internal/v1/control| server
@@ -433,16 +441,19 @@ documento citado; **proposto** = existe desenho, falta aprovação; **lacuna** =
 | X2 | ordem por conexão | `net` → `core` | entrega serializada | `wyd-net` | decidido | `LPRT-12` |
 | X3 | payload tipado e validado | `protocol` → `core` | tipo por família, offset nunca cruza | `wyd-core` | decidido | `LPRT-18` |
 | X4 | fórmula determinística | `sim` → `core` | função pura, sem I/O | `wyd-sim` | proposto | `LSIM-01`, `LSIM-04` |
-| X5 | leitura e persistência | `core` → `db` | porta de repositório, sem SQL no core | `wyd-db` | proposto | `LCORE-04` |
-| X6 | estado durável × memória | `core` ↔ `db` | frequência de save e perda aceitável | `wyd-core` + `wyd-db` | lacuna | `LCORE-02`, `WYDDB-017` |
-| X7 | composição do processo | `server` monta `net`+`core` | uma porta por canal | `wyd-server` | lacuna | `LSRV-01`, `LSRV-02` |
+| X5 | leitura e persistência | `core` → `db` | `CoreRepository` com `load_session`, `load_character` e `commit(UoW)`; sem SQL no core | `wyd-core` (forma), `wyd-db` (adapter) | decidido | `LCORE-04`; `wyd-core-1.0.0.md` §3.2 |
+| X6 | estado durável × memória | `core` ↔ `db` | durável crítico antes do ack; posição no release; sem periódico na primeira fatia | `wyd-core` + `wyd-db` | decidido | `LCORE-02`; `wyd-core-1.0.0.md` §3.2 |
+| X7 | composição do processo | `server` monta `net`+`core` | uma porta por canal | `wyd-server` | decidido | `LSRV-01`, `LSRV-02` |
 | X8 | controle administrativo | `admin` → `server` | `POST /internal/v1/control`, `200 {delivered_to}`, `503` sem escrita | `wyd-server` (forma), `wyd-admin` (elo) | decidido | `LAC-ADM-03` |
 | X9 | segredo do elo de controle | `ops` → `server` | `WYD_SERVER_CONTROL_TOKEN`, distinto do portal | `wyd-ops` | decidido | `LAC-ADM-03` §3.3 |
 | X10 | métrica para NOC | `server` → `portal` | `/metrics` Prometheus, coleta `wyd-ops` | `wyd-ops` | decidido | `LAC-POR-06` |
 | X11 | manifesto e patch | `ops` → `launcher` → `client` | manifesto com hash por arquivo | `wyd-launcher` | lacuna | `LLCH-01`, `LLCH-03` |
-| X12 | captura como prova | `client` → `protocol` | bytes + ficha + anonimização + 2ª leitura | `wyd-protocol` (processo), `wyd-client` (execução) | decidido o processo, 0 capturas | `LPRT-10`, `goldens/como-capturar.md` |
+| X12 | captura como prova | `client` → `protocol` | bytes + ficha + anonimização + 2ª leitura | `wyd-protocol` (processo), `wyd-client` (execução) | processo e D3–D6 decididos; 0 capturas | `LPRT-10`, `goldens/como-capturar.md` |
 | X13 | ambiente de bot | `ops` → `bots` | ambiente efêmero, conta sintética | `wyd-ops` + QA | lacuna | `LBOT-01`, `LBOT-02` |
 | X14 | imagem do site | `ops` → `docs` | imagem publicada no GHCR, consumida por Compose | `wyd-ops` | decidido | `plano-imagem-e-compose-do-site.md` |
+
+`LCORE-03` fixou a fronteira de X4: o `sim` é função pura e o core decide/aplica. X4 continua
+**proposto** porque a lista de fórmulas e a aritmética (`LSIM-01`, `LSIM-04`) ainda não foram decididas.
 
 ### 7.4 O que já pode ser ligado
 
@@ -453,19 +464,18 @@ Isto não é previsão de entrega; é leitura de estado.
 |---|---|---|
 | `protocol` ↔ `net` (camada de quadro) | `LPRT-08`, `12`, `13` e `18` decididas; o codec não faz I/O | offsets de payload por `Type` — depende de captura |
 | `db` ↔ dados (schema) | 109 de 109 tabelas com DDL fechado; 28 de 34 migrations escritas | 6 seeds e `SCHEMA_VERSION` 34 |
+| `core` ↔ `db` (C4) | C4 decidida em 2026-11-23: uma porta, UoW por comando, transação no `db` | adapter, teste de contrato e schema de posição (fora desta decisão) |
 | `admin` ↔ `db` | 14 rotas de C4, 15 `RF-ADM`, zero lacuna aberta | `server` para o elo de controle |
 | `portal` ↔ `db` | 33 `RF-POR`, leitura por view, zero lacuna aberta | nada de decisão; falta código |
 | `admin` → `server` (controle) | forma e autenticação decididas em 2026-11-22 | o endpoint no `server`, que não existe |
 | `docs` ↔ todos | 13 sistemas publicados; build, `verificar.py` e contagens verdes na mesma montagem (2026-11-22) | nada de decisão; falta o conteúdo de cada sistema |
 | `docs` ↔ `ops` (imagem) | Dockerfile, Compose e workflow escritos nesta entrega | primeira execução do workflow no GitHub |
-| `client` (registro) | árvore medida com hash; processo de captura decidido | endpoint que aceita a conexão (`LCLI-04`, `LSRV-01`) |
+| `client` (registro) | árvore medida com hash; localização e escopo estreito da ferramenta aprovados (`LCLI-04`) | D3–D6 decididos; `ECAP` especificado; peer `Q-SRV-5` aberto; falta implementar o `ECAP` e a CLI |
 
 ### 7.5 O que **não** pode ser ligado ainda
 
 | Frente | Bloqueio | ID |
 |---|---|---|
-| escopo da `1.0.0` no `core` | não há catálogo funcional; “jogo completo” não tem lista | `LCORE-01`, §1.5 |
-| topologia do `server` | quantos canais, qual porta, o que é `ready` | `LSRV-01`…`LSRV-03` |
 | fórmula do `sim` | quais fórmulas, com que exemplo e com que aritmética | `LSIM-01`, `LSIM-04` |
 | limites do `net` | limite por conexão, timeout e rate-limit sem valor medido | `LNET-01` |
 | handshake do fio | `KeyWord`, encoding de texto e build-alvo sem captura | `LPRT-03`, `LPRT-06`, `LPRT-09` |
@@ -508,10 +518,15 @@ E2E de `portal` e `client` é Playwright, o resto é Rust. Carga só entra depoi
 |---|---|---|---|
 | **A — fio e dado** | `protocol` `0.1.0` (quadro + DTO), `db` `SCHEMA_VERSION` 34 | nenhum | round-trip verde; migrations aplicam do zero e revertem |
 | **B — cálculo** | `sim` com as fórmulas da `1.0.0` e vetores | catálogo de fórmulas (`LSIM-01`) | determinismo provado por vetor |
-| **C — loop jogável** | `net` + `core` + `server` mínimo, um canal | handshake provado (`LPRT-03`/`09`) e topologia (`LSRV-01`/`02`) | login e movimento em dois canais; `503` do controle testado |
+| **C — loop jogável** | `net` + `core` + `server` mínimo, um canal | handshake provado (`LPRT-03`/`09`) | login e movimento em dois canais; `503` do controle testado |
 | **D — web** | `admin` e `portal` contra o banco migrado | onda A | 15 `RF-ADM` e 33 `RF-POR` cobertos; Playwright verde |
 | **E — cliente e distribuição** | `client` (captura aceita), `launcher` (manifesto), `bots` (carga) | onda C | captura com ficha aceita; patch aplicado; cenário de carga medido |
 | **F — operação** | `ops`: imagem, deploy, observabilidade | ondas C e D | `compose up` do servidor; dashboard com métrica real |
+
+A fatia mínima da onda C — login, entrada no mundo e um passo, com as 7 mensagens, os 5 cenários/6
+capturas e os
+critérios C1–C7 — está detalhada em `wyd-server/docs/planos/esqueleto-de-ponta-a-ponta.md` (`P`,
+2026-11-23). Ela serve ao gate desta tabela e não o altera.
 
 A ordem não é cronograma: é **dependência**. `docs` atravessa todas as ondas porque publica o
 planejamento de cada uma, e por isso o gate editorial (`AGENTS.md` §4) roda em toda entrega.
@@ -543,12 +558,13 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 
 ### 8.2 Artefato, lugar e dono
 
-| Artefato | Onde mora | Dono | Estado (2026-11-22) |
+| Artefato | Onde mora | Dono | Estado (2026-11-22; Compose em 2026-11-23) |
 |---|---|---|---|
 | plano do sistema: dashboard, `lacunas.md`, `docs/` | `planejamento-1.0.0/<sistema>/` | o próprio sistema | 13 pastas, todas abertas; nenhuma `aceita` |
-| Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; `docker compose build docs` verde |
-| `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`), exceção de ferramenta (§8.3) |
-| `docker-compose.override.yml` | raiz | `wyd-ops` | camada de desenvolvimento versionada (2026-11-23): tag `:dev`, `pull_policy: build` e `restart: "no"`; porta herdada do base |
+| Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; build medido em 2026-11-23 (exit 0, 17 s, imagem de 194 329 433 bytes) |
+| `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`) consumindo `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, com `build:` de fallback (2026-11-23) |
+| `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente (2026-11-23): traz **só** o `gate` sob perfil; não toca `docs` |
+| `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
 | workflow de CI | `.github/workflows/` | `wyd-ops` | 3: `docs.yml`, `docs-image.yml`, `full-workflow.yml` (stub) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 1: `docs-check` |
@@ -556,6 +572,8 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
 | portal Next.js | `wyd-portal/` | `wyd-portal` | só `.gitkeep` |
 | binários do cliente real | `wyd-client/files/` | `wyd-client` | existem, ignorados pelo git; patch versionado ainda não existe |
+| ferramenta de captura do cliente (planejada) | `wyd-client/tools/` | `wyd-client` | opção A em `LCLI-04` (2026-11-23); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
+| peer de captura A1 | `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-protocol` | `Q-SRV-5`/`LSRV-05` aberta; sem peer A1 não é conclusiva |
 | migration SQL | `crates/wyd-db/migrations/` | `wyd-db` | planejada; hoje só as páginas `planejamento-1.0.0/wyd-db/migrations/*.md` |
 | segredo local | `.env` na raiz, ignorado | quem opera | existe; nunca lido nem versionado |
 | legado | `deprecated/`, ignorado pelo git | ninguém — é nível 4, referência | existe; nunca é fonte |
@@ -572,31 +590,31 @@ Next.js e o `wyd-ops` é Dockerfile, Compose e CI.
 | `docker-compose.yml` | `docker compose` procura `compose.yaml` ou `docker-compose.yml` no diretório de trabalho | todo comando viraria `docker compose -f wyd-ops/docker-compose.yml …`; o caminho usado na operação e na documentação deixaria de existir |
 | `.dockerignore` | o Docker lê o arquivo na **raiz do contexto**, e o contexto é a raiz do repositório (o `preparar.py` lê `planejamento-1.0.0/`) | `wyd-client/` (567 MB) e `deprecated/` entrariam no contexto; build mais lento e imagem maior |
 | `.github/workflows/` | caminho fixo do GitHub Actions | workflow não é encontrado; não existe alternativa de caminho |
-| `docker-compose.override.yml` | o Compose carrega automaticamente o nome convencional de override ao rodar com o arquivo base na raiz | se for movido ou renomeado, deixa de ser mesclado automaticamente; seria necessário indicá-lo explicitamente na invocação do Compose |
+| `docker-compose.override.yml` | o Compose carrega automaticamente o nome convencional de override ao rodar com o arquivo base na raiz; é o que mantém o `gate` disponível sem `-f` | se for movido ou renomeado, deixa de ser mesclado; `docker compose --profile gate run` passaria a exigir invocação explícita |
 
-`wyd-ops` continua dono do Compose compartilhado, do `.dockerignore` e dos workflows. O override
-local é configuração do operador para desenvolvimento; ele não transfere a responsabilidade do
-Compose base. `wyd-ops/` continua sendo a pasta de implementação do sistema, enquanto estes caminhos
+`wyd-ops` continua dono do Compose compartilhado, do `.dockerignore` e dos workflows. O override é
+ferramenta local — o `gate` — e não transfere a responsabilidade do Compose base. `wyd-ops/` continua sendo a pasta de implementação do sistema, enquanto estes caminhos
 de raiz são exceções por exigência ou convenção de descoberta da ferramenta.
 
-**Camada de desenvolvimento do Compose (`V`, 2026-11-23):** `docker-compose.override.yml` é
-**versionado de propósito** — não é arquivo pessoal nem configuração de máquina. Quem clona o
-repositório roda `docker compose up` e obtém o mesmo comportamento de desenvolvimento, sem copiar
-arquivo, exportar variável ou montar comando à mão. Se ele fosse local e ignorado, cada pessoa
-precisaria reproduzir estes ajustes sozinha e o clone não teria comportamento único.
+**Caminho padrão e caminho de desenvolvimento (`V`, 2026-11-23):** o Compose base consome a imagem
+publicada — `docker compose pull docs` e `up -d docs` — e `build:` ali é fallback. O build da árvore
+de trabalho mora em `docker-compose.dev.yml`, **versionado mas opt-in**: não é mesclado
+automaticamente, então quem edita página invoca `docker compose -f docker-compose.yml -f
+docker-compose.dev.yml up -d docs --build`. O override automático ficou só com o `gate`. Antes, ele
+trocava a imagem para `:dev` em todo comando, e o resultado medido foi `docker compose pull docs`
+mirando uma tag que o CI nunca publica (exit 1, `error from registry: denied`).
 
-| Ajuste | Efeito |
+| Ajuste do dev file | Efeito |
 |---|---|
 | `image: …wyd-docs:dev` | o build local não usa a tag `:latest`, então não se confunde com a imagem publicada no GHCR |
-| `pull_policy: build` | `docker compose up` constrói da árvore de trabalho em vez de puxar imagem antiga |
+| `pull_policy: build` | `up` constrói da árvore de trabalho em vez de puxar imagem antiga |
 | `restart: "no"` | o site de desenvolvimento não reinicia sozinho depois de `down` ou de falha |
 
 Porta (`${WYD_DOCS_PORT:-8000}:8000`), `build:`, `container_name` e contexto continuam vindo do
-Compose base — o override não duplica o Dockerfile. Decisão do dono em 2026-11-23: **produção não
-roda na máquina de desenvolvimento**; a imagem de produção (`:latest`) só é consumida pelo Compose
-fora da estação local. Verificado: `docker compose config` difere do base exatamente nesses três
-pontos, e `docker compose up -d docs` construiu `:dev`, recriou o container com `restart: no` e
-respondeu HTTP 200.
+Compose base — nenhum dos dois arquivos duplica o Dockerfile. Medido: `docker compose config` sem
+perfil lista só `docs` e a imagem `:latest`; o dev file produz `:dev` com `pull_policy: build`, sobe
+em HTTP 200 e `down` sai 0. Decisão do dono em 2026-11-23: **produção não roda na máquina de
+desenvolvimento**.
 
 **Gate de documentação pelo Compose (`V`, 2026-11-23):** o override acrescenta o serviço `gate`, sob
 perfil `gate`, que roda `preparar.py`, `mkdocs build` e `verificar.py` em um comando:
@@ -605,12 +623,13 @@ perfil `gate`, que roda `preparar.py`, `mkdocs build` e `verificar.py` em um com
 docker compose --profile gate run --rm gate
 ```
 
-Ele usa o estágio `build` do Dockerfile — onde vivem pip, `planejamento-1.0.0/`, `wyd-docs/` e
+Ele usa o estágio `gate` do Dockerfile — onde vivem pip, `planejamento-1.0.0/`, `wyd-docs/` e
 `verificar.py`; o runtime só tem `site/` — com tag `:gate` e `pull_policy: build`, então valida a
 árvore de trabalho. Não publica porta nem reinicia. O perfil é o que mantém o `up` normal sem ele, e
-`docker compose config` sem `--profile gate` não o lista. Medido em 2026-11-23: exit 0, com a
-contagem do gate do site (dono do número: `wyd-docs-1.0.0.md` §9.1). DoD e custo por execução ficam
-em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5 e §6.
+`docker compose config` sem `--profile gate` não o lista. Medido em 2026-11-23: exit 0,
+`verificação: 269 páginas, links, âncoras, navegação e sintaxe ok (267 fontes verificadas)` (dono do
+número: `wyd-docs-1.0.0.md` §9.1). DoD e custo por execução ficam em
+`planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5 e §6.
 
 **Estado real do CI (`V`, 2026-11-23):** `.github/workflows/docs-image.yml` está versionado (commit
 `8b23cc2`) mas **nunca rodou** — o arquivo não existe no remoto (`origin/develop` está em `486d718`;
@@ -628,6 +647,15 @@ GHCR cria o pacote como **privado**: para o Compose puxar sem `docker login`, a 
 pacote precisa ser mudada para pública nas configurações do pacote (política documentada em
 <https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry>).
 
+**Ensaio local do job (`V`, 2026-11-23):** os passos do workflow foram executados à mão, com as
+mesmas tags e comandos: build com `:<sha>` e `:latest` (exit 0, 17 s, imagem de 194 329 433 bytes),
+`docker run` dessa imagem do SHA (exit 0), laço de `curl` (HTTP 200 na 2ª tentativa) e
+`find /site -name '*.html'` = **269**, igual à contagem do gate. O Compose padrão subiu a partir
+dessa imagem sem construir (exit 0, HTTP 200, `<title>` do site). O que não é provável localmente é o
+push: `docker compose pull docs` sai 1 com `error from registry: denied` enquanto o pacote não
+existir, e só fica verde depois da primeira execução. Comando por comando em
+`planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5.1.
+
 ### 8.4 O que existe só como lugar reservado
 
 | Pasta | Conteúdo | Significado |
@@ -635,6 +663,7 @@ pacote precisa ser mudada para pública nas configurações do pacote (política
 | `crates/<9 sistemas>/` | `.gitkeep` | crate ainda não nasceu; reservado, não “livre para inventar” |
 | `wyd-portal/` | `.gitkeep` | portal ainda sem código |
 | `planejamento-1.0.0/wyd-admin/{src,tests}/` | `.gitkeep` | árvore de código planejada e vazia |
+| `wyd-client/tools/` | não existe | destino aprovado para a CLI Rust de captura (LCLI-04/D4); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
 | `planejamento-1.0.0/wyd-db/{tests,prompts,skills}/` | vazias no disco | reservadas; sem arquivo, não são versionadas |
 | 10 dos 13 sistemas | `docs/` + dashboard | `src/`, `tests/`, `prompts/` e `skills/` só são criadas onde o dono abriu uma pergunta própria |
 | `planejamento-1.0.0/wyd-ops/` | `docs/` + `plano-imagem-e-compose-do-site.md` | único sistema **sem** dashboard `<sistema>-1.0.0.md` e sem `lacunas.md`; o estado dele é o de propostas (AGENTS.md §6) |
@@ -647,8 +676,10 @@ módulos, não implementação. A regra de §8.1 vale por conteúdo, não por no
 - **Pasta top-level `docker/`.** É o layout do legado (`deprecated/docker/Dockerfile.*`), não do
   planejamento novo. O Dockerfile do projeto mora no `wyd-ops/`; a pasta `docker/` foi removida em
   2026-11-22 depois de a imagem ter sido construída nela por engano.
-- **`tools/`.** Foi citada por versão anterior de AGENTS.md, nunca existiu e não é necessária:
-  ferramenta nasce na pasta do sistema dono (`wyd-docs/verificar.py` é o exemplo).
+- **Pasta top-level `tools/`.** Foi citada por versão anterior de AGENTS.md, nunca existiu e não é
+  necessária: ferramenta nasce na pasta do sistema dono (`wyd-docs/verificar.py` é o exemplo).
+  `wyd-client/tools/` é um caminho específico aprovado em LCLI-04 e listado em §8.2/§8.4; isso não
+  autoriza criar uma pasta compartilhada na raiz.
 - **`crates/wyd-{client,docs,ops,portal}`.** Ver §8.2: esses sistemas não são crate.
 
 Referências a `deprecated/docker/...` em páginas de planejamento são legítimas e apontam para a

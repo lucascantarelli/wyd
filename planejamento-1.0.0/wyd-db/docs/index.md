@@ -147,6 +147,17 @@ usar, como diagramar, linkar e publicar.
 > O passo a passo está em [Guia do desenvolvedor](guia-desenvolvedor/index.md); o porquê de cada
 > regra está em [Arquitetura](arquitetura/index.md).
 
+## 🧾 Decisões em aberto
+
+As perguntas da rodada `M33` — estado de página e aceite da onda A — estão em
+[Decisões da M33](proposta-decisoes-m33.md). O estado da lacuna é de `lacunas.md` §2.3.
+
+Os prazos de retenção que a `M32` deixou pendentes estão em
+[Retenção — prazos pendentes](proposta-retencao-pendente.md), com a medição do que o repositório já permite saber.
+
+O que a página de retenção e capacidade pode afirmar sem volume medido — e quem responde pelo
+alerta — está em [Capacidade — decisões](proposta-decisoes-capacidade.md).
+
 ## 📦 Escopo desta edição
 
 > [!NOTE] O que está documentado e o que fica fora

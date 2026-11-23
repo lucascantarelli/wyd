@@ -14,8 +14,10 @@ contagem ou build. **Não** é captura de protocolo: não há um byte de tráfeg
 1. Só entra número que sai de comando, com data. Número sem comando é `H` e vira lacuna.
 2. **Nenhum dado de jogador**: conta, personagem, nome, IP, chat ou configuração pessoal não são
    lidos nem gravados.
-3. **Nenhum conteúdo proprietário no git**: a árvore do cliente é ignorada; este registro guarda
-   metadados (contagem, tamanho, hash), não arquivo.
+3. **Nenhum conteúdo do cliente no git**: a árvore é ignorada e este registro guarda metadados
+   (contagem, tamanho, hash), não arquivo. Ignorar é salvaguarda, não conclusão sobre titularidade:
+   o que pode ser publicado ou redistribuído está em proposta na `LCLI-05`
+   (`docs/specs/propriedade-intelectual-e-distribuicao.md`).
 4. Não se afirma comportamento do jogo a partir de nome de arquivo. Extensão e pasta são indício,
    não prova (`AGENTS.md` §3).
 
@@ -89,7 +91,7 @@ registro fixa é o **estado**:
 | Passo | Situação | Depende de |
 |---|---|---|
 | identidade do build-alvo | medido como candidato | `LCLI-01` (decisão de qual build) |
-| ferramenta de gravação de tráfego | não existe | `LCLI-04` (dono e pasta) |
+| ferramenta de gravação de tráfego | não existe; pasta e escopo aprovados | `LCLI-04` (D3–D6 decididos; implementação pendente) |
 | endpoint que aceita a conexão do cliente | não existe — nenhum servidor roda esta versão | `wyd-server` / listener sob nosso controle |
 | ficha de origem + anonimização | processo decidido (`LPRT-10`), aprovador não nomeado | `LCLI-03` |
 | primeira captura aceita | **0 capturas** (2026-11-22) | os quatro itens acima |

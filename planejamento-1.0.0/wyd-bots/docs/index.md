@@ -33,3 +33,6 @@ não afirma conexões simultâneas, latência nem taxa de sucesso.
 
 - Não promete número de bots: limiar é medido, não estimado.
 - Não autoriza bot em produção: falta decisão de ambiente (`LBOT-01`).
+## Decisões em aberto
+
+As perguntas que ainda esperam o dono — `LBOT-01`–`LBOT-04` — estão em [Decisões do `wyd-bots`](proposta-decisoes-bots.md). O estado de cada lacuna continua em `lacunas.md`.

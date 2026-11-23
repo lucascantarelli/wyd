@@ -69,3 +69,6 @@ regra de direção e o que reprova uma página.
 - Não descreve captura em produção: dono é `wyd-ops`.
 - Não promete opcode, offset ou campo sem prova: o que falta está em `lacunas.md` do sistema
   (planejamento).
+## Decisões em aberto
+
+A pergunta de desenho que ainda espera o dono — `LPRT-09` — está em [Decisões do `wyd-protocol`](proposta-decisoes-protocol.md); `LPRT-03` e `LPRT-06` são medição/execução e estão cobertas pelo procedimento de captura. O estado de cada lacuna continua em `lacunas.md`.

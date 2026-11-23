@@ -1,33 +1,22 @@
-# Camada de desenvolvimento do `docker compose` — versionada de propósito.
+# Camada carregada automaticamente pelo `docker compose` na raiz.
 #
-# O Compose carrega este arquivo automaticamente ao rodar na raiz; ele não substitui o
-# `docker-compose.yml`, só ajusta o serviço `docs` e acrescenta o `gate` para uso local.
-# Produção não roda nesta máquina: a imagem publicada (`:latest`) é consumida onde o site é
-# servido, não aqui.
-#
-# `docs` — o que muda em relação ao Compose base:
-#   - tag `dev`: build local não sobrescreve `:latest` nem se confunde com a imagem do GHCR
-#   - `pull_policy: build`: `up` constrói da árvore de trabalho em vez de puxar imagem antiga
-#   - `restart: "no"`: o site de desenvolvimento não reinicia sozinho depois de um `down`/erro
-#
-# A porta continua vindo do Compose base (`${WYD_DOCS_PORT:-8000}:8000`), e o `build:` também:
-# o Dockerfile e o contexto têm um dono só, em `wyd-ops/wyd-docs.Dockerfile`.
+# Ela **não** altera o serviço `docs`: o caminho padrão do Compose consome a imagem publicada
+# pelo CI (`docker-compose.yml`). Aqui mora só o `gate`, que é ferramenta local e precisa
+# estar disponível em qualquer `docker compose` da raiz, sem `-f` extra.
 #
 # `gate` — o mesmo gate que o CI roda, em um comando:
 #   docker compose --profile gate run --rm gate
-# Usa o estágio `build` do Dockerfile (pip, `planejamento-1.0.0/`, `wyd-docs/` e `verificar.py`
-# vivem lá; o runtime só tem `site/`). A tag `:gate` e `pull_policy: build` fazem o comando
-# validar a árvore de trabalho, não uma imagem antiga. Não publica porta nem reinicia.
+# Usa o estágio `gate` do Dockerfile (pip e fontes, sem montar o site); a montagem, o build e a
+# verificação ocorrem uma vez no comando. A tag `:gate` e `pull_policy: build` validam a árvore
+# de trabalho, não uma imagem antiga. Não publica porta nem reinicia.
+#
+# O build do site a partir da árvore de trabalho (tag `:dev`) é opt-in e está em
+# `docker-compose.dev.yml`.
 #
 # Dono: `wyd-ops` (imagem e Compose); layout e exceções de raiz em
 # `planejamento-1.0.0/wyd-1.0.0.md` §8.
 
 services:
-  docs:
-    image: ghcr.io/lucascantarelli/wyd-docs:dev
-    pull_policy: build
-    restart: "no"
-
   gate:
     profiles: ["gate"]
     image: ghcr.io/lucascantarelli/wyd-docs:gate
@@ -35,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: wyd-ops/wyd-docs.Dockerfile
-      target: build
+      target: gate
     working_dir: /app/wyd-docs
     command:
       - sh

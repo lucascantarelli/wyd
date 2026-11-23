@@ -63,7 +63,9 @@ wyd-portal/              # portal Next.js (ainda sem código: só .gitkeep)
 wyd-client/              # arquivos do cliente real (files/ ignorado pelo git)
 wyd-ops/                 # imagem do site: Dockerfile
 crates/                  # 9 pastas reservadas aos crates Rust (só .gitkeep)
-docker-compose.yml       # serviço docs; raiz por exigência do Compose
+docker-compose.yml       # serviço docs: consome a imagem publicada pelo CI
+docker-compose.override.yml  # carregado automaticamente: serviço gate (perfil)
+docker-compose.dev.yml   # opt-in (-f): build da árvore, tag :dev
 .github/                 # workflows e action composta (dono: wyd-ops)
 deprecated/              # referência legada, ignorada pelo git: nunca é fonte
 ```
@@ -78,17 +80,24 @@ O site é gerado de `planejamento-1.0.0/*/docs/` e roda em **MkDocs 2.0** com **
 O MkDocs 2.0 é pré-release (`2.0.dev6`), sem `mkdocs.yml`, plugin, tema embutido nem modo estrito —
 por isso o projeto tem tema próprio, montagem em `preparar.py` e gate em `verificar.py`.
 
+Nada é montado à mão: a imagem é construída e publicada pelo CI
+(`.github/workflows/docs-image.yml`) e o `docker compose` a consome.
+
 ```bash
-cd wyd-docs
-py -3.15 -m venv .venv                       # Linux/macOS: python3 -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements.txt
-.venv/Scripts/python.exe preparar.py
-.venv/Scripts/mkdocs.exe build --dir .build/docs --output site
-.venv/Scripts/python.exe verificar.py site
+docker compose pull docs                     # baixa a imagem publicada
+docker compose up -d docs                    # serve o site em http://127.0.0.1:8000
+docker compose --profile gate run --rm gate  # monta, builda e verifica — o mesmo do CI
 ```
 
-> No Windows o build do `mkdocs 2.0.dev6` falha (`PosixPath`): use o container
-> `python:3.15-slim`, como o CI. O comando completo está no plano do `wyd-docs` §7.1.
+Para construir da árvore de trabalho, sem tocar na imagem publicada:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build
+```
+
+> No Windows o build do `mkdocs 2.0.dev6` no host falha (`PosixPath`): use o container, como o CI.
+> Os três passos equivalentes no host e a evidência de verificação estão em
+> `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5.
 
 ## Como o trabalho anda
 

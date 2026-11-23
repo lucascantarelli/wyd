@@ -61,7 +61,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml` ou `Makefile` |
 | GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4; projeto `WYD 1.0.0` (40 itens com os campos preenchidos, 5 views, dependências como `blocked by`) em `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
 | CI | o gate de documentação roda em `.github/workflows/docs.yml` (PR e push em `develop`/`main`, disparado por qualquer mudança na árvore `planejamento-1.0.0/` ou em `wyd-docs/`, sem lista de arquivos — 2026-11-22); o CI de código ainda é stub: `full-workflow.yml` entrega `version`/`commit` vazios, sem build, teste ou cobertura (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
-| Imagem e Compose | `.github/workflows/docs-image.yml` está versionado mas **nunca rodou e nunca publicou** (2026-11-23): o arquivo não está no remoto e o pacote no GHCR não existe. `docker compose up -d docs` constrói pelo Compose; o override de dev (versionado) usa `:dev` e traz o serviço `gate` sob perfil. Estado medido e o que falta para publicar em `planejamento-1.0.0/wyd-1.0.0.md` §8; lugar de cada arquivo em §8, decisão e DoD em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
+| Imagem e Compose | `.github/workflows/docs-image.yml` está versionado mas **nunca rodou e nunca publicou** (2026-11-23): o arquivo não está no remoto e o pacote no GHCR não existe. `docker compose pull docs` / `up -d docs` consomem a imagem publicada (`:latest`, com `build:` de fallback); `docker-compose.override.yml` (automático) traz só o serviço `gate` sob perfil e `docker-compose.dev.yml` (opt-in, `-f`) constrói a árvore com `:dev`. Build, fumaça e contagem provados localmente; `pull` reprova com exit 1 enquanto não houver pacote. Estado medido e o que falta para publicar em `planejamento-1.0.0/wyd-1.0.0.md` §8; decisão, DoD e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
 Números vivem em `planejamento-1.0.0/wyd-1.0.0.md` §1, com comando e data. Não replique contagem em
@@ -111,14 +111,14 @@ sistema está vazio; nenhum está `aceito`.
 |---|---|---|
 | `wyd-protocol` | pacotes CPSock, opcodes, offsets, goldens | **2º piloto**, plano aberto |
 | `wyd-net` | transporte async, sessão, rate-limit, hardening | **aberto (2026-11-22)**: fronteira, 7 contratos (4 herdados decididos) e 4 lacunas; sem código |
-| `wyd-core` | tick, ECS, combate, cena, IA | **aberto (2026-11-22)**: fronteira, 6 contratos e 4 lacunas; escopo depende do catálogo funcional |
-| `wyd-server` | composição do servidor; um processo por canal | **aberto (2026-11-22)**: fronteira, 6 contratos (o de controle decidido por `LAC-ADM-03`) e 4 lacunas |
+| `wyd-core` | tick, ECS, combate, cena, IA | **aberto (2026-11-22)**: fronteira, 6 contratos (C4 decidida em 2026-11-23) e 4 lacunas (0 abertas); escopo depende do catálogo funcional |
+| `wyd-server` | composição do servidor; um processo por canal | **aberto (2026-11-22)**: fronteira, 7 contratos (o de controle decidido por `LAC-ADM-03`; `S7` de captura proposto) e 5 lacunas (1 aberta: peer de A1) |
 | `wyd-sim` | fórmulas, curvas e simulações determinísticas | **aberto (2026-11-22)**: fronteira, 4 contratos e 4 lacunas; nenhuma fórmula escrita |
 | `wyd-db` | PostgreSQL 17, migrations, repositórios, filas | **piloto**, parcial |
 | `wyd-admin` | administração, HTTP/JSON interno, staff | **planejado**: contrato C4 e custódia de item propostos (2026-11-22), com a autenticação portal → admin (token de serviço por ambiente) e o canal de controle do `wyd-server` (HTTP síncrono com ack) decididos na mesma data; nenhuma lacuna aberta; código vazio |
 | `wyd-portal` | portal Next.js: site, login, cadastro, BFF | **planejado**: 11 páginas de planejamento, 33 `RF-POR`, armaria e mercado em F7–F11 (2026-11-22); código vazio |
 | `wyd-launcher` | launcher Tauri: patch, manifesto, serverlist/itemlist | **aberto (2026-11-22)**: fronteira, 6 contratos e 4 lacunas |
-| `wyd-client` | patches e arquivos de configuração do cliente; frente de captura | **aberto (2026-11-22)**: fronteira, 5 contratos, 4 lacunas próprias + 3 medições herdadas; **registro medido** do cliente em `registro-do-cliente.md`; cliente em `wyd-client/files/` |
+| `wyd-client` | patches e arquivos de configuração do cliente; frente de captura | **aberto (2026-11-22)**: fronteira, 5 contratos, 5 lacunas próprias (uso/distribuição em proposta, 2026-11-23) + 3 medições herdadas; **registro medido** do cliente em `registro-do-cliente.md`; cliente em `wyd-client/files/` |
 | `wyd-bots` | bots de QA, carga e convivência | **aberto (2026-11-22)**: fronteira, 5 contratos e 4 lacunas |
 | `wyd-docs` | site MkDocs 2.0 de toda a documentação oficial | **site implementado**; plano aberto |
 | `wyd-ops` | CI, imagens, deploy, ambientes, monitoramento | **propostas** de gestão de GitHub/ambientes e de versões/cobertura + imagem do site e Compose (2026-11-22); sem plano diretor |
@@ -159,7 +159,14 @@ Toda página nova passa pelo gate do sistema: cabeçalho de 5 linhas, estado com
 toda afirmação, sem placeholder, sem segredo, link que resolve, dono único e revisão de quem não
 escreveu. O plano diretor lista o que reprova uma página (`wyd-db-1.0.0.md` §10 e `convencoes.md`).
 
-Página publicada no site também passa pelo gate de link do `wyd-docs`:
+Página publicada no site também passa pelo gate de link do `wyd-docs`. Em um comando, no container —
+o mesmo que o CI valida:
+
+```bash
+docker compose --profile gate run --rm gate
+```
+
+No host, sem container, são os mesmos três passos:
 
 ```bash
 cd wyd-docs && .venv/Scripts/python.exe preparar.py

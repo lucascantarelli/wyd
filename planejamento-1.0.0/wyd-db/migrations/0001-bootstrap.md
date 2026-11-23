@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §3, `padrao-banco.md` §2/§8
 > Revisado em: 2026-11-17
 
+**Estado:** proposto (2026-11-23)
+
 Primeiro arquivo da série `migrations/`. Ele não cria tabela de domínio: cria o **terreno** —
 os quatro schemas, a fronteira de permissão entre eles, a única função de trigger da série e a linha
 de versão do conteúdo. Tudo que vem depois pressupõe este arquivo aplicado.

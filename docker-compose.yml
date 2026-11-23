@@ -1,15 +1,23 @@
 # Serviços do projeto WYD.
 #
 # `docs`: site de planejamento (MkDocs 2.0). A imagem é construída e publicada pelo CI
-# (.github/workflows/docs-image.yml) no GHCR; `build:` existe como fallback para quem não
-# tem a imagem localmente. O Dockerfile pertence ao `wyd-ops/`, dono das imagens; este
-# arquivo fica na raiz porque `docker compose` o procura no diretório de trabalho.
+# (.github/workflows/docs-image.yml) no GHCR. Este arquivo **não** constrói nada por padrão:
+# ele consome a imagem publicada na tag que o CI empurra (`latest` e o SHA do commit).
+#
+# O Dockerfile pertence ao `wyd-ops/`, dono das imagens; este arquivo fica na raiz porque
+# `docker compose` o procura no diretório de trabalho.
 #
 # Dono da decisão: planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md
 #
-#   docker compose pull docs    # consome a imagem publicada
-#   docker compose up -d docs   # sobe (constrói só se a imagem não existir)
-#   docker compose down         # para
+#   docker compose pull docs              # baixa a imagem publicada
+#   docker compose up -d docs             # sobe o site a partir dela
+#   WYD_DOCS_TAG:<sha> docker compose up -d docs   # fixa a imagem no commit
+#   docker compose down                   # para
+#
+# `build:` existe só como fallback de quem não tem a imagem (clone novo, GHCR fora do ar):
+# não é o caminho normal e não roda quando a imagem já está local. O build da árvore de
+# trabalho, com tag própria e sem se confundir com a publicada, é o arquivo opt-in
+# `docker-compose.dev.yml` — ver o comentário dele.
 
 services:
   docs:

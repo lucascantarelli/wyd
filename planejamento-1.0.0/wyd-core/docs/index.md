@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, arquitetura e QA
 > Dono: equipe do wyd-core
 > Base: `wyd-protocol-1.0.0.md` §1.4; `LPRT-18`; `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7.2
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -33,11 +33,17 @@ combate, guerra, guilda e estados — e não do cálculo nem do fio.
 
 ## O que falta
 
-Quatro perguntas abertas — escopo sem catálogo, estado em memória × durável, fronteira com o
-`wyd-sim` e forma de persistência — estão em `lacunas.md` (planejamento). O catálogo funcional, que
-mede a `1.0.0`, ainda não existe (`wyd-1.0.0.md` §1.5).
+As quatro lacunas fecharam em 2026-11-23: escopo (`LCORE-01`), estado em memória × durável
+(`LCORE-02`), fronteira `core` × `sim` (`LCORE-03`) e porta de persistência (`LCORE-04`). O que falta é
+implementação, catálogo funcional (`wyd-1.0.0.md` §1.5) e prova; não há pergunta aberta. O estado de
+cada lacuna continua em `lacunas.md`.
 
 ## Limite desta documentação
 
 - Não afirma regra de jogo: esta abertura não decidiu classe, dano, drop nem progressão.
 - Não afirma capacidade, latência ou quantas entidades cabem em memória: nada foi medido.
+## Decisões registradas
+
+As quatro perguntas estão em [Decisões do `wyd-core`](proposta-decisoes-core.md); `LCORE-01`–`LCORE-04`
+fecharam em 2026-11-23. A fronteira `core` × `sim` tem regra em `wyd-core-1.0.0.md` §3.1; a
+classificação de estado e a porta C4 estão em `wyd-core-1.0.0.md` §3.2.

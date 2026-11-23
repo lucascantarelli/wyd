@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 29); `ddl-confirmado.md` §5.29 (confirmado em 2026-11-21); `padrao-banco.md` §7 (`P-17`); `0007` (`game.session`), `0003` (`portal.person`)
 > Revisado em: 2026-11-21
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo nono arquivo da série, e o único sem tabela. Cria as duas views de
 leitura cruzada prometidas por `P-17`: presença para o portal e identidade mínima para o jogo.
 

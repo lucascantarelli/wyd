@@ -363,6 +363,12 @@ há saída de script e não há dependência de ferramenta para liberar `0016`�
 **dado**: enquanto a contagem e o valor não estiverem verificados, a página declara `H` e o arquivo não
 é escrito, porque inventar linha de conteúdo seria pior que a lacuna.
 
+**Decisão de 2026-11-23 (dono):** a fonte dos seis seeds é o **cliente 7662 medido**, e cada dataset é
+recontado/curado antes de a linha ser escrita; nenhum valor de 2026-11-08/15 vira verdade sem
+reconferência. Os seis ficam **fora da onda A**, como já permite `Q-M33-6`: a série de 28 migrations
+pode andar, e os seeds continuam `bloqueada` por dado até a curadoria. Isso não é gerador nem licença
+para inventar linha; é prioridade e fonte.
+
 ---
 
 ## 5. O que sai e o que entra

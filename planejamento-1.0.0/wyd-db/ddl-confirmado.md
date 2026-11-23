@@ -102,7 +102,7 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 24 | `0024_content_maps.sql` | `concluída` | §5.24 | — (aprovado em 2026-11-21; página escrita e conferida) |
 | 25 | `0025_content_combat.sql` | `concluída` | §5.25 | — (aprovado em 2026-11-21, com `RESTRICT` no item e teto `1.000.000` em `rate_bps`; página escrita e conferida) |
 | 26 | `0026_content_quests_events.sql` | `concluída` | §5.26 | — (aprovado em 2026-11-21, com `start_minute` e `id` identity na recompensa; página escrita e conferida) |
-| 27 | `0027_seed_quests_events.sql` | `bloqueada` | — | o DDL de `0026` fechou; faltam a cadeia de quests do 7662 e o calendário de eventos verificados (`M19` segue proposta) |
+| 27 | `0027_seed_quests_events.sql` | `bloqueada` | — | o DDL de `0026` fechou; faltam a cadeia de quests do 7662 e o calendário de eventos verificados (`M19`, senha de dev, está fechada e não é o bloqueio) |
 | 28 | `0028_game_quests_events.sql` | `concluída` | §5.28 | — (aprovado em 2026-11-21; página `0028-game-quests-events.md` escrita e conferida) |
 | 29 | `0029_views.sql` | `concluída` | §5.29 | — (aprovado em 2026-11-21, sem `GRANT` novo; página `0029-views.md` escrita e conferida) |
 | 30 | `0030_portal_content.sql` (adendo) | `concluída` | §5.15 | — (aprovado em 2026-11-20; página `0030-portal-content.md` escrita e conferida) |

@@ -10,8 +10,9 @@
 # Uso local (mesmo comando do CI):
 #   docker build -f wyd-ops/wyd-docs.Dockerfile -t ghcr.io/lucascantarelli/wyd-docs:local .
 
-# --- estágio 1: build -------------------------------------------------------
-FROM python:3.15-slim AS build
+# --- estágio 0: dependências e fontes para o gate --------------------------
+# Alvo usado pelo serviço `gate` no Compose: contém ferramentas e fontes, sem montar o site.
+FROM python:3.15-slim AS gate
 
 WORKDIR /app
 
@@ -24,6 +25,10 @@ COPY planejamento-1.0.0 planejamento-1.0.0
 COPY wyd-docs wyd-docs
 
 WORKDIR /app/wyd-docs
+
+# --- estágio 1: build -------------------------------------------------------
+# Reusa exatamente as dependências e fontes do alvo gate; montagem e build só ocorrem aqui.
+FROM gate AS build
 
 # Se o MkDocs reprovar o build, a imagem não é produzida.
 RUN python preparar.py \

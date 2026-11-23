@@ -3,8 +3,8 @@
 > Pergunta: "o que o `wyd-server` é, o que ele já deve ao `wyd-admin` e por onde começo a ler?"
 > Público: Desenvolvedor novo, arquitetura e operação
 > Dono: equipe do wyd-server
-> Base: `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3; `LAC-POR-06`
-> Revisado em: 2026-11-22
+> Base: `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3; `LAC-POR-06`; `docs/specs/endpoint-de-captura.md`
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -29,12 +29,29 @@ O canal de controle foi **decidido em 2026-11-22** (`LAC-ADM-03`, opção A): o 
 `released_at`/`audit_log` **depois** do ack `200` com `{delivered_to}`. Processo fora do ar é `503`
 sem escrita. O endpoint nasce no plano deste sistema — ele ainda não existe.
 
+## Como isso é provado primeiro
+
+A primeira prova deste sistema não é uma feature: é a fatia mínima **login → entrada no mundo → um passo**,
+com as mensagens, os goldens e os critérios de ponta a ponta registrados em
+[`planos/esqueleto-de-ponta-a-ponta.md`](planos/esqueleto-de-ponta-a-ponta.md) (proposta, 2026-11-23). Ela
+depende do handshake provado por captura; a topologia mínima já está decidida (`LSRV-01`, `LSRV-02`),
+mas enquanto `LPRT-03` não fechar, nenhum byte desta fatia é afirmável. A captura local é o `ECAP`, não
+o endpoint de produção (`EPROD`): a distinção está em
+[`specs/endpoint-de-captura.md`](specs/endpoint-de-captura.md).
+
 ## O que falta
 
-Quatro perguntas abertas — composição do processo, número de canais, significado de `ready` e
-encerramento gracioso — estão em `lacunas.md` (planejamento).
+Uma pergunta aberta: `Q-SRV-5`/`LSRV-05`, quem completa o handshake em A1. O `ECAP` está especificado,
+mas sem peer a captura fica inconclusiva. Composição, canais, `ready` e encerramento fecharam em
+2026-11-23; falta implementar o processo, o sinal de prontidão e o shutdown gracioso.
 
 ## Limite desta documentação
 
-- Não afirma quantos canais nem qual porta: nada foi decidido nem medido.
-- Não afirma capacidade, latência ou número de jogadores por canal.
+- Não afirma porta, capacidade, latência ou jogadores por canal; o número de canais está decidido (`LSRV-02`).
+
+## Decisões
+
+As quatro primeiras lacunas fecharam em 2026-11-23: `LSRV-01` e `LSRV-02` (composição e canais),
+`LSRV-03` (`ready` com socket + banco + tick) e `LSRV-04` (shutdown como execução; `WYDDB-021` dona da
+sequência). `LSRV-05`, o peer de A1, está aberta. O registro está em
+[Decisões do `wyd-server`](proposta-decisoes-server.md); o estado de cada lacuna continua em `lacunas.md`.

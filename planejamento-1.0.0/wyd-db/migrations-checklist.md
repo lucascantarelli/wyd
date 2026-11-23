@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §2, `lacunas.md` §2
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 Este é o **único controle** do andamento da documentação da série `migrations/`. Ele diz, para
 cada um dos 34 arquivos planejados, qual página deve existir, quantas tabelas o arquivo cria (`—` quando
@@ -27,6 +27,11 @@ Marcar uma linha como concluída exige que a página correspondente exista em `m
 conteúdo mínimo de §5. Enquanto o bloqueio não fechar, a linha fica `bloqueada` mesmo que a página
 exista em rascunho — não existe estado "quase". A única exceção é `aguardando aprovação`, criada em
 2026-11-20: o desenho está inteiro, mas o lote não vale como fechado até o dono responder "sim".
+
+**Estado da página × estado do arquivo.** `concluída` diz que a página existe e foi conferida; não
+diz que o dono a aprovou. O estado de aceite mora na linha `**Estado:**` da própria página; este
+checklist não o espelha (`M33`, Q-M33-5). Para saber se uma página está `aceito`, leia a página, não
+esta tabela.
 
 ### 1.1 Nomes de página
 
@@ -84,7 +89,9 @@ seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.
 **2026-11-21** o dono decidiu `M27` e o `0032` entrou só com `GRANT`s: os arquivos `concluída` passam a
 26 e `Tab.` continua 97. Em **2026-11-22** o dono fechou `M30` e `M31` (`LAC-ADM-02`, `LAC-ADM-06` e
 `LAC-ADM-07`): os lotes `0033` e `0034` entram com 1 e 11 tabelas, os arquivos `concluída` passam a 28 e
-`Tab.` a 109.
+`Tab.` a 109. Em **2026-11-23** o dono confirmou que a fonte dos 6 seeds é o cliente 7662 medido, que
+eles ficam fora da onda A (`Q-M33-6`) e que nenhum valor herdado é tratado como verificado; a série de
+28 pode andar e os seeds continuam `bloqueada` por dado.
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|
@@ -137,7 +144,7 @@ O detalhe de cada decisão fica em `lacunas.md`; aqui está só o que **impede a
 | `M25` | **Fechada em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta; `applied`/`failed` expurgadas 30 dias após `closed_at`, `pending` nunca. Nenhum arquivo trava por ela. | `0012` (fechada) | arquitetura + frente `wyd-server` |
 | `A19` | Loja e cash existem? Entra em `portal`, fica fora do schema, ou não existe. | `0011` | produto |
 | `A14` | Soft-delete de personagem derruba a sessão viva? | `0006` | arquitetura |
-| Dado de seed não verificado | Os 6 seeds são escritos à mão, com os valores conferidos na fonte; não há gerador previsto e ferramenta nova exigiria aprovação própria (`plano-migrations.md` §4). O que falta é dado, não código. | `0016`–`0018`, `0020`, `0023`, `0027` | arquitetura + curadoria de conteúdo |
+| Dado de seed não verificado | Os 6 seeds são escritos à mão, com os valores conferidos no cliente 7662; ficam fora da onda A (`Q-M33-6`), não há gerador previsto e valor herdado não é verdade sem reconferência (`plano-migrations.md` §4). O que falta é dado, não código. | `0016`–`0018`, `0020`, `0023`, `0027` | arquitetura + curadoria de conteúdo |
 
 **Bloqueios que não impedem DDL** — citados aqui porque aparecem nas páginas, mas não mudam coluna,
 constraint nem índice: `B1` (provedor de e-mail: quando `0004`/`0005` passam a ser usadas de verdade),

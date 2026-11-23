@@ -32,3 +32,6 @@ afirma formato de arquivo, URL nem algoritmo de hash.
 
 - Não afirma versão publicada nem tamanho de patch: nada foi publicado.
 - Não promete atualização automática do launcher: isso é `LLCH-04`.
+## Decisões em aberto
+
+As perguntas que ainda esperam o dono — `LLCH-01`–`LLCH-04` — estão em [Decisões do `wyd-launcher`](proposta-decisoes-launcher.md). O estado de cada lacuna continua em `lacunas.md`.

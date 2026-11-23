@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (arquivo 14) e §3.1; `ddl-confirmado.md` §5.18 (confirmado); `padrao-banco.md` §1 (`P-04`, `P-07`, `P-09`, `P-11`), §4 e §7; `migrations/0013-content-taxonomy.md` §7 e §10
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Décimo quarto arquivo da série e o segundo do schema `content`. Cria **uma** tabela: o catálogo de itens
 que o cliente entrega (3.220 linhas no seed de `0017`), alvo das FKs que `0009`, `0011` e `0012`
 deixaram para trás por ordem de arquivo.

@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 22), `ddl-confirmado.md` §5.23 (confirmado em 2026-11-21), fichas legadas de `0037_config_editavel.sql`
 > Revisado em: 2026-11-21
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo segundo arquivo da série: 3 tabelas no schema `content`. As fichas de coluna vêm das fontes
 históricas de configuração editável (nível 4); são **hipótese `H`** até validação própria, não colunas
 provadas por aparecerem no legado.

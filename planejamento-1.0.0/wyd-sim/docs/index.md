@@ -37,3 +37,6 @@ afirma coeficiente, curva nem faixa de dano.
 
 - Não afirma número de balanceamento: valor sem fonte é hipótese, não regra.
 - Não mede desempenho de cálculo: nada foi executado.
+## Decisões em aberto
+
+As perguntas que ainda esperam o dono — `LSIM-01`–`LSIM-04` — estão em [Decisões do `wyd-sim`](proposta-decisoes-sim.md). O estado de cada lacuna continua em `lacunas.md`.

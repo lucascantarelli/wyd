@@ -49,3 +49,6 @@ plano de teste de infraestrutura. Esta página abre a porta; não fecha a lacuna
 
 - Não afirma ambiente publicado: nenhum deploy existe.
 - Não afirma imagem publicada: o workflow está no repositório; a primeira execução dirá se empurra.
+## Decisões em aberto
+
+A hospedagem de produção — `Q-OPS-2` — está em [Decisões do `wyd-ops`](proposta-decisoes-ops.md); §8 registra a ação 2 dos tipos/campos como executada em 2026-11-19; §3.2 ainda conserva o rótulo antigo e a divergência está registrada em [Decisões do `wyd-ops`](proposta-decisoes-ops.md).

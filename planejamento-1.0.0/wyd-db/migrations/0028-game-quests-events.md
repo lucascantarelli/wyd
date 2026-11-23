@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 28); `ddl-confirmado.md` §5.28 (confirmado em 2026-11-21); fichas legadas de `0013_quests.sql`, `0014_eventos.sql` e `0015_arena.sql`
 > Revisado em: 2026-11-21
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo oitavo arquivo da série: 7 tabelas no schema `game`. É o único bloco de `game` que referencia
 `content`, por isso fecha depois de `0026`. As fichas vêm do legado (nível 4) e são **hipótese `H`**.
 

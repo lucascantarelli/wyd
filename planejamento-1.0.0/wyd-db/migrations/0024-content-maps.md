@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 24); `ddl-confirmado.md` §5.24 (confirmado em 2026-11-21); fichas legadas de `0011_rotas_mundo.sql`; `deprecated/docs/wyd/sistemas/mundo.md` §5/§6
 > Revisado em: 2026-11-21
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo quarto arquivo da série: 2 tabelas no schema `content`. As fichas de coluna vêm das fontes
 históricas de mundo (nível 4); são **hipótese `H`** até validação própria, não colunas provadas por
 aparecerem no legado.

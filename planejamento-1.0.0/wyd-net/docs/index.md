@@ -42,3 +42,6 @@ delas tem resposta: esta página não afirma número de limite, timeout nem pol�
 - Não descreve byte, offset ou opcode: dono é `wyd-protocol`.
 - Não descreve regra de jogo: dono é `wyd-core` e `wyd-sim`.
 - Não afirma capacidade, carga ou latência: nada foi medido.
+## Decisões em aberto
+
+As perguntas que ainda esperam o dono — `LNET-01`, `LNET-02` e `LNET-04` — estão em [Decisões do `wyd-net`](proposta-decisoes-net.md); `LNET-03` já está resolvida pela regra de sessão por conta e não é reaberta. O estado de cada lacuna continua em `lacunas.md`.

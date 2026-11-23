@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 21), `ddl-confirmado.md` §5.22 (aprovado em 2026-11-20), fichas legadas do domínio refino
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo primeiro arquivo da série: 5 tabelas no schema `content`. As fichas de coluna vêm das
 fontes históricas de refino (nível 4); são **hipótese `H`** até validação própria, não colunas provadas
 por aparecerem no legado.

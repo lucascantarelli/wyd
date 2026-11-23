@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.14 (confirmado); `padrao-banco.md` §1/§5/§9/§11; `lacunas.md` (`A19`, `M17`)
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Décimo primeiro arquivo. Cria a economia: quatro tabelas em `game` (cidade, preço por mercador, loja
 pessoal e livro do imposto) e seis em `portal` (loja de donate, recompensa diária, resgate diário,
 preço da capa de reino e os dois razões de crédito/débito). `A19` fixou essa divisão: dinheiro real e

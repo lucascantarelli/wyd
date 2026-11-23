@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.2; `padrao-banco.md` §2/§5/§8/§11; `lacunas.md` (`A17`, `M1`–`M3`, `M16`)
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Quinto arquivo da série. Cria a conta de jogo ligada à pessoa do portal, sua carteira, o ledger
 append-only de moedas (`M16`), o estado de moderação e os tokens de reset de PIN. Pessoa e conta são
 identidades distintas; conta fechada não se apaga e devolve sua vaga para a pessoa.

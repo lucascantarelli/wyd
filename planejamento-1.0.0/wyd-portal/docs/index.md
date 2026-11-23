@@ -55,3 +55,6 @@ páginas abaixo respondem perguntas específicas.
 - Número sem fonte e data não entra.
 
 *Página de planejamento. Nenhum código foi escrito.*
+## Decisões em aberto
+
+A cobertura da única lacuna em proposta — `LAC-POR-09`, sem pergunta de desenho porque B exigiria reabrir a fronteira — está em [Cobertura do `wyd-portal`](proposta-decisoes-portal.md). O estado da lacuna continua em `lacunas.md`.

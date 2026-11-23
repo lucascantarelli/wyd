@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (adendo); `ddl-confirmado.md` §5.15 (confirmado); `padrao-banco.md` §1/§5/§9/§11 (P-13, P-20); `wyd-portal/lacunas.md` (`LAC-POR-02`, `LAC-POR-03`)
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que o dono decidiu em
 2026-11-20: notícia (`news`), banner (`banner`), guia editorial (`guide`) e versão de launcher
 (`launcher_release`). Todas em `portal`, porque são conteúdo do site, não estado de jogo.
