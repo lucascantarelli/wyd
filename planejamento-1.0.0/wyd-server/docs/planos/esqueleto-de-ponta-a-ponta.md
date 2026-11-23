@@ -25,7 +25,7 @@ sistema.
 | entrada na cena com estado inicial | combate, inventário, chat e comércio: famílias de `0.4.0`–`0.7.0` (`wyd-protocol-1.0.0.md` §9.1) |
 | um passo com resultado observável | durabilidade da posição: `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y` (`wyd-db/migrations/0006-game-character.md` §6.1, `V` 2026-11-22); `LCORE-02` decidiu que posição é durável eventual com checkpoint no release, mas a fatia não prova save e o schema da posição continua futuro |
 | ciclo de vida da sessão: aberta e liberada | dois canais no mesmo gate; o segundo entra depois da primeira fatia (`LSRV-02`) |
-| — | patch, launcher e serverlist: `X11` (`LLCH-01`, `LLCH-03`); carga e convivência: `LBOT-02` |
+| — | patch, launcher e serverlist: `X11` decidida em 2026-11-23 (JSON canônico + Ed25519), implementação pendente; carga e convivência: onda E, com ambiente e conta decididos em 2026-11-23 (`LBOT-01`/`LBOT-02`) |
 
 A consequência prática: **a fatia não prova save**. Ela prova que o fio, a sessão e a entidade em memória
 existem e que o cliente recebe o resultado do passo. Quem quiser provar persistência de posição precisa de
@@ -153,7 +153,6 @@ Sem provisionar o canal, nenhuma sessão nasce — e o erro aparece como falha d
 | implementação do `ECAP` e da CLI | D3–D6 (`LCLI-04`); `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-client` | desenho do `ECAP` proposto; falta código e operação |
 | peer de A1 | condição de `LSRV-05` reprovada em 2026-11-23 (§9.1 da spec) | `wyd-server` | A1 depende da opção A; falta implementar o peer no passo 0 |
 | segundo canal para C7 | `LSRV-02` | produto + `wyd-ops` | a `1.0.0` tem 2 canais; o segundo só entra depois da primeira fatia |
-| conta de bot | `LBOT-02` | `wyd-db` + QA | o ambiente está decidido em CI efêmero (`Q-BOT-1` = A); falta a conta sintética e a fatia do servidor |
 | conta sintética do seed de desenvolvimento | `seeds/dev.sql` (`M19`) | `wyd-db` | o plano prevê o arquivo; ele não existe (`V`, `crates/` só tem `.gitkeep`) |
 | senha do seed sob a política de senha | `B3`, `M19` | produto + arquitetura | conferir que a conta semeada autentica sob 15–128 chars sem reabrir `M19` |
 

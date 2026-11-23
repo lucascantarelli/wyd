@@ -25,17 +25,22 @@ contrato.
 
 ## O que falta
 
-Duas perguntas abertas — conta sintética e limiar de carga — estão em `lacunas.md` (planejamento). O
-ambiente alvo (`LBOT-01`) fechou em 2026-11-23 pela resposta do dono (`Q-BOT-1` = A): CI efêmero em
-runner hospedado, com servidor descartável por execução. O artefato de falha (`LBOT-04`) fechou na
-mesma data por regra vigente, porque o gate já exigia log + captura e `AGENTS.md` §5.7/`P-22` fixam a
-higiene. Nenhum cenário existe e nenhuma carga foi medida: esta página não afirma conexões simultâneas,
-latência nem taxa de sucesso.
+A política do limiar de carga (`Q-BOT-3` = A) foi decidida em 2026-11-23, mas a lacuna `LBOT-03`
+continua **aberta como medição**, porque ainda não há número, conexão nem latência medidos. O ambiente alvo
+(`LBOT-01`) fechou em 2026-11-23 pela resposta do dono (`Q-BOT-1` = A): CI efêmero em runner hospedado,
+com servidor descartável por execução. A conta e o personagem sintéticos (`LBOT-02`) fecharam na mesma
+data (`Q-BOT-2` = A): seed declarativo em `crates/wyd-db/seeds/dev.sql`, aplicado no banco recriado por
+execução. O artefato de falha (`LBOT-04`) fechou na mesma data por regra vigente, porque o gate já exigia
+log + captura e `AGENTS.md` §5.7/`P-22` fixam a higiene. Nenhum cenário existe e nenhuma carga foi
+medida: esta página não afirma conexões simultâneas, latência nem taxa de sucesso.
 
 ## Limite desta documentação
 
 - Não promete número de bots: limiar é medido, não estimado.
 - Não autoriza bot em produção: o ambiente é CI efêmero (`Q-BOT-1` = A), e produção continua fora.
-## Decisões em aberto
+## Decisões registradas
 
-As perguntas que ainda esperam o dono — `LBOT-02` e `LBOT-03` — estão em [Decisões do `wyd-bots`](proposta-decisoes-bots.md); `LBOT-01` fechou por resposta do dono (`Q-BOT-1` = A) e `LBOT-04` por regra vigente, e nenhuma das duas é reaberta. O estado de cada lacuna continua em `lacunas.md`; o briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.
+As quatro perguntas do sistema foram respondidas ou derivadas: `Q-BOT-1` e `Q-BOT-2` = A, `Q-BOT-3` =
+A (política de medição) e `Q-BOT-4` por regra vigente. `LBOT-01`, `LBOT-02` e `LBOT-04` fecharam;
+`LBOT-03` **continua aberta como medição**, sem número inventado. O estado de cada lacuna está em
+`lacunas.md`; o briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.

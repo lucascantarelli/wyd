@@ -48,7 +48,8 @@ de estado de jogo foi decidido em 2026-11-20 (`LAC-POR-01`): **quem escreve em `
 `game`; o BFF do portal chama a API interna e não recebe `USAGE` no schema. O contrato HTTP ainda não
 tem forma publicada — o `wyd-admin` não tem planejamento —, então o portal depende dele para as ações,
 mas não pode substituí-lo por escrita direta. `P-17` continua valendo: o portal lê `game` pela view de
-`0029`, quando ela existir.
+`0029`, quando ela existir. O fechamento de leilão vencido (`LAC-POR-09`, fechada em 2026-11-23) usa
+esse mesmo C4: o BFF executa o lote e o `wyd-ops` agenda/alerta, sem escrita direta em `game`.
 
 ## 4. Consumo por superfície
 

@@ -39,7 +39,7 @@ Estados: **decidido** (decisão registrada em outro documento), **proposto** (es
 | N3 | `Type` desconhecido | net decide | `UnknownType` tipado, sem decisão no codec | log, descarte ou encerramento é política de conexão | `wyd-net` | **decidido** (`LPRT-08`) |
 | N4 | ordem entre mensagens | net garante | por conexão, sem paralelismo de despacho | a ordem é requisito de combate e inventário | `wyd-net` | **decidido** (`LPRT-12`) |
 | N5 | entrega ao `wyd-core` | net → core | mensagem tipada e validada em faixa | nenhum offset cru atravessa | `wyd-core` | **proposto** |
-| N6 | limite por conexão, timeout e rate-limit | net decide | valores e política | sem valor medido ainda | `wyd-net` | **lacuna** `LNET-01` |
+| N6 | limite por conexão, timeout e rate-limit | net decide | balde por conexão, porte por IP, total por shard, timeout; recusa tipada + contador + fechamento | valores medidos, não prometidos | `wyd-net` | **política decidida** `Q-NET-1` = A (2026-11-23); **`LNET-01` aberta como medição** |
 | N7 | política de versão de protocolo na sessão | net impõe | build-alvo 7662 no handshake; erro tipado para build não suportado | build fora do alvo é recusado; sem tabela de compatibilidade | `wyd-net` + `wyd-client` | **decidido** (`LNET-02` / `Q-NET-2` = A, 2026-11-23) |
 
 ## 4. Estado medido (`V`, 2026-11-22)
@@ -54,12 +54,14 @@ Estados: **decidido** (decisão registrada em outro documento), **proposto** (es
 ## 5. O que falta
 
 `lacunas.md` é o dono do estado de cada lacuna: `LNET-01` (limites e política de conexão) continua
-aberta como medição. `LNET-02` (política de versão na sessão) fechou em 2026-11-23 com `Q-NET-2` = A —
-impor o build-alvo 7662 no handshake, com erro tipado para build não suportado —; `LNET-03` (modelo de
-sessão e identidade por conexão) fechou pela regra `R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04`
-(observabilidade) fechou na mesma data por **regra vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5.7).
-O transporte só implementa as três, e nenhuma volta à fila. O briefing das respostas é
-`../briefing-de-decisoes-1.0.0.md`.
+aberta como medição, mas a **política** do N6 foi fixada em 2026-11-23 por `Q-NET-1` = A: balde por
+conexão, porte por IP, total por shard e timeout, com recusa tipada/contador/fechamento; os valores entram
+só depois da primeira execução no CI efêmero. `LNET-02` (política de versão na sessão) fechou com
+`Q-NET-2` = A — impor o build-alvo 7662 no handshake, com erro tipado para build não suportado —;
+`LNET-03` (modelo de sessão e identidade por conexão) fechou pela regra
+`R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04` (observabilidade) fechou na mesma data por **regra
+vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5.7). O transporte só implementa as três, e nenhuma volta
+à fila. O briefing das respostas é `../briefing-de-decisoes-1.0.0.md`.
 
 ## 6. Gate para sair do papel
 

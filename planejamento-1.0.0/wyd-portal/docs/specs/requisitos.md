@@ -225,8 +225,8 @@ banco, em `wyd-db/armaria-e-mercado.md`.
   de `ends_at` é recusado; fechar duas vezes não cobra duas vezes (`uq_market_transaction_listing` mais
   idempotência); perdedores têm a reserva devolvida e recebem aviso.
 - **Contrato:** `portal.market_bid` (`§3.5`), `portal.market_transaction` (`§3.6`); fechamento
-  idempotente por job, com dono em `LAC-POR-09` (`proposta`: `P-POR-09` recomenda BFF fecha e
-  `wyd-ops` agenda/alerta).
+  idempotente por job, com dono em `LAC-POR-09` (**fechada em 2026-11-23**: BFF fecha e `wyd-ops`
+  agenda/alerta).
 
 ### RF-POR-026 — Carteira e extrato em crédito do portal
 - **Entrada:** conta do portal autenticada.
@@ -321,6 +321,6 @@ banco, em `wyd-db/armaria-e-mercado.md`.
 | RF-POR-011 | `/admin/jogadores*`, `/admin/contas*` | `0005`–`0010` + C4 | contrato do `wyd-admin` |
 | RF-POR-012 | `/admin/config` | `0002` §5.9 | — |
 | RF-POR-019 a 022 | `/personagem/[id]` | Views `game.v_character_*` e `content.v_item_sheet` (`wyd-db/armaria-e-mercado.md` §2) | `LAC-POR-08` fechada (2026-11-22); captura de dano/alcance em `P-POR-08` |
-| RF-POR-023 a 029 | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira` | `portal.market_*` (`§3`); `game.market_escrow` (`§3.11`); contrato `wyd-admin` C4 §4.9–§4.13 | `LAC-POR-07` fechada (2026-11-22); `LAC-POR-09` em proposta (`P-POR-09`) |
+| RF-POR-023 a 029 | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira` | `portal.market_*` (`§3`); `game.market_escrow` (`§3.11`); contrato `wyd-admin` C4 §4.9–§4.13 | `LAC-POR-07` fechada (2026-11-22); `LAC-POR-09` fechada (2026-11-23) |
 | RF-POR-030 a 033 | `/mercado/*`, `/admin/mercado` | `market_notification`, `market_dispute`, `audit_log` | — |
 | RNF-POR-008 a 010 | `/mercado*`, `/personagem/[id]` | índices de `§6`; `market_ledger` append-only | — |

@@ -24,14 +24,17 @@ inicia o jogo. É o dono do manifesto, do patch e da integridade do lado do joga
 
 ## O que falta
 
-Quatro perguntas abertas — formato do manifesto, origem da lista de canais, assinatura e
-empacotamento — estão em `lacunas.md` (planejamento). Nenhum delas foi decidida; esta página não
-afirma formato de arquivo, URL nem algoritmo de hash.
+**Nenhuma pergunta aberta.** As quatro lacunas fecharam em 2026-11-23: o formato do manifesto
+(`LLCH-01`, `Q-LCH-1` = A: JSON versionado e canônico com `sha256` por arquivo), a lista de canais
+(`LLCH-02`, `Q-LCH-2` = A: portal/publicação com cache local, lendo `game.server_channel`), a assinatura
+(`LLCH-03`, `Q-LCH-3` = A: Ed25519 destacado, verificado antes de aplicar) e a distribuição (`LLCH-04`,
+`Q-LCH-4` = A: instalador Tauri NSIS + updater Ed25519 pelo `wyd-ops`). Esta página não afirma URL
+publicada nem artefato implementado.
 
 ## Limite desta documentação
 
 - Não afirma versão publicada nem tamanho de patch: nada foi publicado.
-- Não promete atualização automática do launcher: isso é `LLCH-04`.
-## Decisões em aberto
+- Não promete atualização automática implementada: `LLCH-04` decidiu o desenho, mas o updater não existe.
+## Decisões registradas
 
-As perguntas que ainda esperam o dono — `LLCH-01`–`LLCH-04` — estão em [Decisões do `wyd-launcher`](proposta-decisoes-launcher.md). O estado de cada lacuna continua em `lacunas.md`.
+As quatro decisões — `LLCH-01`–`LLCH-04` — estão em [Decisões do `wyd-launcher`](proposta-decisoes-launcher.md); todas fecharam por resposta do dono (`Q-LCH-1`–`Q-LCH-4` = A) e o estado de cada lacuna continua em `lacunas.md`.

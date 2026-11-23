@@ -2,11 +2,11 @@
 > Público: arquitetura, produto e desenvolvedor novo
 > Dono: arquitetura
 > Base: `docs/arquitetura/fronteira.md`; `docs/arquitetura/consumo-do-banco.md`; `M21`; `AGENTS.md` §5.4
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22.
-`LAC-POR-07` e `LAC-POR-08` fecharam; `LAC-POR-09` está em **proposta** com recomendação registrada —
-**0 abertas**, 8 fechadas, 1 proposta
+As três fecharam; `LAC-POR-09` fechou em 2026-11-23 pela opção **A** — **0 abertas, 0 propostas, 9
+fechadas**.
 
 Registro único de lacuna do `wyd-portal`. Lacuna sem dono não entra; lacuna fechada leva data e
 evidência. Este arquivo é o único lugar onde o ID da lacuna é definido — as páginas citam, não
@@ -19,12 +19,11 @@ redefinem.
 | Estado | Quantas | Quais |
 |---|---:|---|
 | Aberta | 0 | — |
-| Proposta | 1 | `LAC-POR-09` |
-| Fechada | 8 | `LAC-POR-01` a `LAC-POR-08` |
+| Proposta | 0 | — |
+| Fechada | 9 | `LAC-POR-01` a `LAC-POR-09` |
 
-`proposta` significa recomendação técnica registrada com opções e trade-off, aguardando o “sim” do
-dono — o mesmo vocabulário de `wyd-db/lacunas.md` §0.1. `P-POR-08` não é lacuna aberta: é o
-enriquecimento aditivo de dano/alcance, sem bloquear a F7.
+Todas as lacunas do portal estão fechadas. `P-POR-08` não é lacuna aberta: é o enriquecimento aditivo
+de dano/alcance, sem bloquear a F7.
 
 ## 2. Registro das lacunas
 
@@ -160,31 +159,34 @@ enriquecimento aditivo de dano/alcance, sem bloquear a F7.
 - **Fecha quando:** o trace terminar e o dono de `wyd-db` aprovar a forma. Nada disso reabre a decisão
   de `LAC-POR-08`: número não provado não entra.
 
-### LAC-POR-09 — Dono do fechamento de leilão (`proposta`)
+### LAC-POR-09 — Dono do fechamento de leilão (`fechada`)
 
-- **O que falta:** onde roda o job que fecha leilão vencido, expira anúncio sem lance e devolve
-  custódia, e quem o agenda.
-- **O que já está decidido:** o fechamento é idempotente, usa dreno concorrente seguro
+- **Decisão do dono (2026-11-23): opção A.** O **corpo do fechamento é do portal/BFF** — é quem escreve
+  `portal` e chama o `wyd-admin` —, e o **relógio é do `wyd-ops`** (gatilho agendado + métrica/alerta),
+  sem papel de banco novo em `portal`. O BFF reivindica lote com `SKIP LOCKED`, fecha um anúncio por
+  transação e chama `entregar`/`devolver` com `Idempotency-Key`.
+- **Comportamento em falha:** se a liquidação de um anúncio falhar, o lote não aborta os demais; o
+  anúncio continua `ativo` mesmo vencido, não nasce `market_transaction`, a custódia não é devolvida e o
+  próximo ciclo o reencontra. A `Idempotency-Key` e `uq_market_transaction_listing` impedem cobrança
+  dupla se a resposta do admin se perder; o atraso acumulado gera métrica e alerta. A cadência e o
+  limiar de atraso são medição da F9, não número desta decisão.
+- **O que já estava decidido:** o fechamento é idempotente, usa dreno concorrente seguro
   (`FOR UPDATE SKIP LOCKED`, `M25`) e uma transação por anúncio (`uq_market_transaction_listing`);
   leilão sem lance expira e devolve a custódia; o vencedor recebe o item e o perdedor recebe a reserva
   (D4, `RF-POR-025`, `RNF-POR-009`). Nada disso depende do dono do job.
-- **Recomendação (`P-POR-09`):** o **corpo do fechamento é do portal/BFF** — é quem escreve `portal` e
-  chama o `wyd-admin` —, e o **relógio é do `wyd-ops`** (gatilho agendado + métrica/alerta), sem papel
-  de banco novo em `portal`. O BFF reivindica lote com `SKIP LOCKED`, fecha um anúncio por transação e
-  chama `entregar`/`devolver` com `Idempotency-Key`.
 - **Opções e trade-off:**
 
   | Opção | Como funciona | Prós | Contras |
   |---|---|---|---|
-  | A (recomendada) | rota interna autenticada do BFF; `wyd-ops` agenda e alerta | mantém `LAC-POR-01`/`P-17` (só o BFF escreve `portal`); reusa o cliente do admin; sem `GRANT` novo | depende do runtime web; o lote precisa de teto de tempo e ser reentrante; se o BFF cai, o fechamento atrasa |
-  | B | worker do `wyd-ops` com papel próprio em `portal` | independente do web; agendamento e métrica nativos | novo papel/`GRANT` em `portal`; duplica cliente e autenticação do admin; dois escritores do estado do mercado |
-  | C | job no `wyd-admin` | — | recusada: o admin não escreve `portal`; exigiria escrita cruzada e contrariaria `LAC-POR-01`/`M28` |
-  | D | fechar no acesso, sem job | — | recusada em D4: não notifica, não escala e não garante fechamento |
+  | **A (escolhida)** | rota interna autenticada do BFF; `wyd-ops` agenda e alerta | mantém `LAC-POR-01`/`P-17` (só o BFF escreve `portal`); reusa o cliente do admin; sem `GRANT` novo | depende do runtime web; o lote precisa de teto de tempo e ser reentrante; se o BFF cai, o fechamento atrasa |
+  | B (recusada) | worker do `wyd-ops` com papel próprio em `portal` | independente do web; agendamento e métrica nativos | novo papel/`GRANT` em `portal`; duplica cliente e autenticação do admin; dois escritores do estado do mercado |
+  | C (recusada) | job no `wyd-admin` | — | o admin não escreve `portal`; exigiria escrita cruzada e contrariaria `LAC-POR-01`/`M28` |
+  | D (recusada) | fechar no acesso, sem job | — | recusada em D4: não notifica, não escala e não garante fechamento |
 
-- **Fecha quando:** `wyd-ops` confirmar o agendamento e o alerta da opção A, ou escolher B com o
-  `GRANT` aprovado no `wyd-db`. A recomendação não é decisão: falta o “sim” do dono de operação.
-- **Dono:** arquitetura + `wyd-ops`. **Evidência da abertura:** `RF-POR-025`; `roadmap.md` F9;
-  `armaria-e-mercado.md` D4. **Revisado em:** 2026-11-22.
+- **Fecha em:** 2026-11-23, com o “sim” do dono de operação à opção A. A implementação do agendador,
+  do alerta e da rota do BFF continua pendente e não é condição para o fechamento da lacuna.
+- **Dono:** arquitetura + `wyd-ops`. **Evidência:** resposta do dono a `ask_questions`, 2026-11-23;
+  `RF-POR-025`; `roadmap.md` F9; `armaria-e-mercado.md` D4. **Revisado em:** 2026-11-23.
 
 ## 3. Lacunas fechadas
 
@@ -197,6 +199,7 @@ enriquecimento aditivo de dano/alcance, sem bloquear a F7.
 | `LAC-POR-05` | MFA de staff: TOTP em `portal.person_authenticator`, ligado a `portal.person`, obrigatório para `admin`/`moderator`; `member` fora da `1.0.0`. | `docs/specs/requisitos.md` (`RF-POR-013`) |
 | `LAC-POR-06` | Telemetria de canal vem da fonte externa: `/metrics` Prometheus do `wyd-server`, coletado pela pilha do `wyd-ops`; o portal consulta a API do Prometheus e mostra “não medido” quando falha. Nenhuma tabela. | `docs/arquitetura/consumo-do-banco.md` §2 |
 | `LAC-POR-08` | Ficha sem número inventado: durabilidade não existe no cliente e não vira coluna; dano e alcance só entram com origem provada. Enquanto não houver captura, `stat_source = 'effect_names'` e a ficha declara a estatística como não medida. | `armaria-e-mercado.md` D1; `docs/specs/requisitos.md` `RF-POR-021`; `docs/roadmap/roadmap.md` F7; `0009` §10 e `ddl-confirmado.md` §5.12 |
+| `LAC-POR-09` | O BFF do portal fecha o leilão vencido, com `SKIP LOCKED`, uma transação por anúncio e `Idempotency-Key` no `wyd-admin`; o `wyd-ops` agenda e alerta. Falha deixa o anúncio `ativo` e reentrante, sem transação nem devolução até o sucesso. | `lacunas.md` §2; `docs/proposta-decisoes-portal.md` §4–§5; `armaria-e-mercado.md` D4; `docs/roadmap/roadmap.md` F9 |
 
 **Reconfirmação de 2026-11-20 (expansão do monitoramento):** as três decisões de arquitetura foram
 levadas de novo ao dono, com alternativas, e mantidas — ranking com `LIMIT` e cache de 60 s, TOTP em

@@ -55,6 +55,9 @@ páginas abaixo respondem perguntas específicas.
 - Número sem fonte e data não entra.
 
 *Página de planejamento. Nenhum código foi escrito.*
-## Decisões em aberto
+## Decisão registrada
 
-A cobertura da única lacuna em proposta — `LAC-POR-09`, sem pergunta de desenho porque B exigiria reabrir a fronteira — está em [Cobertura do `wyd-portal`](proposta-decisoes-portal.md). O estado da lacuna continua em `lacunas.md`.
+`LAC-POR-09` foi fechada em 2026-11-23: o BFF do portal fecha o leilão vencido e o `wyd-ops` agenda e
+alerta. A comparação das alternativas e o comportamento em falha estão em
+[Cobertura do `wyd-portal`](proposta-decisoes-portal.md); o estado da lacuna continua em `lacunas.md`.
+O portal está em **0 abertas, 0 propostas e 9 fechadas**.

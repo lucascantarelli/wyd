@@ -123,7 +123,7 @@ ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nes
 |---|---|
 | Fase | 6 |
 | Requisitos | `RF-POR-025`, `RF-POR-030` (lance e arremate), `RNF-POR-009` |
-| Depende de | F8; `LAC-POR-09` confirmada (recomendação `P-POR-09`: BFF fecha, `wyd-ops` agenda/alerta); job idempotente |
+| Depende de | F8; `LAC-POR-09` confirmada em 2026-11-23 (BFF fecha, `wyd-ops` agenda/alerta); job idempotente |
 | Entrega | anúncio `leilao` com `ends_at`, lances com reserva de crédito, fechamento por job, aviso de arremate e de lance superado |
 | DoD | lance menor ou igual ao maior ativo é recusado; lance depois de `ends_at` é recusado; o job roda duas vezes e não cobra duas vezes; perdedor recebe a reserva de volta; vencedor recebe o item; leilão sem lance expira e devolve a custódia ao vendedor; atraso do fechamento tem métrica e alerta |
 | Fora | lance automático (proxy bid) e compra imediata em leilão sem `buyout_price` |
@@ -183,9 +183,9 @@ existência.
 | F7 | estatística de arma inexistente no banco | `LAC-POR-08` fechada: a ficha publica só o provado; captura de dano/alcance em `P-POR-08` |
 | F8 | item duplicado entre inventário e anúncio | custódia na mesma transação (`armaria-e-mercado.md` §3.11); anúncio só fica `ativo` com `escrow_ref` |
 | F8 | schema de custódia não aplicado | `LAC-ADM-07` fechada: contrato do `wyd-admin` escrito (`LAC-POR-07`) e lote `0034` aprovado; falta aplicar a série; `delivery_queue` foi recusada para custódia |
-| F9 | leilão fechando duas vezes | job idempotente + `uq_market_transaction_listing`; `P-POR-09` exige dreno `SKIP LOCKED` |
+| F9 | leilão fechando duas vezes | job idempotente + `uq_market_transaction_listing`; `LAC-POR-09` = A exige dreno `SKIP LOCKED` |
 | F9 | leilão sem comprador deixa item preso | expiração devolve a custódia ao vendedor no mesmo job |
-| F9 | fechamento parado ou atrasado | `P-POR-09`: métrica de atraso e alerta; o lote é reentrante e tem teto de tempo |
+| F9 | fechamento parado ou atrasado | `LAC-POR-09` = A: métrica de atraso e alerta; o lote é reentrante e tem teto de tempo |
 | F10 | avaliação usada como retaliação | uma por transação, só pelo comprador, com moderação por estado `oculto` |
 | F11 | taxa alimentando inflação | taxa é sumidouro: linha `taxa` no ledger não é creditada a ninguém |
 

@@ -8,19 +8,19 @@
 > `wyd-1.0.0.md` §7.1, §7.3 (X1–X3) e §7.6; `AGENTS.md` §5.7 e §8
 > Revisado em: 2026-11-23
 
-**Estado:** proposto (2026-11-23). **Uma pergunta em aberto** (`Q-NET-1`). `LNET-02` fechou em
-2026-11-23 pela decisão do dono (`Q-NET-2` = A), `LNET-03` pela regra `R6`/`D9`/
-`ux_session_viva_por_conta` e `LNET-04` por **regra vigente** (`Q-NET-4` = A, derivada em §4), sem
-escolha do usuário. Nada foi implementado.
-**Nenhum número desta página é medição**: não há conexões, latência nem carga medidas; todo limite
-numérico é decisão proposta.
+**Estado:** proposto (2026-11-23). **Nenhuma pergunta aguarda o dono**: `Q-NET-1` e `Q-NET-2` foram
+respondidas (= A), `LNET-03` fechou pela regra `R6`/`D9`/`ux_session_viva_por_conta` e `LNET-04` por
+**regra vigente** (`Q-NET-4` = A, derivada em §4), sem escolha do usuário. `LNET-01` continua **aberta
+como medição**: a política foi decidida, o valor não. Nada foi implementado. **Nenhum número desta página
+é medição**: não há conexões, latência nem carga medidas; todo limite numérico é decisão proposta.
 
 ## 1. Fronteira
 
-**Fecha:** limites por conexão/timeout/rate-limit — `LNET-01`. **Já decididas:** `LNET-02` (política
+**Decide:** limites por conexão/timeout/rate-limit — `LNET-01`. **Já decididas:** `LNET-02` (política
 de versão), fechada em 2026-11-23 por `Q-NET-2` = A; `LNET-03` (modelo de sessão), fechada pela regra
 `R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04` (observabilidade), fechada por decisão derivada das
-regras vigentes (§4). Em todas, o transporte implementa; não escolhe.
+regras vigentes (§4). Em todas, o transporte implementa; não escolhe. A política de `LNET-01` foi
+decidida em `Q-NET-1` = A, mas a lacuna **não fecha** até a primeira medição no CI efêmero.
 
 **Não decide:** byte/opcode/ofuscação (`wyd-protocol`), regra de jogo (`wyd-core`/`wyd-sim`), processo
 por canal (`wyd-server`), sessão persistida (`wyd-db`).
@@ -63,6 +63,39 @@ zumbi sem defesa. A decisão é **como** o número entra.
 **Recomendação: A.** `AGENTS.md` §8 exige gate medido; o limite é decisão, não estimativa. **Custo:**
 nenhum limite numérico antes da medição. **Fontes:** `lacunas.md` `LNET-01`; `docs/index.md`;
 `AGENTS.md` §8. **Recusa C** por inventar número; **B** por tratar provisório como regra.
+
+**Resposta do dono em 2026-11-23: A.** A **forma** do contrato N6 fica fechada agora: balde por conexão,
+porte por IP, teto total por shard e timeout de handshake/ociosidade; ao estourar, o servidor devolve
+**recusa tipada** (`RateLimited` para pacote, `TooManyPerIp`/`TooManyTotal` para handshake, timeout para
+handshake/ociosidade), **conta o motivo** e **fecha a conexão** quando a recusa é de conexão ou timeout.
+Os **valores** não entram antes da primeira execução no CI efêmero de `Q-BOT-1`, com o seed de `Q-BOT-2`
+e o método de `Q-BOT-3`; o valor medido é congelado com ambiente/data. O cenário de carga declara o
+**perfil de teste** ou usa origens distintas, para que o limite por IP não seja confundido com saturação
+do shard. Nenhum número é inventado e a lacuna não fecha nesta decisão.
+
+| Alternativa | Por que foi descartada |
+|---|---|
+| B — teto provisório | defende antes da medição, mas o número é de infraestrutura e pode bloquear jogador legítimo |
+| C — número fixado agora | não tem fonte; vira promessa sem `V`, contra `AGENTS.md` §5.4 e §8 |
+
+**Custo do que A ainda exige, não implementado.** **0 migration, 0 tabela, 0 coluna.** Na implementação:
+**1 página** `docs/specs/limites-e-timeouts.md`, **1 `Cargo.toml`** em `crates/wyd-net`, **1 `src/lib.rs`**,
+**1 `src/limits/rate.rs`**, **1 `src/metrics.rs`**, **1 teste** `tests/integracao/flood.rs` e **1
+`Cargo.toml`** de workspace na raiz — **7 arquivos**; o timeout pode acrescentar `src/session/mod.rs` e
+levar a **8**. Nenhum workflow novo; o job de carga é o de `Q-BOT-1`. O gate do `wyd-net` continua devendo
+`RF-NET`, árvore de `src/`/`tests/` e plano de teste.
+
+**Efeito registrado (`V`, 2026-11-23).**
+
+| Efeito | Fonte |
+|---|---|
+| política do contrato N6 decidida | `wyd-net-1.0.0.md` §3 |
+| `LNET-01` continua aberta como medição | `lacunas.md` §1 |
+| resposta `Q-NET-1` encerrada; a seguinte foi `LAC-POR-09` | §6 |
+
+**Não fecha:** `LNET-01`, os valores, o crate, o teste, o `/metrics` novo, o `wyd-server`, o codec e o gate
+do sistema. `LBOT-03` segue aberta como medição, mas passa a ter um caminho interpretável quando o perfil
+de teste for declarado.
 
 ### Q-NET-2 — A versão do protocolo é negociada ou imposta pelo build?
 
@@ -121,20 +154,20 @@ unidade das métricas são implementação, não decisão pendente. A lacuna `LN
 
 | Lacuna | Pergunta | Situação |
 |---|---|---|
-| `LNET-01` | `Q-NET-1` | aberta |
+| `LNET-01` | `Q-NET-1` | **aberta como medição** (2026-11-23): política A decidida — balde/porte/total/timeout com recusa tipada; valores só após a primeira execução no CI efêmero. |
 | `LNET-02` | `Q-NET-2` | fechada em 2026-11-23 (A): impor o build-alvo 7662 no handshake, com erro tipado para build não suportado; o transporte implementa, não escolhe. |
 | `LNET-03` | — | fechada em 2026-11-23: a regra `R6`/`D9` e `ux_session_viva_por_conta` fixam uma sessão por conta e recusam a segunda; `wyd-db/rascunho-accounts.md` §2 (`R6`) e §6 (`D9`); §3 proíbe limite por IP como identidade. O transporte implementa, não escolhe. |
 | `LNET-04` | `Q-NET-4` | fechada em 2026-11-23 (A): **derivada das regras vigentes, sem escolha do usuário** — métricas de conexão/erro/bytes/latência em `/metrics` (`X10`), fonte externa (`LAC-POR-06`) e log só de metadados, sem payload/PII (`AGENTS.md` §5.7). |
 
 ## 6. Registro da decisão
 
-**`Q-NET-2` respondida e `Q-NET-4` derivada em 2026-11-23.** `LNET-02` fechou na opção A; `LNET-04`
-fechou por **regra vigente** (A derivada, §4), sem escolha do usuário. `LNET-01` continua `aberta`
-aguardando o valor medido; `LNET-03` está `fechada` pela regra de sessão já existente. Nada foi
-implementado: o transporte só executa o que aqui foi decidido.
+**`Q-NET-1` e `Q-NET-2` respondidas e `Q-NET-4` derivada em 2026-11-23.** `LNET-02` fechou na opção A;
+`LNET-04` fechou por **regra vigente** (A derivada, §4), sem escolha do usuário; `Q-NET-1` = A fixou a
+política de `LNET-01`, que continua `aberta` como medição. `LNET-03` está `fechada` pela regra de sessão
+já existente. Nada foi implementado: o transporte só executa o que aqui foi decidido.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|
-| `Q-NET-1` | `LNET-01` | — |
+| `Q-NET-1` | `LNET-01` | A — **medir e congelar** (2026-11-23): forma do N6 fechada (balde/porte/total/timeout, recusa tipada, contador e fechamento); valores só após a primeira execução no CI efêmero; `LNET-01` continua aberta como medição |
 | `Q-NET-2` | `LNET-02` | A — impor o build-alvo 7662 no handshake, com erro tipado para build não suportado (2026-11-23) |
 | `Q-NET-4` | `LNET-04` | A — **derivada das regras vigentes, sem escolha do usuário** (2026-11-23): métricas de conexão/erro/bytes/latência em `/metrics` e log só de metadados, sem payload/PII |
