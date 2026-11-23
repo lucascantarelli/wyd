@@ -525,13 +525,14 @@ planejamento de cada uma, e por isso o gate editorial (`AGENTS.md` §4) roda em 
 
 ---
 
-## 8. Layout do repositório e dono de cada artefato (2026-11-22)
+## 8. Layout do repositório e dono de cada artefato (revisto em 2026-11-23)
 
 > Esta é a seção **dona do layout físico** do repositório: onde cada tipo de artefato mora, qual
 > sistema responde por ele e por que aquele lugar. Ela nasceu de uma dúvida concreta — “o Dockerfile
 > mora em `wyd-ops/` ou na raiz?” — respondida de duas formas diferentes em 2026-11-22. As outras
-> páginas **citam** esta seção em vez de repetir a tabela. Árvore medida com `find` na mesma data;
-> pasta que só tem `.gitkeep` está marcada como reservada, não como implementada.
+> páginas **citam** esta seção em vez de repetir a tabela. A árvore foi medida em 2026-11-22 e o
+> Compose/override foram rechecados em 2026-11-23; pasta que só tem `.gitkeep` está marcada como
+> reservada, não como implementada.
 
 ### 8.1 A regra em uma frase
 
@@ -547,6 +548,7 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | plano do sistema: dashboard, `lacunas.md`, `docs/` | `planejamento-1.0.0/<sistema>/` | o próprio sistema | 13 pastas, todas abertas; nenhuma `aceita` |
 | Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; `docker compose build docs` verde |
 | `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`), exceção de ferramenta (§8.3) |
+| `docker-compose.override.yml` | raiz | `wyd-ops` | camada de desenvolvimento versionada (2026-11-23): tag `:dev`, `pull_policy: build` e `restart: "no"`; porta herdada do base |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
 | workflow de CI | `.github/workflows/` | `wyd-ops` | 3: `docs.yml`, `docs-image.yml`, `full-workflow.yml` (stub) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 1: `docs-check` |
@@ -563,15 +565,43 @@ Não existe `crates/wyd-client`, `crates/wyd-docs`, `crates/wyd-ops` nem `crates
 quatro sistemas não são crate Rust — o cliente é artefato binário, o site é Python/MkDocs, o portal é
 Next.js e o `wyd-ops` é Dockerfile, Compose e CI.
 
-### 8.3 As três exceções de raiz
+### 8.3 Arquivos de raiz exigidos ou descobertos automaticamente pelas ferramentas
 
 | Arquivo | Por que fica na raiz | O que quebraria se mudasse |
 |---|---|---|
 | `docker-compose.yml` | `docker compose` procura `compose.yaml` ou `docker-compose.yml` no diretório de trabalho | todo comando viraria `docker compose -f wyd-ops/docker-compose.yml …`; o caminho usado na operação e na documentação deixaria de existir |
 | `.dockerignore` | o Docker lê o arquivo na **raiz do contexto**, e o contexto é a raiz do repositório (o `preparar.py` lê `planejamento-1.0.0/`) | `wyd-client/` (567 MB) e `deprecated/` entrariam no contexto; build mais lento e imagem maior |
 | `.github/workflows/` | caminho fixo do GitHub Actions | workflow não é encontrado; não existe alternativa de caminho |
+| `docker-compose.override.yml` | o Compose carrega automaticamente o nome convencional de override ao rodar com o arquivo base na raiz | se for movido ou renomeado, deixa de ser mesclado automaticamente; seria necessário indicá-lo explicitamente na invocação do Compose |
 
-O dono continua sendo `wyd-ops` nos três casos: morar na raiz não transfere responsabilidade.
+`wyd-ops` continua dono do Compose compartilhado, do `.dockerignore` e dos workflows. O override
+local é configuração do operador para desenvolvimento; ele não transfere a responsabilidade do
+Compose base. `wyd-ops/` continua sendo a pasta de implementação do sistema, enquanto estes caminhos
+de raiz são exceções por exigência ou convenção de descoberta da ferramenta.
+
+**Camada de desenvolvimento do Compose (`V`, 2026-11-23):** `docker-compose.override.yml` é
+**versionado de propósito** — não é arquivo pessoal nem configuração de máquina. Quem clona o
+repositório roda `docker compose up` e obtém o mesmo comportamento de desenvolvimento, sem copiar
+arquivo, exportar variável ou montar comando à mão. Se ele fosse local e ignorado, cada pessoa
+precisaria reproduzir estes ajustes sozinha e o clone não teria comportamento único.
+
+| Ajuste | Efeito |
+|---|---|
+| `image: …wyd-docs:dev` | o build local não usa a tag `:latest`, então não se confunde com a imagem publicada no GHCR |
+| `pull_policy: build` | `docker compose up` constrói da árvore de trabalho em vez de puxar imagem antiga |
+| `restart: "no"` | o site de desenvolvimento não reinicia sozinho depois de `down` ou de falha |
+
+Porta (`${WYD_DOCS_PORT:-8000}:8000`), `build:`, `container_name` e contexto continuam vindo do
+Compose base — o override não duplica o Dockerfile. Decisão do dono em 2026-11-23: **produção não
+roda na máquina de desenvolvimento**; a imagem de produção (`:latest`) só é consumida pelo Compose
+fora da estação local. Verificado: `docker compose config` difere do base exatamente nesses três
+pontos, e `docker compose up -d docs` construiu `:dev`, recriou o container com `restart: no` e
+respondeu HTTP 200.
+
+**Estado real do CI (`V`, 2026-11-23):** `.github/workflows/docs-image.yml` está versionado (commit
+`8b23cc2`), mas **não há evidência de execução nem de imagem publicada**: a leitura anônima do
+manifesto `ghcr.io/lucascantarelli/wyd-docs:latest` respondeu `denied`. A página não trata `:latest`
+como disponível; a publicação continua pendente da primeira execução do workflow.
 
 ### 8.4 O que existe só como lugar reservado
 
@@ -581,7 +611,7 @@ O dono continua sendo `wyd-ops` nos três casos: morar na raiz não transfere re
 | `wyd-portal/` | `.gitkeep` | portal ainda sem código |
 | `planejamento-1.0.0/wyd-admin/{src,tests}/` | `.gitkeep` | árvore de código planejada e vazia |
 | `planejamento-1.0.0/wyd-db/{tests,prompts,skills}/` | vazias no disco | reservadas; sem arquivo, não são versionadas |
-| 11 dos 13 sistemas | `docs/` + dashboard | `src/`, `tests/`, `prompts/` e `skills/` só são criadas onde o dono abriu uma pergunta própria |
+| 10 dos 13 sistemas | `docs/` + dashboard | `src/`, `tests/`, `prompts/` e `skills/` só são criadas onde o dono abriu uma pergunta própria |
 | `planejamento-1.0.0/wyd-ops/` | `docs/` + `plano-imagem-e-compose-do-site.md` | único sistema **sem** dashboard `<sistema>-1.0.0.md` e sem `lacunas.md`; o estado dele é o de propostas (AGENTS.md §6) |
 
 `planejamento-1.0.0/wyd-db/src/` tem `dsn.md`, `migrate/` e `provision/`: são páginas que descrevem
@@ -607,7 +637,7 @@ find planejamento-1.0.0 -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts'
   -o -name '*.py' -o -name '*.sh' \)
 
 # 2. o único Dockerfile do projeto novo é o do wyd-ops
-find . -name 'Dockerfile*' -not -path './deprecated/*' -not -path './.git/*'
+find . -name '*Dockerfile*' -not -path './deprecated/*' -not -path './.git/*'
 
 # 3. nenhuma referência a pasta top-level docker/ (só deprecated/docker/ pode aparecer)
 grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \

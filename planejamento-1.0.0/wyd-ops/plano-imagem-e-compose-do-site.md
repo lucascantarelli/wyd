@@ -28,6 +28,14 @@ reproduzível — `docker compose up` não subia nada.
    `GITHUB_TOKEN`, conforme `plano-ci-real.md` §4.1. Só `actions/checkout` entra, fixado por SHA.
 5. **O servidor é o do Python**, `http.server`, sem nginx: o site é estático e não precisa de mais
    uma peça para manter.
+6. **Desenvolvimento local tem camada própria, versionada.** `docker-compose.override.yml` entra no
+   repositório de propósito: quem clona roda `docker compose up` e tem o mesmo comportamento de dev,
+   sem passo manual. Ele usa a tag `:dev`, constrói no `up` (`pull_policy: build`) e não reinicia
+   sozinho (`restart: "no"`); porta 8000 e `build:` continuam vindo do base. Consequência: o build
+   local parte da árvore de trabalho e usa a tag `:dev`, portanto **não sobrescreve** a imagem
+   publicada no GHCR. Decisão do dono em 2026-11-23: produção não roda na máquina de desenvolvimento
+   — a imagem `:latest` só é consumida pelo Compose fora dela. Estado do CI: o workflow existe desde
+   `8b23cc2`, mas não há execução nem imagem publicada confirmada (2026-11-23).
 
 ## 3. O que esta decisão **não** faz
 
@@ -44,12 +52,13 @@ reproduzível — `docker compose up` não subia nada.
 |---|---|
 | `wyd-ops/wyd-docs.Dockerfile` | build em dois estágios: dependências, `preparar.py`, `mkdocs build`; runtime só com `site/` e `python -m http.server` |
 | `docker-compose.yml` | serviço `docs`, porta `${WYD_DOCS_PORT:-8000}`, imagem `${WYD_DOCS_TAG:-latest}` com `build:` de fallback |
+| `docker-compose.override.yml` | camada de desenvolvimento versionada: tag `:dev`, `pull_policy: build` e `restart: "no"`; porta, `build:`, `container_name` e contexto continuam vindo do base |
 | `.dockerignore` | mantém fora do contexto `.git`, `deprecated/`, `wyd-client/` (567 MB), `**/site`, `**/.build`, `.venv`, `.env` |
 | `.github/workflows/docs-image.yml` | build, fumaça HTTP 200 e push no GHCR (push só fora de PR) |
 
 O **dono do layout** é `planejamento-1.0.0/wyd-1.0.0.md` §8: ele diz, para cada tipo de artefato,
-onde mora, qual sistema responde e por que três arquivos ficam na raiz (Compose, `.dockerignore` e
-`.github/workflows/`). Esta página não repete a tabela — só lista os arquivos desta entrega. Nenhum
+onde mora, qual sistema responde e por que esses arquivos ficam na raiz (Compose, override,
+`.dockerignore` e `.github/workflows/`). Esta página não repete a tabela — só lista os arquivos desta entrega. Nenhum
 deles pode ser copiado para `planejamento-1.0.0/wyd-ops/`: aquela árvore é documentação
 (AGENTS.md §5.6).
 
@@ -75,6 +84,6 @@ DoD do workflow: a primeira execução em `develop` termina verde, empurra `:<sh
 | Risco | Efeito | Mitigação |
 |---|---|---|
 | imagem grande por copiar o repositório no estágio de build | pull lento | estágio de runtime recebe só `site/`; `.dockerignore` corta cliente e legado |
-| `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG:<sha>` no ambiente que precisa de reprodutibilidade |
+| `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG:<sha>` no ambiente que precisa de reprodutibilidade; em desenvolvimento, o override usa `:dev` com `pull_policy: build` |
 | pacote GHCR privado | `pull` sem `docker login` falha | imagem de documentação pública; se virar privada, o host precisa de credencial |
 | workflow duplicar o gate | dois builds do mesmo commit | o gate continua em `docs.yml`; a imagem não reexecuta `verificar.py` |
