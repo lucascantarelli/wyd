@@ -1,0 +1,23 @@
+# Serviços do projeto WYD.
+#
+# `docs`: site de planejamento (MkDocs 2.0). A imagem é construída e publicada pelo CI
+# (.github/workflows/docs-image.yml) no GHCR; `build:` existe como fallback para quem não
+# tem a imagem localmente. O Dockerfile pertence ao `wyd-ops/`, dono das imagens; este
+# arquivo fica na raiz porque `docker compose` o procura no diretório de trabalho.
+#
+# Dono da decisão: planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md
+#
+#   docker compose pull docs    # consome a imagem publicada
+#   docker compose up -d docs   # sobe (constrói só se a imagem não existir)
+#   docker compose down         # para
+
+services:
+  docs:
+    image: ghcr.io/lucascantarelli/wyd-docs:${WYD_DOCS_TAG:-latest}
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-docs.Dockerfile
+    container_name: wyd-docs
+    ports:
+      - "${WYD_DOCS_PORT:-8000}:8000"
+    restart: unless-stopped

@@ -55,21 +55,22 @@ Em **2026-11-19**, o PR #44 corrigiu o carregamento do bundle browser do Highlig
 ## Estrutura
 
 ```text
-planejamento-1.0.0/      # fonte de verdade nível 1: um sistema por pasta
-├── wyd-1.0.0.md         # panorama medido, divergências e fases
-├── wyd-db/              # piloto: PostgreSQL, migrations, portas, filas
-├── wyd-protocol/        # segundo piloto: CPSock, opcodes, payloads, goldens
-├── wyd-docs/            # site: montagem, tema, gate e publicação
-├── wyd-admin/           # API interna: contrato C4 e custódia de item
-├── wyd-portal/          # portal: páginas, requisitos e roadmap
-├── wyd-ops/             # propostas de gestão, versões e ambientes
-└── <demais sistemas>    # só .gitkeep: não planejado, não "livre para inventar"
-wyd-docs/                # projeto do site MkDocs 2.0 (tema, montagem, verificação)
-wyd-portal/              # portal Next.js (ainda sem código)
-wyd-client/              # patches e config do cliente (files/ ignorado)
-crates/                  # pastas reservadas, só .gitkeep
+planejamento-1.0.0/      # fonte de verdade nível 1: 13 sistemas, um por pasta
+├── wyd-1.0.0.md         # panorama medido: estado, fases, mapa (§7) e layout (§8)
+└── <sistema>/           # por sistema: dashboard, lacunas.md e docs/
+wyd-docs/                # projeto do site MkDocs 2.0 (montagem, tema, verificação)
+wyd-portal/              # portal Next.js (ainda sem código: só .gitkeep)
+wyd-client/              # arquivos do cliente real (files/ ignorado pelo git)
+wyd-ops/                 # imagem do site: Dockerfile
+crates/                  # 9 pastas reservadas aos crates Rust (só .gitkeep)
+docker-compose.yml       # serviço docs; raiz por exigência do Compose
+.github/                 # workflows e action composta (dono: wyd-ops)
 deprecated/              # referência legada, ignorada pelo git: nunca é fonte
 ```
+
+Dono de cada artefato, pasta reservada e as exceções de raiz estão em
+[`planejamento-1.0.0/wyd-1.0.0.md` §8](planejamento-1.0.0/wyd-1.0.0.md); esta árvore é só o mapa
+visual da raiz.
 
 ## Documentação
 
