@@ -1,16 +1,23 @@
 # Camada de desenvolvimento do `docker compose` — versionada de propósito.
 #
 # O Compose carrega este arquivo automaticamente ao rodar na raiz; ele não substitui o
-# `docker-compose.yml`, só ajusta o serviço `docs` para uso local. Produção não roda nesta
-# máquina: a imagem publicada (`:latest`) é consumida onde o site é servido, não aqui.
+# `docker-compose.yml`, só ajusta o serviço `docs` e acrescenta o `gate` para uso local.
+# Produção não roda nesta máquina: a imagem publicada (`:latest`) é consumida onde o site é
+# servido, não aqui.
 #
-# O que muda em relação ao Compose base:
+# `docs` — o que muda em relação ao Compose base:
 #   - tag `dev`: build local não sobrescreve `:latest` nem se confunde com a imagem do GHCR
 #   - `pull_policy: build`: `up` constrói da árvore de trabalho em vez de puxar imagem antiga
 #   - `restart: "no"`: o site de desenvolvimento não reinicia sozinho depois de um `down`/erro
 #
 # A porta continua vindo do Compose base (`${WYD_DOCS_PORT:-8000}:8000`), e o `build:` também:
 # o Dockerfile e o contexto têm um dono só, em `wyd-ops/wyd-docs.Dockerfile`.
+#
+# `gate` — o mesmo gate que o CI roda, em um comando:
+#   docker compose --profile gate run --rm gate
+# Usa o estágio `build` do Dockerfile (pip, `planejamento-1.0.0/`, `wyd-docs/` e `verificar.py`
+# vivem lá; o runtime só tem `site/`). A tag `:gate` e `pull_policy: build` fazem o comando
+# validar a árvore de trabalho, não uma imagem antiga. Não publica porta nem reinicia.
 #
 # Dono: `wyd-ops` (imagem e Compose); layout e exceções de raiz em
 # `planejamento-1.0.0/wyd-1.0.0.md` §8.
@@ -20,3 +27,20 @@ services:
     image: ghcr.io/lucascantarelli/wyd-docs:dev
     pull_policy: build
     restart: "no"
+
+  gate:
+    profiles: ["gate"]
+    image: ghcr.io/lucascantarelli/wyd-docs:gate
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-docs.Dockerfile
+      target: build
+    working_dir: /app/wyd-docs
+    command:
+      - sh
+      - -c
+      - |
+        python preparar.py &&
+        mkdocs build --dir .build/docs --output site &&
+        python verificar.py site

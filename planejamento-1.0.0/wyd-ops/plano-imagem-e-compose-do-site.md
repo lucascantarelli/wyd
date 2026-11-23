@@ -36,6 +36,12 @@ reproduzível — `docker compose up` não subia nada.
    publicada no GHCR. Decisão do dono em 2026-11-23: produção não roda na máquina de desenvolvimento
    — a imagem `:latest` só é consumida pelo Compose fora dela. Estado do CI: o workflow existe desde
    `8b23cc2`, mas não há execução nem imagem publicada confirmada (2026-11-23).
+7. **O gate de documentação roda pelo Compose, atrás de perfil.** O override acrescenta `gate`
+   (perfil `gate`), que executa `preparar.py`, `mkdocs build` e `verificar.py` em um comando, usando
+   o estágio `build` do Dockerfile. `docker compose --profile gate run --rm gate` valida a árvore de
+   trabalho e sai com o código do `verificar.py`; sem `--profile gate` o serviço não entra no `up`
+   nem em `docker compose config`. Medido em 2026-11-23: exit 0 e a mesma contagem do gate do site
+   (dono do número: `wyd-docs-1.0.0.md` §9.1).
 
 ## 3. O que esta decisão **não** faz
 
@@ -52,7 +58,7 @@ reproduzível — `docker compose up` não subia nada.
 |---|---|
 | `wyd-ops/wyd-docs.Dockerfile` | build em dois estágios: dependências, `preparar.py`, `mkdocs build`; runtime só com `site/` e `python -m http.server` |
 | `docker-compose.yml` | serviço `docs`, porta `${WYD_DOCS_PORT:-8000}`, imagem `${WYD_DOCS_TAG:-latest}` com `build:` de fallback |
-| `docker-compose.override.yml` | camada de desenvolvimento versionada: tag `:dev`, `pull_policy: build` e `restart: "no"`; porta, `build:`, `container_name` e contexto continuam vindo do base |
+| `docker-compose.override.yml` | camada de desenvolvimento versionada: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` (porta, `build:`, `container_name` e contexto vêm do base) e `gate` sob perfil `gate`, que roda os três passos do gate no estágio `build` do Dockerfile |
 | `.dockerignore` | mantém fora do contexto `.git`, `deprecated/`, `wyd-client/` (567 MB), `**/site`, `**/.build`, `.venv`, `.env` |
 | `.github/workflows/docs-image.yml` | build, fumaça HTTP 200 e push no GHCR (push só fora de PR) |
 
@@ -74,6 +80,11 @@ curl -fsS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8000/
 
 # 3. o site servido é o do build, com a contagem do gate
 curl -fsS http://127.0.0.1:8000/ | grep -o '<title>[^<]*</title>'
+
+# 4. gate de documentação em um comando (montagem, build e verificação)
+MSYS_NO_PATHCONV=1 docker compose --profile gate run --rm -T gate
+# esperado: exit 0 e a linha "verificação: … ok (N fontes verificadas)" — contagem em
+# wyd-docs-1.0.0.md §9.1
 ```
 
 DoD do workflow: a primeira execução em `develop` termina verde, empurra `:<sha>` e `:latest`, e o
@@ -87,3 +98,4 @@ DoD do workflow: a primeira execução em `develop` termina verde, empurra `:<sh
 | `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG:<sha>` no ambiente que precisa de reprodutibilidade; em desenvolvimento, o override usa `:dev` com `pull_policy: build` |
 | pacote GHCR privado | `pull` sem `docker login` falha | imagem de documentação pública; se virar privada, o host precisa de credencial |
 | workflow duplicar o gate | dois builds do mesmo commit | o gate continua em `docs.yml`; a imagem não reexecuta `verificar.py` |
+| `gate` repetir a montagem que o estágio `build` já fez | cada execução custa dois builds | aceito: o estágio `build` é o único que tem fontes, pip e `verificar.py`, e o `run` reconstrói a imagem por `pull_policy: build`; estágio dedicado seria decisão nova, não parte desta |

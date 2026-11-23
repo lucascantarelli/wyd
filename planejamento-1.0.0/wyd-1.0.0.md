@@ -598,10 +598,35 @@ fora da estação local. Verificado: `docker compose config` difere do base exat
 pontos, e `docker compose up -d docs` construiu `:dev`, recriou o container com `restart: no` e
 respondeu HTTP 200.
 
+**Gate de documentação pelo Compose (`V`, 2026-11-23):** o override acrescenta o serviço `gate`, sob
+perfil `gate`, que roda `preparar.py`, `mkdocs build` e `verificar.py` em um comando:
+
+```bash
+docker compose --profile gate run --rm gate
+```
+
+Ele usa o estágio `build` do Dockerfile — onde vivem pip, `planejamento-1.0.0/`, `wyd-docs/` e
+`verificar.py`; o runtime só tem `site/` — com tag `:gate` e `pull_policy: build`, então valida a
+árvore de trabalho. Não publica porta nem reinicia. O perfil é o que mantém o `up` normal sem ele, e
+`docker compose config` sem `--profile gate` não o lista. Medido em 2026-11-23: exit 0, com a
+contagem do gate do site (dono do número: `wyd-docs-1.0.0.md` §9.1). DoD e custo por execução ficam
+em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5 e §6.
+
 **Estado real do CI (`V`, 2026-11-23):** `.github/workflows/docs-image.yml` está versionado (commit
-`8b23cc2`), mas **não há evidência de execução nem de imagem publicada**: a leitura anônima do
-manifesto `ghcr.io/lucascantarelli/wyd-docs:latest` respondeu `denied`. A página não trata `:latest`
-como disponível; a publicação continua pendente da primeira execução do workflow.
+`8b23cc2`) mas **nunca rodou** — o arquivo não existe no remoto (`origin/develop` está em `486d718`;
+os três commits locais estão sem push), e a lista de workflows do repositório traz só `docs`,
+`Full Workflow`, CodeQL e Dependabot. Consequência: **não há imagem publicada**. O pacote
+`wyd-docs` responde `404 Package not found` na API e a leitura anônima do manifesto `:latest`
+responde `denied`. A página não trata `:latest` como disponível.
+
+O que falta para a primeira publicação: (1) o commit que contém o workflow chegar a `develop` por
+PR — o ruleset `develop — PR obrigatório` recusa push direto e não exige status check; (2) o PR
+roda o workflow em build e fumaça, sem push, porque a etapa de publicação tem `if:
+github.event_name != 'pull_request'`; (3) o merge em `develop` publica `:<sha>` e `:latest`, ou,
+depois do merge, `gh workflow run docs-image --ref develop`. Quando o primeiro push acontecer, o
+GHCR cria o pacote como **privado**: para o Compose puxar sem `docker login`, a visibilidade do
+pacote precisa ser mudada para pública nas configurações do pacote (política documentada em
+<https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry>).
 
 ### 8.4 O que existe só como lugar reservado
 
