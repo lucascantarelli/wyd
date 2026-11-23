@@ -592,5 +592,5 @@ do job de CI, do manifesto, da assinatura, da lista de canais, do instalador ou 
   fila; aponta, não redefine.
 - Não reabre nada decidido: `Q-NET-2`, `Q-SIM-1`, `Q-SIM-2`, `Q-SIM-3`, `Q-SIM-4`, `Q-BOT-1`,
   `Q-BOT-2`, `Q-BOT-3`, `Q-NET-1`, `Q-LCH-1`, `Q-LCH-2`, `Q-LCH-3`, `Q-LCH-4`, `Q-SRV-5` (C com condição reprovada),
-  `Q-PRT-1`, `LNET-03`, `LAC-POR-01`, `M25` e `D4` continuam como estão.
+  `Q-PRT-1`, `LNET-03`, `LAC-POR-01`, `LAC-POR-09`, `M25` e `D4` continuam como estão.
 - Não promete data: a ordem é dependência declarada nas fontes citadas, não cronograma.

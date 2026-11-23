@@ -30,7 +30,7 @@ de estado de jogo foi decidido em 2026-11-20 (`LAC-POR-01`): **quem escreve em `
 | protocolo de fio CPSock, opcodes e offsets | `wyd-protocol` |
 | sessão de jogo e topologia de canal | `wyd-server` (estado em `game.session`/`server_channel`) |
 | DDL, migrations, adapters e pool | `wyd-db` |
-| API interna de staff, jobs e ações privilegiadas | `wyd-admin` (ainda sem planejamento) |
+| API interna de staff, jobs e ações privilegiadas | `wyd-admin` (C4 proposto em 2026-11-22) |
 | patch, manifesto e integridade de arquivo do cliente | `wyd-launcher` / `wyd-ops` |
 | hospedagem, backup, monitoração de infraestrutura | `wyd-ops` |
 
@@ -45,10 +45,10 @@ de estado de jogo foi decidido em 2026-11-20 (`LAC-POR-01`): **quem escreve em `
 | C5 | Conteúdo de catálogo (`content.*`) | portal → banco | leitura; escrita só via CMS, com revisão | — | portal + `wyd-db` |
 
 **C4 foi decidido em 2026-11-20 (`LAC-POR-01`).** O `wyd-admin` é o **único executor** de escrita em
-`game`; o BFF do portal chama a API interna e não recebe `USAGE` no schema. O contrato HTTP ainda não
-tem forma publicada — o `wyd-admin` não tem planejamento —, então o portal depende dele para as ações,
-mas não pode substituí-lo por escrita direta. `P-17` continua valendo: o portal lê `game` pela view de
-`0029`, quando ela existir. O fechamento de leilão vencido (`LAC-POR-09`, fechada em 2026-11-23) usa
+`game`; o BFF do portal chama a API interna e não recebe `USAGE` no schema. O contrato HTTP está
+proposto no C4 do `wyd-admin` (`contrato-c4.md`) e ainda não implementado; o portal depende dele para as
+ações, mas não pode substituí-lo por escrita direta. `P-17` continua valendo: o portal lê `game` pela
+view de `0029`, quando ela existir. O fechamento de leilão vencido (`LAC-POR-09`, fechada em 2026-11-23) usa
 esse mesmo C4: o BFF executa o lote e o `wyd-ops` agenda/alerta, sem escrita direta em `game`.
 
 ## 4. Consumo por superfície
