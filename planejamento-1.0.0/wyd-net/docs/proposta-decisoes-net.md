@@ -8,16 +8,19 @@
 > `wyd-1.0.0.md` §7.1, §7.3 (X1–X3) e §7.6; `AGENTS.md` §5.7 e §8
 > Revisado em: 2026-11-23
 
-**Estado:** proposto (2026-11-23). **Três perguntas**; `LNET-03` continua `aberta` no registro, mas a
-regra `R6`/`D9` e `ux_session_viva_por_conta` já fixam uma sessão por conta e a recusa da segunda; o
-transporte só implementa. Nada foi aplicado. **Nenhum número desta página é medição**: não há conexões,
-latência nem carga medidas; todo limite numérico é decisão proposta.
+**Estado:** proposto (2026-11-23). **Uma pergunta em aberto** (`Q-NET-1`). `LNET-02` fechou em
+2026-11-23 pela decisão do dono (`Q-NET-2` = A), `LNET-03` pela regra `R6`/`D9`/
+`ux_session_viva_por_conta` e `LNET-04` por **regra vigente** (`Q-NET-4` = A, derivada em §4), sem
+escolha do usuário. Nada foi implementado.
+**Nenhum número desta página é medição**: não há conexões, latência nem carga medidas; todo limite
+numérico é decisão proposta.
 
 ## 1. Fronteira
 
-**Fecha:** limites por conexão/timeout/rate-limit, versão do protocolo e observabilidade do transporte —
-`LNET-01`, `LNET-02` e `LNET-04`. **Não fecha:** `LNET-03` (modelo de sessão), ainda `aberta` no registro, embora a regra já esteja
-decidida por `R6`/`D9`/`ux_session_viva_por_conta`; o transporte só a implementa.
+**Fecha:** limites por conexão/timeout/rate-limit — `LNET-01`. **Já decididas:** `LNET-02` (política
+de versão), fechada em 2026-11-23 por `Q-NET-2` = A; `LNET-03` (modelo de sessão), fechada pela regra
+`R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04` (observabilidade), fechada por decisão derivada das
+regras vigentes (§4). Em todas, o transporte implementa; não escolhe.
 
 **Não decide:** byte/opcode/ofuscação (`wyd-protocol`), regra de jogo (`wyd-core`/`wyd-sim`), processo
 por canal (`wyd-server`), sessão persistida (`wyd-db`).
@@ -26,7 +29,7 @@ por canal (`wyd-server`), sessão persistida (`wyd-db`).
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| lacunas do sistema | **4 abertas, 0 propostas, 0 fechadas** | `lacunas.md` §1 |
+| lacunas do sistema | **1 aberta, 0 propostas, 3 fechadas** | `lacunas.md` §1 |
 | arquivos de código | **0** (só `.gitkeep`) | `wyd-net-1.0.0.md` §4 |
 | conexões, carga e latência | **nada medido** | `docs/index.md`; `wyd-1.0.0.md` §7.6 |
 | contratos herdados | `LPRT-13`, `LPRT-08`, `LPRT-12`, `LPRT-18` decididos | `docs/index.md` |
@@ -63,11 +66,12 @@ nenhum limite numérico antes da medição. **Fontes:** `lacunas.md` `LNET-01`; 
 
 ### Q-NET-2 — A versão do protocolo é negociada ou imposta pelo build?
 
-**Medido.** `LNET-02` depende de `LPRT-09` (build-alvo), que segue aberta; não há versão de protocolo
-negociada nem build fixado.
+**Medido.** `LPRT-09` foi decidido em 2026-11-23 (cliente 7662 + SHA-256), então o build está fixado; não
+há versão de protocolo negociada. A pergunta de negociação foi respondida abaixo, em 2026-11-23.
 
 **O que está em jogo.** Negociação permite vários builds; impor o build simplifica o handshake, mas
-quebra compatibilidade. Sem build-alvo, as duas opções ficam no ar.
+quebra compatibilidade. Com o alvo fixado, a escolha deixa de depender de build e passa a ser de
+política de compatibilidade.
 
 | Opção | O que é | Consequência |
 |---|---|---|
@@ -75,9 +79,15 @@ quebra compatibilidade. Sem build-alvo, as duas opções ficam no ar.
 | B | Negociar versão na sessão | aceita mais de um build; exige tabela de compatibilidade e testes por versão |
 | C | Aceitar qualquer build e descobrir o layout em runtime | não bloqueia; offset ambíguo e falha silenciosa |
 
-**Recomendação: A.** O `LPRT-09` ainda não fixou o build; quando fixar, impor é o menor contrato
-verificável. **Custo:** um build suportado. **Fontes:** `lacunas.md` `LNET-02`; `LPRT-09`;
-`wyd-net-1.0.0.md` §3. **Recusa B** por compatibilidade sem prova; **C** por ambiguidade.
+**Recomendação: A.** Com o build fixado em 2026-11-23, impor é o menor contrato verificável. **Custo:**
+um build suportado. **Fontes:** `lacunas.md` `LNET-02`; `LPRT-09`; `wyd-net-1.0.0.md` §3. **Recusa B**
+por compatibilidade sem prova; **C** por ambiguidade.
+
+**Resposta do dono em 2026-11-23: A.** O `wyd-net` impõe o build-alvo **7662** no handshake e recusa
+build não suportado com erro tipado. Negociar versão (B) exigiria tabela de compatibilidade e testes por
+versão, e não é o que a `1.0.0` faz. O formato do erro e o lugar da versão no fio não são desta página:
+o layout é de `wyd-protocol`. A lacuna fechou por decisão; o teste do handshake nasce com a
+implementação, no gate do sistema.
 
 ### Q-NET-4 — O que o transporte expõe em métrica e log?
 
@@ -97,23 +107,34 @@ métricas e revisão de log. **Fontes:** `lacunas.md` `LNET-04`; `AGENTS.md` §5
 `wyd-1.0.0.md` §7.3 (X10). **Recusa C** por cegueira operacional; log de payload não é alternativa
 válida pela regra de segredo/PII.
 
+**Resposta derivada das regras vigentes, sem escolha do usuário (2026-11-23): A.** `X10` já decidiu que
+a métrica do NOC é `/metrics` Prometheus coletada pelo `wyd-ops` (`wyd-1.0.0.md` §7.3), `LAC-POR-06`
+já decidiu que a telemetria vem de fonte externa e o portal mostra “não medido” quando ela falha
+(`wyd-portal/lacunas.md` §2), e `AGENTS.md` §5.7 proíbe payload e PII em log. A opção C contradiz as
+duas primeiras; log de payload contradiz a terceira. O transporte expõe **conexões, erros por tipo,
+bytes e latência** e registra **só metadados** (evento, sessão, tamanhos, caminho); nome, rótulo e
+unidade das métricas são implementação, não decisão pendente. A lacuna `LNET-04` fechou por essa regra;
+`LNET-01` não fecha, porque o valor do limite é medição (§4 `Q-NET-1`). O briefing das respostas é
+`../../briefing-de-decisoes-1.0.0.md` §2.1.
+
 ## 5. Cobertura das lacunas
 
 | Lacuna | Pergunta | Situação |
 |---|---|---|
 | `LNET-01` | `Q-NET-1` | aberta |
-| `LNET-02` | `Q-NET-2` | aberta |
-| `LNET-03` | — | aberta no registro, mas a regra `R6`/`D9` e `ux_session_viva_por_conta` fixam uma sessão por conta e recusam a segunda; `wyd-db/rascunho-accounts.md` §2 (`R6`) e §6 (`D9`); §3 proíbe limite por IP como identidade. O transporte implementa, não escolhe. |
-| `LNET-04` | `Q-NET-4` | aberta |
+| `LNET-02` | `Q-NET-2` | fechada em 2026-11-23 (A): impor o build-alvo 7662 no handshake, com erro tipado para build não suportado; o transporte implementa, não escolhe. |
+| `LNET-03` | — | fechada em 2026-11-23: a regra `R6`/`D9` e `ux_session_viva_por_conta` fixam uma sessão por conta e recusam a segunda; `wyd-db/rascunho-accounts.md` §2 (`R6`) e §6 (`D9`); §3 proíbe limite por IP como identidade. O transporte implementa, não escolhe. |
+| `LNET-04` | `Q-NET-4` | fechada em 2026-11-23 (A): **derivada das regras vigentes, sem escolha do usuário** — métricas de conexão/erro/bytes/latência em `/metrics` (`X10`), fonte externa (`LAC-POR-06`) e log só de metadados, sem payload/PII (`AGENTS.md` §5.7). |
 
 ## 6. Registro da decisão
 
-**Aguardando resposta do dono.** `LNET-01`, `LNET-02` e `LNET-04` continuam `aberta`; `LNET-03`
-segue `aberta` no registro, mas a regra de sessão já existe e não é pergunta de desenho. Nada foi
-aplicado.
+**`Q-NET-2` respondida e `Q-NET-4` derivada em 2026-11-23.** `LNET-02` fechou na opção A; `LNET-04`
+fechou por **regra vigente** (A derivada, §4), sem escolha do usuário. `LNET-01` continua `aberta`
+aguardando o valor medido; `LNET-03` está `fechada` pela regra de sessão já existente. Nada foi
+implementado: o transporte só executa o que aqui foi decidido.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|
 | `Q-NET-1` | `LNET-01` | — |
-| `Q-NET-2` | `LNET-02` | — |
-| `Q-NET-4` | `LNET-04` | — |
+| `Q-NET-2` | `LNET-02` | A — impor o build-alvo 7662 no handshake, com erro tipado para build não suportado (2026-11-23) |
+| `Q-NET-4` | `LNET-04` | A — **derivada das regras vigentes, sem escolha do usuário** (2026-11-23): métricas de conexão/erro/bytes/latência em `/metrics` e log só de metadados, sem payload/PII |

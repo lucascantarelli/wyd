@@ -25,7 +25,7 @@ sistema.
 | entrada na cena com estado inicial | combate, inventário, chat e comércio: famílias de `0.4.0`–`0.7.0` (`wyd-protocol-1.0.0.md` §9.1) |
 | um passo com resultado observável | durabilidade da posição: `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y` (`wyd-db/migrations/0006-game-character.md` §6.1, `V` 2026-11-22); `LCORE-02` decidiu que posição é durável eventual com checkpoint no release, mas a fatia não prova save e o schema da posição continua futuro |
 | ciclo de vida da sessão: aberta e liberada | dois canais no mesmo gate; o segundo entra depois da primeira fatia (`LSRV-02`) |
-| — | patch, launcher e serverlist: `X11` (`LLCH-01`, `LLCH-03`); carga e convivência: `LBOT-01`, `LBOT-02` |
+| — | patch, launcher e serverlist: `X11` (`LLCH-01`, `LLCH-03`); carga e convivência: `LBOT-02` |
 
 A consequência prática: **a fatia não prova save**. Ela prova que o fio, a sessão e a entidade em memória
 existem e que o cliente recebe o resultado do passo. Quem quiser provar persistência de posição precisa de
@@ -40,11 +40,11 @@ de §3.
 |---|---|---|---|---|
 | 0 | um processo abre TCP no canal jogável e aceita a conexão do cliente | `X7` | composição, canais, `ready` e shutdown decididos (`LSRV-01`–`LSRV-04`) | nada de decisão; falta o processo |
 | 1 | o cliente e o servidor trocam o handshake CPSock (enquadramento, ofuscação, checksum) | `X1` | forma decidida, semente aberta | `LPRT-03` e golden do fio |
-| 2 | a conta de jogo autentica | `X3`, `X5` | payload aberto | `LPRT-06`, `LPRT-09` |
+| 2 | a conta de jogo autentica | `X3`, `X5` | payload aberto; build-alvo fixado (`LPRT-09`) | `LPRT-06` |
 | 3 | o servidor devolve a lista de personagens da conta | `X3`, `X5` | payload aberto | `LPRT-06` (nome é texto) |
 | 4 | a seleção grava `character_id` na mesma sessão | `X5` | DDL fechado (`0007`); C4 decidida (`LCORE-04`) | implementar a porta e o adapter; teste de contrato |
 | 5 | o personagem entra na cena com estado inicial | `X3` | `LCORE-01` decidida: cena + estado inicial, sem inventário/combate/chat | implementar a entrada na cena |
-| 6 | um passo muda a posição e o resultado chega ao cliente | `X2`, `X3` | `LCORE-03` decidida: sim calcula deslocamento puro; core valida, resolve colisão, aplica e emite | implementar a chamada pura; fórmula/aritmética em `LSIM-01`/`LSIM-04` |
+| 6 | um passo muda a posição e o resultado chega ao cliente | `X2`, `X3` | `LCORE-03` decidida: sim calcula deslocamento puro; core valida, resolve colisão, aplica e emite | implementar a chamada pura; fórmula incluída em `LSIM-01`; local/formato do vetor decididos em `LSIM-03` (`Q-SIM-3` = A), fixture ainda não implementada |
 | 7 | a sessão é liberada com `released_at` e motivo | `X5` | decidido (`A10`, `A14`) | nada de decisão; falta código |
 
 ### 2.1 Regra `core` × `sim` aplicada ao passo 6 (`LCORE-03`, 2026-11-23)
@@ -53,8 +53,8 @@ O `wyd-sim` calcula apenas o **deslocamento puro**: recebe entrada tipada e imut
 velocidade, tick e modificador de terreno) e devolve saída tipada, sem ler sessão/mapa, sem mutar
 estado, sem relógio, RNG ou I/O; o mesmo vetor produz o mesmo vetor. O `wyd-core` valida sessão e
 personagem, resolve mapa/colisão, consome o `ClientTick`, aplica a posição resultante e emite o
-resultado. A fórmula concreta e a aritmética **não** são decididas aqui: continuam em `LSIM-01` e
-`LSIM-04`.
+resultado. A fórmula concreta **não** é decidida aqui: é a de `LSIM-01` (`Q-SIM-1` = A) e a aritmética
+é a de `LSIM-04` (`Q-SIM-4` = A), ambas em 2026-11-23.
 
 **Prova mínima:** vetor de entrada/saída no `sim`; teste do core com mundo falso mostrando que um
 estado inválido rejeita o passo sem mover a posição. A inexistência de fórmula duplicada no core é
@@ -69,7 +69,7 @@ sistema.
 
 | # | Família | Direção | Papel da mensagem | O que ela precisa carregar | Fecha com |
 |---|---|---|---|---|---|
-| 1 | `autenticacao` | cliente → servidor | pedido de login | login, credencial e a versão que o cliente declara | `LPRT-03`, `LPRT-06`, `LPRT-09` |
+| 1 | `autenticacao` | cliente → servidor | pedido de login | login, credencial e a versão que o cliente declara | `LPRT-03`, `LPRT-06`; build em `LPRT-09` |
 | 2 | `autenticacao` | servidor → cliente | resultado do login | aceito ou recusado, com motivo tipado | `0.2.0` |
 | 3 | `personagem` | servidor → cliente | lista de personagens | vaga, nome (texto), classe e nível | `LPRT-06` e `0.2.0` |
 | 4 | `personagem` | cliente → servidor | seleção | vaga ou identificador do personagem | `0.2.0` |
@@ -92,7 +92,7 @@ cena que ainda não existem.
 
 | Captura | Cenário | Família | Goldens de mensagem que alimenta | Pré-requisito |
 |---|---|---|---:|---|
-| A1 | abrir o cliente contra o `ECAP` e capturar o handshake; registrar a build na ficha antes de qualquer login | fio | 0 (alimenta os 3 goldens do fio) | `ECAP` e `PEER-A1` ([spec](../specs/endpoint-de-captura.md)); `Q-SRV-5` decide o peer; D3 (`wyd-client`) |
+| A1 | abrir o cliente contra o `ECAP` e capturar o handshake; registrar a build na ficha antes de qualquer login | fio | 0 (alimenta os 3 goldens do fio) | `ECAP` e `PEER-A1` ([spec](../specs/endpoint-de-captura.md)); peer pela opção A, porque C foi reprovada em 2026-11-23 (§9.1); build fixada em `Q-PRT-1` (7662 + SHA-256); D3 (`wyd-client`) |
 | A2 | repetir a sessão e chegar ao mundo, sem outra ação | fio | 0 (confirma o handshake no fluxo) | A1 aceita + passos 1–5 |
 | B | um login aceito e um login recusado com conta sintética | `autenticacao` | 2 | `LPRT-06` |
 | C | lista de personagens e seleção | `personagem` | 2 | `LPRT-06` fechada |
@@ -114,7 +114,7 @@ aqui: o ID nasce na aceitação, no `goldens/catalogo.md`, que ainda não existe
 | `X5` leitura e persistência | conta, personagens e `game.session` | decidido (`LCORE-04`) | implementar C4 e o adapter; teste de contrato |
 | `X6` estado durável × memória | **fora**: a fatia não prova save | decidido (`LCORE-02`) | schema da posição e checkpoint, fora desta fatia |
 | `X7` composição do processo | um processo por canal, um canal nesta fatia | decidido (`LSRV-01`, `LSRV-02`) | nada de decisão; falta código |
-| `X12` captura como prova | origem de todos os goldens | processo e D3–D6 decididos; `ECAP` especificado; peer `Q-SRV-5` aberto; 0 capturas | implementar `ECAP` e a CLI (`LCLI-04`); responder `Q-SRV-5` |
+| `X12` captura como prova | origem de todos os goldens | processo e D3–D6 decididos; `ECAP` especificado; peer pela opção A (C reprovada); 0 capturas | implementar `ECAP`, a CLI (`LCLI-04`) e o peer de A; capturar A1 |
 
 Fora de `X`, a fatia depende de `N1`, `N2` e `N4` (`wyd-net`), `C1`, `C2` e `C4` (`wyd-core`) e `S5` (`wyd-server`);
 todos estão citados em `wyd-1.0.0.md` §7.3 e nenhum é reaberto aqui.
@@ -149,10 +149,11 @@ Sem provisionar o canal, nenhuma sessão nasce — e o erro aparece como falha d
 |---|---|---|---|
 | origem da semente do handshake sem captura | `LPRT-03` | pesquisa + arquitetura | sem `KeyWord` provada, nenhum byte de login é afirmável |
 | encoding e terminador de texto | `LPRT-06` | pesquisa + arquitetura | nome de personagem atravessa o fio como texto |
-| build-alvo não confirmado | `LPRT-09` | pesquisa + arquitetura | `client_version` gravado sem referência |
-| implementação do `ECAP` e da CLI | D3–D6 (`LCLI-04`); `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-client` | desenho do `ECAP` proposto; falta código e operação; `Q-SRV-5` aberta |
+| build não registrada na ficha | `LPRT-09` decidido em 2026-11-23 (7662 + SHA-256) | `wyd-client` | sem a ficha, o `client_version` não é atribuível ao alvo |
+| implementação do `ECAP` e da CLI | D3–D6 (`LCLI-04`); `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-client` | desenho do `ECAP` proposto; falta código e operação |
+| peer de A1 | condição de `LSRV-05` reprovada em 2026-11-23 (§9.1 da spec) | `wyd-server` | A1 depende da opção A; falta implementar o peer no passo 0 |
 | segundo canal para C7 | `LSRV-02` | produto + `wyd-ops` | a `1.0.0` tem 2 canais; o segundo só entra depois da primeira fatia |
-| ambiente e conta de bot | `LBOT-01`, `LBOT-02` | `wyd-ops` + QA | o replay não tem onde rodar no CI |
+| conta de bot | `LBOT-02` | `wyd-db` + QA | o ambiente está decidido em CI efêmero (`Q-BOT-1` = A); falta a conta sintética e a fatia do servidor |
 | conta sintética do seed de desenvolvimento | `seeds/dev.sql` (`M19`) | `wyd-db` | o plano prevê o arquivo; ele não existe (`V`, `crates/` só tem `.gitkeep`) |
 | senha do seed sob a política de senha | `B3`, `M19` | produto + arquitetura | conferir que a conta semeada autentica sob 15–128 chars sem reabrir `M19` |
 
@@ -163,7 +164,8 @@ mesmo bloqueio que `wyd-1.0.0.md` §7.5 registra: **a onda jogável não começa
 
 - Não fixa nome, valor nem total de opcode: catálogo gerado e `wire/opcodes/*` são os donos.
 - Não fixa porta de `EPROD`; `ready` e encerramento estão decididos (`LSRV-03`, `LSRV-04`), e a sequência do shutdown é de `WYDDB-021`. O `ECAP` usa loopback e porta efêmera, separado de `EPROD`. Composição e canais já estão decididos (`LSRV-01`, `LSRV-02`).
-- Não fixa a fórmula de movimento: a fronteira está decidida (`LCORE-03`), mas velocidade, colisão, mapa e aritmética continuam em `LSIM-01`/`LSIM-04` e na implementação do core.
+- Não fixa a fórmula de movimento: a fronteira está decidida (`LCORE-03`), mas velocidade e colisão seguem a fórmula de `LSIM-01` e a implementação do core; a aritmética é a de
+`LSIM-04`.
 - Não decide schema de posição: a classificação e a frequência estão em `LCORE-02`/`X6`; a fatia não prova save.
 - Não aloca ID de golden nem cria issue, ADR, prazo ou responsável nominal.
 - Não muda o gate de nenhuma onda: a onda C continua com o gate de `wyd-1.0.0.md` §7.7, e esta página apenas
@@ -175,7 +177,7 @@ mesmo bloqueio que `wyd-1.0.0.md` §7.5 registra: **a onda jogável não começa
 
 | Etapa | O que fecha | Dono | Destrava |
 |---|---|---|---|
-| 1 | `ECAP` de captura (`D3`; `docs/specs/endpoint-de-captura.md`) e CLI Rust (`D4`); peer `Q-SRV-5` | `wyd-server` + `wyd-client` | capturas A1 e A2, depois de o peer ser escolhido |
+| 1 | `ECAP` de captura (`D3`; `docs/specs/endpoint-de-captura.md`), CLI Rust (`D4`) e peer de A1 pela opção A | `wyd-server` + `wyd-client` | capturas A1 e A2 |
 | 2 | captura A1 e os 3 goldens do fio; A2 confirma o fluxo | `wyd-client` captura; `wyd-protocol` aceita | `LPRT-03`, `0.1.0` |
 | 3 | captura B e C, com `LPRT-06` antes da C | idem | `0.2.0`, passos 2–4 |
 | 4 | capturas D e E | idem | `0.3.0`, passos 5–6 |

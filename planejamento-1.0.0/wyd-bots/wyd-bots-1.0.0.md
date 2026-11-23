@@ -36,7 +36,7 @@ Ele não substitui teste de unidade nem de contrato: é o nível mais alto da pi
 | # | Contrato | Direção | Forma | Garantia | Estado |
 |---|---|---|---|---|---|
 | B1 | codec em modo cliente | bots ← `wyd-protocol` | mesmo `encode`/`decode` do servidor | nenhum atalho de teste no codec | **decidido** (`wyd-protocol` §1.4) |
-| B2 | ambiente alvo do cenário | bots ← `wyd-ops` | ambiente efêmero ou homologação | nenhum bot em produção sem autorização | **lacuna** `LBOT-01` |
+| B2 | ambiente alvo do cenário | bots ← `wyd-ops` | ambiente efêmero ou homologação | nenhum bot em produção sem autorização | **decidido** `LBOT-01` (`Q-BOT-1` = A, 2026-11-23): CI efêmero, servidor descartável por execução |
 | B3 | conta sintética e dado de teste | bots ← `wyd-db` | fixture, não conta real | nenhum dado de jogador | **lacuna** `LBOT-02` |
 | B4 | limiar de carga e o que reprova | bots → QA | perfil, duração e limiar | número medido, não prometido | **lacuna** `LBOT-03` |
 | B5 | isolamento entre execuções | bots garante | ambiente descartável por execução | sem estado global entre cenários | **proposto** |
@@ -52,13 +52,17 @@ Ele não substitui teste de unidade nem de contrato: é o nível mais alto da pi
 
 ## 5. O que falta
 
-`lacunas.md`: `LBOT-01` (ambiente alvo), `LBOT-02` (conta e dado sintético), `LBOT-03` (limiar de
-carga) e `LBOT-04` (o que o bot faz quando o cenário falha — relatório e artefato).
+`lacunas.md`: `LBOT-01` (ambiente alvo) fechou em 2026-11-23 por resposta do dono (`Q-BOT-1` = A): CI
+efêmero, com servidor descartável por execução. Seguem abertas `LBOT-02` (conta e dado sintético) e
+`LBOT-03` (limiar de carga). `LBOT-04` (o que o bot faz quando o cenário falha — relatório e artefato)
+fechou em 2026-11-23 por **regra vigente**: o item 4 do gate (§6) já exige log + captura, e `AGENTS.md`
+§5.7/`P-22` fixam a higiene. O briefing das respostas é `../briefing-de-decisoes-1.0.0.md`.
 
 ## 6. Gate para sair do papel
 
 1. Primeiro cenário de QA de fio escrito, com fluxo e critério de sucesso.
-2. `LBOT-01` decidida: nenhum bot roda em produção por acidente.
+2. `LBOT-01` decidida em 2026-11-23 (`Q-BOT-1` = A): CI efêmero; nenhum bot roda em produção por
+   acidente.
 3. `RF-BOT` numerados com critério verificável.
 4. Relatório por execução com falha reproduzível (log + captura), sem `sleep` como sincronização.
 5. Nenhum segredo de jogador em configuração de bot.

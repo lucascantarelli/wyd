@@ -37,7 +37,7 @@ divisão de catálogo decidida em 2026-11-20.
 |---|---|---|---|---|---|---|
 | C1 | payload tipado por família | core ← `wyd-protocol` | tipo já validado em faixa | offset cru não entra | `wyd-core` | **decidido** (`LPRT-18`) |
 | C2 | entrega de mensagem e ordem | core ← `wyd-net` | mensagem tipada, em ordem por conexão | nenhuma mensagem fora de ordem | `wyd-net` | **decidido** (`LPRT-12`) |
-| C3 | fórmula de dano, EXP, drop, cooldown | core ← `wyd-sim` | função pura, determinística | mesma entrada, mesma saída | `wyd-sim` | **decidido** (`LCORE-03`); fórmulas em `LSIM-01`/`LSIM-04` |
+| C3 | fórmula de dano, EXP, drop, cooldown | core ← `wyd-sim` | função pura, determinística | mesma entrada, mesma saída | `wyd-sim` | **decidido** (`LCORE-03`); fórmulas em `LSIM-01`, com a aritmética de `LSIM-04` |
 | C4 | leitura e persistência de estado | core → `wyd-db` | porta `CoreRepository` com `load_session`, `load_character` e `commit(UnitOfWork)`; sem SQL no core | `wyd-db` executa a transação; nenhuma query fora do adapter | `wyd-core` (forma), `wyd-db` (adapter) | **decidido** (`LCORE-04`) |
 | C5 | comando de processo (kick, broadcast) | core ← `wyd-server` | chamada interna do processo | ack do `wyd-admin` antes de efeito | `wyd-server` | **decidido** no elo (`LAC-ADM-03`) |
 | C6 | o que é estado em memória e o que é durável | core decide | durável crítico, durável eventual e memória | escrita crítica antes do ack; posição no release; sem checkpoint periódico na primeira fatia | `wyd-core` | **decidido** (`LCORE-02`) |
@@ -63,7 +63,8 @@ pré-condição, consumir sorteio, aplicar efeito no mundo, emitir evento ou per
    mesmo vetor.
 5. No passo 6, o core valida a sessão/personagem, resolve mapa e colisão, aplica a posição resultante
    e emite o resultado; o `sim` calcula apenas o deslocamento puro a partir da entrada tipada. A
-   fórmula concreta e a aritmética continuam em `LSIM-01` e `LSIM-04`.
+   fórmula concreta está decidida em `LSIM-01` (`Q-SIM-1` = A) e a aritmética em `LSIM-04`,
+   ambas em 2026-11-23.
 
 ### 3.2 Fronteira de persistência (`LCORE-02`/`LCORE-04`, 2026-11-23)
 

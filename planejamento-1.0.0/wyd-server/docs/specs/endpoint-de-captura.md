@@ -6,10 +6,12 @@
 > Base: D3–D6 (`wyd-client/lacunas.md`); `LPRT-10` e `goldens/como-capturar.md`; `X7`; `esqueleto-de-ponta-a-ponta.md` A1; `LCLI-04`; `AGENTS.md` §§5.1, 5.4, 5.6 e 5.8
 > Revisado em: 2026-11-23
 
-**Estado:** proposta (`P`, 2026-11-23). Esta página fecha o desenho técnico do endpoint de captura e
-mantém **uma decisão aberta**: o peer que completa o handshake em A1 (`Q-SRV-5` / `LSRV-05`). Não há
-código, crate, binário, servidor, CLI, captura ou golden produzido por esta página. A implementação não
-começa enquanto a decisão do peer e o aceite desta spec não existirem.
+**Estado:** proposta (`P`, 2026-11-23). Esta página fecha o desenho técnico do endpoint de captura. O peer
+que completa o handshake em A1 foi **decidido** em `Q-SRV-5`/`LSRV-05` como opção **C, com quarentena**
+(servidor legado de `deprecated/` como harness local); a medição de 2026-11-23 **reprovou a condição**
+dessa opção e A1 passa a depender da **opção A** (§9.1). Não há código, crate, binário, servidor, CLI,
+captura ou golden produzido por esta página. A implementação não começa enquanto o aceite desta spec não
+existir.
 
 ## 0. Como ler: FECHADO e ABERTO
 
@@ -26,14 +28,14 @@ não pode ser implementado por suposição.
 | Seção | Estado | O que falta |
 |---|---|---|
 | 1. Nomes e fronteira | **FECHADO nesta spec** | nada; `EPROD` e `ECAP` são nomes distintos |
-| 2. Topologia | **FECHADO nesta spec**, exceto o peer | `Q-SRV-5` escolhe quem responde ao handshake |
+| 2. Topologia | **FECHADO nesta spec** | peer definido em `Q-SRV-5`, mas a condição de C foi reprovada (§9.1): vale o peer da opção A |
 | 3. Listener e ciclo de vida | **FECHADO nesta spec** | nada de decisão; falta implementação |
 | 4. Gravação | **FECHADO nesta spec** | falta implementar; formato e local estão definidos |
-| 5. Segurança verificável | **FECHADO nesta spec** | falta provar em implementação; peer sintético depende de `Q-SRV-5` |
-| 6. Controle pela CLI | **FECHADO nesta spec** | adaptador do arquivo de configuração do cliente depende de `LPRT-09`/`LCLI-01` |
+| 5. Segurança verificável | **FECHADO nesta spec** | falta provar em implementação; o peer é o legado em quarentena, definido em `Q-SRV-5` |
+| 6. Controle pela CLI | **FECHADO nesta spec** | adaptador do serverlist segue em `LCLI-01`; build-alvo fixado em `LPRT-09` (2026-11-23) |
 | 7. Captura completa | **FECHADO nesta spec** | falta executar A1 depois de 2, 3 e 6 |
 | 8. DoD e issue | **FECHADO nesta spec** | issue não criada; implementação não iniciada |
-| 9. Peer de A1 | **ABERTO** | resposta do dono em `Q-SRV-5` |
+| 9. Peer de A1 | **DECIDIDO em C, condição reprovada** (medição de 2026-11-23) | §9.1: clone limpo não tem o peer, boot exige `MIGRATIONS_DIR` e o gate espera 12000; A1 passa a depender de A |
 
 ## 1. Nomes e fronteira
 
@@ -44,7 +46,7 @@ processo, porta, imagem ou configuração.
 |---|---|---|---|
 | **EPROD** | endpoint de produção: listener TCP/CPSock do processo de canal que atende o cliente real; contrato `X7`, passo 0 do esqueleto | processo `wyd-server` de cada canal, no ambiente de jogo | **não implementado**; porta e deploy não são decididos nesta página |
 | **ECAP** | endpoint de captura: listener TCP local que recebe o cliente, encaminha bytes ao peer e grava os dois sentidos; função de proxy gravador | processo local separado, binário de captura do `wyd-server`, nunca no ambiente de jogo | **especificado aqui; não implementado** |
-| **PEER-A1** | peer de destino que completa o handshake do cliente em A1 | local, loopback, escolhido por `Q-SRV-5` | **ABERTO** |
+| **PEER-A1** | peer de destino que completa o handshake do cliente em A1 | servidor legado de `deprecated/` como harness local, em loopback e quarentena (`Q-SRV-5`) | **C reprovada na medição** (2026-11-23); A1 depende de A (§9.1) |
 | **CLI** | ferramenta de captura em Rust de `wyd-client/tools/`, decidida em D4 | máquina do operador; inicia e controla o ECAP | **decidida em princípio; não implementada** |
 
 **Fronteira fechada.**
@@ -80,7 +82,7 @@ CLI  --stdin/stdout (processo filho)-->  ECAP
 |---|---|---|
 | Quem escuta | `ECAP`, em `127.0.0.1`, TCP, com porta escolhida pelo sistema (`bind` na porta 0) | **FECHADO** |
 | Em que endereço/porta | somente loopback; a porta efêmera é publicada no evento `ready`; não há porta fixa de captura | **FECHADO** |
-| Quem é o peer | `PEER-A1`, obrigatoriamente loopback; a escolha está em `Q-SRV-5` | **ABERTO** |
+| Quem é o peer | `PEER-A1`, obrigatoriamente loopback: o peer da opção A (servidor do `wyd-server`), porque a condição de C foi reprovada em 2026-11-23 | **C REPROVADA; peer por A** |
 | Quem inicia | a CLI inicia o `ECAP` como processo filho e só depois inicia o cliente | **FECHADO** |
 | Quem encerra | o operador pela CLI; o `ECAP` também encerra em erro fatal, EOF bilateral, timeout ou sinal | **FECHADO** |
 | Conexões aceitas | exatamente uma conexão de cliente por processo; listener fecha após o primeiro `accept` | **FECHADO** |
@@ -223,8 +225,8 @@ Retenção e descarte são de D5: 30 dias após a segunda leitura, fora do repos
 
 A CLI calcula `SHA-256` e tamanho de `WYD.exe` **antes** de iniciar o ECAP e os envia no cabeçalho. Ao
 encerrar, calcula de novo; se o hash ou o tamanho mudou, a captura é incompleta e a ficha registra
-`client_changed=true`. O hash é a identidade da build para `LPRT-09`; a captura não promove o build a
-alvo sem a decisão de `Q-PRT-1`.
+`client_changed=true`. O hash é a identidade da build contra o alvo fixado em `Q-PRT-1` (7662, 2026-11-23);
+a captura confere esse alvo, não promove outro build.
 
 ## 5. Segurança verificável
 
@@ -238,7 +240,7 @@ implementação. Enquanto o item não tiver prova, o `ECAP` não é considerado 
 | recusar peer remoto | resolve o peer e exige IP loopback; DNS e endereço remoto são `E_PEER` | teste com IP de rede e com hostname; espera recusa antes de gravar |
 | não confundir com produção | binário separado `wyd-capture-endpoint`; não entra na imagem/compose de jogo; sem porta publicada; banner `ECAP` e `mode=capture` | `docker compose config` de produção não contém o binário nem a porta; inspeção da imagem; teste de startup com perfil de produção recusa |
 | não aceitar credencial de produção | o `ECAP` não tem DSN, cliente de banco, auth, portal ou configuração de produção; só retransmite para peer loopback | inspeção de configuração e teste de variáveis de produção rejeitadas; nenhuma conexão de rede fora do loopback |
-| conta sintética | o peer e o banco local usam seed de captura; o `ECAP` não classifica conta | checklist de ambiente: banco `wyd_capture`, seed sintética, peer local; `Q-SRV-5` exige que o peer recuse outra origem |
+| conta sintética | o peer e o banco local usam seed de captura; o `ECAP` não classifica conta | checklist de ambiente: banco `wyd_capture`, seed sintética, peer local; a decisão de `Q-SRV-5` exige que o peer recuse outra origem |
 | bruto fora do repositório | `--capture-root` validado; recusa caminho dentro do worktree; escrita só sob `<root>` | teste com raiz dentro do repositório espera `E_CONFIG`; `git status` não mostra bruto |
 | não vazar dado em log | logs só com evento, sessão, tamanhos e caminho; nunca payload, credencial ou nome | inspeção de log de uma captura sintética; busca por bytes conhecidos não encontra |
 
@@ -275,12 +277,12 @@ JSONL, e não expõe API de controle. O canal de dados do jogo nunca passa pela 
 A CLI **não altera o cliente original**. Ela copia o diretório/configuração necessário para uma pasta
 temporária, aponta a cópia para `127.0.0.1:<porta>` e executa o `WYD.exe` a partir dela; ao terminar,
 remove a cópia. O adaptador que conhece o arquivo de servidor do build é escolhido por
-`--client-config-adapter`; o formato concreto do serverlist e o build-alvo continuam em `LCLI-01` e
-`LPRT-09`.
+`--client-config-adapter`; o formato concreto do serverlist continua em `LCLI-01`, e o build-alvo está
+fixado em `LPRT-09` (2026-11-23).
 
-**ABERTO (dependência de build):** sem o build-alvo e o adaptador do serverlist, a CLI não consegue
-apontar o cliente para o ECAP. Isso não é uma nova decisão de arquitetura; é a dependência já
-registrada em `LPRT-09`/`LCLI-01`. A captura A1 não começa antes dela.
+**ABERTO (dependência de configuração):** sem o adaptador do serverlist, a CLI não consegue apontar o
+cliente para o ECAP. O build-alvo deixou de ser bloqueio em 2026-11-23; resta a dependência registrada em
+`LCLI-01`. A captura A1 não começa antes dela.
 
 ### 6.3 Saída da CLI
 
@@ -333,14 +335,14 @@ segunda leitura nem golden do handshake.
 **Entregável:** binário `wyd-capture-endpoint` (ECAP) com listener loopback, peer, gravação
 `capture.wydcap` e verificação; CLI Rust de `wyd-client/tools/` que inicia, marca `handshake_end`,
 para e produz a ficha.
-**Depende de:** `Q-SRV-5` respondida; `LPRT-09`/`LCLI-01` para o build e o adaptador do cliente;
+**Depende de:** `Q-SRV-5` respondida (feito em 2026-11-23) e peer da opção A implementado, porque a condição de C foi reprovada; `LCLI-01` para o adaptador do serverlist, com o build fixado em `LPRT-09`;
 `LPRT-10`/D5/D6 para ficha e segunda leitura. Não depende de `LPRT-03` para gravar bytes; depende dela
 para concluir a medição.
 
 **DoD verificável.**
 
 - [ ] A spec foi aceita pelo dono do `wyd-server` e pelo dono do `wyd-protocol`.
-- [ ] `Q-SRV-5` está respondida e o peer escolhido está registrado na ficha e no índice.
+- [ ] O peer de A1 em uso é o da opção A, porque a condição de C foi reprovada em 2026-11-23 (§9.1); o legado não entra na captura.
 - [ ] O ECAP recusa bind fora de loopback, cliente remoto e peer remoto, com os códigos de §3.3.
 - [ ] O ECAP não entra na imagem/compose de produção e não publica porta; a prova está no pipeline.
 - [ ] A CLI inicia e para o ECAP por processo local, sem API de controle, e não altera o cliente original.
@@ -361,11 +363,12 @@ não existir para o build; nesse caso A1 fica bloqueada, não se inventa configu
 **Evidência ao fechar:** `capture.wydcap` + `capture.sha256` + `ficha.md`; saída de `capture verify`;
 registro da segunda leitura; issue e commit correspondentes (quando existirem).
 
-## 9. Decisão aberta — peer de A1 (`Q-SRV-5` / `LSRV-05`)
+## 9. Decisão registrada — peer de A1 (`Q-SRV-5` / `LSRV-05`)
 
-**ABERTO.** A topologia define que o `ECAP` encaminha para um peer loopback, mas não escolhe qual
-processo completa o handshake. Sem essa resposta, A1 pode gravar bytes, mas não é conclusiva. O dono
-ainda não respondeu; esta página **recomenda**, não decide.
+**DECIDIDO em 2026-11-23: opção C, com quarentena — condição reprovada na mesma data.** A opção C
+definiu o **servidor legado de `deprecated/`** como peer de A1, executado localmente e somente como
+harness de captura. As opções A–D continuam abaixo como registro da comparação que levou à escolha, e
+§9.1 registra por que a condição falhou e por que A1 passa a depender de A.
 
 **Critério de escolha:** o peer precisa (a) completar o CPSock nos dois sentidos, (b) permitir capturar
 o primeiro byte do cliente, (c) não exigir que o `wyd-server` já implemente o handshake que A1 tenta
@@ -378,27 +381,64 @@ medir, (d) ficar em loopback e fora de produção, e (e) poder ser descartado se
 | **C — servidor legado de `deprecated/` como harness** | rodar o servidor legado localmente, apenas como peer, e capturar o cliente | é o único peer já presente no repositório; se executar, dá dois sentidos sem inventar handshake novo | código ignorado pelo git, possível dificuldade de build, versão e licença; executabilidade não verificada; não é fonte de verdade | contaminar conclusões com comportamento legado; ausência em clone limpo; precisa ser marcado como `H` e descartado |
 | **D — modo de captura com feature flag no `wyd-server`** | o servidor novo ganha um modo `capture` que escuta loopback e grava | reutiliza o caminho do servidor; um binário | exige servidor e handshake; feature flag amplia superfície; risco de configuração de produção | confundir captura com produção; o modo pode vazar para deploy; mais código antes de A1 |
 
-**Recomendação: C, com quarentena.** É a única opção que, **se o legado puder ser executado de forma
-reproduzível**, permite A1 agora sem exigir que o `wyd-server` já saiba o handshake que A1 vai medir e
-sem inventar um CPSock de teste. O critério que a
-sustenta é o (c): não criar dependência circular. O peer legado entra somente como **harness de
-captura**: binário local, loopback, versão/hash na ficha, sem copiar código, sem promover seus bytes a
-fato e sem concluir comportamento do servidor a partir dele. Se o legado não puder ser executado de
-forma reproduzível, a recomendação não autoriza B; A1 espera A ou D.
+**Resposta do dono em 2026-11-23: C, com quarentena.** O critério que a sustenta é o (c): não criar
+dependência circular. O peer legado entra somente como **harness de captura**: binário local, loopback,
+versão/hash na ficha, sem copiar código, sem promover seus bytes a fato e sem concluir comportamento do
+servidor a partir dele. A execução do legado foi medida em 2026-11-23 (§9.1): o binário sobe em
+loopback, mas a condição da opção C **não se cumpriu**. A contingência declarada na proposta se aplica —
+A1 passa a depender de **A** — e B continua recusada. A captura segue não executada; a medição muda o
+estado do peer, não o da evidência.
 
-A escolha continua do dono. Se responder A, B, C ou D, esta spec registra a resposta em `Q-SRV-5` e a
-captura muda de estado; nenhuma opção está escolhida por esta página.
+### 9.1 Ficha medida do peer (2026-11-23)
+
+Execução local do agente, para medir se o peer legado serve como harness de A1. **Não é captura**, não
+produz golden e não foi feita com o cliente real. O operador da captura continua não designado
+(`LCLI-03`).
+
+| Campo | Valor |
+|---|---|
+| Binário | `deprecated/target/debug/wyd-server.exe` (build de depuração, Windows) |
+| Versão declarada | `0.1.0` (log `event=boot … version=0.1.0`) |
+| Bytes | 11.713.024 |
+| Data do arquivo | 2026-11-15 18:39 |
+| SHA-256 | `0758d4f3080e07a105da8c74ed888d806444d982ca52fb1b37ddfe656ff4e9ee` |
+| Banco | `postgres:17-alpine` efêmero, `127.0.0.1:55432` |
+| Migrations | `MIGRATIONS_DIR=deprecated/crates/wyd-db/migrations` |
+| Binds | `127.0.0.1` no CPSock, no `/metrics`, no status TCP e no status UDP |
+| Resultado | sobe em loopback; `applied=53` migrations em banco vazio; `/health` responde `200` com `{"ok":true,…,"schema":53}` |
+| Repetição | segundo boot em banco novo: `applied=53`, CPSock escutando e `/health` 200 |
+
+**O que reprovou a condição da opção C — três fatos medidos.**
+
+1. **Clone limpo não tem o peer.** `deprecated/*` está no `.gitignore` e `git ls-files deprecated`
+devolve **0 arquivos**: nem o binário nem o código existem em clone limpo. A reprodução vale só na
+árvore local, que não é versionada — não é reproduzível por terceiro.
+2. **O boot não é o padrão do binário.** Sem `MIGRATIONS_DIR`, o processo encerra com `exit 2` e
+`fatal reason=schema: série de migrations ilegível: /migrations` — caminho de container. O boot só
+aconteceu com a variável apontada manualmente.
+3. **O gate de versão recusa o cliente do repositório.** O binário compila `PROTOCOL_VERSION = 12000`
+(`deprecated/crates/wyd-protocol/src/lib.rs:40`) e o boot usa `VersionGate::from_protocol_version()` com
+política estrita, sem variável de ambiente que a afrouxe; o log confirma `event=gate
+expected_version=12000`. O cliente medido declara 7640/7662, então o handshake seria recusado e A1 não
+completaria os dois sentidos. É dedução a partir do gate estrito e das versões declaradas, **não** um
+teste com o cliente real — a CLI de captura não existe (`D3`/`D4`).
+
+**Consequência registrada.** A condição da opção C não se cumpriu: **A1 passa a depender da opção A** —
+peer do `wyd-server` no passo 0, com o `ECAP` e a CLI. Isso não reabre `LSRV-05`: a decisão continua
+registrada em C, com a condição reprovada por medição datada, e B segue recusada. Executar A é trabalho
+de implementação, não nova decisão.
 
 ## 10. O que esta especificação não decide
 
 - Não implementa `EPROD`, não define sua porta, seu deploy ou sua exposição.
 - Não implementa `ECAP`, CLI, binário, crate ou teste.
-- Não escolhe o peer de A1; apenas recomenda C e mantém `Q-SRV-5` aberta.
+- Não implementa nem executa o peer de A1; a escolha está registrada em `Q-SRV-5`, com a condição de C
+reprovada em 2026-11-23, e o peer de A1 passa a ser o da opção A.
 - Não afirma `KeyWord`, encoding, terminador, opcode, frame ou comportamento do servidor.
-- Não define o build-alvo (`LPRT-09`), o adaptador do serverlist (`LCLI-01`) nem o nome do QA
-  (`LCLI-03`).
-- Não fecha `LPRT-03`, `LPRT-06` ou `LPRT-09`; A1 só produz a evidência que a segunda leitura e o
-  golden poderão usar.
+- Não define o adaptador do serverlist (`LCLI-01`) nem o nome do QA (`LCLI-03`); o build-alvo está
+  decidido em `LPRT-09` (2026-11-23).
+- Não fecha `LPRT-03` ou `LPRT-06`; A1 produz a evidência que a segunda leitura e o golden usarão e
+  registra a build de `LPRT-09`.
 - Não cria issue, ADR, label, milestone, commit ou publicação.
 - Não altera D3–D6: D3 continua sendo a decisão de princípio do proxy gravador local, D4 a CLI Rust,
   D5 o bruto fora do repositório e D6 a segunda leitura.

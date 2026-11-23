@@ -54,7 +54,9 @@ nesta página. C e D foram recusadas em D4. O status continua `proposta`, não `
 
 ## 5. Registro da decisão
 
-**Aguardando aprovação do dono de operação.** `LAC-POR-09` continua `proposta`; nada foi aplicado.
+**Aguardando aprovação do dono de operação.** `LAC-POR-09` continua `proposta`; nada foi aplicado. A
+ordem das respostas e o custo da alternativa estão no `../../briefing-de-decisoes-1.0.0.md` §3.11 e §6;
+esta página continua dona da comparação.
 
 | Lacuna | Aprovação | Resposta |
 |---|---|---|

@@ -41,7 +41,7 @@ O que ele **não** é: fonte de verdade. O `deprecated/` e a árvore local do cl
 |---|---|---|---|---|---|
 | K1 | procedimento de captura | cliente ← `wyd-protocol` | `goldens/como-capturar.md` (dono) | datada, anonimizada, com segunda leitura | **decidido** (`LPRT-10`) |
 | K2 | ficha de origem de cada captura | cliente entrega | registro com data, build, cenário e o que mediu | sem ficha, a captura é registro, não prova | **decidido** (`LPRT-10`) |
-| K3 | identidade do build-alvo | cliente mede | hash e versão do binário | fecha `LPRT-09` quando datada | **aberto** `LCLI-01` |
+| K3 | identidade do build-alvo | cliente mede | hash e versão do binário | `LPRT-09` decidido em 2026-11-23: 7662 + SHA-256 | **fechado** (`LCLI-01` com `LPRT-09`) |
 | K4 | conteúdo do patch e `strdef.bin` | cliente → `wyd-launcher` | artefato versionado | patch descreve exatamente os arquivos | **lacuna** `LCLI-02` |
 | K5 | anonimização de dado de jogador | cliente garante | conta, nome, IP e chat removidos antes de gravar | nenhum dado pessoal em artefato versionado | **decidido** (`LPRT-10`), operação pendente |
 
@@ -61,10 +61,11 @@ repete (um fato, um dono).
 
 ## 5. O que falta
 
-`lacunas.md`: `LCLI-01` (identidade do build-alvo), `LCLI-02` (conteúdo do patch e `strdef.bin`),
-`LCLI-03` (quem aprova a segunda leitura; o registro já está fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (proposta de autorização e
-escopo de uso/distribuição), mais as três medições herdadas do protocolo (`LPRT-03`, `LPRT-06`,
-`LPRT-09`). `LCLI-04` foi fechada em 2026-11-23: ferramenta específica em
+`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`), `LCLI-03` (quem aprova a segunda leitura; o
+registro já está fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (proposta de autorização e escopo de
+uso/distribuição), mais as duas medições herdadas do protocolo (`LPRT-03`, `LPRT-06`) e a leitura que
+confirma a build do alvo fixado (`LPRT-09`). `LCLI-01` fechou com `LPRT-09` em 2026-11-23.
+`LCLI-04` foi fechada em 2026-11-23: ferramenta específica em
 `wyd-client/tools/`; D3–D6 foram decididos em 2026-11-23 e a implementação está pendente.
 
 ## 6. Gate para sair do papel

@@ -1,7 +1,8 @@
 # `wyd-client` — lacunas e decisões pendentes (registro único)
 
 > **Estado: registro vivo (2026-11-23).** Único lugar onde uma lacuna do `wyd-client` tem dono,
-> impacto e estado. `LCLI-04` foi decidida pelo dono em 2026-11-23; pendências de execução seguem listadas abaixo.
+> impacto e estado. `LCLI-04` foi decidida pelo dono em 2026-11-23 e `LCLI-01` fechou com `LPRT-09`
+> (`Q-PRT-1`) na mesma data; pendências de execução seguem listadas abaixo.
 
 ## 0. Como ler
 
@@ -12,16 +13,16 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 
 | Grupo | Lacunas | Abertas | Propostas | Fechadas |
 |---|---:|---:|---:|---:|
-| Medição do cliente | 2 | 2 | 0 | 0 |
+| Medição do cliente | 2 | 1 | 0 | 1 |
 | Distribuição | 2 | 1 | 1 | 0 |
 | Processo | 1 | 0 | 0 | 1 |
-| **Total** | **5** | **3** | **1** | **1** |
+| **Total** | **5** | **2** | **1** | **2** |
 
 ## 2. Lacunas
 
 | ID | Pergunta | Por que importa | Dono | Estado |
 |---|---|---|---|---|
-| `LCLI-01` | Qual build do cliente é o alvo, e qual é a identidade verificável dele (versão declarada e hash do binário)? | é `LPRT-09` vista do lado do cliente: sem build-alvo, offset e opcode ficam ambíguos | frente `wyd-client` + pesquisa | aberta |
+| `LCLI-01` | Qual build do cliente é o alvo, e qual é a identidade verificável dele (versão declarada e hash do binário)? | é `LPRT-09` vista do lado do cliente: sem build-alvo, offset e opcode ficam ambíguos | frente `wyd-client` + pesquisa | fechada (2026-11-23: `Q-PRT-1`/`LPRT-09` fixou o cliente 7662 com versão e SHA-256 completos; identidade em `registro-do-cliente.md` §4) |
 | `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | aberta |
 | `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o local já estão fixados; falta o nome do QA que assina a segunda leitura | QA + arquitetura | aberta |
 | `LCLI-04` | Qual ferramenta faz a captura, onde ela mora, quem responde por ela e como impede gravar dado de jogador? | captura sem ferramenta e fronteira aprovadas vira script solto ou grava dado pessoal; `AGENTS.md` §5.6 proíbe executável em `planejamento-1.0.0/` | dono de `wyd-client`; `wyd-protocol` valida o golden; QA revisa | fechada (opção A em 2026-11-23; D3–D6 decididos; implementação pendente) |
@@ -50,7 +51,7 @@ segue `LPRT-10` e nunca grava bruto com dados de jogador no repositório.
 
 | ID | O que falta decidir | Dono / aprovação |
 |---|---|---|
-| D3 | **decidido em 2026-11-23:** proxy gravador sobre servidor local controlado; a ferramenta em `wyd-client/tools/` configura e recorta, e o endpoint é operado por `wyd-server`, com conta sintética e sem produção | `wyd-client` + `wyd-protocol`; dono de `wyd-protocol` aprova o contrato de captura. Não bloqueia mais `LPRT-03`, `LPRT-06` e `LPRT-09`; falta implementar e operar o endpoint |
+| D3 | **decidido em 2026-11-23:** proxy gravador sobre servidor local controlado; a ferramenta em `wyd-client/tools/` configura e recorta, e o endpoint é operado por `wyd-server`, com conta sintética e sem produção | `wyd-client` + `wyd-protocol`; dono de `wyd-protocol` aprova o contrato de captura. Não bloqueia mais `LPRT-03` nem `LPRT-06` (`LPRT-09` está decidido); falta implementar e operar o endpoint |
 | D4 | **decidido em 2026-11-23: CLI em Rust** em `wyd-client/tools/`, binário próprio, sem runtime Python; exige Cargo próprio ou workspace; não implementa o proxy | dono de `wyd-client`, com arquitetura |
 | D5 | **decidido em 2026-11-23:** bruto fora do repositório, acesso restrito e descarte **30 dias após a segunda leitura**; só frame anonimizado e ficha entram no git | QA propõe; dono de `wyd-client` aprova |
 | D6 | **decidido em 2026-11-23:** segunda leitura por **QA ou dono do `wyd-protocol`, nunca quem capturou**; a pessoa é nomeada em `LCLI-03` e assina a ficha | QA + arquitetura; registrar junto de `LCLI-03` |
@@ -59,7 +60,8 @@ segue `LPRT-10` e nunca grava bruto com dados de jogador no repositório.
 princípio do proxy gravador local, D4 a CLI Rust, D5 o bruto fora do repositório e D6 a segunda leitura.
 O endpoint local, o listener e a gravação estão em
 [`endpoint-de-captura.md`](../wyd-server/docs/specs/endpoint-de-captura.md); o peer que completa o
-handshake é a decisão aberta `Q-SRV-5`/`LSRV-05`, ainda sem resposta.
+handshake foi decidido em `Q-SRV-5`/`LSRV-05` (C, com quarentena), mas a condição foi reprovada na
+medição de 2026-11-23: A1 passa a depender da opção A.
 
 A localização e o dono de `wyd-client/tools/` estão decididos; D3–D6 também estão decididos. O
 próximo trabalho é implementar o `ECAP` operado por `wyd-server` e a CLI Rust em
@@ -84,7 +86,7 @@ captura de sessão real nem autoriza tráfego de produção.
 |---|---|---|
 | `LPRT-03` | origem da `KeyWord` no handshake | aberta (`wyd-protocol/lacunas.md`) |
 | `LPRT-06` | encoding e terminador de string | aberta (idem) |
-| `LPRT-09` | build-alvo e compatibilidade | aberta (idem) |
+| `LPRT-09` | build-alvo e compatibilidade | fechada em 2026-11-23 (`Q-PRT-1`: 7662 + SHA-256); a comparação entre builds segue não medida |
 
-Estas três fecham no `wyd-protocol`; o `wyd-client` fornece a captura. Duplicar o registro aqui
-criaria dois donos para a mesma lacuna.
+`LPRT-03` e `LPRT-06` fecham no `wyd-protocol`, com a captura que o `wyd-client` fornece; `LPRT-09` fechou
+por decisão de alvo. Duplicar o registro aqui criaria dois donos para a mesma lacuna.

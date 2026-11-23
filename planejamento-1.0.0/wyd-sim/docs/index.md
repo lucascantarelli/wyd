@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, QA e produto
 > Dono: equipe do wyd-sim
 > Base: `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7.2; `wyd-protocol-1.0.0.md` §1.2
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -29,14 +29,24 @@ precisa de um valor do mundo, ele entra como parâmetro.
 
 ## O que falta
 
-Quatro perguntas abertas — catálogo de fórmulas, versão do cálculo, vetores de prova e política
-aritmética — estão em `lacunas.md` (planejamento). Nenhuma fórmula está escrita: esta página não
-afirma coeficiente, curva nem faixa de dano.
+Nenhuma pergunta está aberta em `lacunas.md`: as quatro lacunas fecharam pelo dono em 2026-11-23.
+A versão do cálculo (`LSIM-02`) foi decidida por `Q-SIM-2` = A — cada fórmula carrega `formula_version`
+próprio, registrado no cabeçalho do fixture junto do `content_version` usado. A localização/formato dos
+vetores (`LSIM-03`) foi decidida por `Q-SIM-3` = A: fixtures JSON versionadas em
+`tests/fixtures/sim/<formula>.json`, com entrada, saída esperada e identificador da versão de fórmula; os
+arquivos ainda não foram implementados. A lista de fórmulas (`LSIM-01`, fatia vertical com vetor por
+fórmula, incluindo o deslocamento puro) e a política aritmética (`LSIM-04`: aritmética inteira, percentual
+em bps, sem escala global, `f64` só em exibição) fecharam na mesma data. Resta implementar fórmulas,
+vetores e fixtures. Nenhuma fórmula está escrita: esta página não afirma coeficiente, curva nem faixa de dano.
 
 ## Limite desta documentação
 
 - Não afirma número de balanceamento: valor sem fonte é hipótese, não regra.
 - Não mede desempenho de cálculo: nada foi executado.
+
 ## Decisões em aberto
 
-As perguntas que ainda esperam o dono — `LSIM-01`–`LSIM-04` — estão em [Decisões do `wyd-sim`](proposta-decisoes-sim.md). O estado de cada lacuna continua em `lacunas.md`.
+Nenhuma: `LSIM-01`–`LSIM-04` foram decididas pelo dono em 2026-11-23, com o registro em
+[Decisões do `wyd-sim`](proposta-decisoes-sim.md), e não são reabertas. A decisão de `LSIM-03` não
+significa que fixtures já existam, e `LSIM-02` não escreve fórmula. O estado de cada lacuna continua em
+`lacunas.md`.

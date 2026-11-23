@@ -123,7 +123,9 @@ se aplica ao pacote. **Custo:** pipeline e hosting. **Fontes:** `lacunas.md` `LL
 
 ## 6. Registro da decisão
 
-**Aguardando resposta do dono.** As quatro lacunas continuam `aberta`; nada foi aplicado.
+**Aguardando resposta do dono.** As quatro lacunas continuam `aberta`; nada foi aplicado. O briefing
+das respostas (`../../briefing-de-decisoes-1.0.0.md` §6) ordena `Q-LCH-1` antes de `Q-LCH-3` e `Q-LCH-4`,
+porque formato, assinatura e pacote são dependentes nessa ordem; a recomendação não muda.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|

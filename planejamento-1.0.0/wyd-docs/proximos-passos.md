@@ -11,7 +11,8 @@
 Esta é a **fonte única da fila** do site. O critério de saída da fase 4 é do
 [roadmap-fase-3-para-4.md](roadmap-fase-3-para-4.md) §2, a ordem de produção é de
 `wyd-docs-1.0.0.md` §9 e o estado de cada lacuna é de `lacunas.md` §1; nenhum dos três é
-recontado aqui.
+recontado aqui. As decisões dos sistemas que o site publica estão ordenadas no
+`../briefing-de-decisoes-1.0.0.md` (2026-11-23); esta fila não as repete.
 
 O total e o censo são de `wyd-docs-1.0.0.md` §9.1: **267 páginas** e **15 `aceito` · 245
 `proposto` · 4 sem linha de estado** (2026-11-22). Item concluído não entra nesta fila: o que fechou em
@@ -32,11 +33,11 @@ páginas não pertence àquele PR e permanece nas alterações locais atuais.
 |---:|---|---|---|---|---|
 | 1 | **109 páginas por tabela do `wyd-db`** — produção a decidir na lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3); o gerador `wyd-db-pages` deixou de ser presumido e só existiria com aprovação explícita | arquitetura + documentação | bloqueado por decisão, não por projeto | nenhuma ferramenta é proposta por esta fila; as opções (à mão em lotes, gerador, adiar ou cancelar) estão em `M26` | decisão registrada e, se houver páginas, `gerado/index.md` + gate verde |
 | 2 | **Próxima rodada de decisões** — `A21` (troca de e-mail) e `P3` (`planos/riscos.md`) | usuário (produto + arquitetura) | rápido — 1 resposta por ID | **nenhuma resposta inventada**; são as duas de maior desbloqueio entre as que ainda esperam palavra do dono — as demais de §5.3 são de outro dono ou de onda posterior | respostas registradas e linhas fechadas |
-| 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`), `LPRT-06` (encoding/terminador) e `LPRT-09` (build-alvo); detalhe do que medir em §6 | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida em 2026-11-20 e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
+| 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`) e `LPRT-06` (encoding/terminador), registrando a build de `LPRT-09` (alvo decidido em 2026-11-23); detalhe do que medir em §6 | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida (`LPRT-03`/`LPRT-06` em 2026-11-20; `LPRT-09` em 2026-11-23) e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
 
 A linha 1 depende da decisão `M26` do `wyd-db` e não autoriza ferramenta nenhuma; a 2 não é lacuna deste site, mas reúne
 o que ainda bloqueia o sistema vizinho que o site publica. A 3 é a única frente do protocolo que não
-espera resposta do usuário: as três `LPRT` que sobraram não são perguntas em aberto, são medições que
+espera resposta do usuário: as duas `LPRT` que sobraram não são perguntas em aberto, são medições que
 ninguém fez ainda — o que medir está em §6, e nenhum resultado está registrado.
 
 ## 2. Pré-commit
@@ -129,8 +130,9 @@ Nenhuma resposta abaixo foi inventada. Cada linha só registra **o que a respost
 | `M21` | Quais telas do portal existem (cadastro, recuperação, lista de contas)? | Rotas do portal, onda 6; é `externa`, dona `wyd-portal` |
 
 `LPRT-01`, `LPRT-18`, `LPRT-19` e as demais decididas em 2026-11-20 saíram desta lista; `LPRT-20`
-fechou junto com `LPRT-01`. Restam abertas `LPRT-03`, `LPRT-06` e `LPRT-09`, que não estão aqui
-porque não são decisões pendentes: são medições do cliente, tratadas na frente de captura de §6.
+fechou junto com `LPRT-01`. Restam abertas `LPRT-03` e `LPRT-06`, que não estão aqui porque não são
+decisões pendentes: são medições do cliente, tratadas na frente de captura de §6. `LPRT-09` fechou em
+2026-11-23 (`Q-PRT-1`: alvo 7662 + SHA-256).
 Nenhuma delas muda o schema do `wyd-db`.
 
 ### 5.4 Contagens que este anexo usa
@@ -153,23 +155,24 @@ rodou nesta rodada.
 ## 6. Frente de captura — o que medir (não é rodada de decisão)
 
 > **Seção própria, fora do anexo de §5.** **Nenhuma linha desta seção registra resultado.**
-> `LPRT-03`, `LPRT-06` e `LPRT-09` continuam `aberta` em `lacunas.md`, que é o dono do estado. O que
-> esta seção fixa é **o que uma captura precisa mostrar** para fechar cada uma, para que a próxima
+> `LPRT-03` e `LPRT-06` continuam `aberta` em `lacunas.md`, que é o dono do estado; `LPRT-09` fechou por
+> decisão em 2026-11-23. O que esta seção fixa é **o que uma captura precisa mostrar** para fechar cada
+> uma, para que a próxima
 > sessão não rediscuta a pergunta nem aceite um “parece que é”.
 
-As três não esperam palavra do usuário: em `LPRT-03` e `LPRT-06` a parte decidível já foi decidida em
+As duas não esperam palavra do usuário: em `LPRT-03` e `LPRT-06` a parte decidível já foi decidida em
 2026-11-20, e o que resta é medir o que o cliente faz no fio. Uma única sessão de captura do cliente
-7662 pode responder as três, e nenhuma bloqueia as outras. Dono da execução: frente `wyd-client` +
+7662 pode responder as duas, e nenhuma bloqueia a outra. Dono da execução: frente `wyd-client` +
 pesquisa; o usuário fornece o cliente e o ambiente, não uma resposta. O processo de captura é o de
 `LPRT-10` — datada, anonimizada, `G-<familia>-<nn>` em `tests/golden/`, origem registrada e segunda
-leitura antes de aceitar. O procedimento operacional das três — o que capturar, como anonimizar e a
+leitura antes de aceitar. O procedimento operacional das duas — o que capturar, como anonimizar e a
 ficha de origem — está em `planejamento-1.0.0/wyd-protocol/docs/goldens/como-capturar.md`.
 
 | ID | O que já está decidido (não reabrir) | O que a captura precisa medir | Fecha quando | Enquanto não houver captura |
 |---|---|---|---|---|
 | `LPRT-03` | o crate **recebe** a `KeyWord` do chamador e não assume origem; escolher quem gera não é pergunta do crate | no handshake: se o cliente envia a semente ou só a recebe; qual dos 16 pares de `KEY_TABLE` aparece; em que campo/offset do frame ela viaja; se viaja antes ou depois da ofuscação | captura datada do handshake + segunda leitura, com o offset e o campo escritos em `keyword-e-checksum.md` | a origem da `KeyWord` fica `H`; `header.md`, `enquadramento.md` e `keyword-e-checksum.md` sem afirmação de byte |
 | `LPRT-06` | o codec **não transcodifica**; string é bytes de tamanho fixo declarado | num frame com texto acentuado (nome e linha de chat): a sequência exata de bytes; a qual encoding ela corresponde, comparada contra candidatos sem presumir; se há terminador e de que largura; se o tamanho declarado conta o terminador; o que acontece quando o texto preenche o campo | captura com o mesmo texto visível na tela e os bytes no frame, datada e anonimizada | `payloads/*` sem afirmação de encoding; contrato de nome e chat sem fechar |
-| `LPRT-09` | nada decidido além do alvo **provável** 7662, que não é confirmação | a build que o cliente reporta (welcome/handshake ou o próprio binário); se `APP_VERSION = 7640` do legado bate ou diverge; o que muda entre as duas builds que toque header ou opcode | captura ou leitura datada que identifique a build, com o arquivo de origem registrado | catálogo e versionamento sem afirmação de versão; `wire/opcodes/*` e `versionamento-e-compatibilidade.md` seguem bloqueados |
+| `LPRT-09` | alvo **decidido** em 2026-11-23: cliente 7662 com versão e SHA-256 completos | a versão que o cliente reporta (welcome/handshake ou o próprio binário); se `APP_VERSION = 7640` do legado bate ou diverge; o que muda entre as builds que toque header ou opcode | leitura datada que confirme a versão declarada, com o arquivo de origem registrado | catálogo e versionamento citam a decisão de alvo, sem afirmar versão confirmada |
 
 Uma captura parcial é resultado válido e não vira decisão pela metade: registra-se o que ela respondeu
 e o que não respondeu, e a lacuna que ficou sem resposta continua `aberta`. Se a captura mostrar algo

@@ -31,7 +31,7 @@ ambiente.
 | 109 tabelas e 2 views de leitura cruzada | relatório de BI, dashboard e tela de operação |
 | runner `status`/`apply`/`down`, ledger, checksum e lock | interface de linha de comando além dos subcomandos documentados |
 | provisionamento de seis papéis e `public` | rotação de senha e `pg_hba.conf` do ambiente |
-| portas de `migrate`/`provision` e contratos de `repo` já desenhados | contrato de `repo/` que ainda não existe |
+| portas de `migrate`/`provision` e C4 do core (`CoreRepository`) | demais contratos de `repo/` (pessoa, item, economia) que ainda não existem |
 | testes de contrato e sistema descritos | suíte completa, cobertura e CI real |
 | dicionário de dados e páginas de domínio | página de retenção sem volume medido |
 

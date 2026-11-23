@@ -25,14 +25,17 @@ contrato.
 
 ## O que falta
 
-Quatro perguntas abertas — ambiente alvo, conta sintética, limiar de carga e artefato de falha —
-estão em `lacunas.md` (planejamento). Nenhum cenário existe e nenhuma carga foi medida: esta página
-não afirma conexões simultâneas, latência nem taxa de sucesso.
+Duas perguntas abertas — conta sintética e limiar de carga — estão em `lacunas.md` (planejamento). O
+ambiente alvo (`LBOT-01`) fechou em 2026-11-23 pela resposta do dono (`Q-BOT-1` = A): CI efêmero em
+runner hospedado, com servidor descartável por execução. O artefato de falha (`LBOT-04`) fechou na
+mesma data por regra vigente, porque o gate já exigia log + captura e `AGENTS.md` §5.7/`P-22` fixam a
+higiene. Nenhum cenário existe e nenhuma carga foi medida: esta página não afirma conexões simultâneas,
+latência nem taxa de sucesso.
 
 ## Limite desta documentação
 
 - Não promete número de bots: limiar é medido, não estimado.
-- Não autoriza bot em produção: falta decisão de ambiente (`LBOT-01`).
+- Não autoriza bot em produção: o ambiente é CI efêmero (`Q-BOT-1` = A), e produção continua fora.
 ## Decisões em aberto
 
-As perguntas que ainda esperam o dono — `LBOT-01`–`LBOT-04` — estão em [Decisões do `wyd-bots`](proposta-decisoes-bots.md). O estado de cada lacuna continua em `lacunas.md`.
+As perguntas que ainda esperam o dono — `LBOT-02` e `LBOT-03` — estão em [Decisões do `wyd-bots`](proposta-decisoes-bots.md); `LBOT-01` fechou por resposta do dono (`Q-BOT-1` = A) e `LBOT-04` por regra vigente, e nenhuma das duas é reaberta. O estado de cada lacuna continua em `lacunas.md`; o briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.

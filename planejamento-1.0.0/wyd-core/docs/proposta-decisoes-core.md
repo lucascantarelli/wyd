@@ -16,8 +16,8 @@ Não há catálogo funcional, código nem teste; nenhum número desta página é
 
 **Fecha:** escopo funcional sem catálogo, estado em memória × durável, fronteira `core` × `sim` e
 contrato de persistência — `LCORE-01`, `LCORE-02`, `LCORE-03` e `LCORE-04`. As quatro fecharam em 2026-11-23; a classificação de
-estado e a porta C4 estão em `wyd-core-1.0.0.md` §3.2. **Não fecha:** a fórmula concreta e a aritmética
-(`LSIM-01`, `LSIM-04`), que são execução do `wyd-sim`.
+estado e a porta C4 estão em `wyd-core-1.0.0.md` §3.2. **Não fecha:** a implementação da fórmula e da aritmética decididas (`LSIM-01` e `LSIM-04`, 2026-11-23),
+que são execução do `wyd-sim`.
 
 **Não decide:** fórmula e balanceamento (`wyd-sim`), SQL/DDL (`wyd-db`), fio (`wyd-protocol`),
 socket (`wyd-net`), processo/canal (`wyd-server`).
@@ -104,10 +104,12 @@ sorteio, aplicar efeito, emitir evento ou persistir. O `sim` devolve probabilida
 resultado do sorteio; o RNG e o estado ficam no core.
 
 **Como verificar.** (1) API do `sim` só recebe entrada tipada e devolve saída tipada, sem `&mut World`,
-sessão, repositório, `Clock`, `Rng` ou I/O; (2) cada fórmula tem vetor de entrada/saída (`LSIM-03`); (3)
-o core é testado com mundo/repositório falso e não repete a expressão da fórmula; (4) no passo 6 o core
+sessão, repositório, `Clock`, `Rng` ou I/O; (2) cada fórmula tem vetor de entrada/saída (`LSIM-03`), cujo
+local/formato foi decidido em 2026-11-23 (`Q-SIM-3` = A), mas cujas fixtures ainda não foram implementadas;
+(3) o core é testado com mundo/repositório falso e não repete a expressão da fórmula; (4) no passo 6 o core
 valida sessão/personagem, resolve mapa/colisão e aplica a posição, enquanto o `sim` calcula apenas o
-deslocamento puro. A fórmula concreta e a aritmética continuam em `LSIM-01` e `LSIM-04`.
+deslocamento puro. A fórmula concreta está decidida em `LSIM-01` (`Q-SIM-1` = A) e a aritmética em `LSIM-04`
+(`Q-SIM-4` = A), ambas em 2026-11-23.
 
 **Efeito.** `LCORE-03` fecha; a fórmula de movimento continua sendo execução, não uma nova decisão de
 fronteira.

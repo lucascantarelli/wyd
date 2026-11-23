@@ -41,9 +41,12 @@ o endpoint de produção (`EPROD`): a distinção está em
 
 ## O que falta
 
-Uma pergunta aberta: `Q-SRV-5`/`LSRV-05`, quem completa o handshake em A1. O `ECAP` está especificado,
-mas sem peer a captura fica inconclusiva. Composição, canais, `ready` e encerramento fecharam em
-2026-11-23; falta implementar o processo, o sinal de prontidão e o shutdown gracioso.
+As cinco lacunas fecharam em 2026-11-23. `Q-SRV-5` foi respondida na **opção C, com quarentena**, mas a
+medição do peer **reprovou a condição**: o binário legado sobe em loopback, porém não existe em clone
+limpo, depende de `MIGRATIONS_DIR` manual e compila gate de versão 12000 contra o cliente 7640/7662.
+**A1 passa a depender da opção A**, com o peer do próprio `wyd-server`. O `ECAP` está especificado e sem
+código; falta implementar o processo, o sinal de prontidão, o shutdown gracioso, o `ECAP` e a CLI, e só
+então executar a captura A1.
 
 ## Limite desta documentação
 
@@ -51,7 +54,7 @@ mas sem peer a captura fica inconclusiva. Composição, canais, `ready` e encerr
 
 ## Decisões
 
-As quatro primeiras lacunas fecharam em 2026-11-23: `LSRV-01` e `LSRV-02` (composição e canais),
-`LSRV-03` (`ready` com socket + banco + tick) e `LSRV-04` (shutdown como execução; `WYDDB-021` dona da
-sequência). `LSRV-05`, o peer de A1, está aberta. O registro está em
+As cinco lacunas fecharam em 2026-11-23: `LSRV-01` e `LSRV-02` (composição e canais), `LSRV-03`
+(`ready` com socket + banco + tick), `LSRV-04` (shutdown como execução; `WYDDB-021` dona da sequência) e
+`LSRV-05` (peer de A1: C com quarentena, condição reprovada em 2026-11-23; A1 depende de A). O registro está em
 [Decisões do `wyd-server`](proposta-decisoes-server.md); o estado de cada lacuna continua em `lacunas.md`.

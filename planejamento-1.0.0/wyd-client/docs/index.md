@@ -26,14 +26,14 @@ artefatos) quando houver launcher.
 
 O processo é **decidido** em `LPRT-10` e o procedimento operacional é do `wyd-protocol`
 (`goldens/como-capturar.md`). O endpoint local é o `ECAP`, separado do endpoint de produção (`EPROD`);
-o contrato está em `../../wyd-server/docs/specs/endpoint-de-captura.md`. O peer de A1 é a decisão
-aberta `Q-SRV-5`. Uma captura só vale como prova quando entrega, juntas: o fluxo de bytes por sentido,
+o contrato está em `../../wyd-server/docs/specs/endpoint-de-captura.md`. O peer de A1 foi decidido em C,
+mas a condição foi reprovada na medição de 2026-11-23: a captura usa o peer da opção A. Uma captura só vale como prova quando entrega, juntas: o fluxo de bytes por sentido,
 a ficha de origem preenchida, a anonimização de conta/nome/IP e uma segunda leitura. Captura feita não
 é captura aceita.
 
-Três medições do cliente estão pendentes e são elas que destravam o fio: origem da `KeyWord`
-(`LPRT-03`), encoding e terminador de texto (`LPRT-06`) e o build-alvo (`LPRT-09`). **Nenhuma
-captura existe hoje** (2026-11-22).
+Duas medições do cliente continuam pendentes e são elas que destravam o fio: origem da `KeyWord`
+(`LPRT-03`) e encoding/terminador de texto (`LPRT-06`). O build-alvo foi **decidido em 2026-11-23**
+(`LPRT-09`, cliente 7662 + SHA-256). **Nenhuma captura existe hoje** (2026-11-22).
 
 ## Uso e distribuição
 
@@ -56,4 +56,4 @@ disso está versionado no git e nada disso é prova de protocolo. O inventário 
   permanecem perguntas de `LCLI-05`.
 ## Decisões em aberto
 
-As perguntas que ainda esperam o dono — `LCLI-02` e `LCLI-03` — estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` é a mesma decisão de `LPRT-09` e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.
+As perguntas que ainda esperam o dono — `LCLI-02` e `LCLI-03` — estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` fechou com `LPRT-09` em 2026-11-23 e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.

@@ -8,8 +8,8 @@
 
 **Estado:** proposto (2026-11-22). Abertura inicial: fronteira, contratos e lacunas nomeadas.
 **Nenhum código** e nenhum requisito numerado (`RF-SRV`). O plano nasce com **uma obrigação já
-decidida por outro sistema** — o endpoint de controle — e cinco lacunas: quatro fechadas em 2026-11-23
-e uma aberta, o peer de captura A1 (`LSRV-05`).
+decidida por outro sistema** — o endpoint de controle — e cinco lacunas, **todas fechadas em
+2026-11-23**, inclusive o peer de captura A1 (`LSRV-05`).
 
 ## 1. O que ele faz
 
@@ -40,7 +40,7 @@ do processo, não da regra de jogo.
 | S4 | métricas para o portal (NOC) | `wyd-portal` ← `/metrics` | Prometheus, coletado por `wyd-ops` | amostra com instante; sem série no banco | `wyd-ops` | **decidido** (`LAC-POR-06`) |
 | S5 | composição net + core | server monta | um binário, um processo por canal | uma porta por canal, sem estado global entre canais | `wyd-server` | **decidido** (`LSRV-01`, `LSRV-02`) |
 | S6 | mapa canal → URL de controle | configuração de deploy | `WYD_SERVER_CONTROL_URLS` | muda com a topologia, não com o jogador | `wyd-ops` | **decidido** (`LAC-ADM-03` §3.3) |
-| S7 | captura local (`ECAP`) | CLI de `wyd-client` → endpoint local | TCP em loopback, uma conexão, bruto `.wydcap`; separado de `EPROD` | sem produção; peer de A1 em `Q-SRV-5` | `wyd-server` (endpoint), `wyd-client` (CLI) | **proposto** (`docs/specs/endpoint-de-captura.md`) |
+| S7 | captura local (`ECAP`) | CLI de `wyd-client` → endpoint local | TCP em loopback, uma conexão, bruto `.wydcap`; separado de `EPROD` | sem produção; peer de A1 vem da opção A, porque a condição de C foi reprovada (`LSRV-05`, §9.1) | `wyd-server` (endpoint), `wyd-client` (CLI) | **proposto** (`docs/specs/endpoint-de-captura.md`) |
 
 ## 4. Estado medido (`V`, 2026-11-22; páginas recontadas em 2026-11-23)
 
@@ -50,20 +50,25 @@ do processo, não da regra de jogo.
 | Arquivos de código | 0 | `find crates/wyd-server -type f` (só `.gitkeep`) |
 | Endpoints implementados | 0 | nenhum código existe; `EPROD` e `ECAP` são propostas |
 | Issues criadas | 0 | nenhuma ação no GitHub |
+| Boot do peer legado | sobe em loopback, mas não reproduz de clone limpo | `docs/specs/endpoint-de-captura.md` §9.1 (2026-11-23) |
 
 ## 5. O que falta
 
-Uma lacuna aberta: `LSRV-05`/`Q-SRV-5`, o peer que completa o handshake em A1. O `ECAP` está
-especificado em [`docs/specs/endpoint-de-captura.md`](docs/specs/endpoint-de-captura.md), mas sem peer
-A1 grava bytes e não é conclusiva. `LSRV-03` e `LSRV-04` fecharam em 2026-11-23, junto de `LSRV-01` e
-`LSRV-02`; o que falta nelas é implementação, não decisão.
+Nenhuma lacuna aberta. `LSRV-05` fechou em 2026-11-23 na **opção C, com quarentena**, mas a medição do
+peer **reprovou a condição**: clone limpo não tem o servidor legado, o boot exige `MIGRATIONS_DIR`
+manual e o gate compilado espera 12000 contra o cliente 7640/7662. **A1 passa a depender da opção A** —
+peer do `wyd-server` no passo 0, com `ECAP` e CLI —, conforme a contingência de `Q-SRV-5`. O `ECAP`
+segue especificado em [`docs/specs/endpoint-de-captura.md`](docs/specs/endpoint-de-captura.md) e sem
+código. O que falta em `LSRV-01`–`LSRV-05` é implementação e captura, não decisão.
 
 ## 6. Gate para sair do papel
 
 1. `LSRV-01`–`LSRV-04` decididas em 2026-11-23: dois canais, `ready` com socket + banco + tick e
    shutdown drenando/persistindo; falta implementar o processo, o teste de isolamento e o shutdown.
 2. Endpoint de controle especificado com o formato do pacote de broadcast (`wyd-protocol`).
-3. `Q-SRV-5` respondida e o peer de A1 registrado; sem ele A1 não é conclusiva.
+3. `Q-SRV-5` respondida em 2026-11-23 (C, com quarentena) e a condição **reprovada** na medição: A1
+   depende da opção A, com o peer do próprio `wyd-server`; versão e hash do peer legado ficam
+   registrados em `docs/specs/endpoint-de-captura.md` §9.1 como evidência do descarte.
 4. Spec do `ECAP` aceita e DoD de §8 executável; `EPROD` continua separado e não implementado.
 5. `RF-SRV` numerados com critério verificável, incluindo `503` sem escrita.
 6. Árvore de `src/` e `tests/` planejada; teste de dois canais isolados.
@@ -73,10 +78,11 @@ A1 grava bytes e não é conclusiva. `LSRV-03` e `LSRV-04` fecharam em 2026-11-2
 
 `docs/arquitetura/fronteira.md`, `docs/arquitetura/topologia-de-canais.md`,
 `docs/specs/endpoint-de-captura.md` (escrita) e `docs/roadmap/` com DoD e a issue do `ECAP`.
-O peer de A1 continua na decisão aberta `Q-SRV-5`.
+O peer de A1 vem da opção A (`Q-SRV-5`): a condição de C foi medida e reprovada em 2026-11-23, com
+versão e hash do legado na ficha de §9.1; falta implementar o peer, o `ECAP` e a CLI.
 
 A fatia mínima que serve de gate à onda C — login, entrada no mundo e um passo — já está escrita como proposta
 em [`docs/planos/esqueleto-de-ponta-a-ponta.md`](docs/planos/esqueleto-de-ponta-a-ponta.md) (`P`, 2026-11-23):
 7 mensagens mínimas, 5 cenários/6 capturas, 7 goldens e os critérios C1–C7. Ela não muda o gate deste
-plano; `LSRV-01`–`LSRV-04` estão decididas, e o passo 0 depende da implementação do processo, do `ECAP`,
-do peer `Q-SRV-5` e de `LPRT-03`.
+plano; `LSRV-01`–`LSRV-05` estão decididas, e o passo 0 depende da implementação do processo, do `ECAP`
+e de `LPRT-03`; o peer de A1 é o da opção A desde 2026-11-23.

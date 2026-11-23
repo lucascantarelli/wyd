@@ -48,8 +48,8 @@ contagem ou build. **Não** é captura de protocolo: não há um byte de tráfeg
 | `client.zip` | 192.652.447 | 2026-11-11 20:55 | `cd06047525b1f9b3cbcafb4d15f970a4ab2f5e0136c64f93f4373749c3975471` |
 
 Comando: `sha256sum wyd-client/files/client.zip wyd-client/files/client/WYD.exe`.
-O hash de `WYD.exe` é o candidato a identidade do build-alvo (`LCLI-01`) — **candidato**, porque
-`LPRT-09` ainda pergunta qual build é o alvo e a resposta não está decidida.
+O hash de `WYD.exe` é a identidade do build-alvo desde 2026-11-23 (`Q-PRT-1`/`LPRT-09`, opção A: cliente
+7662 com versão e SHA-256 completos). Era candidato até a decisão; a medição não escolhe o alvo.
 
 ## 5. Distribuição por extensão (top 20)
 
@@ -76,7 +76,7 @@ find wyd-client/files -type f | awk -F. '{n=NF>1?tolower($NF):"(sem)"; c[n]++} E
 | Prova | Não prova |
 |---|---|
 | que existe um cliente local com 7.147 arquivos e 567 MB, nesta máquina, nesta data | que o cliente fala o protocolo descrito em `wyd-protocol` |
-| que `WYD.exe` tem 2.347.008 bytes e hash `04c9d2a1…` | qual build é o alvo (`LPRT-09`) |
+| que `WYD.exe` tem 2.347.008 bytes e hash `04c9d2a1…` | que este deva ser o alvo — isso é decisão (`LPRT-09`, 2026-11-23), não medição |
 | que o pacote `client.zip` é idêntico ao conteúdo extraído ou não | que `strdef.bin`, assets ou patch têm o conteúdo esperado |
 | a distribuição de formatos presentes | qualquer regra de jogo, dano, drop ou progressão |
 
@@ -90,15 +90,15 @@ registro fixa é o **estado**:
 
 | Passo | Situação | Depende de |
 |---|---|---|
-| identidade do build-alvo | medido como candidato | `LCLI-01` (decisão de qual build) |
+| identidade do build-alvo | medida e promovida a alvo em 2026-11-23 | `Q-PRT-1`/`LPRT-09` (decidida); `LCLI-01` fecha nela |
 | ferramenta de gravação de tráfego | não existe; pasta e escopo aprovados | `LCLI-04` (D3–D6 decididos; implementação pendente) |
 | endpoint que aceita a conexão do cliente | não existe — nenhum servidor roda esta versão | `wyd-server` / listener sob nosso controle |
 | ficha de origem + anonimização | processo decidido (`LPRT-10`), aprovador não nomeado | `LCLI-03` |
 | primeira captura aceita | **0 capturas** (2026-11-22) | os quatro itens acima |
 
 Enquanto o passo 3 não existir, não há como produzir tráfego legítimo do cliente: gravar bytes exige
-algo do outro lado do socket. Por isso `LPRT-03`, `LPRT-06` e `LPRT-09` seguem abertas — e por isso
-nenhuma delas foi respondida por estimativa neste planejamento.
+algo do outro lado do socket. Por isso `LPRT-03` e `LPRT-06` seguem abertas — e por isso nenhuma delas
+foi respondida por estimativa. `LPRT-09` não esperou captura: fechou por decisão de alvo em 2026-11-23.
 
 ## 8. Como re-medir
 

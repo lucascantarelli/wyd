@@ -27,10 +27,10 @@ hospedagem (`wyd-ops`).
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| lacunas do sistema | **5**: 3 abertas, 1 proposta (`LCLI-05`), 1 fechada (`LCLI-04`) | `lacunas.md` §1 |
-| build-alvo | **não decidido**; `WYD.exe` é candidato | `registro-do-cliente.md` §4 |
+| lacunas do sistema | **5**: 2 abertas, 1 proposta (`LCLI-05`), 2 fechadas (`LCLI-04`, `LCLI-01`) | `lacunas.md` §1 |
+| build-alvo | **decidido em 2026-11-23** (`Q-PRT-1`/`LPRT-09`): cliente 7662, versão + SHA-256 | `registro-do-cliente.md` §4 |
 | tamanho de `WYD.exe` | **2.347.008 bytes** | `registro-do-cliente.md` |
-| hash de `WYD.exe` | prefixo medido `04c9d2a1…`; a ficha deve completar o hash | idem |
+| hash de `WYD.exe` | SHA-256 completo medido em 2026-11-22; promovido a identidade do alvo em 2026-11-23 | idem |
 | arquivos do cliente versionados no git | **0** — só `wyd-client/.gitkeep` | `registro-do-cliente.md` §3 |
 | capturas existentes | **0** | `docs/index.md` |
 | código do cliente | **0** | `lacunas.md`; `AGENTS.md` §5.6 |
@@ -100,7 +100,7 @@ o dono do produto ainda não nomeou o responsável por direitos, e nenhuma respo
 
 | Lacuna | Pergunta | Situação |
 |---|---|---|
-| `LCLI-01` | — | aberta no `lacunas.md`, mas é a mesma decisão de `LPRT-09`/`Q-PRT-1`; a fonte diz que é "`LPRT-09` vista do lado do cliente"; não duplicada aqui |
+| `LCLI-01` | — | fechada em 2026-11-23 pela decisão de `LPRT-09`/`Q-PRT-1` (cliente 7662 + SHA-256); não duplicada aqui |
 | `LCLI-02` | `Q-CLI-2` | aberta |
 | `LCLI-03` | `Q-CLI-3` | aberta; papel A decidido, **nome do QA pendente**; local fixado por `LPRT-10` |
 | `LCLI-04` | — | fechada em 2026-11-23 (opção A); D3–D6 decididos; implementação pendente |
@@ -110,8 +110,8 @@ o dono do produto ainda não nomeou o responsável por direitos, e nenhuma respo
 
 **Parcialmente respondida em 2026-11-23.** `Q-CLI-3` escolheu A (QA designado; dono do `wyd-protocol`
 suplente), mas o nome não foi informado; `LCLI-03` continua `aberta` e a captura pode ser executada, não
-aceita. `LCLI-02` continua aberta; `LCLI-01` fecha em `LPRT-09`; `LCLI-05` continua `proposta` na página
-própria.
+aceita. `LCLI-02` continua aberta; `LCLI-01` fechou em 2026-11-23 com `LPRT-09` (`Q-PRT-1`, opção A);
+`LCLI-05` continua `proposta` na página própria.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|

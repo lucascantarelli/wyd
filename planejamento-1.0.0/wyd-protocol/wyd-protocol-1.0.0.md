@@ -286,8 +286,8 @@ existirem — nenhum total desta seção é medição.
 **O que dá para escrever sem fechar lacuna:** as páginas de **método** (`guia-desenvolvedor/`,
 `guia-teste/`, `planos/`, `prompts/`, `skills/`) descrevem procedimento e não dependem de byte; as de
 **conteúdo** (`wire/`, `payloads/`, `goldens/`, `specs/fluxos/`) dependem de **captura**: a forma já
-está decidida (`LPRT-01`, `04`, `10`), o que falta é a prova (`LPRT-03`, `LPRT-06`, `LPRT-09` e os
-goldens por família). Ver §9.
+está decidida (`LPRT-01`, `04`, `10`) e o build-alvo também (`LPRT-09`, 2026-11-23); o que falta é a
+prova (`LPRT-03`, `LPRT-06` e os goldens por família). Ver §9.
 
 ---
 
@@ -395,7 +395,7 @@ Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalh
 | `camadas-de-codec.md` | \"em que ordem os bytes são tratados?\" | pipeline `bytes → HEADER → enquadramento → deofuscação → checksum → Type → payload`; o que cada etapa pode rejeitar; diagrama; custo de cada etapa |
 | `fronteira-protocolo-rede.md` | \"onde termina o protocolo e começa a conexão?\" | regra de ouro (codec não faz I/O); o que `wyd-net` decide e o que o crate devolve; tabela erro → reação sugerida → dono da decisão |
 | `fluxo-de-um-pacote.md` | \"o que acontece com um pacote do início ao fim?\" | sequência encode/decode; pontos de rejeição; o que é validado e o que é só transportado; diagrama |
-| `versionamento-e-compatibilidade.md` | \"como o protocolo muda sem quebrar cliente?\" | versão declarada; o que é congelado; como entra mensagem nova; o que acontece com cliente antigo; decisão pendente `LPRT-09` |
+| `versionamento-e-compatibilidade.md` | \"como o protocolo muda sem quebrar cliente?\" | versão declarada; o que é congelado; como entra mensagem nova; o que acontece com cliente antigo; build-alvo decidido (`LPRT-09`, 2026-11-23) |
 | `erros-e-politicas.md` | \"como o erro aparece e quem decide o quê?\" | taxonomia (`HeaderError`, `TransformError`, `PayloadError`); política estrita × tolerante; o que nunca causa panic; o que vai para log |
 | `seguranca-do-fio.md` | \"a ofuscação protege o quê?\" | o que a transformação é (ofuscação, não criptografia); o que ela impede e o que não impede; limite de tamanho como defesa; o que nunca entra em log; ameaças consideradas |
 | `adr/index.md` | \"que decisões estão registradas?\" | tabela `ADR-PRT-nnn | decisão | estado | data | substitui`; **vazia enquanto não houver decisão**, e diz isso |
@@ -516,7 +516,7 @@ digitado à mão onde o catálogo gerado existe; link para fora de `docs/` sem a
 |---|---|---|---:|
 | 1 | método: `guia-desenvolvedor/`, `guia-teste/`, `planos/`, `prompts/`, `skills/` | nenhum | 32 |
 | 2 | fio sem payload: `wire/header`, `enquadramento`, `keyword-e-checksum`, `limites-e-faixas`, `flags-de-direcao` | `LPRT-03` e prova de byte por golden (forma decidida em `LPRT-02`, `05`, `07`, `11`) | 5 |
-| 3 | catálogo: `wire/tabela-de-opcodes`, `wire/opcodes/*` | `LPRT-09` (build-alvo; escopo e gerador decididos em `LPRT-01`, `16`) | 10 |
+| 3 | catálogo: `wire/tabela-de-opcodes`, `wire/opcodes/*` | build-alvo decidido (`LPRT-09`, 2026-11-23); escopo e gerador em `LPRT-01`, `16` | 10 |
 | 4 | payloads: `payloads/*` | `LPRT-06` e golden por família (fonte de verdade em `LPRT-04`) | 12 |
 | 5 | goldens: `goldens/*` e `tests/*` | capturas reais: processo aprovado em `LPRT-10`, nenhuma captura existe | 11 |
 | 6 | requisitos e fluxos: `specs/*` | ondas 2–5 | 19 |
@@ -576,11 +576,11 @@ entrega.
 
 ## 10. Decisões do time
 
-**17 decisões foram tomadas pelo dono em 2026-11-20** e valem como regra deste plano; 3 continuam
-abertas porque dependem de captura ou leitura do cliente. `lacunas.md` é o dono do estado, do dono e
-do prazo; aqui fica o texto da decisão que o restante da árvore precisa citar.
+**18 decisões foram tomadas pelo dono** — 17 em 2026-11-20 e `LPRT-09` em 2026-11-23 — e valem como
+regra deste plano; 2 continuam abertas porque dependem de captura. `lacunas.md` é o dono do estado, do
+dono e do prazo; aqui fica o texto da decisão que o restante da árvore precisa citar.
 
-| # | Decisão | Lacuna | Estado e decisão (2026-11-20) |
+| # | Decisão | Lacuna | Estado e decisão |
 |---|---|---|---|
 | 1 | cobertura do catálogo e sua distribuição até a `1.0.0` | `LPRT-01` | **decidida:** catálogo completo — todo o inventário do legado, sem se limitar a ele; 198 é baseline/piso, não total; total publicado medido do gerador; entrega fatiada em `0.1.0`→`1.0.0` (§9.1) |
 | 2 | política de checksum no servidor | `LPRT-02` | **decidida:** recusar divergente, sem modo tolerante |
@@ -590,7 +590,7 @@ do prazo; aqui fica o texto da decisão que o restante da árvore precisa citar.
 | 6 | encoding e terminador de string | `LPRT-06` | **aberta:** codec não transcodifica e trata bytes de tamanho fixo; encoding e terminador dependem de captura |
 | 7 | comportamento em frame no limite e acima dele | `LPRT-07` | **decidida:** aceitar `Size = 8192`, recusar acima com erro tipado |
 | 8 | reação a opcode desconhecido | `LPRT-08` | **decidida:** codec devolve `UnknownType`; `wyd-net` decide a reação |
-| 9 | versão-alvo do cliente e compatibilidade | `LPRT-09` | **aberta:** alvo provável 7662; fecha com captura datada |
+| 9 | versão-alvo do cliente e compatibilidade | `LPRT-09` | **decidida (2026-11-23):** alvo é o cliente 7662 com versão e SHA-256 completos; outro build não é suportado |
 | 10 | processo de captura e aprovação de golden | `LPRT-10` | **decidida:** captura datada, anonimização, `G-<familia>-<nn>`, origem registrada e segunda leitura |
 | 11 | semântica de `FLAG_NEW` e das flags de direção | `LPRT-11` | **decidida:** direção roteia; `FLAG_NEW` é marcador de versão |
 | 12 | quem garante ordem entre mensagens | `LPRT-12` | **decidida:** `wyd-net` garante; codec é stateless |

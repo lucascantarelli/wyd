@@ -110,16 +110,16 @@ sistema está vazio; nenhum está `aceito`.
 | Sistema | Responsabilidade | Estado do planejamento |
 |---|---|---|
 | `wyd-protocol` | pacotes CPSock, opcodes, offsets, goldens | **2º piloto**, plano aberto |
-| `wyd-net` | transporte async, sessão, rate-limit, hardening | **aberto (2026-11-22)**: fronteira, 7 contratos (4 herdados decididos) e 4 lacunas; sem código |
+| `wyd-net` | transporte async, sessão, rate-limit, hardening | **aberto (2026-11-22)**: fronteira, 7 contratos (5 decididos) e 4 lacunas (3 fechadas em 2026-11-23, uma delas por regra vigente; 1 aberta como medição); sem código |
 | `wyd-core` | tick, ECS, combate, cena, IA | **aberto (2026-11-22)**: fronteira, 6 contratos (C4 decidida em 2026-11-23) e 4 lacunas (0 abertas); escopo depende do catálogo funcional |
-| `wyd-server` | composição do servidor; um processo por canal | **aberto (2026-11-22)**: fronteira, 7 contratos (o de controle decidido por `LAC-ADM-03`; `S7` de captura proposto) e 5 lacunas (1 aberta: peer de A1) |
-| `wyd-sim` | fórmulas, curvas e simulações determinísticas | **aberto (2026-11-22)**: fronteira, 4 contratos e 4 lacunas; nenhuma fórmula escrita |
+| `wyd-server` | composição do servidor; um processo por canal | **aberto (2026-11-22)**: fronteira, 7 contratos (o de controle decidido por `LAC-ADM-03`; `S7` de captura proposto) e 5 lacunas (0 abertas; `LSRV-05` em C com a condição reprovada em 2026-11-23 — A1 depende da opção A) |
+| `wyd-sim` | fórmulas, curvas e simulações determinísticas | **aberto (2026-11-22)**: fronteira, 4 contratos e 4 lacunas (**todas fechadas em 2026-11-23** por resposta explícita do dono: `LSIM-01`, `LSIM-02`, `LSIM-03` e `LSIM-04`); nenhuma fórmula ou fixture escrita |
 | `wyd-db` | PostgreSQL 17, migrations, repositórios, filas | **piloto**, parcial |
 | `wyd-admin` | administração, HTTP/JSON interno, staff | **planejado**: contrato C4 e custódia de item propostos (2026-11-22), com a autenticação portal → admin (token de serviço por ambiente) e o canal de controle do `wyd-server` (HTTP síncrono com ack) decididos na mesma data; nenhuma lacuna aberta; código vazio |
 | `wyd-portal` | portal Next.js: site, login, cadastro, BFF | **planejado**: 11 páginas de planejamento, 33 `RF-POR`, armaria e mercado em F7–F11 (2026-11-22); código vazio |
 | `wyd-launcher` | launcher Tauri: patch, manifesto, serverlist/itemlist | **aberto (2026-11-22)**: fronteira, 6 contratos e 4 lacunas |
 | `wyd-client` | patches e arquivos de configuração do cliente; frente de captura | **aberto (2026-11-22)**: fronteira, 5 contratos, 5 lacunas próprias (uso/distribuição em proposta, 2026-11-23) + 3 medições herdadas; **registro medido** do cliente em `registro-do-cliente.md`; cliente em `wyd-client/files/` |
-| `wyd-bots` | bots de QA, carga e convivência | **aberto (2026-11-22)**: fronteira, 5 contratos e 4 lacunas |
+| `wyd-bots` | bots de QA, carga e convivência | **aberto (2026-11-22)**: fronteira, 5 contratos e 4 lacunas (**2 abertas, 2 fechadas em 2026-11-23** — `LBOT-01` por decisão do dono e `LBOT-04` por regra vigente) |
 | `wyd-docs` | site MkDocs 2.0 de toda a documentação oficial | **site implementado**; plano aberto |
 | `wyd-ops` | CI, imagens, deploy, ambientes, monitoramento | **propostas** de gestão de GitHub/ambientes e de versões/cobertura + imagem do site e Compose (2026-11-22); sem plano diretor |
 

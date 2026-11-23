@@ -37,18 +37,18 @@
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
 | `wyd-db` | 308 | piloto parcial: 301 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-23 |
-| `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (17 decididas em 2026-11-20, 3 abertas por dependerem de captura), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-22 |
+| `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (**18 decididas** — 17 em 2026-11-20 e `LPRT-09` em 2026-11-23; **2 abertas** por captura: `LPRT-03` e `LPRT-06`), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-23 |
 | `wyd-docs` | 10 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/`; proposta do gate de aceite em 2026-11-23 | `find planejamento-1.0.0/wyd-docs -name '*.md'`, 2026-11-23 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, 0 lacunas abertas (8 fechadas; `09` em proposta) | `wyd-portal/`; `lacunas.md` §1, 2026-11-22 |
 | `wyd-admin` | 11 | planejado: dashboard, `lacunas.md` e 9 páginas em `docs/`; contrato C4 com 14 rotas (7 de staff, 4 de custódia de item, 3 utilitárias); **15 `RF-ADM`**, 10 fatias; zero lacunas abertas (as sete fecharam até 2026-11-22) | `wyd-admin/`, 2026-11-22 |
 | `wyd-ops` | 5 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional + porta de entrada publicada e o plano da imagem do site; sem plano diretor e sem `RF-OPS` | `wyd-ops/`, 2026-11-22 |
-| `wyd-net` | 3 | aberto em 2026-11-22: fronteira, 7 contratos (4 herdados já decididos) e 4 lacunas abertas; sem `RF-NET` | `wyd-net/lacunas.md` §1, 2026-11-22 |
-| `wyd-core` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e **2 lacunas abertas, 2 fechadas** (`LCORE-01`, `LCORE-03`); sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-23 |
-| `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura proposto) e 5 lacunas (**1 aberta, 4 fechadas**); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7; peer de A1 em `Q-SRV-5`) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md`, 2026-11-23 |
-| `wyd-sim` | 3 | aberto em 2026-11-22: fronteira, 4 contratos e 4 lacunas; nenhuma fórmula escrita | `wyd-sim/lacunas.md` §1, 2026-11-22 |
+| `wyd-net` | 3 | aberto em 2026-11-22: fronteira, 7 contratos (5 já decididos) e 4 lacunas no total (**1 aberta, 3 fechadas**; `LNET-02` e `LNET-03` fecharam por decisão e `LNET-04` por regra vigente, em 2026-11-23); sem `RF-NET` | `wyd-net/lacunas.md` §1, atualizado em 2026-11-23 |
+| `wyd-core` | 4 | aberto em 2026-11-22: fronteira, 6 contratos e **0 abertas, 0 propostas, 4 fechadas** (`LCORE-01`–`LCORE-04`); C4 decidida em 2026-11-23; sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-23 |
+| `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura proposto) e 5 lacunas (**0 abertas, 5 fechadas**; `LSRV-05` fechou em C, com a condição **reprovada** na medição — A1 passa a depender de A); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md` §9.1, 2026-11-23 |
+| `wyd-sim` | 3 | aberto em 2026-11-22: fronteira, 4 contratos e 4 lacunas (**0 abertas, 0 propostas, 4 fechadas**; `LSIM-02` e `LSIM-03` fecharam por resposta explícita do dono em 2026-11-23); nenhuma fórmula ou fixture escrita | `wyd-sim/lacunas.md` §1, atualizado em 2026-11-23 |
 | `wyd-launcher` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e 4 lacunas abertas | `wyd-launcher/lacunas.md` §1, 2026-11-22 |
 | `wyd-client` | 5 | aberto em 2026-11-22: fronteira, 5 contratos, **5 lacunas próprias** (a de uso/distribuição entrou como proposta em 2026-11-23) + as 3 medições herdadas do protocolo; **registro medido** do cliente local | `wyd-client/lacunas.md` §1 e `registro-do-cliente.md`, 2026-11-23 |
-| `wyd-bots` | 3 | aberto em 2026-11-22: fronteira, 5 contratos e 4 lacunas abertas | `wyd-bots/lacunas.md` §1, 2026-11-22 |
+| `wyd-bots` | 3 | aberto em 2026-11-22: fronteira, 5 contratos e 4 lacunas (**2 abertas, 2 fechadas**; `LBOT-01` fechou por decisão do dono e `LBOT-04` por regra vigente, em 2026-11-23) | `wyd-bots/lacunas.md` §1, atualizado em 2026-11-23 |
 
 ### 1.2 `wyd-db`, página por pasta
 
@@ -362,16 +362,152 @@ pode ser declarada completa, por mais páginas que o planejamento feche. Executa
 `wyd-core`/`wyd-sim`/`wyd-db` e o molde de entrada está proposto em
 `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7 e é passo de `usuário`, não de automação.
 
-**Foco aprovado em 2026-11-23:** o caminho crítico é o fio; o `wyd-db` anda em paralelo. Ordem:
-(1) `M33` com as seis opções A e o início do aceite das 28 páginas, por página; (2) `LSRV-01` e
-`LSRV-02` fechadas (um processo por canal; 2 canais na `1.0.0`, 1 na primeira fatia) e `D3`–`D6`
-decididos (proxy gravador local `ECAP`; CLI Rust; bruto fora do repo por 30 dias; segunda leitura por
-QA/protocolo); (3) captura A em A1 (handshake) e A2 (mundo), com o peer de A1 ainda em `Q-SRV-5`,
-fechando `LPRT-03`/`LPRT-09`; (4)
-`LPRT-06` e `protocol 0.2.0`; (5) o catálogo completo segue como descoberta, com `LCORE-01` já fixando
-que a `1.0.0` é jogo completo e o primeiro domínio é a entrada na cena.
-As seis seeds do `wyd-db` e as propostas de `net`, `launcher`, `bots` e `client` não estão no caminho
-crítico agora.
+**Foco revisto em 2026-11-23, depois de `Q-SRV-5` e `Q-PRT-1`. A ordem de execução daqui para frente é
+esta seção** — §7.5 cita, não repete.
+
+### 6.1 Estado medido das lacunas (2026-11-23)
+
+| Sistema | Lacunas | Abertas | Propostas | Fechadas | Externas | Fonte |
+|---|---:|---:|---:|---:|---:|---|
+| `wyd-protocol` | 20 | 2 | 0 | 18 | 0 | `lacunas.md` §1 |
+| `wyd-client` | 5 | 2 | 1 | 2 | 0 | idem |
+| `wyd-net` | 4 | 1 | 0 | 3 | 0 | idem |
+| `wyd-core` | 4 | 0 | 0 | 4 | 0 | idem |
+| `wyd-sim` | 4 | 0 | 0 | 4 | 0 | idem |
+| `wyd-server` | 5 | 0 | 0 | 5 | 0 | idem |
+| `wyd-db` | 38 | 0 | 0 | 35 | 3 | idem |
+| `wyd-admin` | 7 | 0 | 0 | 7 | 0 | `lacunas.md` (Fechadas; 7 `LAC-ADM` + 2 decisões sem ID) |
+| `wyd-portal` | 9 | 0 | 1 | 8 | 0 | `lacunas.md` §1 |
+| `wyd-launcher` | 4 | 4 | 0 | 0 | 0 | idem |
+| `wyd-bots` | 4 | 2 | 0 | 2 | 0 | idem |
+| `wyd-docs` | 14 | 0 | 0 | 14 | 0 | idem |
+| **Total** | **118** | **11** | **2** | **102** | **3** | `*/lacunas.md` |
+
+`wyd-ops` não tem `lacunas.md`; não entra na soma. As 3 externas do `wyd-db` são `A11`, `A20` e `M21`:
+decididas, mas dependentes de frente fora do banco. O total de 118 é a soma das 12 tabelas de lacunas,
+não uma estimativa; cada linha vem do registro do sistema. O `wyd-admin` registra ainda 2 decisões sem
+ID, fora da soma de lacunas.
+
+**Leitura.** 13 itens ainda não fechados: 11 abertos e 2 propostas. Desses, **8 têm pergunta e
+recomendação escritas** (`wyd-launcher` 4, `wyd-bots` 2, `wyd-net` 1, `wyd-portal` 1);
+**4 não entram numa rodada de decisão técnica** (`LPRT-03` e `LPRT-06` são medição de fio;
+`LCLI-03` é nome de QA;
+`LCLI-02` depende da classificação de direitos); e **1 é jurídico sem recomendação** (`LCLI-05`,
+`Q-IP-1`–`Q-IP-6`). Das 16 perguntas originalmente registradas sem resposta, **seis foram respondidas pelo
+dono** — `Q-NET-2` = A (`LNET-02`), `Q-SIM-1` = A (`LSIM-01`), `Q-SIM-4` = A (`LSIM-04`), `Q-SIM-3` = A
+(`LSIM-03`), `Q-SIM-2` = A (`LSIM-02`) e `Q-BOT-1` = A (`LBOT-01`) — e **duas foram derivadas das regras
+vigentes**: `Q-NET-4` = A (`LNET-04`) e `Q-BOT-4` = A (`LBOT-04`); as outras 8 perguntas técnicas continuam
+sem resposta. O briefing
+atualizado e a autorização da captura estão em [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md).
+
+### 6.2 Frentes candidatas, com o que cada uma fecha e libera
+
+| Frente | Fecha com a recomendação | Tira da espera do dono | Libera | Pré-requisito | Custo |
+|---|---:|---:|---|---|---|
+| **A. Rodada de decisões do dono** (`wyd-sim` concluído; `wyd-launcher`, `wyd-bots`, `wyd-portal`) | **6** (`LLCH-01`–`04`; `LBOT-02`; `LAC-POR-09`) | 8 | X11 (manifesto), a conta sintética de X13 (`LBOT-02`), a onda B (versão e local dos vetores decididos; fixtures ainda dependem de implementação) e a F9 do portal | resposta do dono; nenhuma página nova | uma sessão de decisão; sem código |
+| **B. Captura A1** (peer do passo 0, `ECAP`, CLI, captura) | **2** (`LPRT-03`, `LPRT-06`) | 2 | X12, offsets de payload por `Type`, handshake do `net`/`server` e o caminho do `bots` | autorização explícita de implementação | implementação do peer, endpoint, CLI e captura |
+| **C. Finalizar o `wyd-db`** | **0** (0 abertas, 0 propostas) | 0 | `SCHEMA_VERSION` 34 e o corte vertical, quando os 6 seeds saírem | dado do cliente 7662 para os 6 seeds; aceite por página | execução e curadoria, não decisão |
+| **D. Expandir propostas** | **1–2** (`LCLI-02`; `LCLI-03` é execução) | 0–2 | nada além do próprio `wyd-client` | — | baixo retorno: 8 dos 13 não fechados ainda esperam resposta recomendada; `LPRT-03`/`LPRT-06` são medições |
+
+**Recomendação: a frente A é a próxima.** `Q-SIM-2`, `Q-SIM-3` e `Q-BOT-1` já foram respondidas (A) e
+fecharam `LSIM-02`/`LSIM-03`/`LBOT-01`; das 8 respostas do dono que seguem na fila, a recomendação fecha 6
+lacunas e fixa 2 políticas de medição (`LNET-01` e `LBOT-03`) sem inventar números. A rodada continua liberando três
+planejamentos sem código.
+`LNET-04` e `LBOT-04` já fecharam por regra vigente; a rodada não as reabre. **A captura A1 é a frente
+seguinte**, não a primeira: fecha 2 itens, mas é a única que remove o bloqueio do fio e depende de
+autorização de implementação. **C não é frente de decisão**: o `wyd-db` já está com 0 abertas e 0
+propostas; o que resta é execução, e os 6 seeds esperam dado do cliente. **D tem retorno marginal**:
+proposta nova só alcança `LCLI-02`/`LCLI-03`, e o resto é medição ou direito autoral. Se o
+critério for exclusivamente remover o bloqueio do fio, B vem antes; pela contagem de lacunas e
+liberação de planejamentos, A é a próxima. O catálogo funcional (§1.5) continua sendo o que destrava a
+declaração de versão; ele é descoberta e não substitui a rodada.
+
+### 6.3 Perguntas que dependem do dono
+
+As opções, o trade-off e a fonte de cada recomendação estão nas páginas donas:
+`wyd-sim/docs/proposta-decisoes-sim.md`, `wyd-launcher/docs/proposta-decisoes-launcher.md`,
+`wyd-bots/docs/proposta-decisoes-bots.md`, `wyd-net/docs/proposta-decisoes-net.md` e
+`wyd-portal/docs/proposta-decisoes-portal.md`. Esta tabela só fixa a ordem e o efeito de recusar a
+recomendação. A ordem de resposta, o desbloqueio e o custo de cada alternativa estão no
+[`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md) §6.
+
+| Pergunta | Lacuna | Recomendação | Se escolher diferente |
+|---|---|---|---|
+| `Q-LCH-1` | `LLCH-01` | A: JSON versionado com `sha256` por arquivo, versão e compatibilidade | B perde auditabilidade; C não prova hash/versão |
+| `Q-LCH-2` | `LLCH-02` | A: portal/publicação como fonte, com cache local e estado por canal | B fica preso à release; C mostra a lista só depois de conectar |
+| `Q-LCH-3` | `LLCH-03` | A: assinatura Ed25519 destacada, verificada antes de aplicar | B só detecta corrupção; C aceita patch adulterado |
+| `Q-LCH-4` | `LLCH-04` | A: instalador assinado com atualização, publicado pelo `wyd-ops` | B não atualiza; C não entrega release |
+| `Q-BOT-2` | `LBOT-02` | A: fixture/seed sintético no banco efêmero, com reset por execução | B acopla ao portal e pode deixar estado persistido |
+| `Q-BOT-3` | `LBOT-03` | A: medir primeiro; nenhum limiar numérico entra no gate antes da medição | B mede infraestrutura; C inventa número |
+| `Q-NET-1` | `LNET-01` | A: medir primeiro; limite/timeout/rate-limit entram no gate depois da medição | B trata provisório como regra; C fixa número sem fonte |
+| `LAC-POR-09` | `LAC-POR-09` | A: BFF fecha, `wyd-ops` agenda e alerta | B cria worker e `GRANT` novo em `portal`; C/D contrariam `LAC-POR-01`/D4 |
+
+`Q-NET-2` saiu desta fila: o dono respondeu **A** em 2026-11-23 — impor o build-alvo 7662 no handshake,
+com erro tipado para build não suportado — e `LNET-02` fechou no registro, com a decisão em
+`wyd-net/docs/proposta-decisoes-net.md` §4 e §6. `Q-SIM-3` também saiu: o dono respondeu **A** em
+2026-11-23 e `LSIM-03` fechou; local e formato estão definidos, mas as fixtures não foram
+implementadas. `Q-SIM-2` saiu na mesma data: o dono respondeu **A** e `LSIM-02` fechou, com
+`formula_version` próprio registrado junto do `content_version` usado. `Q-BOT-1` também saiu: o dono
+respondeu **A** em 2026-11-23 e `LBOT-01` fechou, com o ambiente alvo em CI efêmero; a próxima pergunta
+do `bots` é `Q-BOT-2`.
+
+`Q-SIM-4` saiu desta fila: o dono respondeu **A** em 2026-11-23 — aritmética inteira em estado e
+economia, percentual em bps, arredondamento meio-para-longe-do-zero uma vez por fórmula, divisão
+inteira com overflow verificado e `f64` só em exibição. A escala 1/1000 foi dispensada na mesma data:
+não há coluna fracionária no schema (`grep` em `wyd-db/migrations`; vida/AC/dano em `INTEGER`/`SMALLINT`,
+dinheiro e taxa em inteiro — `P-07`). `LSIM-04` fechou, com o motivo em
+`wyd-sim/docs/proposta-decisoes-sim.md` §4 e §6.
+
+`Q-SIM-1` também saiu: o dono respondeu **A** na mesma data — fatia vertical com vetor por fórmula
+(dano físico, chance de acerto, drop, uma fórmula de economia e o deslocamento puro do passo 6) — e
+`LSIM-01` fechou, com `X4` passando a `decidido`. Depois, o dono respondeu **Q-SIM-3 = A** e **Q-SIM-2 = A**: `LSIM-03`
+fechou com local/formato dos vetores definidos e `LSIM-02` fechou com a versão de fórmula própria;
+nenhuma fixture foi criada. O `sim` não tem mais pergunta aberta, e a onda B ainda exige a implementação
+das fórmulas e fixtures para provar determinismo (`§7.7`). As demais respostas vêm por dependência: `LAC-POR-09` é da onda D/F9;
+`Q-LCH-*` e `Q-BOT-*` são da onda E e dependem da C; `Q-NET-1` espera medição; e A1 é autorização de
+implementação que destrava a onda C. `Q-NET-4` e `Q-BOT-4` saíram por regra vigente e não voltam à fila.
+
+Com as recomendações A, `LNET-01` e `LBOT-03` continuam abertas como **medição**, não como decisão: a
+resposta fixa a política e a lacuna só fecha com o número medido. Escolher B/C em qualquer uma delas
+fecha por decisão, mas com a consequência da linha acima. Das 8 respostas que restam, 6 fecham
+lacunas; as duas de medição fixam política, não resultado medido. Cada fechamento entra no documento
+dono com data e evidência, como manda `AGENTS.md` §5.8.
+
+### 6.4 O que não entra nesta rodada
+
+| Item | Por que não entra na rodada | Frente |
+|---|---|---|
+| `LPRT-03`, `LPRT-06` | são medição de fio, não escolha; a parte decidível já foi decidida em 2026-11-20 | B (captura A1) |
+| `LCLI-02` | depende de `Q-IP-1`/`Q-IP-2` (direitos) e da lista do patch; não é escolha isolada | `LCLI-05`/direitos |
+| `LCLI-03` | é o **nome** do QA que assina a segunda leitura; D6 já decidiu o papel | execução de B |
+| `LCLI-05` | `Q-IP-1`–`Q-IP-6` são jurídicas e não têm recomendação técnica; exigem titular dos direitos e revisão | frente de direitos, fora desta rodada |
+
+`LCLI-05` bloqueia patch, release e publicação de conteúdo do cliente; nenhuma resposta técnica a
+fecha. Enquanto ela estiver aberta, `LCLI-02` também não fecha.
+
+### 6.5 Depois da rodada
+
+As 8 respostas ainda pendentes e a autorização da captura estão ordenadas, com motivo medido e custo
+da alternativa, no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md); a próxima resposta
+recomendada é `Q-BOT-2` = A. `Q-BOT-1` = A, `Q-SIM-2` = A e `Q-SIM-3` = A já foram registradas.
+Os passos abaixo são a consequência da rodada, não a fila de perguntas.
+
+1. **Captura A1 pela opção A** — implementar o peer do passo 0, o `ECAP` e a CLI, e capturar; fecha
+   `LPRT-03` e registra a build de `LPRT-09` na ficha (já decidida em 2026-11-23).
+2. **`LPRT-06`**, com B e C, que exigem a conta sintética de `seeds/dev.sql`; os seis seeds de
+   `wyd-db` entram aqui, não antes.
+3. **`LNET-03` implementada** — a regra já está fixada em `R6`/`D9`/`ux_session_viva_por_conta`
+   (`wyd-net/docs/proposta-decisoes-net.md` §5); falta o transporte, e a posição é antes da
+   implementação de `LSIM` porque é o login (passo 2 do esqueleto, critério C3).
+4. **`LSIM-01`/`LSIM-02`/`LSIM-04` implementadas** — a lista (com o deslocamento puro), a versão da
+   fórmula e a aritmética estão decididas; falta escrever as fórmulas e os vetores no passo do esqueleto.
+5. o **catálogo completo** segue como descoberta, com `LCORE-01` fixando que a `1.0.0` é jogo completo
+   e o primeiro domínio é a entrada na cena.
+
+Nenhuma posição é cronograma: é dependência declarada nas fontes citadas. O que continua aberto
+depois da rodada e da captura é `LCLI-02`, `LCLI-03` e `LCLI-05` no cliente, e as medições de
+`LNET-01` e `LBOT-03`.
+
 ---
 
 ## 7. Mapa dos sistemas, contratos e ordem de execução (2026-11-22)
@@ -388,12 +524,12 @@ tem dois donos e é defeito (§3).
 
 | Sistema | Responsabilidade (decide sozinho) | Não é dele | Plano | Estado do plano |
 |---|---|---|---|---|
-| `wyd-protocol` | layout do fio, `Type`, cabeçalho, ofuscação, checksum, DTO e regra “sem I/O” | socket, sessão, regra de jogo | 7 páginas | aberto: 2º piloto, 5 escritas, 3 lacunas dependem de captura |
+| `wyd-protocol` | layout do fio, `Type`, cabeçalho, ofuscação, checksum, DTO e regra “sem I/O” | socket, sessão, regra de jogo | 7 páginas | aberto: 2º piloto, 5 escritas, 2 lacunas de captura (`LPRT-03`, `LPRT-06`); build-alvo fixado (`LPRT-09`) |
 | `wyd-net` | conexão: aceite, sessão, ordem, timeout, limite, reação a erro | byte, opcode, regra | 3 páginas | proposto (2026-11-22) |
 | `wyd-core` | comportamento: tick, cena, entidades, combate, IA, estados | fórmula, SQL, fio | 3 páginas | proposto (2026-11-22) |
 | `wyd-sim` | cálculo puro e determinístico | quando aplicar, balanceamento | 3 páginas | proposto (2026-11-22) |
 | `wyd-db` | schema, migrations, DDL, transação, retenção | comportamento, fio, UI | 308 páginas | piloto: 109/109 tabelas, 28/34 migrations |
-| `wyd-server` | processo por canal, topologia, ciclo de vida, controle, captura local | regra, fio, deploy, peer de A1 | 6 páginas | proposto (2026-11-22); fatia mínima e ECAP propostos em 2026-11-23 |
+| `wyd-server` | processo por canal, topologia, ciclo de vida, controle, captura local e peer de A1 | regra, fio, deploy | 6 páginas | proposto (2026-11-22); fatia mínima e ECAP propostos em 2026-11-23; `LSRV-05` em C com a condição reprovada — A1 depende de A |
 | `wyd-admin` | backoffice de staff, custódia de item, auditoria | regra de jogo, UI pública | 11 páginas | planejado: 15 `RF-ADM`, 0 lacuna aberta |
 | `wyd-portal` | site público, conta web, armaria/mercado web, NOC | redirecionar ao admin, custódia | 12 páginas | planejado: 33 `RF-POR`, 0 lacuna aberta |
 | `wyd-launcher` | manifesto, patch aplicado, integridade local | conteúdo do patch, hospedagem | 3 páginas | proposto (2026-11-22) |
@@ -440,20 +576,21 @@ documento citado; **proposto** = existe desenho, falta aprovação; **lacuna** =
 | X1 | codec do fio | `protocol` → `net`, `bots` | `encode`/`decode`, erro tipado, sem I/O | `wyd-protocol` | decidido | `LPRT-18`, `LPRT-08`, `LPRT-13` |
 | X2 | ordem por conexão | `net` → `core` | entrega serializada | `wyd-net` | decidido | `LPRT-12` |
 | X3 | payload tipado e validado | `protocol` → `core` | tipo por família, offset nunca cruza | `wyd-core` | decidido | `LPRT-18` |
-| X4 | fórmula determinística | `sim` → `core` | função pura, sem I/O | `wyd-sim` | proposto | `LSIM-01`, `LSIM-04` |
+| X4 | fórmula determinística | `sim` → `core` | função pura, sem I/O | `wyd-sim` | decidido | `LSIM-01`, `LSIM-02`, `LSIM-04` (2026-11-23) |
 | X5 | leitura e persistência | `core` → `db` | `CoreRepository` com `load_session`, `load_character` e `commit(UoW)`; sem SQL no core | `wyd-core` (forma), `wyd-db` (adapter) | decidido | `LCORE-04`; `wyd-core-1.0.0.md` §3.2 |
-| X6 | estado durável × memória | `core` ↔ `db` | durável crítico antes do ack; posição no release; sem periódico na primeira fatia | `wyd-core` + `wyd-db` | decidido | `LCORE-02`; `wyd-core-1.0.0.md` §3.2 |
+| X6 | estado durável × memória | `core` ↔ `db` | durável crítico antes do ack; posição no release; sem snapshot periódico na primeira fatia | `wyd-core` + `wyd-db` | decidido | `LCORE-02`; `wyd-core-1.0.0.md` §3.2 |
 | X7 | composição do processo | `server` monta `net`+`core` | uma porta por canal | `wyd-server` | decidido | `LSRV-01`, `LSRV-02` |
 | X8 | controle administrativo | `admin` → `server` | `POST /internal/v1/control`, `200 {delivered_to}`, `503` sem escrita | `wyd-server` (forma), `wyd-admin` (elo) | decidido | `LAC-ADM-03` |
 | X9 | segredo do elo de controle | `ops` → `server` | `WYD_SERVER_CONTROL_TOKEN`, distinto do portal | `wyd-ops` | decidido | `LAC-ADM-03` §3.3 |
 | X10 | métrica para NOC | `server` → `portal` | `/metrics` Prometheus, coleta `wyd-ops` | `wyd-ops` | decidido | `LAC-POR-06` |
 | X11 | manifesto e patch | `ops` → `launcher` → `client` | manifesto com hash por arquivo | `wyd-launcher` | lacuna | `LLCH-01`, `LLCH-03` |
 | X12 | captura como prova | `client` → `protocol` | bytes + ficha + anonimização + 2ª leitura | `wyd-protocol` (processo), `wyd-client` (execução) | processo e D3–D6 decididos; 0 capturas | `LPRT-10`, `goldens/como-capturar.md` |
-| X13 | ambiente de bot | `ops` → `bots` | ambiente efêmero, conta sintética | `wyd-ops` + QA | lacuna | `LBOT-01`, `LBOT-02` |
+| X13 | ambiente de bot | `ops` → `bots` | ambiente efêmero, conta sintética | `wyd-ops` + QA | lacuna: ambiente decidido em 2026-11-23 (`Q-BOT-1` = A, CI efêmero); falta a conta sintética | `LBOT-02` |
 | X14 | imagem do site | `ops` → `docs` | imagem publicada no GHCR, consumida por Compose | `wyd-ops` | decidido | `plano-imagem-e-compose-do-site.md` |
 
-`LCORE-03` fixou a fronteira de X4: o `sim` é função pura e o core decide/aplica. X4 continua
-**proposto** porque a lista de fórmulas e a aritmética (`LSIM-01`, `LSIM-04`) ainda não foram decididas.
+`LCORE-03` fixou a fronteira de X4: o `sim` é função pura e o core decide/aplica. X4 está **decidido**
+desde 2026-11-23: a lista (`LSIM-01`/`Q-SIM-1`), a versão da fórmula (`LSIM-02`/`Q-SIM-2`) e a aritmética
+(`LSIM-04`/`Q-SIM-4`) fecharam; falta escrever a fórmula e o vetor, não escolher contrato.
 
 ### 7.4 O que já pode ser ligado
 
@@ -465,25 +602,50 @@ Isto não é previsão de entrega; é leitura de estado.
 | `protocol` ↔ `net` (camada de quadro) | `LPRT-08`, `12`, `13` e `18` decididas; o codec não faz I/O | offsets de payload por `Type` — depende de captura |
 | `db` ↔ dados (schema) | 109 de 109 tabelas com DDL fechado; 28 de 34 migrations escritas | 6 seeds e `SCHEMA_VERSION` 34 |
 | `core` ↔ `db` (C4) | C4 decidida em 2026-11-23: uma porta, UoW por comando, transação no `db` | adapter, teste de contrato e schema de posição (fora desta decisão) |
+| `sim` ↔ `core` (X4) | `LSIM-01`, `LSIM-02`, `LSIM-03` e `LSIM-04` decididas em 2026-11-23: lista com vetor por fórmula, versão própria da fórmula, local/formato dos vetores e aritmética fixa | escrever as fórmulas e fixtures nos vetores JSON decididos; falta `RF-SIM`; coeficiente sem fonte continua `H` |
 | `admin` ↔ `db` | 14 rotas de C4, 15 `RF-ADM`, zero lacuna aberta | `server` para o elo de controle |
 | `portal` ↔ `db` | 33 `RF-POR`, leitura por view, zero lacuna aberta | nada de decisão; falta código |
 | `admin` → `server` (controle) | forma e autenticação decididas em 2026-11-22 | o endpoint no `server`, que não existe |
 | `docs` ↔ todos | 13 sistemas publicados; build, `verificar.py` e contagens verdes na mesma montagem (2026-11-22) | nada de decisão; falta o conteúdo de cada sistema |
 | `docs` ↔ `ops` (imagem) | Dockerfile, Compose e workflow escritos nesta entrega | primeira execução do workflow no GitHub |
-| `client` (registro) | árvore medida com hash; localização e escopo estreito da ferramenta aprovados (`LCLI-04`) | D3–D6 decididos; `ECAP` especificado; peer `Q-SRV-5` aberto; falta implementar o `ECAP` e a CLI |
+| `client` (registro) | árvore medida com hash; localização e escopo estreito da ferramenta aprovados (`LCLI-04`) | D3–D6 decididos; `ECAP` especificado; peer de A1 pela opção A (C reprovada); falta implementar o `ECAP` e a CLI |
 
 ### 7.5 O que **não** pode ser ligado ainda
 
 | Frente | Bloqueio | ID |
 |---|---|---|
-| fórmula do `sim` | quais fórmulas, com que exemplo e com que aritmética | `LSIM-01`, `LSIM-04` |
 | limites do `net` | limite por conexão, timeout e rate-limit sem valor medido | `LNET-01` |
-| handshake do fio | `KeyWord`, encoding de texto e build-alvo sem captura | `LPRT-03`, `LPRT-06`, `LPRT-09` |
+| handshake do fio | `KeyWord` e encoding de texto dependem de captura; build-alvo fixado em 7662 (`Q-PRT-1`) | `LPRT-03`, `LPRT-06` |
+| peer de captura A1 | a condição de C foi reprovada na medição (clone limpo sem o peer, `MIGRATIONS_DIR` manual e gate 12000 × cliente 7640/7662); A1 depende de A | `LSRV-05`; §9.1 da spec |
 | patch e manifesto | formato e assinatura não decididos | `LLCH-01`, `LLCH-03` |
-| carga e convivência | sem ambiente e sem conta sintética | `LBOT-01`, `LBOT-02` |
+| carga e convivência | sem conta sintética; ambiente decidido em CI efêmero | `LBOT-02` |
 
 Consequência prática: **a onda jogável não começa antes do handshake provado**. O primeiro pacote
 trocado é exatamente o que a captura prova, e a captura exige um endpoint do outro lado do socket.
+
+**Decisão registrada em 2026-11-23: `Q-SRV-5` = C, com quarentena.** O peer de A1 seria o servidor legado
+de `deprecated/`, executado localmente e somente como harness: loopback, versão/hash na ficha, sem cópia
+de código e com os bytes do peer marcados como `H`. A condição foi **medida na mesma data e reprovada**
+(`wyd-server/docs/specs/endpoint-de-captura.md` §9.1): o binário sobe em loopback, mas `deprecated/*` não
+é versionado (`git ls-files deprecated` = 0), o boot exige `MIGRATIONS_DIR` fora do default
+`/migrations` e o gate compilado espera 12000 contra o cliente 7640/7662. Pela contingência de
+`Q-SRV-5`, **A1 passa a depender da opção A** — peer no `wyd-server`, passo 0 —; B continua recusada por
+inventar handshake.
+
+**Decisão de build registrada em 2026-11-23: `Q-PRT-1` = A.** O build-alvo é o cliente **7662**,
+identificado por versão e **SHA-256 completos** medidos em `wyd-client/registro-do-cliente.md` §4; outro
+build é não suportado. A decisão fecha `LPRT-09` como escolha de alvo, dá referência à ficha de captura e
+ao `game.session.client_version` e remove o bloqueio de build que `LNET-02` citava. A política de versão
+foi decidida logo depois, na mesma data, por **`Q-NET-2` = A**: a sessão impõe esse build no handshake,
+com erro tipado para build não suportado, e `LNET-02` fechou. A decisão de alvo não substitui a leitura
+que confirma a versão declarada pelo binário. O que continua não medido é o delta entre builds, que é leitura datada (§5 de
+`goldens/como-capturar.md`) — `H`, não decisão pendente. Com isso o **alvo** do fio está decidido: resta
+execução (peer da opção A, `ECAP`, CLI, captura) e as medições de `LPRT-03`/`LPRT-06`.
+
+**A ordem em que esses bloqueios saem é a de §6**, que é o dono dela; esta seção só nomeia o bloqueio e o
+ID. `LNET-03` não aparece na tabela acima porque não bloqueia ligação: a regra de uma sessão por conta já
+existe e o que falta é o transporte implementá-la — por isso ela entra na fila de §6, não na lista de
+bloqueios.
 
 ### 7.6 Mapa de testes por sistema
 
@@ -498,14 +660,14 @@ arquivo.
 | `wyd-protocol` | round-trip, cabeçalho, erro tipado | bytes dourados (`goldens`) | — | fluxo real via `bots` | 0 testes; vetores ainda não existem |
 | `wyd-net` | buffer por conexão, classificação de erro | codec falso + porta falsa | duas conexões sem vazamento de estado | `bots` conectando | 0 testes |
 | `wyd-core` | regra isolada com semente fixa | repositório falso, sem banco | tick completo determinístico | `bots` em fluxo | 0 testes |
-| `wyd-sim` | vetor de entrada e saída por fórmula | — | — | — | 0 vetores (`LSIM-03`) |
+| `wyd-sim` | vetor de entrada e saída por fórmula | — | — | — | 0 vetores; versão decidida em `LSIM-02` e formato/local em `LSIM-03`, fixtures não implementadas |
 | `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 0 testes; `tests/` planejado com 12 páginas |
 | `wyd-server` | configuração e ciclo de vida | HTTP do controle: `200` com ack, `503` sem escrita | dois canais isolados | `bots` por canal | 0 testes |
 | `wyd-admin` | regra de custódia e permissão | HTTP de C4, 14 rotas | fluxo de staff | Playwright (obrigatório, `AGENTS.md` §8) | 0 testes |
 | `wyd-portal` | cálculo de preço e filtro | HTTP e leitura por view | fluxo de armaria e mercado | Playwright (obrigatório) | 0 testes |
 | `wyd-launcher` | verificação de hash e manifesto | manifesto contra fixture | patch aplicado em árvore de teste | nativo, script de fumaça | 0 testes |
 | `wyd-client` | parsing do registro medido | captura aceita contra ficha | — | Playwright no site que publica o registro | 0 testes |
-| `wyd-bots` | gerador de cenário e perfil | codec real em modo cliente | — | **é o próprio E2E** | 0 cenários |
+| `wyd-bots` | gerador de cenário e perfil | codec real em modo cliente | — | **é o próprio E2E** | 0 cenários; ambiente decidido (`LBOT-01` = A), job não implementado |
 | `wyd-docs` | — | — | — | build + `verificar.py` + contagens | gate ativo (é o teste do sistema) |
 | `wyd-ops` | validação de workflow e compose | build de imagem no CI | `compose up` do site | deploy publicado | pipeline escrito, 0 execução |
 
@@ -517,7 +679,7 @@ E2E de `portal` e `client` é Playwright, o resto é Rust. Carga só entra depoi
 | Onda | Conteúdo | Pré-requisito | Gate de saída |
 |---|---|---|---|
 | **A — fio e dado** | `protocol` `0.1.0` (quadro + DTO), `db` `SCHEMA_VERSION` 34 | nenhum | round-trip verde; migrations aplicam do zero e revertem |
-| **B — cálculo** | `sim` com as fórmulas da `1.0.0` e vetores | catálogo de fórmulas (`LSIM-01`) | determinismo provado por vetor |
+| **B — cálculo** | `sim` com as fórmulas da `1.0.0` e vetores | lista decidida (`LSIM-01`); versão da fórmula decidida (`LSIM-02` = A); formato/local dos vetores decidido (`LSIM-03` = A); implementar fórmulas e fixtures | determinismo provado por vetor |
 | **C — loop jogável** | `net` + `core` + `server` mínimo, um canal | handshake provado (`LPRT-03`/`09`) | login e movimento em dois canais; `503` do controle testado |
 | **D — web** | `admin` e `portal` contra o banco migrado | onda A | 15 `RF-ADM` e 33 `RF-POR` cobertos; Playwright verde |
 | **E — cliente e distribuição** | `client` (captura aceita), `launcher` (manifesto), `bots` (carga) | onda C | captura com ficha aceita; patch aplicado; cenário de carga medido |
@@ -573,7 +735,7 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | portal Next.js | `wyd-portal/` | `wyd-portal` | só `.gitkeep` |
 | binários do cliente real | `wyd-client/files/` | `wyd-client` | existem, ignorados pelo git; patch versionado ainda não existe |
 | ferramenta de captura do cliente (planejada) | `wyd-client/tools/` | `wyd-client` | opção A em `LCLI-04` (2026-11-23); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
-| peer de captura A1 | `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-protocol` | `Q-SRV-5`/`LSRV-05` aberta; sem peer A1 não é conclusiva |
+| peer de captura A1 | `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-protocol` | `Q-SRV-5`/`LSRV-05` decidida em C, com a condição reprovada em 2026-11-23 (§9.1); A1 depende de A |
 | migration SQL | `crates/wyd-db/migrations/` | `wyd-db` | planejada; hoje só as páginas `planejamento-1.0.0/wyd-db/migrations/*.md` |
 | segredo local | `.env` na raiz, ignorado | quem opera | existe; nunca lido nem versionado |
 | legado | `deprecated/`, ignorado pelo git | ninguém — é nível 4, referência | existe; nunca é fonte |

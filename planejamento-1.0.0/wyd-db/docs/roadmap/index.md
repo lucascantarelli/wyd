@@ -27,7 +27,7 @@ uma issue `P1` da fase 4 continua esperando a fase 3.
 | Bloco | Issues afetadas | Por quê |
 |---|---|---|
 | seed de conteúdo | `WYDDB-035`–`040` e o corte vertical | os seis seeds `0016`–`0018`, `0020`, `0023` e `0027` esperam dado de origem conferido |
-| captura do protocolo | `WYDDB-036`–`039` | `LPRT-09`, `LPRT-03` e `LPRT-06` não têm captura datada do cliente 7662 |
+| captura do protocolo | `WYDDB-036`–`039` | `LPRT-03` e `LPRT-06` não têm captura datada do cliente 7662; `LPRT-09` está decidido (2026-11-23) |
 | CI real | `WYDDB-027`–`034` | o workflow é stub; o gate de docs não é suíte do crate |
 | matriz de capacidade | `WYDDB-034` | `CAP-nn` não existe; a página de anti-skip declara a lacuna |
 
