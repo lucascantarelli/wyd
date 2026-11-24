@@ -4,7 +4,7 @@
 > Base: `src/provision/spec.md` §2, §5 e §6
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — `crates/wyd-db/src/provision/` não existe; especificação a implementar.
+**Estado:** aceito (2026-11-24) — `crates/wyd-db/src/provision/` não existe; especificação a implementar.
 
 # `src/provision/mod.rs` — fachada do provisionamento
 
@@ -23,8 +23,11 @@ pub mod error;
 pub mod port;
 
 pub use app::runner::run;
+pub use domain::plan::{Drift, Plan, Step};
 pub use domain::spec::{memberships, render, RoleSpec, MIGRATOR, OWNER, ROLES};
 pub use error::{ProvisionError, Result};
+
+use crate::provision::port::{Catalog, Script}; // só os bounds de `run`
 
 #[non_exhaustive]
 pub enum Command {

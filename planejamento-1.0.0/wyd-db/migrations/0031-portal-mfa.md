@@ -4,6 +4,8 @@
 > Base: `ddl-confirmado.md` §5.20 (aprovado em 2026-11-20); `lacunas.md` `A20`; `padrao-banco.md` §3/§4/§5; `wyd-portal/lacunas.md` `LAC-POR-05`
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Trigésimo primeiro arquivo da série, adendo ao fim como o `0030`. Cria `portal.person_authenticator`, a
 credencial separada de segundo fator que `A20` reservou e que `LAC-POR-05` decidiu para o staff do
 portal. **Mecanismo não reaberto:** TOTP, só `admin`/`moderator`, `member` fora da `1.0.0`.

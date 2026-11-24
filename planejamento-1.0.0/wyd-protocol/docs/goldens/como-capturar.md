@@ -1,24 +1,30 @@
-> Pergunta: "como capturo a prova que fecha `LPRT-03`, `LPRT-06` e `LPRT-09`?"
+> Pergunta: "como capturo a prova que fecha `LPRT-03` e `LPRT-06` e registra a build de `LPRT-09`?"
 > Público: frente `wyd-client`, pesquisa (RE) e QA
 > Dono: equipe do wyd-protocol
-> Base: `lacunas.md` §0.4, §2 e §3; `wyd-protocol-1.0.0.md` §6.7 e §9.1; processo de `LPRT-10`
-> Revisado em: 2026-11-20
+> Base: `lacunas.md` §0.4, §2 e §3; `wyd-protocol-1.0.0.md` §6.7 e §9.1; processo de `LPRT-10`; [`ECAP`](/sistemas/wyd-server/specs/endpoint-de-captura/)
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-20)
 
-Este é o procedimento operacional das **três capturas que ainda faltam** no `wyd-protocol`:
-`LPRT-03` (origem da semente de ofuscação no handshake), `LPRT-06` (encoding, tamanho e terminador
-de string) e `LPRT-09` (build do cliente que serve de alvo). O processo de captura e aprovação já foi
-decidido em `LPRT-10`; esta página diz **o que fazer em cada uma**, não o que foi medido.
+Este é o procedimento operacional das **duas lacunas que ainda faltam** no `wyd-protocol` —
+`LPRT-03` (origem da semente de ofuscação no handshake) e `LPRT-06` (encoding, tamanho e terminador de
+string) — mais o registro da build de `LPRT-09`, cujo alvo já foi decidido em 2026-11-23. O processo de
+captura e aprovação foi decidido em `LPRT-10`; esta página diz **o que fazer em cada uma**, não o que
+foi medido.
 
 As três não entram na mesma fatia: a captura de `LPRT-03` e os goldens do fio são o que destrava a
 `0.1.0`, e a captura de `LPRT-06` fecha antes da família `personagem` — o nome já atravessa o fio
 como string. A ordem é de `LPRT-10` e de §9.1 do plano diretor; esta página registra o efeito dela
 para a captura e não a redefine.
 
-**Esta página não afirma byte nenhum.** Nenhuma captura existe, nenhum golden foi aceito e nenhuma
-destas três lacunas está fechada: as três seguem `aberta` em `lacunas.md`, e continuam `H` até a
-ficha datada e a segunda leitura. Captura feita não é captura aceita.
+**Esta página não afirma byte nenhum.** Nenhuma captura existe, nenhum golden foi aceito e nenhuma das
+duas lacunas de captura está fechada: `LPRT-03` e `LPRT-06` seguem `aberta` em `lacunas.md` e continuam
+`H` até a ficha datada e a segunda leitura. O alvo de `LPRT-09` está decidido, mas a versão declarada
+pelo binário só será confirmada pela leitura. Captura feita não é captura aceita.
+
+**A1 autorizada em 2026-11-23 (resposta A):** o peer da opção A, o `ECAP` e a CLI foram autorizados; a
+captura ainda não foi executada. `LPRT-03` só fecha depois da captura completa e da segunda leitura;
+`LPRT-06` continua nas capturas B/C.
 
 ## 1. O que a captura precisa entregar
 
@@ -29,7 +35,9 @@ Uma captura só vale como prova quando entrega as quatro partes juntas:
 3. **o texto ou o estado do cliente no mesmo instante**, quando o byte depende de algo visível na tela
    (nome, chat, versão);
 4. **a segunda leitura**: outra pessoa refaz a medição a partir do bruto e da ficha, sem falar com
-   quem capturou, e concorda com o que foi anotado.
+   quem capturou, e concorda com o que foi anotado. Quem assina é **QA designado; o dono do
+   `wyd-protocol` é suplente, nunca quem capturou** (D6/LCLI-03, 2026-11-23). O QA designado está
+   nomeado em `LCLI-03`, e o nome entra na ficha.
 
 Falta uma das quatro: a captura é registro, não prova, e a lacuna continua aberta.
 
@@ -45,15 +53,17 @@ Falta uma das quatro: a captura é registro, não prova, e a lacuna continua abe
 4. **Texto e bytes no mesmo registro.** Quando o byte corresponde a algo digitado ou exibido, a ficha
    cita o texto literal e o instante, para que a segunda leitura compare os dois.
 5. **A build entra na ficha.** Toda captura é amarrada a uma build identificada (arquivo e hash); sem
-   isso o byte não pode ser atribuído a versão nenhuma, e `LPRT-09` continua aberta para ele.
+   isso o byte não é atribuível ao alvo fixado, e a leitura de `LPRT-09` fica incompleta para ele.
 6. **Bruto não entra no repositório.** O bruto pode conter conta, personagem e endereço; ele fica fora
-   do repositório, no local registrado na ficha. O repositório recebe só o frame anonimizado e a ficha
-   resumida.
+   do repositório, em local restrito registrado na ficha, e é descartado **30 dias após a segunda
+   leitura** (D5, 2026-11-23). O repositório recebe só o frame anonimizado e a ficha resumida.
 7. **Medir não é concluir.** A ficha registra o observado ("o campo recebeu estes bytes", "o valor
    apareceu neste ponto do fluxo"), nunca a causa ("a semente vem do cliente"). A conclusão é escrita
    na página dona, depois da segunda leitura, com o ID do golden.
-8. **Ambiente controlado.** A captura é feita contra servidor local ou proxy sob controle da própria
-   equipe; captura de tráfego de produção é frente de `wyd-ops` e não está descrita aqui.
+8. **Ambiente controlado.** A captura é feita contra o `ECAP` (endpoint local, loopback), com um
+   `PEER-A1` local; `EPROD` não é usado. A distinção e o contrato estão em
+   [`endpoint-de-captura.md`](/sistemas/wyd-server/specs/endpoint-de-captura/). Captura de tráfego
+   de produção é frente de `wyd-ops` e não está descrita aqui.
 
 **Onde cada uma entra na série.** A ordem e o gate são de §9.1 do plano diretor, que é o dono deles;
 aqui fica só o efeito para a captura.
@@ -62,12 +72,14 @@ aqui fica só o efeito para a captura.
 |---|---|---|
 | `LPRT-03` e os goldens do fio | antes de a `0.1.0` fechar | a primeira fatia é o fio sem payload, e ela só fecha com o handshake medido e o byte provado |
 | `LPRT-06` | antes de a família `personagem` entrar (`0.2.0`) | nome de personagem já atravessa o fio como string; encoding e terminador precisam estar fechados antes |
-| `LPRT-09` | acompanha todas as capturas; fecha até a `1.0.0` | toda captura é amarrada a uma build; sem build identificada, o byte não pertence a versão nenhuma |
+| `LPRT-09` | alvo decidido em 2026-11-23; a leitura acompanha todas as capturas | toda captura é amarrada a uma build; sem build identificada, o byte não é atribuível ao alvo fixado |
 
 ## 3. `LPRT-03` — handshake e origem da `KeyWord`
 
-**Cenário.** Abrir o cliente contra o ambiente controlado e capturar do primeiro byte até o cliente
-entrar no mundo, sem outra ação. Registrar a build usada.
+**Cenário A1 — handshake.** Abrir o cliente contra o `ECAP` e capturar do primeiro byte até o fim do
+handshake, sem outra ação; registrar a build usada. O peer de A1 foi decidido em `Q-SRV-5` (C, com
+quarentena), mas a condição foi reprovada em 2026-11-23; a captura usa o peer da opção A. **Cenário A2 — mundo.** Repetir a sessão e chegar ao mundo, sem outra ação, para
+confirmar o handshake no fluxo (A1/A2, 2026-11-23).
 
 **O que capturar.** O fluxo dos dois sentidos desde antes de qualquer resposta do servidor; a ordem e o
 intervalo relativo entre o primeiro bloco do cliente e o primeiro bloco do servidor; o tamanho de cada
@@ -134,8 +146,8 @@ fluxo em que a versão aparece, se aparecer; e a build anterior, se houver, para
   sem completar por dedução.
 
 **Fecha quando.** Há registro datado que identifica a build e a fonte da leitura; a segunda leitura
-confere; e `versionamento-e-compatibilidade.md` e o catálogo citam o registro. Até lá o alvo é
-**provável**, não confirmado.
+confere; e `versionamento-e-compatibilidade.md` e o catálogo citam o registro. O alvo está **decidido**
+desde 2026-11-23 (`Q-PRT-1`: 7662 + SHA-256); o que a leitura confirma é a versão declarada pelo binário.
 
 **Inconclusiva se.** A build não pôde ser identificada ou o trecho lido não declara versão alguma.
 
@@ -163,13 +175,13 @@ fora do repositório e uma cópia resumida acompanha o frame anonimizado.
 2. data e hora em UTC;
 3. operador que capturou;
 4. build do cliente: nome do arquivo, data e hash;
-5. ambiente: servidor local ou proxy, com a versão usada;
+5. ambiente: `ECAP` + `PEER-A1` local, com a versão/hash do peer e a porta loopback usada;
 6. ferramenta de captura e versão;
 7. passos executados no cliente, na ordem, com o texto digitado quando houver;
-8. arquivos brutos e o caminho onde estão guardados, fora do repositório;
+8. arquivos brutos, o caminho restrito fora do repositório e a data de descarte (30 dias após a segunda leitura);
 9. arquivos anonimizados e o destino em `tests/golden/` (planejamento);
 10. o que foi medido e o que **não** foi medido, item por item;
-11. segunda leitura: quem conferiu, quando e o que refez;
+11. segunda leitura: quem conferiu (QA designado, com o dono do `wyd-protocol` como suplente; nunca quem capturou), quando e o que refez;
 12. ID do golden e a linha do catálogo, preenchidos só na aceitação.
 
 **Onde a origem fica registrada, por parte:**
@@ -181,8 +193,12 @@ fora do repositório e uma cópia resumida acompanha o frame anonimizado.
 | entrada pública: ID, família, opcode, origem, data e o que prova | `goldens/catalogo.md` (planejamento) | equipe do wyd-protocol |
 | execução pendente e estado | ficha de captura e `lacunas.md` §1 | `lacunas.md` |
 
-Enquanto `goldens/catalogo.md` não existir, nenhum ID é alocado: a captura fica identificada pela
-ficha e a lacuna continua `aberta`. O ID `G-<familia>-<nn>` nasce na aceitação, no catálogo.
+**Retenção e segunda leitura (2026-11-23).** O bruto fica em acesso restrito, fora do repositório, e
+é descartado 30 dias após a segunda leitura (D5). A segunda leitura é feita por QA designado, com o
+dono do `wyd-protocol` como suplente, nunca por quem capturou (D6); o QA designado está nomeado em
+`LCLI-03`, e nome e data entram no campo 11 na primeira ficha. Enquanto
+`goldens/catalogo.md` não existir, nenhum ID é alocado: a captura fica identificada pela ficha e a
+lacuna continua `aberta`. O ID `G-<familia>-<nn>` nasce na aceitação, no catálogo.
 
 ## 8. O que nunca capturar
 
@@ -208,6 +224,6 @@ reabre em `lacunas.md`, com a evidência nova, e o dono decide de novo.
 - não mede, não conclui e não afirma byte: descreve o procedimento;
 - não está `aceita`: o estado é `proposto` até a revisão de quem não escreveu;
 - não aloca golden nem ID: o catálogo é o dono;
-- não substitui o processo de `LPRT-10`: é a aplicação dele às três lacunas abertas;
+- não substitui o processo de `LPRT-10`: é a aplicação dele às duas lacunas abertas e à leitura de build;
 - não decide encoding, origem da semente nem build-alvo;
-- não descreve captura em produção, que é de `wyd-ops`.
+- não descreve captura em produção (`EPROD`), que é de `wyd-ops`; o endpoint de captura é o `ECAP`.

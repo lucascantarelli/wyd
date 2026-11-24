@@ -2,19 +2,41 @@
 > Público: Produto / gestão
 > Dono: equipe do `wyd-db`
 > Base: `ddl-confirmado.md`, `lacunas.md`, `migrations-checklist.md`, `padrao-banco.md`, `plano-migrations.md`, `rascunho-accounts.md`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-24
 
-**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-22 e as migrations recontadas na mesma data.
+**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-24 e as migrations recontadas na mesma data.
 
-> **Revisão de 2026-11-22 (lotes 1–6 escritos):** os lotes 1–5 fecharam 58 páginas; o lote 6 escreveu
+> **Revisão de 2026-11-24 (lote C e teto em 144):** `Q-BLK-01` retirou do teto três páginas de
+> `guia-documentacao/` que repetiam `docs/convencoes.md` — `markdown-e-mkdocs.md`, `diagramas.md` e
+> `links-referencias-e-ids.md` — e o lote C escreveu `guia-documentacao/imagens-e-evidencias.md`,
+> `planos/plano-de-manutencao.md`, `guia-administrador/backup-e-restore.md` e
+> `guia-administrador/recuperacao-de-desastre.md`. O teto autoral vai a **144**; o censo no worktree em
+> 2026-11-24, depois do lote D (`Q-BLK-04` e `Q-BLK-05` em A): **137** páginas com corpo em `docs/`,
+> **0 escrevíveis**, **0 de recorte** e **7 bloqueadas**. O **lote E** (`Q-BLK-06` e `Q-BLK-07` em A)
+> escreveu `guia-desenvolvedor/pool-e-transacoes.md` e `specs/requisitos-nao-funcionais.md` na mesma data:
+> **143** páginas com corpo, **0 escrevíveis**, **0 de recorte** e **1 bloqueada**. O **lote F** (`Q-BLK-08` a
+> `Q-BLK-11` em A, 2026-11-24) escreveu `specs/rastreabilidade.md`, `specs/stakeholders.md`,
+> `arquitetura/implantacao.md` e `arquitetura/modelo-conceitual.md`. O registro da decisão e da execução está
+> em `pendencias-de-fechamento.md` §6.6 a §6.6.19.
+>
+> **Revisão de 2026-11-24, antes do lote C (dois lotes de `Q-PAG-1` escritos):** o lote A escreveu
+> `specs/fluxos/criacao-e-selecao-de-personagem.md`, `specs/fluxos/carregamento-e-save.md` e
+> `specs/estados/personagem.md`; o lote B escreveu `specs/fluxos/concessao-de-grant.md`,
+> `specs/fluxos/compra-e-credito.md`, `specs/estados/grant.md` e `specs/estados/item-e-refino.md`.
+> O censo no worktree em 2026-11-24: **128** páginas com corpo em `docs/`, **28 de 34** em
+> `migrations/` e **37 de 59** em `src/`. O que falta escrever fica em
+> **0 escrevíveis**, **0 de recorte** e **19 bloqueadas** — **147** páginas autorais, o teto de
+> `wyd-db-1.0.0.md` §4 com o 19º domínio.
+>
+> **Revisão de 2026-11-23 (lotes 1–6 escritos):** os lotes 1–5 fecharam 58 páginas; o lote 6 escreveu
 > os **21 recortes** e as **40 páginas `WYDDB-nnn`**, além de transformar o índice do roadmap em
-> página. O censo no `HEAD` desta data: **120** páginas com corpo em `docs/`, **28 de 34** em
-> `migrations/` e **37 de 59** em `src/`. O que falta escrever fica em **0 escrevíveis**, **0 de
-> recorte** e **27 bloqueadas** — **147** páginas autorais, o teto de `wyd-db-1.0.0.md` §4 com o 19º
+> página. O censo no `HEAD` em 2026-11-23: **121** páginas com corpo em `docs/`, **28 de 34** em
+> `migrations/` e **37 de 59** em `src/`. O que faltava escrever ficava em **0 escrevíveis**, **0 de
+> recorte** e **26 bloqueadas** — **147** páginas autorais, o teto de `wyd-db-1.0.0.md` §4 com o 19º
 > domínio. A revisão anterior (19 domínios, 36 páginas) fica no histórico do git.
 
 Esta página é a ponte entre as seis fontes de planejamento e a árvore de `docs/` de
-`wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 147 páginas autorais de `docs/`, quantas já
+`wyd-db-1.0.0.md` §4. Ela responde uma pergunta só: **das 144 páginas autorais de `docs/`, quantas já
 podem ser escritas sem inventar desenho, com que fonte e com que lacuna declarada.** Ela não escreve
 página nenhuma e não decide lacuna: aponta dono e marco, como `lacunas.md`.
 
@@ -55,31 +77,30 @@ Duas fontes **fora das seis** já estão fechadas e são citadas como donas, nã
 e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migracoes.md` (escrita) e
 `ADR-DB-0001`/`ADR-DB-0002` (escritas).
 
-## 2. O que já está escrito (medido em 2026-11-22)
+## 2. O que já está escrito (medido em 2026-11-24)
 
-**120 páginas com corpo em `docs/`**, 116 com `**Estado:**` e 4 portas de navegação sem estado editorial:
+**143 páginas com corpo em `docs/`**, 139 com `**Estado:**` e 4 portas de navegação sem estado editorial
+(`index`, `convencoes`, `glossario` e `arquitetura/adr/index`):
 
 | Pasta | Páginas escritas |
 |---|---|
 | raiz | `index.md`, `convencoes.md`, `glossario.md` |
-| `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md`, `contexto-c4.md`, `visao-geral.md`, `index.md`, `componentes-c4.md`, `fronteira-hot-cold.md`, `modelo-logico.md` — as três últimas são o lote 6 |
+| `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md`, `contexto-c4.md`, `visao-geral.md`, `index.md`, `componentes-c4.md`, `fronteira-hot-cold.md`, `modelo-logico.md`, `retencao-e-capacidade.md`, `fluxo-de-dados.md`, `implantacao.md` e `modelo-conceitual.md` — `retencao-e-capacidade` é a entrega de `Q-CAP-1` (2026-11-23); `fluxo-de-dados` e as duas últimas foram escritas em 2026-11-24 (lote F), e a pasta fecha as **17** |
 | `dicionario-dados/` | `index.md`, `como-ler.md` e as 19 páginas `dominio-*.md` — escritas em 2026-11-21 |
-| `planos/` | `plano-de-implantacao.md`, `riscos.md`, `plano-de-dados-e-seeds.md`, `plano-de-qualidade-e-gates.md`, `registro-de-execucao.md`, `index.md`, `plano-de-documentacao.md`, `plano-de-testes.md` — o último é do lote 6 |
-| `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md`, `checklist-de-pr.md`, `index.md`, `setup-ambiente.md`, `mapa-do-crate.md`, `portas-e-contratos.md`, `modelos-e-invariantes.md`, `como-escrever-teste.md`, `erros-e-logs.md` — os sete últimos são do lote 6 |
-| `guia-administrador/` | `configuracao.md`, `index.md`, `instalacao.md`, `diagnostico.md` — os dois últimos são do lote 6 |
-| `guia-teste/` | `testes-de-sistema.md`, `testes-de-contrato.md`, `index.md`, `piramide-e-alvos.md`, `gates-e-anti-skip.md` — os três últimos são do lote 6 |
-| `guia-documentacao/` | `index.md`, `estilo-e-linguagem.md`, `estrutura-e-navegacao.md`, `revisao-e-publicacao.md` — os dois últimos são do lote 6 |
-| `specs/` | `index.md`, `restricoes-e-premissas.md`, `requisitos-funcionais.md`, `regras-de-negocio.md`, `casos-de-uso.md`, `estados/conta-e-moderacao.md`, `estados/sessao.md`, `fluxos/login-e-sessao.md`, `visao-e-escolpo.md`, `fluxos/carga-de-conteudo.md` — os dois últimos são do lote 6 |
+| `planos/` | `plano-de-implantacao.md`, `riscos.md`, `plano-de-dados-e-seeds.md`, `plano-de-qualidade-e-gates.md`, `registro-de-execucao.md`, `index.md`, `plano-de-documentacao.md`, `plano-de-testes.md`, `plano-de-manutencao.md` — o penúltimo é do lote 6 e o último do lote C |
+| `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md`, `checklist-de-pr.md`, `index.md`, `setup-ambiente.md`, `mapa-do-crate.md`, `portas-e-contratos.md`, `modelos-e-invariantes.md`, `como-escrever-teste.md`, `erros-e-logs.md` e `pool-e-transacoes.md` — os sete primeiros do bloco são do lote 6 e o último é do lote E |
+| `guia-administrador/` | `configuracao.md`, `index.md`, `instalacao.md`, `diagnostico.md`, `backup-e-restore.md`, `recuperacao-de-desastre.md`, `sustentacao.md` e `manutencao-rotineira.md` — os dois últimos são do lote D e fecham a pasta no teto de 8 |
+| `guia-teste/` | `testes-de-sistema.md`, `testes-de-contrato.md`, `index.md`, `piramide-e-alvos.md`, `gates-e-anti-skip.md`, `fixtures-e-factories.md` e `dados-de-teste.md` — os dois últimos são do lote D e fecham a pasta no teto de 7 |
+| `guia-documentacao/` | `index.md`, `estilo-e-linguagem.md`, `estrutura-e-navegacao.md`, `revisao-e-publicacao.md`, `imagens-e-evidencias.md` — os dois do lote 6 e o último do lote C; as três páginas retiradas do teto por `Q-BLK-01` não estão aqui |
+| `specs/` | `index.md`, `restricoes-e-premissas.md`, `requisitos-funcionais.md`, `regras-de-negocio.md`, `casos-de-uso.md`, `estados/conta-e-moderacao.md`, `estados/sessao.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md`, `fluxos/login-e-sessao.md`, `visao-e-escolpo.md`, `fluxos/carga-de-conteudo.md`, `requisitos-nao-funcionais.md` (lote E), `fluxos/criacao-e-selecao-de-personagem.md`, `fluxos/carregamento-e-save.md`, `fluxos/concessao-de-grant.md`, `fluxos/compra-e-credito.md`, `rastreabilidade.md` e `stakeholders.md` (lote F) — os dois do lote 6, os sete de 2026-11-24 e as duas últimas, e a pasta fecha as **20** |
 | `roadmap/` | `index.md`, `fases.md` e as **40** páginas `WYDDB-nnn` — escritas no lote 6 |
 
 Fora de `docs/`: **28 de 34** em `migrations/` e **37 de 59** em `src/`.
 
-**Os outros 3 arquivos `index.md` são título de uma linha** — `roadmap`, `guia-desenvolvedor`,
-`guia-teste`. Eles não contam como página: são o marcador de que a pasta existe. Índice só é página
-quando responde à pergunta de §6.2/§6.5/§6.8/§6.9. As seis portas escritas — `dicionario-dados/index`,
-`specs/index`, `arquitetura/index`, `planos/index`, `guia-administrador/index` e
-`guia-documentacao/index` — estão nas 58; `dicionario-dados/gerado/index.md` é o índice auxiliar das
-páginas por tabela, fora da contagem, e não entra.
+**Todos os índices de pasta contam como página**: cada um responde à pergunta da sua pasta e tem corpo
+próprio, inclusive `roadmap/index`, `guia-desenvolvedor/index` e `guia-teste/index`, que já passaram de
+marcador de uma linha para página no lote 6. `dicionario-dados/gerado/index.md` é a exceção: é o índice
+auxiliar das 109 páginas por tabela, fora desta contagem, e não entra nas 132.
 
 ## 3. Mapa de diluição das seis fontes
 
@@ -163,9 +184,9 @@ o ponteiro passa a `migrations/index.md`.
 |---|---|---|
 | §0 estados, marcos e donos | `specs/restricoes-e-premissas.md` (abertura) | — |
 | §1 decisões fechadas | a página dona de cada uma (coluna "Refletida em"), não uma lista nova | — |
-| §2.1–§2.3 as 36 lacunas | `restricoes-e-premissas.md` (as 3 externas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
+| §2.1–§2.3 as 38 lacunas | `restricoes-e-premissas.md` (as 3 externas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
 | §2.4 resumo por marco | `restricoes-e-premissas.md` (a tabela de marcos) | coberta pela mesma nota |
-| §3 `P1`–`P11` | `planos/riscos.md` (as abertas: `P1`, `P3`, `P5`) | — |
+| §3 `P1`–`P11` | `planos/riscos.md` (`P3` fechada; `P1` e `P5` também fechadas) | — |
 | §4 `D-A`, `D-B`, `D-C` | `planos/riscos.md` + `planos/plano-de-documentacao.md` (`D-A`) | — |
 | §5 o que não fazer | `planos/plano-de-qualidade-e-gates.md` (condição de reprovação) | — |
 | §6 manutenção | morre com o registro | — |
@@ -187,19 +208,21 @@ o ponteiro passa a `migrations/index.md`.
 Nenhuma página autoral resta na lista de escrevíveis: as **6** que fechavam em 2026-11-22 foram
 escritas com o lote 5 (§8) — `arquitetura/index`, `planos/index`, `checklist-de-pr`,
 `guia-administrador/index`, `guia-documentacao/index` e `estilo-e-linguagem`. A distribuição por pasta
-está em §2; o que falta é bloqueio (§6), e a soma continua **147** (120 + 0 + 0 + 27).
+está em §2; o que falta é bloqueio (§6), e a soma agora é **144** (143 + 0 + 0 + 1).
 
 ### 4.1 `arquitetura/` (0)
 
-`index.md` foi escrito em 2026-11-22 com o lote 5 e os três recortes com o lote 6; a pasta tem
-**13** páginas com corpo (12 + o índice). O que resta é bloqueio, não página escrevível.
+`index.md` foi escrito em 2026-11-22 com o lote 5, os três recortes com o lote 6, os dois ADRs com o
+lote 1 e `fluxo-de-dados.md` em 2026-11-24; a pasta tem **15** páginas com corpo (12 + os 3 de `adr/`).
+O que resta é bloqueio — `implantacao.md` e `modelo-conceitual.md` —, não página escrevível.
 
 ### 4.2 `specs/` (0)
 
-As cinco páginas do lote 2 e os dois recortes do lote 6 — `visao-e-escolpo.md` e
-`fluxos/carga-de-conteudo.md` — estão escritos; a pasta tem **10** páginas com corpo. Nenhuma página
-de `specs/` permanece na lista de escrevíveis; as restantes — `stakeholders`, `requisitos-nao-funcionais`,
-`rastreabilidade` e os fluxos/estados do grupo de DDL — seguem em §6.
+As cinco páginas do lote 2, os dois recortes do lote 6 — `visao-e-escolpo.md` e
+`fluxos/carga-de-conteudo.md` — e as sete de 2026-11-24 (três de personagem e quatro de economia e
+custódia) estão escritas; a pasta tem **17** páginas com corpo. Nenhuma página de `specs/` permanece na
+lista de escrevíveis; as restantes — `stakeholders`, `requisitos-nao-funcionais` e `rastreabilidade` —
+seguem em §6.
 
 ### 4.3 `dicionario-dados/` (0)
 
@@ -209,8 +232,9 @@ conta e medidas por `docs/dicionario-dados/gerado/index.md`, dono da contagem.
 
 ### 4.4 `planos/` (0)
 
-`index.md` foi escrito em 2026-11-22 com o lote 5, `plano-de-documentacao.md` no mesmo dia e
-`plano-de-testes.md` no lote 6; a pasta tem **8** páginas com corpo. O que resta é bloqueio.
+`index.md` foi escrito em 2026-11-22 com o lote 5, `plano-de-documentacao.md` no mesmo dia,
+`plano-de-testes.md` no lote 6 e `plano-de-manutencao.md` no lote C; a pasta tem **9** páginas com corpo. O
+que resta é `metricas.md`, bloqueada pelo número medido (`M20`).
 
 ### 4.5 `guia-desenvolvedor/` (0)
 
@@ -219,8 +243,10 @@ conta e medidas por `docs/dicionario-dados/gerado/index.md`, dono da contagem.
 
 ### 4.6 `guia-administrador/` (0) e `guia-teste/` (0) e `guia-documentacao/` (0)
 
-`guia-administrador` tem **4** páginas (2 do lote 5 + 2 recortes), `guia-teste` tem **5** (2 escritas
-+ 3 recortes) e `guia-documentacao` tem **4** (2 + 2 recortes). O restante das três pastas é bloqueio.
+`guia-administrador` tem **6** páginas (2 do lote 5, 2 recortes e 2 do lote C), `guia-teste` tem **5** (2
+escritas + 3 recortes) e `guia-documentacao` tem **5** (2 do lote 5, 1 recorte e `imagens-e-evidencias` do
+lote C). Em `guia-documentacao` o teto da pasta caiu de 8 para 5: `Q-BLK-01` retirou três páginas que
+repetiam `convencoes.md`. O restante das três pastas é bloqueio.
 
 ## 5. Páginas de recorte escritas (21)
 
@@ -239,7 +265,7 @@ não cobre.
 | `roadmap/fases.md` | as 7 fases com escopo e critério de saída (`§6.10`) | `D-7` aprovada em 2026-11-22; a página foi escrita e as 40 issues têm DoD |
 | `guia-desenvolvedor/index.md` | trilha de leitura e pré-requisitos | os "3 comandos que provam o ambiente" não existem |
 | `guia-desenvolvedor/setup-ambiente.md` | variáveis por nome (`src/provision/spec.md` §3) e banco local | ferramentas, versões e comandos |
-| `guia-desenvolvedor/mapa-do-crate.md` | árvore planejada e a regra de dependência (`§6.16`) | o crate não existe; tudo é `P` |
+| `guia-desenvolvedor/mapa-do-crate.md` | árvore planejada e a regra de dependência (`§6.16`) | só `dsn` existe; o resto é `P` |
 | `guia-desenvolvedor/portas-e-contratos.md` | as 5 portas de `migrate` e as 2 de `provision` | as portas de `repo/` não têm contrato |
 | `guia-desenvolvedor/modelos-e-invariantes.md` | `GameLogin` 16 B, `GamePassword` 12 B, `NumericPin` 6 B (`padrao-banco.md` §4); `Dsn` (`src/dsn.md`), versão e `Sql` (`src/migrate/spec.md` §2) e checksum (`src/migrate/spec.md` §4) | modelos de personagem, item e economia |
 | `guia-desenvolvedor/como-escrever-teste.md` | proibição de id mágico e de `sleep` (`wyd-db-1.0.0.md` §5.13); escolha de alvo e padrão de nome (§6.11) | fixtures e factories dependem do desenho da suíte |
@@ -252,30 +278,70 @@ não cobre.
 | `guia-documentacao/estrutura-e-navegacao.md` | nome de arquivo (`P8`), uma página por pasta com `index.md`, árvore citada de `§4` | `nav` do mkdocs: não existe config |
 | `guia-documentacao/revisao-e-publicacao.md` | fluxo de revisão e checklist de pronto (`§10`) | a publicação é do `wyd-docs` (`LPDOC`), não desta pasta; a página fecharia só o fluxo de revisão |
 
-## 6. Páginas bloqueadas (27)
+## 6. Páginas bloqueadas (1)
 
-Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
+Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`. O registro de fechamento, com o
+caminho de cada página, dono e o que ela desbloqueia, está em `pendencias-de-fechamento.md` §5; esta
+seção continua sendo a dona da fila e do motivo do bloqueio.
+
+**O que fazer com cada grupo está em §6.6 de `pendencias-de-fechamento.md`** (proposto em 2026-11-24):
+o pacote de decisões que transforma cada bloqueio em pergunta fechada, com recomendação, evidência,
+quantas páginas caem e pré-requisito. **`Q-BLK-01` a `Q-BLK-11` foram aprovadas em 2026-11-24**, todas em
+A: os lotes C, D, E e F escreveram as páginas que cada uma liberava, e esta fila está em **1** —
+`planos/metricas.md`, que espera a série aplicada (`M20`).
+
+**Saíram da lista em 2026-11-24:** as três páginas do lote de entrada na cena — criação/seleção de
+personagem, carregamento e save, e estado do personagem — e as quatro de economia e custódia —
+concessão de grant, compra e crédito, estado de grant e estado de item e refino. Elas foram escritas com
+o DDL fechado de `0006`/`0009`, `0011`/`0012` e `0021`, e o contrato C4; a fila caiu de **26** para
+**19** e as dependências externas de cada uma ficaram declaradas na própria página.
+
+**Saíram da lista em 2026-11-24 (lote C):** três páginas de `guia-documentacao/` **retiradas do teto** por
+`Q-BLK-01` — `markdown-e-mkdocs.md`, `diagramas.md` e `links-referencias-e-ids.md`, porque o conteúdo já
+é de `docs/convencoes.md` — e quatro **escritas**: `guia-documentacao/imagens-e-evidencias.md`,
+`planos/plano-de-manutencao.md`, `guia-administrador/backup-e-restore.md` e
+`guia-administrador/recuperacao-de-desastre.md`. O teto caiu de **147 para 144** e a fila de **19 para
+12**.
+
+**Saiu da lista em 2026-11-24, depois do lote C:** `arquitetura/fluxo-de-dados.md`, escrita a partir do
+DDL fechado e do dicionário. Era a única das páginas da fila que não dependia de decisão nem de medição;
+com ela a fila ficou em **11** naquele dia.
+
+**Saíram da lista em 2026-11-24 (lote D):** `guia-administrador/sustentacao.md`,
+`guia-administrador/manutencao-rotineira.md`, `guia-teste/fixtures-e-factories.md` e
+`guia-teste/dados-de-teste.md`, escritas depois de `Q-BLK-04` = A e `Q-BLK-05` = A. As duas pastas
+fecharam no teto — `guia-administrador` em **8** e `guia-teste` em **7** — e a fila caiu para **7**.
+
+**Saíram da lista em 2026-11-24 (lote E):** `guia-desenvolvedor/pool-e-transacoes.md`, que declara os
+defaults reais do pool e o orçamento de **53 de 97** conexões (`Q-BLK-06` = A), e
+`specs/requisitos-nao-funcionais.md`, que abre a série `RNF-DB` com **3** limiares de fonte real e **2**
+métricas sem limiar até `M20` (`Q-BLK-07` = A). A fila caiu de **7** para **5**.
+
+**Saíram da lista em 2026-11-24 (lote F):** `specs/rastreabilidade.md`, `specs/stakeholders.md`,
+`arquitetura/implantacao.md` e `arquitetura/modelo-conceitual.md`, escritas depois de `Q-BLK-08` a
+`Q-BLK-11` = A. As duas pastas fecharam no teto — `specs/` em **20** e `arquitetura/` em **17** — e a fila
+caiu de **5** para **1**.
 
 **Saiu da lista em 2026-11-22:** `planos/plano-de-documentacao.md`, escrito depois do lote 5 porque
 `D-A` já estava fechada e ele era o primeiro item de §6 sem bloqueio de fonte. A página foi para §2 e
 não fecha a Onda 8; o critério dela continua em `planos/plano-de-documentacao.md` §2.
 
 **Saíram da lista em 2026-11-22:** as **21 páginas de recorte** e as **40 `WYDDB-nnn`**, escritas no
-lote 6; com isso o bloqueio cai de 68 para **27**. As 109 páginas por tabela continuam fora desta
-conta; quantas já existem é de `gerado/index.md`, dono da contagem.
+lote 6; com isso o bloqueio caiu de 68 para **27**. Em **2026-11-23**, `retencao-e-capacidade.md`
+saiu como `proposto` com volume pendente de medição (`Q-CAP-1`), e o bloqueio caiu para **26**. Em
+**2026-11-24**, as três páginas de entrada na cena e as quatro de economia e custódia saíram, e o
+bloqueio caiu para **19**; o lote C fechou mais sete, `fluxo-de-dados.md` fechou a oitava, o lote D fechou
+quatro, o lote E fechou duas, o lote F fechou as quatro de §6.6.19 e o bloqueio está em **1**. As 109 páginas por tabela continuam fora desta conta; quantas já existem é de
+`gerado/index.md`, dono da contagem.
 
 | Grupo | Páginas | Bloqueio | Dono / marco |
 |---|---|---|---|
-| arquitetura — deploy e fluxo | `implantacao.md`, `fluxo-de-dados.md` | não há desenho de processo, porta, volume nem mapa das 42 tabelas restantes | arquitetura, depois da série |
-| arquitetura — modelo e retenção | `modelo-conceitual.md`, `retencao-e-capacidade.md` | a forma das 109 tabelas está fechada; faltam o agrupamento conceitual e a medição de volume/capacidade, que só existe depois da série (`M20`) | arquitetura / operação (marco `P3`) |
+| arquitetura — deploy | `implantacao.md` | não há desenho de processo, porta, volume nem supervisor | arquitetura, depois da série |
+| arquitetura — modelo | `modelo-conceitual.md` | a forma das 109 tabelas está fechada; falta o agrupamento conceitual | arquitetura (marco `P3`) |
 | specs — qualidade e matriz | `requisitos-nao-funcionais.md`, `rastreabilidade.md` | nenhum limiar medido; porta, teste e issue não existem para preencher a matriz | arquitetura, ondas 3/7/8 |
-| specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | `0006`, `0009`, `0011`, `0012` e `0021` têm DDL fechado desde 2026-11-21; `A14`, `A19`, `M16` e `M17` estão fechadas — resta o texto do fluxo | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | os 16 `RF-DB` do bloco de identidade existem; falta a matriz ator → requisito dos demais domínios | onda 3 |
-| planos — manutenção e métrica | `plano-de-manutencao.md`, `metricas.md` | a retenção está decidida (`M22`); faltam a rotina que a executa e o número medido, que só existe depois da série (`M20`) | operação (marco `P3`) / arquitetura (`M20`, marco `P2`) |
-| guia do administrador | `backup-e-restore.md`, `manutencao-rotineira.md`, `recuperacao-de-desastre.md`, `sustentacao.md` | política de backup não decidida; a retenção está decidida (`M22`), falta a rotina e o inventário organizacional | operação |
-| guia de teste | `fixtures-e-factories.md`, `dados-de-teste.md` | desenho da suíte ausente; o catálogo de contas de teste não existe (`M19`, senha de dev, está fechada desde 2026-11-19) | QA + arquitetura |
+| planos — métrica | `metricas.md` | o número medido só existe depois da série aplicada (`M20`); não é decisão | arquitetura (`M20`, marco `P2`) |
 | guia do desenvolvedor — pool | `pool-e-transacoes.md` | pool, timeout e saturação sem desenho e sem medição | arquitetura, onda 7 |
-| guia de documentação | `markdown-e-mkdocs.md`, `diagramas.md`, `links-referencias-e-ids.md`, `imagens-e-evidencias.md` | `diagramas` e `links` duplicariam `convencoes.md` §Diagramas e §Links e citações; build e publicação são do `wyd-docs` | arquitetura + `wyd-docs` |
 
 **Fora da conta:** as 109 páginas por tabela do dicionário estão escritas (**109/109**, 2026-11-22) e `gerado/index.md` é o índice auxiliar; não são páginas bloqueadas nem entram nas 147.
 
@@ -285,7 +351,7 @@ conta; quantas já existem é de `gerado/index.md`, dono da contagem.
 |---|---|---|---|
 | `migrations/` | 28 de 34 | faltam `index.md` e `serie-e-regras.md`; as 28 páginas de arquivo e o `spec.md` do runner estão escritos | restam as 6 de seed, bloqueadas pelo dado de origem |
 | `src/` | 37 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
-| `tests/` | 0 de 12 | 2 páginas de `specs/` — `contrato` e `sistema` | `capacidades` (matriz `CAP-nn`), os 5 alvos e as fixtures: a suíte não existe |
+| `tests/` | **12 de 12** (2026-11-24, §6.6.21) | nada — as 12 saíram: `index`, `fixtures-e-factories`, `dados-de-teste`, `resources/README`, 5 `alvos/*` e 3 `specs/*`, com a matriz `CAP-nn` | o código: `Cargo.toml`, os 5 alvos, `tests/common/` e as fixtures; `CAP-08` espera `banco-catalogo.md` |
 
 ## 8. Ordem proposta (6 lotes; lotes 1 a 6 escritos)
 
@@ -353,6 +419,8 @@ ondas.
    o medido sai do catálogo depois da série.
 5. **Não substitui `metricas.md`.** Ela diz o que dá para escrever; quanto está escrito continua sendo
    contagem de página com cabeçalho, como em §2.
+6. **Não decide o bloqueio.** As perguntas fechadas, com recomendação, impacto e ordem, estão em
+   `pendencias-de-fechamento.md` §6.6; esta proposta só diz de que fonte cada página depende.
 
 ---
 

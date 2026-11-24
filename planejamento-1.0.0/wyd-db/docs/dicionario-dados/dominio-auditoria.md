@@ -60,8 +60,13 @@ trocar privilégio, não só rodar SQL.
 
 ## Retenção
 
-Decisão `M22` (§5.8), não schema: `ops.audit_log` **730 dias**, append-only; o expurgo de
-`login_attempt` e de sessão segue o mesmo registro. Nenhum `DELETE` de runtime está previsto.
+Decisão `M22` (§5.8), não schema: `ops.audit_log` **730 dias**, append-only; `person_session` 30 dias
+após `expires_at` e `game.session` 365 dias após `released_at`. Nenhum `DELETE` de runtime está
+previsto; o expurgo é de operação.
+
+`ops.login_attempt` tem decisão própria (`Q-RET-2`, 2026-11-23): **30 dias após `occurred_at`**, por
+expurgo diário de operação. O índice `ix_login_attempt_occurred` já existe; o `DELETE`/job ainda não,
+com dono `wyd-ops` e custo de 1 sessão em `pendencias-de-fechamento.md` §4.3.
 
 `ops.idempotency_record` tem decisão própria (`M30`): **7 dias após `created_at`**, qualquer estado, por
 expurgo diário de operação. O piso é a janela de replay de 24 h do chamador (`M17`) e o teto é o custo de
@@ -83,4 +88,6 @@ guarda o corpo por 7 dias para responder replay. Quem precisa da trilha consulta
 |---|---|
 | vocabulário de `action` | catálogo fechado de ações ainda não existe; hoje só `session_released` está citado |
 | conteúdo de `target`/`detail` por ação | formato por ação é do código que escreve, não do banco |
-| janela de retenção de `login_attempt` | `M22` fixa as outras três; esta não tem número próprio |
+
+A janela de retenção de `login_attempt` deixou de ser lacuna em 2026-11-23: `Q-RET-2` fixou 30 dias
+após `occurred_at` (§Retenção).

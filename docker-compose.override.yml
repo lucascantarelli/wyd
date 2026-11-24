@@ -1,0 +1,37 @@
+# Camada carregada automaticamente pelo `docker compose` na raiz.
+#
+# Ela **não** altera o serviço `docs`: o caminho padrão do Compose consome a imagem publicada
+# pelo CI (`docker-compose.yml`). Aqui mora só o `gate`, que é ferramenta local e precisa
+# estar disponível em qualquer `docker compose` da raiz, sem `-f` extra.
+#
+# `gate` — o mesmo gate que o CI roda, em um comando:
+#   docker compose --profile gate run --rm gate
+# Usa o estágio `gate` do Dockerfile (pip e fontes, sem montar o site); a montagem, o build e a
+# verificação ocorrem uma vez no comando. A tag `:gate` e `pull_policy: build` validam a árvore
+# de trabalho, não uma imagem antiga. Não publica porta nem reinicia.
+#
+# O build do site a partir da árvore de trabalho (tag `:dev`) é opt-in e está em
+# `docker-compose.dev.yml`.
+#
+# Dono: `wyd-ops` (imagem e Compose); layout e exceções de raiz em
+# `planejamento-1.0.0/wyd-1.0.0.md` §8.
+
+services:
+  gate:
+    profiles: ["gate"]
+    image: ghcr.io/lucascantarelli/wyd-docs:gate
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-docs.Dockerfile
+      target: gate
+    working_dir: /app/wyd-docs
+    command:
+      - sh
+      - -c
+      - |
+        python preparar.py &&
+        mkdocs build --dir .build/docs --output site &&
+        python verificar.py site &&
+        python verificar-contagens.py &&
+        python verificar-censos.py

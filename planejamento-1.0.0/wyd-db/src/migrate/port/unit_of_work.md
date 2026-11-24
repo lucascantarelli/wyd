@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §3, §6 e §7
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/port/unit_of_work.rs` — execução transacional
 

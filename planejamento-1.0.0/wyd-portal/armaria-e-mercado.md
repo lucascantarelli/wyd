@@ -2,19 +2,20 @@
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: produto (escopo) com arquitetura (fronteira)
 > Base: `docs/specs/requisitos.md` §4; `docs/roadmap/roadmap.md` F7–F11; `docs/arquitetura/{fronteira,consumo-do-banco,rotas-e-permissoes}.md`; `lacunas.md`; `wyd-db/armaria-e-mercado.md`; `M16`, `M17`, `M21`, `M25`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** decidido (2026-11-22) — D1–D10 fixadas pelo texto da missão de produto; pacote de
 planejamento fechado, implementação não iniciada. A origem numérica de dano e alcance segue em
-`P-POR-08` e o dono do fechamento de leilão em `LAC-POR-09` (`proposta`); a primeira não bloqueia a
-F7, a segunda condiciona a F9 à confirmação de operação.
+`P-POR-08`; o dono do fechamento de leilão, `LAC-POR-09`, fechou em 2026-11-23 (BFF fecha,
+`wyd-ops` agenda/alerta). A primeira não bloqueia a F7; a segunda deixa a F9 condicionada apenas à
+implementação e à F8.
 
 As decisões abaixo não foram escolhidas por preferência: cada uma tem a frase da missão que a obriga e
 o registro da alternativa recusada. Não resta decisão de produto em aberto. O executor da transferência de
 item foi definido em 2026-11-22 (§8, `LAC-POR-07` fechada) e o schema dele fechou no mesmo dia no
 `wyd-db` (`LAC-ADM-07`, lote `0034`), e a credencial portal→admin foi decidida em 2026-11-22
 (`LAC-ADM-04`: token de serviço por ambiente). O caminho da custódia não tem bloqueio de outro
-dono; o fechamento de leilão aguarda a confirmação de operação em `LAC-POR-09`.
+dono; o fechamento de leilão foi decidido em `LAC-POR-09` e não aguarda mais aprovação de operação.
 
 ## 1. O pedido normalizado
 
@@ -70,7 +71,7 @@ comprova é comportamento — perfil público, slots, ficha do item, filtro — 
 | carteira do portal | só `donate_credit`/`donate_debit` | `market_wallet` + `market_ledger` (§3.1–3.2 da página de banco) |
 | anúncio, lance, transação, avaliação, aviso, disputa, taxa | nenhuma tabela | 10 tabelas em `portal` + `game.market_escrow` |
 | executor da transferência de item | contrato definido em 2026-11-22 | quatro rotas no C4 do `wyd-admin` (`contrato-c4.md` §4.9–§4.13); `LAC-POR-07` fechada |
-| fechamento de leilão | nenhum job planejado | `LAC-POR-09` em `proposta`; recomendação `P-POR-09` (BFF fecha, `wyd-ops` agenda/alerta); job idempotente na F9 |
+| fechamento de leilão | nenhum job implementado | `LAC-POR-09` fechada em 2026-11-23: BFF fecha, `wyd-ops` agenda/alerta; job idempotente na F9 |
 | rota e tela administrativa do mercado | `/admin/*` sem mercado | F11, com MFA e auditoria |
 
 ## 4. Fronteira aplicada
@@ -146,10 +147,10 @@ limite para o término do leilão".
 
 **Decisão:** leilão está na `1.0.0`, na fatia F9. Prazo em `ends_at`; lance reserva o crédito
 (`retencao_lance`) e é devolvido quando superado; fechamento por job idempotente com
-`uq_market_transaction_listing`; leilão sem lance expira e devolve a custódia. O **dono do job** está
-em `LAC-POR-09` (`proposta`): recomendação `P-POR-09`, com o corpo no BFF e o relógio no `wyd-ops`;
-a alternativa de worker do `wyd-ops` com papel próprio em `portal` fica registrada com o custo de
-novo `GRANT`.
+`uq_market_transaction_listing`; leilão sem lance expira e devolve a custódia. O **dono do job** foi
+decidido em `LAC-POR-09` (2026-11-23): o corpo fica no BFF e o relógio no `wyd-ops`; falha deixa o
+anúncio `ativo` e reentrante, sem transação nem devolução até o sucesso. A alternativa de worker do
+`wyd-ops` com papel próprio em `portal` foi recusada com o custo de novo `GRANT`.
 
 **Recusadas:** só venda direta na `1.0.0` (contraria a missão); fechar "no acesso", sem job (não escala e
 não notifica ninguém); lance sem reserva (arremate pode falhar por saldo e a transação vira promessa).
@@ -271,7 +272,7 @@ assíncrona devolveria "aceito" sem garantia de custódia, que é exatamente o f
 | `wyd-db` | lote com quatro views e onze tabelas (`armaria-e-mercado.md`), texto em `ddl-confirmado.md` | onze tabelas no lote `0034` aprovado em 2026-11-22 (`M31`, `LAC-ADM-07` fechada); quatro views seguem em §2 |
 | `wyd-admin` | contrato de custódia e entrega de item | **proposto em 2026-11-22**: C4 §4.9–§4.13, `acoes.md` §8, `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada) |
 | `wyd-server` | aplicar custódia/entrega na transação; expor o dado de §5 | a planejar; captura de dano/alcance em `P-POR-08` |
-| `wyd-ops` | job de fechamento e expiração, métricas do mercado | `LAC-POR-09` em `proposta`: agenda e alerta o fechamento (`P-POR-09`) |
+| `wyd-ops` | job de fechamento e expiração, métricas do mercado | `LAC-POR-09` fechada em 2026-11-23: agenda e alerta o fechamento; implementação pendente |
 | `wyd-docs` | publicar as páginas novas e realinhar contagens | lote `0034` já tem página (`0034-portal-market.md`); realinhar contagens |
 
 ## 10. Lacunas
@@ -280,11 +281,11 @@ assíncrona devolveria "aceito" sem garantia de custódia, que é exatamente o f
 |---|---|---|
 | `LAC-POR-07` | executor da transferência de item | **fechada em 2026-11-22**: contrato no C4 do `wyd-admin` (§4.9–§4.13) e fatia `ADM-10` |
 | `LAC-POR-08` | origem de dano, alcance e durabilidade | **fechada em 2026-11-22**: ficha publica só o provado; durabilidade não existe; dano/alcance ficam em `P-POR-08` |
-| `LAC-POR-09` | dono do fechamento de leilão | **`proposta` em 2026-11-22**: `P-POR-09` recomenda BFF fecha e `wyd-ops` agenda/alerta; falta o “sim” de operação |
+| `LAC-POR-09` | dono do fechamento de leilão | **fechada em 2026-11-23**: BFF fecha; `wyd-ops` agenda/alerta; falha deixa o anúncio reentrante |
 
 Registradas em `lacunas.md` em 2026-11-22; `LAC-POR-07` e `LAC-POR-08` fecharam no mesmo dia, a
-primeira com o contrato escrito e a segunda com a ficha publicando só o provado. `LAC-POR-09` está em
-`proposta` com recomendação e alternativas; a F9 só começa depois do “sim” de operação.
+primeira com o contrato escrito e a segunda com a ficha publicando só o provado. `LAC-POR-09` fechou
+em 2026-11-23; a F9 só começa depois da implementação e da F8.
 
 ## 11. Riscos
 
@@ -309,4 +310,4 @@ primeira com o contrato escrito e a segunda com a ficha publicando só o provado
 | Biblioteca de UI e forma visual | fatia, com registro se mudar fronteira |
 | Detecção estatística de fraude | fase posterior, com dado medido |
 | Captura de dano e alcance (`P-POR-08`) | `wyd-server` + `wyd-db` |
-| Agendamento e alerta do fechamento (`LAC-POR-09`) | arquitetura + `wyd-ops` |
+| Agendamento e alerta do fechamento (`LAC-POR-09`) | arquitetura + `wyd-ops` — **decidido em 2026-11-23**, implementação pendente |

@@ -281,9 +281,6 @@ planejamento-1.0.0/wyd-db/
 │   │   ├── index.md                             ▲
 │   │   ├── estrutura-e-navegacao.md             ▲
 │   │   ├── estilo-e-linguagem.md                ▲
-│   │   ├── markdown-e-mkdocs.md                 ▲
-│   │   ├── diagramas.md                         ▲
-│   │   ├── links-referencias-e-ids.md           ▲
 │   │   ├── imagens-e-evidencias.md              ▲
 │   │   └── revisao-e-publicacao.md              ▲
 ├── migrations/
@@ -340,8 +337,9 @@ planejamento-1.0.0/wyd-db/
 
 **Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
 `specs/` · 21 autorais + 109 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
-11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · 8 em
-`guia-documentacao/` · 36 em `migrations/` (2 páginas de seção + 34 de migration) · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
+11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · **5** em
+`guia-documentacao/` (eram 8 até 2026-11-24, quando `Q-BLK-01` retirou três páginas que repetiam
+`convencoes.md`) · 36 em `migrations/` (2 páginas de seção + 34 de migration) · 59 em `src/` · 12 em `tests/` · 9 em `prompts/` · 9 em `skills/`
 → **teto de páginas autorais + 109 de tabela + 1 dado de apoio**, mais este plano diretor.
 
 **Fonte dos números (2026-11-18):** os totais que **derivam da série** — **109 páginas de tabela** (uma
@@ -349,22 +347,39 @@ por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas 
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
 
-**Teto × escrito (2026-11-22):** os totais acima contam páginas **planejadas** e já incluem as
+**Teto × escrito (2026-11-24):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **120 páginas com corpo em `docs/`**, 116 com `**Estado:**` e 4 portas de navegação sem
-estado editorial — as **3 de raiz**, **13 em `arquitetura/`**, **21 em `dicionario-dados/`**, **8 em
-`planos/`**, **10 em `guia-desenvolvedor/`**, **4 em `guia-administrador/`**, **5 em `guia-teste/`**,
-**4 em `guia-documentacao/`**, **10 em `specs/`** e **42 em `roadmap/`** (índice, fases e as 40
+medição de `planos/metricas.md`. **Medido:** **143 páginas com corpo em `docs/`**, 139 com `**Estado:**` e 4 portas de navegação sem
+estado editorial — as **3 de raiz**, **17 em `arquitetura/`**, **21 em `dicionario-dados/`**, **9 em
+`planos/`**, **11 em `guia-desenvolvedor/`**, **8 em `guia-administrador/`**, **7 em `guia-teste/`**,
+**5 em `guia-documentacao/`**, **20 em `specs/`** e **42 em `roadmap/`** (índice, fases e as 40
 `WYDDB-nnn`). O lote 6 escreveu os 21 recortes e as 40 páginas de issue; os outros três índices que
-eram título de uma linha — `roadmap`, `guia-desenvolvedor` e `guia-teste` — agora são páginas. Fora de
-`docs/`: **28 de 34** em `migrations/` (2026-11-22) e **37 de 59** em `src/` — os dois `spec.md` de
-`src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
+eram título de uma linha — `roadmap`, `guia-desenvolvedor` e `guia-teste` — agora são páginas. Os dois
+lotes de `Q-PAG-1` escreveram as três páginas de personagem e as quatro de economia e custódia em
+2026-11-24. O lote C escreveu `guia-documentacao/imagens-e-evidencias.md`, `planos/plano-de-manutencao.md`,
+`guia-administrador/backup-e-restore.md` e `guia-administrador/recuperacao-de-desastre.md` na mesma data e
+retirou três páginas do teto; `arquitetura/fluxo-de-dados.md` foi escrita em seguida, e o lote D de
+2026-11-24 escreveu `guia-administrador/sustentacao.md`, `guia-administrador/manutencao-rotineira.md`,
+`guia-teste/fixtures-e-factories.md` e `guia-teste/dados-de-teste.md`, e o lote E de 2026-11-24 escreveu
+`guia-desenvolvedor/pool-e-transacoes.md` e `specs/requisitos-nao-funcionais.md`, e o lote F de 2026-11-24
+escreveu `specs/rastreabilidade.md`, `specs/stakeholders.md`, `arquitetura/implantacao.md` e
+`arquitetura/modelo-conceitual.md` (`Q-BLK-08` a `Q-BLK-11` = A), e o lote H de 2026-11-24 escreveu as
+**12** páginas de `tests/` com a matriz `CAP-nn` (**23** capacidades, **0** cobertas). Fora de `docs/`:
+**12 de 12** em `tests/`, **28 de 34** em `migrations/` (2026-11-22) e **37 de 59** em `src/` — os dois `spec.md` de `src/migrate/` e
+`src/provision/` são desenho de origem, não página da árvore.
 
-**O que dá para escrever agora, página a página:** `proposta-paginas.md` mapeia as **147** páginas
-autorais de `docs/` em **0 escrevíveis**, **0 de recorte** e **27 bloqueadas** — as 21 de recorte e as
-40 `WYDDB-nnn` foram escritas no lote 6. A fonte de cada bloqueio e o mapa de diluição das seis fontes
-continuam na proposta. Os **lotes 1 a 6** estão escritos: os títulos e as páginas novas contam nas 120
-acima.
+**O que dá para escrever agora, página a página:** `proposta-paginas.md` mapeia as **144** páginas
+autorais de `docs/` em **0 escrevíveis**, **0 de recorte** e **1 bloqueada** (`planos/metricas.md`) — as 21 de recorte e as
+40 `WYDDB-nnn` foram escritas no lote 6; `retencao-e-capacidade.md` foi escrita como `proposto` em
+2026-11-23; as três páginas de entrada na cena e as quatro de economia e custódia foram escritas em
+2026-11-24. A fonte de cada bloqueio e o mapa de diluição das seis fontes continuam na proposta. Os
+**lotes 1 a 6**, os dois lotes de `Q-PAG-1`, o **lote C**, `fluxo-de-dados`, o **lote D** e o **lote E**
+estão escritos: as páginas novas contam nas 143 acima, e as três retiradas do teto por `Q-BLK-01` não
+existem como arquivo.
+
+**O fechamento da frente:** o que ainda falta, com ID, dono, custo estimado e o que cada item
+desbloqueia, está em [`pendencias-de-fechamento.md`](pendencias-de-fechamento.md). Ele não cria lacuna
+e não renumera ID; a fila de páginas continua sendo a de `proposta-paginas.md` §6.
 
 ---
 
@@ -547,7 +562,7 @@ Já descrito em §5.1.
 | `implantacao.md` | "como isso roda?" | C4 nível 4; processo, imagem, portas, volume, supervisor; ligação com `docs/rust/05-stack-docker.md` do repositório (sem duplicar) |
 | `fronteira-hot-cold.md` | "onde termina o tick e começa o banco?" | regra de ouro (sem I/O no tick); caminho de escrita do jogo; caminho de escrita da web; `delivery_queue` como única ponte; diagrama; o que quebra se violar |
 | `fluxo-de-dados.md` | "que dados entram, mudam e saem?" | diagrama de contexto de dados; tabela origem → caminho → destino; dado efêmero × persistente × derivado; ponto de perda possível |
-| `modelo-conceitual.md` | "quais entidades existem e como se relacionam?" | ER conceitual por domínio (18), sem coluna; cardinalidades; agregados (conta, personagem, clã, conteúdo); glossário de relação |
+| `modelo-conceitual.md` | "quais entidades existem e como se relacionam?" | ER conceitual por domínio (19, as páginas de `dicionario-dados/`), sem coluna; cardinalidades; agregados (conta, personagem, clã, conteúdo, operação); glossário de relação |
 | `modelo-logico.md` | "como o conceitual vira tabela?" | ER lógico com nomes de tabela; PK/FK por relação; tabela 1:1, 1:N e N:N; o que é derivado e por quê; aponta para `gerado/` para coluna |
 | `integridade-e-constraints.md` | "que regra o banco garante sozinho?" | política de FK (cascade × restrict × sem FK); CHECK por domínio; unicidade; DEFERRABLE; o que é garantido em código e não no banco, e por quê; teste que prova cada grupo |
 | `padroes-postgres.md` | "qual é o padrão de modelagem?" | **tipo**: o critério que decide a escolha, citando a lista fechada de `padrao-banco.md` §4; **índice**: o critério que responde quando criar e quando não (invariante × desempenho), citando §6; **concorrência**: transação, versão otimista e `SKIP LOCKED`, cada uma com decisão registrada ou ausência declarada (`H`); **armadilhas**: as famílias de defeito, citando a lista fechada de §11; checklist de revisão de DDL. Citar o dono não dispensa preencher: a seção que só aponta, sem o critério, reprova (§10) |
@@ -665,6 +680,13 @@ dois lugares que podem divergir.
 | `riscos.md` | "o que pode dar errado?" | um item por risco com probabilidade, impacto, sinal de que aconteceu, antídoto, dono; risco aceito declarado |
 | `registro-de-execucao.md` | "o que já foi entregue?" | uma linha por entrega: data, item, comando/arquivo, resultado. Sem narrativa |
 
+**Decisão fora de `docs/`:** a política de dados pessoais e retenção está em
+`proposta-dados-pessoais-e-retencao.md` (`M32`, **decidida em 2026-11-23**, com as oito `Q-DP`
+respondidas pelo dono e registradas no §9 da própria página), na raiz do planejamento do sistema. Ela
+não entra nesta pasta nem na contagem de §4 porque não é plano de execução do banco: as finalidades,
+os responsáveis e a base legal são decisão do produto, e a página não declara conformidade nem
+substitui revisão jurídica.
+
 ### 6.10 `docs/roadmap/*.md`
 
 **`index.md`** — pergunta: "o que está aberto e em que ordem?". Obrigatório: fila por prioridade
@@ -737,14 +759,16 @@ Distribuição das 40 issues por fase. As páginas desta entrega usam `WYDDB-001
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
-| `index.md` | "qual regra eu procuro?" | mapa dos 7 guias por tarefa (criar, escrever, diagramar, linkar, ilustrar, revisar, publicar); estado de cada um |
+| `index.md` | "qual regra eu procuro?" | mapa dos **4** guias por tarefa (criar, escrever, ilustrar, revisar) e o ponteiro para `convencoes.md` §Links e citações, §Diagramas e §Recursos do site; estado de cada um |
 | `estrutura-e-navegacao.md` | "onde este assunto mora?" | árvore e o que pertence a cada pasta; padrão de nome de arquivo (`kebab-case`, sem acento); quando criar seção × página; regra de `index.md` por pasta; como a árvore vira navegação no `preparar.py` |
 | `estilo-e-linguagem.md` | "como escrevo?" | voz e tempo verbal; tamanho de frase e de página; o que evitar (adjetivo sem medida, "basta", "simplesmente"); termos preferidos × proibidos; 5 pares de exemplo certo × errado com frase real |
-| `markdown-e-mkdocs.md` | "que recurso posso usar?" | recursos que a 2.0 renderiza: tables, footnotes, bloco de código com cópia, `> [!TIPO]` (e a **cor por tipo**: `tip` verde, `warning` âmbar, `danger` vermelho, `abstract` turquesa), `<div class="cartoes"></div>` para grade, emoji Unicode, riscado e **Mermaid** em cerca `mermaid` (um tipo por bloco); o que não usar (admonition `!!!`, abas `=== "…"`, details `???`, attr-list e botões, grid cards, `:material-…:`, captura de tela como prova única); exemplo de cada; quando preferir lista × tabela × aviso |
-| `diagramas.md` | "que diagrama uso?" | tipo por pergunta (fluxo, sequência, estado, ER, C4); um tipo por diagrama; legenda em português; tamanho máximo; o que fazer quando o diagrama não renderiza |
-| `links-referencias-e-ids.md` | "como aponto para outra página ou para o código?" | link relativo e âncora; citação `arquivo:linha`; prefixos `RF-DB`/`ADR-DB`/`WYDDB`; proibição de link para fora de `docs/`; como marcar link ainda sem destino |
-| `imagens-e-evidencias.md` | "como provo com imagem?" | quando a imagem é necessária; nome e pasta; texto alternativo obrigatório; peso e formato; o que nunca aparece na captura (dado de jogador, segredo) |
+| `imagens-e-evidencias.md` | "como provo com imagem?" | quando a imagem é necessária; por que a montagem não publica imagem hoje; nome e pasta; texto alternativo obrigatório; peso e formato; o que nunca aparece na captura (dado de jogador, segredo) |
 | `revisao-e-publicacao.md` | "como isto é aprovado e publicado?" | fluxo de revisão; checklist do critério de pronto; gate de link e de build; o que muda entre rascunho e publicado; histórico da página |
+
+**Três páginas desta tabela foram retiradas do teto em 2026-11-24 (`Q-BLK-01`):** `markdown-e-mkdocs.md`,
+`diagramas.md` e `links-referencias-e-ids.md`. O conteúdo delas já é de `docs/convencoes.md` §Recursos do
+site, §Diagramas e §Links e citações, e escrever as duas versões criaria dois donos para o mesmo fato. O
+teto da pasta caiu de **8 para 5**; a página `imagens-e-evidencias.md` ficou e foi escrita na mesma data.
 
 ### 6.15 `migrations/*.md`
 
@@ -1200,12 +1224,17 @@ Uma página só é `aceito` quando **todos** forem verdadeiros:
 7. nenhum segredo, DSN, token ou hash aparece;
 8. nenhum `TODO`, "em construção" ou seção vazia;
 9. foi revisada por alguém que não escreveu;
-10. está linkada no `index.md` da pasta e contabilizada em `planos/metricas.md`;
+10. está linkada no `index.md` da pasta; a contabilização em `planos/metricas.md` está suspensa até
+    `M20` destravar (suspensa em 2026-11-23, retomada quando o arquivo existir), sem dispensar o índice;
 11. tem `Base:` preenchido (bloco consultado ou `—`) e nenhuma afirmação pendurada em material
     externo à árvore.
 
 Página que falha em 1–4 volta para rascunho; 5–8 são defeito bloqueante; 9–11 são pendência de
 fechamento.
+
+**Suspensão de 2026-11-23 (`M33`, Q-M33-3).** Só a metade de `planos/metricas.md` está suspensa; a
+exigência de `index.md` continua. Quando `planos/metricas.md` existir, o aceite de toda página é
+revalidado contra a metade retomada.
 
 ---
 
@@ -1222,7 +1251,7 @@ tabela, depois o procedimento.
 
 | Onda | Entrega | Arquivos | Critério de saída |
 |---|---|---:|---|
-| **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (8) | 15 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
+| **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (5) | 12 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
 | **2. Modelo** | `arquitetura/{componentes-c4,implantacao,fluxo-de-dados,modelo-conceitual,modelo-logico,integridade-e-constraints,padroes-postgres,seguranca}` | 8 | ER conceitual e lógico revisados; constraints conferidas contra o catálogo |
 | **3. Requisitos** | `specs/` completo: 9 páginas + 6 fluxos + 5 estados | 20 | todo `RF`/`RN`/`RNF` com critério de aceitação e destino na matriz |
 | **4. Dicionário** | `dicionario-dados/` (2 + 19) + as 109 páginas por tabela, escritas à mão em lotes (`M26`, 2026-11-21) | 21 + 109 | **109 tabelas cobertas** em 2026-11-22; `gerado/index.md` é índice auxiliar, fora da contagem; sem gerador; **109 das 109 escritas**, fila vazia |

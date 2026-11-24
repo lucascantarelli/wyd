@@ -86,7 +86,7 @@ Risco: perder o vocabulário de fase no board; mitigação é a label `fase/*` e
 | board mede fase | board mede versão, e a soma das versões é a `1.0.0` |
 
 Nada disso cria issue. A criação continua dependendo de página com DoD e de pedido explícito
-(`AGENTS.md` §5, invariante 9).
+(`AGENTS.md` §5, item 9).
 
 ---
 
@@ -205,6 +205,7 @@ Sem esse levantamento não existe plano de sprint honesto para a `1.0.0` — só
 2. **Registrar no panorama** a mudança de alvo da `1.0.0` (jogo completo), com o critério de saída
    refeito; hoje `wyd-1.0.0.md` §4 ainda mede fases de planejamento.
 3. **Planejar `wyd-core` e `wyd-sim`** antes de qualquer página de catálogo funcional: as duas pastas
-   estão vazias e o catálogo sem plano de sistema nasce órfão.
+   já têm três páginas cada (2026-11-22); o que falta é o catálogo funcional e os requisitos, não o
+   plano de sistema.
 4. **Levantar o primeiro domínio** do catálogo, como piloto, com entradas `H` e prova por captura; o
    levantamento completo é frente própria, não um passo de board.

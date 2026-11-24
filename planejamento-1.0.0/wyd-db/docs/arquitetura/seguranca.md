@@ -2,7 +2,7 @@
 > Público: Arquiteto de schema e operação
 > Dono: equipe do wyd-db
 > Base: `padrao-banco.md` §2, §8, `ddl-confirmado.md`, `docs/arquitetura/adr/adr-db-0001-provisionamento-de-papel-fora-da-serie.md`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-18)
 
@@ -34,11 +34,20 @@ As DSNs são **segredo** — a senha viaja dentro da string, e nunca são logada
 cada DSN e a classificação segredo × dado de instalação estão em `src/provision/spec.md` §3; a regra de
 credencial, em §7.
 
-**Fora do contrato:** outros segredos do repositório — o `SESSION_SECRET` citado em `AGENTS.md` §2.5 é
-um deles — **não** são lidos pelo `wyd-db` e não entram no contrato de ambiente
+**Fora do contrato:** outros segredos do repositório — o `SESSION_SECRET` do portal é um deles —
+**não** são lidos pelo `wyd-db` e não entram no contrato de ambiente
 (`src/provision/spec.md` §3 e §7). Com cookie opaco e só o `sha256` no banco (`A16`), a 1.0.0 pode não
 precisar de segredo de assinatura nenhum; se algum sobreviver, é do portal, e esta página não é o dono
 do nome.
+
+## Nota de privacidade — `identifier_hash` (`M32`, 2026-11-23)
+
+`ops.login_attempt.identifier_hash` é `sha256` do `email_fold`/`login_fold`, **sem segredo**. Isso
+impede listar endereços, mas não impede **confirmar** um candidato: quem suspeita do e-mail calcula o
+hash e compara. A decisão de 2026-11-23 (`M32`, `Q-DP-3`) mantém `M6` como está e trata o risco por
+duas vias já existentes: `wyd_game` e `wyd_portal` só têm `INSERT` na tabela, e a coluna não sai em
+export nem vira consulta de BI. Trocar a derivação para `HMAC-SHA256` fecharia o ataque e exigiria
+reabrir `M6` e criar segredo de hash no contrato de ambiente (`src/provision/spec.md` §3 e §7).
 
 ## Decisão — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
 

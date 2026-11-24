@@ -130,6 +130,6 @@ os três comandos viram gate de PR em `checklist-de-pr.md` (planejado).
 3. **Não decide permissão.** O efeito por papel é de [`seguranca.md`](../arquitetura/seguranca.md) e o
    texto do artefato de papel é de `src/provision/spec.md` §4 (planejamento).
 4. **Não decide retenção por tabela** — a política é de `plano-de-manutencao` (planejado) e a decisão
-   de operação está aberta em `lacunas.md` §2.3 (`M22`).
+   de operação está fechada em `lacunas.md` §2.3 (`M22`).
 5. **Não autoriza tabela nova fora da série.** Tabela que não está em `plano-migrations.md` §3 entra
    por decisão registrada, não por este procedimento (`migrations-checklist.md` §6).

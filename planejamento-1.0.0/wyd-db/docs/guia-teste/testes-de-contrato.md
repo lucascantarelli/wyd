@@ -67,10 +67,11 @@ O contrato é a primeira barreira, não a prova final: um schema pode passar nel
 
 ## 5. Estado e o que não cobre
 
-- **Alvo:** `contrato_migrations` é `P`; não existe `Cargo.toml` com o alvo hoje
+- **Alvo:** `contrato_migrations` é `P`; o `Cargo.toml` existe desde 2026-11-24 e ainda não declara o alvo
   (`wyd-db-1.0.0.md` §6.17).
 - **Leitor:** o parser atual não entende schema qualificado, view nem `INET`; até o PR de
   ferramentas, a conferência é manual (`plano-migrations.md` §1.3).
 - **Fixture:** a série de fixture e o caso ruim são critério de pronto do PR de ferramentas, não
   deste alvo.
-- **Cobertura:** este teste não mede cobertura de capacidade; a matriz `CAP-nn` não existe.
+- **Cobertura:** este teste não mede cobertura de capacidade; a matriz está em
+  `tests/specs/capacidades.md`, e os contratos cobrem `CAP-01`–`CAP-08`.

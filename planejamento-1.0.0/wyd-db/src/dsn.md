@@ -4,7 +4,8 @@
 > Base: `docs/arquitetura/seguranca.md`, `src/provision/spec.md` §3 (`M24`)
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — `crates/wyd-db/src/dsn.rs` não existe no repositório.
+**Estado:** aceito (2026-11-24) — implementado em `crates/wyd-db/src/dsn.rs` na mesma data: `cargo test`
+roda **6** testes de unidade no próprio arquivo (parse, redação e `as_str`), nenhum contra PostgreSQL.
 
 # `Dsn` — o tipo único de string de conexão
 
@@ -71,7 +72,7 @@ parse, e é o que mantém o invariante verdadeiro em todo o crate.
 | quem lê o ambiente | binário `wyd-db`; o boot recebe `MigrateConfig` pronto (`src/migrate/spec.md` §9) |
 | senha, rotação, `pg_hba` | `src/provision/spec.md` §7 e o ambiente |
 | papel esperado pelo preflight | `src/migrate/spec.md` §7 (`EXPECTED_ROLE`) |
-| parâmetros de pool | `src/pool/config.rs` (página `pool-config.md`) |
+| parâmetros de pool | `docs/guia-desenvolvedor/pool-e-transacoes.md` (dono dos valores; `docs/guia-administrador/configuracao.md` §3) |
 
 `Dsn` não sabe de papel: o papel é do preflight, e a DSN só aponta para o banco.
 

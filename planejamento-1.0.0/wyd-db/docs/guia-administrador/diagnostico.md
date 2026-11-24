@@ -54,7 +54,8 @@ O checksum é `sha256` dos bytes normalizados (`CRLF` → `LF`); um byte de dife
 ## 4. O que ainda não há
 
 - **Pool, conexões e saturação:** sem métrica, sem limiar e sem painel; não há ação prescrita.
-- **Disco e vacuum:** dependem de volume medido; a página de capacidade está bloqueada.
+- **Disco e vacuum:** dependem de volume medido; a página de capacidade existe como `proposto`, com
+  volume pendente de medição.
 - **Métrica de latência do boot:** não medida.
 - **Runbook de incidente:** este recorte é técnico; comunicação e escalada são do `wyd-ops`.
 

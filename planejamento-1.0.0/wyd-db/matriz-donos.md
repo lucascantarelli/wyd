@@ -132,9 +132,10 @@ de linha — a linha envelhece a cada edição, a seção não.
 | `rascunho-accounts.md` | 8 | 1 | 0 | 0 | 7 |
 | **total** | **71** | **12** | **1** | **0** | **58** |
 
-Treze notas nos seis documentos (a de §5 do `ddl-confirmado.md` cobre seis subseções). Os outros três
-documentos de raiz — `wyd-db-1.0.0.md`, `proposta-paginas.md` e este arquivo — ficam fora: o primeiro é
-o plano diretor, o segundo o mapa de diluição, este a matriz.
+Treze notas nos seis documentos (a de §5 do `ddl-confirmado.md` cobre seis subseções). Os demais
+documentos de raiz — `wyd-db-1.0.0.md`, `proposta-paginas.md`, `armaria-e-mercado.md`,
+`proposta-dados-pessoais-e-retencao.md` e este arquivo — ficam fora: o primeiro é o plano diretor, os
+três seguintes são mapas ou propostas sem seção enunciada por página de `docs/`, e este é a matriz.
 
 ## Achados
 

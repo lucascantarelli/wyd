@@ -22,7 +22,7 @@
 | `Full Workflow` | 1 job `Get Info`, `success`, saída `version`/`commit` vazias por `$(...)` interpretado pelo shell (§2.1 do dono) |
 | `Full Workflow` — pinagem | `actions/checkout@v7`, **tag móvel**, contra a regra de SHA fixado (§4.1) |
 | ruleset `develop` | `required_approving_review_count: 0`; **nenhum** `required_status_checks` — nada bloqueia por check hoje |
-| código Rust | `crates/*` só com `.gitkeep`; sem `Cargo.toml` na raiz |
+| código Rust | `crates/wyd-db` tem `Cargo.toml` e `src/dsn.rs` (2026-11-24); os demais crates só têm `.gitkeep`; sem workspace na raiz |
 | portal | sem `package.json`; nada a compilar |
 
 Consequência: dos cinco estágios de §4.2, **só o de documentação tem o que rodar hoje**. Criar
@@ -36,11 +36,13 @@ Consequência: dos cinco estágios de §4.2, **só o de documentação tem o que
 
 | Action | Inputs | O que faz | Entra quando |
 |---|---|---|---|
-| `docs-check` **(existe)** | `python` | instala `wyd-docs/requirements.txt`, roda `preparar.py`, `mkdocs build`, `verificar.py` | já em uso |
+| `docs-check` **(existe)** | `python` | instala `wyd-docs/requirements.txt`, roda `preparar.py`, `mkdocs build`, `verificar.py`, `verificar-contagens.py` e `verificar-censos.py` | já em uso |
 | `setup-rust` | `toolchain` (`file` ou versão) | instala o toolchain de `rust-toolchain.toml`, cache de `~/.cargo` e `target/` com chave por `Cargo.lock` | quando houver `Cargo.toml` |
 | `setup-node` | `node-version` | instala Node, cache de npm com chave por `package-lock.json` | quando houver `package.json` |
 | `coverage-gate` | `path`, `minimum` (padrão 85) | lê o relatório e falha abaixo do mínimo | junto de `_rust.yml` |
 | `setup-postgres` | `version` (padrão 17) | sobe serviço Postgres, espera `pg_isready`, exporta DSN de teste | junto de `_db.yml` |
+
+**Medido em 2026-11-24:** o workflow `code.yml` já roda `cargo fmt --check`, `cargo clippy --all-targets -D warnings`, os 6 testes unitários e os 13 testes de `sistema_pg` contra um `postgres:17` migrado; a cobertura de 85% e as actions compostas `setup-rust`/`coverage-gate` continuam planejadas.
 
 Regras herdadas de §4.1 e válidas para todas: `using: composite`, `shell: bash` em cada `run`,
 nenhum segredo lido de variável global, nenhuma action de terceiro por tag.

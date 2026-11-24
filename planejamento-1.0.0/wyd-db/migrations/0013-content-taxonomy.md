@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (arquivo 13) e §3.1; `ddl-confirmado.md` §5.17 (confirmado); `padrao-banco.md` §1 (`P-04`, `P-08`, `P-11`, `P-13`), §3, §4 e §7; `migrations/0008-game-skills.md` §10
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Décimo terceiro arquivo da série e o primeiro do schema `content`. Cria as **cinco taxonomias** que o
 resto do conteúdo referencia — sistema de jogo, classe, linhagem de skill, categoria de item e efeito de
 item — e a **função de dobra** usada nas colunas geradas de busca.

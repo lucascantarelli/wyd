@@ -105,7 +105,9 @@ O `down` de seed é de **desenvolvimento**; em produção o plano A é restore, 
 
 ## 8. O que não está decidido
 
-- **Os seis seeds:** bloqueados por dado de origem, não por desenho; nenhum é escrito por dedução.
+- **Os seis seeds:** bloqueados por dado de origem, não por desenho; nenhum é escrito por dedução. O
+  pedido de curadoria — o que reconferir em cada um e o formato da medição — está em
+  `pedido-de-curadoria-dos-seeds.md`, na raiz do sistema.
 - **Atualização pós-`apply`:** o formato do lote de atualização de conteúdo não está decidido.
 - **Contagens medidas:** as da §2 são as da fonte em 2026-11-08/15; o valor final só vale depois de
   recontado na fonte e gravado no seed.

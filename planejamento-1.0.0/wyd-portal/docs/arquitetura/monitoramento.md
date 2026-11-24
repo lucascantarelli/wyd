@@ -74,7 +74,7 @@ Nomes herdados do legado (`V`, `deprecated/wyd-portal/README.md`), para a opera�
 
 Credencial de banco não entra aqui: saúde e presença usam o adapter do `wyd-db` e a view de `0029`.
 Se a API de métricas exigir autenticação, o valor é segredo do `wyd-ops` no ambiente do portal — nunca
-em `docs/`, nunca no navegador, nunca em log (`AGENTS.md` §5.7).
+em `docs/`, nunca no navegador, nunca em log (`AGENTS.md` §5, item 7).
 
 ## 5. Segurança e fronteira
 

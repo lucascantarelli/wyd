@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §4, `padrao-banco.md` §2/§8, `lacunas.md` §1 (`M4`, `M5`)
 > Revisado em: 2026-11-17
 
+**Estado:** proposto (2026-11-23)
+
 Segundo arquivo do bloco de identidade. Ele cria a **sessão revogável do portal** e a **tabela única
 de tokens de cerimônia da pessoa** (recuperação de senha, verificação de e-mail e troca de endereço).
 Nenhuma das duas tabelas é lida pelo jogo: sessão de jogo mora em `game.session` (`0007`), e o

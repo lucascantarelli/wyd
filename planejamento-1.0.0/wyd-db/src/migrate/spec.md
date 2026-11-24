@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §2 e §7, `padrao-banco.md` §11, `src/provision/spec.md`
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — aguardando aceite do dono
+**Estado:** aceito (2026-11-24) — aguardando aceite do dono
 
 # Runner de migrations da 1.0.0 — desenho
 
@@ -33,7 +33,7 @@ processo com erro nomeado — nunca "aplicar assim mesmo".
 | Regra | Detalhe |
 |---|---|
 | nome | `NNNN_slug.sql` — 4 dígitos, `slug` em `snake_case`, extensão única |
-| numeração | contígua a partir de `0001`, sem buraco e sem duplicata; a série é `0001`…`0029` |
+| numeração | contígua a partir de `0001`, sem buraco e sem duplicata; a série é `0001`…`0034` (**34** arquivos, `plano-migrations.md` §3) |
 | marcadores | exatamente **um** `-- migrate:up` e **um** `-- migrate:down`, nesta ordem |
 | antes do `up` | só comentário de cabeçalho; instrução antes do marcador é erro de formato |
 | `up` | obrigatório e não vazio |

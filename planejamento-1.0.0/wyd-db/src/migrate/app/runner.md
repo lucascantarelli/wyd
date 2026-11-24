@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §3, §5, §6, §7, §8 e §11
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/app/runner.rs` — o fluxo
 
@@ -32,7 +32,7 @@ Assinatura idêntica à da fachada: `migrate::run` só delega.
 
 ```text
 1. files = source.load()?                       → Source (2)
-2. set   = MigrationSet::build(files)?           → SetInvalid (4)
+2. set   = MigrationSet::build(pairs(files))?    → SetInvalid (4); `pairs` = `(stem, content)`, §tabela
 3. info  = backend.server_info()?                → Connect (2: não há versão de arquivo aqui)
 4. preflight: current_user == EXPECTED_ROLE ou allows_superuser() → WrongRole (2)
               server_version_num / 10000 == SERVER_MAJOR         → WrongServer (2)

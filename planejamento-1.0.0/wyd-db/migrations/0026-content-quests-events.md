@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3 (linha 26); `ddl-confirmado.md` §5.26 (confirmado em 2026-11-21); fichas legadas de `0013_quests.sql`, `0014_eventos.sql` e `0015_arena.sql`
 > Revisado em: 2026-11-21
 
+**Estado:** proposto (2026-11-23)
+
 Vigésimo sexto arquivo da série: 6 tabelas no schema `content`. As fichas vêm do legado (nível 4) e
 são **hipótese `H`**; a cadeia de quests do 7662 está declarada não fechada, então a tabela recebe o
 dado, não o inventa.

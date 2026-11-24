@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.1, §5.6 e §5.7; `padrao-banco.md` §2/§5/§8; `lacunas.md` (`B4`, `A12`, `M7`)
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Terceiro arquivo da série. Cria a identidade da pessoa do portal e, separadamente, os dados opcionais
 de perfil e o histórico versionado de consentimentos. A pessoa é a identidade única; a conta de jogo
 é criada depois em `game.account` (`0005`). Perfil ausente é válido e não transforma PII em dado de

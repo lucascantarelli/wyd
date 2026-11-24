@@ -6,7 +6,7 @@
 
 **Estado:** proposto (2026-11-22)
 
-A árvore abaixo é a **planejada** para `crates/wyd-db/src/`; o crate ainda não existe. Ela separa
+A árvore abaixo é a **planejada** para `crates/wyd-db/src/`; o crate existe no primeiro slice (`Cargo.toml`, `lib.rs` e `dsn.rs`) e as demais páginas continuam planejadas. Ela separa
 domínio, portas, orquestração e infraestrutura em `migrate` e `provision`, e mantém o restante do
 crate como superfície de repositório e transferência. O objetivo é que `sqlx` e `std::fs` não vazem
 para o domínio.
@@ -68,5 +68,8 @@ compartilhado (`crate::provision::MIGRATOR` e `crate::dsn::Dsn`).
 
 - **Conteúdo de cada arquivo:** as páginas de `src/` são as donas da API; aqui só há o mapa.
 - **Contrato de `model`, `pool`, `repo` e `transfer`:** ainda não existe; a árvore é planejada.
-- **Build, features e dependências de Cargo:** não foram decididos; não há `Cargo.toml`.
+- **Build, features e dependências de Cargo:** decidido só o mínimo em 2026-11-24 — `name = "wyd-db"`,
+  `version = "0.0.0"`, `edition = "2021"`, `publish = false` e nenhuma dependência. Features e dependências
+  de `sqlx` (e o `edition`/versão mínima de Rust, `docs/guia-desenvolvedor/index.md` §2) seguem **não
+decididos** e entram quando o módulo que as usa for implementado.
 - **Testes por arquivo:** o mapa de alvos é de [`../guia-teste/index.md`](../guia-teste/index.md).

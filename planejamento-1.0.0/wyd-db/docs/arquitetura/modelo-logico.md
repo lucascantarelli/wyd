@@ -68,8 +68,9 @@ defeito a corrigir (`convencoes.md`).
 ## 4. O que esta página não cobre
 
 - **ER completo das 109 tabelas:** o dicionário tem uma página por tabela e 19 páginas de domínio;
-  repetir o ER aqui criaria uma segunda fonte de cardinalidade.
+  repetir o ER aqui criaria uma segunda fonte de cardinalidade — a fonte é
+  [`modelo-conceitual.md`](modelo-conceitual.md), escrita em 2026-11-24.
 - **Coluna, nulidade, default, CHECK e índice:** são do DDL e da página da migration.
 - **Volume, retenção e partição:** dependem de medição da série; a página de retenção está bloqueada.
-- **Modelo conceitual independente:** `modelo-conceitual.md` continua bloqueado; este recorte usa os
-  agregados que já têm DDL fechado.
+- **Modelo conceitual independente:** escrito em 2026-11-24 (`Q-BLK-11` = A); este recorte continua usando
+  os agregados que já têm DDL fechado, e a cardinalidade de lá é a fonte.

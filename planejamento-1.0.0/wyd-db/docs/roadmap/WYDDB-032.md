@@ -32,11 +32,12 @@ Não inventar capacidades, não definir cobertura percentual e não substituir o
 
 ## Risco
 
-A matriz ainda não existe; a issue deve bloquear até ela ser escrita, em vez de criar cenários soltos.
+A matriz existe desde 2026-11-24 (`tests/specs/capacidades.md`, **23** capacidades e **0** cobertas); o risco
+agora é o inverso: cenário escrito sem capacidade, ou capacidade declarada coberta sem cenário executado.
 
 ## Depende de
 
-WYDDB-030, WYDDB-031, e a matriz `CAP-nn`.
+WYDDB-030 e WYDDB-031; a matriz `CAP-nn` está escrita em `tests/specs/capacidades.md` desde 2026-11-24.
 
 ## Evidência ao fechar
 

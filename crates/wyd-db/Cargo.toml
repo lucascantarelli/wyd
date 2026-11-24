@@ -1,0 +1,17 @@
+# Primeiro slice do crate (Q-BLK-18 = A, 2026-11-24). Escolhas mínimas e declaradas:
+# nome do pacote, edition 2021 e nenhuma dependência. Features e dependências de `sqlx`
+# continuam NÃO decididas — ver docs/guia-desenvolvedor/mapa-do-crate.md §"o que não decide".
+[package]
+name = "wyd-db"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[[test]]
+name = "sistema_pg"
+path = "tests/sistema_pg.rs"
+
+[dependencies]
+
+[lints.rust]
+unsafe_code = "forbid"

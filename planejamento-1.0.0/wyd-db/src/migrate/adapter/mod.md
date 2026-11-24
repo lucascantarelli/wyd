@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §10 e §10.1
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/adapter/mod.rs` — infraestrutura
 

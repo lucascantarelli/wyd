@@ -1,0 +1,61 @@
+# Cobertura do `wyd-portal` — dono do fechamento de leilão
+
+> Pergunta: "onde roda o job que fecha leilão vencido, expira anúncio sem lance e devolve custódia, e
+> quem o agenda?"
+> Público: arquitetura, `wyd-portal`, `wyd-admin` e `wyd-ops`
+> Dono: arquitetura + `wyd-ops`
+> Base: `lacunas.md` (`LAC-POR-09`); `docs/arquitetura/consumo-do-banco.md`;
+> `docs/specs/requisitos.md` (`RF-POR-025`, `RNF-POR-009`); `armaria-e-mercado.md` (D4, `M25`);
+> `AGENTS.md` §5, item 8
+> Revisado em: 2026-11-23
+
+**Estado:** proposto (2026-11-23) — decisão respondida em 2026-11-23. O dono de operação respondeu **A**: o BFF executa o fechamento e o
+`wyd-ops` agenda/alerta. Nada foi aplicado: não há job, métrica nem agendador implementados; nenhum
+número desta página é medição.
+
+## 1. Fronteira
+
+**Cobre:** o dono do fechamento de leilão/anúncio vencido e o agendador — `LAC-POR-09`.
+
+**Não decide:** a regra do fechamento (idempotente, `SKIP LOCKED`, uma transação por anúncio, D4), a
+custódia (`M31`/`M25`) nem o `GRANT` do `wyd-db`; o `LAC-POR-01` (só o BFF escreve `portal`) não é
+reaberto.
+
+## 2. O que o planejamento permite medir (`V`, 2026-11-23)
+
+| Fato | Medição | Fonte |
+|---|---|---|
+| lacunas do portal | **0 propostas, 0 abertas, 9 fechadas** | `lacunas.md` §1 |
+| job de fechamento | **não existe** | `lacunas.md` `LAC-POR-09` |
+| agendador e alerta | **decididos**: `wyd-ops` agenda e alerta; implementação pendente | idem |
+| fechamento idempotente | **decidido**: `SKIP LOCKED`, uma transação por anúncio, `uq_market_transaction_listing` | `lacunas.md`; `M25` |
+| regra de leilão sem lance | **decidida** (D4): expira e devolve custódia | `armaria-e-mercado.md` D4 |
+
+## 3. Já decidido — não reabrir
+
+| Item | Decisão vigente | Fonte | Efeito |
+|---|---|---|---|
+| escrita em `portal` | só o BFF do portal escreve; `wyd_portal` não escreve `game` | `LAC-POR-01`; `P-17` | a opção não pode criar worker com escrita em `portal` |
+| dreno concorrente | `FOR UPDATE SKIP LOCKED` em transação curta | `M25` | o job usa o mesmo padrão |
+| fechamento | idempotente, uma transação por anúncio, `uq_market_transaction_listing` | `LAC-POR-09`; `M25` | não se rediscute a regra |
+| leilão sem lance | expira e devolve a custódia; vencedor recebe item, perdedor recebe reserva | D4; `RF-POR-025` | não se rediscute o resultado |
+
+## 4. Cobertura da lacuna
+
+`LAC-POR-09` está **fechada** desde 2026-11-23. A foi a opção aprovada: BFF executa, `wyd-ops` agenda e
+alerta, falha deixa o anúncio reentrante. B exigiria worker com escrita em `portal` e reabrir
+`LAC-POR-01`; C e D foram recusadas em D4.
+
+| Lacuna | Pergunta | Por que não há pergunta |
+|---|---|---|
+| `LAC-POR-09` | — | A preserva `LAC-POR-01`/`P-17`, usa o BFF que já escreve `portal` e não cria `GRANT`; B exigiria reabrir a fronteira e criar segundo escritor; C/D recusadas em D4. Respondida em 2026-11-23. |
+
+## 5. Registro da decisão
+
+**Aprovada pelo dono de operação em 2026-11-23.** `LAC-POR-09` está `fechada`; nada foi aplicado. A
+ordem das respostas e o custo da alternativa estão no `../../briefing-de-decisoes-1.0.0.md` §3.11 e §6;
+esta página continua dona da comparação.
+
+| Lacuna | Aprovação | Resposta |
+|---|---|---|
+| `LAC-POR-09` | A | BFF fecha; `wyd-ops` agenda e alerta; falha deixa o anúncio `ativo` e reentrante, sem transação nem devolução até o sucesso idempotente. **Fechada em 2026-11-23.** |

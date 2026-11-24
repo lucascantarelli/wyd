@@ -99,7 +99,7 @@ tabela lê a política por tabela, neste domínio.
 | `session` | handshake do jogo | `renewed_at`, `character_id` na seleção | `released_at` pelo canal ou pelo reaper |
 
 **Órfão possível:** `person_token` e `pin_reset` vencidos sem uso acumulam; é assunto de
-`retencao-e-capacidade.md`, não de schema. `session` liberada é trilha de auditoria (`M22`, aberta).
+`retencao-e-capacidade.md`, não de schema. `session` liberada é trilha de auditoria (`M22`, fechada).
 
 ## Regras e armadilhas
 

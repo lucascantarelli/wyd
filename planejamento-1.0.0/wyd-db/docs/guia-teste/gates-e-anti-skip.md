@@ -8,8 +8,9 @@
 
 A regra é curta: **`SKIP` não é resultado**. Teste que não roda por variável ausente deve falhar
 nomeando a variável; teste que não roda por falta de banco não entra no aceite. O gate de capacidade é
-por `CAP-nn`, não por percentual de linha. A matriz de capacidades ainda não existe; esta página
-declara a lacuna e não inventa cobertura.
+por `CAP-nn`, não por percentual de linha. A matriz de capacidades está escrita em
+`tests/specs/capacidades.md` — **39** capacidades, **0** cobertas —; esta página não a repete nem
+inventa cobertura.
 
 ## 1. O que reprova
 
@@ -47,8 +48,9 @@ como gate de teste.
 | cenário | um caso nomeado dentro do alvo | prova a capacidade com entrada e resultado |
 | requisito | `RF-DB`/`RN-DB`/`RNF-DB` | aponta para a capacidade, não para “teste genérico” |
 
-A matriz `CAP-nn → alvo → cenário → requisito` **não existe**. Sem ela, não há percentual de cobertura
-a citar e nenhuma capacidade pode ser declarada coberta por intuição.
+A matriz `CAP-nn → alvo → cenário → requisito` existe em `tests/specs/capacidades.md` e é o único lugar
+onde uma capacidade pode ser declarada coberta. Coberta quer dizer **cenário executado e verde** — linha
+escrita na matriz é planejamento, não cobertura; e nenhuma capacidade se declara coberta por intuição.
 
 ## 4. Rotina de aceite
 
@@ -57,11 +59,13 @@ a citar e nenhuma capacidade pode ser declarada coberta por intuição.
 3. Conferir que o teste novo falha quando o defeito é reintroduzido (mutação manual mínima).
 4. Verificar que não há `#[ignore]`/`SKIP` novo no diff.
 5. Registrar a capacidade coberta e a evidência na issue.
-6. Se a matriz não existir, declarar a lacuna; não marcar a capacidade como coberta.
+6. Se a capacidade não estiver na matriz, ela entra na matriz antes de o teste ser aceito: capacidade
+   fora da matriz não pode ser marcada como coberta.
 
 ## 5. O que esta página não cobre
 
 - **Cobertura percentual e meta numérica:** a regra é por capacidade, não por linha.
 - **CI real:** o workflow é stub; a rotina acima é manual até o pipeline existir.
-- **Matriz `CAP-nn`:** é lacuna; a página não a substitui por uma tabela inventada.
+- **A matriz `CAP-nn` em si:** é de `tests/specs/capacidades.md`; esta página só diz quando uma
+  capacidade pode ser chamada de coberta.
 - **Teste de carga e caos:** não há volume nem ambiente medido.

@@ -48,7 +48,7 @@ Nenhuma além da PK: a mesma tentativa pode se repetir.
 |---|---|
 | `ix_login_attempt_identifier (identifier_hash, occurred_at DESC)` | falhas por identificador na última hora |
 | `ix_login_attempt_ip (ip, occurred_at DESC) WHERE ip IS NOT NULL` | abuso por origem (multibox, stuffing) |
-| `ix_login_attempt_occurred (occurred_at DESC)` | retenção (`M22`) |
+| `ix_login_attempt_occurred (occurred_at DESC)` | retenção de 30 dias (`Q-RET-2`) |
 
 ## Papéis
 

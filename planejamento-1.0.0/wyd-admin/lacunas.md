@@ -1,7 +1,7 @@
 > Pergunta: "o que ainda não está decidido no `wyd-admin`, quem decide e o que fica bloqueado?"
 > Público: Arquiteto, produto e operação
 > Dono: equipe do wyd-admin
-> Base: [contrato C4](docs/arquitetura/contrato-c4.md); `wyd-portal/docs/arquitetura/fronteira.md`; `AGENTS.md` §5.8
+> Base: [contrato C4](docs/arquitetura/contrato-c4.md); `wyd-portal/docs/arquitetura/fronteira.md`; `AGENTS.md` §5, item 8
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21); `LAC-ADM-07` abriu em 2026-11-22 com a custódia de item e fechou na

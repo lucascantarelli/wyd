@@ -170,6 +170,6 @@ Os códigos de erro são os mesmos que a página de migration documenta para o c
 3. **Não decide o que é regra de jogo** — isso é de `specs/` (planejado).
 4. **Não fecha `DEFERRABLE`.** Ver §5: ausência declarada, com o caso que reabriria a decisão.
 5. **Não decide retenção.** Quanto tempo a linha fica é de `plano-de-manutencao`/`retencao-e-capacidade`
-   (planejados), com a decisão de operação registrada em `lacunas.md` §2.3 (`M22`, aberta).
+   (planejados), com a decisão de operação registrada em `lacunas.md` §2.3 (`M22`, fechada).
 6. **Não é a lista nominal.** As sete regras de integridade são de `padrao-banco.md` §5, e é lá que
    regra nova entra, com `P` próprio.

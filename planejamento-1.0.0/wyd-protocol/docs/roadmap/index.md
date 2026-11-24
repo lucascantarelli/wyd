@@ -45,7 +45,7 @@ Não existe: página de issue, issue criada no GitHub, número alocado, DoD escr
    sem ele;
 3. o número `WYDPRT-nnn` é alocado na escrita da página, sequencial, na ordem de §7 — nunca antes;
 4. a página só entra na fila quando o DoD é executável (§5.8 do plano);
-5. criar a issue no GitHub é ato à parte, que exige pedido explícito (`AGENTS.md` §5, invariante 9).
+5. criar a issue no GitHub é ato à parte, que exige pedido explícito (`AGENTS.md` §5, item 9).
 
 ## 5. Onde está o fatiamento por versão
 

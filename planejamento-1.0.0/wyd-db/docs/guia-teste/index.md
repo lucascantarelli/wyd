@@ -6,7 +6,7 @@
 
 **Estado:** proposto (2026-11-22)
 
-O guia de teste tem cinco alvos planejados e nenhum `Cargo.toml` que os declare ainda. O comando único
+O guia de teste tem cinco alvos planejados e nenhum deles declarado no `Cargo.toml` que já existe. O comando único
 da suíte é `P`: não existe um script aprovado que rode tudo. Até a suíte existir, o guia define o que
 cada alvo deve provar e proíbe chamar de verde o que não rodou.
 
@@ -18,9 +18,10 @@ cada alvo deve provar e proíbe chamar de verde o que não rodou.
 | `contrato_migrations` | forma da série: contiguidade, `down`, FK, seed, constraint e tipo | não | planejado |
 | `sistema_pg` | aplicar, reaplicar, drift, ciclo de `down`, lock e concorrência | sim | planejado |
 | `sistema_sessoes` | privilégio por papel e leitura cruzada por view | sim | planejado |
-| `sistema_stack_caps` | matriz de capacidades `CAP-nn` | sim | planejado; matriz ausente |
+| `sistema_stack_caps` | matriz de capacidades `CAP-nn` | sim | planejado; matriz escrita (**39** capacidades, **0** cobertas) |
 
-O detalhe de cada alvo fica em `tests/alvos/` quando a suíte existir. A página
+O detalhe de cada alvo está em `tests/alvos/` e a matriz em `tests/specs/capacidades.md` — fora do site,
+porque `tests/` não é publicado. A página
 [`piramide-e-alvos.md`](piramide-e-alvos.md) diz como escolher o nível; a página
 [`gates-e-anti-skip.md`](gates-e-anti-skip.md) diz como impedir teste que não roda.
 
@@ -29,8 +30,8 @@ O detalhe de cada alvo fica em `tests/alvos/` quando a suíte existir. A página
 | Guia | Pergunta | Estado |
 |---|---|---|
 | [`piramide-e-alvos.md`](piramide-e-alvos.md) | que tipo de teste escrevo? | recorte escrito |
-| `fixtures-e-factories.md` | como crio dado? | bloqueado: suíte não desenhada |
-| `dados-de-teste.md` | que dado existe? | bloqueado: catálogo de contas não existe |
+| [`fixtures-e-factories.md`](fixtures-e-factories.md) | como crio dado? | escrito (2026-11-24) |
+| [`dados-de-teste.md`](dados-de-teste.md) | que dado existe? | escrito (2026-11-24) |
 | [`testes-de-contrato.md`](testes-de-contrato.md) | como provo a forma sem banco? | escrito |
 | [`testes-de-sistema.md`](testes-de-sistema.md) | como provo contra PG real? | escrito |
 | [`gates-e-anti-skip.md`](gates-e-anti-skip.md) | como impeço `SKIP`? | recorte escrito |

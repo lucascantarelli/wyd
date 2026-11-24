@@ -2,7 +2,7 @@
 > Público: Arquiteto de schema, desenvolvedor e revisor
 > Dono: equipe do `wyd-db`
 > Base: `wyd-db-1.0.0.md` §4 e §6.2; `docs/convencoes.md`; `proposta-paginas.md` §5–§6
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
 
@@ -17,21 +17,22 @@ próxima): quando a dúvida é “o que faço agora”, a página é outra.
 |---|---|---|
 | [`visao-geral.md`](visao-geral.md) | o que é o `wyd-db` em 10 minutos? | escrita |
 | [`contexto-c4.md`](contexto-c4.md) | quem usa e com o que ele conversa? | escrita |
-| `componentes-c4.md` | quais são as peças internas do crate? | recorte (§5) |
-| `implantacao.md` | como isso roda? | não escrita |
-| `fronteira-hot-cold.md` | onde termina o tick e começa o banco? | recorte (§5) |
-| `fluxo-de-dados.md` | que dados entram, mudam e saem? | não escrita |
-| `modelo-conceitual.md` | quais entidades existem e como se relacionam? | não escrita |
-| `modelo-logico.md` | como o conceitual vira tabela? | recorte (§5) |
+| [`componentes-c4.md`](componentes-c4.md) | quais são as peças internas do crate? | escrita (recorte, §5) |
+| [`implantacao.md`](implantacao.md) | como isso roda? | escrita (2026-11-24) |
+| [`fronteira-hot-cold.md`](fronteira-hot-cold.md) | onde termina o tick e começa o banco? | escrita (recorte, §5) |
+| [`fluxo-de-dados.md`](fluxo-de-dados.md) | que dados entram, mudam e saem? | escrita (2026-11-24) |
+| [`modelo-conceitual.md`](modelo-conceitual.md) | quais entidades existem e como se relacionam? | escrita (2026-11-24) |
+| [`modelo-logico.md`](modelo-logico.md) | como o conceitual vira tabela? | escrita (recorte, §5) |
 | [`integridade-e-constraints.md`](integridade-e-constraints.md) | que regra o banco garante sozinho? | escrita |
 | [`padroes-postgres.md`](padroes-postgres.md) | qual é o padrão de modelagem? | escrita |
 | [`migracoes.md`](migracoes.md) | por que a série é assim? | escrita |
-| `retencao-e-capacidade.md` | o que cresce e o que fazer com isso? | não escrita |
+| [`retencao-e-capacidade.md`](retencao-e-capacidade.md) | o que cresce e o que fazer com isso? | proposto (volume pendente de medição) |
 | [`seguranca.md`](seguranca.md) | quem pode o quê e o que é auditado? | escrita |
 
-As sete páginas sem link ainda não existem: caminho em `code` é “vai existir e é aqui que ele mora”,
-não link. O estado de recorte ou de não escrita é o de `proposta-paginas.md` §5–§6, dono da fila;
-esta página só o reflete.
+Não resta página sem link: `implantacao.md` e `modelo-conceitual.md` foram escritas em 2026-11-24
+(`Q-BLK-10` e `Q-BLK-11` = A) e viraram link; as três de recorte já existiam e por isso já eram link. O estado de recorte ou de não escrita é o de `proposta-paginas.md` §5–§6, dono da fila; esta página
+só o reflete. `retencao-e-capacidade.md` já existe como `proposto`, com volume pendente de
+medição; ela não é `aceita` e não fecha a Onda 5.
 
 ## 2. Ordem de leitura
 

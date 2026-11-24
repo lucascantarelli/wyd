@@ -11,7 +11,8 @@
 > `wyd-portal/`.
 >
 > Referência, nunca fonte: o prompt do portal (`wyd-portal-prompt.md`) é **orientação de produto**
-> (`H`); o que vale é o que está decidido no planejamento novo e no `wyd-db`.
+> (`H`); o que vale é o que está decidido no planejamento novo e no `wyd-db`. A última lacuna,
+> `LAC-POR-09`, fechou em 2026-11-23; o portal está em **0 abertas, 0 propostas e 9 fechadas**.
 
 ---
 
@@ -64,7 +65,7 @@ Medido em 2026-11-20, neste diretório (a contagem de páginas foi recontada em 
 | Páginas em `docs/` | 8 | `docs/index.md`, 4 de `arquitetura/`, 2 de `specs/`, 1 de `roadmap/` |
 | Requisitos funcionais | 33 | `docs/specs/requisitos.md` (18 de 2026-11-20 + 15 de armaria e mercado) |
 | Requisitos não funcionais | 10 | `docs/specs/requisitos.md` §5 (7 de 2026-11-20 + 3 de armaria e mercado) |
-| Lacunas abertas | 0 | `lacunas.md` §1 (8 fechadas, `LAC-POR-01` a `LAC-POR-08`; `LAC-POR-09` em proposta com `P-POR-09`) |
+| Lacunas abertas | 0 | `lacunas.md` §1 (9 fechadas, `LAC-POR-01` a `LAC-POR-09`; `LAC-POR-09` fechada em 2026-11-23) |
 | Rotas mapeadas | 50 | `docs/arquitetura/rotas-e-permissoes.md` §2–§3 (43 até 2026-11-22 + 7 de armaria/mercado) |
 | Tabelas do `wyd-db` citadas | 52 (51 com DDL) + 2 views; as 11 do mercado têm DDL no lote `0034`; quatro views seguem em §7.1 | `docs/arquitetura/consumo-do-banco.md` §7 e §7.1 |
 | Issues criadas | **0** | nenhuma, por decisão desta rodada |
@@ -94,7 +95,7 @@ planejamento-1.0.0/wyd-portal/
 ```
 
 `src/` e `tests/` **não** foram criados: árvore de código se planeja quando a primeira fatia for
-aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5.10).
+aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5, item 10).
 
 ## 6. O que falta para o planejamento sair de rascunho
 
@@ -111,7 +112,7 @@ aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5.10).
 | ~~Decidir armaria e mercado~~ — **decididas:** D1–D10 em 2026-11-22 | produto + arquitetura | `armaria-e-mercado.md`, `requisitos.md` §4, `roadmap.md` F7–F11; schema no lote `0034` (`LAC-ADM-07` fechada) |
 | ~~Executor da transferência de item~~ — **fechada em 2026-11-22** | arquitetura + `wyd-admin` | contrato nas quatro rotas do C4 (`contrato-c4.md` §4.9–§4.13) e fatia `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada); F8 espera aplicar a série |
 | ~~Origem de dano, alcance e durabilidade~~ — **fechada em 2026-11-22** | `wyd-server` + `wyd-db` | `LAC-POR-08`: ficha publica só o provado; durabilidade não existe; captura de dano/alcance em `P-POR-08` |
-| Dono do fechamento de leilão | arquitetura + `wyd-ops` | `LAC-POR-09` em **proposta**: `P-POR-09` recomenda BFF fecha e `wyd-ops` agenda/alerta; falta o “sim” de operação |
+| ~~Dono do fechamento de leilão~~ — **fechada em 2026-11-23** | arquitetura + `wyd-ops` | `LAC-POR-09`: BFF fecha com `SKIP LOCKED` e `Idempotency-Key`; `wyd-ops` agenda e alerta; falha deixa o anúncio reentrante |
 
 ## 7. Gate
 
@@ -125,7 +126,7 @@ cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output sit
 ```
 
 O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
-  `sistemas/wyd-portal/` e, na última medição (2026-11-22), passou com **259 páginas** e **257 fontes**
+  `sistemas/wyd-portal/` e, na última medição (2026-11-24), passou com **309 páginas** e **307 fontes**
   verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.

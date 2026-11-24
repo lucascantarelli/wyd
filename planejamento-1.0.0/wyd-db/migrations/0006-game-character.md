@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.10; `padrao-banco.md` §1/§5/§9; `lacunas.md` `A14`
 > Revisado em: 2026-11-20
 
+**Estado:** proposto (2026-11-23)
+
 Sexto arquivo. Cria a identidade do personagem e quatro satélites 1:1 para status, scores, especiais e
 barra curta de skills. É o primeiro estado persistente de personagem; itens vão em `0009`, skills
 aprendidas em `0008`, guilda em `0010`, e conteúdo nos arquivos `0013` em diante.

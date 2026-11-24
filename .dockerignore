@@ -1,0 +1,25 @@
+# Contexto de build da imagem do site: só `planejamento-1.0.0/**/docs`, `wyd-docs` e scripts.
+# Cliente, legado e saídas de build ficam fora — o cliente sozinho tem 567 MB.
+
+.git
+.github
+.agents
+.freebuff
+
+.env
+.env.*
+
+deprecated
+crates
+wyd-client
+wyd-portal
+
+**/node_modules
+**/.venv
+**/site
+**/.build
+**/__pycache__
+**/*.pyc
+
+docker-compose.yml
+*.log

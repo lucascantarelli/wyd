@@ -1,0 +1,80 @@
+name: docs-image
+
+# Constrói a imagem do site e a publica no GHCR. O `docker compose` do repositório consome
+# essa imagem. Login e push usam `run:` com GITHUB_TOKEN: nenhuma action de terceiro
+# (plano-ci-real.md §4.1). O gate editorial continua em `docs.yml`.
+
+on:
+  push:
+    branches: [develop, main]
+    paths:
+      - "planejamento-1.0.0/**"
+      - "wyd-docs/**"
+      - "wyd-ops/wyd-docs.Dockerfile"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - ".github/workflows/docs-image.yml"
+  pull_request:
+    paths:
+      - "planejamento-1.0.0/**"
+      - "wyd-docs/**"
+      - "wyd-ops/wyd-docs.Dockerfile"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - ".github/workflows/docs-image.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: docs-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/wyd-docs
+
+jobs:
+  imagem:
+    name: construir e publicar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Construir imagem
+        run: |
+          set -eu
+          docker build \
+            --file wyd-ops/wyd-docs.Dockerfile \
+            --tag "$IMAGE:${GITHUB_SHA}" \
+            --tag "$IMAGE:latest" \
+            .
+
+      - name: Fumaça — o site responde 200
+        run: |
+          set -eu
+          docker run --detach --name docs-smoke --publish 8123:8000 "$IMAGE:${GITHUB_SHA}"
+          codigo=0
+          for _ in $(seq 1 30); do
+            if curl --fail --silent --show-error --output /dev/null http://127.0.0.1:8123/; then
+              codigo=1
+              break
+            fi
+            sleep 1
+          done
+          docker logs docs-smoke || true
+          docker rm --force docs-smoke || true
+          if [ "$codigo" != "1" ]; then
+            echo "o site não respondeu 200 em 30 s" >&2
+            exit 1
+          fi
+
+      - name: Publicar no GHCR
+        if: github.event_name != 'pull_request'
+        run: |
+          set -eu
+          echo "${{ secrets.GITHUB_TOKEN }}" \
+            | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+          docker push "$IMAGE:${GITHUB_SHA}"
+          docker push "$IMAGE:latest"

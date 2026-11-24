@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §2, §3, §4, §8 e §10
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/migration/mod.rs` — reexport da camada pura
 

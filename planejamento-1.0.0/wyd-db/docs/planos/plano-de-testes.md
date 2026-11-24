@@ -7,9 +7,12 @@
 **Estado:** proposto (2026-11-22)
 
 O plano de testes define **o que precisa ser provado**, em qual alvo e com qual dado. Ele não inventa
-uma matriz de capacidades que ainda não existe: os cinco alvos estão planejados, a suíte não foi
-implementada e a matriz `CAP-nn` é uma lacuna declarada. O critério de saída só vale quando o alvo
-existir e produzir evidência; "não rodou" não é verde.
+capacidade: a matriz `CAP-nn` está escrita fora do site, em `tests/specs/capacidades.md` — **39**
+capacidades em **5** alvos, **0** cobertas —, e esta página aponta para ela em vez de repetir. Os cinco
+alvos estão planejados e a suíte não foi implementada; a matriz existe como planejamento, o que muda a
+natureza da lacuna: o critério 6 deixou de ser "matriz ausente" e passou a ser "matriz preenchida, teste
+não escrito". O critério de saída só vale quando o alvo existir e produzir evidência; "não rodou" não é
+verde.
 
 ## 1. Escopo
 
@@ -29,18 +32,19 @@ existir e produzir evidência; "não rodou" não é verde.
 | `contrato_migrations` | série contígua, `down` completo, FK para o futuro, seed fora de ordem, constraint anônima e tipo proibido | não | `guia-teste/testes-de-contrato.md` |
 | `sistema_pg` | aplicação, reaplicação, drift, ciclo de `down`, lock e concorrência | sim | `guia-teste/testes-de-sistema.md` |
 | `sistema_sessoes` | `permission denied` por papel e leitura cruzada só por view | sim | `guia-teste/testes-de-sistema.md` |
-| `sistema_stack_caps` | a matriz de capacidades, quando ela existir | sim | lacuna `CAP-nn` |
+| `sistema_stack_caps` | a matriz de capacidades e o anti-skip | sim | `tests/specs/capacidades.md` |
 
-Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; ainda não há `Cargo.toml` com esses alvos. A coluna
+Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; o `Cargo.toml` existe desde 2026-11-24 e ainda não declara esses alvos. A coluna
 “precisa de banco” separa o que pode rodar sem PostgreSQL do que exige um banco descartável.
 
 ## 3. Matriz capacidade × alvo
 
-A matriz `CAP-nn → alvo → cenário → requisito` **não existe**. Ela não é substituída por uma tabela
-inventada nesta página: cada capacidade nova deve ser registrada na matriz e ligada a um alvo antes de
-o teste ser aceito. Até lá, a regra de cobertura é a de
-[`../guia-teste/gates-e-anti-skip.md`](../guia-teste/gates-e-anti-skip.md): nenhum teste sem
-capacidade, nenhuma capacidade sem teste.
+A matriz `CAP-nn → alvo → cenário → requisito` existe em `tests/specs/capacidades.md`, fora do site por
+não ser publicada: **39** capacidades, **5** alvos, **0** cobertas por teste executado. Ela não é copiada
+nem substituída por uma tabela paralela aqui — esta página é dona da **estratégia**, a matriz é dona da
+**capacidade**. Cada capacidade nova entra na matriz e ganha alvo antes de o teste ser aceito. A regra de
+cobertura continua a de [`../guia-teste/gates-e-anti-skip.md`](../guia-teste/gates-e-anti-skip.md):
+nenhum teste sem capacidade, nenhuma capacidade sem teste.
 
 ## 4. Dado e ambiente
 
@@ -63,10 +67,12 @@ está em `src/provision/spec.md` §3, e o guia não a duplica.
 3. `sistema_sessoes` prova a fronteira de escrita e a leitura por view.
 4. Nenhum `SKIP`, `#[ignore]` novo ou filtro silencioso no caminho de aceite.
 5. O corte vertical de `plano-migrations.md` §3.2 passa com o cliente 7662 (evidência manual datada).
-6. A matriz `CAP-nn` está preenchida ou a lacuna está declarada no relatório de saída.
+6. A matriz `CAP-nn` está preenchida e cada capacidade aponta alvo e cenário — ou a lacuna está
+   declarada no relatório de saída.
 
-Os itens 1–3 e 5 não podem ser marcados sem a suíte e a série; o item 6 depende da matriz, que ainda
-não existe. O que o plano **não** mede é cobertura por linha, tempo de execução ou custo por alvo.
+Os itens 1–3 e 5 não podem ser marcados sem a suíte e a série. O item 6 tem a primeira metade cumprida: a
+matriz está preenchida com **39** capacidades e **0** cobertas, e o que falta é o alvo existir. O que o
+plano **não** mede é cobertura por linha, tempo de execução ou custo por alvo.
 
 ## 6. O que este plano não cobre
 

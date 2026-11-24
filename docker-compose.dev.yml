@@ -1,0 +1,24 @@
+# Camada de desenvolvimento do site — **opt-in**, não é carregada automaticamente.
+#
+# Serve para construir e servir o site a partir da árvore de trabalho, sem depender do GHCR e
+# sem gravar por cima da imagem publicada. O caminho padrão (`docker compose up -d docs`) usa
+# a imagem que o CI publica; este é o caminho de quem está editando página.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+#
+# Diferenças em relação ao Compose base, e só elas:
+#   - tag `:dev`: o build local não se confunde com `:latest` nem com o SHA do CI
+#   - `pull_policy: build`: `up` constrói da árvore em vez de puxar imagem antiga
+#   - `restart: "no"`: o site de dev não reinicia sozinho depois de `down` ou de falha
+#
+# Porta, `container_name`, `build:` (contexto e Dockerfile) continuam vindo do base.
+#
+# Dono: `wyd-ops` (imagem e Compose); decisão em
+# `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §2.6.
+
+services:
+  docs:
+    image: ghcr.io/lucascantarelli/wyd-docs:dev
+    pull_policy: build
+    restart: "no"

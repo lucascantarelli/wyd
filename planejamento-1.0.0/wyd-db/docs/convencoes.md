@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do wyd-db
 > Base: —
-> Revisado em: 2026-11-17
+> Revisado em: 2026-11-23
 
 Esta página é o contrato de **leitura** da documentação do `wyd-db`. Ela diz o que cada marca
 significa e o que você tem direito de concluir de uma frase. As regras de **escrita** ficam em
@@ -75,6 +75,9 @@ Quatro regras:
 **Forma:** primeira linha depois do cabeçalho, `**Estado:** <estado> (AAAA-MM-DD)`, com a data em que
 o estado foi atribuído — não a da última edição. Página sem essa linha é rascunho, e `proposto` sem
 data não diz há quanto tempo espera revisão.
+
+Em `migrations/`, a linha de estado da página é da própria página; o estado `concluída` de
+`migrations-checklist.md` é do arquivo e não substitui `aceito` (`M33`, Q-M33-1 e Q-M33-5).
 
 **Estado de tabela e coluna** — vale para o dicionário de dados.
 

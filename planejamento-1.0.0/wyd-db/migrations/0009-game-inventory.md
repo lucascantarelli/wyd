@@ -4,6 +4,8 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.12 (confirmado); `padrao-banco.md` §1/§5/§9; `lacunas.md` §2.3
 > Revisado em: 2026-11-22
 
+**Estado:** proposto (2026-11-23)
+
 Nono arquivo da série. Cria o inventário do personagem, o baú da conta e o contador de piedade de
 refino. O catálogo de item não nasce aqui: `item_index` é número do cliente, e nome, preço e efeito
 moram em `content.item_catalog` (`0014`) e nas tabelas de economia (`0011`).

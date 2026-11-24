@@ -83,8 +83,8 @@ registro, o gate reprova.
 
 ## 7. O que esta página não cobre
 
-- **Cobertura funcional:** a matriz `CAP-nn` não existe; cobertura por capacidade é de
-  `plano-de-testes.md` (recorte, ainda não escrito).
+- **Cobertura funcional:** a matriz `CAP-nn` está em `tests/specs/capacidades.md` (**23** capacidades,
+  **0** cobertas); a estratégia é de `plano-de-testes.md`.
 - **Desempenho e carga:** não há medição nem limiar decidido.
 - **Backup, restore e retenção executada:** são de
   [`plano-de-implantacao.md`](plano-de-implantacao.md) e da operação.

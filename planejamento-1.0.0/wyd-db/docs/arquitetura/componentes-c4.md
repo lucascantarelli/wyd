@@ -2,7 +2,7 @@
 > Público: Arquiteto, desenvolvedor do crate e revisor de PR
 > Dono: equipe do `wyd-db`
 > Base: `src/migrate/spec.md` §10; `src/provision/spec.md` §5; `wyd-db-1.0.0.md` §6.16
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -94,8 +94,8 @@ com portas falsas, sem PostgreSQL e sem disco.
 
 - **Componentes de `model`, `pool`, `repo` e `transfer`:** só têm nome de página em
   `wyd-db-1.0.0.md` §6.16; não há desenho de componente aprovado.
-- **Portas de repositório:** não têm contrato; [`portas-e-contratos.md`](../guia-desenvolvedor/portas-e-contratos.md)
-  cobre apenas as sete portas de `migrate` e `provision`.
+- **Portas de repositório:** a C4 do core tem contrato em [`portas-e-contratos.md`](../guia-desenvolvedor/portas-e-contratos.md)
+  §5 e em `wyd-core-1.0.0.md` §3.2; pessoa, item e economia continuam sem contrato.
 - **Implantação, porta de rede e volume:** são de [`../planos/plano-de-implantacao.md`](../planos/plano-de-implantacao.md)
   e não foram medidos.
 - **Fluxo de dados do jogo:** é de [`fronteira-hot-cold.md`](fronteira-hot-cold.md), não do runner.

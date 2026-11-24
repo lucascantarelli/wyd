@@ -49,7 +49,7 @@ Medido no código atual; cada linha vira requisito. Não é desenho.
 | R10 | Token de reset só existe como hash sha256 hex de 64 | `0053_pin_reset_token.sql` | `portal.person_token` (§4) e `game.pin_reset` (§5.2) |
 | R11 | Auditoria append-only, sem FK | `0005_auditoria.sql` | `ops.audit_log` (§5.3), ator tripartido (`M18-A`) |
 | R12 | Papel do jogador no jogo: `player`/`moderator`/`admin` | `accounts_role` | `game.account.role` (§5.2) |
-| R13 | Senha e PIN só como hash resistente (argon2id) | `AGENTS.md` §2.5, `repo/accounts.rs` | CHECKs de prefixo (§5.1/§5.2) + política `M9` |
+| R13 | Senha e PIN só como hash resistente (argon2id) | `repo/accounts.rs` | CHECKs de prefixo (§5.1/§5.2) + política `M9` |
 | R14 | As **5** contas da mesma pessoa podem estar online ao mesmo tempo, em qualquer canal | cultura do jogo (§3) + `docs/wyd/multiconta.md` | `game.session` (§5.5): sessão só por conta |
 | R15 | Contas da mesma pessoa formam grupo e trocam entre si | `docs/wyd/multiconta.md` + comandos `/party*` | o schema não impede; restrição só por política |
 | R16 | O limite de conexões por IP não pode ser menor que 5 por pessoa | `cpsock/limits.rs` (padrão 6), `tests/sistema/limite_ip.rs` | política de transporte, não schema (`D10`) |

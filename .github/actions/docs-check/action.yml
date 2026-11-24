@@ -34,3 +34,8 @@ runs:
       shell: bash
       working-directory: wyd-docs
       run: "${{ inputs.python }} verificar-contagens.py"
+
+    - name: Verificar os censos citados entre páginas
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} verificar-censos.py"

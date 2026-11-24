@@ -5,9 +5,9 @@
 > prova em contrário.
 >
 > **O que este arquivo cobre:** as **20 lacunas** `LPRT-01`–`LPRT-20` do planejamento do protocolo.
-> **17 foram decididas pelo dono em 2026-11-20**; **3 continuam abertas** por dependerem de captura
-> ou leitura do cliente: `LPRT-03`, `LPRT-06` e `LPRT-09`. Nenhuma decisão aqui inventa byte: as
-> pendentes de prova seguem `H` até o golden ou a leitura datada.
+> **18 foram decididas pelo dono** — 17 em 2026-11-20 e `LPRT-09` (build-alvo) em 2026-11-23; **2
+> continuam abertas**, `LPRT-03` e `LPRT-06`, ambas dependentes de captura. Nenhuma decisão aqui inventa
+> byte: as pendentes de prova seguem `H` até o golden ou a leitura datada.
 >
 > **O que este arquivo não é:** não decide. Cada linha diz **quem** decide e **o que** precisa ser
 > decidido; a decisão entra no documento dono (ou em ADR, quando estrutural) e volta aqui como linha
@@ -73,15 +73,20 @@ tamanho do catálogo publicado. A contagem publicada é a do gerador novo, com p
 
 | Grupo | Lacunas | Abertas | Propostas | Fechadas |
 |---|---:|---:|---:|---:|
-| Escopo e contrato | 4 | 1 (`LPRT-09`) | 0 | 3 (`LPRT-01`, `LPRT-18`, `LPRT-19`) |
+| Escopo e contrato | 4 | 0 | 0 | 4 (`LPRT-01`, `LPRT-18`, `LPRT-19`, `LPRT-09`) |
 | Fio e codec | 6 | 2 (`LPRT-03`, `LPRT-06`) | 0 | 4 (`LPRT-02`, `LPRT-05`, `LPRT-07`, `LPRT-08`) |
 | Payload e prova | 4 | 0 | 0 | 4 (`LPRT-04`, `LPRT-10`, `LPRT-11`, `LPRT-13`) |
 | Qualidade e entrega | 6 | 0 | 0 | 6 (`LPRT-12`, `LPRT-14`, `LPRT-15`, `LPRT-16`, `LPRT-17`, `LPRT-20`) |
-| **Total** | **20** | **3** | **0** | **17** |
+| **Total** | **20** | **2** | **0** | **18** |
 
-As 17 fechadas são **decisões do dono registradas em 2026-11-20**; a proposta correspondente está no
-plano diretor §10. Fechar a lacuna não fecha a prova: página de `wire/`, `payloads/` ou `goldens/`
+As 18 fechadas são **decisões do dono**: 17 registradas em 2026-11-20 e `LPRT-09` em 2026-11-23; a
+proposta correspondente está no plano diretor §10. Fechar a lacuna não fecha a prova: página de `wire/`, `payloads/` ou `goldens/`
 continua exigindo `V` (golden, captura ou leitura do cliente) nas afirmações de byte.
+
+**A1 autorizada em 2026-11-23 (resposta A).** O dono autorizou a implementação do peer da opção A, do
+`ECAP` e da CLI, e a execução da captura A1. Isso não fecha `LPRT-03` nem `LPRT-06`: `LPRT-03` só fecha
+com a captura completa, a segunda leitura e o golden; `LPRT-06` continua dependente das capturas B/C e do
+seed sintético.
 
 ---
 
@@ -94,7 +99,7 @@ continua exigindo `V` (golden, captura ou leitura do cliente) nas afirmações d
 | `LPRT-01` | Que opcodes o catálogo novo cobre e como a cobertura chega à `1.0.0`? | define o tamanho do catálogo, das páginas de payload, dos goldens e da suíte; sem isso o roadmap não fatia | produto + arquitetura | `A` | fechada | **decisão do dono (2026-11-20): o catálogo novo cobre todo o inventário do legado e não se limita a ele; nada fica fora da série.** Os **198 são baseline do legado** (§0.4), portanto **piso de cobertura, não total alvo**: a contagem publicada vem do gerador novo, com proveniência por linha (`LPRT-16`, `LPRT-20`). A entrega é fatiada em versões menores, da `0.1.0` à `1.0.0` (plano diretor §9.1), e a `1.0.0` fecha com cobertura integral |
 | `LPRT-18` | O crate entrega payload tipado ou bytes crus a `wyd-core`? | muda a API e a fronteira: offset saindo do crate reabre a possibilidade de cada sistema interpretar o fio por conta própria | arquitetura + frente `wyd-core` | `W6` | fechada | **decisão do dono (2026-11-20): payload tipado e validado**; bytes crus não saem do crate — contrato em §1.4 do plano diretor |
 | `LPRT-19` | Os fluxos `game ↔ db` (`FLAG_GAME2DB`, `FLAG_DB2GAME`, `FLAG_DB2NP`, `FLAG_NP2DB`) entram no escopo? | `wyd-db` é acessado pelo servidor, não por CPSock na `1.0.0`; incluir fluxo sem consumidor cria contrato morto | produto + arquitetura | `A` | fechada | **decisão do dono (2026-11-20): os fluxos `game ↔ db`, `db ↔ np` e `np` entram no escopo**; as 7 flags são documentadas em `docs/wire/flags-de-direcao.md`, com a ressalva de que ainda não há consumidor medido na arquitetura nova |
-| `LPRT-09` | Qual build do cliente é o alvo e o que muda em relação ao build anterior? | o legado declara `APP_VERSION = 7640` e o repositório fala em cliente 7662; sem versão-alvo, offset e mensagem ficam ambíguos | frente `wyd-client` + pesquisa | `W3` | aberta | **alvo provável 7662 registrado em 2026-11-20**; `deprecated/crates/wyd-protocol/src/wire/header.rs:31` (7640) × `README.md` do legado (7662) — fecha só com captura datada que confirme a versão |
+| `LPRT-09` | Qual build do cliente é o alvo e o que muda em relação ao build anterior? | o legado declara `APP_VERSION = 7640` e o repositório fala em cliente 7662; sem versão-alvo, offset e mensagem ficam ambíguos | frente `wyd-client` + pesquisa | `W3` | fechada | **decisão do dono (2026-11-23, `Q-PRT-1` opção A): build-alvo é o cliente 7662, identificado por versão e SHA-256 completos; qualquer outro build é não suportado.** Identidade medida em `wyd-client/registro-do-cliente.md` §4 (2026-11-22). "O que muda em relação ao build anterior" continua não medido: é leitura datada de `docs/goldens/como-capturar.md` §5, marcada `H`, não decisão pendente |
 
 ### 2.2 Fio e codec
 
@@ -134,18 +139,18 @@ continua exigindo `V` (golden, captura ou leitura do cliente) nas afirmações d
 | Documento | Bloqueado por |
 |---|---|
 | `docs/wire/header.md`, `docs/wire/enquadramento.md`, `docs/wire/keyword-e-checksum.md` | `LPRT-03` (origem da `KeyWord`) + prova de byte por golden/captura |
-| `docs/wire/tabela-de-opcodes.md`, `docs/wire/opcodes/*` | `LPRT-09` (build-alvo) |
+| `docs/wire/tabela-de-opcodes.md`, `docs/wire/opcodes/*` | alvo fixado (`LPRT-09`); falta a prova de byte |
 | `docs/payloads/*` | `LPRT-06` (encoding/terminador) + golden por família |
-| `docs/goldens/*`, `docs/tests/*` | capturas reais: o processo de `LPRT-10` está aprovado e o procedimento das três lacunas está escrito em `docs/goldens/como-capturar.md`; nenhuma captura existe |
+| `docs/goldens/*`, `docs/tests/*` | capturas reais: o processo de `LPRT-10` está aprovado e o procedimento das duas lacunas de captura e da leitura de build está escrito em `docs/goldens/como-capturar.md`; nenhuma captura existe |
 | `docs/specs/requisitos-*.md`, `docs/specs/fluxos/*` | nada em decisão; dependem das ondas 2–5 |
 | `docs/arquitetura/seguranca-do-fio.md` | destravado por `LPRT-17` |
-| `docs/arquitetura/versionamento-e-compatibilidade.md` | `LPRT-09` |
+| `docs/arquitetura/versionamento-e-compatibilidade.md` | alvo fixado (`LPRT-09`); falta a comparação entre builds |
 | `docs/roadmap/WYDPRT-nnn.md` | destravado por `LPRT-01` |
 
 **Não bloqueado:** `docs/index.md`, `docs/convencoes.md` e toda a onda 1 (método: guias, planos,
 prompts, skills). Na onda 2, `header.md` e `keyword-e-checksum.md` já têm forma decidida (`LPRT-02`,
 `LPRT-05`, `LPRT-07`), faltando só a origem da `KeyWord` e a prova de byte; na onda 3, o escopo do
-catálogo está decidido (`LPRT-01`) e falta apenas o build-alvo (`LPRT-09`).
+catálogo está decidido (`LPRT-01`) e o build-alvo também (`LPRT-09`, 2026-11-23); falta a prova de byte.
 
 ---
 

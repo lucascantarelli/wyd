@@ -1,8 +1,8 @@
 > Pergunta: "qual plano eu leio, e qual vale agora?"
 > Público: Produto, arquitetura e operação do `wyd-db`
 > Dono: equipe do `wyd-db`
-> Base: `wyd-db-1.0.0.md` §6.9; `proposta-paginas.md` §8; `docs/convencoes.md`
-> Revisado em: 2026-11-22
+> Base: `wyd-db-1.0.0.md` §6.9; `proposta-paginas.md` §6 e §8; `docs/convencoes.md`; `pendencias-de-fechamento.md` §6.6
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
 
@@ -15,17 +15,18 @@ dos nove planos da pasta e responde qual deles governa a fase atual.
 | Plano | Pergunta | Estado |
 |---|---|---|
 | [`plano-de-documentacao.md`](plano-de-documentacao.md) | como esta documentação é produzida? | escrito |
-| `plano-de-testes.md` | como provamos o banco? | recorte (§5) |
+| [`plano-de-testes.md`](plano-de-testes.md) | como provamos o banco? | recorte (§5) |
 | [`plano-de-implantacao.md`](plano-de-implantacao.md) | como isto entra no ar? | escrito |
 | [`plano-de-dados-e-seeds.md`](plano-de-dados-e-seeds.md) | que dado inicial existe? | escrito |
-| `plano-de-manutencao.md` | o que fazer toda semana/mês? | não escrito |
+| [`plano-de-manutencao.md`](plano-de-manutencao.md) | o que fazer toda semana/mês? | escrito (2026-11-24) |
 | [`plano-de-qualidade-e-gates.md`](plano-de-qualidade-e-gates.md) | quando uma mudança é aceita? | escrito |
 | `metricas.md` | quanto já está pronto? | não escrito |
 | [`riscos.md`](riscos.md) | o que pode dar errado? | escrito |
 | [`registro-de-execucao.md`](registro-de-execucao.md) | o que já foi entregue? | escrito |
 
-Seis páginas estão escritas e três não: caminho em `code` não é link. O estado de recorte ou de
-não escrita é o de `proposta-paginas.md` §5–§6; esta página só o reflete.
+Nove páginas estão escritas e uma não: caminho em `code` não é link. `metricas.md` continua bloqueada pelo
+número medido (`M20`), não por decisão. O estado de recorte ou de não escrita é o de
+`proposta-paginas.md` §6; esta página só o reflete.
 
 ## 2. Qual plano é vigente
 
@@ -38,7 +39,7 @@ timeline única (`D-A`, fechada em 2026-11-19).
 |---|---|---|
 | planejamento (2026-11-22) | `plano-de-documentacao.md` + `proposta-paginas.md` §8 | a entrega é página, não schema aplicado |
 | execução da série | [`plano-de-implantacao.md`](plano-de-implantacao.md), [`plano-de-dados-e-seeds.md`](plano-de-dados-e-seeds.md) e [`plano-de-qualidade-e-gates.md`](plano-de-qualidade-e-gates.md) | ordem, dado inicial e aceite |
-| operação | `plano-de-manutencao.md` | rotina, vacuum, backup e crescimento |
+| operação | [`plano-de-manutencao.md`](plano-de-manutencao.md) | rotina, vacuum, backup e crescimento |
 
 Nenhum plano é `aceito`: todos são `proposto`/`P`. A fase muda por decisão do dono, não por esta
 tabela.
@@ -59,3 +60,5 @@ tabela.
 - **O aceite de uma mudança:** é de [`plano-de-qualidade-e-gates.md`](plano-de-qualidade-e-gates.md).
 - **O risco e o defeito:** são de [`riscos.md`](riscos.md).
 - **A contagem de páginas e o percentual:** são de `metricas.md` (planejado) e do censo do site.
+- **O quadro de fechamento com ID, dono e desbloqueio:** é de `pendencias-de-fechamento.md`, na raiz de
+  `planejamento-1.0.0/wyd-db/`; esta página só aponta os planos.
