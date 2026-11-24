@@ -2,7 +2,7 @@
 
 > Pergunta: "qual resposta fecha mais lacuna e libera mais frente por unidade de esforço, o que cada uma desbloqueia e o que custa a resposta oposta?"
 > Público: dono do produto, arquitetura, `wyd-ops` e QA
-> Dono: arquitetura (este briefing); a fila oficial é `wyd-1.0.0.md` §6.3, que cita esta página
+> Dono: arquitetura (este briefing); **o foco e o ranking do projeto são da página canônica** `wyd-ops/docs/prioridade-do-projeto.md` §0.1; este briefing cobre as decisões de sistema
 > Base: `wyd-1.0.0.md` §6.1–§6.3 e §7; `wyd-sim/docs/proposta-decisoes-sim.md`; `wyd-launcher/docs/proposta-decisoes-launcher.md`; `wyd-bots/docs/proposta-decisoes-bots.md`; `wyd-net/docs/proposta-decisoes-net.md`; `wyd-portal/docs/proposta-decisoes-portal.md`; `wyd-server/docs/specs/endpoint-de-captura.md` §8–§9.1; `AGENTS.md` §5, §8 e §9
 > Revisado em: 2026-11-23 (respostas `Q-SIM-2`, `Q-SIM-3`, `Q-BOT-1`, `Q-BOT-2`, `Q-BOT-3`, `Q-NET-1`, `Q-LCH-1`, `Q-LCH-2`, `Q-LCH-3`, `Q-LCH-4`, `LAC-POR-09` e A1 registradas)
 
@@ -13,9 +13,9 @@ implementa, não cria issue, não altera schema e não escolhe produto. Duas lac
 `Q-SIM-2` = A, `Q-SIM-3` = A, `Q-BOT-1` = A, `Q-BOT-2` = A, `Q-LCH-1` = A, `Q-LCH-2` = A, `Q-LCH-3` = A e
 `Q-LCH-4` = A; `Q-BOT-3` = A fixou a política de limiar e `Q-NET-1` = A fixou a política de limites, mas
 **não fecharam `LBOT-03`/`LNET-01`**, que seguem abertas como medição. `LAC-POR-09` = A fechou a última
-lacuna do portal e zerou as respostas pendentes. Esses estados estão registrados nas páginas dona. O
-briefing mantém **0 respostas do dono** pendentes; A1 foi autorizada em 2026-11-23 e a implementação é a
-próxima ação. Nenhuma
+lacuna do portal e zerou as respostas pendentes. Esses estados estão registrados nas páginas dona. Para as decisões de **sistema** cobertas aqui, o briefing mantém **0 respostas** pendentes; as decisões
+de **foco** (`Q-FOCO-3`, `Q-FOCO-4`) e as **2** `Q-BLK` do piloto estão na página canônica. A1 foi
+autorizada em 2026-11-23 e a implementação é a próxima ação. Nenhuma
 fixture, fórmula, coeficiente, número de balanceamento, dado de jogo ou conteúdo de cliente é criado aqui.
 
 ## 0. Como ler

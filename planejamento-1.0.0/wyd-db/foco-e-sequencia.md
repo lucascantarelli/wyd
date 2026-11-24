@@ -1,4 +1,4 @@
-> Pergunta: "de todas as frentes abertas, qual é o foco imediato, e em que ordem as outras entram?"
+> Pergunta: "quais frentes internas do `wyd-db` estão abertas, quanto cada uma custa e de que terceiro depende — sem substituir o foco do projeto?"
 > Público: Dono do projeto, curadoria de conteúdo e equipe do `wyd-db`
 > Dono: equipe do `wyd-db`
 > Base: `migrations-checklist.md` §1–§4; `plano-migrations.md` §3–§4; `docs/planos/plano-de-dados-e-seeds.md` §2; `docs/planos/plano-de-testes.md` §5; `docs/specs/rastreabilidade.md`; `pendencias-de-fechamento.md` §1 e §6.6.20; `pedido-de-curadoria-dos-seeds.md`; `../wyd-1.0.0.md` §1
@@ -6,11 +6,16 @@
 
 **Estado:** proposto (2026-11-24)
 
-Este documento **fecha a decisão de foco** do `wyd-db`: enumera as frentes abertas com o número que cada
-uma tem no arquivo dono, ordena pelo que cada uma destrava e nomeia **uma** como foco imediato. Ele não é
-proposta de página nova nem seed: é direção. O ranking de §6.6.20 de `pendencias-de-fechamento.md` continua
-sendo o registro do lote G; aqui ele é **consolidado** e recebe a frente de curadoria, que não estava
-naquele quadro porque o pedido só foi escrito depois. Onde os dois divergirem, vale este documento.
+**Foco do projeto (2026-11-24): D-01 = A — finalizar o `wyd-db`.** A página canônica é
+`../wyd-ops/docs/prioridade-do-projeto.md` §0.1; esta página mede as frentes internas do `wyd-db` e
+mantém as perguntas de seed. Ela **não** publica um segundo ranking do projeto: onde divergir, vale a
+página canônica.
+
+Este documento mede as frentes do `wyd-db` e preserva as perguntas de seed: enumera as frentes abertas
+com o número que cada uma tem no arquivo dono e registra o custo/dependência de cada uma. Ele não é
+proposta de página nova nem seed: é medição e insumo. **A decisão de foco e a ordem do projeto são da
+página canônica §0.1.** O ranking de §6.6.20 de `pendencias-de-fechamento.md` continua sendo o registro
+do lote G; aqui ele é apenas citado. Onde houver divergência, vale a página canônica.
 
 ## 1. As frentes abertas hoje, medidas
 
@@ -20,60 +25,49 @@ seção onde vivem.
 | # | Frente | Número | Fonte |
 |---:|---|---|---|
 | **F1** | **Curadoria e medição do 7662** | **6** datasets parados; **6** linhas `bloqueada` por dado; **0** por decisão; **0** por dependência; **6** páginas de migration faltando (28 de 34) | `migrations-checklist.md` §3 (motivo por arquivo), §4 (soma `28 + 6 = 34`), §1 (o que cada estado significa); `plano-de-dados-e-seeds.md` §2 |
-| **F2** | **Issues + suíte de testes** | **40** issues com DoD e **0** criadas; **12 de 12** páginas de `tests/`, todas `aceito` (2026-11-24); matriz `CAP-nn` com **39** capacidades e **13** cobertas por teste executado; **64** células pendentes na matriz (**24** `teste` + **40** `issue`; **13** `teste` já em `V` e outras **3** são `—` por regra); **31 de 40** linhas com página que nomeia o requisito (**9** sem página, **0** sem cenário) | `docs/roadmap/` (40 páginas `WYDDB-nnn`); `docs/planos/riscos.md` `R-5`; `wyd-db-1.0.0.md` §6.17; `rastreabilidade.md` §2; `plano-de-testes.md` §5 |
+| **F2** | **Issues + suíte de testes** | **40** issues abertas (#82–#121) e **0** vinculadas; **12 de 12** páginas de `tests/`, todas `aceito` (2026-11-24); matriz `CAP-nn` com **39** capacidades e **13** cobertas por teste executado; **64** células pendentes na matriz (**24** `teste` + **40** `issue`; **13** `teste` já em `V` e outras **3** são `—` por regra); **31 de 40** linhas com página que nomeia o requisito (**9** sem página, **0** sem cenário) | `docs/roadmap/` (40 páginas `WYDDB-nnn`); `docs/planos/riscos.md` `R-5`; `wyd-db-1.0.0.md` §6.17; `rastreabilidade.md` §2; `plano-de-testes.md` §5 |
 | **F3** | **Aceite de página** | **168** atos pendentes: **141** em `docs/` + **0** em `src/` + **27** em `migrations/` + **0** em `tests/`; **52** páginas `aceito` (2 ADRs + `migrations/0002` + 12 de `tests/` + 37 de `src/`); a série de **28** `.sql` já aplica do zero e 13 cenários rodaram, mas nenhuma das 27 páginas de `migrations/` virou `aceito` | contagem de `**Estado:**`; `wyd-db-1.0.0.md` §10 (11 itens por página); `proposta-decisoes-m33.md` §2 |
-| **F4** | **Requisito das 94 tabelas** | **16 de 109** tabelas com `RF`/`RN`; o critério de §11.1 exige cobertura de todas | `rastreabilidade.md` §3.2; `wyd-db-1.0.0.md` §11.1 |
-| **F5** | **Expansão para outros sistemas** | **12** sistemas fora do `wyd-db`; **5** lacunas abertas, todas de captura (`LPRT-03`, `LPRT-06`, `LNET`, `LBOT-03`, `LCLI-02`); `wyd-protocol` com **5 de 131** páginas | `../wyd-1.0.0.md` §1.1; `AGENTS.md` §6 |
-| **F6** | **Perguntas ao dono** | **2** `Q-BLK` abertas (`Q-BLK-20` e `22`; `17`, `18`, `19`, `21`, `23` e `24` foram respondidas em A em 2026-11-24) + **2** de foco do projeto (`Q-FOCO-2` e `Q-FOCO-3`) + **4** de seed (§5 deste documento) = **8**; **0** lacunas abertas no `wyd-db` | `pendencias-de-fechamento.md` §6.6.22.5, §6.6.23, §6.6.24 e §6.6.29; `../wyd-ops/docs/prioridade-do-projeto.md` §7, §10 e §11; `lacunas.md` §1 |
+| **F4** | **Requisito das 109 tabelas** | **16 de 109** tabelas com `RF`/`RN`; o critério de §11.1 exige cobertura de todas | `rastreabilidade.md` §3.2; `wyd-db-1.0.0.md` §11.1 |
+| **F5** | **Expansão para outros sistemas** | **12** sistemas fora do `wyd-db`; **6** lacunas abertas + **1** proposta, todas de captura (protocol 2, client 2+1, net 1, bots 1); `wyd-protocol` com **5 de 131** páginas | `../wyd-1.0.0.md` §1.1; `AGENTS.md` §6 |
+| **F6** | **Perguntas ao dono** | **2** `Q-BLK` abertas (`Q-BLK-20` e `22`; `17`, `18`, `19`, `21`, `23` e `24` foram respondidas em A em 2026-11-24) + **2** de foco do projeto (`Q-FOCO-3` e `Q-FOCO-4`) + **4** de seed (§5 deste documento) = **8**; **0** lacunas abertas no `wyd-db` | `pendencias-de-fechamento.md` §6.6.22.5, §6.6.23, §6.6.24 e §6.6.29; `../wyd-ops/docs/prioridade-do-projeto.md` §0.1, §7 e §10; `lacunas.md` §1 |
 
 **O que os três zeros de F1 querem dizer:** o bloqueio dos seis não é de desenho nem de decisão — o DDL
 fechou em 2026-11-20/21 e os cinco lotes de 2026-11-21 foram aprovados. Sobrou **dado**: nenhuma linha
 pode ser escrita antes de o cliente 7662 ser medido (`plano-migrations.md` §4, decisão de 2026-11-23).
 O instrumento do pedido já existe (`pedido-de-curadoria-dos-seeds.md`) e não muda esse número.
 
-## 2. Ordem por poder de desbloqueio
+## 2. Frentes internas do `wyd-db` — medição, não ranking
 
-> **O ranking das frentes do projeto é publicado em** `../wyd-ops/docs/prioridade-do-projeto.md`
-> (2026-11-24). Esta seção continua sendo a medição **do `wyd-db`** com seis frentes; a página publicada
-> ranqueia as três frentes do projeto e é a dona da recomendação. Onde as duas divergirem sobre qual vem
-> primeiro, vale a página publicada.
+> **O ranking das frentes do projeto é a página canônica** `../wyd-ops/docs/prioridade-do-projeto.md`
+> (D-01 = A, 2026-11-24). A tabela abaixo mede as frentes internas do `wyd-db` sem posição de projeto;
+> serve para mostrar o custo e a dependência de F1–F6, não para escolher a frente do projeto. Onde as
+> duas divergirem, vale a página canônica.
 
 Critério da missão: itens bloqueantes resolvidos, regras/padrões fixados e planejamentos liberados, **por
 unidade de esforço** — e uma coluna que os números de F1 obrigam a ter: **depende de terceiro?**
 
-| Pos. | Frente | Itens que libera | Quais | Regras fixadas | Depende de terceiro | Custo |
-|---:|---|---:|---|---|---|---|
-| **1** | **F2 — suíte + issues** | **31 de 40** linhas com cenário e **5** alvos prontos | 12 páginas de `tests/` aceitas (**0** atos de aceite restantes na leva 1), a matriz `CAP-nn` (**39** capacidades), as 40 linhas com natureza e onda, 40 vínculos de issue | **3**: fixture/factory, dado de teste, matriz `CAP-nn` | **não** | **0** atos de aceite (feito em 2026-11-24) + 3 sessões (issues) |
-| **2** | **F1 — curadoria 7662** | **19 itens** + `R-6` | 6 páginas de migration, 6 `.sql`, 6 linhas de checklist, 1 página de fluxo (`carga-de-conteudo`) | 0 | **sim** — cliente 7662 | 6 medições + 12 artefatos |
-| **3** | **F3 — aceite** | **168 atos** | `src/` escrito (**37** páginas, aceitas em 2026-11-24), série aplicada, `planos/metricas.md`, 144/144 | 0 (decididas em `Q-M33-1`–`6`) | não | 100–168 h |
-| **4** | **F4 — requisito das 94** | **1 critério** | cobertura de §11.1; matriz sem lacuna | **1**: política de cobertura | não | 19 a 94 blocos |
-| **5** | **F5 — outros sistemas** | **0** no `wyd-db` | nada daqui; 12 planos alheios | 0 | **sim** — captura A1 | alto |
+| Frente | Itens que libera | Quais | Regras fixadas | Depende de terceiro | Custo |
+|---|---:|---|---|---|---|
+| **F2 — suíte + issues** | **31 de 40** linhas com cenário e **5** alvos prontos | 12 páginas de `tests/` aceitas (**0** atos de aceite restantes na leva 1), a matriz `CAP-nn` (**39** capacidades), as 40 linhas com natureza e onda, 40 vínculos de issue | **3**: fixture/factory, dado de teste, matriz `CAP-nn` | **não** | **0** atos de aceite (feito em 2026-11-24) + 3 sessões (issues) |
+| **F1 — curadoria 7662** | **19 itens** + `R-6` | 6 páginas de migration, 6 `.sql`, 6 linhas de checklist, 1 página de fluxo (`carga-de-conteudo`) | 0 | **sim** — cliente 7662 | 6 medições + 12 artefatos |
+| **F3 — aceite** | **168 atos** | `src/` escrito (**37** páginas, aceitas em 2026-11-24), série aplicada, `planos/metricas.md`, 144/144 | 0 (decididas em `Q-M33-1`–`6`) | não | 100–168 h |
+| **F4 — requisito das 109** | **1 critério** | cobertura de §11.1; matriz sem lacuna | **1**: política de cobertura | não | 19 a 109 blocos |
+| **F5 — outros sistemas** | **0** no `wyd-db` | nada daqui; 12 planos alheios | 0 | **sim** — captura A1 | alto |
 
-**Por que F1 fica em segundo mesmo sendo a única que produz dado real:** porque ela **não é executável
-pelo time**. Os 19 itens dela só existem depois de uma medição que o cliente 7662 precisa entregar; hoje
-o que o time podia fazer — o pedido, item por item e com formato — está feito
-(`pedido-de-curadoria-dos-seeds.md`). Frente que espera terceiro não pode ser foco imediato sem inventar
-espera. Ela entra em segundo por valor por entrega: **1 dataset medido libera 1 página, 1 arquivo e 1
-incremento de versão** — a maior conversão de esforço único do projeto, no dia em que a medição chegar.
+**Leitura interna, sem ranking de projeto:** F1 depende do 7662; F2/F3/F4 medem o `wyd-db`; F5 não move
+o piloto. O foco do projeto é D-01 = A na página canônica; esta ordem interna não substitui aquela.
 
-**Por que não F3, que libera mais:** porque libera por **168 atos** (100–168 h) e continua sendo
-pré-requisito de código de qualquer forma; adiá-la não a elimina, e ela não é o que falta para o próximo
-resultado — F2 é.
-
-**Por que não F4 nem F5:** F4 fecha um critério de release sem mover execução (19 a 94 blocos); F5 não
-libera nada do piloto e as cinco lacunas abertas do projeto esperam captura.
-
-## 3. A frente escolhida: F2, com a cadeia de elos
+## 3. A frente do projeto é A; F2 é a leva de testes/issues
 
 **Feito em 2026-11-24:** as 12 páginas foram aceitas (`Q-BLK-21` = A) e, com `Q-BLK-18` = A, as **37** de
 `src/` também — o que deixou **5** alvos prontos para código e, com os **16** cenários de `Q-BLK-23` = A, a matriz
 em **31 das 40** linhas com cenário nomeado. `sistema_pg` nasceu e **13** cenários rodaram verdes contra a base
 migrada; as **26** capacidades restantes seguem sem execução. O próximo elo é o código dos outros quatro
 alvos, com a página já aceita (invariante §5.1), e a recomendação de foco vigente está em
-`../wyd-ops/docs/prioridade-do-projeto.md` §11.
+`../wyd-ops/docs/prioridade-do-projeto.md` §0.1 (D-01).
 Os elos 1 e 2 estão entregues desde o lote H: as 12 páginas e a matriz de **39** capacidades existem, com
 **13** cobertas; os elos 3 e 4 citam alvo escrito e 13 cenários executados. O elo 5 (issues) é o
-3º passo da fila, e não o próximo — `Q-BLK-17` foi respondida pela execução (a leva 1 começou por `tests/`)
+passo 5 da ordem canônica, e não o próximo — `Q-BLK-17` foi respondida pela execução (a leva 1 começou por `tests/`)
 e `Q-BLK-20` e `22` seguem abertas — `18`, `19` e `23` foram respondidas em A (o aceite libera o código; os
 seis `RNF` de gate zeraram a dívida da matriz; os 16 cenários sem `CAP-nn` foram escritos).
 
@@ -96,7 +90,8 @@ exigindo `aceita` (F3). F2 também não fecha nenhuma lacuna — o `wyd-db` não
 
 ## 4. A trilha paralela: F1 e a cadeia até `content_version`
 
-Quando a medição chegar, F1 anda sem decisão nova e **passa na frente do resto** pelo custo por item:
+Quando a medição chegar, F1 anda sem decisão nova e passa na frente das frentes internas do `wyd-db`
+pelo custo por item (não é a frente do projeto; D-01 = A):
 
 | Elo | O que entrega | Itens liberados | Fonte |
 |---|---|---:|---|
@@ -112,7 +107,7 @@ frente não precisa de nova pergunta ao dono além das quatro de §5.
 ## 5. O que só o dono decide
 
 Quatro perguntas, cada uma com opções curtas, recomendação e consequência. Nenhuma está respondida aqui;
-nenhum valor foi preenchido para encurtar a decisão. As da frente escolhida (F2) foram respondidas em **A**
+nenhum valor foi preenchido para encurtar a decisão. As da leva de testes/issues (F2) foram respondidas em **A**
 em §6.6.20 — `Q-BLK-12` (testes antes das issues), `Q-BLK-13` (as 12 páginas) e `Q-BLK-14` (issues em 3
 lotes) — e não se repetem aqui.
 

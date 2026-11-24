@@ -1,10 +1,12 @@
-> Pergunta: "das quatro frentes candidatas — finalizar o `wyd-db`, expandir os outros sistemas, fechar as lacunas de rastreabilidade (as 4 linhas sem `CAP-nn` e as 9 sem página) e definir regras/padrões pendentes — qual vem primeiro, com que evidência contada e o que fica fora?"
-> Público: dono do produto, arquitetura e quem coordena as frentes
-> Dono: arquitetura publica; **a decisão é do dono do produto**
-> Base: `planejamento-1.0.0/wyd-1.0.0.md` §1 e §6; `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.22–§6.6.24; `planejamento-1.0.0/wyd-db/tests/specs/capacidades.md`; `planejamento-1.0.0/wyd-db/docs/specs/rastreabilidade.md` §1.1–§3.4
+> Pergunta: "qual é o foco efetivo daqui por diante e, para cada decisão aberta de foco, gate de código, escopo das `migrations/`, critério de organização e dependências, qual opção resolve mais bloqueios, o que ela adia e o que só o dono pode decidir?"
+> Público: dono do produto, arquitetura, `wyd-ops` e quem coordena as frentes
+> Dono: arquitetura publica; **foco e escopo são decisão do dono do produto; gate e dependências são de `wyd-ops` + arquitetura**
+> Base: `planejamento-1.0.0/wyd-1.0.0.md` §1 e §6; `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.22–§6.6.24; `planejamento-1.0.0/wyd-db/tests/specs/capacidades.md`; `planejamento-1.0.0/wyd-db/docs/specs/rastreabilidade.md` §1.1–§3.4; `AGENTS.md` §8 e §9; `plano-ci-real.md`; `proposta-versoes-e-cobertura-funcional.md`
 > Revisado em: 2026-11-24
 
-**Estado:** proposto (2026-11-24) — recomendação publicada; nenhuma frente iniciada e nenhuma página aceita por causa dela.
+**Estado:** proposto (2026-11-24) — **quadro canônico de foco e decisões**; recomendação publicada; nenhuma frente iniciada e nenhuma página aceita por causa dela.
+
+**Esta é a página canônica.** As páginas que medem frentes citam este quadro e não publicam uma segunda recomendação. O `foco-e-sequencia.md` continua dono da medição interna do `wyd-db` e das perguntas de seed; o `briefing-de-decisoes-1.0.0.md` continua dono do dossiê das decisões de sistema. Nenhum dos dois substitui a ordem e as escolhas registradas aqui.
 
 ## 0. A recomendação
 
@@ -19,16 +21,163 @@ Por que A: os **168** atos não esperam terceiro — são revisão e aceite; os 
 (**6** seeds e `CAP-08`) ficam fora deles, e as **2** `Q-BLK` abertas (`20`, `22`) são decisão do dono. B fecha
 **0** bloqueio do piloto e libera **48** `RF` (`admin` 15 + `portal` 33) e **1** plano diretor; C fecha **3**
 células e **0** das **9** linhas sem página; D fecha **1** página e **1** harness, ambos dentro do caminho de A
-(§3). A sequência de atos está em §5; a pergunta de foco, em §11.
+(§3). A sequência de atos está em §0.2 e §5; a pergunta de foco, em §0.1 (D-01).
 
 Esta página é o **único lugar publicado** que ranqueia as frentes do projeto. Ela não substitui o plano
 de fases (`wyd-1.0.0.md` §6), nem o registro de pendências (`pendencias-de-fechamento.md` §6.6), nem a
-direção do piloto (`wyd-db/foco-e-sequencia.md`): ela usa os números deles e diz qual vem agora.
+medição interna do piloto (`wyd-db/foco-e-sequencia.md`): ela usa os números deles e diz qual vem agora.
 
 **Por que ela mora aqui:** o dono convencional do ranking é `wyd-1.0.0.md` §6.2, que **não é publicado**;
 o `docs/` do `wyd-db` está no teto de **144** páginas; e `wyd-ops` é o sistema de processo, com `docs/`
 publicado e sem teto. Não existe convenção para “página de ranking do projeto”, então esta é a opção mais
 próxima já usada — e a única que fica navegável no site.
+
+## 0.1 Quadro canônico de decisões (vigente em 2026-11-24)
+
+Cada decisão traz o que está bloqueado hoje, as opções reais, a recomendação, o motivo medido e o que
+deixa de ser possível na opção não escolhida. A recomendação **não** é decisão: o dono ainda responde.
+
+### D-01 — Qual frente recebe o foco?
+
+**Bloqueado hoje:** **168** atos de aceite, **64** células (**24** `teste` + **40** `issue`), **40** issues
+abertas (#82–#121) e **0** vinculadas às linhas, **26** capacidades sem execução (**13 de 39**) e **2**
+`Q-BLK` (`20`, `22`). A alternativa B tem **48** `RF` (15 `admin` + 33 `portal`), **10** sistemas sem
+`RF`, **12** planos e **1** plano diretor ausente (`wyd-ops`); a C tem **3** células `teste`, **9** linhas
+sem página e **4** sem `CAP-nn`.
+
+| Opção | O que fecha/entrega | O que adia | Custo | Disponível hoje |
+|---|---|---|---|---|
+| **A — finalizar o `wyd-db`** | **64** células + **168** atos + **40** issues + **26** capacidades; 2 `Q-BLK` | as **48** `RF`, **12** planos e **1** diretor de B; as **3** células de C | 27 aceites + `serie-e-regras` + runner + 3 cenários + 141 atos + 40 issues | **sim**: 0 item de A espera terceiro; 27 são aceite do dono |
+| **B — expandir os outros sistemas** | **48** `RF`, **12** planos e **1** plano diretor (`wyd-ops`); **0** bloqueio do piloto | **64** células, **26** capacidades e **40** issues de A; as **3** células de C | 10 sistemas a numerar + 12 planos + 1 diretor | parcial: 10 sistemas andam sem terceiro; `protocol` e `client` não |
+| **C — fechar lacunas transversais** (rastreabilidade + regras) | **3** células `teste` (`RF-DB-003`, `006`, `014`) + 1 gate de cobertura; **1** página + **1** harness | **61** células, **26** capacidades e **40** issues de A; **48** `RF` e **12** planos de B | 3 `CAP` + 1 gate + 1 página + `tests/common/` | **sim**, mas o retorno é **3 de 64** células; **0** das 9 linhas sem página |
+
+**Recomendação: A.** É a única frente cujos fechamentos estão disponíveis hoje e cujo produto é
+verificável (schema, teste, DDL). B não fecha bloqueio do piloto e C fecha **3 de 64** células; as **9**
+linhas sem página não são fecháveis por cenário (2 de outro sistema, 1 gate de CI e 6 gate de série).
+Regras e padrões (**D** na leitura antiga) não são uma quarta opção: são o passo 2 de A.
+
+**Se B for escolhida:** as **64** células, **26** capacidades e **40** issues de A ficam paradas; o DDL
+de `portal`/`admin` segue proposta e a implementação deles continua esperando A. **Se C for escolhida:**
+A fica com **61** células e **26** capacidades sem execução, e B continua sem o DDL aceito. **Se A:**
+B pode numerar os **48** `RF` em paralelo, mas a implementação de `portal`/`admin` espera o DDL de A.
+
+### D-02 — Política do gate de código: cobertura e segurança
+
+**Bloqueado hoje:** o `code.yml` tem **19** testes (**6** unitários + **13** de schema) e **0** medição de
+cobertura; não há `cargo audit` nem `cargo deny`. A matriz tem **24** das **64** células (tipo `teste`) pendentes e **26**
+capacidades sem execução. O `AGENTS.md` §8 exige **85%** por sistema, medido no gate; o `full-workflow.yml`
+segue stub e não mede nada.
+
+| Opção | Cobertura | Segurança | Efeito imediato |
+|---|---|---|---|
+| **A — bloquear 85% agora** | `--fail-under-lines 85` no `code.yml` desde já | `cargo audit` + `cargo deny` bloqueantes | pode reprovar PR por cobertura de linha do `dsn`, sem provar as **26** capacidades; força teste do que ainda não tem alvo |
+| **B — 85% no gate do sistema; informativo no `code.yml`** | **bloqueante** quando o sistema declarar o gate fechado; **informativo** no incremental até lá | `cargo audit` + `cargo deny` **bloqueantes agora** | mantém o invariante de release sem transformar cobertura de linha em prova de capacidade; segurança entra já |
+| **C — tudo informativo até a 1.0.0** | sem bloqueio até a release | sem bloqueio até a release | adia a dívida e deixa vulnerabilidade entrar; não recomendado |
+
+**Recomendação: B.** O invariante é **85% por sistema no gate**, não “85% de qualquer linha no PR”;
+os **19** testes atuais não cobrem **24** das **64** células pendentes, então um bloqueio agora mediria o `dsn`,
+não a capacidade. `cargo audit`/`deny` são baratos hoje (o crate não tem dependência) e devem ser
+obrigatórios; a dependência Python do site (`mkdocs==2.0.dev6`) fica fora do `cargo audit` e exige
+`pip-audit`/hash em item separado.
+
+**Se A:** PRs podem ficar vermelhos por uma métrica que não prova capacidade e o time pode ser levado a
+escrever teste de linha em vez de teste de contrato. **Se C:** vulnerabilidade e regressão de cobertura
+entram sem barreira. **B** preserva a barreira onde ela é exigível e não finge que o slice atual já é o
+gate do sistema.
+
+### D-03 — Escopo das 27 páginas de `migrations/` e das 2 `Q-BLK`
+
+**Bloqueado hoje:** o runner não pode nascer antes das páginas `aceitas` (`AGENTS.md` §5.1). As **27**
+páginas de `migrations/` seguem `proposto`; a leva tem **28** `.sql` aplicados, **13** cenários verdes e
+**1** página aceita (`0002`). Restam **141** atos de `docs/`, **40** issues e **6** seeds; `Q-BLK-20` e
+`Q-BLK-22` são as duas decisões abertas.
+
+| Opção | Migrations | `Q-BLK-20` (catálogo) | `Q-BLK-22` (teto) | Efeito |
+|---|---|---|---|---|
+| **A — aceitar as 27 agora** | **168 → 141** atos; runner liberado | **A**: catálogo pós-`1.0.0`; `CAP-08` declarada não executável | **A**: as 12 páginas de `tests/` não contam no teto de **144** | fecha a leva, libera os passos 2–4 e mantém os **6** seeds fora (terceiro) |
+| **B — aceitar só depois do runner** | 27 atos e runner adiados | **B**: catálogo entra e **1** capacidade passa a segurar **28** `.sql` | **B**: teto vai a **156** | amarra o aceite à prova, mas o runner nasce sobre página `proposto` |
+| **C — manter `proposto` até a release** | **168** atos permanecem | decisão adiada | decisão adiada | a leva não fecha e o runner nasce sob página não assinada |
+
+**Recomendação: A**, com `Q-BLK-20 = A` e `Q-BLK-22 = A`. O que já foi provado é a série: **28** `.sql`
+aplicaram do zero e **13** cenários rodaram; o que falta é a assinatura editorial, não uma nova prova. A
+opção B inverte a ordem e transforma **1** capacidade (catálogo) em bloqueio de **28** `.sql`; a C mantém
+os **168** atos e o runner sobre página não assinada. Os **6** seeds não entram em nenhuma das opções:
+eles dependem de dado e continuam **6** até a curadoria.
+
+**Se B:** os **27** atos e o runner esperam; `Q-BLK-20 = B` impede a leva de fechar sem o catálogo e
+`Q-BLK-22 = B` muda o critério de release de **144** para **156**. **Se C:** os **168** atos e as **2**
+decisões ficam em aberto no fechamento. **Se A:** o runner nasce sob página assinada e `CAP-08` fica
+declarada não executável, sem esconder a lacuna.
+
+### D-04 — Critério para declarar “organização definida” nos sistemas sem código
+
+**Bloqueado hoje:** a afirmação “todos os sistemas têm organização definida” não é verdadeira. São **13**
+sistemas; **12** não têm código de produto (o `wyd-docs` tem implementação Python de documentação), **8**
+dos **9** diretórios de crate estão vazios, **10** sistemas não têm `RF` numerado e **1** (`wyd-ops`) não
+tem plano diretor. Só há **2** manifestos reais (`crates/wyd-db/Cargo.toml` e
+`wyd-docs/requirements.txt`).
+
+| Opção | O que conta como “organizado” | O que permite afirmar | O que deixa de fora |
+|---|---|---|---|
+| **A — planejamento completo, sem código** | fronteira + contratos com dono + árvore `src/`, `tests/` e `ops/` + requisitos com ID + plano de teste + roadmap com DoD + dashboard com gate | **12** sistemas podem ser auditados e declarados **um a um**; código continua proibido antes do aceite | sistemas que não passarem no checklist; hoje **10** sem `RF` e **1** sem plano |
+| **B — código mínimo** | só conta quando houver crate/manifesto, build e teste | apenas `wyd-db` (e o site) hoje; **12** esperam | contradiz “planejar antes de codar” e adia a declaração de **12** sistemas |
+| **C — abertura atual basta** | fronteira + contratos + lacunas nomeadas | qualquer sistema aberto vira “organizado” | ignora **10** sem `RF`, **1** sem plano e **8** crates vazios; a afirmação fica falsa |
+
+**Recomendação: A.** “Organização definida” é um estado de **planejamento verificável**, não de código;
+mas não é o estado “aberto”. Um sistema só recebe o carimbo depois de mostrar a árvore de código/testes/ops,
+os requisitos, o plano de teste, o roadmap com DoD e o gate. **Implementável** é um estado posterior:
+páginas aceitas + manifesto + gate de código. A recomendação não declara os **12** de uma vez: ela obriga a
+auditar cada um e a aceitar a ausência justificada de `ops/` quando não houver operação própria.
+
+**Se B:** os **12** sistemas sem código ficam sem declaração até existir crate, o que inverte a ordem do
+projeto. **Se C:** “organizado” passa a significar “aberto” e os **10** sem `RF`/`1` sem plano ficam
+escondidos. **Se A:** a declaração é seletiva e verificável; nenhum sistema ganha o carimbo por simetria.
+
+### D-05 — Política de dependências e versões
+
+**Bloqueado hoje:** o repositório tem **2** manifestos reais, **9** diretórios de crate (**1** com
+`Cargo.toml`, **8** vazios), **nenhum** workspace Rust na raiz, **nenhum** `rust-toolchain.toml` e
+**nenhum** `Makefile`. As actions estão fixadas por SHA, mas a imagem do CI usa `postgres:17` por tag; o
+site fixa `mkdocs==2.0.dev6` (pré-release).
+
+| Opção | Estrutura | Versões | Custo/risco |
+|---|---|---|---|
+| **A — workspace único + toolchain + Makefile** | `Cargo.toml` de workspace na raiz, membros explícitos, `rust-toolchain.toml`, `Makefile`, `Cargo.lock` na raiz; actions por SHA e imagens por digest | um lock, uma versão de Rust, comandos iguais no local e no CI | migração única; os **8** crates vazios entram quando ganharem `Cargo.toml` |
+| **B — crates independentes** | cada crate com seu manifesto; sem workspace, toolchain ou Makefile na raiz | **9** locks/versões possíveis; drift entre crates | simples agora, caro quando os **8** crates nascerem |
+| **C — híbrido** | workspace sem `Makefile`/toolchain, ou toolchain sem workspace | parcialmente reproduzível | comandos divergem; o CI e o local não provam o mesmo |
+
+**Recomendação: A.** O custo é uma migração única agora, com **1** crate real; o custo de B cresce com os
+**8** crates vazios e produz **9** fontes de versão. `mkdocs==2.0.dev6` continua fixado como pré-release
+até existir estável; a troca não é silenciosa. A imagem do CI deve ser fixada por digest, não por tag.
+
+**Se B:** cada crate pode divergir de toolchain e lock; o CI precisa repetir configuração **9** vezes.
+**Se C:** o comando local não é o do CI e a reprodutibilidade fica parcial. **Se A:** o workspace nasce
+com **1** membro e cresce por adição explícita; nada é implementado nesta página.
+
+## 0.2 Ordem recomendada e impacto em bloqueios
+
+A ordem abaixo é a de **execução**, não a de implementação: nenhum passo de código é executado neste
+turno. O passo 0 é resposta do dono; os passos 1–5 são a frente A; o passo 6 é terceiro.
+
+| # | Passo | Resolve/fecha | Desbloqueia | Depende de |
+|---:|---|---|---|---|
+| **0** | Responder D-01–D-05 | **0** itens; **5** decisões | **168** atos, **40** issues, **12** sistemas e o gate de código | dono do produto + `wyd-ops`/arquitetura |
+| **1** | Aceitar as **27** páginas de `migrations/` | **27** atos (**168 → 141**) | runner (passos 2–4); leva de `migrations/` fechada | D-03 = A |
+| **2** | `migrations/serie-e-regras.md` | **1** página/ato | contrato do ledger para o runner | passo 1 |
+| **3** | Runner `src/migrate` + `MigrateConfig` | **1** alvo (`contrato_migrations`) | **3** `CAP` e o gate de código do banco | passos 1–2; D-02 |
+| **4** | `CAP-37`–`CAP-39` | **3** capacidades / **3** células `teste`; **13 → 16 de 39** | **3** células; restam **21** `teste` para os outros alvos | passo 3 |
+| **5** | **40** issues + **141** atos de `docs/` | **40** células `issue` vinculadas + **141** atos; **21** `teste` seguem para código | **40** issues autorizadas; fecha os **141** atos restantes | passos 1 e 4 |
+| **6** | Seeds/captura | **6** seeds + **6** lacunas abertas + **1** proposta | **0** hoje; só quando o terceiro entregar | terceiro/dado |
+
+**Por que o passo 1 vem antes do passo 5, que fecha mais itens:** o passo 5 depende de o DDL estar
+assinado e o runner existir; o passo 1 é o primeiro ato de **27** itens que não espera código; os **141** atos de `docs/` são a maior
+carga de revisão e entram depois para não abrir 141 páginas antes do runner. A ordem por
+“resolve mais bloqueios primeiro” é: **1** (27 atos, custo de aceite), **5** (141 atos + 40 issues, custo
+de revisão), **4** (3 células, custo de código), **2–3** (1 página + 1 alvo, habilitam o runner). O passo
+0 não fecha item, mas sem ele nenhum dos outros começa.
+
+**O que a ordem não resolve:** os **6** seeds, as **6** lacunas abertas e a **1** proposta não entram em
+nenhum passo porque dependem de terceiro; `CAP-08` só deixa de ser executável depois de `Q-BLK-20 = A`.
 
 ## 1. O critério, declarado antes do número
 
@@ -200,16 +349,13 @@ terceiro/dado e não entram na fila.
 
 O dossiê de cada pergunta já respondida está em `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
 §6.6.22.5 (`Q-BLK-17`), §6.6.23 (`Q-BLK-21`), §6.6.26 (`Q-BLK-24`), §6.6.28 (`Q-BLK-19`) e §6.6.29
-(`Q-BLK-23`); `Q-BLK-20` e `22` seguem com dossiê em §6.6.22.5 e §6.6.23. As perguntas de **projeto** têm
-dossiê nesta página: `Q-FOCO-2` era o tamanho da leva 1, `Q-FOCO-3` é a frente e `Q-FOCO-4` é o aceite das 27
-páginas; as duas últimas detalham as opções em §11.
+(`Q-BLK-23`). **As decisões abertas não se repetem nesta tabela:** `Q-FOCO-3`, `Q-FOCO-4`, `Q-BLK-20` e
+`Q-BLK-22` estão no quadro canônico §0.1 (D-01 e D-03). Aqui ficam apenas as já respondidas, como
+histórico.
 
 | Pergunta | Opções | Recomendação | Consequência de cada opção |
 |---|---|---|---|
-| **`Q-FOCO-3`** — com a leva `migrations/` feita, qual frente recebe o foco? | **A** `wyd-db`; **B** outros sistemas; **C** rastreabilidade; **D** regras | **A** | **A:** 64 células + 168 atos e 40 issues; **B:** 48 `RF` + 12 planos, 0 do piloto; **C:** 3 de 64 células; **D:** 1 página + 1 harness, dentro de A |
-| **`Q-FOCO-4`** — aceitar as **27** páginas de `migrations/` agora? | **A** agora; **B** só depois do runner verde; **C** manter `proposto` até a release | **A** | **A:** fecha a leva e libera os atos 2–5; **B:** amarra o aceite ao runner e adia 27 atos; **C:** mantém 168 atos e o runner sobre página não assinada |
-| **`Q-BLK-20`** — o dicionário `banco-catalogo.md` entra na `1.0.0`? | **A** pós-`1.0.0`, com `CAP-08` declarada não executável; **B** entra e bloqueia a leva de `migrations/` | **A** | **A:** a leva anda sem ferramenta externa e a lacuna fica datada. **B:** 1 capacidade passa a segurar 28 `.sql` por um PR de terceiro |
-| **`Q-BLK-22`** — as 12 páginas contam no critério de release de **144**? | **A** não contam; **B** contam | **A** | **A:** o critério segue **144** páginas de `docs/` e as 12 ficam como artefato de engenharia. **B:** o teto e o critério passam a **156**, e a release de documentação muda de tamanho |
+| **Decisões abertas** | ver §0.1: D-01 (foco) e D-03 (migrations/`Q-BLK`) | — | não repetidas aqui; o quadro canônico é a única fonte da recomendação |
 | **`Q-FOCO-2`** (decidida em A em 2026-11-24) — confirmar `A` como foco e o tamanho da 1ª leva | **A** leva 1 = 12 aceites e parada para verificar; **B** emendar `migrations/` na mesma sessão; **C** trocar o foco para C (captura `A1`) | **A (decidida)** | **A:** 12 atos verificáveis e gate verde antes de escalar. **B:** 39 atos sem ponto de verificação intermediário. **C:** o foco passa a depender de terceiro, e o `wyd-db` fica parado com **0** bloqueio |
 | **`Q-BLK-23`** (decidida em A em 2026-11-24) — as **16** linhas sem cenário entram na `1.0.0`? | **A** escrever os 16 cenários (uma `CAP-nn` cada) antes de `migrations/`; **B** adiar para depois; **C** declarar fora da `1.0.0` | **A (decidida)** | **A:** os **16** cenários foram escritos (`CAP-24`–`CAP-39`, `pendencias` §6.6.29) e as **16** linhas que estavam sem `CAP-nn` ganharam cenário. **B:** **13** `CHECK`/FK/índices teriam entrado sem cenário que os recuse. **C:** exigiria rebaixar **16** linhas das páginas donas — decisão de outro dono, recusada |
 
@@ -230,7 +376,7 @@ restam estão na tabela acima.
 - **Não cria issue, commit, push nem recurso no GitHub.**
 - **Não é dona de nenhum número:** cada linha cita a página que mediu; divergência resolve-se na fonte.
 - **Não substitui** o plano de fases (`wyd-1.0.0.md` §6), o registro de pendências
-  (`pendencias-de-fechamento.md` §6.6) nem a direção do piloto (`foco-e-sequencia.md`).
+  (`pendencias-de-fechamento.md` §6.6) nem a medição interna do piloto (`foco-e-sequencia.md`).
 - **Não decide as lacunas de captura:** elas pertencem aos sistemas donos e dependem de terceiro.
 
 ## 9. Quando esta página envelhece
@@ -249,9 +395,8 @@ restam estão na tabela acima.
 | Item | Quantos | Dono |
 |---|---:|---|
 | `Q-BLK-20` e `22` (`17`, `18`, `19`, `21`, `23` e `24` respondidas) | **2** | dono do produto (`pendencias` §6.6.22.5, §6.6.23 e §6.6.24) |
-| `Q-FOCO-2` | **1** | dono do produto (dossiê nesta página) |
-| `Q-FOCO-3` | **1** | dono do produto (dossiê em §11 desta página) |
-| `Q-FOCO-4` | **1** | dono do produto (aceite das 27 páginas; dossiê em §11) |
+| `Q-FOCO-3` | **1** | dono do produto (dossiê em §0.1, D-01) |
+| `Q-FOCO-4` | **1** | dono do produto (aceite das 27 páginas; dossiê em §0.1, D-03) |
 | lacunas abertas | **6** + **1** proposta | `protocol` 2, `client` 2 + 1, `net` 1, `bots` 1 |
 | seeds bloqueadas | **6** | curadoria de dados (`migrations-checklist.md` §2) |
 | capacidade sem ambiente | **1** (`CAP-08`) | dicionário de dados ausente |
@@ -260,7 +405,11 @@ restam estão na tabela acima.
 
 Nenhuma delas é decisão desta página: ela recomenda, mede e aponta o dono.
 
-## 11. Depois de `Q-BLK-24` e de `Q-BLK-21`: a próxima frente (2026-11-24)
+## 11. Depois de `Q-BLK-24` e de `Q-BLK-21`: a próxima frente (histórico de 2026-11-24)
+
+> **Histórico.** Esta seção foi substituída pelo §0.1 em 2026-11-24. Ela fica como registro da medição
+> que levou à decisão; **as opções, a recomendação e o impacto vigentes estão em §0.1**, que prevalece
+> sobre qualquer tabela abaixo.
 
 `Q-BLK-24` foi aprovada em **A** e executada: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` existem, as três
 capacidades apontam para eles e a matriz de rastreabilidade tem **40** linhas. `Q-BLK-21` também foi
