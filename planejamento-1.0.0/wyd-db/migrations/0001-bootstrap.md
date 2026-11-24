@@ -4,16 +4,17 @@
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §3, `padrao-banco.md` §2/§8
 > Revisado em: 2026-11-17
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Primeiro arquivo da série `migrations/`. Ele não cria tabela de domínio: cria o **terreno** —
 os quatro schemas, a fronteira de permissão entre eles, a única função de trigger da série e a linha
 de versão do conteúdo. Tudo que vem depois pressupõe este arquivo aplicado.
 
-!!! warning "Nada disto rodou ainda"
-    O DDL abaixo é **planejado** (`P`): nenhum Postgres foi executado contra ele e o arquivo
-    `crates/wyd-db/migrations/0001_bootstrap.sql` ainda não existe. O texto é o de
-    `ddl-confirmado.md` §3, que é o dono do DDL; esta página não o reescreve por conta própria.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0001_bootstrap.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §3, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 

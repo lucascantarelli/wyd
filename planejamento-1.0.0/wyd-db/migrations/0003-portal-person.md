@@ -4,17 +4,18 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.1, §5.6 e §5.7; `padrao-banco.md` §2/§5/§8; `lacunas.md` (`B4`, `A12`, `M7`)
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Terceiro arquivo da série. Cria a identidade da pessoa do portal e, separadamente, os dados opcionais
 de perfil e o histórico versionado de consentimentos. A pessoa é a identidade única; a conta de jogo
 é criada depois em `game.account` (`0005`). Perfil ausente é válido e não transforma PII em dado de
 jogo.
 
-!!! warning "Nada disto rodou ainda"
-    O DDL abaixo é **planejado** (`P`): nenhum Postgres foi executado contra ele e
-    `crates/wyd-db/migrations/0003_portal_person.sql` ainda não existe. O texto é o de
-    `ddl-confirmado.md` §5.1, §5.6 e §5.7, que é o dono do DDL; esta página o apresenta sem redesenhá-lo.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0003_portal_person.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §5.1, §5.6 e §5.7, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 

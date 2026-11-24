@@ -4,16 +4,18 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.5; `padrao-banco.md` §2/§5/§8/§9; `lacunas.md` (`A10`, `A14`, `M23`)
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Sétimo arquivo da série. Cria a topologia `server_channel` e as sessões de jogo. A configuração de cada
 instalação (grupo, `host`, URL de status e limites) é dado operacional, inserido fora da migration; uma
 sessão só pode referenciar canal cadastrado. O arquivo mantém sessão encerrada para auditoria e
 reaper.
 
-!!! warning "Nada disto rodou ainda"
-    O desenho do lote foi fechado em `ddl-confirmado.md` §5.5 em 2026-11-18 e suas decisões/revisões
-    constam ali. Nada foi executado e nenhum arquivo `.sql` da série existe.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0007_game_session.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §5.5, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 

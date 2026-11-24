@@ -14,7 +14,8 @@ implementa, não cria issue, não altera schema e não escolhe produto. Duas lac
 `Q-LCH-4` = A; `Q-BOT-3` = A fixou a política de limiar e `Q-NET-1` = A fixou a política de limites, mas
 **não fecharam `LBOT-03`/`LNET-01`**, que seguem abertas como medição. `LAC-POR-09` = A fechou a última
 lacuna do portal e zerou as respostas pendentes. Esses estados estão registrados nas páginas dona. Para as decisões de **sistema** cobertas aqui, o briefing mantém **0 respostas** pendentes; as decisões
-de **foco** (`Q-FOCO-3`, `Q-FOCO-4`) e as **2** `Q-BLK` do piloto estão na página canônica. A1 foi
+de **foco** (`Q-FOCO-3`, `Q-FOCO-4`) e as **2** `Q-BLK` do piloto estão na página canônica e foram
+**decididas em A em 2026-11-24** (D-01 e D-03). A1 foi
 autorizada em 2026-11-23 e a implementação é a próxima ação. Nenhuma
 fixture, fórmula, coeficiente, número de balanceamento, dado de jogo ou conteúdo de cliente é criado aqui.
 

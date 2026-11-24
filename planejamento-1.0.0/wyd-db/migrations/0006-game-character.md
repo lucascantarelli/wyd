@@ -4,16 +4,17 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.10; `padrao-banco.md` §1/§5/§9; `lacunas.md` `A14`
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Sexto arquivo. Cria a identidade do personagem e quatro satélites 1:1 para status, scores, especiais e
 barra curta de skills. É o primeiro estado persistente de personagem; itens vão em `0009`, skills
 aprendidas em `0008`, guilda em `0010`, e conteúdo nos arquivos `0013` em diante.
 
-!!! warning "Nada disto rodou ainda"
-    O desenho do lote foi aprovado em 2026-11-20 e o DDL abaixo é o de `ddl-confirmado.md` §5.10. Nenhum
-    Postgres executou contra ele e o arquivo `crates/wyd-db/migrations/0006_game_character.sql` ainda não
-    existe.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0006_game_character.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §5.10, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 

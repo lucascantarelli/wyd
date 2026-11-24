@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 24); `ddl-confirmado.md` §5.24 (confirmado em 2026-11-21); fichas legadas de `0011_rotas_mundo.sql`; `deprecated/docs/wyd/sistemas/mundo.md` §5/§6
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo quarto arquivo da série: 2 tabelas no schema `content`. As fichas de coluna vêm das fontes
 históricas de mundo (nível 4); são **hipótese `H`** até validação própria, não colunas provadas por
@@ -214,7 +214,11 @@ Não há `content_source`/`confidence`/`notes` por linha: proveniência de datas
    carteira da conta (`game.account_wallet.coin`, §5.2) e não o cash do portal (`0011`). O lote guarda o
    preço; o débito é do runtime, contra a linha do personagem.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `map_id` repetido → `23505` em `pk_map_definition`.
 2. Mesma rota (origem, destino e NPC) duas vezes → `23505` em `uq_teleport_route_rota`; a mesma rota com

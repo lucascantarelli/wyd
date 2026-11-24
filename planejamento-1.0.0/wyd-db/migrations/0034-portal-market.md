@@ -4,7 +4,7 @@
 > Base: `lacunas.md` `M31` (decidida em 2026-11-22); `ddl-confirmado.md` §5.34 e §5.32 (emenda); `armaria-e-mercado.md` §3 e §6; `../wyd-admin/docs/arquitetura/contrato-c4.md` §4.9–§4.13
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Trigésimo quarto arquivo da série: **onze tabelas** — dez em `portal` (o mercado) e uma em `game` (a
 custódia do item). Fecha `LAC-ADM-07` do `wyd-admin` e completa o `0032` com os dois `GRANT` que a

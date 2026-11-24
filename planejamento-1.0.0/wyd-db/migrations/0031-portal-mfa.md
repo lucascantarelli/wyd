@@ -4,7 +4,7 @@
 > Base: `ddl-confirmado.md` §5.20 (aprovado em 2026-11-20); `lacunas.md` `A20`; `padrao-banco.md` §3/§4/§5; `wyd-portal/lacunas.md` `LAC-POR-05`
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Trigésimo primeiro arquivo da série, adendo ao fim como o `0030`. Cria `portal.person_authenticator`, a
 credencial separada de segundo fator que `A20` reservou e que `LAC-POR-05` decidiu para o staff do
@@ -191,7 +191,11 @@ em resposta, nem em log, nem em `Debug` de struct.
 - **Recuperação do fator** é ato de staff (`A20`), nunca autoatendimento do titular: o fluxo revoga e
   reemite, e cada passo passa por `ops.audit_log` na mesma transação.
 
-## 10. Prova de execução (quando a série for escrita)
+## 10. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `psql -v ON_ERROR_STOP=1 -f 0031_portal_mfa.sql` como `wyd_migrator` → `CREATE TABLE`, 2 `CREATE
    INDEX`, `CREATE TRIGGER`.

@@ -194,12 +194,13 @@ as **5** perguntas (`Q-BLK-12` a `Q-BLK-16`) respondidas em **A**. O **lote H** 
 metade: as **12** páginas de `tests/` estão escritas, com a matriz `CAP-nn` de **23** capacidades e **0**
 cobertas, e as **40** issues seguem sem artefato no GitHub. O **lote I** (§6.6.22) mediu tudo de novo e
 recomenda **aceitar as 12 páginas de `tests/` primeiro** — **12** atos que deixam **5** alvos prontos e,
-medido depois do lote I, alcançam **15 das 40** linhas da rastreabilidade —, com **168** atos de aceite
-pendentes no sistema e **4** perguntas novas (`Q-BLK-17` a `Q-BLK-20`), das quais só `20` segue aberta —
-a `17` foi respondida pela própria execução (a leva 1 começou por `tests/`) e `18` e `19` em **A**. Com
+medido depois do lote I, alcançam **15 das 40** linhas da rastreabilidade —, com o aceite ainda pendente naquele momento (hoje **141**, §6.6.31) e **4** perguntas novas (`Q-BLK-17` a `Q-BLK-20`), todas respondidas em 2026-11-24 —
+a `17` pela própria execução (a leva 1 começou por `tests/`) e `18`, `19` e `20` em **A**. Com
 `Q-BLK-18` = **A**, a leva 2 foi executada na mesma data: as **37** páginas de `src/` foram revisadas e
-estão `aceito (2026-11-24)` (`pendencias` §6.6.27), o que deixa **168** atos de aceite no sistema e o crate
-livre para o primeiro `Cargo.toml`/`.rs` sob o invariante §5.1. Com `Q-BLK-19` = **A**, a mesma data
+estão `aceito (2026-11-24)` (`pendencias` §6.6.27), o que deixou **168** atos de aceite naquele momento e o crate
+livre para o primeiro `Cargo.toml`/`.rs` sob o invariante §5.1. Com `Q-BLK-20` e `Q-BLK-22` em **A** e
+a leva `migrations/` assinada, as **27** páginas passaram a `aceito (2026-11-24)` e o aceite pendente caiu
+para **141**, todos em `docs/` (`pendencias` §6.6.31). Com `Q-BLK-19` = **A**, a mesma data
 acrescentou seis requisitos de gate (`RNF-DB-008`–`013`), repontou as **11** capacidades e levou a matriz de
 rastreabilidade a **40** linhas (`pendencias` §6.6.28).
 O censo de **2026-11-24** (`docs/specs/rastreabilidade.md` §3.4) mediu **25** linhas sem página e **16** sem

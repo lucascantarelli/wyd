@@ -145,7 +145,7 @@ não silenciado.
 | Situação | Quantas | Quais |
 |---|---:|---|
 | com página e alvo escritos | **39** | todas: `CAP-01`–`CAP-07` em `alvos/contrato-migrations.md`; `CAP-08` em `alvos/contrato-catalogo.md`; `CAP-09`–`CAP-19` e `CAP-24`–`CAP-39` em `alvos/sistema-pg.md`; `CAP-20`–`CAP-21` em `alvos/sistema-sessoes.md`; `CAP-22`–`CAP-23` em `alvos/sistema-stack-caps.md` |
-| com alvo escrito e **sem ambiente hoje** | **1** | `CAP-08`: o documento `docs/dicionario-dados/banco-catalogo.md` não existe e o leitor atual não enxerga `CREATE TABLE esquema.tabela` (`../alvos/contrato-catalogo.md` §3) |
+| com alvo escrito e **sem ambiente hoje** | **1** | `CAP-08`: o documento `docs/dicionario-dados/banco-catalogo.md` não existe e o leitor atual não enxerga `CREATE TABLE esquema.tabela` (`../alvos/contrato-catalogo.md` §3); é **declarada não executável na `1.0.0`** por `Q-BLK-20` = A (2026-11-24) |
 | com cenário executado e verde | **13** | `CAP-24`–`CAP-36` em `sistema_pg`: 13 verdes em 2026-11-24 |
 | com cenário escrito e **sem código que o execute** | **3** | `CAP-37` (`RNF-DB-002`, `MigrateConfig` do runner), `CAP-38` (`RNF-DB-004`, consulta da porta C4) e `CAP-39` (`RNF-DB-005`, boot do binário) |
 
@@ -170,7 +170,7 @@ cinco alvos foi liberado por `Q-BLK-18` = A (2026-11-24); `crates/wyd-db/` tem `
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|
-| o dicionário `banco-catalogo.md` entra na `1.0.0`? | `Q-BLK-20` — recomendação **A**: pós-`1.0.0`, com `CAP-08` declarada não executável | dono do `wyd-db` |
+| o dicionário `banco-catalogo.md` entra na `1.0.0`? | **decidida em 2026-11-24 (`A`)**: pós-`1.0.0`; `CAP-08` fica **declarada não executável na `1.0.0`**, com o gate `catálogo` como conferência manual até o PR de ferramentas | dono do `wyd-db` |
 | quando `CAP-37`–`CAP-39` rodam? | levas de código que ainda não existem: runner/`MigrateConfig` (`RNF-DB-002`), consulta da porta C4 (`RNF-DB-004`) e boot do binário (`RNF-DB-005`) | dono do `wyd-db` |
 
 ## 10. O que esta página não decide

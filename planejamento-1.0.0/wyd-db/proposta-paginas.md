@@ -351,7 +351,7 @@ quatro, o lote E fechou duas, o lote F fechou as quatro de §6.6.19 e o bloqueio
 |---|---|---|---|
 | `migrations/` | 28 de 34 | faltam `index.md` e `serie-e-regras.md`; as 28 páginas de arquivo e o `spec.md` do runner estão escritos | restam as 6 de seed, bloqueadas pelo dado de origem |
 | `src/` | 37 de 59 | 34 páginas de `migrate/` e `provision/` têm o desenho de módulo em `src/migrate/spec.md` §10 e `src/provision/spec.md` §5, e 4 contratos fechados na revisão de 2026-11-18 (`lacunas.md` §1) | as 24 do resto do crate, que só têm nome de página |
-| `tests/` | **12 de 12** (2026-11-24, §6.6.21) | nada — as 12 saíram: `index`, `fixtures-e-factories`, `dados-de-teste`, `resources/README`, 5 `alvos/*` e 3 `specs/*`, com a matriz `CAP-nn` | o código: `Cargo.toml`, os 5 alvos, `tests/common/` e as fixtures; `CAP-08` espera `banco-catalogo.md` |
+| `tests/` | **12 de 12** (2026-11-24, §6.6.21) | nada — as 12 saíram: `index`, `fixtures-e-factories`, `dados-de-teste`, `resources/README`, 5 `alvos/*` e 3 `specs/*`, com a matriz `CAP-nn` | o código: `Cargo.toml`, os 5 alvos, `tests/common/` e as fixtures; `CAP-08` declarada não executável na `1.0.0` (`Q-BLK-20` = A) |
 
 ## 8. Ordem proposta (6 lotes; lotes 1 a 6 escritos)
 

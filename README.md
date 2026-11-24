@@ -31,11 +31,11 @@ planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 |---|---|
 | `planejamento-1.0.0/` com o panorama e os sistemas já abertos | workspace Rust na raiz (`Cargo.toml`, `rust-toolchain.toml`, `Makefile`) |
 | site MkDocs 2.0 montado em `wyd-docs/` | runner de migrations e serviço no ar |
-| `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; **19 testes** locais | código de produção fora do slice `dsn`/schema |
-| **28** `.sql` em `crates/wyd-db/migrations/`, aplicados do zero num PG17 em 2026-11-24 | os **6** seeds, bloqueados por curadoria de dado |
+| `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; testes unitários e de schema (contagem no panorama §1) | código de produção fora do slice `dsn`/schema |
+| série de `.sql` em `crates/wyd-db/migrations/`, aplicada do zero num PG17 em 2026-11-24 (contagem no panorama §1) | os seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
-| workflow `docs.yml` faz build/verificação e publica Pages; `code.yml` roda fmt, clippy e os testes unitários/de schema | gate de cobertura de 85% |
+| workflow `docs.yml` faz build/verificação e publica Pages; `code.yml` roda fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes | gate de cobertura de 85% |
 
 Números medidos em **2026-11-24** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.

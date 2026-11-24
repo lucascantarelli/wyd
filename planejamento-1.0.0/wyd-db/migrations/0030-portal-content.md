@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (adendo); `ddl-confirmado.md` §5.15 (confirmado); `padrao-banco.md` §1/§5/§9/§11 (P-13, P-20); `wyd-portal/lacunas.md` (`LAC-POR-02`, `LAC-POR-03`)
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que o dono decidiu em
 2026-11-20: notícia (`news`), banner (`banner`), guia editorial (`guide`) e versão de launcher
@@ -366,7 +366,11 @@ do navegador: o BFF grava e registra autor em `ops.audit_log`.
   com autor em `ops.audit_log` (`0002`), pela credencial `wyd_portal`. Ver `LAC-POR-01`: ação em
   `game` continua sendo do `wyd-admin`, e estas tabelas **não** são estado de jogo.
 
-## 10. Prova de execução (quando a série for escrita)
+## 10. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `psql -v ON_ERROR_STOP=1 -f 0030_portal_content.sql` como `wyd_migrator` → `CREATE TABLE` ×4.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'portal';` → **15** depois de

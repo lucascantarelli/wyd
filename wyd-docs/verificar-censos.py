@@ -11,7 +11,8 @@ Medidas (fontes independentes, cada uma com a regra ao lado):
 3. **células pendentes** — linhas de requisito de `docs/specs/rastreabilidade.md` §2: célula `Teste`
    com `P` e célula `Issue` ainda em `onda N` (sem número de issue). Mede `teste`, `issue` e o total.
 4. **`Q-BLK` abertas** — linhas da tabela de status de `pendencias-de-fechamento.md` cuja célula de
-   situação começa por `aberta` e cujo ID é `Q-BLK-nn`. Mede a lista, não a contagem citada.
+   situação começa por `aberta` e cujo ID é `Q-BLK-nn`. Mede a lista, não a contagem citada; **zero
+   aberta é medida válida** e imprime `nenhuma`.
 
 Regra das citações: todo `**N** atos de aceite`, `**N** páginas \`aceito\``, `**N** células
 pendentes` (ou `**N** células (X \`teste\` + Y \`issue\`)`), `**N** \`Q-BLK\` abertas` e
@@ -45,6 +46,7 @@ ESTADO_RE = re.compile(r"^[\s>]*\*\*Estado:\*\*[ ]*([^\s(]+)", re.IGNORECASE)
 REQUISITO_RE = re.compile(r"^\|\s*`((?:RF|RN|RNF|UC)-DB-[0-9]{3})`\s*\|")
 MIGRATION_RE = re.compile(r"[0-9]{4}-[a-z0-9-]+[.]md$")
 QBLK_RE = re.compile(r"`(Q-BLK-[0-9]+)`")
+ABERTA_RE = re.compile(r"^[ *]*aberta([^a-z]|$)", re.IGNORECASE)
 
 ATOS_RE = re.compile(r"\*\*(\d+)\*\*\s+atos de aceite")
 ATOS_TABELA_RE = re.compile(r"atos de aceite pendentes[^|]*\|\s*\*{0,2}(\d+)\*{0,2}")
@@ -162,7 +164,7 @@ def medir_celulas(raiz: Path) -> tuple[int, int]:
 
 
 def medir_qblk(raiz: Path) -> list[str]:
-    """IDs `Q-BLK` cuja situação na tabela de status ainda é `aberta`."""
+    """IDs `Q-BLK` cuja situação na tabela de status começa por `aberta` (com ou sem negrito)."""
     abertas: list[str] = []
     for linha in ler(raiz, PENDENCIAS).splitlines():
         if not linha.startswith("|"):
@@ -171,10 +173,8 @@ def medir_qblk(raiz: Path) -> list[str]:
         if not ids:
             continue
         celulas = [celula.strip() for celula in linha.strip().strip("|").split("|")]
-        if any(celula.startswith("aberta no lote") for celula in celulas):
+        if any(ABERTA_RE.match(celula) for celula in celulas):
             abertas.append(ids[0])
-    if not abertas:
-        raise Erro(f"{PENDENCIAS}: nenhuma linha de status `aberta` com `Q-BLK-nn`")
     return abertas
 
 
@@ -282,7 +282,7 @@ def main() -> int:
         f"{atos['tests']} tests); {aceitas} páginas aceitas "
         f"({', '.join(f'{pasta} {numero}' for pasta, numero in sorted(aceitas_por_pasta.items()))}); "
         f"{teste + issue} células pendentes ({teste} teste + {issue} issue); "
-        f"{len(qblk)} Q-BLK abertas ({', '.join(qblk)}); "
+        f"{len(qblk)} Q-BLK abertas ({', '.join(qblk) or 'nenhuma'}); "
         f"{len(vigentes)} citação(ões) conferida(s), {len(historicas)} histórica(s)"
     )
     for citacao, marca in historicas:

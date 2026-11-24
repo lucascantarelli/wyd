@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.16 (confirmado); `padrao-banco.md` §1/§5/§8/§9/§11; `lacunas.md` (`M17`, `M25`); `rascunho-accounts.md` `R9`
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Décimo segundo arquivo da série. Cria a **fila única** pela qual a web pede algo ao jogo: item, ouro ou
 nível para uma conta ou personagem. O portal enfileira, o servidor drena e aplica; o portal nunca

@@ -60,7 +60,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Código Rust | primeiro slice em `crates/wyd-db/`: `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (19 testes locais); os outros 8 `crates/*` só têm `.gitkeep`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml` de workspace, `rust-toolchain.toml` ou `Makefile`; o crate tem `crates/wyd-db/Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4; projeto `WYD 1.0.0` (40 itens com os campos preenchidos, 5 views, dependências como `blocked by`) em `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
-| CI | o gate de documentação roda em `.github/workflows/docs.yml` (PR e push em `develop`/`main`, disparado por qualquer mudança na árvore `planejamento-1.0.0/` ou em `wyd-docs/`, sem lista de arquivos — 2026-11-22); `code.yml` roda fmt, clippy, testes unitários e os 13 testes de schema contra PG17 migrado; `full-workflow.yml` segue stub de versão e a cobertura de 85% ainda não é medida (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
+| CI | o gate de documentação roda em `.github/workflows/docs.yml` (PR e push em `develop`/`main`, disparado por qualquer mudança na árvore `planejamento-1.0.0/` ou em `wyd-docs/`, sem lista de arquivos — 2026-11-22); `code.yml` roda fmt, clippy, 6 testes unitários, 13 de schema contra PG17 migrado, cobertura informativa sem `--fail-under` e `cargo audit`/`cargo deny` bloqueantes com `deny.toml`; `full-workflow.yml` segue stub de versão e a cobertura de 85% continua no gate do sistema (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
 | Imagem e Compose | `.github/workflows/docs-image.yml` está versionado mas **nunca rodou e nunca publicou** (2026-11-23): o arquivo não está no remoto e o pacote no GHCR não existe. `docker compose pull docs` / `up -d docs` consomem a imagem publicada (`:latest`, com `build:` de fallback); `docker-compose.override.yml` (automático) traz só o serviço `gate` sob perfil e `docker-compose.dev.yml` (opt-in, `-f`) constrói a árvore com `:dev`. Build, fumaça e contagem provados localmente; `pull` reprova com exit 1 enquanto não houver pacote. Estado medido e o que falta para publicar em `planejamento-1.0.0/wyd-1.0.0.md` §8; decisão, DoD e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
@@ -209,7 +209,7 @@ escopo.
   GitHub desaconselha em repositório público.
 - CI é feito de workflows reutilizáveis e actions compostas em `.github/actions/`, com permissões
   mínimas, actions fixadas e cache. O fluxo de documentação (`.github/workflows/docs.yml`) já roda o
-  gate em PR e push; o CI de código tem `code.yml` (fmt, clippy, testes) e `full-workflow.yml` ainda é stub de versão, descritos em `planejamento-1.0.0/wyd-ops/`.
+  gate em PR e push; o CI de código tem `code.yml` (fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes) e `full-workflow.yml` ainda é stub de versão, descritos em `planejamento-1.0.0/wyd-ops/`.
 - O site usa **MkDocs 2.0** (`2.0.dev6`, pré-release) com Python 3.15: sem `mkdocs.yml`, plugin ou
   modo estrito, e o build não roda no Windows. Não crie `mkdocs.yml`; tema, montagem e verificação
   vivem em `wyd-docs/`.

@@ -98,7 +98,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | `crates/*` | 9 pastas, só `.gitkeep` | `git ls-files` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
-| CI | `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
+| CI | `code`: fmt, clippy, 6 unitários, 13 de schema, cobertura informativa e audit/deny bloqueantes (2026-11-24); `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos e 567 MB em `wyd-client/files/`, ignorado; `WYD.exe` com hash medido | `wyd-client/registro-do-cliente.md`, 2026-11-22 |
@@ -170,7 +170,7 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 |---|---|---|---|
 | D1 | `README.md` da raiz afirma desenvolvimento ativo, 10 crates, 34 issues ativas, 58 concluídas, 53 migrations e serviços no ar — **resolvido em 2026-11-19**: reescrito para o estado medido, sem contagem replicada | `README.md` × `git ls-files`, API do GitHub | agente e visitante leem estado falso |
 | D2 | `crates/*` estão vazios, mas o README e o CI pressupõem workspace Rust | `find crates` | qualquer `cargo build` na raiz falha |
-| D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
+| D3 | O `full-workflow.yml` tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
 | D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
 | D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-22:** as 40 issues #82–#121 existem no board, com milestone de fase, DoD, labels, os quatro campos preenchidos, 5 views e 63 vínculos `blocked by` (`wyd-ops` §10.3) |
 | D6 | O plano diretor declara **144** páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **1 segue** depois das 21 de recorte, das 40 `WYDDB-nnn`, da página de capacidade, dos cinco lotes de 2026-11-24 (o lote D aprovado por `Q-BLK-04`/`Q-BLK-05`, o lote E por `Q-BLK-06`/`Q-BLK-07`) e da retirada de três por `Q-BLK-01` | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
@@ -819,7 +819,7 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente (2026-11-23): traz **só** o `gate` sob perfil; não toca `docs` |
 | `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
-| workflow de CI | `.github/workflows/` | `wyd-ops` | 4: `docs.yml`, `docs-image.yml`, `code.yml` (fmt/clippy/testes) e `full-workflow.yml` (stub de versão) |
+| workflow de CI | `.github/workflows/` | `wyd-ops` | 4: `docs.yml`, `docs-image.yml`, `code.yml` (fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes) e `full-workflow.yml` (stub de versão) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 1: `docs-check` |
 | crate Rust | `crates/<sistema>/` | o sistema | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários); os outros 8 só `.gitkeep` |
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
@@ -951,4 +951,156 @@ find . -name '*Dockerfile*' -not -path './deprecated/*' -not -path './.git/*'
 # 3. nenhuma referência a pasta top-level docker/ (só deprecated/docker/ pode aparecer)
 grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \
   | grep -v 'deprecated/' | grep -v '\.build/'
+```
+
+### 8.7 Organização de código, testes e operação por sistema (proposta, 2026-11-24)
+
+> **Estado: proposta (`P`), não decisão aprovada.** Esta subseção define o alvo verificável de
+> organização para os 13 sistemas e o checklist de D-04 = A. Ela **não cria pasta, código ou teste**;
+> a árvore de cada sistema só nasce depois da página `aceita` e da aprovação do dono (`AGENTS.md` §5,
+> item 1). Medido em 2026-11-24: `crates/wyd-db` é o único crate com código; os outros 8 `crates/*` têm
+> só `.gitkeep`; `wyd-admin` tem `src/` e `tests/` reservados; **10** sistemas não têm `RF` numerado e
+> `wyd-ops` não tem plano diretor (fonte: `wyd-ops/docs/prioridade-do-projeto.md` §0.1, D-04).
+
+#### Princípios que valem para todos
+
+1. **Dependência aponta para dentro.** Regra de negócio não importa banco, HTTP, filesystem, relógio ou
+   rede. A borda (binário, handler, adapter) conhece o interior; o interior não conhece a borda.
+2. **Contrato antes de implementação.** Cada sistema declara o que consome e o que fornece, com dono
+   nomeado. Tipo compartilhado mora no sistema dono do contrato — não em uma pasta “comum”.
+3. **SOLID com problema nomeado.** Interface (porta) nasce quando há mais de uma implementação real ou
+   quando o teste precisa isolar I/O; não se cria abstração para uma única chamada. `utils`, `helpers`,
+   `common` e “base” sem dono são proibidos.
+4. **Clean Architecture sem cerimônia.** Camadas existem para isolar dependência, não para duplicar tipo.
+   Sistema puro (`protocol`, `sim`) não ganha `adapter/`; sistema com I/O (`db`, `net`, `core`,
+   `server`, `admin`) separa domínio, aplicação e adaptador.
+5. **Teste é parte do desenho.** Cada alvo declara o que prova, o dado que precisa e o comando; teste
+   não é pasta criada depois do código.
+6. **Operação é um sistema.** Imagem, Compose, workflow, segredo, ambiente e rollback têm lugar e dono
+   antes do primeiro deploy.
+
+#### Rust: um crate por sistema
+
+`crates/<sistema>/` é a fronteira do crate. O alvo, quando o sistema tiver I/O:
+
+```text
+crates/<sistema>/
+├── Cargo.toml                 # membro do workspace (D-05 = A), edição e lints declarados
+├── src/
+│   ├── lib.rs                 # API pública; nada de regra ou I/O por conveniência
+│   ├── domain/                # tipos, invariantes e regras puras; sem sqlx/http/tokio/fs
+│   ├── application/           # casos de uso e portas (traits); sem adaptador concreto
+│   ├── adapter/               # PostgreSQL, HTTP, filesystem, relógio; implementa as portas
+│   └── bin/<sistema>.rs       # composição: lê config, monta adapter e chama aplicação
+├── tests/
+│   ├── contract_<alvo>.rs     # contrato entre sistemas, com dublê/fixture
+│   ├── system_<alvo>.rs       # sistema + PostgreSQL/HTTP reais, isolado
+│   └── fixtures/              # dado versionado e legível; sem segredo
+└── migrations/                # só wyd-db; SQL é artefato do sistema, não do planejamento
+```
+
+- Sistema **puro** (`wyd-protocol`, `wyd-sim`): `src/` com módulos por responsabilidade e testes
+  unitários inline; `tests/contract_*` quando houver contrato; **não** cria `adapter/` vazio.
+- `wyd-db` já tem `src/dsn.rs`, `src/migrate/` e `src/provision/` planejados; o padrão vale para o
+  código novo e não obriga renomear página `aceita`. `dsn` é utilitário de configuração, não domínio.
+- `wyd-client/tools/` é a exceção aprovada para a CLI de captura (`LCLI-04`); o crate continua em
+  `crates/` quando a ferramenta virar crate, não em `tools/` na raiz.
+- Nenhum crate nasce com `unsafe`; `unsafe_code = "forbid"` é o padrão do `wyd-db` e deve ser repetido
+  salvo decisão registrada.
+
+#### Portal Next.js
+
+```text
+wyd-portal/
+├── app/                       # rotas e Server Components; sem SQL direto na página
+├── components/                # UI reutilizável, sem regra de servidor
+├── lib/                       # validação, formatação e tipos puros
+├── server/                    # BFF: sessão, leitura do wyd-db, chamadas ao admin
+├── tests/unit/                # Vitest
+└── tests/e2e/                 # Playwright; fluxo de jogador, não teste de componente
+```
+
+O BFF é a única borda que fala com `wyd-db`/`wyd-admin`; a página não recebe DSN nem credencial. O
+portal não importa crate Rust: consome contrato HTTP/JSON documentado no sistema dono.
+
+#### Site, operação e cliente
+
+| Sistema | Árvore alvo | Regra |
+|---|---|---|
+| `wyd-docs` | `preparar.py`, `verificar*.py`, `tema/`, `tests/` e o site gerado fora do git | script de documento mora no `wyd-docs`; nada de `.py` em `planejamento-1.0.0/` |
+| `wyd-ops` | `wyd-ops/wyd-docs.Dockerfile`, `scripts/`, `tests/smoke/`; workflows em `.github/` | um Dockerfile; Compose na raiz por descoberta da ferramenta (§8.3); imagem por digest quando D-05 = A |
+| `wyd-client` | `wyd-client/tools/` (CLI), `files/` ignorado, `tests/` da CLI | binário do cliente nunca é versionado; patch e manifesto têm hash |
+| `wyd-admin` | `crates/wyd-admin/` quando virar Rust; HTTP/JSON interno | mesma separação domínio/aplicação/adaptador; auditoria não mora no handler |
+| `wyd-launcher` | `crates/wyd-launcher/` (Tauri/Rust) + `tests/` | assinatura e updater testados antes de publicar |
+
+`crates/wyd-client`, `crates/wyd-docs`, `crates/wyd-ops` e `crates/wyd-portal` não existem e não devem
+ser criados por analogia (§8.5).
+
+#### Testes: alvo, prova e comando
+
+| Tipo | Onde | O que prova | Comando |
+|---|---|---|---|
+| unitário | inline `#[cfg(test)]` no módulo | regra pura, erro tipado, borda de cálculo | `cargo test --lib` |
+| contrato | `tests/contract_<alvo>.rs` | forma e erro do contrato entre dois sistemas | `cargo test --test contract_<alvo>` |
+| sistema | `tests/system_<alvo>.rs` | adapter + PostgreSQL/HTTP reais, isolamento | `cargo test --test system_<alvo> -- --test-threads=1` |
+| E2E | `tests/e2e/` do portal/cliente | fluxo de jogador no navegador/cliente | Playwright, uma suíte por fluxo |
+| fumaça de ops | `wyd-ops/tests/smoke/` | imagem sobe, healthcheck responde, rollback para | comando do `wyd-ops` |
+
+Regras: dado de teste tem factory; `sleep` não sincroniza; estado global não vaza entre testes; `SKIP`
+silencioso reprova; cobertura de **85%** é medida no gate do sistema, não no `code.yml` incremental
+(D-02 = B). Teste que depende de segredo usa variável de ambiente e falha de forma legível quando ela
+falta.
+
+#### Operação e versões
+
+- Workspace Rust na raiz, `rust-toolchain.toml`, `Makefile` e **um** `Cargo.lock` quando D-05 = A; até
+  lá, o crate existente continua com o lock próprio e o CI o referencia explicitamente.
+- Imagem de CI e de runtime fixada por **digest** quando D-05 = A; hoje `postgres:17` e
+  `python:3.15-slim` estão por tag e essa dívida está registrada em D-05.
+- Workflow com permissão mínima, action por SHA e segredo só em secret; nenhum segredo em documento,
+  log ou artefato.
+- Toda imagem tem healthcheck; todo deploy tem rollback; nenhum ambiente de produção em free tier
+  (`AGENTS.md` §9).
+
+#### Checklist para declarar “organização definida” (D-04 = A)
+
+Um sistema só recebe o carimbo depois de mostrar, no documento dono:
+
+1. fronteira em uma página: o que faz, o que não faz e quem é dono de cada exclusão;
+2. contratos com forma, direção, erro, timeout e dono;
+3. árvore de `src/`, `tests/` e operação (ou ausência justificada de operação própria);
+4. requisitos com ID e critério de aceitação verificável;
+5. plano de teste com alvos, dados, isolamento e comando;
+6. roadmap com DoD executável por issue;
+7. dashboard que mede páginas, requisitos, issues e gate;
+8. comando de gate que falha de verdade.
+
+`wyd-ops` acrescenta runbook, ambientes e rollback; `wyd-portal` acrescenta a fronteira do BFF;
+`wyd-client` acrescenta direitos, hash e segunda leitura. **Nenhum sistema é declarado organizado por
+simetria:** os **13** passam pelo checklist, um a um, e a ausência de `RF` ou de plano diretor reprova.
+
+#### O que não fazer
+
+- Criar pasta vazia “para simetria”, `docker/` ou `tools/` na raiz (§8.5).
+- Colocar `.rs`, `.sql`, `.ts`, `.py` ou script executável em `planejamento-1.0.0/` (`AGENTS.md` §5,
+  item 6).
+- Criar crate compartilhado, `utils` ou “core comum” sem sistema dono e contrato.
+- Implementar antes de a página que descreve o arquivo estar `aceita`.
+- Tratar cobertura de linha como prova de capacidade: o gate funcional é do sistema.
+
+#### Como verificar
+
+```bash
+# 1. um crate por sistema, sem manifesto órfão
+find crates -maxdepth 2 -name Cargo.toml | sort
+
+# 2. nenhum executável dentro do planejamento (saída vazia)
+find planejamento-1.0.0 -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts' -o -name '*.py' -o -name '*.sh' \)
+
+# 3. o padrão de cada crate: API pública, domínio e teste declarados
+cargo metadata --manifest-path crates/wyd-db/Cargo.toml --no-deps --format-version 1 >/dev/null
+
+# 4. gate do sistema (documentação) e do código
+docker compose --profile gate run --rm gate
+cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
 ```

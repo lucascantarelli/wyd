@@ -7,6 +7,12 @@
 **Estado:** cumprida (2026-11-24) — o dono aprovou `Q-BLK-21` em **A**, as correções de §4 foram aplicadas
 antes da assinatura e as 12 páginas estão `aceito (2026-11-24)`. O registro está em §5.
 
+> **Atualizado em 2026-11-24, depois desta revisão:** `Q-BLK-20` = A foi decidida e `CAP-08` está
+> declarada não executável; as 27 páginas de `migrations/` foram aceitas e `crates/wyd-db/` já tem
+> `Cargo.toml`, `src/dsn.rs` e `tests/sistema_pg.rs`. O retrato de §1 (“os cinco alvos não existem”,
+> “0 de 23 capacidades”) é o daquele dia; o vigente está em `pendencias-de-fechamento.md` §6.6.31 e em
+> `tests/specs/capacidades.md` §7.
+
 ## 1. O que a assinatura é — e o que ela não é
 
 - **É o item 9 de §10**, "revisada por quem não escreveu". `Q-BLK-21` = A: o dono revisa e assina, e o

@@ -175,7 +175,9 @@ não é “verde por ausência” ([`plano-de-qualidade-e-gates.md`](../planos/p
 
 Governa `CAP-08`, que hoje **não tem ambiente**: o documento `dicionario-dados/banco-catalogo.md` não
 existe e o leitor atual não entende `CREATE TABLE esquema.tabela` (`tests/alvos/contrato-catalogo.md` §3).
-O requisito existe e é verificável no dia em que o gate rodar; o que não existe é o insumo.
+O requisito existe e é verificável no dia em que o gate rodar; o que não existe é o insumo. Em 2026-11-24,
+`Q-BLK-20` = **A** declarou `CAP-08` **não executável na `1.0.0`**; o requisito segue válido para depois da
+release, quando o dicionário e o leitor existirem.
 
 ## 12. `RNF-DB-012` — a fronteira entre papéis é provada (gate `fronteira`)
 
