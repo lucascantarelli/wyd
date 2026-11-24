@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §1, §8, §10 e §10.1
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — `crates/wyd-db/src/migrate/` não existe; especificação a implementar.
+**Estado:** aceito (2026-11-24) — `crates/wyd-db/src/migrate/` não existe; especificação a implementar.
 
 # `src/migrate/mod.rs` — fachada do runner
 

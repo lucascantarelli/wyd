@@ -1,7 +1,7 @@
 > Pergunta: "o que ainda não está decidido no portal, quem decide e o que trava enquanto isso?"
 > Público: arquitetura, produto e desenvolvedor novo
 > Dono: arquitetura
-> Base: `docs/arquitetura/fronteira.md`; `docs/arquitetura/consumo-do-banco.md`; `M21`; `AGENTS.md` §5.4
+> Base: `docs/arquitetura/fronteira.md`; `docs/arquitetura/consumo-do-banco.md`; `M21`; `AGENTS.md` §5, item 4
 > Revisado em: 2026-11-23
 
 **Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22.

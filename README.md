@@ -22,20 +22,22 @@
 O alvo é a **`1.0.0`**: um servidor de WYD2 com o protocolo CPSock do cliente original, motor em
 Rust, persistência em PostgreSQL 17, portal em Next.js, launcher Tauri e documentação publicada.
 
-O repositório está em **planejamento**. Não há workspace Rust, migration executável nem serviço no
-ar: o que existe é o plano de cada sistema, medido e com dono. Essa é a decisão do projeto — planejar
-antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
+O repositório está em **planejamento**, com o primeiro slice do `wyd-db` já em código. Não há
+workspace Rust na raiz, runner de migrations nem serviço no ar: o que existe é o plano de cada
+sistema, medido e com dono, e o código que nasceu sob páginas `aceitas`. Essa é a decisão do projeto —
+planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 
 | Existe | Não existe ainda |
 |---|---|
-| `planejamento-1.0.0/` com o panorama e os sistemas já abertos | `Cargo.toml`, `rust-toolchain.toml`, `Makefile` |
-| site MkDocs 2.0 montado em `wyd-docs/` | código de produção em `crates/` (só `.gitkeep`) |
-| plano do `wyd-db` (piloto) com páginas, ADRs e lacunas registrados | migrations da `1.0.0` (a série é planejada, não escrita) |
+| `planejamento-1.0.0/` com o panorama e os sistemas já abertos | workspace Rust na raiz (`Cargo.toml`, `rust-toolchain.toml`, `Makefile`) |
+| site MkDocs 2.0 montado em `wyd-docs/` | runner de migrations e serviço no ar |
+| `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; **19 testes** locais | código de produção fora do slice `dsn`/schema |
+| **28** `.sql` em `crates/wyd-db/migrations/`, aplicados do zero num PG17 em 2026-11-24 | os **6** seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
-| workflow principal `.github/workflows/full-workflow.yml` limitado ao `Get Info`; o workflow `docs.yml` faz build/verificação e publica Pages | CI de código com build, teste e cobertura |
+| workflow `docs.yml` faz build/verificação e publica Pages; `code.yml` roda fmt, clippy e os testes unitários/de schema | gate de cobertura de 85% |
 
-Números medidos em **2026-11-22** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
+Números medidos em **2026-11-24** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.
 
 O site oficial de documentação está publicado em [GitHub Pages](https://lucascantarelli.github.io/wyd/).
@@ -62,7 +64,8 @@ wyd-docs/                # projeto do site MkDocs 2.0 (montagem, tema, verifica�
 wyd-portal/              # portal Next.js (ainda sem código: só .gitkeep)
 wyd-client/              # arquivos do cliente real (files/ ignorado pelo git)
 wyd-ops/                 # imagem do site: Dockerfile
-crates/                  # 9 pastas reservadas aos crates Rust (só .gitkeep)
+crates/wyd-db/           # crate inicial: Cargo.toml, src/ e tests/; 28 .sql em migrations/
+crates/                  # as outras 8 pastas seguem reservadas (só .gitkeep)
 docker-compose.yml       # serviço docs: consome a imagem publicada pelo CI
 docker-compose.override.yml  # carregado automaticamente: serviço gate (perfil)
 docker-compose.dev.yml   # opt-in (-f): build da árvore, tag :dev
@@ -86,7 +89,7 @@ Nada é montado à mão: a imagem é construída e publicada pelo CI
 ```bash
 docker compose pull docs                     # baixa a imagem publicada
 docker compose up -d docs                    # serve o site em http://127.0.0.1:8000
-docker compose --profile gate run --rm gate  # monta, builda e verifica — o mesmo do CI
+docker compose --profile gate run --rm gate  # monta, builda e roda a cadeia de verificação
 ```
 
 Para construir da árvore de trabalho, sem tocar na imagem publicada:

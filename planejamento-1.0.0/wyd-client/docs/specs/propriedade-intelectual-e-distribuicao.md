@@ -4,7 +4,7 @@
 > Base: `wyd-client/lacunas.md` (`LCLI-02`); `wyd-launcher/lacunas.md` (`LLCH-01`, `LLCH-03`, `LLCH-04`); `wyd-client/registro-do-cliente.md`; `docs/specs/inventario-da-arvore.md`; `docs/specs/pedido-ao-titular.md`; `AGENTS.md` §§1, 3, 5.7–5.9
 > Revisado em: 2026-11-23
 
-**Estado:** proposta (`P`, 2026-11-23). Em 2026-11-23 o dono decidiu as políticas de `Q-IP-3`–`Q-IP-6` e iniciou o pedido externo de `Q-IP-1`/`Q-IP-2`; o inventário item a item e o pacote do pedido foram preparados, mas o pedido **não foi enviado**. A proposta **continua aberta**, a distribuição segue **congelada** e nenhuma decisão aqui autoriza patch, release, captura ou evidência de direitos. Esta página não conclui titularidade, licença, permissão ou legalidade de uso, modificação, publicação ou redistribuição. Não é parecer jurídico nem autorização para distribuir arquivo.
+**Estado:** proposto (2026-11-23) — proposta (`P`, 2026-11-23). Em 2026-11-23 o dono decidiu as políticas de `Q-IP-3`–`Q-IP-6` e iniciou o pedido externo de `Q-IP-1`/`Q-IP-2`; o inventário item a item e o pacote do pedido foram preparados, mas o pedido **não foi enviado**. A proposta **continua aberta**, a distribuição segue **congelada** e nenhuma decisão aqui autoriza patch, release, captura ou evidência de direitos. Esta página não conclui titularidade, licença, permissão ou legalidade de uso, modificação, publicação ou redistribuição. Não é parecer jurídico nem autorização para distribuir arquivo.
 
 ## 1. Objetivo e limite
 

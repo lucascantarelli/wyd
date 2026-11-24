@@ -90,7 +90,7 @@ só fecha após a segunda leitura, e `LPRT-06` continua nas capturas B/C.
 1. Registro medido do cliente (feito em 2026-11-22) e primeira captura datada com ficha.
 2. Ferramenta de captura planejada em `wyd-client/tools/`, com escopo e salvaguardas aprovados;
    D3–D6 estão decididos, **A1 foi autorizada em 2026-11-23** e a implementação do `ECAP` e da CLI Rust
-   é o próximo trabalho, sem código em `planejamento-1.0.0/` (`AGENTS.md` §5.6).
+   é o próximo trabalho, sem código em `planejamento-1.0.0/` (`AGENTS.md` §5, item 6).
 3. Nenhum conteúdo do cliente é versionado, publicado ou redistribuído sem autorização e escopo
    documentados (`LCLI-05`); ignorar a árvore local é uma salvaguarda, não uma conclusão sobre
    titularidade.

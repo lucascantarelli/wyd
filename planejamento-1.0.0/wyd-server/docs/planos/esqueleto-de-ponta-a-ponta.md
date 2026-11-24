@@ -6,7 +6,7 @@
 > Base: `wyd-1.0.0.md` §7.3 e §7.7; `wyd-protocol-1.0.0.md` §9.1; `wyd-protocol/docs/goldens/como-capturar.md` §1, §2 e §7; `wyd-client/lacunas.md` (`LCLI-04`, D3–D6); `wyd-core/lacunas.md` (`LCORE-01`–`LCORE-04`); `wyd-db/migrations/0006-game-character.md` §6.1 e `0007-game-session.md` §6.2/§7; `docs/specs/endpoint-de-captura.md`; `LPRT-10`
 > Revisado em: 2026-11-23
 
-**Estado:** proposta (`P`, 2026-11-23). Define **qual** fatia prova o encaixe das fronteiras e **como** se reconhece
+**Estado:** proposto (`P`, 2026-11-23). Define **qual** fatia prova o encaixe das fronteiras e **como** se reconhece
 que ela passou. Não afirma byte, nome de mensagem nem valor de opcode: nenhum dos três está medido — não há
 captura, não há golden e não há código de produção (`V`, `wyd-1.0.0.md` §7; `wyd-client/registro-do-cliente.md` §7).
 
@@ -184,4 +184,4 @@ mesmo bloqueio que `wyd-1.0.0.md` §7.5 registra: **a onda jogável não começa
 | 6 | repetir o fluxo no canal 2 | `wyd-server` | C7, quando o segundo canal for implementado |
 
 Cada etapa fecha em issue própria, com DoD copiado do critério que ela serve. Esta página não cria issue
-(`AGENTS.md` §5.9).
+(`AGENTS.md` §5, item 9).

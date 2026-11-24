@@ -32,4 +32,6 @@ services:
       - |
         python preparar.py &&
         mkdocs build --dir .build/docs --output site &&
-        python verificar.py site
+        python verificar.py site &&
+        python verificar-contagens.py &&
+        python verificar-censos.py

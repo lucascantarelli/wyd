@@ -1,7 +1,7 @@
 > Pergunta: "como o BFF do portal prova ao `wyd-admin` que o chamador é ele, e como o admin pede kick e broadcast ao `wyd-server`?"
 > Público: Arquitetura, `wyd-ops`, `wyd-admin` e quem for planejar o `wyd-server`
 > Dono: arquitetura (decisão); `wyd-admin` (forma do elo portal → admin)
-> Base: `contrato-c4.md` §1, §4.4, §4.5 e §7; `lacunas.md` `LAC-ADM-03` e `LAC-ADM-04`; `RNF-ADM-001`/`RNF-ADM-002`; `AGENTS.md` §5.8
+> Base: `contrato-c4.md` §1, §4.4, §4.5 e §7; `lacunas.md` `LAC-ADM-03` e `LAC-ADM-04`; `RNF-ADM-001`/`RNF-ADM-002`; `AGENTS.md` §5, item 8
 > Revisado em: 2026-11-22
 
 **Estado:** aceito (2026-11-22) — **decidido pelo dono em 2026-11-22**, nas duas opções
@@ -34,7 +34,7 @@ justifica a rotação em dois passos de §2.3.
 1. Recusar chamada de fora da rede interna (inclusive de outro ambiente de deploy).
 2. Impedir que um token de outro serviço (`wyd_game`, `wyd_portal` do banco) sirva como credencial de API.
 3. Permitir rotação de segredo **sem janela de erro** — portal e admin não sobem no mesmo instante.
-4. Não guardar segredo em tabela, log, resposta ou repositório (`AGENTS.md` §5.7).
+4. Não guardar segredo em tabela, log, resposta ou repositório (`AGENTS.md` §5, item 7).
 5. Caber no que já está fixo no contrato: `Authorization: Bearer`, `401` sem token válido, `403` por
    papel, `400` sem `X-Trace-Id` (`RN-ADM-002`, `RNF-ADM-002`).
 
@@ -57,7 +57,7 @@ justifica a rotação em dois passos de §2.3.
 - **TLS obrigatório no elo**, mesmo em rede interna: sem ele o token trafega em claro e a opção A deixa
   de valer.
 - **Comparação em tempo constante** e token de 32 bytes ou mais (base64url), gerado pelo `wyd-ops`; o
-  valor nunca entra em log, resposta, issue ou documento (`AGENTS.md` §5.7).
+  valor nunca entra em log, resposta, issue ou documento (`AGENTS.md` §5, item 7).
 - **O que o token autoriza é o papel, não a pessoa:** `RN-ADM-001` continua decidindo `moderator` ×
   `admin`, e nas rotas de custódia o ator é `X-Actor-Account-Id` com conferência de titular no banco.
 

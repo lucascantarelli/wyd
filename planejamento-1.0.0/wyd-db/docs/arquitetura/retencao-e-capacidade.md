@@ -2,7 +2,7 @@
 > Público: Arquiteto de schema, operação e revisor de capacidade
 > Dono: arquitetura + operação
 > Base: `wyd-db-1.0.0.md` §6.3; `padrao-banco.md` `P-21`; `ddl-confirmado.md` §4, §5.1–§5.7, §5.9, §5.16, §5.33 e §5.34; `proposta-retencao-pendente.md` §2–§4; `proposta-dados-pessoais-e-retencao.md` §5.2; `proposta-decisoes-capacidade.md` §4; `lacunas.md` `M20`, `M22`, `M25`, `M30` e `M32`; `docs/planos/plano-de-documentacao.md` §2
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-23)
 
@@ -195,9 +195,13 @@ limiar numérico de alerta foi aprovado, e esta página não inventa um.
 
 ## 9. O que esta página não cobre
 
-- **A rotina de expurgo, o backup, o reaper e o restore:** são de `wyd-ops` e continuam pendentes;
-  `Q-RET-7 = A` (2026-11-24) fixou 30 dias de cópia diária, rotação, criptografia fora do host e restore
-  trimestral, mas fornecedor, contrato, RPO/RTO e ensaio não existem.
+- **A rotina de expurgo, o backup, o reaper e o restore:** o executor dos expurgos foi decidido em
+  2026-11-24 (`Q-BLK-02` = `cron` do host no Compose) e o backup ganhou destino, RPO de 24 h e RTO de 4 h
+  (`Q-BLK-03`); `Q-RET-7 = A` já fixava 30 dias de cópia diária, rotação, criptografia fora do host e
+  restore trimestral. O que **não** existe: contrato e região do destino, credencial administrativa
+  nominal, ensaio de restore e os próprios jobs — a rotina escrita está em
+  [`planos/plano-de-manutencao.md`](../planos/plano-de-manutencao.md) e o procedimento, em
+  [`guia-administrador/backup-e-restore.md`](../guia-administrador/backup-e-restore.md).
 - **A validação jurídica de `Q-DP-2`:** o dono definiu em 2026-11-24 o artefato **parecer jurídico
 escrito, por finalidade**; o parecer **não existe** e `Q-DP-2/validação` continua pendente. `Q-RET-3`
 foi decidida em A pelo dono na mesma data, por ciclo de vida, **sem** transformar essa dispensa em

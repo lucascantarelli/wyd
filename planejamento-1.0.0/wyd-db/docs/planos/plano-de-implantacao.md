@@ -32,7 +32,7 @@ aqui fica só qual etapa usa qual.
 | # | Etapa | O que acontece | Como falha |
 |---|---|---|---|
 | 1 | provisionar papéis e `public` | `wyd-db provision apply` cria os seis papéis e aplica o bloco de `public` (dono: `src/provision/spec.md` §4); fora da série (`ADR-DB-0001`) | roda uma vez por **banco** — criar papel é no-op no cluster; reexecutar é no-op verificado |
-| 2 | aplicar a série | o runner valida o papel, pega o advisory lock e aplica `0001`…`0029` em transação por arquivo — é `0001` que cria os quatro schemas | aborta no primeiro erro; o ledger diz até onde chegou |
+| 2 | aplicar a série | o runner valida o papel, pega o advisory lock e aplica `0001`…`0034` em transação por arquivo — é `0001` que cria os quatro schemas | aborta no primeiro erro; o ledger diz até onde chegou |
 | 3 | conteúdo | os seeds da própria série gravam o catálogo e fecham `content_version` | contagem divergente de `plano-migrations.md` §4 reprova o gate de conteúdo |
 | 4 | serviços | jogo (`WYD_DB_URL_GAME`) e portal (`WYD_DB_URL_PORTAL`) sobem e rodam o preflight de conexão | preflight recusa papel errado em vez de degradar |
 | 5 | verificação | §"Verificação pós-implantação" | falha aqui é rollback, não "ajustar depois" |
@@ -52,7 +52,7 @@ a janela com o número medido no ensaio, não com estimativa.
 
 | O que conferir | Esperado |
 |---|---|
-| tabelas por schema (`content`, `game`, `portal`, `ops`) | soma **92** (`plano-migrations.md` §3), com fonte e data na página da série |
+| tabelas por schema (`content`, `game`, `portal`, `ops`) | soma **109** (`plano-migrations.md` §3), com fonte e data na página da série |
 | views | 2 (`plano-migrations.md` §3) |
 | versão de conteúdo | `content_version = 7` (`plano-migrations.md` §4) |
 | papéis | os seis existem; `wyd_owner` é `NOLOGIN` (`seguranca.md`) |

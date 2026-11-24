@@ -73,8 +73,9 @@ executa mesmo assim e retorna 0 — o passo fica `success`, o job fica verde e o
 
 **Efeito:** não há job vermelho para consertar; há **gate verde que não publica metadado**. O
 `version`/`commit` que um job futuro consumiria chega vazio, e o defeito não aparece em status check
-nenhum. Um gate que não pode falhar não é gate. Continua verdade que não existe build, teste,
-cobertura nem gate de código: `crates/*` só tem `.gitkeep` e não há `Cargo.toml` na raiz.
+nenhum. Um gate que não pode falhar não é gate. Continua verdade que não existe gate de código,
+build nem cobertura: só `crates/wyd-db` tem `Cargo.toml` (com `dsn`, desde 2026-11-24) e não há workspace
+na raiz.
 
 **O que esta medição não decide:** corrigir a interpolação do `run:` e substituir o stub pela
 arquitetura de §4 são a decisão 6 de §8 e a Fase 4 do panorama. O workflow não foi alterado.
@@ -463,7 +464,7 @@ estado medido no fim da execução:
 | `Status` | `Pronto` **1** (`WYDDB-001`, sem dependência), `Backlog` **25**, `Bloqueado` **14** (`027`–`040`, os bloqueios de `roadmap/index.md` §2) | — |
 | Opções de `Status` | as seis de §3.5: `Backlog`, `Pronto`, `Em andamento`, `Bloqueado`, `Em revisão`, `Done` | `gh project field-list 10 --owner @me` |
 | Views | **5, todas com filtro**: `Fila` (`-status:Done`, é a view padrão renomeada), `Por sistema` (`sistema:wyd-db`), `Bloqueados` (`status:Bloqueado`), `Minhas issues` (`assignee:@me`) e `Roadmap` (`-status:Done`) | `gh api graphql` na consulta do project |
-| Descrição e README do project | preenchidos, cada linha apontando o documento dono do fato | página do project |
+| Descrição e README do project | preenchidos, cada item apontando o documento dono do fato | página do project |
 | Tipo de issue | `Task` nas 40 | `gh api repos/lucascantarelli/wyd/issues/82 -q .type` |
 | Dependências | **63** vínculos `blocked by`, derivados do bloco "Depende de" das 40 páginas; 39 issues têm ao menos um bloqueador | `gh api repos/lucascantarelli/wyd/issues/{n}/dependencies/blocked_by` |
 | `estado/bloqueada` | 14 issues (`027`–`040`), as mesmas que `roadmap/index.md` §2 declara bloqueadas | `gh issue list --label estado/bloqueada` |

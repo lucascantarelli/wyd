@@ -36,12 +36,12 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 308 | piloto parcial: 301 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados), 37 páginas de `src/`, 0 em `tests/`, `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-23 |
+| `wyd-db` | 348 | piloto parcial: 340 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados) e **28** `.sql` aplicados do zero em 2026-11-24, 37 páginas de `src/`, **12 de 12** em `tests/` (matriz `CAP-nn` de **39** capacidades, **13** cobertas), crate inicial `crates/wyd-db` com `dsn` e o alvo `sistema_pg` (13 cenários), 0 em `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-24 |
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (**18 decididas** — 17 em 2026-11-20 e `LPRT-09` em 2026-11-23; **2 abertas** por captura: `LPRT-03` e `LPRT-06`), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-23 |
 | `wyd-docs` | 10 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/`; proposta do gate de aceite em 2026-11-23 | `find planejamento-1.0.0/wyd-docs -name '*.md'`, 2026-11-23 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, **0 lacunas abertas, 0 propostas e 9 fechadas** (`LAC-POR-09` fechou em 2026-11-23) | `wyd-portal/`; `lacunas.md` §1, 2026-11-23 |
 | `wyd-admin` | 11 | planejado: dashboard, `lacunas.md` e 9 páginas em `docs/`; contrato C4 com 14 rotas (7 de staff, 4 de custódia de item, 3 utilitárias); **15 `RF-ADM`**, 10 fatias; zero lacunas abertas (as sete fecharam até 2026-11-22) | `wyd-admin/`, 2026-11-22 |
-| `wyd-ops` | 5 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional + porta de entrada publicada e o plano da imagem do site; sem plano diretor e sem `RF-OPS` | `wyd-ops/`, 2026-11-22 |
+| `wyd-ops` | 6 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional + porta de entrada publicada, o plano da imagem do site e o ranking publicado das frentes (`docs/prioridade-do-projeto.md`, 2026-11-24); sem plano diretor e sem `RF-OPS` | `wyd-ops/`, 2026-11-22 |
 | `wyd-net` | 3 | aberto em 2026-11-22: fronteira, 7 contratos (6 já decididos) e 4 lacunas no total (**1 aberta como medição, 3 fechadas**; `LNET-02`/`LNET-03` por decisão, `LNET-04` por regra vigente e a política de `LNET-01` por `Q-NET-1` = A, em 2026-11-23); sem `RF-NET` | `wyd-net/lacunas.md` §1, atualizado em 2026-11-23 |
 | `wyd-core` | 4 | aberto em 2026-11-22: fronteira, 6 contratos e **0 abertas, 0 propostas, 4 fechadas** (`LCORE-01`–`LCORE-04`); C4 decidida em 2026-11-23; sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-23 |
 | `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura com A1 autorizada em 2026-11-23) e 5 lacunas (**0 abertas, 5 fechadas**; `LSRV-05` fechou em C, com a condição **reprovada** na medição — peer de A1 pela opção A, implementação pendente); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md` §9.1, 2026-11-23 |
@@ -55,25 +55,25 @@
 | Pasta | Escritas | Planejadas | Observação |
 |---|---:|---:|---|
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
-| `docs/arquitetura/` | 14 | 17 | `index` + 13; faltam implantação, fluxo e modelo conceitual; `retencao-e-capacidade` é `proposto` com volume pendente |
-| `docs/specs/` | 10 | 20 | `index` + 9; faltam 4 de topo, 4 fluxos e 3 estados |
+| `docs/arquitetura/` | 17 | 17 | `index` + 13 páginas + 3 de `adr/`; `implantacao` e `modelo-conceitual` entraram no lote F (2026-11-24) e a pasta fecha; `retencao-e-capacidade` é `proposto` com volume pendente |
+| `docs/specs/` | 20 | 20 | `index` + 19; os 6 fluxos e os 5 estados estão escritos; `requisitos-nao-funcionais` entrou no lote E e `stakeholders` e `rastreabilidade` no lote F (2026-11-24); a pasta fecha |
 | `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **109 existem** (2026-11-22) |
-| `docs/planos/` | 8 | 10 | `index` + 7 planos escritos, inclusive `plano-de-documentacao` e `plano-de-testes` |
+| `docs/planos/` | 9 | 10 | `index` + 8 planos escritos, inclusive `plano-de-documentacao`, `plano-de-testes` e `plano-de-manutencao` (lote C); falta `metricas` (`M20`) |
 | `docs/roadmap/` | 42 | 42 | `index`, `fases` e as 40 `WYDDB-nnn` escritas; as issues nascem na Onda 8 |
-| `docs/guia-desenvolvedor/` | 10 | 11 | 3 páginas anteriores + 7 recortes; falta `pool-e-transacoes` |
-| `docs/guia-administrador/` | 4 | 8 | `index`, `configuracao`, `instalacao` e `diagnostico` |
-| `docs/guia-teste/` | 5 | 7 | `index`, contrato, sistema, `piramide-e-alvos` e `gates-e-anti-skip` |
-| `docs/guia-documentacao/` | 4 | 8 | `index`, `estilo-e-linguagem`, `estrutura-e-navegacao` e `revisao-e-publicacao` |
-| `migrations/` | 28 | 36 | 2 páginas de seção (por escrever) + 34 arquivos, 28 escritos |
+| `docs/guia-desenvolvedor/` | 11 | 11 | 3 páginas anteriores + 7 recortes + `pool-e-transacoes` (lote E); fecha |
+| `docs/guia-administrador/` | 8 | 8 | `index`, `configuracao`, `instalacao`, `diagnostico`, `backup-e-restore`, `recuperacao-de-desastre`, `sustentacao` e `manutencao-rotineira` (os dois últimos do lote D; pasta no teto) |
+| `docs/guia-teste/` | 7 | 7 | `index`, contrato, sistema, `piramide-e-alvos`, `gates-e-anti-skip`, `fixtures-e-factories` e `dados-de-teste` (os dois últimos do lote D; pasta no teto) |
+| `docs/guia-documentacao/` | 5 | **5** | `index`, `estilo-e-linguagem`, `estrutura-e-navegacao`, `revisao-e-publicacao` e `imagens-e-evidencias` (lote C); o teto da pasta caiu de 8 para 5 em 2026-11-24 (`Q-BLK-01`) |
+| `migrations/` | 28 | 36 | `index` escrito em 2026-11-23 (`Q-M33-4`) + **1** página de seção por escrever (`serie-e-regras`) + 34 arquivos, 28 escritos |
 | `src/` | 37 | 59 | `migrate/` e `provision/` têm página por arquivo |
-| `tests/` | 0 | 12 | |
+| `tests/` | **12** | 12 | 2026-11-24: `index`, `fixtures-e-factories`, `dados-de-teste`, `resources/README`, 5 `alvos/*` e 3 `specs/*`, com a matriz `CAP-nn` |
 | `prompts/` | 0 | 9 | |
 | `skills/` | 0 | 9 | |
 
-**Totais planejados:** 147 páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **121 páginas autorais com
-corpo** em `docs/` (121 arquivos, incluindo os índices que já viraram página), fora de `gerado/`, que reúne **110 arquivos**
-(as 109 páginas de tabela e o índice); 28 em `migrations/`, 37 em `src/` (2026-11-22).
+**Totais planejados:** **144** páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **143 páginas autorais com
+corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página), fora de `gerado/`, que reúne **110 arquivos**
+(as 109 páginas de tabela e o índice); 28 em `migrations/`, 37 em `src/` (2026-11-24).
 
 ### 1.3 Série de migrations
 
@@ -173,7 +173,7 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 | D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
 | D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
 | D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-22:** as 40 issues #82–#121 existem no board, com milestone de fase, DoD, labels, os quatro campos preenchidos, 5 views e 63 vínculos `blocked by` (`wyd-ops` §10.3) |
-| D6 | O plano diretor declara 147 páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **26 seguem** depois das 21 de recorte, das 40 `WYDDB-nnn` e da página de capacidade | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
+| D6 | O plano diretor declara **144** páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **1 segue** depois das 21 de recorte, das 40 `WYDDB-nnn`, da página de capacidade, dos cinco lotes de 2026-11-24 (o lote D aprovado por `Q-BLK-04`/`Q-BLK-05`, o lote E por `Q-BLK-06`/`Q-BLK-07`) e da retirada de três por `Q-BLK-01` | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
 | D7 | Não existe `mkdocs.yml` em lugar nenhum, mas `wyd-docs` é dono do site e o guia do `wyd-db` já prescreve recursos do MkDocs — **resolvido em 2026-11-19**: site em MkDocs 2.0 no `wyd-docs/`, sem `mkdocs.yml`; recursos do MkDocs 1.x convertidos na origem (§2.2 e `LPDOC-14`) | `find . -iname 'mkdocs*.yml'` sem resultado | site não publicável; exigência sem base executável |
 | D8 | `docs/` na raiz não existe; no legado, `docs/` é referência — **resolvido em 2026-11-19**: a documentação publicada sai de `planejamento-1.0.0/*/docs/` por `wyd-docs/`, e o legado não é publicado | `ls` | risco de alguém publicar o legado como doc oficial |
 
@@ -413,26 +413,31 @@ nem operação; a execução continua pendente de `wyd-ops`.
 
 ### 6.2 Frentes candidatas, com o que cada uma fecha e libera
 
+> **O ranking vigente das frentes do projeto é publicado em `wyd-ops/docs/prioridade-do-projeto.md`**
+> (2026-11-24): ele ranqueia finalizar o `wyd-db`, expandir os outros sistemas e resolver as lacunas
+> abertas, com número e fonte, e recomenda a trajetória. Esta tabela fica como registro da avaliação de
+> 2026-11-19/23; onde divergir, vale a página publicada.
+
 | Frente | Fecha com a recomendação | Tira da espera do dono | Libera | Pré-requisito | Custo |
 |---|---:|---:|---|---|---|
 | **A. Rodada de decisões do dono** (concluída: `wyd-sim`, `wyd-launcher`, `wyd-bots`, `wyd-net` e `wyd-portal`) | **1** (`LAC-POR-09`, fechada) | **0** | a onda B (versão e local dos vetores decididos; fixtures ainda dependem de implementação) e a decisão da F9 do portal | resposta do dono; nenhuma página nova | uma sessão de decisão; sem código |
 | **B. Captura A1** (peer do passo 0, `ECAP`, CLI, captura) | **1** (`LPRT-03`); prepara `LPRT-06` | 1 | X12, offsets de payload por `Type`, handshake do `net`/`server` e o caminho do `bots` | autorizada em 2026-11-23; implementação pendente | implementação do peer, endpoint, CLI e captura — **11 arquivos autorais**, 0 migrations |
 | **C1. Decidir o que resta do `wyd-db`** | **0 lacunas** (0 abertas, 0 propostas); `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` decididas; `Q-DP-2/artefato` definido em A (2026-11-24), `Q-DP-2/validação` pendente; `Q-RET-3`, `Q-RET-6` e `Q-RET-7` decididas em A (2026-11-24), aplicação pendente | **0 decisões de retenção** | página de retenção entregue como `proposto`, com volume pendente; matriz e sinal aplicados; `Q-RET-3` é 1 tabela/1 tela sem job; `Q-RET-6/7` condicionam aplicação | `Q-CAP-1/2/3` resolvidas; `Q-DP-2/artefato` definido; `Q-RET-3/6/7` decididas; `Q-DP-2/validação` continua separada | página, matriz, sinal, formato, política de mercado, backup e retenção por ciclo de vida entregues; restam aplicações e validação separada |
-| **C2. Executar o `wyd-db`** | **0 lacunas**; 26 páginas bloqueadas, 6 seeds, 1/28 migration aceita, 5 aplicações de retenção | 0 | `SCHEMA_VERSION` 34, aceite da série e corte vertical; expurgos só com job | 6 seeds do cliente 7662; aceite por página; `wyd-ops` | execução e curadoria, não decisão |
+| **C2. Executar o `wyd-db`** | **0 lacunas**; 7 páginas bloqueadas, 6 seeds, 1/28 migration aceita, 5 aplicações de retenção | 0 | `SCHEMA_VERSION` 34, aceite da série e corte vertical; expurgos só com job | 6 seeds do cliente 7662; aceite por página; `wyd-ops` | execução e curadoria, não decisão |
 | **D. Expandir propostas** | **1–2** (`LCLI-02`; `LCLI-03` é execução) | 0–2 | nada além do próprio `wyd-client` | — | baixo retorno: nenhum dos 7 não fechados ainda espera resposta recomendada; `LPRT-03`/`LPRT-06` são medições |
 
-**Recomendação: a frente B (captura A1) é a próxima.** A rodada A de decisões de lacuna encerrou:
+**Recomendação registrada em 2026-11-23 (histórico): a frente B (captura A1) era a próxima.** A rodada A de decisões de lacuna encerrou:
 `Q-SIM-2`, `Q-SIM-3`, `Q-BOT-1`, `Q-BOT-2`, `Q-BOT-3`, `Q-NET-1`, `Q-LCH-1`, `Q-LCH-2`, `Q-LCH-3`,
 `Q-LCH-4` e `LAC-POR-09` já foram respondidas (A), e as lacunas de decisão do portal fecharam. Não resta
 pergunta de desenho no quadro de lacunas; a captura A1 é a única autorização que remove o bloqueio de fio
 e libera `LPRT-03`, além de preparar `LPRT-06`, `X12` e a onda C; **foi autorizada em 2026-11-23**. `LPRT-06`
 só fecha com as capturas B/C e o seed sintético; `LBOT-03` e `LNET-01` esperam a primeira execução, não
 uma resposta. `LNET-04` e `LBOT-04` já fecharam por regra vigente; a rodada não as reabre. **A
-implementação de A1 é a frente seguinte**: fecha 1 item (`LPRT-03`), prepara o segundo e é a única que
+implementação de A1 era a frente seguinte até a reavaliação de 2026-11-24**: fecha 1 item (`LPRT-03`), prepara o segundo e é a única que
 remove o bloqueio do fio; a autorização já foi dada. **C1 não tem decisão de retenção aberta**: `Q-RET-3`
 foi resolvida em A (2026-11-24); `Q-CAP-1` foi resolvida e a página já existe como `proposto`, com volume pendente;
 `Q-CAP-2` foi resolvida em A e aplicada na página; `Q-CAP-3` foi resolvida em A e aplicada;
-`Q-RET-3` foi respondida em A (2026-11-24), sem parecer, e não é mais decisão aberta; `Q-RET-6` e `Q-RET-7` foram respondidas em A (2026-11-24) e suas aplicações continuam pendentes; o **artefato** de validação de `Q-DP-2` foi decidido em A (parecer escrito por finalidade) em 2026-11-24, mas o parecer não existe e `Q-DP-2/validação` continua pendente. **C2 é execução**, não decisão: 26 páginas bloqueadas, 6 seeds e 1/28 migration
+`Q-RET-3` foi respondida em A (2026-11-24), sem parecer, e não é mais decisão aberta; `Q-RET-6` e `Q-RET-7` foram respondidas em A (2026-11-24) e suas aplicações continuam pendentes; o **artefato** de validação de `Q-DP-2` foi decidido em A (parecer escrito por finalidade) em 2026-11-24, mas o parecer não existe e `Q-DP-2/validação` continua pendente. **C2 é execução**, não decisão: 7 páginas bloqueadas, 6 seeds e 1/28 migration
 aceita; os expurgos de `Q-RET-1/2/4` têm decisão, mas continuam pendentes de índice/`DELETE`/job e não
 são código imediato. **D tem retorno marginal**: proposta nova só alcança `LCLI-02`/`LCLI-03`, e o resto é
 medição ou direito autoral. O catálogo funcional (§1.5) continua sendo o que destrava a declaração de
@@ -441,6 +446,22 @@ versão; ele é descoberta e não substitui a rodada.
 **Decisão do dono em 2026-11-23:** a próxima sessão é a captura A1; `Q-CAP-1` fica na sequência. A
 implementação, a captura e o golden ainda não foram executados; a decisão é de prioridade, não de
 fechamento de `LPRT-03`.
+
+**Reavaliação de 2026-11-24 — `Q-FOCO-1 = D`:** o responsável priorizou a remoção dos bloqueios das
+**26 páginas de `docs/` do `wyd-db`** antes de A1. A decisão de 2026-11-23 fica no histórico e **A1
+não é cancelada**: continua autorizada, apenas deixa de ser o foco imediato. O foco D não tornava as 26
+páginas daquele momento escrevíveis de uma vez (12 restam agora); a primeira sessão foi o lote de
+**entrada na cena** (`Q-PAG-1 = A`):
+`criacao-e-selecao-de-personagem`, `carregamento-e-save` e `estado/personagem`, usando o DDL fechado de
+`0006`/`0009`. As três foram escritas em 2026-11-24 como `proposto`; a fila caiu de **26** para **23**.
+O segundo lote, de **economia e custódia**, escreveu `concessao-de-grant`, `compra-e-credito`,
+`estado/grant` e `estado/item-e-refino` com o DDL de `0011`/`0012`/`0021`, e a fila caiu de **23** para
+**19**. Em seguida, as respostas de 2026-11-24 a `Q-BLK-01`–`Q-BLK-03` retiraram três páginas do teto
+(**147 → 144**) e o **lote C** escreveu quatro (`imagens-e-evidencias`, `plano-de-manutencao`,
+`backup-e-restore` e `recuperacao-de-desastre`), levando a fila de **19 para 12**, e `arquitetura/fluxo-de-dados.md`, escrita em seguida, levou a **11**. As **38 lacunas** seguem
+**0/0/35/3** e as **7 decisões de retenção** seguem **7/0**. A comparação
+quantitativa, a execução e as dependências declaradas estão em
+[`pendencias-de-fechamento.md`](wyd-db/pendencias-de-fechamento.md) §6.5.
 
 ### 6.3 Perguntas do dono — nenhuma pergunta de desenho de lacuna; 0 decisões de retenção no `wyd-db`
 
@@ -536,7 +557,7 @@ política e a lacuna só fecha com o número medido. `LBOT-03` já tem a políti
 fecha com a primeira execução. Escolher B/C em qualquer uma delas fecha por decisão, mas com a
 consequência da linha acima. A única resposta que restava, `LAC-POR-09`, foi fechada em 2026-11-23; as
 duas medições continuam abertas. Cada fechamento entra no documento
-dono com data e evidência, como manda `AGENTS.md` §5.8.
+dono com data e evidência, como manda `AGENTS.md` §5, item 8.
 
 ### 6.4 O que não entra nesta rodada
 
@@ -731,7 +752,7 @@ arquivo.
 | `wyd-net` | buffer por conexão, classificação de erro e limites | codec falso + porta falsa | duas conexões sem vazamento de estado; flood contido | `bots` conectando | 0 testes; política de limites decidida (`Q-NET-1` = A), valores e código pendentes |
 | `wyd-core` | regra isolada com semente fixa | repositório falso, sem banco | tick completo determinístico | `bots` em fluxo | 0 testes |
 | `wyd-sim` | vetor de entrada e saída por fórmula | — | — | — | 0 vetores; versão decidida em `LSIM-02` e formato/local em `LSIM-03`, fixtures não implementadas |
-| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 0 testes; `tests/` planejado com 12 páginas |
+| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 13 testes de sistema verdes (`sistema_pg`, 2026-11-24); `tests/` escrito (12 páginas, matriz `CAP-nn`), 13 de 39 capacidades cobertas |
 | `wyd-server` | configuração e ciclo de vida | HTTP do controle: `200` com ack, `503` sem escrita | dois canais isolados | `bots` por canal | 0 testes |
 | `wyd-admin` | regra de custódia e permissão | HTTP de C4, 14 rotas | fluxo de staff | Playwright (obrigatório, `AGENTS.md` §8) | 0 testes |
 | `wyd-portal` | cálculo de preço e filtro | HTTP e leitura por view | fluxo de armaria e mercado | Playwright (obrigatório) | 0 testes |
@@ -783,7 +804,7 @@ planejamento de cada uma, e por isso o gate editorial (`AGENTS.md` §4) roda em 
 
 ### 8.1 A regra em uma frase
 
-`planejamento-1.0.0/` é **só documentação** (AGENTS.md §5.6). Artefato executável mora na pasta real do
+`planejamento-1.0.0/` é **só documentação** (`AGENTS.md` §5, item 6). Artefato executável mora na pasta real do
 projeto, na raiz: `crates/<sistema>/` para Rust, `wyd-portal/` para o Next.js, `wyd-docs/` para o
 site e `wyd-ops/` para imagem, Compose e CI. Três arquivos ficam na raiz porque a **ferramenta** os
 procura ali, não porque a raiz seja a casa natural deles (§8.3).
@@ -798,15 +819,15 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente (2026-11-23): traz **só** o `gate` sob perfil; não toca `docs` |
 | `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
-| workflow de CI | `.github/workflows/` | `wyd-ops` | 3: `docs.yml`, `docs-image.yml`, `full-workflow.yml` (stub) |
+| workflow de CI | `.github/workflows/` | `wyd-ops` | 4: `docs.yml`, `docs-image.yml`, `code.yml` (fmt/clippy/testes) e `full-workflow.yml` (stub de versão) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 1: `docs-check` |
-| crate Rust | `crates/<sistema>/` | o sistema | 9 pastas, só `.gitkeep` |
+| crate Rust | `crates/<sistema>/` | o sistema | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários); os outros 8 só `.gitkeep` |
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
 | portal Next.js | `wyd-portal/` | `wyd-portal` | só `.gitkeep` |
 | binários do cliente real | `wyd-client/files/` | `wyd-client` | existem, ignorados pelo git; patch versionado ainda não existe |
 | ferramenta de captura do cliente (planejada) | `wyd-client/tools/` | `wyd-client` | opção A em `LCLI-04` (2026-11-23); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
 | peer de captura A1 | `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-protocol` | `Q-SRV-5`/`LSRV-05` decidida em C, com a condição reprovada em 2026-11-23 (§9.1); A1 depende de A |
-| migration SQL | `crates/wyd-db/migrations/` | `wyd-db` | planejada; hoje só as páginas `planejamento-1.0.0/wyd-db/migrations/*.md` |
+| migration SQL | `crates/wyd-db/migrations/` | `wyd-db` | **28** `.sql` (`0001`–`0034`, 6 seeds ausentes), aplicados do zero em 2026-11-24; as páginas continuam em `planejamento-1.0.0/wyd-db/migrations/*.md` |
 | segredo local | `.env` na raiz, ignorado | quem opera | existe; nunca lido nem versionado |
 | legado | `deprecated/`, ignorado pelo git | ninguém — é nível 4, referência | existe; nunca é fonte |
 | skills de agente | `.agents/skills/` | o time | existe; `.agents/memory/` é ignorado |

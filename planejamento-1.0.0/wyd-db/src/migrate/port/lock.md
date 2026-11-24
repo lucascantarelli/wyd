@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §5 e §8
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/port/lock.rs` — exclusão mútua entre processos
 

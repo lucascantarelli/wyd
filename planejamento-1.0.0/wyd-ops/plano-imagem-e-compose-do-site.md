@@ -42,9 +42,10 @@ reproduzível — `docker compose up` não subia nada.
    publicada confirmada (2026-11-23) — a medição está em §5.1.
 7. **O gate de documentação roda pelo Compose, atrás de perfil e sem montar o site durante o build
    da imagem gate.** O override acrescenta `gate` (perfil `gate`), que executa `preparar.py`,
-   `mkdocs build` e `verificar.py` em um comando. Seu alvo Dockerfile `gate` instala dependências e
-   copia fontes, mas não faz a montagem; assim o comando a executa uma única vez. `docker compose
-   --profile gate run --rm gate` valida a árvore de trabalho e sai com o código do `verificar.py`; sem
+   `mkdocs build`, `verificar.py`, `verificar-contagens.py` e `verificar-censos.py` em um comando. Seu alvo Dockerfile `gate`
+   instala dependências e copia fontes, mas não faz a montagem; assim o comando a executa uma única
+   vez. `docker compose --profile gate run --rm gate` valida a árvore de trabalho e sai com o código
+   do último verificador; sem
    `--profile gate` o serviço não entra no `up` nem em `docker compose config`. A comparação medida do
    protótipo está em §6; gate verde e contagem permanecem em §5 (dono da contagem:
    `wyd-docs-1.0.0.md` §9.1).
@@ -73,7 +74,7 @@ O **dono do layout** é `planejamento-1.0.0/wyd-1.0.0.md` §8: ele diz, para cad
 onde mora, qual sistema responde e por que esses arquivos ficam na raiz (Compose, override,
 `.dockerignore` e `.github/workflows/`). Esta página não repete a tabela — só lista os arquivos desta entrega. Nenhum
 deles pode ser copiado para `planejamento-1.0.0/wyd-ops/`: aquela árvore é documentação
-(AGENTS.md §5.6).
+(`AGENTS.md` §5, item 6).
 
 ## 5. Como verificar (DoD)
 

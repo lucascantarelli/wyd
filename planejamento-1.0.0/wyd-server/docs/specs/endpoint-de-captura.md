@@ -3,10 +3,10 @@
 > Pergunta: "como o `wyd-server` opera um listener local que grava o handshake do cliente sem se confundir com o endpoint de produção e sem interpretar frames?"
 > Público: arquitetura, `wyd-server`, `wyd-client`, `wyd-protocol`, QA e operação
 > Dono: equipe do `wyd-server` (endpoint); contrato de captura aprovado por `wyd-protocol`; operação pela CLI de `wyd-client`
-> Base: D3–D6 (`wyd-client/lacunas.md`); `LPRT-10` e `goldens/como-capturar.md`; `X7`; `esqueleto-de-ponta-a-ponta.md` A1; `LCLI-04`; `AGENTS.md` §§5.1, 5.4, 5.6 e 5.8
+> Base: D3–D6 (`wyd-client/lacunas.md`); `LPRT-10` e `goldens/como-capturar.md`; `X7`; `esqueleto-de-ponta-a-ponta.md` A1; `LCLI-04`; `AGENTS.md` §5, itens 1, 4, 6 e 8
 > Revisado em: 2026-11-23
 
-**Estado:** proposta (`P`, 2026-11-23). Esta página fecha o desenho técnico do endpoint de captura. O peer
+**Estado:** proposto (`P`, 2026-11-23). Esta página fecha o desenho técnico do endpoint de captura. O peer
 que completa o handshake em A1 foi **decidido** em `Q-SRV-5`/`LSRV-05` como opção **C, com quarentena**
 (servidor legado de `deprecated/` como harness local); a medição de 2026-11-23 **reprovou a condição**
 dessa opção e A1 passa a depender da **opção A** (§9.1). Não há código, crate, binário, servidor, CLI,

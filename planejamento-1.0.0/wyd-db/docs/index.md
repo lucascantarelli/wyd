@@ -2,7 +2,7 @@
 > Público: todos os públicos de §2 do plano diretor — é a porta de entrada
 > Dono: equipe do `wyd-db`
 > Base: —
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-24
 
 # wyd-db — documentação oficial
 
@@ -170,10 +170,56 @@ a rotina, o fornecedor, o RPO/RTO e o ensaio continuam pendentes. `Q-RET-6` foi 
 a aplicação (índice, job e preservação legal) continua pendente. **Não resta decisão de retenção aberta:**
 são 7 resolvidas.
 
-O quadro completo de fechamento — 0 decisões de retenção abertas, 6 seeds bloqueados, 1 ato de aceite e as 26
-páginas de `docs/` bloqueadas — está em `pendencias-de-fechamento.md`, na raiz de
+O quadro completo de fechamento — 0 decisões de retenção abertas, 6 seeds bloqueados, 1 ato de aceite e a 1
+página de `docs/` bloqueada (`planos/metricas.md`) — está em `pendencias-de-fechamento.md`, na raiz de
 `planejamento-1.0.0/wyd-db/`. Ele nomeia dono, custo estimado e o que cada item desbloqueia, sem
 criar lacuna nova.
+
+O **foco do projeto em 2026-11-24** era a fila das páginas bloqueadas (`Q-FOCO-1 = D`): com o **lote F**, as
+quatro que dependiam de decisão foram aprovadas em A e escritas — `rastreabilidade`, `stakeholders`,
+`implantacao` e `modelo-conceitual` (`Q-BLK-08` a `Q-BLK-11`) —, e a fila está em **1**: `planos/metricas.md`,
+que espera a série aplicada. Ficaram escritos e `proposto` os lotes de entrada na cena, de economia e
+custódia, de operação e documentação, de teste e de conexão, cada um com as dependências externas
+declaradas na própria página. A1 continua autorizada, mas fora do foco imediato. O registro de execução
+está em `pendencias-de-fechamento.md` §6.5 e §6.6.19. Em §6.6 do mesmo arquivo está o pacote de decisões:
+`Q-BLK-01` a `Q-BLK-11` foram **aprovadas em 2026-11-24** (o teto autoral foi de 147 para **144**), e
+nenhuma pergunta daquele quadro fica aberta. O **lote G** (§6.6.20) escolheu a frente de execução: issues +
+suíte de testes — **52** artefatos que não fecham a matriz célula a célula: as **12** páginas de `tests/` fecham
+o critério 6 do plano de testes (a matriz `CAP-nn` escrita, com a lacuna de cobertura declarada) e deram
+cenário a **15** das 40 linhas, na coluna `Página` — **31** desde `Q-BLK-23` = A, §6.6.29; as **40** issues são
+a fila do roadmap, e a coluna `Issue` registra a
+onda de cada linha, não um número de issue; as **24** células `Teste` seguem em `P` e **13** estão em `V`
+desde 2026-11-24 —, com
+as **5** perguntas (`Q-BLK-12` a `Q-BLK-16`) respondidas em **A**. O **lote H** (§6.6.21) executou a primeira
+metade: as **12** páginas de `tests/` estão escritas, com a matriz `CAP-nn` de **23** capacidades e **0**
+cobertas, e as **40** issues seguem sem artefato no GitHub. O **lote I** (§6.6.22) mediu tudo de novo e
+recomenda **aceitar as 12 páginas de `tests/` primeiro** — **12** atos que deixam **5** alvos prontos e,
+medido depois do lote I, alcançam **15 das 40** linhas da rastreabilidade —, com **168** atos de aceite
+pendentes no sistema e **4** perguntas novas (`Q-BLK-17` a `Q-BLK-20`), das quais só `20` segue aberta —
+a `17` foi respondida pela própria execução (a leva 1 começou por `tests/`) e `18` e `19` em **A**. Com
+`Q-BLK-18` = **A**, a leva 2 foi executada na mesma data: as **37** páginas de `src/` foram revisadas e
+estão `aceito (2026-11-24)` (`pendencias` §6.6.27), o que deixa **168** atos de aceite no sistema e o crate
+livre para o primeiro `Cargo.toml`/`.rs` sob o invariante §5.1. Com `Q-BLK-19` = **A**, a mesma data
+acrescentou seis requisitos de gate (`RNF-DB-008`–`013`), repontou as **11** capacidades e levou a matriz de
+rastreabilidade a **40** linhas (`pendencias` §6.6.28).
+O censo de **2026-11-24** (`docs/specs/rastreabilidade.md` §3.4) mediu **25** linhas sem página e **16** sem
+cenário — **13** de requisito e **3** `RNF` —, o que abriu `Q-BLK-23` (`pendencias-de-fechamento.md` §6.6.24).
+Com `Q-BLK-23` = **A**, o dono mandou escrever os **16** cenários antes da leva de `migrations/`: são as
+**16** `CAP-24` a `CAP-39` de `tests/specs/capacidades.md`, em `tests/alvos/sistema-pg.md` (§6.6.29), e o
+censo vigente é **9** linhas sem página e **0** sem cenário. `Q-BLK-24` foi aprovada em **A** na mesma data e deu requisito próprio às três capacidades que
+apontavam `RNF` alheio: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` (§6.6.26 daquele arquivo). A folha de
+revisão de `Q-BLK-21` está na raiz do sistema (`revisao-de-q-blk-21.md`, arquivo não publicado): o dono
+aprovou **A**, as correções de redação foram aplicadas e as **12** páginas de `tests/` estão `aceito
+(2026-11-24)`. O aceite não cobre capacidade por si — mas em 2026-11-24 a leva de `migrations/` aplicou os
+**28** `.sql` do zero e 13 cenários de `sistema_pg` rodaram verdes: a matriz está **13 de 39** — e o código
+dos 5 alvos já tem permissão: `Q-BLK-18` = A.
+
+**A medição do foco do sistema é `foco-e-sequencia.md`**, na raiz deste sistema — arquivo de raiz não é
+publicado no site, e por isso é citado aqui como código: ele mantém as seis frentes, a cadeia de
+dependência e o que cada elo destrava. O **ranking publicado** das frentes do projeto, que decide qual vem
+agora, é `wyd-ops/docs/prioridade-do-projeto.md` §0 e §4. Esta página resume o histórico dos lotes e não é
+dona da ordem; onde as duas divergirem, vale a página de prioridade para a ordem e `foco-e-sequencia.md`
+para a medição do sistema.
 
 ## 📦 Escopo desta edição
 

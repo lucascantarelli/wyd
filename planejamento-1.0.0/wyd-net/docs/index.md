@@ -38,7 +38,7 @@ A política de limites e rate-limit (`Q-NET-1` = A) foi decidida em 2026-11-23, 
 (`LNET-02`) foi decidida em 2026-11-23 (`Q-NET-2` = A: impor o build-alvo 7662 no handshake, com erro
 tipado para build não suportado) e o modelo de sessão (`LNET-03`) está decidido por
 `R6`/`D9`/`ux_session_viva_por_conta`; a observabilidade (`LNET-04`) fechou na mesma data por **regra
-vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5.7). Nessas três só falta o transporte implementar. A
+vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5, item 7). Nessas três só falta o transporte implementar. A
 aberta não tem número: esta página não afirma limite nem timeout.
 
 ## Limite desta documentação

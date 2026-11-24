@@ -21,7 +21,7 @@ fixture, fórmula, coeficiente, número de balanceamento, dado de jogo ou conte�
 ## 0. Como ler
 
 - Marcas: `V` (verificado por arquivo ou comando, com data), `H` (hipótese, com a lacuna que a fecha),
-  `P` (projetado). Presente do indicativo sem `V` é erro de escrita (`AGENTS.md` §5.4).
+  `P` (projetado). Presente do indicativo sem `V` é erro de escrita (`AGENTS.md` §5, item 4).
 - **Derivada das regras vigentes, sem escolha do usuário** significa: mais de uma opção existia na
   proposta, mas só uma é compatível com contrato ou regra já decidida. A decisão fica registrada no
   documento dono e conta na lacuna; não é resposta de produto.
@@ -85,14 +85,14 @@ de `LAC-POR-09` é `0 abertas / −1 proposta / +1 fechada`; o total continua 11
 |---|---|---|
 | `X10` | a métrica do NOC é `/metrics` no formato Prometheus, coletada pelo `wyd-ops` | `wyd-1.0.0.md` §7.3 |
 | `LAC-POR-06` | a telemetria de canal vem de fonte externa; o portal consulta o Prometheus e mostra "não medido" quando falha | `wyd-portal/lacunas.md` §2 |
-| `AGENTS.md` §5.7 | segredo, token, senha e PIN nunca aparecem em log; payload e PII não entram | `AGENTS.md` §5.7 |
+| `AGENTS.md` §5, item 7 | segredo, token, senha e PIN nunca aparecem em log; payload e PII não entram | `AGENTS.md` §5, item 7 |
 
 **Decisão derivada.** O transporte expõe métricas de **conexões, erros por tipo, bytes e latência** em
 `/metrics`, e grava log **só de metadados** (evento, sessão, tamanhos, caminho), nunca payload, credencial
 ou PII. Nome, rótulo e unidade de cada métrica são implementação, não decisão pendente.
 
 **Por que não há escolha.** A opção C ("sem métrica/log") contradiz `X10`, que é contrato decidido, e
-`LAC-POR-06`, que já escolheu a fonte externa; log de payload contradiz `AGENTS.md` §5.7. Resta o
+`LAC-POR-06`, que já escolheu a fonte externa; log de payload contradiz `AGENTS.md` §5, item 7. Resta o
 conjunto A. Não é preferência de arquitetura: é a única combinação compatível com três decisões
 vigentes.
 
@@ -101,7 +101,7 @@ vigentes.
 ganha conteúdo de implementação. `LNET-01` **não** fecha: continua aberta como medição (§3.10).
 
 **O que teria custado a resposta oposta.** Escolher C exigiria reabrir `X10` e `LAC-POR-06`; aceitar log
-de payload exigiria revogar `AGENTS.md` §5.7. Nenhuma das duas é decisão desta rodada, e as duas
+de payload exigiria revogar `AGENTS.md` §5, item 7. Nenhuma das duas é decisão desta rodada, e as duas
 deixariam o NOC sem a métrica que o portal já publica.
 
 ### 2.2 `Q-BOT-4` = A — `LBOT-04` fechada
@@ -114,7 +114,7 @@ deixariam o NOC sem a métrica que o portal já publica.
 |---|---|---|
 | gate do `wyd-bots`, item 4 | "Relatório por execução com falha reproduzível (log + captura), sem `sleep` como sincronização" | `wyd-bots/wyd-bots-1.0.0.md` §6 |
 | gate do `wyd-bots`, item 5 | "Nenhum segredo de jogador em configuração de bot" | `wyd-bots/wyd-bots-1.0.0.md` §6 |
-| `AGENTS.md` §5.7 | segredo/PII nunca em log | `AGENTS.md` §5.7 |
+| `AGENTS.md` §5, item 7 | segredo/PII nunca em log | `AGENTS.md` §5, item 7 |
 | `P-22` | PII mora só em `portal`; o jogo referencia `person_id`, nunca copia e-mail | `wyd-db/padrao-banco.md` `P-22` |
 
 **Decisão derivada.** Uma execução falha entrega **log estruturado + frame/captura anonimizada no ponto
@@ -123,7 +123,7 @@ nome de personagem nem dado de jogador. Trace da conexão é opcional e, se exis
 higiene.
 
 **Por que não há escolha.** O item 4 do gate já exige log **e** captura: a opção C ("nada além do exit
-code") reprova o gate, e B ("só log textual") reprova a parte "captura". O item 5 e `AGENTS.md` §5.7
+code") reprova o gate, e B ("só log textual") reprova a parte "captura". O item 5 e `AGENTS.md` §5, item 7
 fixam a higiene. A é o único conjunto que cumpre o gate que o próprio sistema já declarou.
 
 **Efeito registrado.** `LBOT-04` fechou em `wyd-bots/lacunas.md`; depois de `Q-BOT-2`, o `wyd-bots` está
@@ -261,7 +261,7 @@ para ser auditável e assinável por inteiro.
 `portal.launcher_release` com `channel`, `version`, `manifest_url`, `manifest_sha256` e `min_version`
 (`0030-portal-content.md:172–203`). O legado tem um manifesto de texto v1 com `build`, `protocol` e
 hash/tamanho/caminho por linha (`deprecated/crates/wyd-launcher/core/src/manifest.rs:16,28–31`), mas
-não tem canal, `min_version`, URL nem assinatura e não pode ser copiado (`AGENTS.md` §5.2).
+não tem canal, `min_version`, URL nem assinatura e não pode ser copiado (`AGENTS.md` §5, item 2).
 
 **O que fechou.** `LLCH-01`, o contrato L1 e o item 1 do gate do launcher; `X11` passou a seguir lacuna
 **apenas** por `LLCH-03`. **1 lacuna + 1 contrato + 1 item de gate.**
@@ -366,7 +366,7 @@ drena e falha com o relatório de `Q-BOT-4`.
 **Motivo medido.** O plano diz que "limiar é medido, não estimado" (`wyd-bots/docs/index.md`) e o gate da
 onda E exige "cenário de carga medido" (`wyd-1.0.0.md` §7.7). Não há conexões, latência nem taxa de
 sucesso medidas (`wyd-bots/docs/proposta-decisoes-bots.md` §2). Fixar número agora seria afirmação sem
-`V`, contra `AGENTS.md` §5.4. B mede infraestrutura, não o cenário; C inventa número.
+`V`, contra `AGENTS.md` §5, item 4. B mede infraestrutura, não o cenário; C inventa número.
 
 **O que fechou.** A **política** do contrato B4; **não fechou `LBOT-03`**, que segue aberta como medição
 até a primeira execução, depois da fatia do `wyd-server` e da política de `Q-NET-1`. **0 fechadas + 1 política
@@ -393,7 +393,7 @@ origens distintas, para não medir o limite por IP como se fosse saturação do 
 
 **Motivo medido.** Não há conexões, latência nem abuso medidos (`wyd-net/docs/proposta-decisoes-net.md`
 §2), e `wyd-1.0.0.md` §7.6 registra 0 testes e 0 medições. `LNET-01` está listada como bloqueio de
-ligação em `wyd-1.0.0.md` §7.5. Fixar número agora seria afirmação sem `V` (`AGENTS.md` §5.4). B trata
+ligação em `wyd-1.0.0.md` §7.5. Fixar número agora seria afirmação sem `V` (`AGENTS.md` §5, item 4). B trata
 provisório como regra; C fixa número sem fonte.
 
 **O que fechou.** A **política** do contrato N6; **não fechou `LNET-01`**, que segue aberta como medição
@@ -572,8 +572,8 @@ assinada e `LCLI-05` só fecha com evidência do titular; `LCLI-05` continua pro
 
 | Lacuna | Registro | Evidência |
 |---|---|---|
-| `LNET-04` | `wyd-net/lacunas.md` §2; `wyd-net/docs/proposta-decisoes-net.md` §4 e §6; `wyd-net/docs/index.md` | `X10`; `LAC-POR-06`; `AGENTS.md` §5.7 |
-| `LBOT-04` | `wyd-bots/lacunas.md` §2; `wyd-bots/docs/proposta-decisoes-bots.md` §4 e §6; `wyd-bots/docs/index.md` | `wyd-bots-1.0.0.md` §6, itens 4–5; `AGENTS.md` §5.7; `P-22` |
+| `LNET-04` | `wyd-net/lacunas.md` §2; `wyd-net/docs/proposta-decisoes-net.md` §4 e §6; `wyd-net/docs/index.md` | `X10`; `LAC-POR-06`; `AGENTS.md` §5, item 7 |
+| `LBOT-04` | `wyd-bots/lacunas.md` §2; `wyd-bots/docs/proposta-decisoes-bots.md` §4 e §6; `wyd-bots/docs/index.md` | `wyd-bots-1.0.0.md` §6, itens 4–5; `AGENTS.md` §5, item 7; `P-22` |
 | `LSIM-03` | `wyd-sim/lacunas.md` §2; `wyd-sim/docs/proposta-decisoes-sim.md` §4 e §6; `wyd-sim/docs/index.md` | resposta explícita do dono `Q-SIM-3` = A; formato/local fechados, fixtures não implementadas |
 | `LSIM-02` | `wyd-sim/lacunas.md` §2; `wyd-sim/docs/proposta-decisoes-sim.md` §4 e §6; `wyd-sim/docs/index.md`; `wyd-sim/wyd-sim-1.0.0.md` §3 | resposta explícita do dono `Q-SIM-2` = A; `M3` decidido, versão documentada e fórmula não escrita |
 | `LBOT-01` | `wyd-bots/lacunas.md` §2; `wyd-bots/docs/proposta-decisoes-bots.md` §4 e §6; `wyd-bots/docs/index.md`; `wyd-bots/wyd-bots-1.0.0.md` §3 e §6 | resposta explícita do dono `Q-BOT-1` = A; B2 decidido, job de CI não implementado |
@@ -615,7 +615,7 @@ acima; `Q-IP-1`/`Q-IP-2` seguem sem resposta do titular, com `Q-IP-2` no escopo 
 ## 9. O que este briefing não decide
 
 - Não implementa `ECAP`, CLI, peer, job, launcher, fórmula ou teste; não cria issue, ADR, commit ou
-  release (`AGENTS.md` §5.1, §5.9).
+  release (`AGENTS.md` §5, itens 1 e 9).
 - Não escolhe produto, escopo, balanceamento nem direito autoral; não inventa coeficiente, número de
   carga, opcode, byte ou conteúdo de cliente.
 - Não substitui o `lacunas.md` de cada sistema como dono do estado, nem `wyd-1.0.0.md` §6.3 como dono da

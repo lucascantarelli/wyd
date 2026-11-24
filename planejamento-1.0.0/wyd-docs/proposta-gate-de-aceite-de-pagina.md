@@ -18,11 +18,11 @@ Uma página passa de `proposto` para `aceito` quando **as quatro** valem na mesm
 | 1 | **zero falha mecânica** nos itens de §2 | qualquer pessoa ou o CI; a saída do comando vai na entrega | esta página |
 | 2 | **zero falha de julgamento** nos itens de §3, assinada por quem conferiu | revisor que não escreveu a página | `wyd-docs/docs/revisao.md` §2 |
 | 3 | **segunda leitura registrada** com nome e data, no PR | revisor | `revisao.md` §1 e §4 |
-| 4 | **"sim" do dono do sistema**, com data, e a linha de estado atualizada na mesma entrega | dono nomeado em `lacunas.md` | `AGENTS.md` §5.3 e §7 |
+| 4 | **"sim" do dono do sistema**, com data, e a linha de estado atualizada na mesma entrega | dono nomeado em `lacunas.md` | `AGENTS.md` §5, item 3 e §7 |
 
 Três consequências que costumam ser esquecidas:
 
-- **O agente não dá `aceito`.** Decisão sem "sim" do dono é `proposta`, não `aceito` (`AGENTS.md` §5.3);
+- **O agente não dá `aceito`.** Decisão sem "sim" do dono é `proposta`, não `aceito` (`AGENTS.md` §5, item 3);
   escrever `**Estado:** aceito` sem a condição 4 é falsificar estado.
 - **Merge não aceita.** `aceito` é ato de revisão, não consequência de squash (`revisao.md` §4.4).
 - **`aceito` não é permanente.** Mudança de conteúdo relevante devolve a página a `proposto`; correção de
@@ -74,12 +74,12 @@ aparece em exemplo. São os itens de §3 — chamá-los de "automáticos" seria 
 | Item | O que se confere | Quem assina |
 |---|---|---|
 | `Pergunta` respondida | o corpo responde à pergunta do cabeçalho e não a outra | revisor |
-| evidência | toda afirmação de comportamento tem `V`, `H` ou `P`, e `H` tem o ID que a reabre (`AGENTS.md` §5.4) | revisor |
+| evidência | toda afirmação de comportamento tem `V`, `H` ou `P`, e `H` tem o ID que a reabre (`AGENTS.md` §5, item 4) | revisor |
 | número com fonte e data | o formato de `convencoes.md` §5.1, sem copiar contagem do dono | revisor |
-| um fato, um dono | regra de outro sistema citada por seção, não reescrita (`AGENTS.md` §5.5) | revisor |
+| um fato, um dono | regra de outro sistema citada por seção, não reescrita (`AGENTS.md` §5, item 5) | revisor |
 | molde do tipo | as seções obrigatórias do plano do sistema estão presentes e preenchidas (`wyd-db-1.0.0.md` §6; `wyd-protocol-1.0.0.md` §6) | dono do sistema |
 | legado como fonte | nenhuma conclusão se apoia em `deprecated/` como fato (`AGENTS.md` §3) | revisor |
-| segredo e dado de jogador | nem no corpo, nem em exemplo, nem em log citado (`AGENTS.md` §5.7) | revisor |
+| segredo e dado de jogador | nem no corpo, nem em exemplo, nem em log citado (`AGENTS.md` §5, item 7) | revisor |
 | dentro do teto | a página pertence à árvore planejada e à contagem do sistema | dono do sistema |
 
 ## 4. As listas existentes e quem vence
@@ -137,7 +137,7 @@ arquivo: `wyd-protocol/docs/` tem só `index.md`, `convencoes.md`, `goldens/` e 
 não podem ser aceitas na forma atual e 14 não existem. "Não muda" não é juízo de valor sobre o conteúdo:
 é o retrato do gate.
 
-**Por que isso não é só dívida de documentação.** `AGENTS.md` §5.1 diz que nenhuma migration nasce antes de
+**Por que isso não é só dívida de documentação.** `AGENTS.md` §5, item 1 diz que nenhuma migration nasce antes de
 a página que a descreve estar `aceita`. Lido ao pé da letra: das 34 páginas de migration, **1 está aceita**
 (`0002`), **27 estão em rascunho** por falta da linha de estado e **6 não existem** — então a onda A trava
 no processo de aceite antes de travar na captura. O bloqueio de captura (`LPRT-03`) é real e conhecido;

@@ -7,7 +7,7 @@
 **Estado:** proposto (2026-11-22)
 
 A fila tem **40 issues** em sete fases. `FASE` agrupa escopo; `P-n` ordena prioridade. O roadmap não
-é uma lista de desejos: cada linha aponta uma página `WYDDB-nnn` com entregável, DoD e evidência de
+é uma lista de desejos: cada item aponta uma página `WYDDB-nnn` com entregável, DoD e evidência de
 fechamento. Issue sem página com DoD executável não entra na fila.
 
 ## 1. Fila por prioridade
@@ -29,7 +29,7 @@ uma issue `P1` da fase 4 continua esperando a fase 3.
 | seed de conteúdo | `WYDDB-035`–`040` e o corte vertical | os seis seeds `0016`–`0018`, `0020`, `0023` e `0027` esperam dado de origem conferido |
 | captura do protocolo | `WYDDB-036`–`039` | `LPRT-03` e `LPRT-06` não têm captura datada do cliente 7662; `LPRT-09` está decidido (2026-11-23) |
 | CI real | `WYDDB-027`–`034` | o workflow é stub; o gate de docs não é suíte do crate |
-| matriz de capacidade | `WYDDB-034` | `CAP-nn` não existe; a página de anti-skip declara a lacuna |
+| matriz de capacidade | `WYDDB-032`, `WYDDB-034` | `CAP-nn` está escrita em `tests/specs/capacidades.md`; falta o alvo que a executa |
 
 O bloqueio é de **dado ou ambiente**, não de decisão: `D-7` está aprovada e as 40 páginas existem.
 Nenhuma issue bloqueada é marcada como concluída por ter página.

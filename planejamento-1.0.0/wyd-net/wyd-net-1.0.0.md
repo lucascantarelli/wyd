@@ -60,14 +60,14 @@ só depois da primeira execução no CI efêmero. `LNET-02` (política de versã
 `Q-NET-2` = A — impor o build-alvo 7662 no handshake, com erro tipado para build não suportado —;
 `LNET-03` (modelo de sessão e identidade por conexão) fechou pela regra
 `R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04` (observabilidade) fechou na mesma data por **regra
-vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5.7). O transporte só implementa as três, e nenhuma volta
+vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5, item 7). O transporte só implementa as três, e nenhuma volta
 à fila. O briefing das respostas é `../briefing-de-decisoes-1.0.0.md`.
 
 ## 6. Gate para sair do papel
 
 1. `lacunas.md` sem lacuna aberta que bloqueie requisito.
 2. `RF-NET` numerados com critério de aceitação verificável.
-3. Árvore de `src/` e `tests/` planejada antes do primeiro arquivo (`AGENTS.md` §5.10).
+3. Árvore de `src/` e `tests/` planejada antes do primeiro arquivo (`AGENTS.md` §5, item 10).
 4. Plano de teste com alvos, dado e comando — incluindo teste de contrato com portas falsas.
 5. Fronteira aprovada por arquitetura: nenhum offset cru cruzando para `wyd-core`.
 

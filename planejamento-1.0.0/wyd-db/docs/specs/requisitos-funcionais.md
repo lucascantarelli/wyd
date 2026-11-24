@@ -1,8 +1,8 @@
 > Pergunta: "o que o banco precisa fazer no bloco de identidade, e como provar cada requisito?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `rascunho-accounts.md` §2; `ddl-confirmado.md` §4, §5.1–§5.7, §5.16; `lacunas.md` §2
-> Revisado em: 2026-11-22
+> Base: `rascunho-accounts.md` §2; `ddl-confirmado.md` §4, §5.1–§5.7, §5.16; `lacunas.md` §2; `migrations/0001-bootstrap.md` §4, §6 e §9; `migrations/0006-game-character.md`; `pendencias-de-fechamento.md` §6.6.26 (`Q-BLK-24` = A)
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
 
@@ -13,7 +13,8 @@ economia e catálogo ainda não têm requisito levantado; entram nas ondas donas
 Os IDs `RF-DB-001`–`RF-DB-016` nascem nesta página, na ordem de `R1`–`R16`, porque nenhum existia
 antes (`docs/dicionario-dados/dominio-acesso.md` §Requisitos atendidos registrava a ausência). O
 prefixo e o formato são de `wyd-db-1.0.0.md` §9.1. O número **não** é reutilizado depois de retirado
-(§9.3).
+(§9.3). `RF-DB-017` nasce em 2026-11-24, pela decisão `Q-BLK-24` = A, e é o único bloco **fora** do
+recorte de identidade: enuncia a versão corrente de conteúdo, que nenhum dos 16 anteriores dizia.
 
 > [!NOTE]
 > A coluna de **issue** está vazia de propósito: `D-7` foi aprovada em 2026-11-22, mas as 40 páginas
@@ -222,14 +223,29 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Tabela e porta:** nenhuma tabela; `cpsock/limits.rs` (frente `wyd-server`, `D10`).
 - **Issue:** a alocar na onda 8, com dono `wyd-server`.
 
+## RF-DB-017 — uma versão corrente de conteúdo, referenciada por FK
+
+- **Enunciado:** o banco admite **uma única** versão corrente de conteúdo — `content.content_version` é
+  linha única, `id = 1` — e o personagem referencia essa versão por FK; duas versões correntes **não são
+  representáveis**.
+- **Entrada:** `id`, `version`, `note`.
+- **Saída:** a linha única de versão, criada pela carga de conteúdo.
+- **Critério de aceitação:** `INSERT INTO content.content_version (id, version) VALUES (2, 1)` falha com
+  `23514` em `ck_content_version_linha_unica`; `UPDATE content.content_version SET id = 2` falha no mesmo
+  `CHECK`; `INSERT` em `game.character` com `content_version` inexistente falha com `23503` em
+  `fk_character_content_version`.
+- **Tabela e porta:** `content.content_version` (`migrations/0001-bootstrap.md` §4 e §9, prova 9) e a FK de
+  `game.character` (`migrations/0006-game-character.md`); porta `catalog` (planejada).
+- **Issue:** a alocar na onda 8.
+
 ## O que este recorte não cobre
 
 | Fora | Por quê | Onde entra |
 |---|---|---|
 | requisitos de personagem, inventário, economia, conteúdo e entrega | não foram levantados como `R`; só o desenho existe | ondas donas, com `RF-DB` próprio |
-| requisitos não funcionais (limiar, latência, capacidade) | nenhum limiar foi medido | `requisitos-nao-funcionais.md`, bloqueada |
-| matriz requisito → tabela → porta → teste → issue | porta, teste e issue ainda não existem | `rastreabilidade.md`, bloqueada |
+| requisitos não funcionais (limiar, latência, capacidade) | nenhum limiar foi medido | [`requisitos-nao-funcionais.md`](requisitos-nao-funcionais.md), escrita com 5 limiares e 2 a medir |
+| matriz requisito → tabela → porta → teste → issue | porta e teste existem como **alvo** — o teste tem matriz `CAP-nn` desde 2026-11-24 —, e a issue segue sem artefato | [`rastreabilidade.md`](rastreabilidade.md), escrita em 2026-11-24 |
 | issue de entrega | `D-7` aprovada; falta a página `WYDDB-nnn` com DoD | onda 8 |
 
-*Os `RF-DB-001`–`RF-DB-016` são a primeira numeração de requisito do `wyd-db`; o número 017 é o
+*Os `RF-DB-001`–`RF-DB-017` são a numeração de requisito funcional do `wyd-db`; o número 018 é o
 próximo livre.*

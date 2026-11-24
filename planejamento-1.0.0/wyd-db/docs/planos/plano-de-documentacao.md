@@ -2,7 +2,7 @@
 > Público: Equipe do `wyd-db`, arquitetura, produto e quem revisa página
 > Dono: equipe do `wyd-db`
 > Base: `wyd-db-1.0.0.md` §11; `proposta-paginas.md` §8; `lacunas.md` `D-A`; `plano-migrations.md` §9; `docs/convencoes.md`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
 
@@ -60,10 +60,16 @@ dicionário, índices, recortes e roadmap). Eles não são uma trilha separada: 
 verificada foram **puxadas para a frente** dentro das ondas. Uma página escrita cedo continua
 pertencendo à onda de §11; o que muda é a data de escrita, não o critério de aceite.
 
-**Estado medido em 2026-11-23:** **121 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
-**0 de recorte** e **26 bloqueadas** — **147** páginas autorais. Os seis lotes estão escritos;
+**Estado medido em 2026-11-24:** **143 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
+**0 de recorte** e **1 bloqueada** (`planos/metricas.md`) — **144** páginas autorais. Os seis lotes estão escritos;
 `specs/index` foi antecipado no lote 2; as 21 de recorte e as 40 `WYDDB-nnn` fecharam no lote 6;
-`retencao-e-capacidade.md` foi escrita como `proposto` com volume pendente (`Q-CAP-1`).
+`retencao-e-capacidade.md` foi escrita como `proposto` com volume pendente (`Q-CAP-1`); os dois lotes
+de `Q-PAG-1` escreveram as três páginas de personagem e as quatro de economia e custódia em
+2026-11-24. O **lote C** escreveu quatro páginas na mesma data e `Q-BLK-01` retirou três do teto (147 →
+144), porque repetiam `convencoes.md`; `arquitetura/fluxo-de-dados.md` fechou a última página da fila que
+não dependia de decisão nem de medição. O **lote D** escreveu quatro páginas de operação e teste e o **lote E**
+escreveu `guia-desenvolvedor/pool-e-transacoes.md` e `specs/requisitos-nao-funcionais.md`, também em
+2026-11-24. O registro está em `pendencias-de-fechamento.md` §6.6, §6.6.17 e §6.6.18.
 
 **Por que esta página veio depois dos lotes:** `§4` não tinha mais escrevível e, em `§6`,
 `plano-de-documentacao.md` era o primeiro item cuja condição de bloqueio já estava resolvida
@@ -116,8 +122,8 @@ presumida pelo autor.
 | 9 | molde do tipo | página de migration segue os dez itens de `migrations-checklist.md` §5 e o DDL tem `-- migrate:up`/`-- migrate:down`; página de plano segue §6.9 | falta seção obrigatória, `down` ou prova de execução |
 | 10 | revisão por par | alguém que não escreveu leu o diff e registrou o veredito | página sem segunda leitura |
 
-Depois dos dez itens, o gate do site é a prova final: `preparar.py`, `mkdocs build`, `verificar.py`
-e `verificar-contagens.py` precisam sair com **exit 0**. O comando e o container são os de
+Depois dos dez itens, o gate do site é a prova final: `preparar.py`, `mkdocs build`, `verificar.py`,
+`verificar-contagens.py` e `verificar-censos.py` precisam sair com **exit 0**. O comando e o container são os de
 `wyd-docs-1.0.0.md` §7.1; a página não repete a linha de comando.
 
 ## 6. Revisão por par

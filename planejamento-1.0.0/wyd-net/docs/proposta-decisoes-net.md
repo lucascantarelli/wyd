@@ -5,7 +5,7 @@
 > Público: arquitetura, `wyd-net`, produto, `wyd-client` e `wyd-ops`
 > Dono: equipe do `wyd-net`
 > Base: `lacunas.md` (`LNET-01`–`LNET-04`); `docs/index.md`; `wyd-net-1.0.0.md` §1–§6;
-> `wyd-1.0.0.md` §7.1, §7.3 (X1–X3) e §7.6; `AGENTS.md` §5.7 e §8
+> `wyd-1.0.0.md` §7.1, §7.3 (X1–X3) e §7.6; `AGENTS.md` §5, item 7 e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). **Nenhuma pergunta aguarda o dono**: `Q-NET-1` e `Q-NET-2` foram
@@ -76,7 +76,7 @@ do shard. Nenhum número é inventado e a lacuna não fecha nesta decisão.
 | Alternativa | Por que foi descartada |
 |---|---|
 | B — teto provisório | defende antes da medição, mas o número é de infraestrutura e pode bloquear jogador legítimo |
-| C — número fixado agora | não tem fonte; vira promessa sem `V`, contra `AGENTS.md` §5.4 e §8 |
+| C — número fixado agora | não tem fonte; vira promessa sem `V`, contra `AGENTS.md` §5, item 4 e §8 |
 
 **Custo do que A ainda exige, não implementado.** **0 migration, 0 tabela, 0 coluna.** Na implementação:
 **1 página** `docs/specs/limites-e-timeouts.md`, **1 `Cargo.toml`** em `crates/wyd-net`, **1 `src/lib.rs`**,
@@ -136,14 +136,14 @@ segredo/PII; sem métrica, o NOC fica cego.
 | C | Sem métrica/log | mínimo; o NOC não vê o transporte |
 
 **Recomendação: A.** É o único conjunto que serve ao NOC sem violar §5.7. **Custo:** catálogo de
-métricas e revisão de log. **Fontes:** `lacunas.md` `LNET-04`; `AGENTS.md` §5.7;
+métricas e revisão de log. **Fontes:** `lacunas.md` `LNET-04`; `AGENTS.md` §5, item 7;
 `wyd-1.0.0.md` §7.3 (X10). **Recusa C** por cegueira operacional; log de payload não é alternativa
 válida pela regra de segredo/PII.
 
 **Resposta derivada das regras vigentes, sem escolha do usuário (2026-11-23): A.** `X10` já decidiu que
 a métrica do NOC é `/metrics` Prometheus coletada pelo `wyd-ops` (`wyd-1.0.0.md` §7.3), `LAC-POR-06`
 já decidiu que a telemetria vem de fonte externa e o portal mostra “não medido” quando ela falha
-(`wyd-portal/lacunas.md` §2), e `AGENTS.md` §5.7 proíbe payload e PII em log. A opção C contradiz as
+(`wyd-portal/lacunas.md` §2), e `AGENTS.md` §5, item 7 proíbe payload e PII em log. A opção C contradiz as
 duas primeiras; log de payload contradiz a terceira. O transporte expõe **conexões, erros por tipo,
 bytes e latência** e registra **só metadados** (evento, sessão, tamanhos, caminho); nome, rótulo e
 unidade das métricas são implementação, não decisão pendente. A lacuna `LNET-04` fechou por essa regra;
@@ -157,7 +157,7 @@ unidade das métricas são implementação, não decisão pendente. A lacuna `LN
 | `LNET-01` | `Q-NET-1` | **aberta como medição** (2026-11-23): política A decidida — balde/porte/total/timeout com recusa tipada; valores só após a primeira execução no CI efêmero. |
 | `LNET-02` | `Q-NET-2` | fechada em 2026-11-23 (A): impor o build-alvo 7662 no handshake, com erro tipado para build não suportado; o transporte implementa, não escolhe. |
 | `LNET-03` | — | fechada em 2026-11-23: a regra `R6`/`D9` e `ux_session_viva_por_conta` fixam uma sessão por conta e recusam a segunda; `wyd-db/rascunho-accounts.md` §2 (`R6`) e §6 (`D9`); §3 proíbe limite por IP como identidade. O transporte implementa, não escolhe. |
-| `LNET-04` | `Q-NET-4` | fechada em 2026-11-23 (A): **derivada das regras vigentes, sem escolha do usuário** — métricas de conexão/erro/bytes/latência em `/metrics` (`X10`), fonte externa (`LAC-POR-06`) e log só de metadados, sem payload/PII (`AGENTS.md` §5.7). |
+| `LNET-04` | `Q-NET-4` | fechada em 2026-11-23 (A): **derivada das regras vigentes, sem escolha do usuário** — métricas de conexão/erro/bytes/latência em `/metrics` (`X10`), fonte externa (`LAC-POR-06`) e log só de metadados, sem payload/PII (`AGENTS.md` §5, item 7). |
 
 ## 6. Registro da decisão
 

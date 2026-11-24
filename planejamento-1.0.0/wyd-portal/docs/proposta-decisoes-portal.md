@@ -6,10 +6,10 @@
 > Dono: arquitetura + `wyd-ops`
 > Base: `lacunas.md` (`LAC-POR-09`); `docs/arquitetura/consumo-do-banco.md`;
 > `docs/specs/requisitos.md` (`RF-POR-025`, `RNF-POR-009`); `armaria-e-mercado.md` (D4, `M25`);
-> `AGENTS.md` §5.8
+> `AGENTS.md` §5, item 8
 > Revisado em: 2026-11-23
 
-**Estado:** decidida (2026-11-23). O dono de operação respondeu **A**: o BFF executa o fechamento e o
+**Estado:** proposto (2026-11-23) — decisão respondida em 2026-11-23. O dono de operação respondeu **A**: o BFF executa o fechamento e o
 `wyd-ops` agenda/alerta. Nada foi aplicado: não há job, métrica nem agendador implementados; nenhum
 número desta página é medição.
 

@@ -111,7 +111,7 @@ dado pessoal; fixture em banco efêmero isola, mas precisa de reset e de um cami
 
 **Recomendação: A.** O contrato B3 já diz "fixture, não conta real"; a decisão é onde a fixture mora
 e como reseta. **Custo:** um seed e um reset a manter. **Fontes:** `lacunas.md` `LBOT-02`;
-`wyd-bots-1.0.0.md` §3 B3; `AGENTS.md` §5.7; `M19` em `lacunas.md` do `wyd-db`. **Conta real não é
+`wyd-bots-1.0.0.md` §3 B3; `AGENTS.md` §5, item 7; `M19` em `lacunas.md` do `wyd-db`. **Conta real não é
 opção**: contraria B3. **Recusa B** por acoplar o bot ao portal.
 
 **Resposta do dono em 2026-11-23: A.** A conta, a pessoa e o personagem de cada cenário nascem de um
@@ -172,7 +172,7 @@ Nenhum número é inventado e a lacuna não fecha nesta decisão.
 | Alternativa | Por que foi descartada |
 |---|---|
 | B — teto de infraestrutura | mede a capacidade do processo/ambiente, não o comportamento do jogo; pode bloquear jogador legítimo e é refeito |
-| C — número fixado agora | não tem fonte; vira promessa sem `V`, contra `AGENTS.md` §5.4 e §8 |
+| C — número fixado agora | não tem fonte; vira promessa sem `V`, contra `AGENTS.md` §5, item 4 e §8 |
 
 **Custo do que A ainda exige, não implementado.** **0 migration, 0 tabela, 0 coluna.** Na implementação:
 **1 página** `docs/specs/cenarios.md`, **1 `Cargo.toml`** em `crates/wyd-bots`, **1 `src/scenario.rs`**,
@@ -197,7 +197,7 @@ gate item 1.
 execução com falha reproduzível (log + captura)" e `AGENTS.md` §8 proíbe `SKIP` silencioso.
 
 **O que está em jogo.** Sem artefato, a falha não é reproduzível e o custo do teste não se paga; log
-com payload ou dado de jogador pode carregar segredo/PII e conflita com a higiene de `AGENTS.md` §5.7
+com payload ou dado de jogador pode carregar segredo/PII e conflita com a higiene de `AGENTS.md` §5, item 7
 e com a fronteira de PII do `wyd-db` (`P-22`).
 
 | Opção | O que é | Consequência |
@@ -208,12 +208,12 @@ e com a fronteira de PII do `wyd-db` (`P-22`).
 
 **Recomendação: A.** O gate já pede log + captura; a decisão é o formato e a higiene. **Custo:**
 armazenamento e revisão de PII. **Fontes:** `lacunas.md` `LBOT-04`; `wyd-bots-1.0.0.md` §6;
-`AGENTS.md` §5.7 e §8; `wyd-db/padrao-banco.md` `P-22`. **Recusa B/C** por não reproduzirem a falha.
+`AGENTS.md` §5, item 7 e §8; `wyd-db/padrao-banco.md` `P-22`. **Recusa B/C** por não reproduzirem a falha.
 
 **Resposta derivada das regras vigentes, sem escolha do usuário (2026-11-23): A.** O item 4 do gate do
 sistema já exige “relatório por execução com falha reproduzível (log + captura)” e o item 5 proíbe
 segredo de jogador (`wyd-bots-1.0.0.md` §6). C (“nada além do exit code”) reprova o item 4 e B (“só log
-textual”) reprova a parte “captura”; `AGENTS.md` §5.7 e `P-22` fixam a higiene. A execução falha entrega
+textual”) reprova a parte “captura”; `AGENTS.md` §5, item 7 e `P-22` fixam a higiene. A execução falha entrega
 **log estruturado + frame/captura anonimizada no ponto da falha**, com cenário e `ClientTick`, sem
 payload, credencial, nome de personagem nem dado de jogador; trace é opcional e segue a mesma higiene. A
 lacuna `LBOT-04` fechou por essa regra. O briefing das respostas é

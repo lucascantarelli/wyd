@@ -41,6 +41,12 @@ O layout do repositório — qual pasta, qual sistema é dono e por que Compose,
 repositório; o panorama não é publicado no site). O Dockerfile da imagem do site está em
 `wyd-ops/wyd-docs.Dockerfile`; a decisão e o DoD, em `plano-imagem-e-compose-do-site.md`.
 
+## Qual frente vem agora
+
+O ranking publicado das frentes do projeto — finalizar o `wyd-db`, expandir os outros sistemas e resolver
+as lacunas abertas — e a trajetória recomendada estão em [Prioridade do projeto](prioridade-do-projeto.md).
+É o único lugar publicado que ranqueia as frentes com número e fonte; a decisão continua do dono do produto.
+
 ## O que falta
 
 O `wyd-ops` tem propostas, não plano diretor: ainda não há `RF-OPS`, roadmap com DoD por issue nem

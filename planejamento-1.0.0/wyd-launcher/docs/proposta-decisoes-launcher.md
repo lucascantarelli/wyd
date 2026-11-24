@@ -5,7 +5,7 @@
 > Público: arquitetura, `wyd-launcher`, `wyd-client`, `wyd-server` e `wyd-ops`
 > Dono: equipe do `wyd-launcher`
 > Base: `lacunas.md` (`LLCH-01`–`LLCH-04`); `docs/index.md`; `wyd-launcher-1.0.0.md` §1–§6;
-> `wyd-1.0.0.md` §7.1, §7.3 (X11) e §7.6; `AGENTS.md` §5.7 e §8
+> `wyd-1.0.0.md` §7.1, §7.3 (X11) e §7.6; `AGENTS.md` §5, item 7 e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). Nenhuma pergunta segue aberta; `Q-LCH-1`–`Q-LCH-4` foram respondidas
@@ -68,7 +68,7 @@ existe: `portal.launcher_release` guarda `channel` (`stable`/`beta`), `version` 
 | Alternativa | Por que foi descartada |
 |---|---|
 | B — binário compacto | exige codec e ferramenta de inspeção; não há ganho de tamanho que pague a auditabilidade |
-| C — texto do legado | não tem canal, `min_version`, URL nem assinatura; `deprecated/` não se copia (`AGENTS.md` §5.2) |
+| C — texto do legado | não tem canal, `min_version`, URL nem assinatura; `deprecated/` não se copia (`AGENTS.md` §5, item 2) |
 
 **Custo do que A ainda exige, não implementado.** **1 página** em `docs/specs/manifesto-e-patch.md`
 (planejada em `wyd-launcher-1.0.0.md` §7), **1 JSON Schema**, **1 módulo**
@@ -152,7 +152,7 @@ assinatura exige gestão de chave e rotação.
 | C | Sem assinatura | mínimo; patch adulterado passa |
 
 **Recomendação: A.** O risco declarado é execução arbitrária; hash sem assinatura não fecha esse
-risco. **Custo:** gestão de chave. **Fontes:** `lacunas.md` `LLCH-03`; `AGENTS.md` §5.7;
+risco. **Custo:** gestão de chave. **Fontes:** `lacunas.md` `LLCH-03`; `AGENTS.md` §5, item 7;
 `wyd-launcher-1.0.0.md` §3. **Recusa B** por não autenticar; **C** por risco aceito sem decisão.
 
 **Resposta do dono em 2026-11-23: A.** O manifesto leva **assinatura Ed25519 destacada** sobre os bytes

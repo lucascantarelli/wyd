@@ -4,7 +4,7 @@
 > Base: `src/provision/spec.md` §3, §5 e §6; `ADR-DB-0001` item 3
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/provision/app/runner.rs` — o fluxo
 

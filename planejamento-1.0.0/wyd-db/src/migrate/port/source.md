@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §2, §7 e §10
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/port/source.rs` — leitura da série
 
@@ -37,8 +37,9 @@ pub enum SourceError {
 }
 ```
 
-`LoadedFile` não tem `file_name`/`stem`: quem deriva o nome é o `adapter/fs`, e o `set.rs` recebe
-`(stem, content)`. O `path` fica para a mensagem ("não consegui ler …").
+`LoadedFile` não tem `file_name`/`stem`: quem deriva o nome é o **runner** (`app/runner.md` §3), de
+`path.file_stem()`, e o `set.rs` recebe `(stem, content)`. O `path` fica para a mensagem ("não consegui
+ler …").
 
 ## 3. Contrato
 

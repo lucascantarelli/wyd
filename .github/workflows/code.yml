@@ -1,0 +1,67 @@
+name: code
+
+on:
+  push:
+    branches: [develop, main]
+    paths:
+      - "crates/**"
+      - ".github/workflows/code.yml"
+  pull_request:
+    paths:
+      - "crates/**"
+      - ".github/workflows/code.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cargo:
+    name: fmt, clippy e testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Componentes Rust
+        run: rustup component add rustfmt clippy
+
+      - name: Formatação
+        run: cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check
+
+      - name: Lint
+        run: cargo clippy --manifest-path crates/wyd-db/Cargo.toml --all-targets -- -D warnings
+
+      - name: Testes unitários
+        run: cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
+
+      - name: Subir PostgreSQL 17 e aplicar a série
+        run: |
+          docker run -d --name wyd-db-ci -e POSTGRES_PASSWORD=test -e POSTGRES_DB=wyd postgres:17
+          for i in $(seq 1 30); do
+            if docker exec wyd-db-ci psql -U postgres -d wyd -tAc 'SELECT 1' >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          docker exec -i wyd-db-ci psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q -c "
+            CREATE ROLE wyd_owner NOLOGIN;
+            CREATE ROLE wyd_migrator NOLOGIN;
+            CREATE ROLE wyd_game NOLOGIN;
+            CREATE ROLE wyd_portal NOLOGIN;
+            CREATE ROLE wyd_admin NOLOGIN;
+            CREATE ROLE wyd_read NOLOGIN;
+            GRANT wyd_owner TO wyd_migrator;
+            GRANT CREATE, CONNECT ON DATABASE wyd TO wyd_migrator;
+          "
+          for arquivo in crates/wyd-db/migrations/*.sql; do
+            docker exec -i wyd-db-ci psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q < "$arquivo" >/dev/null
+          done
+
+      - name: Testes de schema
+        env:
+          WYD_DB_TEST_CONTAINER: wyd-db-ci
+        run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1

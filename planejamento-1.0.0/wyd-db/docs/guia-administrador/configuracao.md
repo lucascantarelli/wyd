@@ -49,7 +49,31 @@ Papel esperado (`wyd_migrator`) e versão do servidor (17) **não são configura
 runner. Uma checagem de segurança que se desliga por arquivo de ambiente não é checagem; mudar
 qualquer uma das duas é commit com `ADR-DB-0002` revista, não variável nova.
 
-## 3. DSN e segredo por nome
+## 3. Pool e timeouts da conexão
+
+**Nenhum destes é variável de ambiente.** São parâmetros do driver (`sqlx`) e do servidor, declarados em
+2026-11-24 pela decisão `Q-BLK-06` = A: o que já acontece ganha dono em vez de virar estimativa.
+
+| Parâmetro | Valor | Onde é lido | Dono do valor |
+|---|---:|---|---|
+| conexões por pool de runtime | **10** (mínimo 0) | `PoolOptions::new()`, um pool por processo | default do `sqlx` |
+| `acquire_timeout` (espera por conexão) | **30 s** | idem; esgotado, devolve erro de aquisição | default do `sqlx` |
+| `idle_timeout` (conexão ociosa) | **10 min** | idem | default do `sqlx` |
+| `max_lifetime` (vida máxima) | **30 min** | idem | default do `sqlx` |
+| `statement_timeout` | **0** (sem limite) | servidor PostgreSQL | default do servidor; **não declarado** pelo projeto |
+| `lock_timeout` do runner | **10 s** (faixa `1 s`–`10 min`) | `MigrateConfig` (§2) | campo do runner, com faixa validada |
+
+O teto do servidor **não** está configurado em lugar nenhum: vale o default do PostgreSQL 17
+(`max_connections` **100** menos `superuser_reserved_connections` **3** = **97** utilizáveis). O orçamento
+que mostra a folga — **53 de 97**, com 4 pools de runtime, runner, provision e suíte — está em
+[`pool-e-transacoes.md`](../guia-desenvolvedor/pool-e-transacoes.md) §2, que é o dono da conta.
+
+> [!WARNING] `statement_timeout` em 0 é estado declarado, não alvo
+> Nenhum arquivo fixa `statement_timeout`, e o default do servidor é **sem limite**. A decisão declara esse
+> 0 para que ninguém o confunda com um valor escolhido: uma consulta longa não é interrompida pelo servidor.
+> Fixar um prazo é decisão nova, com número que ainda não foi medido.
+
+## 4. DSN e segredo por nome
 
 | O que | Onde vive | Regra |
 |---|---|---|
@@ -61,10 +85,10 @@ qualquer uma das duas é commit com `ADR-DB-0002` revista, não variável nova.
 
 A DSN é secret **pelo valor**, não pelo nome: o nome da variável pode aparecer em documentação e em
 mensagem de erro, o valor não. Nenhum caminho de `Display`/`Debug` do crate imprime a senha
-(`src/dsn.md`; `src/provision/spec.md` §7). O `SESSION_SECRET` citado em `AGENTS.md` §2.5 **não** é
-lido pelo `wyd-db` e não faz parte deste contrato.
+(`src/dsn.md`; `src/provision/spec.md` §7). O `SESSION_SECRET` do portal **não** é lido pelo `wyd-db`
+e não faz parte deste contrato.
 
-## 4. O que muda sem reiniciar
+## 5. O que muda sem reiniciar
 
 **Nada do contrato recarrega a quente.** No runner, o binário monta o `MigrateConfig` no boot e a
 partir daí só usa o valor recebido; trocar a DSN ou o diretório exige **novo processo**
@@ -75,10 +99,11 @@ O que muda sem reiniciar é do **ambiente**, não do contrato: `pg_hba.conf` pod
 PostgreSQL, e essa operação é do operador — não é parâmetro do `wyd-db`. Papel e versão do servidor
 não mudam por ambiente.
 
-## 5. O que esta página não cobre
+## 6. O que esta página não cobre
 
 - **Valores e rotação:** são ato do operador; a página só diz onde o valor vive.
-- **Pool, timeout de query e tamanho de conexão:** não há desenho documentado para jogo e portal.
+- **Pool e timeouts de runtime:** declarados em §3; a conta de conexões, a saturação e o isolamento estão em
+  [`pool-e-transacoes.md`](../guia-desenvolvedor/pool-e-transacoes.md), não aqui.
 - **A linha `WYD_DB_URL_ADMIN` no contrato:** está na decisão `M27`, não na tabela de §3; a
   divergência está declarada acima e não é corrigida por esta página.
 - **Instalação e ordem:** são de [`plano-de-implantacao.md`](../planos/plano-de-implantacao.md).

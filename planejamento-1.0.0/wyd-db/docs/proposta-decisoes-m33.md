@@ -6,7 +6,7 @@
 > Dono: `wyd-db` — a decisão é do dono; esta página formula as perguntas e registra as respostas
 > Base: `lacunas.md` §2.3 (`M20`, `M33`); `docs/convencoes.md` §Estados e §Cabeçalho de página;
 > `migrations-checklist.md` §1, §1.2, §4 e §5; `wyd-db-1.0.0.md` §10 e §11;
-> `proposta-gate-de-aceite-de-pagina.md` §5 e §7; `AGENTS.md` §5.1, §5.3 e §5.5
+> `proposta-gate-de-aceite-de-pagina.md` §5 e §7; `AGENTS.md` §5, itens 1, 3 e 5
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). Seis perguntas respondidas pelo dono em 2026-11-23; as opções A
@@ -56,11 +56,11 @@ a única data em jogo é a de atribuição do estado. `M20` proíbe número medi
 | Item | Decisão vigente | Fonte | Efeito na M33 |
 |---|---|---|---|
 | toda página carrega linha de estado | 4 estados; sem a linha, a página é rascunho | `docs/convencoes.md` §Estados | a M33 decide **se `migrations/` é exceção**, não se a regra existe |
-| página não aprovada é `proposto` | sem "sim" do dono não há `aceito` | `AGENTS.md` §5.3 | a M33 decide **quando** aplicar a linha, não qual estado |
+| página não aprovada é `proposto` | sem "sim" do dono não há `aceito` | `AGENTS.md` §5, item 3 | a M33 decide **quando** aplicar a linha, não qual estado |
 | `metricas.md` só depois da série | número medido, dono único `M20` | `lacunas.md` `M20` | a M33 não escreve `metricas.md`; decide o que fazer com o item 10 enquanto ele falta |
 | `index.md` é exigido pelo item 10 | a página precisa estar linkada no índice da pasta | `wyd-db-1.0.0.md` §10 | a M33 decide **quando** criar o índice, não se ele é exigido |
 | `serie-e-regras.md` é da 5ª onda | fora das 34 páginas e da M33 | `wyd-db-1.0.0.md` §11 | não entra nesta rodada |
-| página antes da migration | `AGENTS.md` §5.1 | `AGENTS.md` §5.1 | a M33 decide **como a onda A percorre** as 34, não se o critério é por página |
+| página antes da migration | `AGENTS.md` §5, item 1 | `AGENTS.md` §5, item 1 | a M33 decide **como a onda A percorre** as 34, não se o critério é por página |
 | retenção, fila, idempotência, dado pessoal | `M22`, `M25`, `M30`, `M32` | `lacunas.md` §2.3 | fora da M33; não reabrir |
 
 ## 4. As seis decisões
@@ -73,7 +73,7 @@ checklist tem 5 estados de **arquivo**, nenhum `aceito`. A regra geral já está
 que não está decidido é se `migrations/` fica fora dela.
 
 **O que está em jogo.** Sem linha de estado na página, o `wyd-db` não tem onde registrar que uma
-página de migration foi aprovada — e `AGENTS.md` §5.1 exige essa aprovação antes de cada `.sql`. Com
+página de migration foi aprovada — e `AGENTS.md` §5, item 1 exige essa aprovação antes de cada `.sql`. Com
 exceção, `aceito` deixa de existir para as 34 e o critério de §11.1 ("todas ... `aceito` ou
 `retirado`") fica sem objeto.
 
@@ -86,7 +86,7 @@ exceção, `aceito` deixa de existir para as 34 e o critério de §11.1 ("todas 
 **Recomendação: A.** `concluída` no checklist significa "escrita e conferida", não "aprovada"; são
 fatos diferentes e podem ter nomes diferentes sem duplicação. **Custo:** 27 linhas e duas frases,
 nenhum corpo alterado. **Fontes:** `docs/convencoes.md` §Estados (a regra já vale para página);
-`AGENTS.md` §5.1 (aprovação por página antes da migration); `AGENTS.md` §5.5 (dois estados, dois
+`AGENTS.md` §5, item 1 (aprovação por página antes da migration); `AGENTS.md` §5, item 5 (dois estados, dois
 donos, sem espelho). **Recusa B** porque retira do `wyd-db` a única forma de registrar a aprovação que
 §5.1 exige.
 
@@ -106,13 +106,13 @@ ninguém: só declara o que já é verdade.
 | **A (recomendada)** | Aplicar `**Estado:** proposto (2026-11-23)` nas 27 agora; a data é a de **atribuição** do estado | 27 páginas saem de "rascunho por regra" para "proposto com data"; nenhuma vira `aceito` |
 | B | Deixar sem linha até a revisão de cada uma | mantém as 27 como rascunho; a dívida cresce a cada página nova escrita assim |
 
-Aceitar em bloco não entra na tabela: viola `AGENTS.md` §5.3 e o item 9 de §10 (revisão por quem não
+Aceitar em bloco não entra na tabela: viola `AGENTS.md` §5, item 3 e o item 9 de §10 (revisão por quem não
 escreveu), então não é alternativa — é a hipótese que a página existe para impedir.
 
 **Recomendação: A.** É a leitura honesta do que existe: página escrita, não aprovada; a data é de
 atribuição, como `convencoes.md` exige. **Custo:** 27 arquivos ganham uma linha; nenhuma outra
 mudança, e nenhuma página vira `aceito` por isso. **Fontes:** `docs/convencoes.md` §Estados
-("`proposto` sem data não diz há quanto tempo espera revisão"); `AGENTS.md` §5.3.
+("`proposto` sem data não diz há quanto tempo espera revisão"); `AGENTS.md` §5, item 3.
 
 ### Q-M33-3 — O item 10 de §10 vale antes de `metricas.md` existir?
 
@@ -136,7 +136,7 @@ existir; suspender a metade errada libera o aceite sem número medido. O própri
 **Recomendação: A.** Uma condição é navegação e a outra é medição; suspender a segunda com data e
 condição é diferente de suprimi-la. **Custo:** reescrever um item de §10 e revalidar o aceite de toda
 página quando `metricas.md` existir — dívida declarada, não esquecida. **Fontes:** `wyd-db-1.0.0.md`
-§10 (itens 9–11 como pendência de fechamento) e §11.1; `lacunas.md` `M20`; `AGENTS.md` §5.1.
+§10 (itens 9–11 como pendência de fechamento) e §11.1; `lacunas.md` `M20`; `AGENTS.md` §5, item 1.
 **Recusa B** porque mantém o impasse circular; **C** porque troca a condição verificável por uma
 suspensão total.
 
@@ -167,7 +167,7 @@ na onda própria. **Custo:** uma página nova em `migrations/`, fora das 34 posi
 
 **Medido.** O checklist tem 5 estados de **arquivo**; `concluída` deriva o estado de tabela em §1.2.
 O estado da página é a linha `**Estado:**` dela. Hoje não há coluna que espelhe esse estado, e
-`AGENTS.md` §5.5 exige um dono por fato.
+`AGENTS.md` §5, item 5 exige um dono por fato.
 
 **O que está em jogo.** Quem lê o checklist pode supor que ali está o aceite. Espelhar o estado na
 tabela resolveria a leitura local e criaria dois donos para o mesmo fato.
@@ -180,12 +180,12 @@ tabela resolveria a leitura local e criaria dois donos para o mesmo fato.
 
 **Recomendação: A.** `concluída` responde "a página existe e foi conferida?"; `aceito` responde "o
 dono aprovou?". **Custo:** uma frase em §1 e uma visita a mais para quem quer o estado de aceite.
-**Fontes:** `AGENTS.md` §5.5; `migrations-checklist.md` §1 e §1.2; `docs/convencoes.md` §Estados.
+**Fontes:** `AGENTS.md` §5, item 5; `migrations-checklist.md` §1 e §1.2; `docs/convencoes.md` §Estados.
 **Recusa B** porque cria a divergência que §5.5 proíbe; **C** porque muda o que §1.2 deriva.
 
 ### Q-M33-6 — Como a onda A atravessa o aceite das 34 páginas?
 
-**Medido.** A onda A (`wyd-1.0.0.md` §7.7) precisa que a série comece; `AGENTS.md` §5.1 exige página
+**Medido.** A onda A (`wyd-1.0.0.md` §7.7) precisa que a série comece; `AGENTS.md` §5, item 1 exige página
 `aceita` antes da migration que ela descreve. São 34 páginas, **28 escritas**; 6 dependem de dado de
 origem e curadoria de conteúdo, e não existem.
 
@@ -200,7 +200,7 @@ aceitar por lote esconde página não revisada dentro do agregado.
 
 **Recomendação: A.** O critério de §5.1 é por página e a dependência real também: `0001` não precisa
 que `0027` esteja pronta. **Custo:** 34 atos de aceite, um a um, sem atalho; a série espera o aceite da
-página que vai executar, não o das outras. **Fontes:** `AGENTS.md` §5.1; `plano-migrations.md` §3 (a
+página que vai executar, não o das outras. **Fontes:** `AGENTS.md` §5, item 1; `plano-migrations.md` §3 (a
 ordem); `migrations-checklist.md` §4 (o painel, sem número novo). **Recusa B** porque transforma
 bloqueio de dado em bloqueio de schema; **C** porque troca critério verificável por agregado.
 

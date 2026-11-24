@@ -65,7 +65,8 @@ O resultado não se copia para cá: total e censo continuam só em §9.1, e este
 se reproduz e se confere, sem leitura manual do artefato.
 
 Quem impõe o número não é quem roda o comando à mão: o `docs-check` do CI
-(`.github/actions/docs-check/`) roda `verificar-contagens.py` logo depois do `verificar.py`, em todo
+(`.github/actions/docs-check/`) roda `verificar-contagens.py` e `verificar-censos.py` logo depois do
+`verificar.py`, em todo
 PR e push que o workflow `docs` cobre — o filtro é a árvore `planejamento-1.0.0/**` mais
 `wyd-docs/**`, sem lista de arquivos, então painel, `lacunas.md`, `migrations/` e página de sistema
 disparam o mesmo gate.

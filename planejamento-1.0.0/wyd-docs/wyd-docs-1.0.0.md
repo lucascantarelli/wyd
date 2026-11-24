@@ -165,6 +165,8 @@ wyd-docs/
 ├── requirements.txt                  ● mkdocs==2.0.dev6
 ├── preparar.py                       ● monta .build/docs e a navegação
 ├── verificar.py                      ● gate de link, âncora, nav, título e sintaxe 1.x
+├── verificar-contagens.py            ● contagens da série e censo por estado
+├── verificar-censos.py               ● censos citados entre páginas (mede e compara)
 ├── redirects.tsv                     ● mapa origem → destino dos redirects
 ├── tema/
 │   ├── base.html                     ● tema Jinja completo
@@ -247,7 +249,7 @@ O build roda em **Linux com Python 3.15** — no Windows o MkDocs 2.0.dev6 falha
 ```bash
 # Windows: build dentro do container
 docker run --rm -v "D:/dolorestec/wyd2:/work" -w /work/wyd-docs python:3.15-slim sh -c \
-  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site"
+  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site && python verificar-contagens.py && python verificar-censos.py"
 
 # Linux/macOS
 cd wyd-docs
@@ -255,6 +257,8 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python preparar.py
 .venv/bin/mkdocs build --dir .build/docs --output site
 .venv/bin/python verificar.py site
+.venv/bin/python verificar-contagens.py
+.venv/bin/python verificar-censos.py
 ```
 
 `preparar.py` e `verificar.py` são Python puro e rodam também no Windows, para iteração rápida.
@@ -269,6 +273,8 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | título | página sem título no `<title>` |
 | redirect | origem do `redirects.tsv` sem página-stub, destino inexistente, `refresh`/`canonical` fora do destino, destino que é outro stub ou origem duplicada |
 | sintaxe 1.x | fonte publicada em `planejamento-1.0.0/*/docs` com `!!!`, `=== "…"`, `???`, atributo de link `](pagina.md){ … }` ou `<div class="grid cards" markdown>` fora de bloco de código e de code span |
+| contagens da série | soma de `Tab.`, arquivos, tabelas, páginas do site ou censo por estado diverge da medida, ou citação sem dono declarado |
+| censos citados | citação de atos de aceite, páginas aceitas, células pendentes ou `Q-BLK` abertas diverge da medida nas fontes; linha histórica precisa da marca (`na medição de então`) |
 
 **Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Esta é a medição histórica de 2026-11-19; o total e o censo vigentes estão em §9.1, e `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam aquela seção em vez de repetir os números.
 
@@ -609,7 +615,7 @@ ferramenta é criada; as 109 das 109 páginas existem em 2026-11-22** (lotes `00
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-22):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **267 páginas** (medido em 2026-11-22 pelo build) e publica as que existem (`V`, 2026-11-22). O censo das 265 fontes na mesma data é **15 `aceito` · 245 `proposto` · 4 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 265 + 2 = 267 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
+**Reconciliação e estado (2026-11-24):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **309 páginas** (medido em 2026-11-24 pelo build) e publica as que existem (`V`, 2026-11-24). O censo das 307 fontes na mesma data é **15 `aceito` · 287 `proposto` · 4 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 307 + 2 = 309 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 

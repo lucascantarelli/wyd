@@ -6,7 +6,7 @@
 > Base: `Q-IP-1`/`Q-IP-2`/`Q-IP-6`; `docs/specs/inventario-da-arvore.md`; `docs/specs/propriedade-intelectual-e-distribuicao.md` §4 e §8
 > Revisado em: 2026-11-23
 
-**Estado:** pacote em `P`, pronto para revisão e envio pelo dono, **não enviado** em 2026-11-23. Nenhuma
+**Estado:** proposto (2026-11-23) — pacote em `P`, pronto para revisão e envio pelo dono, **não enviado** em 2026-11-23. Nenhuma
 resposta foi recebida ou presumida. A distribuição segue **congelada**; `LCLI-05` continua `proposta`;
 `LCLI-02` continua aberta até a evidência do titular, e nada aqui autoriza patch, release, captura ou
 evidência de direitos.

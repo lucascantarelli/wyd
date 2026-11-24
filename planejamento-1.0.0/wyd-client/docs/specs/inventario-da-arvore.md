@@ -6,7 +6,7 @@
 > Base: `Q-IP-1`/`Q-IP-2` (escopo B, 2026-11-23); `docs/specs/propriedade-intelectual-e-distribuicao.md`; `registro-do-cliente.md`
 > Revisado em: 2026-11-23
 
-**Estado:** inventário medido (`V`, 2026-11-23). Só metadados: caminho relativo, tamanho e `sha256`. Nenhum
+**Estado:** proposto (2026-11-23) — inventário medido (`V`, 2026-11-23). Só metadados: caminho relativo, tamanho e `sha256`. Nenhum
 conteúdo, screenshot, logo ou binário do cliente é copiado, embutido ou publicado. A distribuição segue
 **congelada**; `LCLI-05` continua `proposta` e `LCLI-02` continua aberta até a evidência do titular.
 

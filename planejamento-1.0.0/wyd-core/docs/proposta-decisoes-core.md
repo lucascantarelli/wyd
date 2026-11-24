@@ -5,7 +5,7 @@
 > Público: produto, arquitetura, `wyd-core`, `wyd-sim` e `wyd-db`
 > Dono: equipe do `wyd-core`
 > Base: `lacunas.md` (`LCORE-01`–`LCORE-04`); `docs/index.md`; `wyd-core-1.0.0.md` §1–§6;
-> `wyd-1.0.0.md` §1.5, §7.1, §7.3 (X5, X6) e §7.6; `AGENTS.md` §5.8 e §8
+> `wyd-1.0.0.md` §1.5, §7.1, §7.3 (X5, X6) e §7.6; `AGENTS.md` §5, item 8 e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). **Quatro perguntas respondidas** em 2026-11-23; nenhuma pergunta
@@ -134,7 +134,7 @@ que as separe; separar leitura de comandos aumenta a superfície sem exigência 
 **Recomendação: A.** É a forma que o contrato X5 já desenha, permite testar o core com repositório
 falso e mantém o `wyd-db` como dono da transação. **Custo:** uma porta e uma `UnitOfWork`; a primeira
 fatia usa uma operação de escrita por comando. **Fontes:** `lacunas.md` `LCORE-04`; `wyd-1.0.0.md` X5;
-`wyd-core-1.0.0.md` §3.2; `wyd-db/padrao-banco.md` `P-18`; `AGENTS.md` §5.8. **Recusa B** por criar
+`wyd-core-1.0.0.md` §3.2; `wyd-db/padrao-banco.md` `P-18`; `AGENTS.md` §5, item 8. **Recusa B** por criar
 interfaces sem operação que as exija; **C** por aumentar a composição sem exigência da fonte.
 
 **Resposta do dono em 2026-11-23: A, com o recorte C4.** A primeira fatia tem **uma** porta

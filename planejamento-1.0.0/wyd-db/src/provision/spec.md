@@ -4,7 +4,7 @@
 > Base: `ADR-DB-0001` (Contexto e Decisão), `padrao-banco.md` §8, `src/migrate/spec.md` §3
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — nada disto existe no repositório: nem `crates/wyd-db/src/provision/`,
+**Estado:** aceito (2026-11-24) — nada disto existe no repositório: nem `crates/wyd-db/src/provision/`,
 nem `db/roles.sql`. A página é a especificação a implementar, não a descrição de código vigente.
 
 # Estado desejado dos papéis e de `public` — desenho
@@ -50,7 +50,8 @@ A ordem da tabela **é** a ordem de emissão do SQL e não pode mudar sem regene
 **`wyd_admin` entrou em 2026-11-21 (`M27`):** o dono escolheu **A + S1 + C1 + D1** em
 `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`" — papel com `LOGIN`, sem membership,
 `USAGE` em `game`/`ops` e `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, com o
-`GRANT` no arquivo novo `0032_admin_grants.sql` (31 → 32 na série). Nenhum privilégio de schema mora
+`GRANT` no arquivo novo `0032_admin_grants.sql` (31 → 32 na série naquele momento; hoje a série fechou em
+**34**). Nenhum privilégio de schema mora
 nesta página (§1): o papel entra em `ROLES` e no golden, o `GRANT` entra na série.
 
 ```rust
@@ -383,4 +384,4 @@ papel (`ADR-DB-0001`).
 | Remoção de papel | ato manual auditado: `DROP OWNED BY` antes, `DROP ROLE` dos que têm `member_of` e `wyd_owner` por último (`2BP01` enquanto houver dependência) |
 | `GRANT` e default privileges nos quatro schemas da série | `migrations/0001-bootstrap.md` §7 (`P-18`) |
 | Estado do schema `public` (ACL do ledger) | §4 desta página; decisão em `ADR-DB-0001`, item 8 |
-| Quem conecta com cada papel em produção | operação / `docs/rust/05-stack-docker.md` |
+| Quem conecta com cada papel em produção | `docs/planos/plano-de-implantacao.md` §1 (cada serviço sobe com a DSN do seu papel) |

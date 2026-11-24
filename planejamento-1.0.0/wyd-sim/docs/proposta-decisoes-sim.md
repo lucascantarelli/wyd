@@ -179,7 +179,7 @@ não cria fixtures nem código.
 uma onda: a autorização e implementação da captura A1 destravam a onda C. As demais pendências têm
 outras dependências: `LAC-POR-09` é da onda D/F9; `Q-LCH-*` (`X11`) e `Q-BOT-*` (`X13`) são da onda E e
 dependem da C; `Q-NET-1` é uma medição, cuja política pode ser indicada sem inventar o número;
-`Q-NET-4` já fechou por regra vigente (`X10`/`LAC-POR-06`/`AGENTS.md` §5.7). Com a resposta do dono
+`Q-NET-4` já fechou por regra vigente (`X10`/`LAC-POR-06`/`AGENTS.md` §5, item 7). Com a resposta do dono
 registrada acima, `Q-SIM-3` deixou de estar pendente; `Q-SIM-2`, a seguinte, foi respondida na mesma data
 (§6) e o `sim` não tem mais pergunta aberta.
 
@@ -188,7 +188,7 @@ registrada acima, `Q-SIM-3` deixou de estar pendente; `Q-SIM-2`, a seguinte, foi
 | Alternativa | Por que foi descartada |
 |---|---|
 | B — vetor inline no teste | o mesmo vetor precisa servir ao teste do `sim`, à revisão de QA e ao contrato com o `core`; inline duplica e some quando o teste é refatorado |
-| C — vetor fora do repositório | não é versionado nem auditável, e `AGENTS.md` §5.4 exige prova verificável por arquivo; a prova ficaria fora do que o gate lê |
+| C — vetor fora do repositório | não é versionado nem auditável, e `AGENTS.md` §5, item 4 exige prova verificável por arquivo; a prova ficaria fora do que o gate lê |
 | D — só teste de propriedade, sem vetor | não atende ao gate da onda B, que pede determinismo provado por vetor, não propriedade genérica |
 
 **Efeito da resposta registrada em `LSIM-02` e `LSIM-03`.**

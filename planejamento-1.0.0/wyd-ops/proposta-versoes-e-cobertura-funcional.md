@@ -86,7 +86,7 @@ Risco: perder o vocabulário de fase no board; mitigação é a label `fase/*` e
 | board mede fase | board mede versão, e a soma das versões é a `1.0.0` |
 
 Nada disso cria issue. A criação continua dependendo de página com DoD e de pedido explícito
-(`AGENTS.md` §5, invariante 9).
+(`AGENTS.md` §5, item 9).
 
 ---
 

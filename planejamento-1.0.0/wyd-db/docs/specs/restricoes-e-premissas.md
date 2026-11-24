@@ -20,7 +20,7 @@ sendo o registro de lacuna.
 | a série da `1.0.0` ainda **não foi aplicada** | todo DDL é `P`; a contagem que vale é a planejada (34 arquivos, 109 tabelas, `SCHEMA_VERSION = 34` na troca), e o número medido só entra depois da medição | `plano-migrations.md` §2–§3; `lacunas.md` `M20` (fechada) |
 | enquanto a série herdada roda, `SCHEMA_VERSION` continua `53` | nenhuma página afirma que a troca já aconteceu | `plano-migrations.md` §6 |
 | catálogo de banco não existe | cobertura e contagem de coluna não são medidas por catálogo; o que há é o DDL confirmado | `wyd-db-1.0.0.md` §1.2; `lacunas.md` `M20` |
-| `planejamento-1.0.0/` é documentação | nenhum `.sql`, `.py`, `.rs` ou artefato executável nasce nesta árvore; script de conferência mora em `wyd-docs/` ou `tools/` | `AGENTS.md` §5.6 |
+| `planejamento-1.0.0/` é documentação | nenhum `.sql`, `.py`, `.rs` ou artefato executável nasce nesta árvore; script de conferência mora em `wyd-docs/` ou `tools/` | `AGENTS.md` §5, item 6 |
 | build do site só em Linux/CI | página não promete comando de build no Windows | `AGENTS.md` §9 |
 | CI de código é stub | nenhuma página trata "verde de CI" como prova de build ou teste de código | `AGENTS.md` §4; `docs/planos/riscos.md` `R-3` |
 | seed sem gerador, escrito à mão quando o dado de origem for conferido | nenhuma página promete `make` ou gerador de seed | `plano-migrations.md` §4 |

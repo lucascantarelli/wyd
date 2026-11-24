@@ -325,3 +325,10 @@ validação jurídica separada. Nenhum índice ou job foi criado.
 | `Q-RET-5` | **resolvida por evidência — A confirmada** (`ddl-confirmado.md` §5.9) | 2026-11-23 |
 | `Q-RET-6` | **A — financeiro/custódia sem expurgo; `market_notification` lida em 90 dias; não lida nunca** | 2026-11-24 |
 | `Q-RET-7` | **A — 30 dias de cópia diária; rotação, criptografia fora do host e restore trimestral** | 2026-11-24 |
+
+**Aplicação de `Q-RET-7` (2026-11-24):** as duas variáveis que faltavam foram decididas em
+`pendencias-de-fechamento.md` §6.6 — **`Q-BLK-03`**: destino no **storage de objeto do mesmo provedor da
+VPS**, fora do host, com **RPO de 24 h** e **RTO de 4 h**. O procedimento está em
+`docs/guia-administrador/backup-e-restore.md` e o cenário de perda total, em
+`docs/guia-administrador/recuperacao-de-desastre.md`. Contrato, região, credencial administrativa e ensaio
+de restore continuam pendentes: esta decisão não contrata, não configura e não cria rotina.

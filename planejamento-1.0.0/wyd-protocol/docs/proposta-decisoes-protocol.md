@@ -5,7 +5,7 @@
 > Dono: equipe do `wyd-protocol`
 > Base: `lacunas.md` (`LPRT-03`, `LPRT-06`, `LPRT-09`, `LPRT-10`); `docs/convencoes.md`;
 > `docs/goldens/como-capturar.md`; `wyd-client/registro-do-cliente.md`;
-> `wyd-1.0.0.md` §7.1, §7.3 (X12) e §7.6; `AGENTS.md` §5.8 e §8
+> `wyd-1.0.0.md` §7.1, §7.3 (X12) e §7.6; `AGENTS.md` §5, item 8 e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). **Uma pergunta de decisão** (`LPRT-09`), **respondida em 2026-11-23

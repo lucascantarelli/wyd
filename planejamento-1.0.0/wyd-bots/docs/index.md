@@ -31,7 +31,7 @@ continua **aberta como medição**, porque ainda não há número, conexão nem 
 com servidor descartável por execução. A conta e o personagem sintéticos (`LBOT-02`) fecharam na mesma
 data (`Q-BOT-2` = A): seed declarativo em `crates/wyd-db/seeds/dev.sql`, aplicado no banco recriado por
 execução. O artefato de falha (`LBOT-04`) fechou na mesma data por regra vigente, porque o gate já exigia
-log + captura e `AGENTS.md` §5.7/`P-22` fixam a higiene. Nenhum cenário existe e nenhuma carga foi
+log + captura e `AGENTS.md` §5, item 7/`P-22` fixam a higiene. Nenhum cenário existe e nenhuma carga foi
 medida: esta página não afirma conexões simultâneas, latência nem taxa de sucesso.
 
 ## Limite desta documentação

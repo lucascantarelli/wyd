@@ -77,7 +77,7 @@ hospedagem e pagamento; medição de volume para dimensionar prazos.
 |---|---|---|
 | **A (recomendada)** | Fixar os **papéis por função** — responsável de produto, responsável técnico (`wyd-ops`), revisão jurídica externa — e deixar nome de pessoa e canal de contato como campo `pendente` que bloqueia coleta real | a política tem dono verificável hoje; a coleta real continua bloqueada; nenhum nome ou endereço é inventado |
 | B | O dono do projeto declara agora os nomes e um contato | resolve o campo nominal; o canal ainda depende de endereço real, e quem não foi consultado passa a constar como responsável |
-| C | Não registrar nada até designação formal | a política inteira fica sem dono, contra `AGENTS.md` §5.5 |
+| C | Não registrar nada até designação formal | a política inteira fica sem dono, contra `AGENTS.md` §5, item 5 |
 
 **Recomendação: A.** O que o projeto pode decidir sozinho é a estrutura de responsabilidade, não o
 nome de quem aceita o risco. `C` deixa a lacuna sem dono — exatamente o defeito que `M32` existe para

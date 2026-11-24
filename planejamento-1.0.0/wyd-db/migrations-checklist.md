@@ -91,7 +91,8 @@ seeds seguem `bloqueada`, por dado de origem não verificado (`plano-migrations.
 `LAC-ADM-07`): os lotes `0033` e `0034` entram com 1 e 11 tabelas, os arquivos `concluída` passam a 28 e
 `Tab.` a 109. Em **2026-11-23** o dono confirmou que a fonte dos 6 seeds é o cliente 7662 medido, que
 eles ficam fora da onda A (`Q-M33-6`) e que nenhum valor herdado é tratado como verificado; a série de
-28 pode andar e os seeds continuam `bloqueada` por dado.
+28 pode andar e os seeds continuam `bloqueada` por dado. O pedido de curadoria que fecha esse bloqueio —
+item por item e com o formato da medição — está em `pedido-de-curadoria-dos-seeds.md`, na raiz do sistema.
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|

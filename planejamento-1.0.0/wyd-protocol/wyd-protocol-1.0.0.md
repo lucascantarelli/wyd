@@ -401,7 +401,7 @@ Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalh
 | `adr/index.md` | \"que decisões estão registradas?\" | tabela `ADR-PRT-nnn | decisão | estado | data | substitui`; **vazia enquanto não houver decisão**, e diz isso |
 
 **ADR:** não existe catálogo prévio. O `index.md` nasce sem linha e a primeira decisão aprovada cria
-`ADR-PRT-0001`. Registrar decisão futura é proibido (`AGENTS.md` §5, invariante 3).
+`ADR-PRT-0001`. Registrar decisão futura é proibido (`AGENTS.md` §5, item 3).
 
 ### 6.3 `docs/wire/*.md`
 

@@ -34,8 +34,8 @@ As DSNs são **segredo** — a senha viaja dentro da string, e nunca são logada
 cada DSN e a classificação segredo × dado de instalação estão em `src/provision/spec.md` §3; a regra de
 credencial, em §7.
 
-**Fora do contrato:** outros segredos do repositório — o `SESSION_SECRET` citado em `AGENTS.md` §2.5 é
-um deles — **não** são lidos pelo `wyd-db` e não entram no contrato de ambiente
+**Fora do contrato:** outros segredos do repositório — o `SESSION_SECRET` do portal é um deles —
+**não** são lidos pelo `wyd-db` e não entram no contrato de ambiente
 (`src/provision/spec.md` §3 e §7). Com cookie opaco e só o `sha256` no banco (`A16`), a 1.0.0 pode não
 precisar de segredo de assinatura nenhum; se algum sobreviver, é do portal, e esta página não é o dono
 do nome.

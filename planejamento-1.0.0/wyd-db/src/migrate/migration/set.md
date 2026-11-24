@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §2, §4, §7 e §8
 > Revisado em: 2026-11-18
 
-**Estado:** proposto (2026-11-18) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/migrate/migration/set.rs` — `MigrationSet`
 
@@ -52,7 +52,7 @@ pub enum SetError {
 ```
 
 Não há variante para checksum: `Checksum::of` é infalível e o erro de hash inválido é da **leitura** do
-ledger (`ChecksumError` em `port::ledger`), não do build da série.
+ledger (`ChecksumError`, em `migration::checksum`), não do build da série.
 
 `Entry` é `#[non_exhaustive]`; `MigrationSet` não é (não é construído por literal).
 

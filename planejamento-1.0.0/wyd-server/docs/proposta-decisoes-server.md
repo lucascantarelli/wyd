@@ -6,7 +6,7 @@
 > Base: `lacunas.md` (`LSRV-01`–`LSRV-05`); `docs/index.md`; `wyd-server-1.0.0.md` §1–§6;
 > `docs/planos/esqueleto-de-ponta-a-ponta.md`; `docs/specs/endpoint-de-captura.md`;
 > `wyd-1.0.0.md` §7.1, §7.3 (X7) e §7.6;
-> `AGENTS.md` §5.8 e §8
+> `AGENTS.md` §5, item 8 e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). **Cinco perguntas respondidas em 2026-11-23**: `Q-SRV-1`–`Q-SRV-4`

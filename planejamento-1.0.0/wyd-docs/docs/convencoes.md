@@ -102,7 +102,7 @@ externo quebra em silêncio.
 ## 5. Evidência
 
 Toda afirmação de comportamento carrega `V`, `H` ou `P`, e o que cada marca exige é de
-`AGENTS.md` §5, invariante 4 — a definição não se repete aqui. O que a forma acrescenta é onde a fonte fica: na
+`AGENTS.md` §5, item 4 — a definição não se repete aqui. O que a forma acrescenta é onde a fonte fica: na
 própria frase da afirmação, com data, e `H` sempre com o ID da lacuna que a reabre.
 
 ### 5.1 Números

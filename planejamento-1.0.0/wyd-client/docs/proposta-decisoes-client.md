@@ -4,7 +4,7 @@
 > Público: frente `wyd-client`, `wyd-protocol`, QA e `wyd-launcher`
 > Dono: equipe do `wyd-client`
 > Base: `lacunas.md` (`LCLI-01`–`LCLI-05`); `registro-do-cliente.md`; `docs/index.md`;
-> `wyd-1.0.0.md` §7.1, §7.3 (X11, X12) e §7.6; `AGENTS.md` §5.6, §5.7 e §8
+> `wyd-1.0.0.md` §7.1, §7.3 (X11, X12) e §7.6; `AGENTS.md` §5, itens 6 e 7, e §8
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). `Q-CLI-3` foi respondida (= A) e o nome do QA foi definido em
@@ -36,7 +36,7 @@ hospedagem (`wyd-ops`).
 | hash de `WYD.exe` | SHA-256 completo medido em 2026-11-22; promovido a identidade do alvo em 2026-11-23 | idem |
 | arquivos do cliente versionados no git | **0** — só `wyd-client/.gitkeep` | `registro-do-cliente.md` §3 |
 | capturas existentes | **0** | `docs/index.md` |
-| código do cliente | **0** | `lacunas.md`; `AGENTS.md` §5.6 |
+| código do cliente | **0** | `lacunas.md`; `AGENTS.md` §5, item 6 |
 
 ## 3. Já decidido — não reabrir
 
