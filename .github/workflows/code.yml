@@ -5,10 +5,12 @@ on:
     branches: [develop, main]
     paths:
       - "crates/**"
+      - "deny.toml"
       - ".github/workflows/code.yml"
   pull_request:
     paths:
       - "crates/**"
+      - "deny.toml"
       - ".github/workflows/code.yml"
   workflow_dispatch:
 
@@ -21,7 +23,7 @@ concurrency:
 
 jobs:
   cargo:
-    name: fmt, clippy e testes
+    name: fmt, clippy, testes e cobertura (informativa)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -38,10 +40,29 @@ jobs:
       - name: Testes unitários
         run: cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
 
+      - name: Instalar cargo-llvm-cov
+        uses: taiki-e/install-action@fe3acb53a98b62c772db35de75ce0e4595e7ca8c # v2.90.8
+
+      - name: Cobertura informativa (sem --fail-under)
+        run: |
+          set -o pipefail
+          rustup component add llvm-tools-preview
+          cargo llvm-cov --manifest-path crates/wyd-db/Cargo.toml --lib --summary-only | tee coverage-summary.txt
+          cargo llvm-cov --manifest-path crates/wyd-db/Cargo.toml --lib --html --output-dir coverage
+
+      - name: Publicar relatório de cobertura
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cobertura-wyd-db
+          path: |
+            coverage-summary.txt
+            coverage/
+          if-no-files-found: error
+
       - name: Subir PostgreSQL 17 e aplicar a série
         run: |
           docker run -d --name wyd-db-ci -e POSTGRES_PASSWORD=test -e POSTGRES_DB=wyd postgres:17
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             if docker exec wyd-db-ci psql -U postgres -d wyd -tAc 'SELECT 1' >/dev/null 2>&1; then
               break
             fi
@@ -65,3 +86,57 @@ jobs:
         env:
           WYD_DB_TEST_CONTAINER: wyd-db-ci
         run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
+
+  security:
+    name: audit e deny (bloqueante)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Detectar código Rust
+        id: rust
+        run: |
+          if [ -f Cargo.toml ]; then
+            manifest=Cargo.toml
+          else
+            manifest="$(find crates -name Cargo.toml -not -path '*/target/*' -print -quit)"
+          fi
+          if [ -n "$manifest" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### audit/deny"
+              echo "Nenhum Cargo.toml em crates/: não há código Rust para auditar."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Exigir Cargo.lock
+        if: steps.rust.outputs.exists == 'true'
+        id: lock
+        run: |
+          if [ -f Cargo.lock ]; then
+            lock=Cargo.lock
+          else
+            lock="$(find crates -name Cargo.lock -not -path '*/target/*' -print -quit)"
+          fi
+          if [ -z "$lock" ]; then
+            echo "::error::Cargo.toml existe, mas Cargo.lock não. cargo audit/deny exigem lockfile; rode 'cargo generate-lockfile' e commite."
+            exit 1
+          fi
+          echo "lock=$lock" >> "$GITHUB_OUTPUT"
+
+      - name: Instalar cargo-audit e cargo-deny
+        if: steps.rust.outputs.exists == 'true'
+        uses: taiki-e/install-action@fe3acb53a98b62c772db35de75ce0e4595e7ca8c # v2.90.8
+        with:
+          tool: cargo-audit,cargo-deny
+
+      - name: cargo audit (advisory derruba)
+        if: steps.rust.outputs.exists == 'true'
+        run: cargo audit --file "${{ steps.lock.outputs.lock }}"
+
+      - name: cargo deny (advisory, licença, ban e fonte derrubam)
+        if: steps.rust.outputs.exists == 'true'
+        run: cargo deny --config deny.toml --manifest-path "${{ steps.rust.outputs.manifest }}" check advisories bans licenses sources

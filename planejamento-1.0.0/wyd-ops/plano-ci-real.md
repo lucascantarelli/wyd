@@ -5,6 +5,11 @@
 > obrigatório em `develop`. O `docs-check` e o `code.yml` já existem; os demais workflows, actions e o
 > status check continuam proposta e não estão aplicados.
 >
+> **Decisão vigente (`V`, 2026-11-24):** D-02 = **B** — cobertura de 85% bloqueante no gate do sistema,
+> informativa no `code.yml`; `cargo audit` e `cargo deny` bloqueantes. **Passo 8a executado em
+> 2026-11-24:** o job `security` do `code.yml` roda `cargo audit` e `cargo deny` com `deny.toml`, e o
+> job `cargo` publica cobertura informativa (sem `--fail-under`).
+>
 > **Relação com o dono:** `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §4.1
 > decide a **arquitetura** (workflow reutilizável, action composta, SHA fixado, permissão mínima,
 > estágios). Este documento não repete a regra: aplica-a a nomes de arquivo, jobs e gatilhos, e
@@ -24,12 +29,13 @@
 | `Full Workflow` — pinagem | `actions/checkout` fixado por SHA (`v7.0.1`), como `docs` e `code` (2026-11-24) |
 | ruleset `develop` | `required_approving_review_count: 0`; **nenhum** `required_status_checks` — nada bloqueia por check hoje |
 | código Rust | `crates/wyd-db` tem `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; 6 testes unitários + 13 de schema (2026-11-24); os demais crates só têm `.gitkeep`; sem workspace na raiz |
-| `code` | fmt, clippy, 6 testes unitários e 13 de schema em PG17; **sem** cobertura, `cargo audit` ou `cargo deny` (2026-11-24) |
+| `code` | fmt, clippy, 6 testes unitários e 13 de schema em PG17; cobertura informativa em artefato (sem `--fail-under`) e `cargo audit`/`cargo deny` bloqueantes com `deny.toml` (2026-11-24, passo 8a) |
 | portal | sem `package.json`; nada a compilar |
 
 Consequência: dos cinco estágios de §4.2, **documentação e código já têm o que rodar**; o portal não
-tem `package.json` e a cobertura/segurança continuam sem gate. Criar `_portal.yml` agora produziria job
-que sempre passa — o que §4.2 proíbe.
+tem `package.json`; a cobertura é informativa no `code.yml` (o 85% bloqueante continua no gate do
+sistema, passo 5) e a segurança já bloqueia. Criar `_portal.yml` agora produziria job que sempre passa —
+o que §4.2 proíbe.
 
 ---
 
@@ -45,7 +51,7 @@ que sempre passa — o que §4.2 proíbe.
 | `coverage-gate` | `path`, `minimum` (padrão 85) | lê o relatório e falha abaixo do mínimo | junto de `_rust.yml` |
 | `setup-postgres` | `version` (padrão 17) | sobe serviço Postgres, espera `pg_isready`, exporta DSN de teste | junto de `_db.yml` |
 
-**Medido em 2026-11-24:** o workflow `code.yml` já roda `cargo fmt --check`, `cargo clippy --all-targets -D warnings`, os 6 testes unitários e os 13 testes de `sistema_pg` contra um `postgres:17` migrado; a cobertura de 85% e as actions compostas `setup-rust`/`coverage-gate` continuam planejadas.
+**Medido em 2026-11-24 (passo 8a executado):** o workflow `code.yml` roda `cargo fmt --check`, `cargo clippy --all-targets -D warnings`, os 6 testes unitários e os 13 testes de `sistema_pg` contra um `postgres:17` migrado; a cobertura é publicada como artefato sem `--fail-under`; `cargo audit` e `cargo deny` rodam no job `security` com `deny.toml`. As actions `setup-rust`/`coverage-gate` e o gate de 85% continuam no passo 5.
 
 Regras herdadas de §4.1 e válidas para todas: `using: composite`, `shell: bash` em cada `run`,
 nenhum segredo lido de variável global, nenhuma action de terceiro por tag.
@@ -57,10 +63,10 @@ Todos com `on: workflow_call`, `permissions: contents: read` no topo e inputs ex
 | Arquivo | Jobs | O que cada job faz | Falha quando |
 |---|---|---|---|
 | `_docs.yml` | `gate` | monta, constrói e verifica o site (`docs-check`) | link, âncora, navegação ou título reprovam |
-| `_rust.yml` | `fmt`, `clippy`, `test`, `coverage` | `cargo fmt --check`; `clippy -D warnings`; testes por alvo; cobertura com `--fail-under` | qualquer aviso, teste vermelho ou cobertura abaixo do mínimo |
+| `_rust.yml` | `fmt`, `clippy`, `test`, `coverage` | `cargo fmt --check`; `clippy -D warnings`; testes por alvo; cobertura com `--fail-under` **só no gate do sistema** — no incremental é relatório informativo (D-02 = B) | qualquer aviso ou teste vermelho; cobertura abaixo do mínimo só quando o sistema declarar o gate fechado |
 | `_db.yml` | `migrations`, `isolation` | aplica a série em Postgres 17 real e roda o runner; prova isolamento `portal` × `game` por `permission denied` | migration falha, checksum diverge, acesso indevido passa |
 | `_portal.yml` | `typecheck`, `test`, `e2e` | `tsc --noEmit`; Vitest; Playwright com artefato de trace | tipo, teste ou E2E falha |
-| `_security.yml` | `deps` | `dependency-review` em PR; `cargo-deny` quando houver workspace | advisory ou licença proibida |
+| `_security.yml` | `deps` | `dependency-review` em PR; `cargo audit`/`cargo deny` já bloqueiam no `code.yml` (passo 8a, 2026-11-24); reusa quando houver workspace | advisory ou licença proibida |
 
 `CodeQL` continua workflow próprio (já ativo, `Analyze` ×3 verde) e **não** vira reutilizável: o
 GitHub gerencia o ciclo dele.
@@ -164,10 +170,29 @@ recebe segredo e o `gate` roda igual.
 | 5 | `setup-rust` + `_rust.yml` + `coverage-gate`, e `rust` entra no `gate` | workspace Rust existir | 1 sessão |
 | 6 | `setup-postgres` + `_db.yml` | migrations do `wyd-db` existirem | 1 sessão |
 | 7 | `setup-node` + `_portal.yml` | `package.json` do portal existir | 1 sessão |
-| 8 | `_security.yml` (`dependency-review`, `cargo-deny`) | 5 | ~1 h |
+| 8a | **D-02 = B — executado em 2026-11-24:** `cargo audit` + `cargo deny` bloqueantes e cobertura informativa no `code.yml` | — | feito |
+| 8 | `_security.yml` (`dependency-review`, `cargo-deny`) | 5 e 8a | ~1 h |
 
 O passo 4 é o único que muda governança; 1–3 são invisíveis para quem não abre Actions e podem
-entrar antes de qualquer código.
+entrar antes de qualquer código. **O passo 8a não espera 5–7:** D-02 = B o torna a primeira alteração de CI
+depois deste plano, e ele não depende de workspace, portal ou runner; os passos 5–7 continuam esperando
+seus artefatos.
+
+**O que o passo 8a alterou (2026-11-24):**
+
+- `.github/workflows/code.yml`: novo job `security`, que detecta `Cargo.toml`, exige `Cargo.lock` e roda
+  `cargo audit --file <lock>` e `cargo deny --config deny.toml --manifest-path <manifest> check advisories
+  bans licenses sources`; o job `cargo` ganhou cobertura com `cargo llvm-cov --lib --summary-only` e
+  `--html`, publicada como artefato, sem `--fail-under`.
+- `deny.toml` na raiz: lista de licenças permitidas, nenhum advisory ignorado, `wildcards = "deny"` e
+  fonte desconhecida bloqueada.
+- **Como a falha aparece:** advisory ativo → `cargo audit` sai **1** e o job `security` fica vermelho;
+  licença fora da lista → `cargo deny` sai **4** e o job fica vermelho; `Cargo.toml` sem `Cargo.lock` →
+  passo falha com `::error::` e exit 1; nenhum `Cargo.toml` → job verde com resumo explícito de que não
+  havia código Rust.
+- **Provado localmente em 2026-11-24:** fixture com `time 0.1.44` → `RUSTSEC-2020-0071`, exit 1; fixture
+  com dependência `GPL-3.0-only` → `licenses FAILED`, exit 4; cobertura do `wyd-db` → 92,96% de regiões e
+  90,57% de linhas, exit 0 sem limite.
 
 ---
 
@@ -189,8 +214,9 @@ entrar antes de qualquer código.
 - **Habilitar `gate` como required** (passo 4): admin do repositório; o plano não altera ruleset.
 - **Aprovar a remoção de `full-workflow.yml`** (passo 3): apaga workflow existente; reversível por
   revert, mas é mudança visível na aba Actions.
-- **Decidir se cobertura bloqueia desde o primeiro sistema** ou começa advisory e vira bloqueante
-  quando o primeiro crate chegar a 85% — `AGENTS.md` §8 fixa a meta, não o momento de bloquear.
+- **D-02 = B aprovada e passo 8a executado em 2026-11-24:** `cargo audit`/`cargo deny` bloqueiam no
+  `code.yml` e a cobertura é informativa; resta o passo 8 (`_security.yml`) e o `pip-audit`/hash do site
+  (`mkdocs==2.0.dev6`).
 - **Decidir se `main` espelha os checks de `develop`** — proposto sim, mas `main` hoje só recebe
   release.
 
@@ -209,7 +235,7 @@ em workflow.
 
 ## 9. O que este documento não decide
 
-- Não altera workflow, ruleset, environment ou permissão.
+- Não altera ruleset, environment ou permissão; o passo 8a já alterou `code.yml` e criou `deny.toml`.
 - Não define versões de action: `docs.yml` já fixa as suas; as demais entram travadas no PR do passo.
 - Não decide cobertura bloqueante, release nem `main`.
 - Não substitui §4.1/§4.2 do dono: só os aplica em nomes de arquivo e jobs.

@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 25); `ddl-confirmado.md` §5.25 (confirmado em 2026-11-21); fichas legadas de `0012_combate.sql`; `deprecated/docs/wyd/sistemas/drops.md`
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo quinto arquivo da série: 4 tabelas no schema `content`. As fichas de coluna vêm de
 `0012_combate.sql` (nível 4); são **hipótese `H`** até validação própria, não colunas provadas.
@@ -216,7 +216,11 @@ Não há `content_source`, `confidence` nem `notes`: proveniência de dataset fi
    ficha; item apagado não leva regra de drop em silêncio.
 5. Teto de `content_rate_override.rate_bps`: `1.000.000` (10.000%), respondido pelo dono em 2026-11-21.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `template_name` inexistente em `mob_template_stat`, `mob_template_equip` ou `drop_rate_override` → `23503`.
 2. `DELETE` de `content.npc_template` → linhas filhas somem (`CASCADE`).

@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 22), `ddl-confirmado.md` §5.23 (confirmado em 2026-11-21), fichas legadas de `0037_config_editavel.sql`
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo segundo arquivo da série: 3 tabelas no schema `content`. As fichas de coluna vêm das fontes
 históricas de configuração editável (nível 4); são **hipótese `H`** até validação própria, não colunas
@@ -169,7 +169,11 @@ dataset fica em `0019` e `H` fica nesta página, como decidido em §5.22.
 5. Escrita: `GRANT SELECT, INSERT, UPDATE, DELETE` a `wyd_portal` (área administrativa, `M21`).
 6. Reset: `DELETE` da linha, sem tombstone; histórico em `ops`.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. PK duplicada em cada tabela → `23505`.
 2. Override com chave ausente na base (`step = 99`, `powder = 'XX'`, família inexistente) → `23503`.

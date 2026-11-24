@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 28); `ddl-confirmado.md` §5.28 (confirmado em 2026-11-21); fichas legadas de `0013_quests.sql`, `0014_eventos.sql` e `0015_arena.sql`
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo oitavo arquivo da série: 7 tabelas no schema `game`. É o único bloco de `game` que referencia
 `content`, por isso fecha depois de `0026`. As fichas vêm do legado (nível 4) e são **hipótese `H`**.
@@ -338,7 +338,11 @@ Origem `H` = hipótese derivada da ficha do legado; `P` = provada por fonte do p
 3. Linha única de Kefra e castelo com `SMALLINT` + `CHECK (id = 1)`.
 4. Escrita só do servidor; o portal lê pela view de `0029`.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `INSERT` de progresso com personagem ou quest inexistente → `23503`.
 2. `DELETE` de `content.quest`/`world_event`/`arena` com estado dependente → `23503` (`RESTRICT`).

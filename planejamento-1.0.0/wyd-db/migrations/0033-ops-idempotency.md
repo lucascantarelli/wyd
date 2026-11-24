@@ -4,7 +4,7 @@
 > Base: `lacunas.md` `M30` (decidida em 2026-11-22); `ddl-confirmado.md` §5.33; `docs/arquitetura/contrato-c4.md` §2 e §5; `../wyd-admin/docs/specs/acoes.md` regra comum
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Trigésimo terceiro arquivo da série e o primeiro que tabela em `ops` para servir um serviço, não um
 processo. Uma tabela: `ops.idempotency_record`.

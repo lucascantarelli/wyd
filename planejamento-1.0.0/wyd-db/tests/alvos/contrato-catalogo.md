@@ -51,10 +51,10 @@ migration (`CAP-06`/`CAP-07` cobrem a forma). Comparar coluna aqui seria um segu
 **Consequência declarada:** `CAP-08` é **0 coberta**, e a paridade catálogo × série hoje é conferência
 manual. O alvo é desenho até o PR de ferramentas — e a página não cita verde que não existe.
 
-**Quem decide o destino de `CAP-08` na `1.0.0`:** `Q-BLK-20` (`../../pendencias-de-fechamento.md`
-§6.6.22.5). Se **A**, `CAP-08` fica declarada não executável; se **B**, o alvo bloqueia a leva de
-`migrations/` até o PR de ferramentas. Esta página descreve os dois casos e **não escolhe** — o aceite
-dela é do plano, não da decisão.
+**Destino de `CAP-08` na `1.0.0`, decidido em 2026-11-24:** `Q-BLK-20` = **A**
+(`../../pendencias-de-fechamento.md` §6.6.31). O dicionário fica **pós-`1.0.0`**, `CAP-08` é
+**declarada não executável na `1.0.0`** e o gate `catálogo` é conferência manual até o PR de ferramentas;
+nenhuma migration `.sql` fica bloqueada por ela.
 
 ## 4. Como interpretar a falha
 
@@ -74,7 +74,7 @@ o campo fica declarado como pendente, não estimado.
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|
-| o documento de catálogo entra na `1.0.0` ou fica pós-`1.0.0`? | `Q-BLK-20` — recomendação **A**: pós-`1.0.0`, com `CAP-08` declarada não executável (`../../pendencias-de-fechamento.md` §6.6.22.5) | dono do `wyd-db` |
+| o documento de catálogo entra na `1.0.0` ou fica pós-`1.0.0`? | **decidida em 2026-11-24 (`A`)**: pós-`1.0.0`, com `CAP-08` declarada não executável (`../../pendencias-de-fechamento.md` §6.6.31) | dono do `wyd-db` |
 | quando o PR de ferramentas for autorizado, o leitor novo enxerga schema qualificado e view? | é o critério de pronto do PR; hoje o `banco-parse` não enxerga `CREATE TABLE esquema.tabela` | dono do PR de ferramentas |
 
 ## 7. O que este alvo não prova

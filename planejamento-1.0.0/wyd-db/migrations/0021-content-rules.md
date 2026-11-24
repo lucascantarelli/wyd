@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 21), `ddl-confirmado.md` §5.22 (aprovado em 2026-11-20), fichas legadas do domínio refino
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo primeiro arquivo da série: 5 tabelas no schema `content`. As fichas de coluna vêm das
 fontes históricas de refino (nível 4); são **hipótese `H`** até validação própria, não colunas provadas
@@ -250,7 +250,11 @@ privilégios de leitura de `0001`.
 14. Remover `updated_by`/`updated_at` da tabela de acessório.
 15. Índices só quando necessários às FKs e às chaves; nenhum preventivo em lookup somente-leitura.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. PK duplicada em cada tabela → `23505`.
 2. `rate_bps` < 0 ou > 10000 → `23514`.

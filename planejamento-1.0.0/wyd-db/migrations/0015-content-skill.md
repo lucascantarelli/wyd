@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (arquivo 15) e §3.1; `ddl-confirmado.md` §5.19 (confirmado); `padrao-banco.md` §1 (`P-04`, `P-11`), §4 e §7; `migrations/0013-content-taxonomy.md` §7; `migrations/0008-game-skills.md` §10
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Décimo quinto arquivo da série e o terceiro do schema `content`. Cria **uma** tabela: o catálogo de
 skills que o cliente entrega (154 linhas no seed de `0018`), com os números de combate que o servidor

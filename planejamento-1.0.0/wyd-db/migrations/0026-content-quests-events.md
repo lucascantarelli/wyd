@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 26); `ddl-confirmado.md` §5.26 (confirmado em 2026-11-21); fichas legadas de `0013_quests.sql`, `0014_eventos.sql` e `0015_arena.sql`
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo sexto arquivo da série: 6 tabelas no schema `content`. As fichas vêm do legado (nível 4) e
 são **hipótese `H`**; a cadeia de quests do 7662 está declarada não fechada, então a tabela recebe o
@@ -337,7 +337,11 @@ Sem `content_source`/`confidence`: proveniência fica em `content.content_source
 6. Identidade da recompensa: `id` identity + `UNIQUE NULLS NOT DISTINCT (quest_code, kind, item_index)`,
    respondido pelo dono em 2026-11-21.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. Passo repetido na mesma quest → `23505` em `pk_quest_step`; duas janelas iguais → `23505` em `uq_event_schedule`.
 2. `reach` sem `map_id`/`pos_x`/`pos_y` → `23514`.

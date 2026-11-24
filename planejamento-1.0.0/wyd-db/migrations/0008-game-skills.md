@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.11; `padrao-banco.md` §1/§5/§9; `lacunas.md` §2.3
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Terceiro arquivo do bloco de estado do jogador. Ele cria o que a ficha carrega **depois** de
 identidade, atributos e inventário: skills aprendidas com maestria, a máscara de aprendizado por

@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 29); `ddl-confirmado.md` §5.29 (confirmado em 2026-11-21); `padrao-banco.md` §7 (`P-17`); `0007` (`game.session`), `0003` (`portal.person`)
 > Revisado em: 2026-11-21
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Vigésimo nono arquivo da série, e o único sem tabela. Cria as duas views de
 leitura cruzada prometidas por `P-17`: presença para o portal e identidade mínima para o jogo.
@@ -139,7 +139,11 @@ suspensão e `closed_at` (`A12`; `padrao-banco.md` §7).
    `GRANT USAGE` no schema cruzado e sem `SELECT` na view; mover a view para o schema do leitor fica
    fora até nova decisão.
 
-## 9. Prova prevista (não executada)
+## 9. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `SELECT * FROM game.v_live_session` como `wyd_migrator` → só sessões com `released_at IS NULL`.
 2. Sessão aberta sem personagem → aparece com `character_name` nulo.

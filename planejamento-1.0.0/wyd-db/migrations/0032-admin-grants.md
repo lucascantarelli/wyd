@@ -4,7 +4,7 @@
 > Base: `lacunas.md` `M27` (decidida em 2026-11-21); `ddl-confirmado.md` §5.32; `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`"; `wyd-admin/docs/arquitetura/contrato-c4.md` §4
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Trigésimo segundo arquivo da série e o único sem tabela: só `GRANT`s para o papel `wyd_admin`. O papel
 **não** nasce aqui — é criado fora da série por `db/roles.sql` (`src/provision/spec.md` §2 e §4), como

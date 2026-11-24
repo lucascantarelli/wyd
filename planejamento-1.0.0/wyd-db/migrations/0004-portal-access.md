@@ -4,17 +4,18 @@
 > Base: `plano-migrations.md` §3, `ddl-confirmado.md` §4, `padrao-banco.md` §2/§8, `lacunas.md` §1 (`M4`, `M5`)
 > Revisado em: 2026-11-17
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Segundo arquivo do bloco de identidade. Ele cria a **sessão revogável do portal** e a **tabela única
 de tokens de cerimônia da pessoa** (recuperação de senha, verificação de e-mail e troca de endereço).
 Nenhuma das duas tabelas é lida pelo jogo: sessão de jogo mora em `game.session` (`0007`), e o
 cliente 7662 nunca autentica por aqui.
 
-!!! warning "Nada disto rodou ainda"
-    O DDL abaixo é **planejado** (`P`): nenhum Postgres executou contra ele e o arquivo
-    `crates/wyd-db/migrations/0004_portal_access.sql` ainda não existe. O texto é o de
-    `ddl-confirmado.md` §4, que é o dono do DDL; esta página não o reescreve por conta própria.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0004_portal_access.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §4, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 

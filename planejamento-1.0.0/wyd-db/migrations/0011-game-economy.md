@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.14 (confirmado); `padrao-banco.md` §1/§5/§9/§11; `lacunas.md` (`A19`, `M17`)
 > Revisado em: 2026-11-22
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Décimo primeiro arquivo. Cria a economia: quatro tabelas em `game` (cidade, preço por mercador, loja
 pessoal e livro do imposto) e seis em `portal` (loja de donate, recompensa diária, resgate diário,

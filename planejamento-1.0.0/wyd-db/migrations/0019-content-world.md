@@ -4,7 +4,7 @@
 > Base: `plano-migrations.md` §3 (linha 19) e §4; `ddl-confirmado.md` §5.21 (aprovado em 2026-11-20); fichas de tabela do legado em `deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Décimo nono arquivo da série e o maior lote: **13 tabelas** de `content` para mundo, NPC, loja,
 configuração e zona de guilda. Todas as colunas são **`H`** — vêm das fichas do legado, não de
@@ -591,7 +591,11 @@ Nenhum `GRANT`/`REVOKE` novo: valem os default privileges de `0001` §3.
 - **`P` de verdade:** a lista das 13 tabelas e a ordem (`plano-migrations.md` §3), as colunas de
   `content_source` (§4), `map_id` de `world_item_seed` (decisão de 2026-11-20) e os campos de série.
 
-## 10. Prova de execução (quando a série for escrita)
+## 10. Prova de execução
+
+As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
+do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
+§6.6.30).
 
 1. `psql -v ON_ERROR_STOP=1 -f 0019_content_world.sql` como `wyd_migrator` → 13 `CREATE TABLE`,
    5 `CREATE TRIGGER` e os índices listados.

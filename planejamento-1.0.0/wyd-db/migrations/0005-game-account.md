@@ -4,16 +4,17 @@
 > Base: `plano-migrations.md` §3; `ddl-confirmado.md` §5.2; `padrao-banco.md` §2/§5/§8/§11; `lacunas.md` (`A17`, `M1`–`M3`, `M16`)
 > Revisado em: 2026-11-20
 
-**Estado:** proposto (2026-11-23)
+**Estado:** aceito (2026-11-24)
 
 Quinto arquivo da série. Cria a conta de jogo ligada à pessoa do portal, sua carteira, o ledger
 append-only de moedas (`M16`), o estado de moderação e os tokens de reset de PIN. Pessoa e conta são
 identidades distintas; conta fechada não se apaga e devolve sua vaga para a pessoa.
 
-!!! warning "Nada disto rodou ainda"
-    O DDL abaixo é **planejado** (`P`): nenhum Postgres foi executado contra ele e
-    `crates/wyd-db/migrations/0005_game_account.sql` ainda não existe. O texto é o de
-    `ddl-confirmado.md` §5.2, dono do DDL; esta página o transcreve sem redesenhá-lo.
+!!! note "Aplicado em 2026-11-24"
+    O arquivo `crates/wyd-db/migrations/0005_game_account.sql` existe e a série aplicou do zero em PostgreSQL 17
+    nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
+    DDL continua sendo o de `ddl-confirmado.md` §5.2, dono do texto; as provas de §9 não foram executadas uma a uma
+    nesta leva.
 
 ## 1. Identificação
 
