@@ -191,8 +191,9 @@ seus artefatos.
   passo falha com `::error::` e exit 1; nenhum `Cargo.toml` → job verde com resumo explícito de que não
   havia código Rust.
 - **Provado localmente em 2026-11-24:** fixture com `time 0.1.44` → `RUSTSEC-2020-0071`, exit 1; fixture
-  com dependência `GPL-3.0-only` → `licenses FAILED`, exit 4; cobertura do `wyd-db` → 92,96% de regiões e
-  90,57% de linhas, exit 0 sem limite.
+  com dependência **privada** `GPL-3.0-only` → `licenses FAILED`, exit 4; cobertura do `wyd-db` → 92,96% de
+  regiões e 90,57% de linhas, exit 0 sem limite. O `Cargo.toml` declara GPL-2.0-only e a exceção do
+  `deny.toml` vale só para `wyd-db`; `ignore = false` impede que `publish = false` vire bypass.
 
 ---
 
