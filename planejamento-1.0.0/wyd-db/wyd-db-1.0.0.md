@@ -349,10 +349,10 @@ por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas 
 `plano-migrations.md` §3, dono único da contagem. O **teto autoral** e o número **medido** são de
 `planos/metricas.md`, escrito só depois que a série existir. Nenhum total desta seção é medição.
 
-**Teto × escrito (2026-11-22):** os totais acima contam páginas **planejadas** e já incluem as
+**Teto × escrito (2026-11-23):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **120 páginas com corpo em `docs/`**, 116 com `**Estado:**` e 4 portas de navegação sem
-estado editorial — as **3 de raiz**, **13 em `arquitetura/`**, **21 em `dicionario-dados/`**, **8 em
+medição de `planos/metricas.md`. **Medido:** **121 páginas com corpo em `docs/`**, 117 com `**Estado:**` e 4 portas de navegação sem
+estado editorial — as **3 de raiz**, **14 em `arquitetura/`**, **21 em `dicionario-dados/`**, **8 em
 `planos/`**, **10 em `guia-desenvolvedor/`**, **4 em `guia-administrador/`**, **5 em `guia-teste/`**,
 **4 em `guia-documentacao/`**, **10 em `specs/`** e **42 em `roadmap/`** (índice, fases e as 40
 `WYDDB-nnn`). O lote 6 escreveu os 21 recortes e as 40 páginas de issue; os outros três índices que
@@ -361,10 +361,14 @@ eram título de uma linha — `roadmap`, `guia-desenvolvedor` e `guia-teste` —
 `src/migrate/` e `src/provision/` são desenho de origem, não página da árvore.
 
 **O que dá para escrever agora, página a página:** `proposta-paginas.md` mapeia as **147** páginas
-autorais de `docs/` em **0 escrevíveis**, **0 de recorte** e **27 bloqueadas** — as 21 de recorte e as
-40 `WYDDB-nnn` foram escritas no lote 6. A fonte de cada bloqueio e o mapa de diluição das seis fontes
-continuam na proposta. Os **lotes 1 a 6** estão escritos: os títulos e as páginas novas contam nas 120
-acima.
+autorais de `docs/` em **0 escrevíveis**, **0 de recorte** e **26 bloqueadas** — as 21 de recorte e as
+40 `WYDDB-nnn` foram escritas no lote 6; `retencao-e-capacidade.md` foi escrita como `proposto` em
+2026-11-23. A fonte de cada bloqueio e o mapa de diluição das seis fontes continuam na proposta. Os
+**lotes 1 a 6** estão escritos: os títulos e as páginas novas contam nas 121 acima.
+
+**O fechamento da frente:** o que ainda falta, com ID, dono, custo estimado e o que cada item
+desbloqueia, está em [`pendencias-de-fechamento.md`](pendencias-de-fechamento.md). Ele não cria lacuna
+e não renumera ID; a fila de páginas continua sendo a de `proposta-paginas.md` §6.
 
 ---
 

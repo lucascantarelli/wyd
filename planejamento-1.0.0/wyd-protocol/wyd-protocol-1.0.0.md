@@ -566,6 +566,8 @@ Regras da série:
 **Pré-requisito de prova no `0.1.0`:** a captura de `LPRT-03` e os goldens do fio entram na primeira
 fatia como pré-requisito, do mesmo modo que a onda 2 de §9 — o fio sem payload só fecha com o handshake
 medido e o byte provado. Não é decisão nova: é a exigência de `LPRT-10` aplicada à primeira fatia.
+**A1 autorizada em 2026-11-23 (resposta A):** peer da opção A, `ECAP` e CLI autorizados; captura não
+executada; `LPRT-03` só fecha após a segunda leitura e `LPRT-06` continua nas capturas B/C.
 
 **Onde o fatiamento vira issue:** `docs/roadmap/fases.md` liga cada issue `WYDPRT-nnn` à versão cujo
 gate ela serve e registra as regras dessa ligação. Ele cita esta seção como dona do escopo e do gate,

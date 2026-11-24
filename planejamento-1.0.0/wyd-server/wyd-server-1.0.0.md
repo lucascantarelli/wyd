@@ -40,7 +40,7 @@ do processo, não da regra de jogo.
 | S4 | métricas para o portal (NOC) | `wyd-portal` ← `/metrics` | Prometheus, coletado por `wyd-ops` | amostra com instante; sem série no banco | `wyd-ops` | **decidido** (`LAC-POR-06`) |
 | S5 | composição net + core | server monta | um binário, um processo por canal | uma porta por canal, sem estado global entre canais | `wyd-server` | **decidido** (`LSRV-01`, `LSRV-02`) |
 | S6 | mapa canal → URL de controle | configuração de deploy | `WYD_SERVER_CONTROL_URLS` | muda com a topologia, não com o jogador | `wyd-ops` | **decidido** (`LAC-ADM-03` §3.3) |
-| S7 | captura local (`ECAP`) | CLI de `wyd-client` → endpoint local | TCP em loopback, uma conexão, bruto `.wydcap`; separado de `EPROD` | sem produção; peer de A1 vem da opção A, porque a condição de C foi reprovada (`LSRV-05`, §9.1) | `wyd-server` (endpoint), `wyd-client` (CLI) | **proposto** (`docs/specs/endpoint-de-captura.md`) |
+| S7 | captura local (`ECAP`) | CLI de `wyd-client` → endpoint local | TCP em loopback, uma conexão, bruto `.wydcap`; separado de `EPROD` | sem produção; peer de A1 vem da opção A, porque a condição de C foi reprovada (`LSRV-05`, §9.1) | `wyd-server` (endpoint), `wyd-client` (CLI) | **A1 autorizada em 2026-11-23; implementação pendente** (`docs/specs/endpoint-de-captura.md`) |
 
 ## 4. Estado medido (`V`, 2026-11-22; páginas recontadas em 2026-11-23)
 
@@ -59,7 +59,9 @@ peer **reprovou a condição**: clone limpo não tem o servidor legado, o boot e
 manual e o gate compilado espera 12000 contra o cliente 7640/7662. **A1 passa a depender da opção A** —
 peer do `wyd-server` no passo 0, com `ECAP` e CLI —, conforme a contingência de `Q-SRV-5`. O `ECAP`
 segue especificado em [`docs/specs/endpoint-de-captura.md`](docs/specs/endpoint-de-captura.md) e sem
-código. O que falta em `LSRV-01`–`LSRV-05` é implementação e captura, não decisão.
+código. **A1 foi autorizada em 2026-11-23 (resposta A):** o recorte é peer da opção A com handshake mínimo
+local, `ECAP`, CLI e captura; nenhuma lacuna fecha com a autorização. O que falta em `LSRV-01`–`LSRV-05`
+é implementação e captura, não decisão.
 
 ## 6. Gate para sair do papel
 
@@ -69,7 +71,9 @@ código. O que falta em `LSRV-01`–`LSRV-05` é implementação e captura, não
 3. `Q-SRV-5` respondida em 2026-11-23 (C, com quarentena) e a condição **reprovada** na medição: A1
    depende da opção A, com o peer do próprio `wyd-server`; versão e hash do peer legado ficam
    registrados em `docs/specs/endpoint-de-captura.md` §9.1 como evidência do descarte.
-4. Spec do `ECAP` aceita e DoD de §8 executável; `EPROD` continua separado e não implementado.
+4. Spec do `ECAP` aceita e DoD de §8 executável; `EPROD` continua separado e não implementado. A1 foi
+   autorizada em 2026-11-23; a spec ainda é `proposta` como documento, e a implementação segue o recorte
+   autorizado.
 5. `RF-SRV` numerados com critério verificável, incluindo `503` sem escrita.
 6. Árvore de `src/` e `tests/` planejada; teste de dois canais isolados.
 7. Plano de encerramento: `SIGTERM` drena e persiste, sem perda silenciosa.

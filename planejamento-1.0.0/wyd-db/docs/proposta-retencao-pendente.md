@@ -1,4 +1,4 @@
-# Retenção — prazos pendentes da `M32`
+# Retenção — decisões e prazos da `M32`
 
 > Pergunta: "por quanto tempo cada tabela que a `M32` deixou `pendente` guarda linha, e o que o
 > repositório já permite saber para decidir isso?"
@@ -6,23 +6,30 @@
 > Dono: operação + produto (os prazos); `wyd-db` mantém o DDL e este registro
 > Base: `proposta-dados-pessoais-e-retencao.md` §5.2 (`M32`); `lacunas.md` (`M22`, `M25`, `M30`,
 > `B1`, `M7`, `A12`); `ddl-confirmado.md` §5.1, §5.4, §5.7, §5.9, §5.33 e §5.34;
-> `padrao-banco.md` `P-21`; `docs/arquitetura/retencao-e-capacidade.md` (não escrita)
-> Revisado em: 2026-11-23
+> `padrao-banco.md` `P-21`; `docs/arquitetura/retencao-e-capacidade.md` (`proposto`, volume pendente)
+> Revisado em: 2026-11-24
 
-**Estado:** proposto (2026-11-23). Sete perguntas, uma por categoria que a `M32` deixou `pendente`.
-Nenhuma está respondida e nada foi aplicado. **Nenhum número desta página é medição de volume**: o
-planejamento não tem volume medido (§2), então todo prazo abaixo é uma decisão proposta, com a
-justificativa e o custo declarados.
+**Estado:** proposto (2026-11-23; resposta de mercado em 2026-11-24). Sete perguntas, uma por categoria
+que a `M32` deixou `pendente`. `Q-RET-5` foi **resolvida por evidência** (`ddl-confirmado.md` §5.9),
+`Q-RET-1`, `Q-RET-2` e `Q-RET-4` foram **respondidas pelo dono em 2026-11-23** (opção A, 30 dias) e
+`Q-RET-6` e `Q-RET-7` foram respondidas em A em 2026-11-24, e `Q-RET-3` foi respondida em A na mesma
+data; **as sete decisões estão resolvidas**. Nenhum índice ou job foi criado.
+**Nenhum número desta página é medição de volume**: o planejamento não tem volume medido (§2), então
+todo prazo abaixo é uma decisão proposta, com a justificativa e o custo declarados.
 
 ## 1. Fronteira desta rodada
 
 **Fecha:** os prazos de `person_token`, `login_attempt`, `person_consent`, `pin_reset`, `config_*`,
-`market_*` e backup — as sete linhas `pendente` de `proposta-dados-pessoais-e-retencao.md` §5.2.
+`market_*` e backup — as sete categorias de `proposta-dados-pessoais-e-retencao.md` §5.2.
+`config_*` fecha por confirmação de `ddl-confirmado.md` §5.9; `person_token`, `login_attempt` e
+`pin_reset` foram respondidos em 2026-11-23; `Q-RET-6` e `Q-RET-7` foram respondidas em 2026-11-24;
+`Q-RET-3` foi respondida em A na mesma data. Nenhuma pergunta de retenção segue aberta.
 
-**Não decide:** a rotina que executa o expurgo (dono `wyd-ops`); o TTL dos tokens (`B1`, onda 6); a
+**Não decide:** a rotina que executa o expurgo (dono `wyd-ops`); o TTL dos tokens e do reset de PIN
+(`B1`, onda 6); a
 base legal de cada tratamento (`M32`, `Q-DP-2`, `a validar`); a política de backup em si — só a
-retenção das cópias; e a criação de `planos/retencao-e-capacidade.md`, que continua bloqueada por
-medição.
+retenção das cópias; e a página `arquitetura/retencao-e-capacidade.md`, que existe como `proposto` e
+continua sem volume medido.
 
 **Não reabre:** `M22` (sessão e auditoria), `M25` (fila), `M30` (idempotência), `M7` (consentimento
 versionado), `A12` (fechamento anonimiza e-mail), `P-21` (retenção declarada) nem `M32` (as oito
@@ -36,7 +43,7 @@ Nenhuma página do repositório mede volume de linha, e as fontes que o mediriam
 
 | O que mediria | Estado | Fonte |
 |---|---|---|
-| volume por tabela e crescimento | `planos/retencao-e-capacidade.md` **não escrita**, "bloqueada por medição" | `docs/arquitetura/index.md`; `docs/arquitetura/fronteira-hot-cold.md` |
+| volume por tabela e crescimento | `docs/arquitetura/retencao-e-capacidade.md` existe como `proposto`; **volume não medido** | `docs/arquitetura/retencao-e-capacidade.md`; `docs/arquitetura/index.md` |
 | limiar, latência e capacidade | `requisitos-nao-funcionais.md` bloqueada: "nenhum limiar foi medido" | `docs/specs/requisitos-funcionais.md` |
 | carga, stress e volume | "não há volume nem limiar aprovado" | `docs/planos/plano-de-testes.md` |
 | produção | nada está em produção e nenhum serviço está no ar | `docs/specs/restricoes-e-premissas.md` §2 |
@@ -91,7 +98,7 @@ Consequência medida: **três categorias exigem índice novo** antes de qualquer
 - **`P-21`** — toda tabela que cresce tem retenção declarada; a declaração pode ser por tempo ou por
   ciclo de vida, mas não pode faltar.
 
-## 4. As sete decisões
+## 4. As sete decisões (2 resolvidas)
 
 ### Q-RET-1 — Quanto tempo `portal.person_token` guarda linha?
 
@@ -110,7 +117,12 @@ sem medição.
 **Recomendação: A.** O prazo é **decisão, não medição**: 30 dias é o mesmo número que `M22` já usa
 para sessão expirada, e cobre a janela de reenvio de `B1` (3 reenvios/h) com folga. **Custo:** um
 índice completo novo (`expires_at`) e um `DELETE` diário; nenhum corpo de tabela muda. **Fontes:**
-`M22` e `B1` em `lacunas.md`; `ddl-confirmado.md` §5.4 (`ix_person_token_expira` parcial).
+`M22` e `B1` em `lacunas.md`; `ddl-confirmado.md` §4 (`ix_person_token_expira` parcial).
+
+**Resolvida pelo dono (2026-11-23): A — 30 dias após `expires_at`, usado ou não, em expurgo diário.**
+O registro está em §9 e a linha de `proposta-dados-pessoais-e-retencao.md` §5.2 passa a `decidido`. O
+índice completo e o `DELETE` ainda **não** foram criados: a aplicação é `wyd-db` (índice/migration) e
+`wyd-ops` (job), com o custo de 2–4 h + 1 sessão declarado em `pendencias-de-fechamento.md` §4.3.
 
 ### Q-RET-2 — Quanto tempo `ops.login_attempt` guarda linha?
 
@@ -130,6 +142,11 @@ e 30 dias é o menor prazo já usado pelo projeto para trilha operacional. **Cus
 diário; nenhum índice novo. **Fontes:** `ddl-confirmado.md` §5.4 (índice e comentário de reaper);
 `M22` e `M25` em `lacunas.md`.
 
+**Resolvida pelo dono (2026-11-23): A — 30 dias após `occurred_at`, em expurgo diário.** O registro
+está em §9 e a linha de `proposta-dados-pessoais-e-retencao.md` §5.2 passa a `decidido`. O índice
+`ix_login_attempt_occurred` já existe; o `DELETE` e o job ainda **não**, com dono `wyd-ops` e custo
+de 1 sessão em `pendencias-de-fechamento.md` §4.3.
+
 ### Q-RET-3 — Quanto tempo `portal.person_consent` guarda linha?
 
 **Medido.** Prova de consentimento com versão; `granted_at` e `revoked_at`; um vivo por `(person,
@@ -147,6 +164,12 @@ no DDL (`ON DELETE CASCADE`), e `A12` mantém a pessoa fechada. **Custo:** nenhu
 ao número de mudanças de consentimento por pessoa, que é baixo por natureza. **Fontes:** `M7` e `A12`
 em `lacunas.md`; `ddl-confirmado.md` §5.7; `P-21`.
 
+**Resolvida pelo dono (2026-11-24): A — sem prazo por tempo; guardar enquanto a linha de `person`
+existir.** O responsável também declarou que o projeto é experimental, sem gasto e sem apoio jurídico;
+por isso a decisão **não espera parecer** e **não declara validação jurídica**. `Q-DP-2/validação`
+continua pendente como registro separado, mas não é pré-requisito desta decisão de retenção. Nenhum job
+foi criado; o teste com dado sintético não substitui a validação para produção com dado real.
+
 ### Q-RET-4 — Quanto tempo `game.pin_reset` guarda linha?
 
 **Medido.** `created_at`, `expires_at`, `used_at`; FK `RESTRICT` para `game.account`, e conta não é
@@ -163,13 +186,19 @@ apagada; **não há índice por `expires_at`** nem único "vivo por conta" (dife
 que aqui não existe nem índice parcial. **Custo:** índice novo por `expires_at` mais o `DELETE`
 diário. **Fontes:** `ddl-confirmado.md` §5.5; `B1` e `M22` em `lacunas.md`.
 
-### Q-RET-5 — `ops.config_revision` e `config_change` têm prazo?
+**Resolvida pelo dono (2026-11-23): A — 30 dias após `expires_at`, usado ou não, em expurgo diário.**
+O registro está em §9 e a linha de `proposta-dados-pessoais-e-retencao.md` §5.2 passa a `decidido`.
+O índice por `expires_at`, a migration e o `DELETE`/job ainda **não** existem; a aplicação é `wyd-db`
+(índice/migration) e `wyd-ops` (job), com o custo de 2–4 h + 1 sessão em `pendencias-de-fechamento.md`
+§4.3. O TTL dos pedidos continua em `B1`, onda 6.
 
-**Medido — e é aqui que a `M32` diverge do DDL.** `§5.9` registra decisão aprovada pelo dono:
+### Q-RET-5 — `ops.config_revision` e `config_change` têm prazo? (resolvida por evidência em 2026-11-23)
+
+**Medido — e é aqui que a `M32` divergia do DDL.** `§5.9` registra decisão aprovada pelo dono:
 histórico append-only e **sem purge**; "retenção com purge" está entre as alternativas recusadas.
-`M32` §5.2 lista `config_*` como `pendente`. As duas coisas não podem valer ao mesmo tempo. Além
-disso, `config_change` **não tem timestamp próprio**: a idade só vem de `config_revision.created_at`
-por join.
+`M32` §5.2 listava `config_*` como `pendente` até esta rodada. As duas coisas não podiam valer ao
+mesmo tempo; a divergência foi corrigida por evidência em 2026-11-23. Além disso, `config_change`
+**não tem timestamp próprio**: a idade só vem de `config_revision.created_at` por join.
 
 | Opção | O que é | Consequência |
 |---|---|---|
@@ -181,6 +210,12 @@ por join.
 `§5.9`, mantendo a decisão que o dono já aprovou. **Custo:** nenhum job; a tabela cresce uma revisão e
 N mudanças por edição de staff. **Fontes:** `ddl-confirmado.md` §5.9 (as quatro escolhas e o registro
 da aprovação); `M32` §5.2; `P-21`.
+
+**Resolvida por evidência (2026-11-23).** A opção A já era decisão aprovada: `ddl-confirmado.md` §5.9
+registra que o dono aprovou, em 2026-11-20, "histórico append-only e **sem purge**; voltar atrás é
+revisão nova, nunca `UPDATE` nem `DELETE`". Não há decisão nova a pedir; a linha `config_*` de
+`proposta-dados-pessoais-e-retencao.md` §5.2 passa a `decidido (sem expurgo)` e esta pergunta sai da
+contagem de pendentes. `Q-RET-3` também foi respondida em A em 2026-11-24; **não resta categoria de retenção aberta**.
 
 ### Q-RET-6 — Quanto tempo as tabelas de mercado guardam linha?
 
@@ -223,58 +258,70 @@ criptografia, rotação e um ensaio de restore trimestral; **backup não é font
 apagar a linha viva não apaga a cópia, e a `M32` já decidiu que nada promete apagamento físico.
 **Fontes:** `docs/guia-administrador/index.md` (página não escrita); `M32` §5.2 e §8; `M22`/`M25`.
 
-## 5. O quadro que as sete decisões produzem
+## 5. O quadro que as sete decisões produzem (0 pendentes + 7 resolvidas)
 
 | Categoria | Prazo proposto | Âncora | Índice | Job |
 |---|---|---|---|---|
-| `person_token` | 30 dias | `expires_at` | **novo** (completo) | diário |
-| `login_attempt` | 30 dias | `occurred_at` | pronto | diário |
-| `person_consent` | ciclo da pessoa | `person` (FK `CASCADE`) | — | nenhum |
-| `pin_reset` | 30 dias | `expires_at` | **novo** | diário |
-| `config_*` | sem expurgo (confirmado) | — | — | nenhum |
-| `market_*` (financeiro/custódia) | sem expurgo | — | — | nenhum |
-| `market_notification` (lida) | 90 dias | `read_at` | **novo** | diário |
-| backup | 30 dias (cópia diária) | — | — | rotação + restore trimestral |
+| `person_token` | 30 dias (decidido em 2026-11-23) | `expires_at` | **novo** (completo) | diário |
+| `login_attempt` | 30 dias (decidido em 2026-11-23) | `occurred_at` | pronto | diário |
+| `person_consent` | ciclo da pessoa (decidido em 2026-11-24) | `person` (FK `CASCADE`) | — | nenhum |
+| `pin_reset` | 30 dias (decidido em 2026-11-23) | `expires_at` | **novo** | diário |
+| `config_*` | sem expurgo (confirmado em §5.9) | — | — | nenhum |
+| `market_*` (financeiro/custódia) | sem expurgo (decidido em 2026-11-24) | — | — | nenhum |
+| `market_notification` (lida) | 90 dias (decidida em 2026-11-24) | `read_at` | **novo** | diário (pendente) |
+| backup | 30 dias (cópia diária; decidida em 2026-11-24) | — | — | rotação + restore trimestral (pendente) |
 
 ## 6. O que esta rodada não decide
 
-- **Não fixa o TTL dos tokens**: é `B1`, onda 6; esta rodada fixa quanto tempo a **linha** fica depois
-  de expirar.
+- **Não fixa o TTL dos tokens nem do reset de PIN**: é `B1`, onda 6; esta rodada fixa quanto tempo a
+  **linha** fica depois de expirar.
 - **Não decide a base legal** nem a retenção exigida por lei: `M32` `Q-DP-2` está `a validar`.
 - **Não decide a rotina** (frequência, janela, ferramenta): dono `wyd-ops`.
-- **Não escreve `planos/retencao-e-capacidade.md`** nem mede volume: a página continua bloqueada.
+- **Não mede volume:** a página `arquitetura/retencao-e-capacidade.md` existe como `proposto`, mas a
+  medição continua pendente (`M20`).
 - **Não decide arquivo histórico** de mercado nem de configuração.
-- **Não aplica nada**: nenhum índice, nenhum `DELETE`, nenhuma linha de `M32` muda até a resposta.
+- **Não aplica nada**: nenhum índice, nenhum `DELETE` e nenhuma rotina foram criados. As decisões de
+  retenção estão completas no papel; a execução continua pendente de `wyd-ops`.
 
-## 7. O que muda quando as sete forem respondidas
+## 7. O que as sete decisões já autorizam no papel
 
 | # | Entrega | Arquivo | Dono |
 |---|---|---|---|
 | 1 | prazos no quadro de §5.2 | `proposta-dados-pessoais-e-retencao.md` §5.2 | `wyd-db` |
 | 2 | regra de retenção por categoria em §2 | `docs/specs/restricoes-e-premissas.md` | `wyd-db` |
 | 3 | índices de expurgo (`person_token`, `pin_reset`, `market_notification`) | migration nova | `wyd-db` |
-| 4 | rotina de expurgo e rotação de backup | `wyd-ops` / `planos/retencao-e-capacidade.md` | `wyd-ops` |
+| 4 | rotina de expurgo e rotação de backup | `wyd-ops`; página `arquitetura/retencao-e-capacidade.md` | `wyd-ops` |
 | 5 | `M32` §5.2 sem `pendente` | `proposta-dados-pessoais-e-retencao.md` | `wyd-db` |
+
+A aplicação de `person_token` (`Q-RET-1`), `login_attempt` (`Q-RET-2`), `pin_reset` (`Q-RET-4`) e
+`market_notification` (`Q-RET-6`) está autorizada; o índice completo, o índice por `expires_at`, os
+`DELETE` diários e os jobs são as linhas `Q-RET-1/aplicação`, `Q-RET-2/aplicação`,
+`Q-RET-4/aplicação` e `Q-RET-6/aplicação` de `pendencias-de-fechamento.md` §4.3. `Q-RET-3` não cria
+job: a retenção é o ciclo de vida da pessoa.
 
 ## 8. O que continua bloqueado depois desta rodada
 
-- **Produção de qualquer tabela ainda `pendente`**, até os prazos serem respondidos (`M32`).
+- **Produção com dado real** sujeita à validação de finalidades (`Q-DP-2/validação`) e ao canal do
+titular; a retenção de `person_consent` já está decidida.
 - **A rotina de expurgo**, até `wyd-ops` desenhar o job e o registro.
-- **A página de retenção e capacidade**, até haver volume medido (`planos/retencao-e-capacidade.md`).
+- **A página de retenção e capacidade**, que existe como `proposto` e não pode ser `aceita` até haver
+  volume medido (`arquitetura/retencao-e-capacidade.md`).
 - **A declaração de conformidade**, até a revisão jurídica da base legal (`M32`).
 
 ## 9. Registro da decisão
 
-**Aguardando resposta do dono.** Nenhuma das sete foi respondida; `M32` §5.2 continua com as sete
-linhas `pendente`, e nenhum índice ou job foi criado. Quando houver resposta, o registro entra aqui
-com a data, a opção escolhida por pergunta e o arquivo de cada entrega.
+**As sete decisões estão resolvidas.** `Q-RET-5` foi confirmada por `ddl-confirmado.md` §5.9 em
+2026-11-23, `Q-RET-1`, `Q-RET-2` e `Q-RET-4` foram respondidas pelo dono na mesma data na opção A,
+`Q-RET-6` e `Q-RET-7` foram respondidas em A em 2026-11-24 e `Q-RET-3` foi respondida em A na mesma
+data. `M32` §5.2 não tem mais linha `pendente` por retenção; `Q-DP-2/validação` continua pendente como
+validação jurídica separada. Nenhum índice ou job foi criado.
 
 | Pergunta | Resposta | Data |
 |---|---|---|
-| `Q-RET-1` | — | — |
-| `Q-RET-2` | — | — |
-| `Q-RET-3` | — | — |
-| `Q-RET-4` | — | — |
-| `Q-RET-5` | — | — |
-| `Q-RET-6` | — | — |
-| `Q-RET-7` | — | — |
+| `Q-RET-1` | **A — 30 dias após `expires_at`, usado ou não; expurgo diário** | 2026-11-23 |
+| `Q-RET-2` | **A — 30 dias após `occurred_at`; expurgo diário** | 2026-11-23 |
+| `Q-RET-3` | **A — ciclo de vida da pessoa; sem expurgo por tempo** | 2026-11-24 |
+| `Q-RET-4` | **A — 30 dias após `expires_at`, usado ou não; expurgo diário** | 2026-11-23 |
+| `Q-RET-5` | **resolvida por evidência — A confirmada** (`ddl-confirmado.md` §5.9) | 2026-11-23 |
+| `Q-RET-6` | **A — financeiro/custódia sem expurgo; `market_notification` lida em 90 dias; não lida nunca** | 2026-11-24 |
+| `Q-RET-7` | **A — 30 dias de cópia diária; rotação, criptografia fora do host e restore trimestral** | 2026-11-24 |

@@ -94,7 +94,9 @@ pendente, sem pergunta de desenho. Nada além do registro foi aplicado. A decis�
 conclusividade de A1 — é o que permite à ficha nomear a build — e remove o bloqueio de build que
 `LNET-02` citava; não decide se a versão é negociada ou imposta — essa política foi decidida depois em
 `Q-NET-2` = A (2026-11-23): a sessão impõe o build no handshake —, nem substitui a leitura que confirma a
-versão declarada.
+versão declarada. **A1 foi autorizada em 2026-11-23 (resposta A):** peer da opção A, `ECAP` e CLI
+autorizados; a captura não foi executada; `LPRT-03` só fecha após a segunda leitura e `LPRT-06` continua
+nas capturas B/C.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|

@@ -2,7 +2,7 @@
 > Público: Arquiteto, desenvolvedor do jogo e da operação
 > Dono: equipe do `wyd-db`
 > Base: `padrao-banco.md` §0, §2 e `P-17`; `ddl-confirmado.md` §5.16 e §5.29; `plano-migrations.md` §3
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-22)
 
@@ -55,8 +55,9 @@ usa as duas views de `0029_views.sql`; nenhum dos lados recebe `SELECT` na tabel
   deve tratar a fila como durável, sem inventar um número nesta página.
 - **Consistência entre banco e memória do servidor:** é do `wyd-server`; o banco só garante a
   transação de cada escrita.
-- **Retenção e capacidade:** são de `retencao-e-capacidade.md` (bloqueada por medição) e de
-  `plano-migrations.md` §4; não há número para citar.
+- **Retenção e capacidade:** são de [`retencao-e-capacidade.md`](retencao-e-capacidade.md), existente
+  como `proposto` com volume pendente de medição, e de `plano-migrations.md` §4; não há número para
+  citar.
 
 ## 5. Dependência dura declarada
 

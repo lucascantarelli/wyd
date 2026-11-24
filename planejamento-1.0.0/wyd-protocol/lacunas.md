@@ -83,6 +83,11 @@ As 18 fechadas são **decisões do dono**: 17 registradas em 2026-11-20 e `LPRT-
 proposta correspondente está no plano diretor §10. Fechar a lacuna não fecha a prova: página de `wire/`, `payloads/` ou `goldens/`
 continua exigindo `V` (golden, captura ou leitura do cliente) nas afirmações de byte.
 
+**A1 autorizada em 2026-11-23 (resposta A).** O dono autorizou a implementação do peer da opção A, do
+`ECAP` e da CLI, e a execução da captura A1. Isso não fecha `LPRT-03` nem `LPRT-06`: `LPRT-03` só fecha
+com a captura completa, a segunda leitura e o golden; `LPRT-06` continua dependente das capturas B/C e do
+seed sintético.
+
 ---
 
 ## 2. Lacunas

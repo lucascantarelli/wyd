@@ -46,7 +46,8 @@ medição do peer **reprovou a condição**: o binário legado sobe em loopback,
 limpo, depende de `MIGRATIONS_DIR` manual e compila gate de versão 12000 contra o cliente 7640/7662.
 **A1 passa a depender da opção A**, com o peer do próprio `wyd-server`. O `ECAP` está especificado e sem
 código; falta implementar o processo, o sinal de prontidão, o shutdown gracioso, o `ECAP` e a CLI, e só
-então executar a captura A1.
+então executar a captura A1. **A1 foi autorizada em 2026-11-23 (resposta A)** — implementação e captura
+pendentes; `LPRT-03` só fecha após a segunda leitura, e `LPRT-06` continua nas capturas B/C.
 
 ## Limite desta documentação
 
@@ -56,5 +57,6 @@ então executar a captura A1.
 
 As cinco lacunas fecharam em 2026-11-23: `LSRV-01` e `LSRV-02` (composição e canais), `LSRV-03`
 (`ready` com socket + banco + tick), `LSRV-04` (shutdown como execução; `WYDDB-021` dona da sequência) e
-`LSRV-05` (peer de A1: C com quarentena, condição reprovada em 2026-11-23; A1 depende de A). O registro está em
+`LSRV-05` (peer de A1: C com quarentena, condição reprovada em 2026-11-23; A1 depende de A e foi
+autorizada na mesma data). O registro está em
 [Decisões do `wyd-server`](proposta-decisoes-server.md); o estado de cada lacuna continua em `lacunas.md`.

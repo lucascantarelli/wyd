@@ -5,13 +5,14 @@
 > Dono: frente `wyd-ops`; custo de produção é decisão do dono do produto
 > Base: `proposta-gestao-github-e-ambientes.md` §3.2 e §7.3; `docs/index.md`;
 > `wyd-ops/plano-ci-real.md`; `wyd-ops/plano-imagem-e-compose-do-site.md`; `AGENTS.md` §4 e §9
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-24
 
-**Estado:** proposto (2026-11-23). Uma pergunta para a proposta de hospedagem ainda aberta. §8 registra a ação 2 como
+**Estado:** proposto (2026-11-23); a hospedagem foi respondida em **A** pelo dono em 2026-11-24. §8 registra a ação 2 como
 executada e §10 lista os campos do project, mas não repete os issue fields; §3.2 ainda rotula os
 tipos/campos como "Proposta em aberto". Essa divergência documental é registrada abaixo e não vira
-nova pergunta de desenho. Nada foi aplicado. **Nenhum número desta página é medição**: não há custo, capacidade nem produção medidos; a
-escolha de hospedagem é decisão de custo, não estimativa.
+nova pergunta de desenho. **Nada foi aplicado**: não há VPS, contrato, ambiente publicado, custo ou
+capacidade medidos; a escolha foi decisão de custo, não estimativa. **Nenhum número desta página é
+medição** de hospedagem.
 
 ## 1. Fronteira
 
@@ -26,7 +27,7 @@ ainda diz "Proposta em aberto".
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| lacunas formais | **0** — `wyd-ops` não tem `lacunas.md`; das duas propostas do texto, uma foi aprovada/executada e uma segue aberta | `docs/index.md` |
+| lacunas formais | **0** — `wyd-ops` não tem `lacunas.md`; das duas propostas do texto, uma foi aprovada/executada e a de hospedagem foi respondida (A) | `docs/index.md` |
 | `RF-OPS`, roadmap e plano de teste | **não existem** | `docs/index.md` "O que falta" |
 | CI real | **stub**; workflow de docs é o único gate ativo | `AGENTS.md` §4/§9; `wyd-ops/plano-ci-real.md` |
 | produção | **nada publicado**; free tier não serve | `wyd-ops/proposta-gestao-github-e-ambientes.md` §7.3 |
@@ -47,7 +48,8 @@ ainda diz "Proposta em aberto".
 ### Q-OPS-2 — Onde a produção roda?
 
 **Medido.** Nada está publicado; o documento diz que free tier não sustenta processo persistente,
-porta TCP e estado em memória. Não há custo, VPS nem máquina **registrados**; a escolha está aberta.
+porta TCP e estado em memória. Não há custo, VPS nem máquina **registrados**. A escolha foi respondida
+em **A** pelo dono em 2026-11-24; a infraestrutura, o contrato e o backup continuam não executados.
 
 **O que está em jogo.** Máquina própria dá controle e custo fixo; VPS barata reduz operação; crédito
 de provedor adia o custo, mas cria dependência. O número é decisão de custo, não medição.
@@ -63,18 +65,24 @@ temporário; o valor do contrato é decisão do dono, não estimativa desta pág
 operação. **Fontes:** `wyd-ops/proposta-gestao-github-e-ambientes.md` §7.3; `AGENTS.md` §9; `wyd-ops/plano-ci-real.md` §3.
 **Recusa B** por operação local; **C** por prazo.
 
+**Resposta do dono (2026-11-24): A — VPS paga com processo persistente e deploy Compose.** A decisão
+escolhe o ambiente, mas **não cria** VPS, contrato, rotina de backup, RPO/RTO nem página de operação.
+O que resta é aplicação: contratar/escolher o provedor, provisionar o host, configurar Compose e
+conectar a rotina de backup de `Q-RET-7`; nada disso foi executado.
+
 ## 5. Cobertura das propostas
 
 | Item | Pergunta | Situação |
 |---|---|---|
 | tipos/campos de issue (`§3.2`) | — | §8 registra a ação 2 como executada em 2026-11-19; §10 lista os campos do project, não os issue fields; §3.2 mantém "Proposta em aberto". Divergência da fonte, sem pergunta de desenho |
-| hospedagem de produção (`§7.3`) | `Q-OPS-2` | aberta; a escolha de host pago/controlado continua sem resposta |
+| hospedagem de produção (`§7.3`) | `Q-OPS-2` | **respondida em A (2026-11-24)**; VPS paga com processo persistente e Compose; contrato, provisionamento e backup pendentes |
 
 ## 6. Registro da decisão
 
-**Aguardando resposta do dono.** A hospedagem continua em aberto; §8 registra a ação 2 dos
-tipos/campos como executada, mas §3.2 conserva o rótulo antigo. Nada foi aplicado nesta rodada.
+**Respondida pelo dono em 2026-11-24.** A hospedagem de produção será **VPS paga com processo
+persistente e deploy Compose** (A); §8 registra a ação 2 dos tipos/campos como executada, mas §3.2
+conserva o rótulo antigo. **Nada foi aplicado**: contrato, VPS, backup e operação continuam pendentes.
 
 | Pergunta | Item | Resposta |
 |---|---|---|
-| `Q-OPS-2` | hospedagem de produção | — |
+| `Q-OPS-2` | hospedagem de produção | **A — VPS paga com processo persistente e Compose** (2026-11-24); aplicação pendente |

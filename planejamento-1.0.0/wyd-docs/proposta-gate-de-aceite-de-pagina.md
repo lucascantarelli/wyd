@@ -95,16 +95,13 @@ sistema da página.
 | `wyd-protocol-1.0.0.md` §8 | 8 | página do `wyd-protocol` |
 | `wyd-db/docs/convencoes.md` §Estados e §Números | — | significado dos estados e formato de número |
 
-**Divergência já medida, que o time precisa resolver.** `wyd-db-1.0.0.md` §10, item 10, exige que a página
-esteja "contabilizada em `planos/metricas.md`" — e `metricas.md` não existe: `docs/planos/index.md` (2026-11-22)
-o lista como **não escrito**, e `M20` decidiu que ele só pode ser escrito depois da série existir
-(`V`, `wyd-db/lacunas.md` §2.3). Enquanto isso valer, **nenhuma página de `wyd-db` satisfaz §10 por
-completo**, mesmo perfeita nos outros dez itens. Ou o item 10 ganha uma exceção declarada, ou o estado
-`aceito` fica indisponível para o sistema — e as duas são decisão do dono, não desta página.
-
-A divergência e a questão gêmea do estado de página de `migrations/` (§5.2 mede; §5.3, item 2, formula a decisão) estão registradas juntas em
-`M33` (`wyd-db/lacunas.md` §2.3, proposta desde 2026-11-23). O registro é o dono da decisão; esta página é a
-medição que a motivou.
+**Divergência medida e decidida em `M33`.** `wyd-db-1.0.0.md` §10, item 10, exigia que a página estivesse
+"contabilizada em `planos/metricas.md`" — e `metricas.md` não existe: `docs/planos/index.md` (2026-11-22) o
+lista como **não escrito**, e `M20` decidiu que ele só pode ser escrito depois da série existir (`V`,
+`wyd-db/lacunas.md` §2.3). A decisão de `M33` (2026-11-23) suspendeu só a metade "contabilizada em
+`planos/metricas.md`" do item 10, com retomada, e deu à página de `migrations/` linha de estado própria; as
+27 páginas receberam `**Estado:** proposto (2026-11-23)` e o aceite é por página. O registro é o dono da
+decisão; esta página é a medição que a motivou.
 
 ## 5. Aplicação à onda A (2026-11-23)
 

@@ -12,7 +12,10 @@
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-23). Três perguntas, uma por decisão que a página
-`retencao-e-capacidade.md` exige antes de existir. Nenhuma está respondida e nada foi aplicado.
+`retencao-e-capacidade.md` exige. `Q-CAP-1` foi respondida (A) em 2026-11-23 e a página foi entregue
+como `proposto`, com volume `pendente de medição (M20)`; `Q-CAP-2` foi respondida (A) na mesma data e
+sua matriz foi aplicada na página, com 25 linhas nominais e os 84 demais grupos declarados; `Q-CAP-3`
+foi respondida (A) e aplicada na página. As três decisões de capacidade estão resolvidas.
 **Nenhum número desta página é medição de volume**: o repositório não tem volume medido (§2), e o
 único limiar citado (`~10 M` linhas) é decisão de `P-21`, não medição.
 
@@ -39,7 +42,7 @@ aberto. É esse item — não uma milestone numerada inventada — que esta pág
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| `retencao-e-capacidade.md` | **não escrita**; "o que cresce e o que fazer com isso?" | `docs/arquitetura/index.md` |
+| `retencao-e-capacidade.md` | **escrita como `proposto`** em 2026-11-23; volume pendente de medição; "o que cresce e o que fazer com isso?" | `docs/arquitetura/retencao-e-capacidade.md` |
 | `planos/metricas.md` | **não escrito**; o número medido só existe depois da série (`M20`) | `docs/planos/index.md`; `lacunas.md` `M20` |
 | volume, latência e capacidade | **nenhum limiar foi medido**; a página de RNF está bloqueada | `docs/specs/requisitos-funcionais.md` |
 | o que a página deve cobrir | por tabela de crescimento: volume esperado, retenção, partição, custo de vacuum; quente × histórica; alerta com limiar | `wyd-db-1.0.0.md` §6.3 |
@@ -47,7 +50,7 @@ aberto. É esse item — não uma milestone numerada inventada — que esta pág
 | bloqueio declarado | "faltam ... a medição de volume/capacidade, que só existe depois da série (`M20`)" | `proposta-paginas.md` §6 |
 | limiar de partição | `~10 M` linhas, por tempo (`RANGE (occurred_at)`); **decisão de `P-21`, não medição** | `padrao-banco.md` `P-21` |
 | candidatos a partição | auditoria e sessão, "candidatos futuros" | `padrao-banco.md` `P-21` |
-| índices de expurgo já no DDL | `ix_person_session_expira`, `ix_audit_log_occurred`, `ix_delivery_queue_fechadas`; `ix_person_token_expira` é parcial (`WHERE used_at IS NULL`) | `ddl-confirmado.md` §5.1/§5.4/§5.16 |
+| índices de expurgo já no DDL | `ix_person_session_expira`, `ix_audit_log_occurred`, `ix_delivery_queue_fechadas`; `ix_person_token_expira` é parcial (`WHERE used_at IS NULL`) | `ddl-confirmado.md` §4/§5.4/§5.16 |
 | índices que faltam | `pin_reset` por `expires_at`; `market_notification` por `read_at` | `ddl-confirmado.md` §5.5/§5.34; `proposta-retencao-pendente.md` §2 |
 | alerta | nenhum limiar ou alerta automático no `wyd-db`; "depende do `wyd-ops` e de medição" | `docs/roadmap/WYDDB-025.md` |
 | dono da operação | retenção, backup, reaper e limite de recurso | `lacunas.md` §0.3 |
@@ -148,9 +151,9 @@ reavaliação; o limiar numérico fica para o `wyd-ops`, com a medição. **Font
 
 | Decisão | Efeito se A vencer | Já decidido que não muda |
 |---|---|---|
-| `Q-CAP-1` | página `proposto`, com lacuna de volume declarada | `M20`: número só depois da série; 5ª onda não fecha antes |
-| `Q-CAP-2` | matriz por tabela, uma linha por tabela crescente | `P-21`: retenção declarada e partição acima de `~10 M` |
-| `Q-CAP-3` | sinal + dono, sem limiar numérico | `WYDDB-025`: sem alerta automático; `wyd-ops` é dono da operação |
+| `Q-CAP-1` | página `proposto` entregue, com lacuna de volume declarada | `M20`: número só depois da série; 5ª onda não fecha antes |
+| `Q-CAP-2` | matriz por tabela, uma linha por tabela crescente — **decidida em A e aplicada** | `P-21`: retenção declarada e partição acima de `~10 M` |
+| `Q-CAP-3` | sinal + dono + condição de medição, sem limiar numérico — **decidida em A e aplicada** | `WYDDB-025`: sem alerta automático; `wyd-ops` é dono da operação |
 
 ## 6. O que esta rodada não decide
 
@@ -162,11 +165,11 @@ reavaliação; o limiar numérico fica para o `wyd-ops`, com a medição. **Font
 - **Não reabre `M22`, `M25`, `M30`, `M32`, `M7`, `A12`, `P-21` nem `P-22`.**
 - **Não fecha a 5ª onda:** a página nasce `proposto` e só pode ser `aceita` depois da série medida.
 
-## 7. O que muda quando as três forem respondidas
+## 7. O que muda com as três decisões respondidas
 
 | # | Entrega | Arquivo | Dono |
 |---|---|---|---|
-| 1 | página de retenção e capacidade, com matriz e lacuna de volume | `docs/arquitetura/retencao-e-capacidade.md` (nova) | arquitetura + operação |
+| 1 | página de retenção e capacidade, com matriz e lacuna de volume | `docs/arquitetura/retencao-e-capacidade.md` (entregue como `proposto`) | arquitetura + operação |
 | 2 | condição de retomada registrada (série medida → preencher volume) | própria página, §volume | arquitetura |
 | 3 | sinal de alerta com dono, sem limiar | própria página, §alerta | operação |
 | 4 | estado da rodada | `lacunas.md` §2.4 e este registro | `wyd-db` |
@@ -179,17 +182,26 @@ medição` por número com comando e data.
 - **A página `retencao-e-capacidade.md`** continua `proposto` até a série ser medida; a 5ª onda não
   fecha antes.
 - **Os prazos de retenção** das categorias pendentes continuam em `proposta-retencao-pendente.md`.
-- **O alerta automático** continua fora do `wyd-db`: depende do `wyd-ops` e de medição.
+- **O alerta automático** continua fora do `wyd-db`: `Q-CAP-3 = A` fixou sinal, dono e condição de
+  medição, sem limiar; depende do `wyd-ops` e de medição.
 - **O volume por tabela** continua sem medição; não há número a publicar.
 
 ## 9. Registro da decisão
 
-**Aguardando resposta do dono.** Nenhuma das três foi respondida; nada foi aplicado nas páginas
-donas. Quando houver resposta, o registro entra aqui com a data, a opção escolhida por pergunta, as
-alternativas recusadas e o arquivo de cada entrega.
+**As três decisões de capacidade estão resolvidas; `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` foram respondidas
+pelo dono em 2026-11-23.** A página `retencao-e-capacidade.md` existe como `proposto`, com volume
+pendente de medição. `Q-CAP-2` foi aplicada: 25 linhas de tabela no escopo e 84 grupos fora dele
+declarados em §3.4; `Q-CAP-3 = A` fixou sinal, dono e condição de medição, sem limiar. A aceitação
+continua dependendo de `M20`.
 
 | Pergunta | Resposta | Data |
 |---|---|---|
-| `Q-CAP-1` | — | — |
-| `Q-CAP-2` | — | — |
-| `Q-CAP-3` | — | — |
+| `Q-CAP-1` | **A — escrever agora como `proposto`; página entregue com volume pendente** | 2026-11-23 |
+| `Q-CAP-2` | **A — matriz por tabela crescente; aplicada (25 linhas + 84 declaradas)** | 2026-11-23 |
+| `Q-CAP-3` | **A — sinal + dono + condição de medição, sem limiar; aplicado** | 2026-11-23 |
+
+**Nota de escopo (2026-11-24):** a decisão `Q-DP-2/artefato` — parecer jurídico escrito, por
+finalidade — é de retenção/jurídico e está registrada em
+`pendencias-de-fechamento.md` §3.3.1. Ela **não reabre** nenhuma
+das três decisões de capacidade: `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` continuam resolvidas; 0 decisões de
+capacidade abertas.

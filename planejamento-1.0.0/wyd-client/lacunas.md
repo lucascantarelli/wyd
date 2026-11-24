@@ -2,7 +2,9 @@
 
 > **Estado: registro vivo (2026-11-23).** Único lugar onde uma lacuna do `wyd-client` tem dono,
 > impacto e estado. `LCLI-04` foi decidida pelo dono em 2026-11-23 e `LCLI-01` fechou com `LPRT-09`
-> (`Q-PRT-1`) na mesma data; pendências de execução seguem listadas abaixo.
+> (`Q-PRT-1`) na mesma data. Em 2026-11-23 o dono assumiu a segunda leitura (`LCLI-03`) e a
+> responsabilidade nominal por direitos (`LCLI-05`), com distribuição congelada; as duas seguem como
+> aberta e proposta até a ficha e a evidência.
 
 ## 0. Como ler
 
@@ -24,9 +26,9 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 |---|---|---|---|---|
 | `LCLI-01` | Qual build do cliente é o alvo, e qual é a identidade verificável dele (versão declarada e hash do binário)? | é `LPRT-09` vista do lado do cliente: sem build-alvo, offset e opcode ficam ambíguos | frente `wyd-client` + pesquisa | fechada (2026-11-23: `Q-PRT-1`/`LPRT-09` fixou o cliente 7662 com versão e SHA-256 completos; identidade em `registro-do-cliente.md` §4) |
 | `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | aberta |
-| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o local já estão fixados; falta o nome do QA que assina a segunda leitura | QA + arquitetura | aberta |
+| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | aberta (2026-11-23: **Lucas Cantarelli**, dono do produto, assina a segunda leitura e **não é o operador**; o nome do operador entra na ficha; nunca quem capturou; a lacuna fecha com a primeira ficha assinada) |
 | `LCLI-04` | Qual ferramenta faz a captura, onde ela mora, quem responde por ela e como impede gravar dado de jogador? | captura sem ferramenta e fronteira aprovadas vira script solto ou grava dado pessoal; `AGENTS.md` §5.6 proíbe executável em `planejamento-1.0.0/` | dono de `wyd-client`; `wyd-protocol` valida o golden; QA revisa | fechada (opção A em 2026-11-23; D3–D6 decididos; implementação pendente) |
-| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | dono do produto + responsável por direitos (a nomear), com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | proposta (`docs/specs/propriedade-intelectual-e-distribuicao.md`, `Q-IP-1`–`Q-IP-6`) |
+| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **proposta** (2026-11-23: responsável nominal; **distribuição congelada**; `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote do pedido prontos, canal de suporte decidido, envio pelo dono ainda não realizado, sem evidência; `LCLI-02` aberta; nenhuma resposta fechou a lacuna) |
 
 ### 2.1 `LCLI-04` — decisão da ferramenta e pendências de execução (2026-11-23)
 
@@ -56,6 +58,11 @@ segue `LPRT-10` e nunca grava bruto com dados de jogador no repositório.
 | D5 | **decidido em 2026-11-23:** bruto fora do repositório, acesso restrito e descarte **30 dias após a segunda leitura**; só frame anonimizado e ficha entram no git | QA propõe; dono de `wyd-client` aprova |
 | D6 | **decidido em 2026-11-23:** segunda leitura por **QA ou dono do `wyd-protocol`, nunca quem capturou**; a pessoa é nomeada em `LCLI-03` e assina a ficha | QA + arquitetura; registrar junto de `LCLI-03` |
 
+**A1 autorizada em 2026-11-23 (resposta A).** O dono autorizou implementar o peer da opção A com handshake
+mínimo local, o `ECAP` e a CLI, e executar a captura A1. A CLI ainda não existe; a captura não foi
+executada. `LPRT-03` continua aberta até a segunda leitura; `LPRT-06` continua dependente das capturas
+B/C e do seed sintético. Nenhuma lacuna deste sistema fecha com a autorização.
+
 **O desenho técnico do ECAP e o peer de A1 estão fora de D3–D6.** D3 continua sendo a decisão de
 princípio do proxy gravador local, D4 a CLI Rust, D5 o bruto fora do repositório e D6 a segunda leitura.
 O endpoint local, o listener e a gravação estão em
@@ -65,10 +72,11 @@ medição de 2026-11-23: A1 passa a depender da opção A.
 
 A localização e o dono de `wyd-client/tools/` estão decididos; D3–D6 também estão decididos. O
 próximo trabalho é implementar o `ECAP` operado por `wyd-server` e a CLI Rust em
-`wyd-client/tools/`; depois, executar a captura A1. `LCLI-03` continua aberta para o **nome** da pessoa:
-em 2026-11-23 o dono escolheu que **QA designado** assina a segunda leitura e o dono do `wyd-protocol`
-é suplente; o nome não foi informado. `wyd-protocol` valida a conformidade do frame com `LPRT-10`; uma
-pessoa diferente de quem capturou faz a segunda leitura.
+`wyd-client/tools/`; depois, executar a captura A1. Em 2026-11-23 o dono escolheu que **QA designado**
+assina a segunda leitura e assumiu ele próprio a função: **Lucas Cantarelli** (dono do produto); o dono do
+`wyd-protocol` é suplente. `LCLI-03` continua aberta porque o nome só entra na primeira ficha assinada;
+`wyd-protocol` valida a conformidade do frame com `LPRT-10`, e uma pessoa diferente de quem capturou faz
+a segunda leitura.
 
 **Salvaguardas adotadas para A:** (1) usar apenas conta e personagem de teste, com valores sintéticos;
 nunca abrir sessão de produção nem capturar tráfego de terceiros; (2) usar servidor local ou proxy sob
@@ -79,6 +87,27 @@ exclusivamente fora do repositório, em local restrito a decidir em D5; (5) revi
 e só versionar frame anonimizado e ficha resumida, sem login, nome, IP, porta ou chat real, conforme
 `wyd-protocol/docs/goldens/como-capturar.md` §2 e §6–§7. Anonimizar não substitui prevenção de
 captura de sessão real nem autoriza tráfego de produção.
+
+### 2.2 Nomeações de 2026-11-23 — segunda leitura e direitos
+
+| Item | Decisão do dono | Efeito imediato | O que ainda falta |
+|---|---|---|---|
+| `LCLI-03` | **Lucas Cantarelli** (dono do produto) assina a segunda leitura e **não é o operador**; dono do `wyd-protocol` é suplente; nunca quem capturou (D6) | a cadeia de aceite de A1 tem assinante; a lacuna não muda de estado | o nome do operador na ficha, com a captura A1; o nome do QA já está definido |
+| `LCLI-05` | **Lucas Cantarelli** assume a responsabilidade nominal por direitos e mantém a **distribuição congelada**; `Q-IP-3`–`Q-IP-6` decididas e pedido de `Q-IP-1`/`Q-IP-2` iniciado | frente de direitos aberta; inventário técnico pode começar sem publicar conteúdo | evidência do titular para `Q-IP-1`/`Q-IP-2`; `LCLI-02` depende disso |
+
+Nenhuma das duas nomeações altera as contagens: `LCLI-03` só fecha com a ficha e `LCLI-05` só fecha com
+as respostas e a evidência. A distribuição congelada vale para patch, release, site e qualquer artefato
+público.
+
+### 2.3 Passos executáveis da frente de direitos (não são lacunas)
+
+Os passos técnicos, com dono e limite, estão em
+`docs/specs/propriedade-intelectual-e-distribuicao.md` §9: inventário de metadados (`wyd-client`), pacote
+do pedido ao titular (`wyd-client`), lista candidata do patch (`wyd-client` + `wyd-launcher`), usos de
+marca/screenshot (`wyd-portal` + `wyd-launcher`) e template do registro de evidência (`wyd-client` +
+`wyd-ops`). O inventário item a item está em `docs/specs/inventario-da-arvore.md` e o pacote em
+`docs/specs/pedido-ao-titular.md`; ambos existem, o pedido não foi enviado, e nenhum deles fecha lacuna
+ou autoriza distribuição.
 
 ## 3. Medições herdadas (não são lacunas deste registro)
 

@@ -60,9 +60,10 @@ dicionário, índices, recortes e roadmap). Eles não são uma trilha separada: 
 verificada foram **puxadas para a frente** dentro das ondas. Uma página escrita cedo continua
 pertencendo à onda de §11; o que muda é a data de escrita, não o critério de aceite.
 
-**Estado medido em 2026-11-22:** **120 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
-**0 de recorte** e **27 bloqueadas** — **147** páginas autorais. Os seis lotes estão escritos;
-`specs/index` foi antecipado no lote 2; as 21 de recorte e as 40 `WYDDB-nnn` fecharam no lote 6.
+**Estado medido em 2026-11-23:** **121 páginas autorais com corpo** em `docs/`, **0 escrevíveis**,
+**0 de recorte** e **26 bloqueadas** — **147** páginas autorais. Os seis lotes estão escritos;
+`specs/index` foi antecipado no lote 2; as 21 de recorte e as 40 `WYDDB-nnn` fecharam no lote 6;
+`retencao-e-capacidade.md` foi escrita como `proposto` com volume pendente (`Q-CAP-1`).
 
 **Por que esta página veio depois dos lotes:** `§4` não tinha mais escrevível e, em `§6`,
 `plano-de-documentacao.md` era o primeiro item cuja condição de bloqueio já estava resolvida

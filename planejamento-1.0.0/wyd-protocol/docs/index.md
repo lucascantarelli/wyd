@@ -74,4 +74,6 @@ regra de direção e o que reprova uma página.
 O build-alvo foi **decidido em 2026-11-23** (`Q-PRT-1`, opção A): cliente **7662**, identificado por versão
 e SHA-256 completos; qualquer outro build é não suportado. O registro está em
 [Decisões do `wyd-protocol`](proposta-decisoes-protocol.md). `LPRT-03` e `LPRT-06` são medição/execução e
-seguem cobertas pelo procedimento de captura; o estado de cada lacuna continua em `lacunas.md`.
+seguem cobertas pelo procedimento de captura; o estado de cada lacuna continua em `lacunas.md`. **A1 foi
+autorizada em 2026-11-23 (resposta A):** peer da opção A, `ECAP` e CLI autorizados; captura não executada;
+`LPRT-03` só fecha após a segunda leitura e `LPRT-06` continua nas capturas B/C.

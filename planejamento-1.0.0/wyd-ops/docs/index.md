@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, arquitetura e quem opera
 > Dono: frente `wyd-ops`
 > Base: `wyd-ops/plano-ci-real.md`; `wyd-ops/proposta-versoes-e-cobertura-funcional.md`; `AGENTS.md` §4
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
 
@@ -22,6 +22,7 @@ ele garante que o que existe seja construível, publicável, observável e repro
 | elo de controle admin → servidor com segredo próprio e ack antes de escrita | 2026-11-22 | `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3 |
 | imagem do site é construída pelo CI e consumida pelo Compose | 2026-11-22 | `plano-imagem-e-compose-do-site.md` |
 | layout do repositório: artefato executável na pasta real do projeto; Compose, `.dockerignore` e workflows na raiz | 2026-11-22 | `planejamento-1.0.0/wyd-1.0.0.md` §8 |
+| hospedagem de produção: VPS paga com processo persistente e Compose (A); contrato e backup pendentes | 2026-11-24 | `proposta-decisoes-ops.md` §4 e §6 |
 
 ## O que ele não faz
 
@@ -49,6 +50,9 @@ plano de teste de infraestrutura. Esta página abre a porta; não fecha a lacuna
 
 - Não afirma ambiente publicado: nenhum deploy existe.
 - Não afirma imagem publicada: o workflow está no repositório; a primeira execução dirá se empurra.
-## Decisões em aberto
+## Decisão de hospedagem
 
-A hospedagem de produção — `Q-OPS-2` — está em [Decisões do `wyd-ops`](proposta-decisoes-ops.md); §8 registra a ação 2 dos tipos/campos como executada em 2026-11-19; §3.2 ainda conserva o rótulo antigo e a divergência está registrada em [Decisões do `wyd-ops`](proposta-decisoes-ops.md).
+A hospedagem de produção — `Q-OPS-2` — foi respondida em **A** em 2026-11-24: VPS paga com processo
+persistente e Compose. Contrato, VPS, backup e operação continuam **não executados**. O registro e a
+divergência de §3.2 estão em [Decisões do `wyd-ops`](proposta-decisoes-ops.md); §8 registra a ação 2
+dos tipos/campos como executada em 2026-11-19.

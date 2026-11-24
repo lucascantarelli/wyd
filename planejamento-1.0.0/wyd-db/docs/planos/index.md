@@ -59,3 +59,5 @@ tabela.
 - **O aceite de uma mudança:** é de [`plano-de-qualidade-e-gates.md`](plano-de-qualidade-e-gates.md).
 - **O risco e o defeito:** são de [`riscos.md`](riscos.md).
 - **A contagem de páginas e o percentual:** são de `metricas.md` (planejado) e do censo do site.
+- **O quadro de fechamento com ID, dono e desbloqueio:** é de `pendencias-de-fechamento.md`, na raiz de
+  `planejamento-1.0.0/wyd-db/`; esta página só aponta os planos.

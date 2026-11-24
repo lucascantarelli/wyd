@@ -22,6 +22,10 @@ duas lacunas de captura está fechada: `LPRT-03` e `LPRT-06` seguem `aberta` em 
 `H` até a ficha datada e a segunda leitura. O alvo de `LPRT-09` está decidido, mas a versão declarada
 pelo binário só será confirmada pela leitura. Captura feita não é captura aceita.
 
+**A1 autorizada em 2026-11-23 (resposta A):** o peer da opção A, o `ECAP` e a CLI foram autorizados; a
+captura ainda não foi executada. `LPRT-03` só fecha depois da captura completa e da segunda leitura;
+`LPRT-06` continua nas capturas B/C.
+
 ## 1. O que a captura precisa entregar
 
 Uma captura só vale como prova quando entrega as quatro partes juntas:
@@ -32,8 +36,8 @@ Uma captura só vale como prova quando entrega as quatro partes juntas:
    (nome, chat, versão);
 4. **a segunda leitura**: outra pessoa refaz a medição a partir do bruto e da ficha, sem falar com
    quem capturou, e concorda com o que foi anotado. Quem assina é **QA designado; o dono do
-   `wyd-protocol` é suplente, nunca quem capturou** (D6/LCLI-03, 2026-11-23). O nome do QA ainda não
-   foi informado.
+   `wyd-protocol` é suplente, nunca quem capturou** (D6/LCLI-03, 2026-11-23). O QA designado está
+   nomeado em `LCLI-03`, e o nome entra na ficha.
 
 Falta uma das quatro: a captura é registro, não prova, e a lacuna continua aberta.
 
@@ -191,8 +195,8 @@ fora do repositório e uma cópia resumida acompanha o frame anonimizado.
 
 **Retenção e segunda leitura (2026-11-23).** O bruto fica em acesso restrito, fora do repositório, e
 é descartado 30 dias após a segunda leitura (D5). A segunda leitura é feita por QA designado, com o
-dono do `wyd-protocol` como suplente, nunca por quem capturou (D6); o nome do QA ainda não foi
-informado, e nome e data entram no campo 11 quando ele for definido. Enquanto
+dono do `wyd-protocol` como suplente, nunca por quem capturou (D6); o QA designado está nomeado em
+`LCLI-03`, e nome e data entram no campo 11 na primeira ficha. Enquanto
 `goldens/catalogo.md` não existir, nenhum ID é alocado: a captura fica identificada pela ficha e a
 lacuna continua `aberta`. O ID `G-<familia>-<nn>` nasce na aceitação, no catálogo.
 

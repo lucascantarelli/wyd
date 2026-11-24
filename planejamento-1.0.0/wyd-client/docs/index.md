@@ -35,19 +35,36 @@ Duas medições do cliente continuam pendentes e são elas que destravam o fio: 
 (`LPRT-03`) e encoding/terminador de texto (`LPRT-06`). O build-alvo foi **decidido em 2026-11-23**
 (`LPRT-09`, cliente 7662 + SHA-256). **Nenhuma captura existe hoje** (2026-11-22).
 
+**A1 autorizada em 2026-11-23 (resposta A):** o dono autorizou implementar o peer da opção A, o `ECAP` e a
+CLI, e executar a captura A1. A CLI e o peer ainda não existem; a captura não foi executada. A segunda
+leitura será assinada por **Lucas Cantarelli** (dono do produto), que **não é o operador**; o dono do
+`wyd-protocol` é suplente e o nome do operador entra na ficha. `LPRT-03` continua aberta até a segunda
+leitura; `LPRT-06` continua nas capturas B/C.
+
 ## Uso e distribuição
 
 Nenhum direito de redistribuição é inferido da cópia local. A proposta em
 [`specs/propriedade-intelectual-e-distribuicao.md`](specs/propriedade-intelectual-e-distribuicao.md)
-(`LCLI-05`) lista as perguntas, aprovações e bloqueios. Até haver evidência e decisão, conteúdo do
-cliente não deve ser incluído em patch, release, site ou outro artefato publicado. A árvore local
-ignorada pelo Git é uma salvaguarda; não prova titularidade nem concede licença.
+(`LCLI-05`) lista as perguntas, aprovações e bloqueios. Em 2026-11-23 o dono assumiu a responsabilidade
+nominal por direitos (**Lucas Cantarelli**), congelou a distribuição e decidiu as políticas de
+`Q-IP-3`–`Q-IP-6`; o pedido de proveniência/autorização (`Q-IP-1`/`Q-IP-2`) foi iniciado, com `Q-IP-2`
+no escopo B (árvore inteira), e segue sem resposta do titular. **`LCLI-05` continua proposta**: nenhuma dessas decisões autoriza patch, release ou
+conteúdo do cliente. Os passos técnicos com dono estão em
+[`specs/propriedade-intelectual-e-distribuicao.md`](specs/propriedade-intelectual-e-distribuicao.md) §9;
+o inventário item a item está em [`specs/inventario-da-arvore.md`](specs/inventario-da-arvore.md) e o
+pacote do pedido em [`specs/pedido-ao-titular.md`](specs/pedido-ao-titular.md). O pedido **não foi
+enviado** e nenhum dos dois artefatos libera uso. `LCLI-05` continua `proposta` e `LCLI-02` continua
+aberta até a evidência do titular. Até lá, conteúdo do cliente não deve ser incluído em patch, release,
+site ou outro artefato publicado. A árvore local ignorada pelo Git é uma salvaguarda; não prova
+titularidade nem concede licença.
 
 ## O que já foi medido
 
 A árvore local do cliente tem 7.147 arquivos e 567 MB, com um pacote de 192.652.447 bytes; nada
-disso está versionado no git e nada disso é prova de protocolo. O inventário e os hashes estão em
-`registro-do-cliente.md` (planejamento) — esta página não repete os números.
+disso está versionado no git e nada disso é prova de protocolo. O inventário item a item, com 7.147
+caminhos e hashes, está em [`specs/inventario-da-arvore.md`](specs/inventario-da-arvore.md); o pacote do
+pedido ao titular está em [`specs/pedido-ao-titular.md`](specs/pedido-ao-titular.md) e **não foi enviado**.
+O registro de identidade e totais permanece em `registro-do-cliente.md` — esta página não repete os números.
 
 ## Limite desta documentação
 
@@ -56,4 +73,4 @@ disso está versionado no git e nada disso é prova de protocolo. O inventário 
   permanecem perguntas de `LCLI-05`.
 ## Decisões em aberto
 
-As perguntas que ainda esperam o dono — `LCLI-02` e `LCLI-03` — estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` fechou com `LPRT-09` em 2026-11-23 e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.
+`LCLI-02` continua aberta e `Q-CLI-2` espera o dono; `LCLI-03` tem QA definido (**Lucas Cantarelli**, que não é o operador) e espera a primeira ficha assinada com o nome do operador; `LCLI-05` segue **proposta**, com responsável nominal, distribuição congelada, `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` aguardando evidência do titular, com `Q-IP-2` no escopo B (árvore inteira). As perguntas estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` fechou com `LPRT-09` em 2026-11-23 e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.

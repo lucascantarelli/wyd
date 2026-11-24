@@ -48,6 +48,11 @@ launcher/login.
 Entra em loopback, fora de produção, com **versão e hash** na ficha, sem cópia de código e com os bytes
 do peer marcados como `H`; não se conclui comportamento do servidor novo a partir dele.
 
+**A1 autorizada em 2026-11-23 (resposta A).** Não é nova lacuna: o dono autorizou implementar o peer da
+opção A com handshake mínimo local, o `ECAP` e a CLI, e executar a captura A1. `LPRT-03` continua aberta
+até a captura completa e a segunda leitura; `LPRT-06` continua dependente das capturas B/C e do seed
+sintético. A contagem do sistema permanece **5 = 0/0/5**.
+
 **A condição de C foi medida e reprovada em 2026-11-23** (`docs/specs/endpoint-de-captura.md` §9.1):
 `deprecated/*` está no `.gitignore` e `git ls-files deprecated` devolve 0 arquivos, então clone limpo não
 tem o peer; o boot só acontece com `MIGRATIONS_DIR` apontado manualmente para fora do default

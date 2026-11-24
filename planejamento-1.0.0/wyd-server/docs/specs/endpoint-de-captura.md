@@ -10,8 +10,13 @@
 que completa o handshake em A1 foi **decidido** em `Q-SRV-5`/`LSRV-05` como opção **C, com quarentena**
 (servidor legado de `deprecated/` como harness local); a medição de 2026-11-23 **reprovou a condição**
 dessa opção e A1 passa a depender da **opção A** (§9.1). Não há código, crate, binário, servidor, CLI,
-captura ou golden produzido por esta página. A implementação não começa enquanto o aceite desta spec não
-existir.
+captura ou golden produzido por esta página. A implementação do recorte A1 começa pela autorização de
+2026-11-23; a spec permanece `proposta` como documento até a revisão editorial.
+
+**A1 autorizada em 2026-11-23 (resposta A):** implementar o peer da opção A com handshake mínimo local, o
+`ECAP` e a CLI, e executar a captura A1. A autorização **não** fecha `LPRT-03` nem `LPRT-06`: `LPRT-03`
+só fecha após captura completa, segunda leitura e golden; `LPRT-06` continua dependente das capturas B/C
+e do seed sintético.
 
 ## 0. Como ler: FECHADO e ABERTO
 
@@ -31,8 +36,8 @@ não pode ser implementado por suposição.
 | 2. Topologia | **FECHADO nesta spec** | peer definido em `Q-SRV-5`, mas a condição de C foi reprovada (§9.1): vale o peer da opção A |
 | 3. Listener e ciclo de vida | **FECHADO nesta spec** | nada de decisão; falta implementação |
 | 4. Gravação | **FECHADO nesta spec** | falta implementar; formato e local estão definidos |
-| 5. Segurança verificável | **FECHADO nesta spec** | falta provar em implementação; o peer é o legado em quarentena, definido em `Q-SRV-5` |
-| 6. Controle pela CLI | **FECHADO nesta spec** | adaptador do serverlist segue em `LCLI-01`; build-alvo fixado em `LPRT-09` (2026-11-23) |
+| 5. Segurança verificável | **FECHADO nesta spec** | falta provar em implementação; o peer é o da opção A, porque a condição da opção C foi reprovada (§9.1) |
+| 6. Controle pela CLI | **FECHADO nesta spec** | adaptador do serverlist é implementação de `LCLI-04`; formato do serverlist em `LLCH-02`/`X11`; build-alvo fixado em `LPRT-09` (2026-11-23) |
 | 7. Captura completa | **FECHADO nesta spec** | falta executar A1 depois de 2, 3 e 6 |
 | 8. DoD e issue | **FECHADO nesta spec** | issue não criada; implementação não iniciada |
 | 9. Peer de A1 | **DECIDIDO em C, condição reprovada** (medição de 2026-11-23) | §9.1: clone limpo não tem o peer, boot exige `MIGRATIONS_DIR` e o gate espera 12000; A1 passa a depender de A |
@@ -46,7 +51,7 @@ processo, porta, imagem ou configuração.
 |---|---|---|---|
 | **EPROD** | endpoint de produção: listener TCP/CPSock do processo de canal que atende o cliente real; contrato `X7`, passo 0 do esqueleto | processo `wyd-server` de cada canal, no ambiente de jogo | **não implementado**; porta e deploy não são decididos nesta página |
 | **ECAP** | endpoint de captura: listener TCP local que recebe o cliente, encaminha bytes ao peer e grava os dois sentidos; função de proxy gravador | processo local separado, binário de captura do `wyd-server`, nunca no ambiente de jogo | **especificado aqui; não implementado** |
-| **PEER-A1** | peer de destino que completa o handshake do cliente em A1 | servidor legado de `deprecated/` como harness local, em loopback e quarentena (`Q-SRV-5`) | **C reprovada na medição** (2026-11-23); A1 depende de A (§9.1) |
+| **PEER-A1** | peer de destino que completa o handshake do cliente em A1 | peer da opção A: listener local do `wyd-server` no passo 0, em loopback | **C (legado) reprovada na medição** (2026-11-23); vale A (§9.1) |
 | **CLI** | ferramenta de captura em Rust de `wyd-client/tools/`, decidida em D4 | máquina do operador; inicia e controla o ECAP | **decidida em princípio; não implementada** |
 
 **Fronteira fechada.**
@@ -277,12 +282,12 @@ JSONL, e não expõe API de controle. O canal de dados do jogo nunca passa pela 
 A CLI **não altera o cliente original**. Ela copia o diretório/configuração necessário para uma pasta
 temporária, aponta a cópia para `127.0.0.1:<porta>` e executa o `WYD.exe` a partir dela; ao terminar,
 remove a cópia. O adaptador que conhece o arquivo de servidor do build é escolhido por
-`--client-config-adapter`; o formato concreto do serverlist continua em `LCLI-01`, e o build-alvo está
-fixado em `LPRT-09` (2026-11-23).
+`--client-config-adapter`; ele é implementação de `LCLI-04`, e o formato do serverlist é o do launcher
+(`LLCH-02`/`X11`); o build-alvo está fixado em `LPRT-09` (2026-11-23).
 
-**ABERTO (dependência de configuração):** sem o adaptador do serverlist, a CLI não consegue apontar o
-cliente para o ECAP. O build-alvo deixou de ser bloqueio em 2026-11-23; resta a dependência registrada em
-`LCLI-01`. A captura A1 não começa antes dela.
+**DEPENDÊNCIA DE IMPLEMENTAÇÃO (não é lacuna):** sem o adaptador do serverlist, a CLI não consegue
+apontar o cliente para o ECAP. O build-alvo deixou de ser bloqueio em 2026-11-23 e `LCLI-01` está
+fechada; o adaptador é trabalho de `LCLI-04`. A captura A1 não começa antes de o adaptador existir.
 
 ### 6.3 Saída da CLI
 
@@ -335,7 +340,7 @@ segunda leitura nem golden do handshake.
 **Entregável:** binário `wyd-capture-endpoint` (ECAP) com listener loopback, peer, gravação
 `capture.wydcap` e verificação; CLI Rust de `wyd-client/tools/` que inicia, marca `handshake_end`,
 para e produz a ficha.
-**Depende de:** `Q-SRV-5` respondida (feito em 2026-11-23) e peer da opção A implementado, porque a condição de C foi reprovada; `LCLI-01` para o adaptador do serverlist, com o build fixado em `LPRT-09`;
+**Depende de:** `Q-SRV-5` respondida (feito em 2026-11-23) e peer da opção A implementado, porque a condição de C foi reprovada; `LCLI-04` para a CLI e o adaptador do serverlist, com o build fixado em `LPRT-09`;
 `LPRT-10`/D5/D6 para ficha e segunda leitura. Não depende de `LPRT-03` para gravar bytes; depende dela
 para concluir a medição.
 
@@ -435,7 +440,7 @@ de implementação, não nova decisão.
 - Não implementa nem executa o peer de A1; a escolha está registrada em `Q-SRV-5`, com a condição de C
 reprovada em 2026-11-23, e o peer de A1 passa a ser o da opção A.
 - Não afirma `KeyWord`, encoding, terminador, opcode, frame ou comportamento do servidor.
-- Não define o adaptador do serverlist (`LCLI-01`) nem o nome do QA (`LCLI-03`); o build-alvo está
+- Não define o adaptador do serverlist (implementação de `LCLI-04`) nem o nome do QA (`LCLI-03`); o build-alvo está
   decidido em `LPRT-09` (2026-11-23).
 - Não fecha `LPRT-03` ou `LPRT-06`; A1 produz a evidência que a segunda leitura e o golden usarão e
   registra a build de `LPRT-09`.

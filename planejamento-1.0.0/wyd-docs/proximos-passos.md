@@ -2,7 +2,7 @@
 > Público: quem mantém o `wyd-docs`
 > Dono: equipe do wyd-docs
 > Base: `lacunas.md`; `wyd-docs-1.0.0.md` §9.1; `roadmap-fase-3-para-4.md` §2
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
 **Estado:** proposto (2026-11-19)
 
@@ -31,14 +31,14 @@ páginas não pertence àquele PR e permanece nas alterações locais atuais.
 
 | # | Item e o que destrava | Dono | Tamanho | Recomendação e impacto | Pronto quando |
 |---:|---|---|---|---|---|
-| 1 | **109 páginas por tabela do `wyd-db`** — produção a decidir na lacuna `M26` (`planejamento-1.0.0/wyd-db/lacunas.md` §2.3); o gerador `wyd-db-pages` deixou de ser presumido e só existiria com aprovação explícita | arquitetura + documentação | bloqueado por decisão, não por projeto | nenhuma ferramenta é proposta por esta fila; as opções (à mão em lotes, gerador, adiar ou cancelar) estão em `M26` | decisão registrada e, se houver páginas, `gerado/index.md` + gate verde |
-| 2 | **Próxima rodada de decisões** — `A21` (troca de e-mail) e `P3` (`planos/riscos.md`) | usuário (produto + arquitetura) | rápido — 1 resposta por ID | **nenhuma resposta inventada**; são as duas de maior desbloqueio entre as que ainda esperam palavra do dono — as demais de §5.3 são de outro dono ou de onda posterior | respostas registradas e linhas fechadas |
-| 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`) e `LPRT-06` (encoding/terminador), registrando a build de `LPRT-09` (alvo decidido em 2026-11-23); detalhe do que medir em §6 | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida (`LPRT-03`/`LPRT-06` em 2026-11-20; `LPRT-09` em 2026-11-23) e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
+| 1 | **Nenhuma página por tabela pendente** — `M26` fechou em 2026-11-21; as **109 de 109** páginas foram escritas à mão, sem gerador | — | concluída | frente concluída; não há decisão nem ferramenta a autorizar | 109 páginas existentes e gate verde |
+| 2 | **Nenhuma rodada de decisões pendente** — `A21` (troca de e-mail) e `P3` (`planos/riscos.md`) fecharam em 2026-11-20; a fila de decisões é do `briefing`, e não tem resposta pendente | — | concluída | frente concluída; a implementação seguinte é A1 (captura), autorizada em 2026-11-23 no `briefing` | — |
+| 3 | **Frente de captura do cliente 7662** — medir `LPRT-03` (origem da `KeyWord`) e `LPRT-06` (encoding/terminador), registrando a build de `LPRT-09` (alvo decidido em 2026-11-23); **A1 autorizada em 2026-11-23**, implementação e captura pendentes | frente `wyd-client` + pesquisa | médio — sessão de captura | **não é decisão**: a parte decidível já foi decidida (`LPRT-03`/`LPRT-06` em 2026-11-20; `LPRT-09` em 2026-11-23; A1 em 2026-11-23) e o que resta é byte medido; sem captura a linha continua `aberta`, sem valor suposto | captura datada e anonimizada registrada, com o medido e o não medido escritos |
 
-A linha 1 depende da decisão `M26` do `wyd-db` e não autoriza ferramenta nenhuma; a 2 não é lacuna deste site, mas reúne
-o que ainda bloqueia o sistema vizinho que o site publica. A 3 é a única frente do protocolo que não
-espera resposta do usuário: as duas `LPRT` que sobraram não são perguntas em aberto, são medições que
-ninguém fez ainda — o que medir está em §6, e nenhum resultado está registrado.
+As linhas 1 e 2 estão concluídas: `M26`, `A21` e `P3` fecharam no `wyd-db`, e nenhuma delas espera
+resposta. A 3 é a única frente do protocolo que não espera resposta do usuário: as duas `LPRT` que
+sobraram não são perguntas em aberto, são medições que ninguém fez ainda — o que medir está em §6, e
+nenhum resultado está registrado.
 
 ## 2. Pré-commit
 
@@ -116,7 +116,10 @@ fechado; a ordem de **aplicação** continua `0003` → `0005` → `0007` (e `00
 próxima página ser aberta, para não propagar bloqueio falso. A frente 8 é a única de escopo maior:
 entrega uma página operacional nova, sem alterar schema.
 
-### 5.3 Frentes bloqueadas por decisão do usuário
+### 5.3 Frentes que esperaram decisão do usuário (histórico)
+
+**Nenhuma pendente:** `A21` e `P3` fecharam em 2026-11-20 (`wyd-db/lacunas.md` §2–§3); a lista abaixo é
+histórico, não fila.
 
 Nenhuma resposta abaixo foi inventada. Cada linha só registra **o que a resposta destrava**.
 
@@ -142,7 +145,7 @@ Nenhuma delas muda o schema do `wyd-db`.
 | Arquivos da série / tabelas planejadas / seeds | consultar `plano-migrations.md` §3–§4; resumo em `wyd-1.0.0.md` §1 |
 | Tabelas com DDL fechado | consultar `ddl-confirmado.md` §1 e `migrations-checklist.md` §4; resumo em `wyd-1.0.0.md` §1 |
 | Estado das páginas de migration | consultar `migrations-checklist.md` §2/§4; resumo em `wyd-1.0.0.md` §1 |
-| Lacunas `B`/`A`/`M` | **34 fechadas, 1 proposta (`M33`), 0 aberta, 3 externas (`A11`, `A20`, `M21`)** | `lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | **35 fechadas, 0 proposta, 0 aberta, 3 externas (`A11`, `A20`, `M21`)** | `lacunas.md` §1 |
 | Divergências `P` / achados `D` | **11 fechadas** / **3 fechadas** | `lacunas.md` §1 |
 | Estado atual das páginas | consultar `migrations-checklist.md` §2/§4 |
 

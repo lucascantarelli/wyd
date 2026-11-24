@@ -152,11 +152,28 @@ usar, como diagramar, linkar e publicar.
 As perguntas da rodada `M33` — estado de página e aceite da onda A — estão em
 [Decisões da M33](proposta-decisoes-m33.md). O estado da lacuna é de `lacunas.md` §2.3.
 
-Os prazos de retenção que a `M32` deixou pendentes estão em
-[Retenção — prazos pendentes](proposta-retencao-pendente.md), com a medição do que o repositório já permite saber.
+As decisões de retenção que a `M32` deixou pendentes estão em
+[Retenção — decisões e prazos](proposta-retencao-pendente.md), com a medição do que o repositório já permite saber.
 
-O que a página de retenção e capacidade pode afirmar sem volume medido — e quem responde pelo
-alerta — está em [Capacidade — decisões](proposta-decisoes-capacidade.md).
+A página [Retenção e capacidade](arquitetura/retencao-e-capacidade.md) existe como `proposto`, com
+volume pendente de medição, a matriz de `Q-CAP-2` aplicada e o sinal de `Q-CAP-3` registrado sem
+limiar; o histórico das decisões está em [Capacidade — decisões](proposta-decisoes-capacidade.md).
+
+O artefato que deve encerrar a validação jurídica de `Q-DP-2` foi escolhido em **2026-11-24** —
+**A: parecer jurídico escrito, por finalidade** — e está registrado em
+`pendencias-de-fechamento.md` §3.3.1. O parecer ainda não existe e `Q-DP-2/validação` continua pendente;
+`Q-RET-3` foi respondida em **2026-11-24** (A): retenção por ciclo de vida da pessoa, sem expurgo por
+tempo. A decisão não transforma a dispensa de parecer em validação jurídica. `Q-RET-7` foi respondida
+em **2026-11-24** (A): cópia diária de 30 dias, rotação, criptografia fora do host e restore trimestral;
+a rotina, o fornecedor, o RPO/RTO e o ensaio continuam pendentes. `Q-RET-6` foi respondida em
+**2026-11-24** (A): financeiro/custódia sem expurgo por tempo e `market_notification` lida por 90 dias;
+a aplicação (índice, job e preservação legal) continua pendente. **Não resta decisão de retenção aberta:**
+são 7 resolvidas.
+
+O quadro completo de fechamento — 0 decisões de retenção abertas, 6 seeds bloqueados, 1 ato de aceite e as 26
+páginas de `docs/` bloqueadas — está em `pendencias-de-fechamento.md`, na raiz de
+`planejamento-1.0.0/wyd-db/`. Ele nomeia dono, custo estimado e o que cada item desbloqueia, sem
+criar lacuna nova.
 
 ## 📦 Escopo desta edição
 

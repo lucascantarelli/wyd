@@ -38,6 +38,10 @@ contagem ou build. **Não** é captura de protocolo: não há um byte de tráfeg
 | Tamanho da árvore | 567 MB | `du -sh wyd-client/files` |
 | Pacote compactado | 192.652.447 bytes | `ls -l wyd-client/files/client.zip` |
 
+O inventário item a item, com caminho relativo, tamanho e `sha256`, está em
+[`docs/specs/inventario-da-arvore.md`](docs/specs/inventario-da-arvore.md); o total lógico exato é
+576.124.039 bytes e `du -sh` continua 567 MB.
+
 ## 4. Identidade dos binários
 
 | Arquivo | Bytes | Data de modificação | SHA-256 |
@@ -93,7 +97,7 @@ registro fixa é o **estado**:
 | identidade do build-alvo | medida e promovida a alvo em 2026-11-23 | `Q-PRT-1`/`LPRT-09` (decidida); `LCLI-01` fecha nela |
 | ferramenta de gravação de tráfego | não existe; pasta e escopo aprovados | `LCLI-04` (D3–D6 decididos; implementação pendente) |
 | endpoint que aceita a conexão do cliente | não existe — nenhum servidor roda esta versão | `wyd-server` / listener sob nosso controle |
-| ficha de origem + anonimização | processo decidido (`LPRT-10`), aprovador não nomeado | `LCLI-03` |
+| ficha de origem + anonimização | processo decidido (`LPRT-10`); QA designado: **Lucas Cantarelli** (dono do produto), que **não é o operador**; quem captura não assina; o nome do operador entra na ficha quando ela existir | `LCLI-03` |
 | primeira captura aceita | **0 capturas** (2026-11-22) | os quatro itens acima |
 
 Enquanto o passo 3 não existir, não há como produzir tráfego legítimo do cliente: gravar bytes exige

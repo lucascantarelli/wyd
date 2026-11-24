@@ -67,10 +67,10 @@ delas vira regra sem a captura ou a decisão que a fecha.
 | o limite de conexões por IP precisa comportar cinco clientes por pessoa mais margem | medição de campo mostrar outro perfil de uso | `rascunho-accounts.md` §3 (`D10`) |
 | o cliente alvo é o 7662, com senha de 12 bytes e PIN de 6 no fio | troca de cliente ou de protocolo | `padrao-banco.md` §4; `rascunho-accounts.md` §2 |
 
-## 5. Decisões pendentes (com dono e prazo)
+## 5. Pendências externas (com dono e prazo)
 
-O registro tem **1 `proposta` (`M33`), 0 `aberta`** e **3 `externa`** (`lacunas.md` §1, 2026-11-23). As
-três não bloqueiam as páginas desta onda: cada uma é execução de frente fora do `wyd-db`.
+O registro tem **0 `proposta`, 0 `aberta`** e **3 `externa`** (`lacunas.md` §1, 2026-11-23). As três não
+bloqueiam as páginas desta onda: cada uma é execução de frente fora do `wyd-db`.
 
 | Lacuna | Assunto | Dono | Estado | Marco |
 |---|---|---|---|---|

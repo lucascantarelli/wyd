@@ -44,7 +44,7 @@
 | `wyd-ops` | 5 | propostas de gestão de GitHub/ambientes e de versões/cobertura funcional + porta de entrada publicada e o plano da imagem do site; sem plano diretor e sem `RF-OPS` | `wyd-ops/`, 2026-11-22 |
 | `wyd-net` | 3 | aberto em 2026-11-22: fronteira, 7 contratos (6 já decididos) e 4 lacunas no total (**1 aberta como medição, 3 fechadas**; `LNET-02`/`LNET-03` por decisão, `LNET-04` por regra vigente e a política de `LNET-01` por `Q-NET-1` = A, em 2026-11-23); sem `RF-NET` | `wyd-net/lacunas.md` §1, atualizado em 2026-11-23 |
 | `wyd-core` | 4 | aberto em 2026-11-22: fronteira, 6 contratos e **0 abertas, 0 propostas, 4 fechadas** (`LCORE-01`–`LCORE-04`); C4 decidida em 2026-11-23; sem catálogo, sem `RF-CORE` | `wyd-core/lacunas.md` §1, 2026-11-23 |
-| `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura proposto) e 5 lacunas (**0 abertas, 5 fechadas**; `LSRV-05` fechou em C, com a condição **reprovada** na medição — A1 passa a depender de A); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md` §9.1, 2026-11-23 |
+| `wyd-server` | 5 | aberto em 2026-11-22: fronteira, 7 contratos (6 decididos; `S7` de captura com A1 autorizada em 2026-11-23) e 5 lacunas (**0 abertas, 5 fechadas**; `LSRV-05` fechou em C, com a condição **reprovada** na medição — peer de A1 pela opção A, implementação pendente); **esqueleto de ponta a ponta** e **spec do ECAP** propostos em 2026-11-23 (7 mensagens, 5 cenários/6 capturas, 7 goldens, C1–C7) | `wyd-server/lacunas.md` §1; `wyd-server/docs/specs/endpoint-de-captura.md` §9.1, 2026-11-23 |
 | `wyd-sim` | 3 | aberto em 2026-11-22: fronteira, 4 contratos e 4 lacunas (**0 abertas, 0 propostas, 4 fechadas**; `LSIM-02` e `LSIM-03` fecharam por resposta explícita do dono em 2026-11-23); nenhuma fórmula ou fixture escrita | `wyd-sim/lacunas.md` §1, atualizado em 2026-11-23 |
 | `wyd-launcher` | 3 | aberto em 2026-11-22: fronteira, 6 contratos e 4 lacunas (**0 abertas, 0 propostas, 4 fechadas**; `LLCH-01`–`LLCH-04` fecharam por decisão do dono em 2026-11-23) | `wyd-launcher/lacunas.md` §1, atualizado em 2026-11-23 |
 | `wyd-client` | 5 | aberto em 2026-11-22: fronteira, 5 contratos, **5 lacunas próprias** (a de uso/distribuição entrou como proposta em 2026-11-23) + as 3 medições herdadas do protocolo; **registro medido** do cliente local | `wyd-client/lacunas.md` §1 e `registro-do-cliente.md`, 2026-11-23 |
@@ -55,7 +55,7 @@
 | Pasta | Escritas | Planejadas | Observação |
 |---|---:|---:|---|
 | `docs/` raiz (`index`, `convencoes`, `glossario`) | 3 | 3 | fecha |
-| `docs/arquitetura/` | 13 | 17 | `index` + 12; faltam implantação, fluxo, modelo conceitual e retenção |
+| `docs/arquitetura/` | 14 | 17 | `index` + 13; faltam implantação, fluxo e modelo conceitual; `retencao-e-capacidade` é `proposto` com volume pendente |
 | `docs/specs/` | 10 | 20 | `index` + 9; faltam 4 de topo, 4 fluxos e 3 estados |
 | `docs/dicionario-dados/` | 21 | 21 (+109 de tabela) | `index`, `como-ler` e os **19 domínios** (2026-11-21); as 109 por tabela são manuais (`M26`) e **109 existem** (2026-11-22) |
 | `docs/planos/` | 8 | 10 | `index` + 7 planos escritos, inclusive `plano-de-documentacao` e `plano-de-testes` |
@@ -71,8 +71,8 @@
 | `skills/` | 0 | 9 | |
 
 **Totais planejados:** 147 páginas autorais em `docs/` + 109 por tabela, escritas à mão (`M26`) + 36 de migration + 59 de `src/`
-+ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **120 páginas autorais com
-corpo** em `docs/` (120 arquivos, incluindo os índices que já viraram página), fora de `gerado/`, que reúne **110 arquivos**
++ 12 de teste + 9 prompts + 9 skills (`wyd-db-1.0.0.md` §4). **Escritas:** **121 páginas autorais com
+corpo** em `docs/` (121 arquivos, incluindo os índices que já viraram página), fora de `gerado/`, que reúne **110 arquivos**
 (as 109 páginas de tabela e o índice); 28 em `migrations/`, 37 em `src/` (2026-11-22).
 
 ### 1.3 Série de migrations
@@ -153,7 +153,7 @@ São **dois** ADRs. Não existe catálogo prévio; ADR nasce de decisão tomada,
 
 | Grupo | Abertas | Exemplos |
 |---|---:|---|
-| Lacunas `B`/`A`/`M` | 1 proposta (`M33`); 0 abertas | `M27` e `M28` fecharam em 2026-11-21, `M29`, `M30` e `M31` em 2026-11-22 e `M32` em 2026-11-23; 34 fecharam; `M33` segue `proposta`; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
+| Lacunas `B`/`A`/`M` | 0 | `M27` e `M28` fecharam em 2026-11-21, `M29`, `M30` e `M31` em 2026-11-22, e `M32` e `M33` em 2026-11-23; 35 fecharam; 0 propostas; 3 seguem `externa` (`A11`, `A20`, `M21`); a lista completa está em `wyd-db/lacunas.md` §1 |
 | Externas | 3 | `A11`, `A20`, `M21` |
 | Divergências do plano diretor | 0 | `P1`–`P11` fechadas (`wyd-db/lacunas.md` §1 e §3) |
 | DDL não desenhado | 0 tabelas | todas as 109 têm coluna desenhada; 34 arquivos de migration para 109 tabelas (34/109, `plano-migrations.md` §3, 2026-11-22); os lotes `0022`, `0025`, `0026`, `0028` e `0029` foram aprovados em 2026-11-21, os `0033` e `0034` em 2026-11-22, e os seis seeds são escritos à mão (`plano-migrations.md` §4) |
@@ -173,7 +173,7 @@ registradas aqui até alguém decidir; nenhuma foi corrigida por conta própria.
 | D3 | CI tem um job só, e o `run:` monta `$(0.0.0-<sha>)` e `$(<sha>)`, que o shell executa como comando — **medido em 2026-11-19**: o job **não** falha e publica metadado vazio | `V`: run #14 (`44505419869`) e job `Get Info` (`135495629487`) com `success`; log traz `command not found` nas linhas 40 e 44; 0 runs `failure`; detalhe em `wyd-ops` §2.1 | gate verde que não publica `version`/`commit`; não há build, teste, cobertura nem gate de código |
 | D4 | O planejamento exige CI composto por actions reutilizáveis; `.github/actions/` tem só `docs-check` | `V`: `git ls-files .github`, 2026-11-19 | meta da `1.0.0` sem base: faltam as actions de Rust, cobertura e segurança de `wyd-ops` §4 |
 | D5 | Gestão de trabalho: o roadmap de 40 issues do `wyd-db` não tinha onde viver | `V`, 2026-11-19: `has_projects: true`, 6 milestones (`M0`–`M5`) e project `WYD 1.0.0` nº 10; execução registrada em `wyd-ops` §10 | **resolvido em 2026-11-22:** as 40 issues #82–#121 existem no board, com milestone de fase, DoD, labels, os quatro campos preenchidos, 5 views e 63 vínculos `blocked by` (`wyd-ops` §10.3) |
-| D6 | O plano diretor declara 147 páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **27 seguem** depois das 21 de recorte e das 40 `WYDDB-nnn` | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
+| D6 | O plano diretor declara 147 páginas autorais; 84 estavam bloqueadas em 2026-11-18 e **26 seguem** depois das 21 de recorte, das 40 `WYDDB-nnn` e da página de capacidade | `proposta-paginas.md` §6 | escrever mais rápido exige fechar lacuna, não escrever autour |
 | D7 | Não existe `mkdocs.yml` em lugar nenhum, mas `wyd-docs` é dono do site e o guia do `wyd-db` já prescreve recursos do MkDocs — **resolvido em 2026-11-19**: site em MkDocs 2.0 no `wyd-docs/`, sem `mkdocs.yml`; recursos do MkDocs 1.x convertidos na origem (§2.2 e `LPDOC-14`) | `find . -iname 'mkdocs*.yml'` sem resultado | site não publicável; exigência sem base executável |
 | D8 | `docs/` na raiz não existe; no legado, `docs/` é referência — **resolvido em 2026-11-19**: a documentação publicada sai de `planejamento-1.0.0/*/docs/` por `wyd-docs/`, e o legado não é publicado | `ls` | risco de alguém publicar o legado como doc oficial |
 
@@ -390,49 +390,89 @@ decididas, mas dependentes de frente fora do banco. O total de 118 é a soma das
 não uma estimativa; cada linha vem do registro do sistema. O `wyd-admin` registra ainda 2 decisões sem
 ID, fora da soma de lacunas.
 
-**Leitura.** 7 itens ainda não fechados: 6 abertos e 1 proposta. Desses, **0 têm pergunta e recomendação
-aguardando resposta**; **2 são medições com política decidida** (`LNET-01`, `Q-NET-1` = A; `LBOT-03`,
+**Leitura.** 7 itens ainda não fechados: 6 abertos e 1 proposta. Desses, **0 têm pergunta de desenho
+isolada aguardando resposta** — a de `LCLI-02` existe, com recomendação A, mas depende da liberação de
+direitos —; **2 são medições com política decidida** (`LNET-01`, `Q-NET-1` = A; `LBOT-03`,
 `Q-BOT-3` = A); **4 não entram numa rodada de decisão técnica** (`LPRT-03` e `LPRT-06` são medição de fio;
-`LCLI-03` é nome de QA; `LCLI-02` depende da classificação de direitos); e **1 é jurídico sem
-recomendação** (`LCLI-05`, `Q-IP-1`–`Q-IP-6`). Das 16 perguntas originalmente registradas sem resposta,
+`LCLI-03` tem QA definido (Lucas Cantarelli, que não é o operador) e espera a primeira ficha assinada;
+`LCLI-02` depende da classificação de direitos); e **1 é jurídico sem recomendação** (`LCLI-05`, com
+responsável nominal, `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado e sem
+evidência, distribuição congelada). Das 16 perguntas originalmente registradas sem resposta,
 **quatorze foram respondidas pelo dono** — `Q-NET-2` = A (`LNET-02`), `Q-SIM-1` = A (`LSIM-01`),
 `Q-SIM-4` = A (`LSIM-04`), `Q-SIM-3` = A (`LSIM-03`), `Q-SIM-2` = A (`LSIM-02`), `Q-BOT-1` = A
 (`LBOT-01`), `Q-BOT-2` = A (`LBOT-02`), `Q-BOT-3` = A (política de `LBOT-03`), `Q-NET-1` = A (política de
 `LNET-01`), `Q-LCH-1` = A (`LLCH-01`), `Q-LCH-2` = A (`LLCH-02`), `Q-LCH-3` = A (`LLCH-03`), `Q-LCH-4` =
 A (`LLCH-04`) e `LAC-POR-09` = A — e **duas foram derivadas das regras vigentes**: `Q-NET-4` = A
 (`LNET-04`) e `Q-BOT-4` = A (`LBOT-04`); não resta pergunta sem resposta. O briefing
-atualizado e a autorização da captura estão em [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md).
+atualizado e a autorização da captura (A1 = A, 2026-11-23) estão em [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md).
+
+**Fora da soma.** `wyd-ops` não tem `lacunas.md`; sua pergunta de hospedagem (`Q-OPS-2`,
+`wyd-ops/docs/proposta-decisoes-ops.md` §4) foi **respondida em A em 2026-11-24** — VPS paga com
+processo persistente e Compose — e **não** entra nos 118. A escolha não aplicou VPS, contrato, backup
+nem operação; a execução continua pendente de `wyd-ops`.
 
 ### 6.2 Frentes candidatas, com o que cada uma fecha e libera
 
 | Frente | Fecha com a recomendação | Tira da espera do dono | Libera | Pré-requisito | Custo |
 |---|---:|---:|---|---|---|
-| **A. Rodada de decisões do dono** (`wyd-sim`, `wyd-launcher`, `wyd-bots`, `wyd-net` e `wyd-portal` concluídos) | **1** (`LAC-POR-09`, fechada) | **0** | a onda B (versão e local dos vetores decididos; fixtures ainda dependem de implementação) e a decisão da F9 do portal | resposta do dono; nenhuma página nova | uma sessão de decisão; sem código |
-| **B. Captura A1** (peer do passo 0, `ECAP`, CLI, captura) | **2** (`LPRT-03`, `LPRT-06`) | 2 | X12, offsets de payload por `Type`, handshake do `net`/`server` e o caminho do `bots` | autorização explícita de implementação | implementação do peer, endpoint, CLI e captura |
-| **C. Finalizar o `wyd-db`** | **0** (0 abertas, 0 propostas) | 0 | `SCHEMA_VERSION` 34 e o corte vertical, quando os 6 seeds saírem | dado do cliente 7662 para os 6 seeds; aceite por página | execução e curadoria, não decisão |
+| **A. Rodada de decisões do dono** (concluída: `wyd-sim`, `wyd-launcher`, `wyd-bots`, `wyd-net` e `wyd-portal`) | **1** (`LAC-POR-09`, fechada) | **0** | a onda B (versão e local dos vetores decididos; fixtures ainda dependem de implementação) e a decisão da F9 do portal | resposta do dono; nenhuma página nova | uma sessão de decisão; sem código |
+| **B. Captura A1** (peer do passo 0, `ECAP`, CLI, captura) | **1** (`LPRT-03`); prepara `LPRT-06` | 1 | X12, offsets de payload por `Type`, handshake do `net`/`server` e o caminho do `bots` | autorizada em 2026-11-23; implementação pendente | implementação do peer, endpoint, CLI e captura — **11 arquivos autorais**, 0 migrations |
+| **C1. Decidir o que resta do `wyd-db`** | **0 lacunas** (0 abertas, 0 propostas); `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` decididas; `Q-DP-2/artefato` definido em A (2026-11-24), `Q-DP-2/validação` pendente; `Q-RET-3`, `Q-RET-6` e `Q-RET-7` decididas em A (2026-11-24), aplicação pendente | **0 decisões de retenção** | página de retenção entregue como `proposto`, com volume pendente; matriz e sinal aplicados; `Q-RET-3` é 1 tabela/1 tela sem job; `Q-RET-6/7` condicionam aplicação | `Q-CAP-1/2/3` resolvidas; `Q-DP-2/artefato` definido; `Q-RET-3/6/7` decididas; `Q-DP-2/validação` continua separada | página, matriz, sinal, formato, política de mercado, backup e retenção por ciclo de vida entregues; restam aplicações e validação separada |
+| **C2. Executar o `wyd-db`** | **0 lacunas**; 26 páginas bloqueadas, 6 seeds, 1/28 migration aceita, 5 aplicações de retenção | 0 | `SCHEMA_VERSION` 34, aceite da série e corte vertical; expurgos só com job | 6 seeds do cliente 7662; aceite por página; `wyd-ops` | execução e curadoria, não decisão |
 | **D. Expandir propostas** | **1–2** (`LCLI-02`; `LCLI-03` é execução) | 0–2 | nada além do próprio `wyd-client` | — | baixo retorno: nenhum dos 7 não fechados ainda espera resposta recomendada; `LPRT-03`/`LPRT-06` são medições |
 
-**Recomendação: a frente B (captura A1) é a próxima.** A rodada A encerrou: `Q-SIM-2`, `Q-SIM-3`,
-`Q-BOT-1`, `Q-BOT-2`, `Q-BOT-3`, `Q-NET-1`, `Q-LCH-1`, `Q-LCH-2`, `Q-LCH-3`, `Q-LCH-4` e `LAC-POR-09` já
-foram respondidas (A), e as lacunas de decisão do portal fecharam. Não resta pergunta de desenho; a captura
-A1 é a única autorização que remove o bloqueio de fio e libera `LPRT-03`, `LPRT-06`, `X12` e a onda C.
-`LBOT-03` e `LNET-01` esperam a primeira execução, não uma resposta.
-`LNET-04` e `LBOT-04` já fecharam por regra vigente; a rodada não as reabre. **A captura A1 é a frente
-seguinte**: fecha 2 itens, é a única que remove o bloqueio do fio e depende de autorização de
-implementação. **C não é frente de decisão**: o `wyd-db` já está com 0 abertas e 0 propostas; o que resta
-é execução, e os 6 seeds esperam dado do cliente. **D tem retorno marginal**: proposta nova só alcança
-`LCLI-02`/`LCLI-03`, e o resto é medição ou direito autoral. O catálogo funcional (§1.5) continua sendo o
-que destrava a declaração de versão; ele é descoberta e não substitui a rodada.
+**Recomendação: a frente B (captura A1) é a próxima.** A rodada A de decisões de lacuna encerrou:
+`Q-SIM-2`, `Q-SIM-3`, `Q-BOT-1`, `Q-BOT-2`, `Q-BOT-3`, `Q-NET-1`, `Q-LCH-1`, `Q-LCH-2`, `Q-LCH-3`,
+`Q-LCH-4` e `LAC-POR-09` já foram respondidas (A), e as lacunas de decisão do portal fecharam. Não resta
+pergunta de desenho no quadro de lacunas; a captura A1 é a única autorização que remove o bloqueio de fio
+e libera `LPRT-03`, além de preparar `LPRT-06`, `X12` e a onda C; **foi autorizada em 2026-11-23**. `LPRT-06`
+só fecha com as capturas B/C e o seed sintético; `LBOT-03` e `LNET-01` esperam a primeira execução, não
+uma resposta. `LNET-04` e `LBOT-04` já fecharam por regra vigente; a rodada não as reabre. **A
+implementação de A1 é a frente seguinte**: fecha 1 item (`LPRT-03`), prepara o segundo e é a única que
+remove o bloqueio do fio; a autorização já foi dada. **C1 não tem decisão de retenção aberta**: `Q-RET-3`
+foi resolvida em A (2026-11-24); `Q-CAP-1` foi resolvida e a página já existe como `proposto`, com volume pendente;
+`Q-CAP-2` foi resolvida em A e aplicada na página; `Q-CAP-3` foi resolvida em A e aplicada;
+`Q-RET-3` foi respondida em A (2026-11-24), sem parecer, e não é mais decisão aberta; `Q-RET-6` e `Q-RET-7` foram respondidas em A (2026-11-24) e suas aplicações continuam pendentes; o **artefato** de validação de `Q-DP-2` foi decidido em A (parecer escrito por finalidade) em 2026-11-24, mas o parecer não existe e `Q-DP-2/validação` continua pendente. **C2 é execução**, não decisão: 26 páginas bloqueadas, 6 seeds e 1/28 migration
+aceita; os expurgos de `Q-RET-1/2/4` têm decisão, mas continuam pendentes de índice/`DELETE`/job e não
+são código imediato. **D tem retorno marginal**: proposta nova só alcança `LCLI-02`/`LCLI-03`, e o resto é
+medição ou direito autoral. O catálogo funcional (§1.5) continua sendo o que destrava a declaração de
+versão; ele é descoberta e não substitui a rodada.
 
-### 6.3 Perguntas do dono — nenhuma pendente
+**Decisão do dono em 2026-11-23:** a próxima sessão é a captura A1; `Q-CAP-1` fica na sequência. A
+implementação, a captura e o golden ainda não foram executados; a decisão é de prioridade, não de
+fechamento de `LPRT-03`.
 
-Não há pergunta de desenho aguardando resposta. A última, `LAC-POR-09`, foi respondida em 2026-11-23:
+### 6.3 Perguntas do dono — nenhuma pergunta de desenho de lacuna; 0 decisões de retenção no `wyd-db`
+
+Não há pergunta de desenho no quadro de lacunas. A última, `LAC-POR-09`, foi respondida em 2026-11-23:
 BFF fecha o leilão vencido, `wyd-ops` agenda e alerta, e falha é reentrante. As opções, o trade-off e a
 fonte de cada resposta estão nas páginas donas (`wyd-sim/docs/proposta-decisoes-sim.md`,
 `wyd-launcher/docs/proposta-decisoes-launcher.md`, `wyd-bots/docs/proposta-decisoes-bots.md`,
 `wyd-net/docs/proposta-decisoes-net.md` e `wyd-portal/docs/proposta-decisoes-portal.md`). A captura A1
-é autorização de implementação, não pergunta de desenho; a ordem e o custo estão no
-[`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md) §6.
+foi autorizada em 2026-11-23; é autorização de implementação, não pergunta de desenho. A ordem e o custo
+estão no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md) §6.
+
+Fora do quadro de lacunas, o `wyd-db` **não mantém decisão de retenção aberta** registrada em
+[`pendencias-de-fechamento.md`](wyd-db/pendencias-de-fechamento.md) §3: `Q-RET-3` foi respondida em A
+(2026-11-24), por ciclo de vida da pessoa, sem parecer e sem transformar a dispensa em validação jurídica.
+`Q-RET-6` foi respondida em A (2026-11-24): financeiro/custódia sem expurgo e `market_notification` lida
+com 90 dias; a aplicação (índice, job e preservação legal) continua pendente. `Q-RET-7` foi respondida em
+A (2026-11-24): cópia diária de 30 dias, rotação, criptografia fora do host e restore trimestral;
+fornecedor, RPO/RTO, rotina e ensaio continuam pendentes. `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` foram
+respondidas em 2026-11-23 (A); a página existe como `proposto`, com volume pendente de medição (`M20`), a
+matriz de `Q-CAP-2` está aplicada e o sinal de `Q-CAP-3` também. Elas não são lacunas abertas e não são
+execução; não resta decisão de capacidade nem de retenção. **Fora delas, o dono definiu em 2026-11-24 o
+artefato de validação de `Q-DP-2` (A): parecer jurídico escrito, por finalidade; o parecer não existe e
+`Q-DP-2/validação` continua pendente como registro separado.**
+
+**Nomeações de 2026-11-23.** Fora da fila de desenho, o dono assumiu a segunda leitura da captura
+(`LCLI-03`; **Lucas Cantarelli**, dono do produto, que não é o operador, com o dono do `wyd-protocol` como
+suplente) e a responsabilidade nominal por direitos (`LCLI-05`), mantendo a distribuição congelada.
+Também decidiu as políticas de `Q-IP-3`–`Q-IP-6`, iniciou o pedido externo de `Q-IP-1`/`Q-IP-2` e fixou
+`Q-IP-2` no escopo B (árvore inteira); o inventário item a item
+(`wyd-client/docs/specs/inventario-da-arvore.md`) e o pacote do pedido
+(`wyd-client/docs/specs/pedido-ao-titular.md`) existem, mas o pedido não foi enviado. Nenhuma dessas decisões fecha lacuna: `LCLI-03` depende da ficha assinada e `LCLI-05`, de evidência do
+titular; `LCLI-05` segue proposta e `LCLI-02` aberta.
 
 `Q-NET-2` saiu desta fila: o dono respondeu **A** em 2026-11-23 — impor o build-alvo 7662 no handshake,
 com erro tipado para build não suportado — e `LNET-02` fechou no registro, com a decisão em
@@ -489,7 +529,7 @@ fechou com local/formato dos vetores definidos e `LSIM-02` fechou com a versão 
 nenhuma fixture foi criada. O `sim` não tem mais pergunta aberta, e a onda B ainda exige a implementação
 das fórmulas e fixtures para provar determinismo (`§7.7`). As demais respostas vêm por dependência: `LAC-POR-09` é da onda D/F9;
 as respostas do launcher, do `wyd-bots` e do `wyd-net` já dadas são da onda E e a implementação depende da
-C; `LNET-01`/`LBOT-03` esperam medição; e A1 é autorização de implementação que destrava a onda C. `Q-NET-4` e `Q-BOT-4` saíram por regra vigente e não voltam à fila.
+C; `LNET-01`/`LBOT-03` esperam medição; e A1, autorizada em 2026-11-23, é implementação que destrava a onda C. `Q-NET-4` e `Q-BOT-4` saíram por regra vigente e não voltam à fila.
 
 Com as recomendações A, `LNET-01` continua aberta como **medição**, não como decisão: a resposta fixa a
 política e a lacuna só fecha com o número medido. `LBOT-03` já tem a política (`Q-BOT-3` = A) e também só
@@ -504,22 +544,25 @@ dono com data e evidência, como manda `AGENTS.md` §5.8.
 |---|---|---|
 | `LPRT-03`, `LPRT-06` | são medição de fio, não escolha; a parte decidível já foi decidida em 2026-11-20 | B (captura A1) |
 | `LCLI-02` | depende de `Q-IP-1`/`Q-IP-2` (direitos) e da lista do patch; não é escolha isolada | `LCLI-05`/direitos |
-| `LCLI-03` | é o **nome** do QA que assina a segunda leitura; D6 já decidiu o papel | execução de B |
-| `LCLI-05` | `Q-IP-1`–`Q-IP-6` são jurídicas e não têm recomendação técnica; exigem titular dos direitos e revisão | frente de direitos, fora desta rodada |
+| `LCLI-03` | QA definido em 2026-11-23 (**Lucas Cantarelli**, dono do produto, que não é o operador); falta a primeira ficha assinada com o nome do operador | execução de B |
+| `LCLI-05` | `Q-IP-1`–`Q-IP-6` são jurídicas; `Q-IP-3`–`Q-IP-6` decididas em 2026-11-23, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote prontos, pedido não enviado e sem evidência; distribuição congelada; **segue proposta** e `LCLI-02` aberta | frente de direitos, fora desta rodada |
 
 `LCLI-05` bloqueia patch, release e publicação de conteúdo do cliente; nenhuma resposta técnica a
 fecha. Enquanto ela estiver aberta, `LCLI-02` também não fecha.
 
 ### 6.5 Depois da rodada
 
-A rodada de respostas terminou. A autorização da captura A1 está ordenada, com motivo medido e custo da
-alternativa, no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md); `Q-LCH-1` = A,
-`Q-LCH-2` = A, `Q-LCH-3` = A, `Q-LCH-4` = A, `Q-BOT-1` = A, `Q-BOT-2` = A, `Q-BOT-3` = A, `Q-NET-1` = A,
-`Q-SIM-2` = A, `Q-SIM-3` = A e `LAC-POR-09` = A já foram registradas. Os passos abaixo são a consequência
-da rodada, não a fila de perguntas.
+A rodada de respostas terminou. A captura A1 foi **autorizada em 2026-11-23 (resposta A)**, com motivo
+medido e custo da alternativa no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md);
+`Q-LCH-1` = A, `Q-LCH-2` = A, `Q-LCH-3` = A, `Q-LCH-4` = A, `Q-BOT-1` = A, `Q-BOT-2` = A, `Q-BOT-3` = A,
+`Q-NET-1` = A, `Q-SIM-2` = A, `Q-SIM-3` = A e `LAC-POR-09` = A já foram registradas. Os passos abaixo
+são a consequência da rodada, não a fila de perguntas.
 
-1. **Captura A1 pela opção A** — implementar o peer do passo 0, o `ECAP` e a CLI, e capturar; fecha
-   `LPRT-03` e registra a build de `LPRT-09` na ficha (já decidida em 2026-11-23).
+1. **Captura A1 pela opção A — autorizada em 2026-11-23** — implementar o peer do passo 0 com handshake
+   mínimo local, o `ECAP` e a CLI, e capturar; fecha `LPRT-03` somente após a segunda leitura e registra a
+   build de `LPRT-09` na ficha (já decidida em 2026-11-23). A segunda leitura tem assinante definido
+   (`LCLI-03`: **Lucas Cantarelli**, dono do produto; suplente `wyd-protocol`). `LPRT-06` continua nas
+   capturas B/C.
 2. **`LPRT-06`**, com B e C, que exigem a conta sintética de `seeds/dev.sql`; os seis seeds de
    `wyd-db` entram aqui, não antes.
 3. **`LNET-03` implementada** — a regra já está fixada em `R6`/`D9`/`ux_session_viva_por_conta`
@@ -531,8 +574,8 @@ da rodada, não a fila de perguntas.
    e o primeiro domínio é a entrada na cena.
 
 Nenhuma posição é cronograma: é dependência declarada nas fontes citadas. O que continua aberto
-depois da rodada e da captura é `LCLI-02`, `LCLI-03` e `LCLI-05` no cliente, e as medições de
-`LNET-01` e `LBOT-03`.
+depois da rodada e da captura é `LCLI-02`, a primeira ficha assinada de `LCLI-03` e as respostas de
+`LCLI-05` no cliente, e as medições de `LNET-01` e `LBOT-03`.
 
 ---
 
@@ -555,11 +598,11 @@ tem dois donos e é defeito (§3).
 | `wyd-core` | comportamento: tick, cena, entidades, combate, IA, estados | fórmula, SQL, fio | 3 páginas | proposto (2026-11-22) |
 | `wyd-sim` | cálculo puro e determinístico | quando aplicar, balanceamento | 3 páginas | proposto (2026-11-22) |
 | `wyd-db` | schema, migrations, DDL, transação, retenção | comportamento, fio, UI | 308 páginas | piloto: 109/109 tabelas, 28/34 migrations |
-| `wyd-server` | processo por canal, topologia, ciclo de vida, controle, captura local e peer de A1 | regra, fio, deploy | 6 páginas | proposto (2026-11-22); fatia mínima e ECAP propostos em 2026-11-23; `LSRV-05` em C com a condição reprovada — A1 depende de A |
+| `wyd-server` | processo por canal, topologia, ciclo de vida, controle, captura local e peer de A1 | regra, fio, deploy | 6 páginas | proposto (2026-11-22); fatia mínima e ECAP propostos em 2026-11-23; `LSRV-05` em C com a condição reprovada — peer de A1 pela opção A, A1 autorizada em 2026-11-23 |
 | `wyd-admin` | backoffice de staff, custódia de item, auditoria | regra de jogo, UI pública | 11 páginas | planejado: 15 `RF-ADM`, 0 lacuna aberta |
 | `wyd-portal` | site público, conta web, armaria/mercado web, NOC | redirecionar ao admin, custódia | 12 páginas | planejado: 33 `RF-POR`, 0 abertas, 0 propostas e 9 fechadas |
 | `wyd-launcher` | manifesto, patch aplicado, integridade local | conteúdo do patch, hospedagem | 3 páginas | proposto (2026-11-22) |
-| `wyd-client` | captura e registro do cliente real, artefato de cliente | fio, manifesto, regra | 5 páginas | proposto (2026-11-22), com registro medido |
+| `wyd-client` | captura e registro do cliente real, artefato de cliente | fio, manifesto, regra | 5 páginas | proposto (2026-11-22), com registro medido; A1 autorizada em 2026-11-23, CLI/peer pendentes |
 | `wyd-bots` | cenário de QA de fio, carga e convivência | codec, ambiente, métrica | 3 páginas | proposto (2026-11-22) |
 | `wyd-docs` | publicação, gate editorial, contagens do site | conteúdo de sistema | 10 páginas + site | implementado, gate verde |
 | `wyd-ops` | CI, imagem, deploy, observabilidade, topologia de ambiente | regra, fio, escrita administrativa | 3 + 2 páginas | proposto: decisões sem plano diretor |

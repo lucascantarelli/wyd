@@ -9,7 +9,12 @@
 **Estado:** proposto (2026-11-22). Abertura inicial: fronteira, contratos e a frente de captura
 nomeada. **Nenhum código** e nenhum requisito numerado (`RF-CLI`). A política de uso e distribuição do
 cliente está aberta como proposta em `docs/specs/propriedade-intelectual-e-distribuicao.md`
-(`LCLI-05`); nenhum direito é presumido. O registro do que já foi medido no cliente local está em
+(`LCLI-05`); nenhum direito é presumido. Em 2026-11-23 o dono assumiu a responsabilidade nominal por
+direitos, congelou a distribuição e decidiu as políticas de `Q-IP-3`–`Q-IP-6`; o pedido de
+`Q-IP-1`/`Q-IP-2` foi iniciado; o inventário item a item e o pacote do pedido existem, mas o pedido não
+foi enviado. **`LCLI-05` continua proposta** e nenhuma decisão autoriza patch, release ou conteúdo do
+cliente. **Lucas Cantarelli** (dono do produto) é o QA da segunda leitura e **não é o operador**; o nome
+do operador entra na ficha. O registro do que já foi medido no cliente local está em
 `registro-do-cliente.md` e **não** afirma comportamento do jogo.
 
 ## 1. O que ele faz
@@ -61,19 +66,31 @@ repete (um fato, um dono).
 
 ## 5. O que falta
 
-`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`), `LCLI-03` (quem aprova a segunda leitura; o
-registro já está fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (proposta de autorização e escopo de
-uso/distribuição), mais as duas medições herdadas do protocolo (`LPRT-03`, `LPRT-06`) e a leitura que
+`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`; aberta), `LCLI-03` (QA definido: **Lucas
+Cantarelli**, dono do produto, que não é o operador; falta a primeira ficha assinada com o nome do
+operador; registro fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (**proposta**; responsável nominal
+e distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` com pedido externo iniciado,
+sem evidência), mais as duas medições herdadas do protocolo (`LPRT-03`, `LPRT-06`) e a leitura que
 confirma a build do alvo fixado (`LPRT-09`). `LCLI-01` fechou com `LPRT-09` em 2026-11-23.
+
+**Passos executáveis da frente de direitos (não são perguntas):** inventário de metadados por
+classe/item (`wyd-client`) em `docs/specs/inventario-da-arvore.md` e `inventario-arvore-cliente.tsv`;
+pacote do pedido ao titular (`wyd-client`) em `docs/specs/pedido-ao-titular.md`, pronto e **não enviado**;
+lista candidata do patch (`wyd-client` + `wyd-launcher`); usos pretendidos de marca/screenshot
+(`wyd-portal` + `wyd-launcher`); e template do registro de evidência (`wyd-client` + `wyd-ops`). Dono e
+limite de cada um estão em `docs/specs/propriedade-intelectual-e-distribuicao.md` §9; nenhum deles fecha
+lacuna ou autoriza distribuição, e a lista do patch continua separada do inventário da árvore.
 `LCLI-04` foi fechada em 2026-11-23: ferramenta específica em
-`wyd-client/tools/`; D3–D6 foram decididos em 2026-11-23 e a implementação está pendente.
+`wyd-client/tools/`; D3–D6 foram decididos em 2026-11-23 e a implementação está pendente. **A1 foi
+autorizada na mesma data (resposta A):** implementar peer da opção A, `ECAP` e CLI, e capturar; `LPRT-03`
+só fecha após a segunda leitura, e `LPRT-06` continua nas capturas B/C.
 
 ## 6. Gate para sair do papel
 
 1. Registro medido do cliente (feito em 2026-11-22) e primeira captura datada com ficha.
 2. Ferramenta de captura planejada em `wyd-client/tools/`, com escopo e salvaguardas aprovados;
-   D3–D6 estão decididos, e a implementação do `ECAP` e da CLI Rust é o próximo trabalho,
-   sem código em `planejamento-1.0.0/` (`AGENTS.md` §5.6).
+   D3–D6 estão decididos, **A1 foi autorizada em 2026-11-23** e a implementação do `ECAP` e da CLI Rust
+   é o próximo trabalho, sem código em `planejamento-1.0.0/` (`AGENTS.md` §5.6).
 3. Nenhum conteúdo do cliente é versionado, publicado ou redistribuído sem autorização e escopo
    documentados (`LCLI-05`); ignorar a árvore local é uma salvaguarda, não uma conclusão sobre
    titularidade.

@@ -129,8 +129,9 @@ regra de §2 de `restricoes-e-premissas.md`; `M6` ficou como está.
 
 ### Q-DP-4 — O que vale para as categorias sem prazo?
 
-Fato medido: só três tabelas têm prazo (`M22`). `ix_login_attempt_occurred` e `ix_person_token_expira`
-existem "para o reaper" no comentário do DDL, mas **nenhum prazo foi decidido** para elas.
+Antes desta rodada, só três tabelas tinham prazo (`M22`). `ix_login_attempt_occurred` e
+`ix_person_token_expira` existiam "para o reaper" no comentário do DDL, mas **nenhum prazo tinha sido
+decidido** para elas; `Q-RET-1`, `Q-RET-2` e `Q-RET-4` decidiram os três em 2026-11-23.
 
 | Opção | O que é | Consequência |
 |---|---|---|
@@ -144,8 +145,8 @@ sem volume é chute com aparência de decisão, e `M22` só fechou porque teve d
 **Aplicado (A, 2026-11-23):** a lista com as categorias `pendente` está em §5.2, e
 `restricoes-e-premissas.md` §2 tem a regra.
 
-**Não decide:** os prazos em si; a rotina de expurgo (dono `wyd-ops`); retenção de backup (é
-`Q-DP-4` de novo, quando houver medição).
+**Não decide:** os prazos em si; a rotina de expurgo (dono `wyd-ops`); retenção de backup — esta foi
+decidida em `Q-RET-7 = A` (2026-11-24), com rotina/fornecedor/RPO/RTO pendentes.
 
 ### Q-DP-5 — Como o titular exerce acesso, correção e exclusão?
 
@@ -221,7 +222,7 @@ opção recomendada.
 |---|---|---|
 | Responsável de produto (finalidades e risco) | dono do projeto | **nomeado em 2026-11-23** |
 | Responsável técnico (controles, log, backup) | dono do projeto; `wyd-ops` executa | **nomeado em 2026-11-23** |
-| Revisão jurídica | externa, a contratar | `pendente` — bloqueia declaração de conformidade |
+| Revisão jurídica | externa, não contratada | `pendente` — bloqueia declaração de conformidade; o dono declarou em 2026-11-24 que o projeto é experimental, sem gasto e sem apoio jurídico, o que **não** produz o parecer nem fecha `Q-DP-2` |
 | Canal de contato do titular | a definir | `pendente` — sem endereço real no repositório |
 
 ### 5.2 Retenção: o que existe e o que falta (`Q-DP-4`)
@@ -233,16 +234,17 @@ opção recomendada.
 | auditoria | `ops.audit_log` | 730 dias, append-only | decidido (`M22`) |
 | fila de entrega | `ops.delivery_queue` | `applied`/`failed` 30 dias após `closed_at`; `pending` nunca | decidido (`M25`) |
 | idempotência | `ops.idempotency_record` | 7 dias após `created_at` | decidido (`M30`) |
-| token de cerimônia | `portal.person_token` | — | **`pendente`** (dono: operação + produto; exige medição) |
-| tentativa de login | `ops.login_attempt` | — | **`pendente`** (idem) |
-| histórico de consentimento | `portal.person_consent` | — | **`pendente`** (idem; revogação não apaga) |
-| reset de PIN | `game.pin_reset` | — | **`pendente`** (idem) |
-| configuração versionada | `ops.config_revision`, `ops.config_change` | — | **`pendente`** (idem) |
-| mercado e custódia | `portal.market_*`, `game.market_escrow` | — | **`pendente`** (idem; pode haver preservação legal) |
-| backup | — | — | **`pendente`** (dono: `wyd-ops`) |
+| token de cerimônia | `portal.person_token` | 30 dias após `expires_at`, usado ou não | **`decidido`** (opção A do dono, 2026-11-23; índice completo e expurgo ainda não criados) |
+| tentativa de login | `ops.login_attempt` | 30 dias após `occurred_at` | **`decidido`** (opção A do dono, 2026-11-23; `DELETE` diário ainda não criado) |
+| reset de PIN | `game.pin_reset` | 30 dias após `expires_at`, usado ou não | **`decidido`** (opção A do dono, 2026-11-23; índice e `DELETE` diário ainda não criados; TTL é `B1`) |
+| histórico de consentimento | `portal.person_consent` | ciclo de vida da pessoa | **`decidido`** (`Q-RET-3 = A`, 2026-11-24: guardar enquanto a linha de `person` existir; sem expurgo por tempo; revogação não apaga) |
+| configuração versionada | `ops.config_revision`, `ops.config_change` | — | **`decidido`** — append-only e sem expurgo (`ddl-confirmado.md` §5.9, aprovado em 2026-11-20; resolvido por evidência em 2026-11-23) |
+| mercado e custódia | `portal.market_*`, `game.market_escrow` | — | **`decidido`** (`Q-RET-6 = A`, 2026-11-24: financeiro/custódia sem expurgo; notificação lida 90 dias; índice, job e preservação legal pendentes) |
+| backup | — | — | **`decidido`** (`Q-RET-7 = A`, 2026-11-24: cópia diária de 30 dias, rotação, criptografia fora do host e restore trimestral; rotina/fornecedor/RPO/RTO pendentes) |
 
-Regra que acompanha o quadro: **categoria `pendente` não vai a produção** — planejamento e DDL
-seguem livres.
+Regra que acompanha o quadro: **categoria sem retenção decidida não vai a produção** — planejamento e
+DDL seguem livres. Com `Q-RET-3 = A`, não resta categoria de retenção `pendente`; a coleta real continua
+sujeita a `Q-DP-2/validação` e ao canal do titular, que não foram resolvidos por esta decisão.
 
 ### 5.3 O que fica preservado ao fechar a conta (`Q-DP-5`)
 
@@ -313,7 +315,7 @@ regras de §5 foram aplicadas em `docs/specs/restricoes-e-premissas.md` §2 e em
 | `Q-DP-1` | **B — nomear agora**: o dono do projeto é responsável de produto e técnico; revisão jurídica externa e contato do titular ficam `pendente` | A (papéis por função, nomes depois), C (nada até designação formal) | §5.1 |
 | `Q-DP-2` | **A — inventário mínimo** com finalidade por grupo de campo, hipótese legal `a validar`, e `birth_date`/`country` fora de coleta | B (consentimento como base única), C (nada até o jurídico) | §5.4; `restricoes-e-premissas.md` §2 |
 | `Q-DP-3` | **A — manter `M6`**, classificar o hash como identificador indireto reidentificável e registrar o risco | B (HMAC com segredo, reabrindo `M6`), C (remover o identificador) | `seguranca.md`; `restricoes-e-premissas.md` §2 |
-| `Q-DP-4` | **A — `P-21` como regra de aceite**: categoria sem prazo não vai a produção; as 6 categorias ficam `pendente` com dono | B (fixar prazos por analogia), C (retenção indefinida) | §5.2; `restricoes-e-premissas.md` §2 |
+| `Q-DP-4` | **A — `P-21` como regra de aceite**: categoria sem prazo não vai a produção; as 3 categorias restantes **naquela data** ficam `pendente` com dono (as 6 iniciais menos `person_token`, `login_attempt` e `pin_reset`, decididas em 2026-11-23; `config_*` já estava fora da contagem); `Q-RET-6` fez a linha de mercado passar a `decidido` em 2026-11-24 | B (fixar prazos por analogia), C (retenção indefinida) | §5.2; `restricoes-e-premissas.md` §2 |
 | `Q-DP-5` | **A — fechamento com anonimização** (`A12`), preservando auditoria e histórico de `game`; acesso e correção por tela ou staff com registro | B (apagamento físico), C (manual sem registro) | §5.3; `restricoes-e-premissas.md` §2 |
 | `Q-DP-6` | **A — identificador indireto** em log; retenção de log `pendente` com `wyd-ops`; telemetria identificável bloqueia produção | B (identificador em claro), C (proibir identificador) | `restricoes-e-premissas.md` §2; `erros-e-logs.md` §5 |
 | `Q-DP-7` | **A — só sintético declarado** em fixture, golden e captura; sessão real exige decisão nova | B (captura real higienizada), C (adiar toda captura) | `restricoes-e-premissas.md` §2 |

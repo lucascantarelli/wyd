@@ -2,15 +2,15 @@
 > Público: Produto / gestão
 > Dono: equipe do `wyd-db`
 > Base: `ddl-confirmado.md`, `lacunas.md`, `migrations-checklist.md`, `padrao-banco.md`, `plano-migrations.md`, `rascunho-accounts.md`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-23
 
-**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-22 e as migrations recontadas na mesma data.
+**Estado:** proposta (2026-11-18), com o censo de páginas remedido em 2026-11-23 e as migrations recontadas na mesma data.
 
-> **Revisão de 2026-11-22 (lotes 1–6 escritos):** os lotes 1–5 fecharam 58 páginas; o lote 6 escreveu
+> **Revisão de 2026-11-23 (lotes 1–6 escritos):** os lotes 1–5 fecharam 58 páginas; o lote 6 escreveu
 > os **21 recortes** e as **40 páginas `WYDDB-nnn`**, além de transformar o índice do roadmap em
-> página. O censo no `HEAD` desta data: **120** páginas com corpo em `docs/`, **28 de 34** em
+> página. O censo no `HEAD` em 2026-11-23: **121** páginas com corpo em `docs/`, **28 de 34** em
 > `migrations/` e **37 de 59** em `src/`. O que falta escrever fica em **0 escrevíveis**, **0 de
-> recorte** e **27 bloqueadas** — **147** páginas autorais, o teto de `wyd-db-1.0.0.md` §4 com o 19º
+> recorte** e **26 bloqueadas** — **147** páginas autorais, o teto de `wyd-db-1.0.0.md` §4 com o 19º
 > domínio. A revisão anterior (19 domínios, 36 páginas) fica no histórico do git.
 
 Esta página é a ponte entre as seis fontes de planejamento e a árvore de `docs/` de
@@ -57,12 +57,12 @@ e, dentro de `docs/`, `guia-administrador/configuracao.md`, `arquitetura/migraco
 
 ## 2. O que já está escrito (medido em 2026-11-22)
 
-**120 páginas com corpo em `docs/`**, 116 com `**Estado:**` e 4 portas de navegação sem estado editorial:
+**121 páginas com corpo em `docs/`**, 117 com `**Estado:**` e 4 portas de navegação sem estado editorial:
 
 | Pasta | Páginas escritas |
 |---|---|
 | raiz | `index.md`, `convencoes.md`, `glossario.md` |
-| `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md`, `contexto-c4.md`, `visao-geral.md`, `index.md`, `componentes-c4.md`, `fronteira-hot-cold.md`, `modelo-logico.md` — as três últimas são o lote 6 |
+| `arquitetura/` | `migracoes.md`, `seguranca.md`, `adr/index.md`, `adr/adr-db-0001-…`, `adr/adr-db-0002-…`, `padroes-postgres.md`, `integridade-e-constraints.md`, `contexto-c4.md`, `visao-geral.md`, `index.md`, `componentes-c4.md`, `fronteira-hot-cold.md`, `modelo-logico.md`, `retencao-e-capacidade.md` — a última é a entrega de `Q-CAP-1` (2026-11-23) |
 | `dicionario-dados/` | `index.md`, `como-ler.md` e as 19 páginas `dominio-*.md` — escritas em 2026-11-21 |
 | `planos/` | `plano-de-implantacao.md`, `riscos.md`, `plano-de-dados-e-seeds.md`, `plano-de-qualidade-e-gates.md`, `registro-de-execucao.md`, `index.md`, `plano-de-documentacao.md`, `plano-de-testes.md` — o último é do lote 6 |
 | `guia-desenvolvedor/` | `como-adicionar-migration.md`, `como-adicionar-tabela.md`, `checklist-de-pr.md`, `index.md`, `setup-ambiente.md`, `mapa-do-crate.md`, `portas-e-contratos.md`, `modelos-e-invariantes.md`, `como-escrever-teste.md`, `erros-e-logs.md` — os sete últimos são do lote 6 |
@@ -187,7 +187,7 @@ o ponteiro passa a `migrations/index.md`.
 Nenhuma página autoral resta na lista de escrevíveis: as **6** que fechavam em 2026-11-22 foram
 escritas com o lote 5 (§8) — `arquitetura/index`, `planos/index`, `checklist-de-pr`,
 `guia-administrador/index`, `guia-documentacao/index` e `estilo-e-linguagem`. A distribuição por pasta
-está em §2; o que falta é bloqueio (§6), e a soma continua **147** (120 + 0 + 0 + 27).
+está em §2; o que falta é bloqueio (§6), e a soma continua **147** (121 + 0 + 0 + 26).
 
 ### 4.1 `arquitetura/` (0)
 
@@ -252,22 +252,26 @@ não cobre.
 | `guia-documentacao/estrutura-e-navegacao.md` | nome de arquivo (`P8`), uma página por pasta com `index.md`, árvore citada de `§4` | `nav` do mkdocs: não existe config |
 | `guia-documentacao/revisao-e-publicacao.md` | fluxo de revisão e checklist de pronto (`§10`) | a publicação é do `wyd-docs` (`LPDOC`), não desta pasta; a página fecharia só o fluxo de revisão |
 
-## 6. Páginas bloqueadas (27)
+## 6. Páginas bloqueadas (26)
 
-Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`.
+Agrupadas pelo bloqueio — o dono e o marco são os de `lacunas.md`. O registro de fechamento, com o
+caminho de cada página, dono e o que ela desbloqueia, está em `pendencias-de-fechamento.md` §5; esta
+seção continua sendo a dona da fila e do motivo do bloqueio.
 
 **Saiu da lista em 2026-11-22:** `planos/plano-de-documentacao.md`, escrito depois do lote 5 porque
 `D-A` já estava fechada e ele era o primeiro item de §6 sem bloqueio de fonte. A página foi para §2 e
 não fecha a Onda 8; o critério dela continua em `planos/plano-de-documentacao.md` §2.
 
 **Saíram da lista em 2026-11-22:** as **21 páginas de recorte** e as **40 `WYDDB-nnn`**, escritas no
-lote 6; com isso o bloqueio cai de 68 para **27**. As 109 páginas por tabela continuam fora desta
-conta; quantas já existem é de `gerado/index.md`, dono da contagem.
+lote 6; com isso o bloqueio caiu de 68 para **27**. Em **2026-11-23**, `retencao-e-capacidade.md`
+saiu como `proposto` com volume pendente de medição (`Q-CAP-1`), e o bloqueio caiu para **26**. As 109
+páginas por tabela continuam fora desta conta; quantas já existem é de `gerado/index.md`, dono da
+contagem.
 
 | Grupo | Páginas | Bloqueio | Dono / marco |
 |---|---|---|---|
 | arquitetura — deploy e fluxo | `implantacao.md`, `fluxo-de-dados.md` | não há desenho de processo, porta, volume nem mapa das 42 tabelas restantes | arquitetura, depois da série |
-| arquitetura — modelo e retenção | `modelo-conceitual.md`, `retencao-e-capacidade.md` | a forma das 109 tabelas está fechada; faltam o agrupamento conceitual e a medição de volume/capacidade, que só existe depois da série (`M20`) | arquitetura / operação (marco `P3`) |
+| arquitetura — modelo | `modelo-conceitual.md` | a forma das 109 tabelas está fechada; falta o agrupamento conceitual | arquitetura (marco `P3`) |
 | specs — qualidade e matriz | `requisitos-nao-funcionais.md`, `rastreabilidade.md` | nenhum limiar medido; porta, teste e issue não existem para preencher a matriz | arquitetura, ondas 3/7/8 |
 | specs — fluxos e estados sob DDL aberto | `fluxos/criacao-e-selecao-de-personagem.md`, `carregamento-e-save.md`, `concessao-de-grant.md`, `compra-e-credito.md`, `estados/personagem.md`, `estados/grant.md`, `estados/item-e-refino.md` | `0006`, `0009`, `0011`, `0012` e `0021` têm DDL fechado desde 2026-11-21; `A14`, `A19`, `M16` e `M17` estão fechadas — resta o texto do fluxo | produto + arquitetura (marco `P1`/`P3`) |
 | specs — atores | `stakeholders.md` | os 16 `RF-DB` do bloco de identidade existem; falta a matriz ator → requisito dos demais domínios | onda 3 |
