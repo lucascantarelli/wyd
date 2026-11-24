@@ -1,8 +1,9 @@
 # Plano do CI real — Fase 4 (`wyd-ops`)
 
-> **Estado: proposta (`P`, 2026-11-19).** Especifica, arquivo por arquivo, o CI da Fase 4:
-> workflows reutilizáveis, actions compostas, jobs e o status check que passa a ser obrigatório em
-> `develop`. Não altera workflow, ruleset nem ambiente — nada aqui está aplicado.
+> **Estado: proposta (`P`, 2026-11-19; estado revisto em 2026-11-24).** Especifica, arquivo por arquivo,
+> o CI da Fase 4: workflows reutilizáveis, actions compostas, jobs e o status check que passa a ser
+> obrigatório em `develop`. O `docs-check` e o `code.yml` já existem; os demais workflows, actions e o
+> status check continuam proposta e não estão aplicados.
 >
 > **Relação com o dono:** `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §4.1
 > decide a **arquitetura** (workflow reutilizável, action composta, SHA fixado, permissão mínima,
@@ -12,21 +13,23 @@
 
 ---
 
-## 1. Estado medido (`V`, 2026-11-19)
+## 1. Estado medido (`V`, 2026-11-19; revisto em 2026-11-24)
 
 | Fato | Medição |
 |---|---|
-| workflows | 2: `Full Workflow` (`.github/workflows/full-workflow.yml`) e `docs` (`.github/workflows/docs.yml`) |
+| workflows | 4: `docs` (`.github/workflows/docs.yml`), `docs-image` (`.github/workflows/docs-image.yml`), `code` (`.github/workflows/code.yml`) e `Full Workflow` (`.github/workflows/full-workflow.yml`, stub) |
 | actions compostas | 1: `.github/actions/docs-check/action.yml` (mais `.gitkeep`) |
 | `docs` | jobs `verificar` (gate do site) e `publicar` (Pages, só fora de PR); checkout e setup pinados por SHA |
 | `Full Workflow` | 1 job `Get Info`, `success`, saída `version`/`commit` vazias por `$(...)` interpretado pelo shell (§2.1 do dono) |
-| `Full Workflow` — pinagem | `actions/checkout@v7`, **tag móvel**, contra a regra de SHA fixado (§4.1) |
+| `Full Workflow` — pinagem | `actions/checkout` fixado por SHA (`v7.0.1`), como `docs` e `code` (2026-11-24) |
 | ruleset `develop` | `required_approving_review_count: 0`; **nenhum** `required_status_checks` — nada bloqueia por check hoje |
-| código Rust | `crates/wyd-db` tem `Cargo.toml` e `src/dsn.rs` (2026-11-24); os demais crates só têm `.gitkeep`; sem workspace na raiz |
+| código Rust | `crates/wyd-db` tem `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; 6 testes unitários + 13 de schema (2026-11-24); os demais crates só têm `.gitkeep`; sem workspace na raiz |
+| `code` | fmt, clippy, 6 testes unitários e 13 de schema em PG17; **sem** cobertura, `cargo audit` ou `cargo deny` (2026-11-24) |
 | portal | sem `package.json`; nada a compilar |
 
-Consequência: dos cinco estágios de §4.2, **só o de documentação tem o que rodar hoje**. Criar
-`_rust.yml` ou `_portal.yml` agora produziria job que sempre passa — o que §4.2 proíbe.
+Consequência: dos cinco estágios de §4.2, **documentação e código já têm o que rodar**; o portal não
+tem `package.json` e a cobertura/segurança continuam sem gate. Criar `_portal.yml` agora produziria job
+que sempre passa — o que §4.2 proíbe.
 
 ---
 
@@ -198,10 +201,11 @@ entrar antes de qualquer código.
 | Onde | O que diz | O que é medido |
 |---|---|---|
 | `wyd-ops` §4.1 | `docs-check/action.yml # mkdocs build --strict + links` | a 2.0 **não tem** `--strict` (§2.2 do plano do site); a action real roda `preparar.py`, `mkdocs build` e `verificar.py` |
-| `full-workflow.yml:37` | `actions/checkout@v7` | tag móvel, contra a regra de SHA fixado de §4.1; `docs.yml` já usa SHA |
+| `full-workflow.yml:37` | `actions/checkout@v7` | **corrigido em 2026-11-24:** `actions/checkout` passou a SHA fixo, como `docs.yml` e `code.yml` |
 | `docs.yml` — filtros | `push` inclui `planejamento-1.0.0/wyd-1.0.0.md`; `pull_request` **não** | PR que altera só o panorama não roda o gate de docs, mas o merge publica — assimetria a resolver no passo 1 |
 
-Nenhuma das três foi corrigida: são achados deste plano, e duas exigem mexer em workflow.
+A pinagem foi corrigida em 2026-11-24; as outras duas seguem como achados deste plano e exigem mexer
+em workflow.
 
 ## 9. O que este documento não decide
 
