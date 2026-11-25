@@ -61,8 +61,8 @@ Medido em 2026-11-20, neste diretório (a contagem de páginas foi recontada em 
 
 | Medida | Valor | Fonte |
 |---|---:|---|
-| Páginas de planejamento escritas | 11 | `find planejamento-1.0.0/wyd-portal -name '*.md'` (exclui o prompt; inclui a proposta de 2026-11-22) |
-| Páginas em `docs/` | 8 | `docs/index.md`, 4 de `arquitetura/`, 2 de `specs/`, 1 de `roadmap/` |
+| Páginas de planejamento escritas | 13 | `find planejamento-1.0.0/wyd-portal -name '*.md'` (exclui o prompt; 11 até 2026-11-22 + `componentes.md` e `plano-de-testes.md` em 2026-11-25) |
+| Páginas em `docs/` | 10 | `docs/index.md`, 5 de `arquitetura/`, 2 de `specs/`, 1 de `planos/`, 1 de `roadmap/` |
 | Requisitos funcionais | 33 | `docs/specs/requisitos.md` (18 de 2026-11-20 + 15 de armaria e mercado) |
 | Requisitos não funcionais | 10 | `docs/specs/requisitos.md` §5 (7 de 2026-11-20 + 3 de armaria e mercado) |
 | Lacunas abertas | 0 | `lacunas.md` §1 (9 fechadas, `LAC-POR-01` a `LAC-POR-09`; `LAC-POR-09` fechada em 2026-11-23) |
@@ -86,16 +86,23 @@ planejamento-1.0.0/wyd-portal/
     │   ├── fronteira.md         # contrato com wyd-db e wyd-admin
     │   ├── rotas-e-permissoes.md# telas por rota e nível de acesso
     │   ├── consumo-do-banco.md  # o que cada tela lê e escreve
-    │   └── monitoramento.md     # fontes, paridade com o legado e degradação
+    │   ├── monitoramento.md     # fontes, paridade com o legado e degradação
+    │   └── componentes.md      # unidades de código do BFF (proposto, 2026-11-25)
     ├── specs/
     │   ├── requisitos.md        # RF-POR e RNF-POR com critério de aceitação
     │   └── analise-do-prompt.md # o prompt lido contra o que está decidido
+    ├── planos/
+    │   └── plano-de-testes.md   # pirâmide, alvos, dado, isolamento (proposto, 2026-11-25)
     └── roadmap/
         └── roadmap.md           # fatias com DoD, sem issue criada
+├── src/                      # árvore planejada e vazia (2026-11-25); código real mora em wyd-portal/
+└── tests/                    # árvore planejada e vazia (2026-11-25)
 ```
 
-`src/` e `tests/` **não** foram criados: árvore de código se planeja quando a primeira fatia for
-aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5, item 10).
+`src/` e `tests/` foram criados em 2026-11-25 para fechar o checklist D-04 = A (item 3). O conteúdo
+das unidades vive em `docs/arquitetura/componentes.md` e o plano de teste em `docs/planos/plano-de-testes.md`.
+O código real do portal mora em `wyd-portal/` na raiz do repositório (`AGENTS.md` §8.2); as pastas
+aqui são planejamento, não implementação.
 
 ## 6. O que falta para o planejamento sair de rascunho
 
@@ -107,7 +114,8 @@ aprovada, e pasta vazia por simetria é enfeite (`AGENTS.md` §5, item 10).
 | ~~`LAC-POR-04`~~ — **decidida:** ranking direto de `game` com `LIMIT` e cache BFF de 60 s | arquitetura | sem tabela/view materializada nova |
 | ~~`LAC-POR-05`~~ — **decidida:** TOTP em `portal.person_authenticator`, só staff | produto + segurança | `RF-POR-013`; DDL no lote `0031` do `wyd-db` |
 | ~~`LAC-POR-06`~~ — **decidida:** telemetria vem do `/metrics` Prometheus do `wyd-server`, coletado pelo `wyd-ops`; o portal consulta a API | `wyd-ops` + arquitetura | NOC mostra CPU/RAM/latência com instante da amostra; sem tabela nova no `wyd-db` |
-| Planejar o `wyd-admin` | arquitetura | forma do contrato C4 (rotas, payload, códigos) |
+| ~~Planejar o `wyd-admin`~~ — **planejado** (`wyd-admin/docs/arquitetura/contrato-c4.md`) | arquitetura | forma do contrato C4 (rotas, payload, códigos) |
+| ~~Árvore de `src/` e `tests/` e plano de teste~~ — **fechados em 2026-11-25** | equipe do portal | `docs/arquitetura/componentes.md` e `docs/planos/plano-de-testes.md` |
 | Contrato de observabilidade do `wyd-ops` | `wyd-ops` | valor de URL/credencial, intervalo de coleta, retenção definitiva e dashboards; fontes e nomes estão em `docs/arquitetura/monitoramento.md` |
 | ~~Decidir armaria e mercado~~ — **decididas:** D1–D10 em 2026-11-22 | produto + arquitetura | `armaria-e-mercado.md`, `requisitos.md` §4, `roadmap.md` F7–F11; schema no lote `0034` (`LAC-ADM-07` fechada) |
 | ~~Executor da transferência de item~~ — **fechada em 2026-11-22** | arquitetura + `wyd-admin` | contrato nas quatro rotas do C4 (`contrato-c4.md` §4.9–§4.13) e fatia `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada); F8 espera aplicar a série |
@@ -126,7 +134,7 @@ cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output sit
 ```
 
 O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
-  `sistemas/wyd-portal/` e, na última medição (2026-11-24), passou com **309 páginas** e **307 fontes**
+  `sistemas/wyd-portal/` e, na última medição (2026-11-25), passou com **386 páginas** e **384 fontes**
   verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.

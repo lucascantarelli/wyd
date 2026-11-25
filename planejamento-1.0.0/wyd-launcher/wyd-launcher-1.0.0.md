@@ -37,6 +37,8 @@ do **manifesto, do patch e da integridade** do lado da máquina do jogador.
 | L5 | assinatura do manifesto | launcher verifica | Ed25519 destacado sobre bytes canônicos; chave pública no launcher | manifesto adulterado não aplica patch | **decidido** `LLCH-03` (`Q-LCH-3` = A, 2026-11-23): verificação antes de aplicar, chave privada no `wyd-ops` |
 | L6 | entrega do executável ao jogador | `wyd-ops` | instalador Tauri (NSIS) + updater Ed25519 | instalador reproduzível | **decidido** `LLCH-04` (`Q-LCH-4` = A, 2026-11-23): GitHub Releases, updater reusa L1/L5 |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-LCH` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (8 `RF-LCH` + 5 `RNF-LCH`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LLCH-01`–`LLCH-04` fechadas; implementação pendente.
+
 ## 4. Estado medido (`V`, 2026-11-22)
 
 | Medida | Valor | Comando |

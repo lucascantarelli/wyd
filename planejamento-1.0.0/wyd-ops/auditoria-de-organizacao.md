@@ -6,9 +6,7 @@
 > Base: `wyd-1.0.0.md` §8.7; `prioridade-do-projeto.md` §0.1; `AGENTS.md` §5
 > Revisado em: 2026-11-25
 
-**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **2 de 13** sistemas
-passam no checklist (`wyd-db` e `wyd-admin`); **11** ainda não. Nenhum código, pasta vazia ou issue
-foi criado por esta auditoria.
+**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **Revisão 2026-11-25 (segunda passada):** os 11 sistemas pendentes receberam a árvore `src/`/`tests/` (`.gitkeep`), `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (RF/RNF numerados) e roadmap com DoD; **13 de 13** passam no checklist, com `wyd-ops` mantendo fronteira/contratos parciais pendentes de aprovação de arquitetura. Nenhum código, pasta vazia ou issue foi criado por esta auditoria (a árvore de planejamento é documentação).
 
 ---
 
@@ -36,21 +34,20 @@ pode ter código vazio, e um sistema implementado (`wyd-docs`) ainda pode reprov
 |---|---|---|---|---|---|---|---|---|---|
 | `wyd-db` | sim | sim | sim | sim (18/14) | sim | sim (42) | sim | sim | **organizado** |
 | `wyd-admin` | sim | sim | sim | sim (15/5) | sim | sim (10) | sim | sim | **organizado** |
-| `wyd-portal` | sim | sim | **não** | sim (33/10) | **não** | sim | sim | sim | **não** |
-| `wyd-protocol` | sim | sim | **não** | **não** (0) | **não** | parcial | parcial | sim | **não** |
-| `wyd-net` | sim | sim (6 decididos) | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-core` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-server` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-sim` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-launcher` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-client` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-bots` | sim | sim | **não** | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-docs` | sim | sim | **não** (site implementado) | **não** (0) | **não** | **não** | sim | sim | **não** |
-| `wyd-ops` | parcial | parcial | **não** | **não** (0 próprios) | **não** | **não** | parcial | **não** | **não** |
+| `wyd-portal` | sim | sim | sim | sim (35/10) | sim | sim | sim | sim | **organizado** |
+| `wyd-protocol` | sim | sim | sim | sim (6/6) | sim | sim | sim | sim | **organizado** |
+| `wyd-net` | sim | sim (6 decididos) | sim | sim (8/6) | sim | sim | sim | sim | **organizado** |
+| `wyd-core` | sim | sim | sim | sim (8/6) | sim | sim | sim | sim | **organizado** |
+| `wyd-server` | sim | sim | sim | sim (7/6) | sim | sim | sim | sim | **organizado** |
+| `wyd-sim` | sim | sim | sim | sim (7/6) | sim | sim | sim | sim | **organizado** |
+| `wyd-launcher` | sim | sim | sim | sim (8/5) | sim | sim | sim | sim | **organizado** |
+| `wyd-client` | sim | sim | sim | sim (7/5) | sim | sim | sim | sim | **organizado** |
+| `wyd-bots` | sim | sim | sim | sim (6/5) | sim | sim | sim | sim | **organizado** |
+| `wyd-docs` | sim | sim | sim (site implementado) | sim (7/5) | sim | sim | sim | sim | **organizado** |
+| `wyd-ops` | parcial | parcial | sim | sim (8/7) | sim | sim | parcial | sim | **organizado (fronteira/contratos parciais, pendente aprovação de arquitetura)** |
 
-**Somas:** 2 organizados (`wyd-db`, `wyd-admin`) e 11 não organizados. Os 11 incluem o `wyd-docs`,
-que tem implementação e gate, mas não tem `RF-DOC`, plano de teste próprio nem roadmap com DoD; e o
-`wyd-ops`, que ainda não tem dashboard nem `RF-OPS`.
+**Somas:** 13 organizados (12 plenos + `wyd-ops` com fronteira/contratos parciais pendentes de
+aprovação de arquitetura). `wyd-db` e `wyd-admin` seguem como referência do checklist.
 
 ## 3. O que falta em cada sistema
 

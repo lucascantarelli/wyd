@@ -50,6 +50,8 @@ O que ele **não** é: fonte de verdade. O `deprecated/` e a árvore local do cl
 | K4 | conteúdo do patch e `strdef.bin` | cliente → `wyd-launcher` | artefato versionado | patch descreve exatamente os arquivos | **lacuna** `LCLI-02` |
 | K5 | anonimização de dado de jogador | cliente garante | conta, nome, IP e chat removidos antes de gravar | nenhum dado pessoal em artefato versionado | **decidido** (`LPRT-10`), operação pendente |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-CLI` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-CLI` + 5 `RNF-CLI`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LCLI-01` fechado; `LCLI-02`/`LCLI-03`/`LCLI-05` abertas/propostas; A1 autorizada.
+
 ## 4. Estado medido (`V`, 2026-11-22; páginas recontadas em 2026-11-23)
 
 | Medida | Valor | Fonte |

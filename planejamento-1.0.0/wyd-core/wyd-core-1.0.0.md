@@ -162,6 +162,8 @@ devolve linha crua e não expõe SQLSTATE ao core.
 política de retry do adapter e tabelas de outros domínios. A classificação de estado é C6; a porta é
 C4; ambas foram decididas em 2026-11-23.
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-CORE`/`RNF-CORE` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (8 `RF-CORE` + 6 `RNF-CORE`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LCORE-01`–`LCORE-04` já fechadas; implementação pendente.
+
 ## 4. Estado medido (`V`, 2026-11-22)
 
 | Medida | Valor | Comando |

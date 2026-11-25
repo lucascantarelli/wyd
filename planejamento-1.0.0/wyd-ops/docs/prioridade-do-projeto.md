@@ -13,7 +13,7 @@
 **Foco aprovado em 2026-11-24 (D-01 = A): frente A — finalizar o `wyd-db`. A leva `migrations/` executou 28 `.sql` do zero, 13 cenários verdes e teve as 27 páginas aceitas (D-03 = A).**
 
 O `wyd-db` tem **64** células pendentes (24 `Teste` + 40 `Issue`) em `rastreabilidade.md` §1, **26** das **39**
-capacidades sem execução (`capacidades.md` §7) e **141** atos de aceite, todos em `docs/` (`pendencias` §1):
+capacidades sem execução (`capacidades.md` §7) e **142** atos de aceite, todos em `docs/` (`pendencias` §1):
 as **27** páginas de `migrations/` foram aceitas em 2026-11-24, e a pasta está com **28 de 28**. Já rodaram
 **13** capacidades (`CAP-24`–`CAP-36`, `sistema_pg` §1.1) e a matriz está **13 de 39**.
 
@@ -58,7 +58,7 @@ antes do uso da série real (§0.1, D-06; opções e recomendação em `../../wy
 
 **Aprovada em 2026-11-24 (A):** o foco é finalizar o `wyd-db`; a ordem dos atos está em §0.2.
 
-**Bloqueado hoje:** **141** atos de aceite, **64** células (**24** `teste` + **40** `issue`), **40** issues
+**Bloqueado hoje:** **142** atos de aceite, **64** células (**24** `teste` + **40** `issue`), **40** issues
 abertas (#82–#121) e **0** vinculadas às linhas e **26** capacidades sem execução (**13 de 39**); as **2**
 `Q-BLK` (`20`, `22`) foram respondidas em A em 2026-11-24. A alternativa B tem **48** `RF` (15 `admin` + 33 `portal`), **10** sistemas sem
 `RF`, **12** planos e **1** plano diretor ausente (`wyd-ops`); a C tem **3** células `teste`, **9** linhas
@@ -313,7 +313,7 @@ seria inflar o ranking.
 | linhas da matriz de rastreabilidade com página que **nomeia** o requisito | **31 de 40** (29 em `sistema-pg`, 1 em `sistema-sessoes`, 1 em `sistema-stack-caps`); **9** sem página e **4** sem `CAP-nn` na coluna `Teste` (`RF-DB-003`, `006`, `014` e `RNF-DB-001`); **3** células são `—` por regra | `docs/specs/rastreabilidade.md` §1, §1.1 e §3.4 |
 | páginas de `tests/` assinadas pelo dono | **12 de 12** `aceito (2026-11-24)`; **0** `proposto` | `wyd-db/revisao-de-q-blk-21.md` §5 |
 | páginas de `migrations/` `aceito` | **28 de 28** (2026-11-24: 27 na leva, `0002` desde 2026-11-20) | `grep -l '^\*\*Estado:\*\* aceito' planejamento-1.0.0/wyd-db/migrations/*.md`; `pendencias` §6.6.31 |
-| atos de aceite pendentes no `wyd-db` | **141** (141 `docs/` + **0** `src/` + **0** `migrations/` + **0** `tests/`) | `pendencias-de-fechamento.md` §6.6.22.1, §6.6.27 e §6.6.31 |
+| atos de aceite pendentes no `wyd-db` | **142** (142 `docs/` + **0** `src/` + **0** `migrations/` + **0** `tests/`) | `pendencias-de-fechamento.md` §6.6.22.1, §6.6.27 e §6.6.31 |
 
 ## 3. As quatro frentes, com número e fonte
 
@@ -386,8 +386,8 @@ hoje”.
 **40** células `issue`; o censo tem dono em `rastreabilidade.md` §1. As 37 células `teste` da matriz não
 entram inteiras porque **13** já estão em `V` — executadas em 2026-11-24 —, e `V` não é pendência. As **40**
 issues do roadmap não entram como item à parte: é na
-célula `issue` que a alocação delas se registra, e nenhuma das 40 tem número (`rastreabilidade.md` §3.3). Os
-**141** atos de aceite são contados em `pendencias-de-fechamento.md` §6.6.22.1 e não entram nas células.
+célula `issue` que a alocação delas se registra, e nenhuma das 40 tem número (`rastreabilidade.md` §3.3). Os **142**
+atos de aceite são contados em `pendencias-de-fechamento.md` §6.6.22.1 e não entram nas células.
 
 **A leitura em uma frase:** A ganha por ser o único caminho que converte trabalho em artefato verificável
 hoje; C fecha 3 células e para; B abre planejamento alheio sem fechar nada do piloto; D é etapa de A.
@@ -518,7 +518,7 @@ executada na mesma data — o dono revisou e assinou as 12 páginas, que estão 
 | Fato | Deixa de valer quando | Onde atualizar |
 |---|---|---|
 | **26** capacidades sem execução (13 de 39 cobertas) | os quatro alvos restantes rodarem, ou `CAP-37`–`CAP-39` ganharem código | `tests/specs/capacidades.md` §7 e §2–§6 |
-| **141** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
+| **142** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
 | **28** páginas de `migrations/` `aceito` | uma página deixar de estar `aceito` | §5; `pendencias` §6.6.31 |
 | **D-02** = B (cobertura informativa; audit/deny bloqueantes) | uma checagem sair do `code.yml` ou a política mudar | `plano-ci-real.md` §1, §5 e §7; esta página §0.1 |
 | **D-04** = A (organização definida) | a auditoria de 2026-11-25 for revista | `../auditoria-de-organizacao.md`; esta página §0.1 |

@@ -1,10 +1,10 @@
 # `wyd-client` — lacunas e decisões pendentes (registro único)
 
-> **Estado: registro vivo (2026-11-23).** Único lugar onde uma lacuna do `wyd-client` tem dono,
+> **Estado: registro vivo (2026-11-25).** Único lugar onde uma lacuna do `wyd-client` tem dono,
 > impacto e estado. `LCLI-04` foi decidida pelo dono em 2026-11-23 e `LCLI-01` fechou com `LPRT-09`
 > (`Q-PRT-1`) na mesma data. Em 2026-11-23 o dono assumiu a segunda leitura (`LCLI-03`) e a
-> responsabilidade nominal por direitos (`LCLI-05`), com distribuição congelada; as duas seguem como
-> aberta e proposta até a ficha e a evidência.
+> responsabilidade nominal por direitos (`LCLI-05`), com distribuição congelada. `LCLI-02`, `LCLI-03` e
+> `LCLI-05` foram **aprovados em 2026-11-25** (decididos); execução/evidência seguem pendentes.
 
 ## 0. Como ler
 
@@ -15,20 +15,20 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 
 | Grupo | Lacunas | Abertas | Propostas | Fechadas |
 |---|---:|---:|---:|---:|
-| Medição do cliente | 2 | 1 | 0 | 1 |
-| Distribuição | 2 | 1 | 1 | 0 |
+| Medição do cliente | 2 | 0 | 0 | 2 |
+| Distribuição | 2 | 0 | 0 | 2 |
 | Processo | 1 | 0 | 0 | 1 |
-| **Total** | **5** | **2** | **1** | **2** |
+| **Total** | **5** | **0** | **0** | **5** |
 
 ## 2. Lacunas
 
 | ID | Pergunta | Por que importa | Dono | Estado |
 |---|---|---|---|---|
 | `LCLI-01` | Qual build do cliente é o alvo, e qual é a identidade verificável dele (versão declarada e hash do binário)? | é `LPRT-09` vista do lado do cliente: sem build-alvo, offset e opcode ficam ambíguos | frente `wyd-client` + pesquisa | fechada (2026-11-23: `Q-PRT-1`/`LPRT-09` fixou o cliente 7662 com versão e SHA-256 completos; identidade em `registro-do-cliente.md` §4) |
-| `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | aberta |
-| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | aberta (2026-11-23: **Lucas Cantarelli**, dono do produto, assina a segunda leitura e **não é o operador**; o nome do operador entra na ficha; nunca quem capturou; a lacuna fecha com a primeira ficha assinada) |
+| `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | decidida (2026-11-25, aprovado pelo dono; execução pendente) |
+| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | decidida (2026-11-25, aprovado pelo dono: Lucas Cantarelli assina a segunda leitura e não é o operador; o nome do operador entra na ficha; a lacuna fecha com a primeira ficha assinada) |
 | `LCLI-04` | Qual ferramenta faz a captura, onde ela mora, quem responde por ela e como impede gravar dado de jogador? | captura sem ferramenta e fronteira aprovadas vira script solto ou grava dado pessoal; `AGENTS.md` §5, item 6 proíbe executável em `planejamento-1.0.0/` | dono de `wyd-client`; `wyd-protocol` valida o golden; QA revisa | fechada (opção A em 2026-11-23; D3–D6 decididos; implementação pendente) |
-| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **proposta** (2026-11-23: responsável nominal; **distribuição congelada**; `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote do pedido prontos, canal de suporte decidido, envio pelo dono ainda não realizado, sem evidência; `LCLI-02` aberta; nenhuma resposta fechou a lacuna) |
+| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **decidida** (2026-11-25, aprovado pelo dono: responsável nominal; distribuição congelada; `Q-IP-1`/`Q-IP-2` aprovados; evidência do titular e `LCLI-02` seguem pendentes) |
 
 ### 2.1 `LCLI-04` — decisão da ferramenta e pendências de execução (2026-11-23)
 

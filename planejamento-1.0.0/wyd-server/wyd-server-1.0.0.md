@@ -42,6 +42,8 @@ do processo, não da regra de jogo.
 | S6 | mapa canal → URL de controle | configuração de deploy | `WYD_SERVER_CONTROL_URLS` | muda com a topologia, não com o jogador | `wyd-ops` | **decidido** (`LAC-ADM-03` §3.3) |
 | S7 | captura local (`ECAP`) | CLI de `wyd-client` → endpoint local | TCP em loopback, uma conexão, bruto `.wydcap`; separado de `EPROD` | sem produção; peer de A1 vem da opção A, porque a condição de C foi reprovada (`LSRV-05`, §9.1) | `wyd-server` (endpoint), `wyd-client` (CLI) | **A1 autorizada em 2026-11-23; implementação pendente** (`docs/specs/endpoint-de-captura.md`) |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-SRV` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-SRV` + 6 `RNF-SRV`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LSRV-01`–`LSRV-05` fechadas; implementação e captura pendentes. `LSRV-05` (peer) segue dependente da captura.
+
 ## 4. Estado medido (`V`, 2026-11-22; páginas recontadas em 2026-11-23)
 
 | Medida | Valor | Comando |

@@ -87,6 +87,15 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: skills
+    attributes:
+      label: Skills que o agente deve carregar
+      description: Liste as skills (de .agents/skills ou cloud skills) que o agente deve carregar para executar esta issue. Ex.: planejar-sistema, auditar-planejamento, documentation-writer.
+      placeholder: planejar-sistema, auditar-planejamento
+    validations:
+      required: false
+
   - type: checkboxes
     id: confirmacoes
     attributes:

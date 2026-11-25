@@ -42,6 +42,8 @@ Estados: **decidido** (decisão registrada em outro documento), **proposto** (es
 | N6 | limite por conexão, timeout e rate-limit | net decide | balde por conexão, porte por IP, total por shard, timeout; recusa tipada + contador + fechamento | valores medidos, não prometidos | `wyd-net` | **política decidida** `Q-NET-1` = A (2026-11-23); **`LNET-01` aberta como medição** |
 | N7 | política de versão de protocolo na sessão | net impõe | build-alvo 7662 no handshake; erro tipado para build não suportado | build fora do alvo é recusado; sem tabela de compatibilidade | `wyd-net` + `wyd-client` | **decidido** (`LNET-02` / `Q-NET-2` = A, 2026-11-23) |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-NET`/`RNF-NET` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (8 `RF-NET` + 6 `RNF-NET`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LNET-01` (limites) permanece aberta como medição; `LNET-02`/`LNET-03`/`LNET-04` fechadas. Nenhuma lacuna de captura foi reaberta.
+
 ## 4. Estado medido (`V`, 2026-11-22)
 
 | Medida | Valor | Comando |

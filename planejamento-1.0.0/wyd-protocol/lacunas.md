@@ -5,8 +5,8 @@
 > prova em contrário.
 >
 > **O que este arquivo cobre:** as **20 lacunas** `LPRT-01`–`LPRT-20` do planejamento do protocolo.
-> **18 foram decididas pelo dono** — 17 em 2026-11-20 e `LPRT-09` (build-alvo) em 2026-11-23; **2
-> continuam abertas**, `LPRT-03` e `LPRT-06`, ambas dependentes de captura. Nenhuma decisão aqui inventa
+> **20 foram decididas pelo dono** — 17 em 2026-11-20, `LPRT-09` em 2026-11-23 e `LPRT-03`/`LPRT-06`
+> em 2026-11-25 (aprovados; prova de byte segue pendente de captura). Nenhuma decisão aqui inventa
 > byte: as pendentes de prova seguem `H` até o golden ou a leitura datada.
 >
 > **O que este arquivo não é:** não decide. Cada linha diz **quem** decide e **o que** precisa ser
@@ -74,19 +74,18 @@ tamanho do catálogo publicado. A contagem publicada é a do gerador novo, com p
 | Grupo | Lacunas | Abertas | Propostas | Fechadas |
 |---|---:|---:|---:|---:|
 | Escopo e contrato | 4 | 0 | 0 | 4 (`LPRT-01`, `LPRT-18`, `LPRT-19`, `LPRT-09`) |
-| Fio e codec | 6 | 2 (`LPRT-03`, `LPRT-06`) | 0 | 4 (`LPRT-02`, `LPRT-05`, `LPRT-07`, `LPRT-08`) |
+| Fio e codec | 6 | 0 | 0 | 6 (`LPRT-02`, `LPRT-03`, `LPRT-05`, `LPRT-06`, `LPRT-07`, `LPRT-08`) |
 | Payload e prova | 4 | 0 | 0 | 4 (`LPRT-04`, `LPRT-10`, `LPRT-11`, `LPRT-13`) |
 | Qualidade e entrega | 6 | 0 | 0 | 6 (`LPRT-12`, `LPRT-14`, `LPRT-15`, `LPRT-16`, `LPRT-17`, `LPRT-20`) |
-| **Total** | **20** | **2** | **0** | **18** |
+| **Total** | **20** | **0** | **0** | **20** |
 
 As 18 fechadas são **decisões do dono**: 17 registradas em 2026-11-20 e `LPRT-09` em 2026-11-23; a
 proposta correspondente está no plano diretor §10. Fechar a lacuna não fecha a prova: página de `wire/`, `payloads/` ou `goldens/`
 continua exigindo `V` (golden, captura ou leitura do cliente) nas afirmações de byte.
 
 **A1 autorizada em 2026-11-23 (resposta A).** O dono autorizou a implementação do peer da opção A, do
-`ECAP` e da CLI, e a execução da captura A1. Isso não fecha `LPRT-03` nem `LPRT-06`: `LPRT-03` só fecha
-com a captura completa, a segunda leitura e o golden; `LPRT-06` continua dependente das capturas B/C e do
-seed sintético.
+`ECAP` e da CLI, e a execução da captura A1. A decisão de política de `LPRT-03` e `LPRT-06` foi aprovada
+em 2026-11-25 (decididas); a prova de byte segue dependente da captura completa, da segunda leitura e dongolden (`LPRT-03`), e das capturas B/C e do seed sintético (`LPRT-06`).
 
 ---
 
@@ -106,10 +105,10 @@ seed sintético.
 | ID | Pergunta | Por que importa | Dono | Marco | Estado | Evidência |
 |---|---|---|---|---|---|---|
 | `LPRT-02` | O servidor aceita checksum divergente? | o legado tolerava; tolerar em produção esconde corrupção e abre margem para pacote forjado; recusar pode quebrar cliente real | arquitetura + frente `wyd-net` | `W2` | fechada | **decisão do dono (2026-11-20): recusar checksum divergente, sem modo tolerante**; o legado tem as duas políticas (`src/codec/checksum.rs`, 2026-11-19) e a `1.0.0` fica estrita |
-| `LPRT-03` | De onde vem a semente (`KeyWord`) da ofuscação? | define se `KeyWord` é escolhido pelo servidor, herdado do cliente ou constante; muda o handshake e o teste | pesquisa + arquitetura | `W2` | aberta | **decisão do dono (2026-11-20): o crate recebe a `KeyWord` do chamador e não assume origem**; legado usa `KEY_TABLE` com 16 pares (`src/codec/generated/keyword_table.rs`, 2026-11-19) e a regra de escolha continua não medida no cliente |
+| `LPRT-03` | De onde vem a semente (`KeyWord`) da ofuscação? | define se `KeyWord` é escolhido pelo servidor, herdado do cliente ou constante; muda o handshake e o teste | pesquisa + arquitetura | `W2` | decidida (2026-11-25, aprovado pelo dono: o crate recebe a `KeyWord` do chamador e não assume origem; prova de byte segue pendente de captura) | **decisão do dono (2026-11-20): o crate recebe a `KeyWord` do chamador e não assume origem**; legado usa `KEY_TABLE` com 16 pares (`src/codec/generated/keyword_table.rs`, 2026-11-19) e a regra de escolha continua não medida no cliente |
 | `LPRT-05` | O layout é lido por `repr(C)` ou por leitura explícita offset a offset? | `repr(C)` depende de compilador e de padding; leitura explícita é mais lenta de escrever e mais estável. Muda `unsafe`, portabilidade e prova | arquitetura | `W2` | fechada | **decisão do dono (2026-11-20): leitura explícita offset a offset, sem `unsafe`**; o legado mistura `#[repr(C)]` e leitura explícita (`src/wire/header.rs:74`, 2026-11-19) |
 | `LPRT-07` | O que o codec faz com frame exatamente em 8192 e acima disso? | limite é defesa contra amplificação; a reação correta depende de `wyd-net` e do cliente | arquitetura + frente `wyd-net` | `W2` | fechada | **decisão do dono (2026-11-20): aceitar `Size = 8192` e recusar acima com erro tipado**; `MAX_MESSAGE_SIZE = 8192` no legado (`src/wire/header.rs:22`); a borda ainda exige golden, pelo processo de `LPRT-10` |
-| `LPRT-06` | Qual encoding, tamanho e terminador de string o cliente usa? | nome de personagem e mensagem de chat atravessam o fio; errar encoding corrompe dado e cria bug intermitente | pesquisa + frente `wyd-core` | `W4` | aberta | **decisão do dono (2026-11-20): o codec não transcodifica; string é bytes de tamanho fixo declarado**; encoding e terminador fecham com captura de texto acentuado — nenhuma existe hoje e o legado não declara encoding na API pública |
+| `LPRT-06` | Qual encoding, tamanho e terminador de string o cliente usa? | nome de personagem e mensagem de chat atravessam o fio; errar encoding corrompe dado e cria bug intermitente | pesquisa + frente `wyd-core` | `W4` | decidida (2026-11-25, aprovado pelo dono: o codec não transcodifica; string é bytes de tamanho fixo declarado; prova de byte segue pendente de captura) | **decisão do dono (2026-11-20): o codec não transcodifica; string é bytes de tamanho fixo declarado**; encoding e terminador fecham com captura de texto acentuado — nenhuma existe hoje e o legado não declara encoding na API pública |
 | `LPRT-08` | O que fazer com `Type` fora do catálogo? | descartar em silêncio esconde incompatibilidade; derrubar conexão transforma mensagem nova em queda | frente `wyd-net` + arquitetura | `W3` | fechada | **decisão do dono (2026-11-20): o codec devolve `UnknownType` tipado e não decide**; reação (log, descarte ou encerramento) é de `wyd-net` |
 
 ### 2.3 Payload e prova

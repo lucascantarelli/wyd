@@ -36,6 +36,8 @@ chamadas: a mesma entrada produz a mesma saída.
 | M3 | versão do cálculo | sim declara | `formula_version` próprio + `content_version` usado, na resposta | mudança de fórmula é rastreável | `wyd-sim` + `wyd-db` | **decidido** `LSIM-02` (`Q-SIM-2` = A, 2026-11-23) |
 | M4 | prova de determinismo | sim → QA | fixtures JSON versionadas com entrada, saída esperada e identificador da versão de fórmula | reprova quando diverge | QA + `wyd-sim` | **decidido** `LSIM-03` (`Q-SIM-3` = A, 2026-11-23); fixture não implementada |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-SIM` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-SIM` + 6 `RNF-SIM`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LSIM-01`–`LSIM-04` fechadas; implementação e fixtures pendentes.
+
 ## 4. Estado medido (`V`, 2026-11-22)
 
 | Medida | Valor | Comando |
