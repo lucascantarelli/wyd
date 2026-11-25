@@ -4,7 +4,7 @@
 > Público: dono, arquitetura, operação, jurídico, curadoria de conteúdo e equipe do `wyd-db`
 > Dono: `wyd-db` mantém o registro; cada linha nomeia o dono da decisão
 > Base: `lacunas.md`; `proposta-paginas.md` §4–§8; `migrations-checklist.md` §2–§3; `proposta-decisoes-m33.md`; `proposta-retencao-pendente.md`; `proposta-decisoes-capacidade.md`; `plano-migrations.md` §4 e §6; `ddl-confirmado.md` §5.9
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-23). Este é um **registro de fechamento**, não uma nova lacuna e não um
 plano de execução. Ele reúne o que as páginas donas já declaram, com o identificador de cada item, e
@@ -22,7 +22,7 @@ lacuna, não renumera ID e não altera as contagens de `lacunas.md`.
 | lacunas do `wyd-db` | **38**: 0 abertas, 0 propostas, 35 fechadas, 3 externas (`A11`, `A20`, `M21`) | `lacunas.md` §1 |
 | páginas autorais de `docs/` | **144**: 143 com corpo, 0 escrevíveis, 0 de recorte, **1 bloqueada** (`planos/metricas.md`) | `proposta-paginas.md` §2–§6; §6.6.19 |
 | migrations por arquivo | **34**: 28 com página, **6 seeds bloqueados** | `migrations-checklist.md` §2 e §4 |
-| páginas de seção de `migrations/` | `index.md` escrito; `serie-e-regras.md` **não escrito** | `migrations/index.md`; `wyd-db-1.0.0.md` §11 |
+| páginas de seção de `migrations/` | `index.md` e `serie-e-regras.md` escritos; `serie-e-regras.md` `aceito` em 2026-11-25 | `migrations/index.md`; `migrations/serie-e-regras.md`; `wyd-db-1.0.0.md` §11 |
 | aceite de página de migration | **28 de 28 escritas** `aceito` (2026-11-24: 27 na leva `migrations/`, `0002` desde 2026-11-20); as 6 de seed seguem por escrever | `proposta-decisoes-m33.md` §2 e §4; §6.6.31 |
 | aceite pendente no sistema | **141 atos**: 141 em `docs/` + **0** em `src/` + **0** em `migrations/` + **0** em `tests/` (12 de `tests/`, 37 de `src/` e 27 de `migrations/` aceitas em 2026-11-24) | §6.6.22.1, §6.6.27 e §6.6.31 (remedido em 2026-11-24) |
 | decisões de retenção | **7 propostas, 7 resolvidas**, **0 abertas** (`Q-RET-5` por evidência; `Q-RET-1`, `Q-RET-2` e `Q-RET-4` pelo dono em 2026-11-23; `Q-RET-6` e `Q-RET-7` pelo dono em 2026-11-24; `Q-RET-3` pelo dono em 2026-11-24, opção A) | `proposta-retencao-pendente.md` §4 e §9 |
@@ -36,9 +36,9 @@ lacuna, não renumera ID e não altera as contagens de `lacunas.md`.
 `M32` continua fechada; `A11`, `A20` e `M21` continuam `externa`. Este registro não reabre nenhuma
 delas.
 
-**Fontes ausentes que não podem determinar prazo:** `migrations/serie-e-regras.md` e `planos/metricas.md`
-não existem no worktree em 2026-11-23; são páginas pendentes, não fonte de decisão. `migrations/index.md`
-existe e não fixa retenção. Os seis seeds estão nas migrations, mas não carregam prazo de retenção.
+**Fontes que não podem determinar prazo:** `migrations/serie-e-regras.md` foi escrita e aceita em
+2026-11-25, mas não fixa prazo de retenção; `planos/metricas.md` continua pendente de medição. Os seis
+seeds estão nas migrations, mas não carregam prazo de retenção.
 
 ## 2. O que significa "fechar" nesta frente
 
@@ -47,7 +47,7 @@ Há dois limiares diferentes, e a fila não deve confundi-los:
 | Limiar | Critério verificável | O que ainda falta |
 |---|---|---|
 | **Decisão da frente** | nenhuma pergunta de retenção/capacidade sem resposta; nenhuma categoria `pendente` sem dono; nenhuma pendência do `wyd-db` dependendo de suposição | **0 `Q-RET` abertas**; 3 lacunas externas permanecem externas; `Q-DP-2/validação` continua pendente como validação separada |
-| **Documentação 1.0.0** | as 144 páginas de `docs/` escritas e `aceito`/`retirado`; 34 páginas de migration + `serie-e-regras`; `planos/metricas.md` medido; todos os links e gates verdes | 7 páginas bloqueadas; 6 seeds; `metricas.md`; `serie-e-regras.md`; aceite página a página |
+| **Documentação 1.0.0** | as 144 páginas de `docs/` escritas e `aceito`/`retirado`; 34 páginas de migration + `serie-e-regras`; `planos/metricas.md` medido; todos os links e gates verdes | 7 páginas bloqueadas; 6 seeds; `metricas.md`; aceite página a página |
 
 O primeiro limiar é o que esta rodada ataca. O segundo depende do primeiro e de execução da série;
 não pode ser declarado fechado só porque as decisões foram tomadas.
@@ -294,7 +294,7 @@ verificada (`plano-migrations.md` §4). Custo é estimativa de curadoria + escri
 | ID | Pendência | Dono | Custo estimado | Dependência externa | Consequência de não fazer | Desbloqueia |
 |---|---|---|---|---|---|---|
 | `M20/metricas` | escrever `planos/metricas.md` com número medido | arquitetura + operação | 1 sessão, **depois** da série | a série precisa existir e ser medida | o critério de saída da documentação 1.0.0 não fecha; o item 10 de §10 segue com a metade suspensa | métrica, contagem real e aceite de página |
-| `SERIE-REGRAS` | escrever `migrations/serie-e-regras.md` | `wyd-db` | 1 sessão | nenhuma decisão nova; a fonte é `plano-migrations.md` §2/§6 e `src/migrate/spec.md` | a 5ª onda continua aberta; a política da série não tem um único dono publicado | 5ª onda e operação da série |
+| `SERIE-REGRAS` | ~~escrever `migrations/serie-e-regras.md`~~ — **feito em 2026-11-25**, `aceito` | `wyd-db` | concluído | nenhuma decisão nova; a fonte é `plano-migrations.md` §2/§6 e `src/migrate/spec.md` | a página existe, mas a política de `down` continua aberta em `Q-SERIE-1` | 5ª onda e operação da série |
 | `Q-RET-1/aplicação` | criar o índice completo por `expires_at` e o `DELETE` diário de `portal.person_token` | `wyd-db` + `wyd-ops` | 2–4 h de índice/migration + 1 sessão de job | outra frente: `wyd-ops`; sem jurídico | a decisão existe, mas a tabela não está pronta para produção nem tem expurgo | produção de `person_token`, expurgo diário e a linha de índice |
 | `Q-RET-2/aplicação` | criar o `DELETE` diário de `ops.login_attempt` usando `ix_login_attempt_occurred` | `wyd-ops` | 1 sessão de job | outra frente: `wyd-ops`; sem jurídico e sem índice novo | a decisão existe, mas a tabela continua sem expurgo e não vai a produção | produção de `login_attempt` e expurgo diário |
 | `Q-RET-4/aplicação` | criar o índice por `expires_at` e o `DELETE` diário de `game.pin_reset` | `wyd-db` + `wyd-ops` | 2–4 h de índice/migration + 1 sessão de job | outra frente: `wyd-ops`; sem jurídico; TTL ainda é `B1` | a decisão existe, mas `pin_reset` não vai a produção e pedidos nunca usados crescem | produção e expurgo de `pin_reset` |

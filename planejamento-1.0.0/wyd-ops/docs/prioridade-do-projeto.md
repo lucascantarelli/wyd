@@ -24,11 +24,12 @@ células e **0** das **9** linhas sem página; D fecha **1** página e **1** har
 (§3). A pergunta de foco está em §0.1 (D-01).
 
 **Recomendação única: manter A.** É a única frente que fecha item do piloto sem terceiro: **64** células
-e **141** atos, com **40** issues a autorizar. A sequência imediata, sem nova decisão, é o **ato 2**
-(`migrations/serie-e-regras.md`), o **ato 3** (runner `src/migrate` + `MigrateConfig`, com **D-02** respondida em B),
-o **ato 4** (`CAP-37`–`CAP-39`, cobertura **13 → 16 de 39**) e o **ato 5** (**40** issues + **141** atos de
-`docs/`); o **ato 6** (seeds/captura) espera terceiro. B não fecha item do piloto, C fecha **3 de 64**
-células e D é absorvida pelo ato 2 (§3–§5).
+e **141** atos, com **40** issues a autorizar. O **ato 2** (`migrations/serie-e-regras.md`) e o **ato 3**
+(runner `src/migrate` + `MigrateConfig`, com **D-02** respondida em B) foram **concluídos em 2026-11-25**
+no escopo de lib/fakes; a próxima fatia é o **ato 4** (`CAP-37`–`CAP-39`, cobertura **13 → 16 de 39**),
+depois o **ato 5** (**40** issues + **141** atos de `docs/`); o **ato 6** (seeds/captura) espera terceiro.
+O **ato 4** que usa a série real depende da resposta **`Q-SERIE-1`** (política dos 28 `down`, recomendação
+**B**). B não fecha item do piloto, C fecha **3 de 64** células e D já foi absorvida pelo ato 2 concluído (§3–§5).
 
 Esta página é o **único lugar publicado** que ranqueia as frentes do projeto. Ela não substitui o plano
 de fases (`wyd-1.0.0.md` §6), nem o registro de pendências (`pendencias-de-fechamento.md` §6.6), nem a
@@ -39,12 +40,19 @@ o `docs/` do `wyd-db` está no teto de **144** páginas; e `wyd-ops` é o sistem
 publicado e sem teto. Não existe convenção para “página de ranking do projeto”, então esta é a opção mais
 próxima já usada — e a única que fica navegável no site.
 
-## 0.1 Quadro canônico de decisões (vigente em 2026-11-24)
+## 0.1 Quadro canônico de decisões (vigente em 2026-11-25)
 
 Cada decisão traz o que está bloqueado hoje, as opções reais, a recomendação, o motivo medido e o que
-deixa de ser possível na opção não escolhida. **D-01 e D-03 foram aprovadas em A e D-02 em B, em
-2026-11-24**; a execução de D-01/D-03 está em §0.2 e a política de D-02, em §0.1 e no plano de CI.
-**D-04 e D-05 seguem em aberto** e o dono ainda responde.
+deixa de ser possível na opção não escolhida. **D-01, D-03, D-04 e D-05 foram aprovadas em A e D-02 em B, em
+2026-11-24 (D-04 em 2026-11-25)**; a execução de D-01/D-03 está em §0.2 e a política de D-02, em §0.1
+e no plano de CI. **D-05 foi aprovada em A em 2026-11-25**; o dossiê está em
+`../dossie-d-05.md` e o plano de migração, em `../plano-migracao-d-05.md`; a auditoria de D-04 está
+em `../auditoria-de-organizacao.md`. **D-06 está ABERTA — aguardando decisão do usuário**
+(§0.1, D-06); D-05 permanece aprovada e não é reaberta. **Ato 2 e ato 3 concluídos em 2026-11-25**
+(`migrations/serie-e-regras.md` em `aceito` e runner em lib/fakes — 63 testes verdes; ver
+`../../wyd-db/migrations/serie-e-regras.md` §8); a próxima fatia é o **ato 4** (`CAP-37`–`CAP-39`).
+**`Q-SERIE-1` está ABERTA**: os 28 `.sql` só têm `up`, e a política de rollback precisa ser escolhida
+antes do uso da série real (§0.1, D-06; opções e recomendação em `../../wyd-db/migrations/serie-e-regras.md` §9).
 
 ### D-01 — Qual frente recebe o foco?
 
@@ -106,7 +114,7 @@ sistema**, não no PR — no `code.yml` ela é **informativa** até o sistema de
 e `cargo deny` são **bloqueantes**. **Passo 8a executado em 2026-11-24:** o job `security` do `code.yml`
 roda os dois com `deny.toml`, o job `cargo` publica cobertura sem `--fail-under`, e a falha aparece como
 job vermelho (advisory: exit 1; licença: exit 4; `Cargo.toml` sem lock: `::error::`). O `pip-audit`/hash do
-site (`mkdocs==2.0.dev6`) continua item separado, e D-05 segue aberta para toolchain e versões.
+site (`mkdocs==2.0.dev6`) continua item separado, e D-05 foi aprovada em A para toolchain e versões (dossiê em `../dossie-d-05.md`).
 
 ### D-03 — Escopo das 27 páginas de `migrations/` e das 2 `Q-BLK`
 
@@ -135,13 +143,17 @@ declarada não executável, sem esconder a lacuna.
 
 ### D-04 — Critério para declarar “organização definida” nos sistemas sem código
 
-**Bloqueado hoje:** a afirmação “todos os sistemas têm organização definida” não é verdadeira. São **13**
+**Aprovada em 2026-11-25 (A).** A auditoria por sistema está em
+`../auditoria-de-organizacao.md`: **2 de 13** sistemas foram declarados organizados (`wyd-db` e
+`wyd-admin`) e **11** ainda não.
+
+**Estado medido antes da aprovação:** a afirmação “todos os sistemas têm organização definida” não é verdadeira. São **13**
 sistemas; **12** não têm código de produto (o `wyd-docs` tem implementação Python de documentação), **8**
 dos **9** diretórios de crate estão vazios, **10** sistemas não têm `RF` numerado e **1** (`wyd-ops`) não
 tem plano diretor. Só há **2** manifestos de dependência reais (`crates/wyd-db/Cargo.toml` e
 `wyd-docs/requirements.txt`; `deny.toml` é política).
 
-**O que trava:** a declaração dos **12** sistemas, não a sequência de A (§0.2).
+**O que travava:** a declaração dos **12** sistemas, não a sequência de A (§0.2).
 
 | Opção | O que conta como “organizado” | O que permite afirmar | O que deixa de fora |
 |---|---|---|---|
@@ -154,54 +166,80 @@ mas não é o estado “aberto”. Um sistema só recebe o carimbo depois de mos
 os requisitos, o plano de teste, o roadmap com DoD e o gate. **Implementável** é um estado posterior:
 páginas aceitas + manifesto + gate de código. A recomendação não declara os **12** de uma vez: ela obriga a
 auditar cada um e a aceitar a ausência justificada de `ops/` quando não houver operação própria. O
-checklist e a árvore alvo estão em `wyd-1.0.0.md` §8.7 (proposta de 2026-11-24); D-04 = A é o que os
-torna exigíveis. Hoje **1** crate tem código, **8** crates têm só `.gitkeep`, **10** sistemas não têm
-`RF` e `wyd-ops` não tem plano diretor: a afirmação “todos organizados” ainda é **falsa**.
+checklist e a árvore alvo estão em `wyd-1.0.0.md` §8.7 (aprovada em 2026-11-25); D-04 = A aprovada é
+o que os torna exigíveis. Na medição de 2026-11-24, **1** crate tem código, **8** crates têm só
+`.gitkeep`, **10** sistemas não têm `RF` e `wyd-ops` não tem plano diretor: a afirmação “todos
+organizados” ainda era **falsa**.
 
 **Se B:** os **12** sistemas sem código ficam sem declaração até existir crate, o que inverte a ordem do
 projeto. **Se C:** “organizado” passa a significar “aberto” e os **10** sem `RF`/`1` sem plano ficam
 escondidos. **Se A:** a declaração é seletiva e verificável; nenhum sistema ganha o carimbo por simetria.
 
+**Resultado da auditoria (2026-11-25):** `wyd-db` e `wyd-admin` passaram; `wyd-portal` tem os **33**
+`RF` e o roadmap, mas não tem árvore de `src/`/`tests/` nem plano de teste; `wyd-protocol` e os demais
+da cadeia de runtime não têm `RF`, árvore, plano de teste e roadmap completos; `wyd-docs` tem site e
+gate, mas não tem `RF-DOC`; `wyd-ops` não tem dashboard nem `RF-OPS`. A lista por sistema e o que falta
+em cada um estão em `../auditoria-de-organizacao.md` §2–§3.
+
 ### D-05 — Política de dependências e versões
 
-**Bloqueado hoje:** o repositório tem **2** manifestos de dependência reais (`crates/wyd-db/Cargo.toml` e
-`wyd-docs/requirements.txt`; `deny.toml` é política, não manifesto), **9** diretórios de crate (**1** com
-`Cargo.toml`, **8** vazios), **nenhum** workspace Rust na raiz, **nenhum** `rust-toolchain.toml` e
-**nenhum** `Makefile`. Medido em 2026-11-24: Rust **1.100.0** local, `edition = "2021"` e `Cargo.lock`
-versão 4 no único crate; Python **3.15.2** e `mkdocs==2.0.dev6`; PostgreSQL **17** no CI; nenhum
-`package.json`; actions fixadas por SHA, mas `postgres:17` e `python:3.15-slim` usam tag, não digest.
+**Aprovada em 2026-11-25 (A).** Adotar o workspace Cargo único na raiz, com `rust-toolchain.toml`,
+`Makefile`, **um** `Cargo.lock`, ações por SHA e imagens por digest. O dossiê completo está em
+`../dossie-d-05.md`; a execução, com passos, DoD e rollback, está em `../plano-migracao-d-05.md` e
+**ainda não foi executada**.
 
-**O que trava:** o segundo crate. O **ato 2** e o runner no crate existente não esperam esta política;
-B fica mais caro a cada crate que nascer.
+**O que destrava:** o segundo crate Rust sem repetir lock/toolchain. O passo 2 do `wyd-db` e o gate
+de documentação **não** esperam D-05. **O que D-05 não fecha:** as **6** lacunas abertas + **1** proposta,
+que dependem de captura, direitos ou medição.
 
-| Opção | Estrutura | Versões | Custo/risco |
+### D-06 — Qual frente executa primeiro depois de D-05?
+
+**ABERTA — aguardando decisão do usuário (2026-11-25).** D-05 está aprovada com plano de migração
+pronto, mas ainda não executado. D-06 escolhe a **ordem de execução**; não reabre D-05, não aceita
+página e não autoriza código. O **ato 2** e o **ato 3** de A já foram concluídos no escopo de lib/fakes;
+**`Q-SERIE-1`** é decisão interna de A e está detalhada em `../../wyd-db/migrations/serie-e-regras.md` §9.
+
+| Opção | O que destrava/fecha hoje | Depende de | O que fica parado sem ela |
 |---|---|---|---|
-| **A — workspace único + toolchain + Makefile** | `Cargo.toml` de workspace na raiz, membros explícitos, `rust-toolchain.toml`, `Makefile`, `Cargo.lock` na raiz; actions por SHA e imagens por digest | um lock, uma versão de Rust, comandos iguais no local e no CI | migração única; os **8** crates vazios entram quando ganharem `Cargo.toml` |
-| **B — crates independentes** | cada crate com seu manifesto; sem workspace, toolchain ou Makefile na raiz | **9** locks/versões possíveis; drift entre crates | simples agora, caro quando os **8** crates nascerem |
-| **C — híbrido** | workspace sem `Makefile`/toolchain, ou toolchain sem workspace | parcialmente reproduzível | comandos divergem; o CI e o local não provam o mesmo |
+| **A — D-01 / `wyd-db`** — runner concluído em lib/fakes → ato 4 `CAP-37`–`CAP-39` → 40 issues + 141 atos | **141 atos** (141 `docs/`), **64 células** (24 `teste` + 40 `issue`) e **40 issues** (#82–#121) (§2 e §3); ato 2/3 **concluídos**; `CAP-37`–`CAP-39` = **3 células `teste`**; passo 5 = **40 issues + 141 atos** (§0.2) | Ato 4 não depende de terceiro, mas a série real depende de **`Q-SERIE-1`**; **6 seeds** e `CAP-08` ficam para o passo 6, por dado externo | 141 atos, 64 células e 40 issues continuam parados; `portal`/`admin`/`server` seguem sem o DDL aceito |
+| **B — Executar a migração D-05** | **9 crates** (1 real + 8 `.gitkeep`), **6 comandos `--manifest-path`** e **2 imagens externas/6 referências sem digest**; **0 atos, 0 issues, 0 células**; destrava o segundo crate e um único lock/toolchain (`dossie-d-05.md` §2; `plano-migracao-d-05.md`) | Nenhuma externa; D-05 já aprovada | Os 8 crates vazios e o segundo crate ficam sem padrão; o CI continua repetindo o manifesto do `wyd-db` |
+| **C — D-04 / `wyd-portal`** — árvore `src/`/`tests/` + plano de teste | **33 `RF` + 10 `RNF`**, 9 páginas e roadmap já escritos; **0 atos/issues**; fecha o checklist D-04 de **1 sistema**; faltam árvore e teste (`auditoria-de-organizacao.md` §2–§3) | Nenhuma externa; D-04 já aprovada | O portal continua fora dos 2/13 organizados e os 33 `RF` seguem sem árvore/teste; nada do `wyd-db` fecha |
+| **D — `wyd-protocol`** | **5 de 131 páginas**, **0 `RF`**, 6 contratos e **2 lacunas de captura** (`LPRT-03`, `LPRT-06`); **0 atos/issues**; é o codec que `net`/`core` consomem | `LPRT-03`/`LPRT-06` (captura externa); código também espera D-05 e página `aceita` | As 126 páginas restantes, os `RF-PRT` e o codec continuam parados; `net` e `core` não começam a integração |
 
-**Recomendação: A.** O custo é uma migração única agora, com **1** crate real; o custo de B cresce com os
-**8** crates vazios e produz **9** fontes de versão. `mkdocs==2.0.dev6` continua fixado como pré-release
-até existir estável; a troca não é silenciosa. A imagem do CI deve ser fixada por digest, não por tag.
+**Recomendação: A — D-01 / `wyd-db`.** É a única opção que fecha itens já mapeados **hoje**: 141 atos,
+64 células e 40 issues; B, C e D fecham **0** atos/issues no curto prazo. D-05 já está aprovada e o
+plano pode esperar a vez sem perder a decisão; C é a organização mais barata, mas não move esses
+números; D depende de captura externa e de `RF` que ainda não existem.
 
-**Se B:** cada crate pode divergir de toolchain e lock; o CI precisa repetir configuração **9** vezes.
-**Se C:** o comando local não é o do CI e a reprodutibilidade fica parcial. **Se A:** o workspace nasce
-com **1** membro e cresce por adição explícita; nada é implementado nesta página.
+**doneWhen do caminho A:**
+
+1. `migrations/serie-e-regras.md` em `aceito` — **1 ato** — **concluído em 2026-11-25**.
+2. Runner `src/migrate` + `MigrateConfig` com o alvo `contrato_migrations` verde — **1 alvo** —
+   **concluído em lib/fakes** (63 testes; o PG17 de sistema ainda não rodou).
+3. **`Q-SERIE-1`** respondida: política de `down` dos 28 arquivos, recomendação **B**; sem ela a série
+   real e `CAP-37` não rodam.
+4. `CAP-37`–`CAP-39` verdes — **3 células `teste`**, de 13 para 16 de 39.
+5. **40 issues** vinculadas e **141 atos** de `docs/` aceitos; gate do `wyd-db` verde. Os **6 seeds** e
+   `CAP-08` continuam fora por dado/terceiro.
+
+**Pergunta ao usuário:** **A** (D-01/`wyd-db`), **B** (executar D-05), **C** (`wyd-portal`) ou **D**
+(`wyd-protocol`)? A recomendação é **A**, pelo volume de 141 atos/64 células contra 0 nas demais.
+**Decisão interna que acompanha A:** **`Q-SERIE-1`**, com opções e recomendação **B** em
+`../../wyd-db/migrations/serie-e-regras.md` §9.
 
 ## 0.2 Ordem recomendada e impacto em bloqueios
 
 A ordem abaixo é a de **execução**, não a de implementação: nenhum passo de código é executado neste
-turno. O passo 0 está respondido em parte (D-01, D-02 e D-03); os passos 1–5 são a frente A, e o passo 1
-está concluído; o passo 6 é terceiro.
+turno. Os passos 1–3 estão concluídos (o 3 em lib/fakes); os passos 4–5 são a frente A; o passo 6 é terceiro.
 
 | # | Passo | Resolve/fecha | Desbloqueia | Depende de |
 |---:|---|---|---|---|
-| **0** | Responder D-01–D-05 | **3** decisões (D-01, D-02, D-03) e **2** abertas | **40** issues, **12** sistemas e o gate de código; os **27** aceites de `migrations/` já saíram | dono do produto + `wyd-ops`/arquitetura |
+| **0** | Responder D-01–D-06 e `Q-SERIE-1` | **5** decisões (D-01, D-02, D-03, D-04, D-05), **1 aberta (D-06)** e **1 política aberta (`Q-SERIE-1`)** | **40** issues, **12** sistemas e o gate de código; a auditoria de D-04 saiu e os **27** aceites de `migrations/` já saíram | dono do produto + `wyd-ops`/arquitetura |
 | **1** | Aceitar as **27** páginas de `migrations/` | **feito em 2026-11-24** (D-03 = A): **27** atos, **168 → 141** | runner (passos 2–4); leva de `migrations/` fechada | — (concluído em 2026-11-24) |
-| **2** | `migrations/serie-e-regras.md` | **1** página/ato | contrato do ledger para o runner | passo 1 |
-| **3** | Runner `src/migrate` + `MigrateConfig` | **1** alvo (`contrato_migrations`) | **3** `CAP` e o gate de código do banco | passos 1–2; D-02 = B (2026-11-24) |
-| **4** | `CAP-37`–`CAP-39` | **3** capacidades / **3** células `teste`; **13 → 16 de 39** | **3** células; restam **21** `teste` para os outros alvos | passo 3 |
-| **5** | **40** issues + **141** atos de `docs/` | **40** células `issue` vinculadas + **141** atos; **21** `teste` seguem para código | **40** issues autorizadas; fecha os **141** atos restantes | passos 1 e 4 |
+| **2** | `migrations/serie-e-regras.md` | **feito em 2026-11-25**: **1** página/ato `aceito` | contrato do ledger para o runner | passo 1 (concluído) |
+| **3** | Runner `src/migrate` + `MigrateConfig` | **feito em 2026-11-25** em lib/fakes: **1** alvo (`contrato_migrations`), 63 testes | **3** `CAP` e o gate de código do banco (PG17 ainda não) | passos 1–2; D-02 = B (2026-11-24) |
+| **4** | `CAP-37`–`CAP-39` | **3** capacidades / **3** células `teste`; **13 → 16 de 39** | **3** células; restam **21** `teste` para os outros alvos | passo 3; **`Q-SERIE-1`** para a série real |
+| **5** | **40** issues + **141** atos de `docs/` | **40** células `issue` vinculadas + **141** atos; **21** `teste` seguem para código | **40** issues autorizadas; fecha os **141** atos restantes | passos 1 e 4; `Q-SERIE-1` não bloqueia o aceite |
 | **6** | Seeds/captura | **6** seeds + **6** lacunas abertas + **1** proposta | **0** hoje; só quando o terceiro entregar | terceiro/dado |
 
 **Por que o passo 1 vem antes do passo 5, que fecha mais itens:** o passo 5 depende de o DDL estar
@@ -209,12 +247,50 @@ assinado e o runner existir; o passo 1 é o primeiro ato de **27** itens que nã
 carga de revisão e entram depois para não abrir 141 páginas antes do runner. A ordem por
 “resolve mais bloqueios primeiro” é: **1** (27 atos, custo de aceite), **5** (141 atos + 40 issues, custo
 de revisão), **4** (3 células, custo de código), **2–3** (1 página + 1 alvo, habilitam o runner). O passo
-0 não fecha item, mas sem ele nenhum dos outros começa. **O passo 1 está feito; o próximo é o 2**
-(`migrations/serie-e-regras.md`).
+0 não fecha item, mas sem ele nenhum dos outros começa. **Os passos 1–3 estão feitos; o próximo é o 4**
+(`CAP-37`–`CAP-39`), condicionado a **`Q-SERIE-1`** na parte que usa a série real.
 
 **O que a ordem não resolve:** os **6** seeds, as **6** lacunas abertas e a **1** proposta não entram em
 nenhum passo porque dependem de terceiro; `CAP-08` já está declarada não executável (`Q-BLK-20` = A), mas
 segue **0 coberta**.
+
+## 0.3 Sequência depois de D-05
+
+D-04 e D-05 estão aprovadas; **D-06 está aberta** e é o topo da fila. A recomendação é **A: D-01 /
+`wyd-db`**, porque é a única candidata que fecha itens já mapeados hoje. Cada linha abaixo traz o
+pré-requisito e o que **não** resolve.
+
+| Ordem | Frente | Pré-requisito que a destrava | O que resolve | O que não resolve |
+|---:|---|---|---|---|
+| **0** | **D-06** — escolher A/B/C/D | resposta do dono; dossiê §0.1 | **A:** 141 atos/64 células/40 issues; **B:** 9 crates/6 manifestos; **C:** 33 `RF`/10 `RNF`; **D:** 5/131 páginas | não executa nenhuma frente por si só |
+| **1** | **D-01 / `wyd-db`** — ato 2/3 concluídos → ato 4 `CAP-37`–`CAP-39` → 40 issues + 141 atos | **D-06 = A**; ato 2/3 já feitos; **`Q-SERIE-1`** para a série real | 3 `CAP`, 40 issues e 141 atos ao fim | 6 seeds e `CAP-08` dependem de dado/terceiro; parte de `CAP-37` depende de `Q-SERIE-1` |
+| **2** | **D-05 = A** — executar o plano de migração | **D-06 = B**; D-05 já aprovada | workspace, 1 lock, toolchain, Makefile, 6 comandos e digests; segundo crate destravado | **0** atos/issues; não fecha lacunas de captura |
+| **3** | **D-04 / `wyd-portal`** — árvore `src/`/`tests/` + plano de teste | **D-06 = C**; D-04 aprovada, sem D-05 | fecha o checklist do portal; 33 `RF`/10 `RNF` já existem | **0** atos/issues; não implementa o portal |
+| **4** | **D-04 / `wyd-protocol`** — `RF`, árvore, teste e roadmap | **D-06 = D**; captura `LPRT-03`/`LPRT-06`; código também espera D-05 e página `aceita` | planejamento do codec; depois destrava `net`/`core` | 5/131 páginas; 2 lacunas de captura |
+| **5** | **runtime `net`/`core`/`server`** | contratos do protocol + D-05 = A + páginas `aceitas` | implementação em cadeia | captura e dados externos |
+| **6** | **`sim`/`launcher`/`client`/`bots`** | decisões próprias + D-05 quando Rust + captura | fórmulas, assinatura, direitos e carga | lacunas de terceiro |
+| **7** | **`docs`/`ops`** | depois do runtime; D-04 para o carimbo | `RF-DOC`/`RF-OPS` e gates | não bloqueia a onda jogável |
+
+**Regra de leitura:** D-05 está aprovada, mas é a opção **B** de D-06; o plano pode esperar sem perder
+a decisão. **O ato 4 do `wyd-db` é a próxima execução se D-06 = A** (recomendado), depois dos atos 2–3
+concluídos; a parte de série real espera **`Q-SERIE-1`**. O `wyd-portal` é a organização mais barata e
+não depende de D-05, porque é Next.js. As **6 lacunas abertas + 1 proposta** ficam no passo 6 do
+`wyd-db`/captura, não em D-06.
+
+## 0.4 Ordem recomendada das decisões abertas
+
+A ordem abaixo é a de **resposta do dono**, não a de execução; as opções e consequências estão na tabela
+§7 e nas notas indicadas, sem exigir abrir outro documento para decidir.
+
+| Ordem | Decisão | Recomendação | O que libera | Por que nesta posição |
+|---:|---|---|---|---|
+| **1** | **`D-06`** — frente depois de D-05 | **A** D-01/`wyd-db` | **141 atos**, **64 células** e **40 issues**; o DDL deixa de ser proposta para `portal`/`admin`/`server` | É a única opção que fecha itens já mapeados sem terceiro; B, C e D fecham **0 atos/issues** no curto prazo, então as demais decisões só fazem sentido depois desta. |
+| **2** | **`Q-SERIE-1`** — política dos 28 arquivos sem `down` | **B** escrever os 28 `down` reais | **28** migrations com rollback, **`CAP-37`**, reset, `down --to` e os testes de sistema | Sem ela, A para no runner de lib/fakes e não aplica a série existente; é o maior desbloqueio técnico interno de A. |
+| **3** | **`Q-SEP-1`** — separador `-` × `_` | **A** ler os dois e usar `_` nos novos | **1** regra de nomenclatura; preserva os **28** nomes e checksums atuais | Não fecha ato nem issue, mas evita **28** renomeações e novos checksums; deve ser fixada antes de qualquer arquivo novo e não muda a ordem da série. |
+
+**Leitura:** responda **D-06 = A** primeiro; se A for a escolha, responda **Q-SERIE-1 = B** e **Q-SEP-1 = A**
+antes de retomar o ato 4. As três respostas são independentes entre si, mas a ordem evita escrever `down`
+antes de decidir se os nomes serão renomeados.
 
 ## 1. O critério, declarado antes do número
 
@@ -322,7 +398,7 @@ hoje; C fecha 3 células e para; B abre planejamento alheio sem fechar nada do p
   aceita; e B pode numerar os **48** `RF` e os **10** sistemas sem `RF` **em paralelo**, sem competir por atenção.
 - **C ganha com A:** **3** células de `Teste` (as três com página e sem `CAP-nn`) podem ser escritas a
   qualquer momento; A não as fecha, mas também não as bloqueia.
-- **D ganha com A:** vira o ato 2 de A (`serie-e-regras`) e o `tests/common/` dos **4** alvos restantes.
+- **D ganha com A:** o ato 2 de A (`serie-e-regras`) já foi concluído; restam o `tests/common/` dos **4** alvos e a integração do codec depois dos contratos.
 - **B, C e D ganham com o tempo:** cada ato de A fecha de **1** a **27** itens sem depender de ninguém, o que
   compra o intervalo em que `A1` e a curadoria dos seeds podem chegar.
 
@@ -359,13 +435,14 @@ páginas de `migrations/` seguiam `proposto` naquele momento; foram aceitas em 2
 | **5. 40 issues e 141 atos** | issues autorizadas e o resto do aceite | `CAP-08` já declarada **não executável** em 2026-11-24; **40** issues existentes vinculadas às linhas e **141** páginas a aceitar | 40 issues + 141 atos |
 
 **O ato 1 foi concluído em 2026-11-24 (D-03 = A):** as 27 páginas estão `aceito` e o runner pode nascer
-sob página assinada. O próximo é o **ato 2**, `migrations/serie-e-regras.md`, que não depende de nova decisão;
-o **ato 3** (runner) tinha **D-02** como dependência, respondida em B em 2026-11-24; o **ato 5** depende dos
+sob página assinada. **Os atos 2 e 3 também estão concluídos em 2026-11-25** — a nota `migrations/serie-e-regras.md`
+está `aceito` e o runner passou 63 testes de lib/fakes; a verificação PG17 ainda não rodou. O próximo é o
+**ato 4** (`CAP-37`–`CAP-39`), condicionado a **`Q-SERIE-1`** na parte de série real; o **ato 5** depende dos
 atos 1 e 4.
 
 **O que fica postergado, e por quê:** **B** (48 `RF` + 12 planos) espera A porque a implementação de
 `portal`/`admin` cita o DDL que A aceita; **C** (3 células) espera A porque o ganho é 3 de 64 e não move
-nenhuma outra frente; **D** não é postergado — vira o ato 2 de A; as **6** seeds e a captura `A1` esperam
+nenhuma outra frente; **D** não é postergado — o ato 2 de A já foi concluído e restam os contratos/testes de D; as **6** seeds e a captura `A1` esperam
 terceiro/dado e não entram na fila.
 
 ## 6. O que não entra agora
@@ -388,9 +465,18 @@ terceiro/dado e não entram na fila.
 
 O dossiê de cada pergunta já respondida está em `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
 §6.6.22.5 (`Q-BLK-17`), §6.6.23 (`Q-BLK-21`), §6.6.26 (`Q-BLK-24`), §6.6.28 (`Q-BLK-19`), §6.6.29
-(`Q-BLK-23`) e §6.6.31 (`Q-BLK-20`, `Q-BLK-22`, D-01 e D-03). **D-04 e D-05 seguem abertas** e não se
-repetem aqui; D-02 foi aprovada em B e o dossiê dela é §0.1; o resumo com opções, recomendação e
-consequência está em §10.
+(`Q-BLK-23`) e §6.6.31 (`Q-BLK-20`, `Q-BLK-22`, D-01 e D-03). **D-05 foi aprovada em A em
+2026-11-25**; o dossiê está em `../dossie-d-05.md` e o plano de migração, em
+`../plano-migracao-d-05.md`. **D-06 está ABERTA — aguardando decisão do usuário**; ela escolhe a
+próxima frente e está detalhada em §0.1. **`Q-SERIE-1` está ABERTA** e é decisão interna de A (política
+dos 28 `down`, recomendação **B**), detalhada em `../../wyd-db/migrations/serie-e-regras.md` §9. D-04 foi aprovada em A em 2026-11-25 e a auditoria está em
+`../auditoria-de-organizacao.md`; D-02 foi aprovada em B e o dossiê dela é §0.1; o resumo com opções,
+recomendação e consequência está em §10.
+
+**Notas correspondentes:** `D-06` é detalhada em §0.1; `Q-SERIE-1` em
+`../../wyd-db/migrations/serie-e-regras.md` §9; `Q-SEP-1` na mesma nota, §9.1. As perguntas de sistema
+do `briefing-de-decisoes-1.0.0.md` continuam no dossiê de sistema e não são duplicadas aqui; esta tabela
+cobre as decisões de foco, execução e contrato que o quadro precisa resolver.
 
 | Pergunta | Opções | Recomendação | Consequência de cada opção |
 |---|---|---|---|
@@ -399,6 +485,12 @@ consequência está em §10.
 | **`D-03`** (aprovada em A em 2026-11-24) — aceite das 27 e as 2 `Q-BLK` | **A** aceitar agora, com `Q-BLK-20` = A e `Q-BLK-22` = A; **B** esperar o runner; **C** manter `proposto` | **A (aprovada)** | **A:** 168 → 141 atos e runner liberado; **B/C:** leva aberta e runner sob página não assinada |
 | **`Q-FOCO-2`** (decidida em A em 2026-11-24) — confirmar `A` como foco e o tamanho da 1ª leva | **A** leva 1 = 12 aceites e parada para verificar; **B** emendar `migrations/` na mesma sessão; **C** trocar o foco para C (captura `A1`) | **A (decidida)** | **A:** 12 atos verificáveis e gate verde antes de escalar. **B:** 39 atos sem ponto de verificação intermediário. **C:** o foco passa a depender de terceiro, e o `wyd-db` fica parado com **0** bloqueio |
 | **`Q-BLK-23`** (decidida em A em 2026-11-24) — as **16** linhas sem cenário entram na `1.0.0`? | **A** escrever os 16 cenários (uma `CAP-nn` cada) antes de `migrations/`; **B** adiar para depois; **C** declarar fora da `1.0.0` | **A (decidida)** | **A:** os **16** cenários foram escritos (`CAP-24`–`CAP-39`, `pendencias` §6.6.29) e as **16** linhas que estavam sem `CAP-nn` ganharam cenário. **B:** **13** `CHECK`/FK/índices teriam entrado sem cenário que os recuse. **C:** exigiria rebaixar **16** linhas das páginas donas — decisão de outro dono, recusada |
+| **`D-04`** (aprovada em A em 2026-11-25) — organização definida nos sistemas sem código | **A** planejamento completo verificável; **B** só com crate/build/teste; **C** abertura atual basta | **A (aprovada)** | **A:** 2 de 13 organizados (`wyd-db`, `wyd-admin`) e 11 com lacuna nomeada; **B:** 12 esperam crate; **C:** 10 sem `RF` e 1 sem plano ficam escondidos |
+| **`D-05`** (aprovada em A em 2026-11-25) — workspace Cargo, toolchain e versões | **A** workspace único + toolchain + Makefile + digests; **B** crates independentes; **C** híbrido | **A (aprovada)** | **A:** 1 lock/1 toolchain, segundo crate destravado; **B:** 1 lock hoje e até 9 se todos os crates nascerem; **C:** local ≠ CI em parte; destrava o segundo crate, não D-01 nem o gate de documentos |
+| **`D-06`** (ABERTA — aguardando decisão do usuário em 2026-11-25) — frente depois de D-05 | **A** D-01/`wyd-db`; **B** executar D-05; **C** `wyd-portal`; **D** `wyd-protocol` | **A (recomendada)** | **A:** 141 atos/64 células/40 issues; **B:** 9 crates/6 manifestos, 0 atos; **C:** 33 `RF`/10 `RNF`, 0 atos; **D:** 5/131 páginas, 0 atos |
+| **`Q-SERIE-1`** (ABERTA em 2026-11-25) — política dos 28 arquivos sem `down` | **A** forward-only com marcador explícito; **B** escrever os 28 `down` reais; **C** baseline dos 28 | **B (recomendada)** | **A:** aceita a série sem rollback, mas revisa ADR/spec e retira a prova `down`; **B:** mantém o contrato e destrava série/reset/testes de sistema; **C:** evita reexecução, mas pode esconder drift e ainda exige exceção |
+| **`Q-SEP-1`** (ABERTA em 2026-11-25) — separador dos nomes (`NNNN-slug.sql` × `NNNN_slug.sql`) | **A** manter a leitura dos dois separadores e usar `_` nos novos; **B** renomear os 28 para `_`; **C** mudar o contrato para `-` | **A (recomendada)** | **A:** preserva a série atual e evita 28 renomeações/checksums novos; **B:** alinha os 28 ao contrato, mas exige 28 renomeações e novos checksums, sem mudar a numeração; **C:** espalha uma forma que o restante da documentação não usa e contraria o spec |
+
 
 **Fora da tabela:** **`Q-BLK-17` = A**, respondida pela execução em 2026-11-24 — a leva de aceite começou
 pelas 12 páginas de `tests/`, como a recomendação dizia (`pendencias` §6.6.22.5). **`Q-BLK-18` = A**, também
@@ -407,8 +499,8 @@ das **37** de `src/` (`pendencias` §6.6.27). **`Q-BLK-19` = A**, na mesma data:
 um por gate, repontaram as **11** capacidades e zeraram a dívida da matriz (`pendencias` §6.6.28). E
 **`Q-BLK-21` = A**,
 executada na mesma data — o dono revisou e assinou as 12 páginas, que estão `aceito (2026-11-24)`
-(`wyd-db/revisao-de-q-blk-21.md` §5; `pendencias` §6.6.23). Nenhuma dessas quatro segue aberta; as duas
-que restam — `D-04` e `D-05` — estão no quadro §0.1.
+(`wyd-db/revisao-de-q-blk-21.md` §5; `pendencias` §6.6.23). Nenhuma dessas quatro segue aberta; D-04 foi aprovada em A em 2026-11-25 (auditoria em
+`../auditoria-de-organizacao.md`) e D-05 foi aprovada em A, com plano em `../plano-migracao-d-05.md`.
 
 ## 8. O que esta página não decide
 
@@ -429,15 +521,22 @@ que restam — `D-04` e `D-05` — estão no quadro §0.1.
 | **141** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
 | **28** páginas de `migrations/` `aceito` | uma página deixar de estar `aceito` | §5; `pendencias` §6.6.31 |
 | **D-02** = B (cobertura informativa; audit/deny bloqueantes) | uma checagem sair do `code.yml` ou a política mudar | `plano-ci-real.md` §1, §5 e §7; esta página §0.1 |
+| **D-04** = A (organização definida) | a auditoria de 2026-11-25 for revista | `../auditoria-de-organizacao.md`; esta página §0.1 |
+| **D-05** = A (workspace Cargo) | o plano de migração for executado ou revisto | `../dossie-d-05.md`; `../plano-migracao-d-05.md`; esta página §0.1 e §10 |
+| **D-06** = aberta (frente depois de D-05) | o dono responder A/B/C/D | esta página §0.1 e §10 |
+| **`Q-SERIE-1`** = aberta (política dos 28 `down`) | o dono responder A/B/C | `../../wyd-db/migrations/serie-e-regras.md` §9; esta página §0.1 e §10 |
+| **`Q-SEP-1`** = aberta (separador `-` × `_` no nome das migrations) | o dono responder A/B/C | `../../wyd-db/migrations/serie-e-regras.md` §9.1; esta página §7 e §10 |
 | **6** lacunas abertas + 1 proposta | a captura do 7662 chegar | `lacunas.md` §1 de cada sistema |
 | **39** capacidades com requisito | `Q-BLK-19` = A (2026-11-24): dívida de gate solto zerada; `Q-BLK-23` = A: os 16 cenários | `tests/specs/capacidades.md` §7 |
 | **31 de 40** linhas com página | uma `CAP-nn` deixar de nomear uma linha que hoje tem página | `rastreabilidade.md` §2 e §3.4; esta página §2 |
 
-## 10. O que segue aberto (2026-11-24)
+## 10. O que segue aberto (2026-11-25)
 
 | Item | Quantos | Dono |
 |---|---:|---|
-| `D-04` e `D-05` (`D-01`, `D-02` e `D-03` aprovadas em 2026-11-24) | **2** | dono do produto + `wyd-ops`/arquitetura (dossiês em §0.1) |
+| **D-06** — **ABERTA — aguardando decisão do usuário** (frente depois de D-05) | **1** | dono do produto; dossiê em §0.1 |
+| **`Q-SERIE-1`** — **ABERTA** (política dos 28 arquivos sem `down`) | **1** | dono do produto; opções e recomendação em `../../wyd-db/migrations/serie-e-regras.md` §9 |
+| **`Q-SEP-1`** — **ABERTA** (separador `-` × `_` no nome das migrations) | **1** | dono do produto; opções e recomendação **A** em `../../wyd-db/migrations/serie-e-regras.md` §9.1 |
 | lacunas abertas | **6** + **1** proposta | `protocol` 2, `client` 2 + 1, `net` 1, `bots` 1 |
 | seeds bloqueadas | **6** | curadoria de dados (`migrations-checklist.md` §2) |
 | capacidade sem ambiente | **1** (`CAP-08`), declarada não executável na `1.0.0` | dicionário de dados ausente (`Q-BLK-20` = A) |
@@ -448,14 +547,32 @@ que restam — `D-04` e `D-05` — estão no quadro §0.1.
 informativa no `code.yml` e `cargo audit`/`deny` bloqueantes; a alteração está em `plano-ci-real.md` §5
 (dossiê §0.1).
 
-**Perguntas de decisão abertas — resumo com recomendação; o dossiê completo é §0.1:**
+**D-04 = A aprovada em 2026-11-25 e auditada:** **2 de 13** sistemas organizados (`wyd-db` e
+`wyd-admin`); os **11** restantes têm a lacuna nomeada em `../auditoria-de-organizacao.md`. A aprovação
+fecha a pergunta de critério, não a de prioridade.
 
-| Pergunta | Opções (resumo) | Recomendação | Consequência de cada opção | O que trava |
-|---|---|---|---|---|
-| **D-04** — o que conta como “organização definida” nos 12 sistemas sem código? | **A** planejamento completo verificável; **B** só com crate/build/teste; **C** abertura atual basta | **A** | **A:** 12 auditados um a um, código segue proibido; **B:** 12 esperam crate e invertem a ordem; **C:** 10 sem `RF` e 1 sem plano ficam escondidos | declaração dos 12; não a sequência de A |
-| **D-05** — workspace único, toolchain e versões fixadas por digest? | **A** workspace + toolchain + `Makefile` + digests; **B** crates independentes; **C** híbrido | **A** | **A:** 1 lock/versão, migração única; **B:** até 9 locks/versões; **C:** local ≠ CI | segundo crate; ato 2 não |
+**D-05 = A aprovada em 2026-11-25:** workspace Cargo único na raiz, `rust-toolchain.toml`, `Makefile`,
+um `Cargo.lock`, ações por SHA e imagens por digest. A execução está em
+`../plano-migracao-d-05.md` e **ainda não foi executada**; D-05 não fecha lacuna de captura nem muda
+D-01.
 
-**Nenhuma outra decisão do dono foi encontrada nesta análise:** o **ato 2** não espera decisão; o **ato 6**
-espera terceiro/dado.
+**Pergunta de decisão aberta — D-06:** qual frente executa primeiro depois de D-05?
 
-Nenhuma delas é decisão desta página: ela recomenda, mede e aponta o dono.
+| Opção | Frente | Recomendação | O que destrava |
+|---|---|---|---|
+| **A** | **D-01 / `wyd-db`**: atos 2–3 concluídos → ato 4 `CAP-37`–`CAP-39` → 40 issues + 141 atos | **A (recomendada)** | 141 atos, 64 células e 40 issues |
+| **B** | Executar a migração D-05 | — | 9 crates e 6 comandos; 0 atos/issues |
+| **C** | D-04 / `wyd-portal`: árvore `src/`/`tests/` + plano de teste | — | 33 `RF`/10 `RNF`; 0 atos/issues |
+| **D** | `wyd-protocol`: `RF`, árvore, teste e roadmap | — | 5/131 páginas; 2 lacunas de captura |
+
+**A recomendação é A**, porque é a única que fecha 141 atos/64 células/40 issues hoje; B, C e D
+fecham 0 atos/issues no curto prazo e D ainda depende de captura. Os **atos 2–3 já estão feitos**; o
+**ato 4** depende de **`Q-SERIE-1`** na parte de série real; o **ato 6** espera terceiro/dado. As
+**6 lacunas abertas + 1 proposta**, os **6** seeds e a capacidade `CAP-08` continuam como estão; D-05
+continua aprovada e não é reaberta.
+
+**Pergunta de decisão aberta — `Q-SERIE-1`:** qual política para os 28 arquivos sem `down`? **A**
+forward-only com marcador explícito; **B** escrever os 28 `down` reais (**recomendada**); **C** baseline
+dos 28. A recomendação **B** mantém o contrato e destrava a série, o reset e os testes de sistema; **A**
+exige revisão da `ADR-DB-0002` e retira a prova de rollback; **C** pode esconder drift e ainda exige
+exceção para os arquivos legados. A análise completa está em `../../wyd-db/migrations/serie-e-regras.md` §9.

@@ -10,8 +10,9 @@ o arquivo é só seed) e se há bloqueio para escrevê-la. O plano (`plano-migra
 **ordem e do escopo**; o texto DDL fechado é dono de `ddl-confirmado.md`; a **decisão** de cada
 bloqueio é dona de `lacunas.md`. Aqui não se decide nada: aqui se acompanha.
 
-Este arquivo fica na **raiz** de `planejamento-1.0.0/wyd-db/`, fora de `migrations/`: a pasta guarda só
-página de migration, uma por arquivo `.sql` da série.
+Este arquivo fica na **raiz** de `planejamento-1.0.0/wyd-db/`, fora de `migrations/`: a pasta guarda as
+páginas de migration, uma por arquivo `.sql` da série, e a nota transversal `serie-e-regras.md`, que
+não é página numerada nem entra nas contagens.
 
 ## 1. Como ler este checklist
 

@@ -91,7 +91,7 @@ Só `core`/`std`. Sem `regex` (scanner manual é mais simples que regex com `$$`
 | `accepts_commit_in_string` | `INSERT … VALUES ('COMMIT');` | `Ok` |
 | `rejects_empty` / `_only_comments` | `""`, `"-- nada"` | `Empty` |
 | `rejects_commit` | `COMMIT;` | `TransactionControl { keyword: "COMMIT" }` |
-| `rejects_begin_after_semicolon` | `SELECT 1; begin;` | `TransactionControl { keyword: "begin" }` |
+| `rejects_begin_after_semicolon` | `SELECT 1; begin;` | `TransactionControl { keyword: "BEGIN" }` (canônico) |
 | `rejects_savepoint` | `SAVEPOINT s1;` | `TransactionControl { keyword: "SAVEPOINT" }` |
 | `rejects_marker` | `-- migrate:up` no corpo | `MarkerInSql` |
 | `does_not_match_prefix` | `BEGINNING OF …` | `Ok` |

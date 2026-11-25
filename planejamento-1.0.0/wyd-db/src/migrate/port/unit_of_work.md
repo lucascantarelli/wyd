@@ -16,6 +16,7 @@ sessão está (preflight). A transação pertence ao adapter: a orquestração n
 ## 2. API pública
 
 ```rust
+use crate::migrate::migration::checksum::Checksum;
 use crate::migrate::migration::file::RawMigration;
 use crate::migrate::migration::sql::Sql;
 use crate::migrate::migration::version::Version;
@@ -32,7 +33,11 @@ pub struct ServerInfo {
 /// Unidade de trabalho. `commit` consome a transação; `Drop` faz ROLLBACK.
 pub trait MigrationTxn: Send {
     async fn run(&mut self, sql: &Sql) -> Result<(), SqlError>;
-    async fn record(&mut self, m: &RawMigration) -> Result<(), SqlError>;
+    async fn record(
+        &mut self,
+        m: &RawMigration,
+        checksum: Checksum,
+    ) -> Result<(), SqlError>;
     /// Apaga a linha do ledger — só o `down` usa (spec §8).
     async fn forget(&mut self, version: Version) -> Result<(), SqlError>;
     async fn commit(self) -> Result<(), SqlError>;
@@ -61,6 +66,10 @@ pub enum SqlError {
 **Duas adições fecham lacunas do spec §7/§8 sem criar porta nova:** `server_info` (o preflight precisa
 de `current_user` e da versão, e nenhuma outra porta responde) e `allows_superuser` (o binário lê a
 variável, passa por `MigrateConfig`, o adapter guarda e a porta informa — a orquestração não lê ambiente).
+
+`record` recebe o `Checksum` além de `RawMigration`: o checksum é do arquivo inteiro, calculado uma vez
+pelo `MigrationSet`, e `RawMigration` não o carrega. Passá-lo como argumento mantém o parser puro e o
+ledger com o valor que o `plan` comparou, sem recalcular o hash dentro da transação.
 
 `record` e `forget` devolvem `SqlError`, não `LedgerError`: são `INSERT`/`DELETE` dentro da transação, e
 o que o operador precisa é `sqlstate` e `position`. `LedgerError` é da leitura (`Shape`) e do bootstrap

@@ -4,7 +4,7 @@
 > Base: `../specs/capacidades.md` §4; `../specs/sistema.md`; `../../docs/guia-teste/testes-de-sistema.md`
 > Revisado em: 2026-11-24
 
-**Estado:** aceito (2026-11-24) — alvo executado em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código que não existe (§1.1).
+**Estado:** aceito (2026-11-24) — alvo executado em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). O runner foi implementado em lib/fakes em 2026-11-25, mas `CAP-37`–`CAP-39` continuam sem execução contra PG17.
 
 **Quatro níveis de afirmação convivem aqui:**
 
@@ -65,7 +65,7 @@ cenário, não no DDL; rodou de novo e passou.
 | Resultado | Quais | Por quê |
 |---|---|---|
 | **verde** | `CAP-24`–`CAP-36` | o schema recusa e aceita o que a capacidade enuncia |
-| **sem código que execute** | `CAP-37`, `CAP-38`, `CAP-39` | `RNF-DB-002` (runner/`MigrateConfig`), `RNF-DB-004` (consulta da porta C4), `RNF-DB-005` (boot do binário): nenhum existe em `crates/wyd-db/` |
+| **sem código de sistema que execute** | `CAP-37`, `CAP-38`, `CAP-39` | `RNF-DB-002`: runner existe em lib/fakes, mas o cenário de sistema ainda não roda; `RNF-DB-004` (consulta da porta C4) e `RNF-DB-005` (boot do binário) continuam sem implementação em `crates/wyd-db/` |
 
 O harness chama `psql` no container por `docker exec`; ele prova o **schema**, não a porta do crate. A
 decisão de cliente (`sqlx`) segue aberta, e trocar `psql` pelo cliente é leva posterior.

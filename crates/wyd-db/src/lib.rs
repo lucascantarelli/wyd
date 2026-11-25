@@ -5,3 +5,4 @@
 //! a árvore completa está em `docs/guia-desenvolvedor/mapa-do-crate.md`.
 
 pub mod dsn;
+pub mod migrate;

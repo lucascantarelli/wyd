@@ -953,14 +953,18 @@ grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \
   | grep -v 'deprecated/' | grep -v '\.build/'
 ```
 
-### 8.7 Organização de código, testes e operação por sistema (proposta, 2026-11-24)
+### 8.7 Organização de código, testes e operação por sistema (aprovada, 2026-11-25)
 
-> **Estado: proposta (`P`), não decisão aprovada.** Esta subseção define o alvo verificável de
+> **Estado: aprovada em D-04 = A em 2026-11-25.** Esta subseção define o alvo verificável de
 > organização para os 13 sistemas e o checklist de D-04 = A. Ela **não cria pasta, código ou teste**;
 > a árvore de cada sistema só nasce depois da página `aceita` e da aprovação do dono (`AGENTS.md` §5,
-> item 1). Medido em 2026-11-24: `crates/wyd-db` é o único crate com código; os outros 8 `crates/*` têm
-> só `.gitkeep`; `wyd-admin` tem `src/` e `tests/` reservados; **10** sistemas não têm `RF` numerado e
-> `wyd-ops` não tem plano diretor (fonte: `wyd-ops/docs/prioridade-do-projeto.md` §0.1, D-04).
+> item 1). A auditoria por sistema está em `wyd-ops/auditoria-de-organizacao.md`: **2 de 13** passaram
+> (`wyd-db` e `wyd-admin`) e **11** ainda não. Medido em 2026-11-24: `crates/wyd-db` é o único crate
+> com código; os outros 8 `crates/*` têm só `.gitkeep`; `wyd-admin` tem `src/` e `tests/` reservados;
+> **10** sistemas não têm `RF` numerado e `wyd-ops` não tem plano diretor (fonte:
+> `wyd-ops/docs/prioridade-do-projeto.md` §0.1, D-04). **D-05 = A foi aprovada em 2026-11-25**; o
+> plano de migração para o workspace, toolchain, Makefile e digests está em
+> `wyd-ops/plano-migracao-d-05.md` e ainda não foi executado.
 
 #### Princípios que valem para todos
 
@@ -985,7 +989,7 @@ grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \
 
 ```text
 crates/<sistema>/
-├── Cargo.toml                 # membro do workspace (D-05 = A), edição e lints declarados
+├── Cargo.toml                 # membro do workspace (D-05 = A aprovada), edição e lints declarados
 ├── src/
 │   ├── lib.rs                 # API pública; nada de regra ou I/O por conveniência
 │   ├── domain/                # tipos, invariantes e regras puras; sem sqlx/http/tokio/fs
@@ -1028,7 +1032,7 @@ portal não importa crate Rust: consome contrato HTTP/JSON documentado no sistem
 | Sistema | Árvore alvo | Regra |
 |---|---|---|
 | `wyd-docs` | `preparar.py`, `verificar*.py`, `tema/`, `tests/` e o site gerado fora do git | script de documento mora no `wyd-docs`; nada de `.py` em `planejamento-1.0.0/` |
-| `wyd-ops` | `wyd-ops/wyd-docs.Dockerfile`, `scripts/`, `tests/smoke/`; workflows em `.github/` | um Dockerfile; Compose na raiz por descoberta da ferramenta (§8.3); imagem por digest quando D-05 = A |
+| `wyd-ops` | `wyd-ops/wyd-docs.Dockerfile`, `scripts/`, `tests/smoke/`; workflows em `.github/` | um Dockerfile; Compose na raiz por descoberta da ferramenta (§8.3); imagem por digest (D-05 = A aprovada) |
 | `wyd-client` | `wyd-client/tools/` (CLI), `files/` ignorado, `tests/` da CLI | binário do cliente nunca é versionado; patch e manifesto têm hash |
 | `wyd-admin` | `crates/wyd-admin/` quando virar Rust; HTTP/JSON interno | mesma separação domínio/aplicação/adaptador; auditoria não mora no handler |
 | `wyd-launcher` | `crates/wyd-launcher/` (Tauri/Rust) + `tests/` | assinatura e updater testados antes de publicar |
@@ -1053,10 +1057,12 @@ falta.
 
 #### Operação e versões
 
-- Workspace Rust na raiz, `rust-toolchain.toml`, `Makefile` e **um** `Cargo.lock` quando D-05 = A; até
-  lá, o crate existente continua com o lock próprio e o CI o referencia explicitamente.
-- Imagem de CI e de runtime fixada por **digest** quando D-05 = A; hoje `postgres:17` e
-  `python:3.15-slim` estão por tag e essa dívida está registrada em D-05.
+- Workspace Rust na raiz, `rust-toolchain.toml`, `Makefile` e **um** `Cargo.lock` por D-05 = A
+  (aprovada em 2026-11-25; execução em `wyd-ops/plano-migracao-d-05.md`). Enquanto o plano não for
+  executado, o crate existente continua com o lock próprio e o CI o referencia explicitamente.
+- Imagem de CI e de runtime fixada por **digest** por D-05 = A (aprovada em 2026-11-25); o plano
+  `wyd-ops/plano-migracao-d-05.md` resolve os digests. Hoje `postgres:17` e `python:3.15-slim` ainda
+  estão por tag e essa dívida está registrada em D-05.
 - Workflow com permissão mínima, action por SHA e segredo só em secret; nenhum segredo em documento,
   log ou artefato.
 - Toda imagem tem healthcheck; todo deploy tem rollback; nenhum ambiente de produção em free tier
@@ -1078,6 +1084,8 @@ Um sistema só recebe o carimbo depois de mostrar, no documento dono:
 `wyd-ops` acrescenta runbook, ambientes e rollback; `wyd-portal` acrescenta a fronteira do BFF;
 `wyd-client` acrescenta direitos, hash e segunda leitura. **Nenhum sistema é declarado organizado por
 simetria:** os **13** passam pelo checklist, um a um, e a ausência de `RF` ou de plano diretor reprova.
+A auditoria de 2026-11-25 declarou **2 de 13** organizados (`wyd-db` e `wyd-admin`); os **11** restantes
+e a lacuna exata de cada um estão em `wyd-ops/auditoria-de-organizacao.md` §2–§3.
 
 #### O que não fazer
 

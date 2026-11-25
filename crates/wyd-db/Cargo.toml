@@ -1,6 +1,6 @@
-# Primeiro slice do crate (Q-BLK-18 = A, 2026-11-24). Escolhas mínimas e declaradas:
-# nome do pacote, edition 2021, licença GPL-2.0-only e nenhuma dependência. Features e dependências de `sqlx`
-# continuam NÃO decididas — ver docs/guia-desenvolvedor/mapa-do-crate.md §"o que não decide".
+# Primeiro slice do crate (Q-BLK-18 = A, 2026-11-24), agora com o runner de migrations.
+# `sqlx` fica confinado ao adapter de `migrate/`; as demais camadas usam apenas std, sha2 e thiserror.
+# A decisão de features continua documentada em docs/guia-desenvolvedor/mapa-do-crate.md §"o que não decide".
 [package]
 name = "wyd-db"
 version = "0.0.0"
@@ -13,6 +13,13 @@ name = "sistema_pg"
 path = "tests/sistema_pg.rs"
 
 [dependencies]
+sha2 = "0.10.9"
+sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["rt", "macros", "sync"] }
+
+[dev-dependencies]
+tempfile = "3.27.0"
 
 [lints.rust]
 unsafe_code = "forbid"

@@ -4,6 +4,9 @@
 > `**Estado:**`;
 > este índice não copia nem resume estado. O checklist de arquivo é
 > [`../migrations-checklist.md`](../migrations-checklist.md).
+>
+> Nota transversal da série: [`serie-e-regras.md`](serie-e-regras.md) — ordem, ledger, idempotência
+> e drift; não é uma página de migration numerada nem um arquivo `.sql`.
 
 | Arquivo | Página |
 |---|---|

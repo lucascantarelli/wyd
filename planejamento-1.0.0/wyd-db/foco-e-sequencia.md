@@ -11,6 +11,10 @@
 mantém as perguntas de seed. Ela **não** publica um segundo ranking do projeto: onde divergir, vale a
 página canônica.
 
+**Atualização de 2026-11-25:** o ato 2 (`migrations/serie-e-regras.md`) e o ato 3 (runner em
+lib/fakes, 63 testes) estão concluídos; o próximo elo de F2 é o **ato 4** (`CAP-37`–`CAP-39`), e a
+série real depende de **`Q-SERIE-1`**. O registro completo está em `migrations/serie-e-regras.md` §8–§10.
+
 Este documento mede as frentes do `wyd-db` e preserva as perguntas de seed: enumera as frentes abertas
 com o número que cada uma tem no arquivo dono e registra o custo/dependência de cada uma. Ele não é
 proposta de página nova nem seed: é medição e insumo. **A decisão de foco e a ordem do projeto são da

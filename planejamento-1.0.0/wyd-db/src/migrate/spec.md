@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` que vai implementar o runner
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §2 e §7, `padrao-banco.md` §11, `src/provision/spec.md`
-> Revisado em: 2026-11-18
+> Revisado em: 2026-11-25
 
 **Estado:** aceito (2026-11-24) — aguardando aceite do dono
 
@@ -155,9 +155,14 @@ pub trait Ledger: Send + Sync {
 /// Unidade de trabalho: o adapter abre a transação, fixa `search_path` e a fecha.
 /// Desfazer não tem método: `commit` consome a transação (`self`, não `Box<Self>`) e o `Drop` do
 /// adapter faz ROLLBACK — receber o `Txn` por valor de `begin` já torna o caminho único.
+/// `record` recebe o checksum calculado pelo `MigrationSet`: `RawMigration` não o carrega.
 pub trait MigrationTxn: Send {
     async fn run(&mut self, sql: &Sql) -> Result<(), SqlError>;
-    async fn record(&mut self, m: &RawMigration) -> Result<(), SqlError>;
+    async fn record(
+        &mut self,
+        m: &RawMigration,
+        checksum: Checksum,
+    ) -> Result<(), SqlError>;
     async fn forget(&mut self, version: Version) -> Result<(), SqlError>;
     async fn commit(self) -> Result<(), SqlError>;
 }
@@ -423,15 +428,18 @@ pub struct MigrateConfig {
     dsn: Dsn,                     // de `crate::dsn`; a redação do Debug é de lá (`src/dsn.md`)
     dir: PathBuf,
     lock_timeout: Duration,       // padrão 10 s
+    allow_superuser: bool,         // padrão false; o binário liga pelo opt-out
 }
 
 impl MigrateConfig {
     pub fn new(dsn: Dsn, dir: PathBuf) -> Self;
     /// Fora de 1 s..=10 min é erro do chamador, não valor a corrigir em silêncio.
     pub fn with_lock_timeout(self, d: Duration) -> Result<Self, ConfigError>;
+    pub fn with_allow_superuser(self, allow: bool) -> Self;
     pub fn dsn(&self) -> &Dsn;
     pub fn dir(&self) -> &Path;
     pub fn lock_timeout(&self) -> Duration;
+    pub fn allow_superuser(&self) -> bool;
 }
 ```
 
@@ -439,9 +447,9 @@ impl MigrateConfig {
 invariante e `Debug` redigido moram lá, e aqui só se recebe o valor pronto. O preflight compara
 `current_user`, não lê a DSN.
 
-Três campos não pedem builder: `new` cobre o caso obrigatório e `with_lock_timeout` é o único ajuste.
+Os campos obrigatórios cabem em `new`; `with_lock_timeout` e `with_allow_superuser` são os únicos ajustes.
 Não existe `from_env`: ler variável é do binário (§10.1), e `config.rs` não importa `std::env`. O que
-sobra de configurável é tempo, não regra.
+sobra de configurável é tempo e o opt-out logado, não regra de papel/versão.
 
 ## 10. Arquitetura do módulo
 
@@ -630,3 +638,26 @@ como em §6; (4) advisory lock de sessão, chave constante e espera limitada (§
 `MigrationTxn` (§8 e §6); (6) três comandos, nada automático no boot, códigos de saída fixos (§8 e
 §11), com o reset servido pelo `down` até vazio (§8.1). Este documento é a fonte da implementação, e os dois passam a mudar juntos — mexer nesses pontos
 é revisão de ADR, não de implementação.
+
+## 15. Estado da implementação (2026-11-25)
+
+**Ato 3 concluído no escopo de biblioteca e portas falsas.** O módulo `crates/wyd-db/src/migrate/`
+existe com parser, `MigrationSet`, `plan`, portas, adapter PostgreSQL, `FsSource` e runner. O registro
+de fechamento da nota transversal é `../../migrations/serie-e-regras.md` §8; esta seção guarda a mesma
+evidência no documento de contrato que a nota cita como `Base:`.
+
+| Comando | Resultado observado |
+|---|---|
+| `cargo test --manifest-path crates/wyd-db/Cargo.toml --lib` | **63 passed; 0 failed; 0 ignored** (exit 0) |
+| `cargo check --manifest-path crates/wyd-db/Cargo.toml --all-targets` | concluído sem erro (exit 0) |
+| `cargo clippy --manifest-path crates/wyd-db/Cargo.toml --all-targets -- -D warnings` | concluído sem aviso (exit 0) |
+| `cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check` | concluído sem diferença (exit 0) |
+
+**Cobertura:** a prova é de **lib/fakes** (unidade e contrato), não de sistema com PostgreSQL. Não
+foram executados `tests/sistema_pg.rs` (falta `WYD_DB_TEST_CONTAINER`/PG17), o gate de documentação em
+container nem teste de binário/CLI. As 28 migrations materializadas têm **28** `up`, **0** `down` e
+não foram alteradas; a decisão de rollback é `Q-SERIE-1` em `../../migrations/serie-e-regras.md` §9, com
+recomendação **B** (escrever os 28 `down` reais).
+
+A próxima frente canônica continua **A — D-01/`wyd-db`**, com a fatia **ato 4** (`CAP-37`–`CAP-39`,
+3 células) e depois **ato 5** (40 issues + 141 atos).
