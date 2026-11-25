@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o portal é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o portal é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: produto
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/rotas-e-permissoes.md`; `M21`
@@ -6,7 +6,7 @@
 
 **Estado:** aceito (2026-11-20); F7 e F9 alinhadas às decisões de 2026-11-22
 
-Fatias de entrega, cada uma com DoD executável. **Nenhuma issue foi criada**: o roadmap planeja
+Fatias de entrega; o DoD executável de cada uma está na página citada em §2. **Nenhuma issue foi criada**: o roadmap planeja
 ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nesta rodada.
 
 ## 1. Regras do fatiamento
@@ -18,155 +18,30 @@ ordem e prova; abrir issue, milestone ou board é ato separado e não pedido nes
 
 ## 2. Fatias
 
-### F0 — Fundação do portal (auth e sessão)
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-POR-001` a `RF-POR-003` |
-| Depende de | `0001`–`0004` aplicadas |
-| Entrega | app Next.js, login, cadastro, recuperação, middleware de sessão, layout dos dois temas |
-| DoD | E2E de cadastro → verificação → login → logout verde; sessão revogada não acessa `/conta`; `npm run build` e `tsc --noEmit` limpos |
-| Fora | área administrativa, WYDpedia, atlas |
-
-### F1 — Conta e personagens
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-POR-004` |
-| Depende de | F0; `0005`/`0006` aplicadas; view de `0029` |
-| Entrega | `/conta`, `/conta/personagens`, `/conta/seguranca`, `/conta/consentimentos`; criação de conta de jogo |
-| DoD | sexta conta recusada com mensagem de vaga; personagem apagado não aparece; revogar sessão derruba a lista |
-| Fora | edição de personagem e inventário |
-
-### F2 — Portal público: home, notícias e rankings
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-POR-005`, `RF-POR-006`, `RF-POR-007` |
-| Depende de | F0; views de `0029`; lote das tabelas `portal.news`/`banner` para notícias |
-| Entrega | home, `/noticias*`, `/rankings`, `/download` |
-| DoD | home com banco vazio mostra `0` e hora da medição; ranking exclui `deleted_at`; rascunho de notícia não aparece |
-| Fora | WYDpedia e atlas |
-
-### F3 — WYDpedia e atlas
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-POR-008`, `RF-POR-009` |
-| Depende de | F2; `0013`–`0019`, `0024` e seus seeds |
-| Entrega | `/wydpedia*`, `/atlas*`, busca e tooltip |
-| DoD | 404 para item inexistente; busca ignora caixa; mapa sem pins mostra estado vazio; link cruzado mínimo por ficha |
-| Fora | simulador de build e calculadora de dano |
-
-### F4 — Admin: NOC, canais, logs e configuração
-
-| Campo | Valor |
-|---|---|
-| Fase | 4 |
-| Requisitos | `RF-POR-010`, `RF-POR-012`, `RF-POR-014` a `RF-POR-018`, `RNF-POR-001`, `RNF-POR-005`, `RNF-POR-007` |
-| Depende de | F1; `0007`, `0002`; contrato do `wyd-admin` (`LAC-POR-01`); Prometheus, Loki e Grafana do `wyd-ops` (`LAC-POR-06`, `monitoramento.md` §4) |
-| Entrega | `/admin`, `/admin/canais`, `/admin/logs`, `/admin/config`, as seis telas de monitoramento 38–43, middleware de papel |
-| DoD | `member` recebe 403 em `/admin`; alteração de canal grava revisão e auditoria; revisão sem mudança é recusada; cada tela de monitoramento tem paridade com o legado (`monitoramento.md` §7); CPU/RAM/latência, logs e painéis vêm das APIs do `wyd-ops` com instante da amostra e viram “não medido” quando a fonte falha; nenhuma URL interna ou credencial chega ao navegador |
-| Fora | kick/broadcast como SQL do portal (passam pelo `wyd-admin`); substituir o Grafana ou guardar série no banco |
-
-### F5 — Admin: jogadores, contas e economia
-
-| Campo | Valor |
-|---|---|
-| Fase | 4 |
-| Requisitos | `RF-POR-011` |
-| Depende de | F4; `0005`, `0006`, `0008`–`0011`; `wyd-admin` para ação no processo |
-| Entrega | `/admin/jogadores*`, `/admin/contas*`, `/admin/economia*`, `/admin/seguranca` |
-| DoD | ficha não devolve hash; bloqueio sem motivo recusado; ajuste de moeda vira linha no ledger; toda ação com autor em `audit_log` |
-| Fora | alteração de inventário item a item (precisa de decisão de operação) |
-
-### F6 — CMS e launcher
-
-| Campo | Valor |
-|---|---|
-| Fase | 5 |
-| Requisitos | `RF-POR-006` (edição) |
-| Depende de | — (`0030` aprovado em 2026-11-20: `news`, `banner`, `guide`, `launcher_release`) |
-| Entrega | `/admin/conteudo/noticias`, `/admin/conteudo/wydpedia`, `/admin/launcher` |
-| DoD | publicar/despublicar notícia reflete no público em até um ciclo de revalidação; versão de launcher só publica manifesto íntegro |
-| Fora | geração de patch e upload de binário (`wyd-ops`) |
-
-### F7 — Armaria read-only
-
-| Campo | Valor |
-|---|---|
-| Fase | 6 |
-| Requisitos | `RF-POR-019` a `RF-POR-022`, `RNF-POR-008` |
-| Depende de | F2; views de `wyd-db/armaria-e-mercado.md` §2 no lote; `LAC-POR-08` fechada em 2026-11-22 (ficha publica só o provado; captura em `P-POR-08`) |
-| Entrega | `/personagem/[id]` com cabeçalho, os 16 slots, habilidades, ficha do item, filtro e ordenação |
-| DoD | rota responde sem sessão; personagem apagado devolve `404`; resposta sem `account_id`, e-mail, IP ou ouro; slot vazio e item não catalogado não quebram a página; a ficha exibe habilidades especiais pelo símbolo e, quando houver origem provada, dano e alcance; durabilidade não aparece como número; `stat_source` declara o que não foi medido e nenhum número é inventado; nenhuma escrita do portal em `game` |
-| Fora | edição de perfil, importação manual de dado, simulador de build |
-
-### F8 — Mercado: carteira e venda direta
-
-| Campo | Valor |
-|---|---|
-| Fase | 6 |
-| Requisitos | `RF-POR-023`, `RF-POR-026` a `RF-POR-028`, `RF-POR-031`, `RNF-POR-009`, `RNF-POR-010` |
-| Depende de | F7; lote do mercado (`armaria-e-mercado.md` §3, `LAC-ADM-07`); contrato de custódia do `wyd-admin` (`contrato-c4.md` §4.9–§4.13, `ADM-10`; `LAC-POR-07` fechada em 2026-11-22) |
-| Entrega | `/mercado`, `/mercado/[id]`, `/mercado/minhas`, `/mercado/carteira`; anúncio, compra, taxa e extrato |
-| DoD | item sai do inventário antes de o anúncio ficar `ativo`; compra entrega o item e liquida com `taxa + líquido = bruto`; repetir a requisição não duplica anúncio nem cobrança; comprar da própria conta é recusado; saldo confere com a soma do ledger; teste de carga com 10 mil anúncios mede `p95` dentro do `RNF-POR-009` |
-| Fora | leilão (F9), reputação e avisos (F10), disputa e antifraude (F11) |
-
-### F9 — Mercado: leilão
-
-| Campo | Valor |
-|---|---|
-| Fase | 6 |
-| Requisitos | `RF-POR-025`, `RF-POR-030` (lance e arremate), `RNF-POR-009` |
-| Depende de | F8; `LAC-POR-09` confirmada em 2026-11-23 (BFF fecha, `wyd-ops` agenda/alerta); job idempotente |
-| Entrega | anúncio `leilao` com `ends_at`, lances com reserva de crédito, fechamento por job, aviso de arremate e de lance superado |
-| DoD | lance menor ou igual ao maior ativo é recusado; lance depois de `ends_at` é recusado; o job roda duas vezes e não cobra duas vezes; perdedor recebe a reserva de volta; vencedor recebe o item; leilão sem lance expira e devolve a custódia ao vendedor; atraso do fechamento tem métrica e alerta |
-| Fora | lance automático (proxy bid) e compra imediata em leilão sem `buyout_price` |
-
-### F10 — Mercado: reputação e notificação
-
-| Campo | Valor |
-|---|---|
-| Fase | 6 |
-| Requisitos | `RF-POR-029`, `RF-POR-030` |
-| Depende de | F8 e F9 (transação concluída é a base da avaliação) |
-| Entrega | avaliação do comprador, agregado público do vendedor, central de avisos com contador |
-| DoD | uma avaliação por transação e só pelo comprador; agregado confere com as transações concluídas; avaliação oculta não soma; cada evento gera um aviso por destinatário; contador zera ao ler |
-| Fora | comentário com resposta do vendedor e moderação editorial de texto livre |
-
-### F11 — Mercado: disputa, antifraude e fechamento
-
-| Campo | Valor |
-|---|---|
-| Fase | 6 |
-| Requisitos | `RF-POR-032`, `RF-POR-033`, `RNF-POR-010` |
-| Depende de | F8; F10 para o aviso de disputa |
-| Entrega | `/admin/mercado`, `/admin/mercado/disputas`; disputa com desfecho, limites por conta e trilha de auditoria |
-| DoD | uma disputa aberta por transação; só as partes abrem; staff decide com segundo fator e a decisão fica em `audit_log`; desfecho aplica estorno ou liberação e notifica as partes; `member` recebe `403` em `/admin/mercado`; limite de anúncios ativos e de lances por minuto é recusado no servidor; ciclo de transferência entre as mesmas contas é recusado |
-| Fora | detecção estatística de fraude, repasse financeiro externo e saque de crédito |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — Fundação do portal (auth e sessão) | [`WYDPOR-F0`](WYDPOR-F0.md) §Skills |
+| 2 | F1 — Conta e personagens | [`WYDPOR-F1`](WYDPOR-F1.md) §Skills |
+| 3 | F2 — Portal público: home, notícias e rankings | [`WYDPOR-F2`](WYDPOR-F2.md) §Skills |
+| 4 | F3 — WYDpedia e atlas | [`WYDPOR-F3`](WYDPOR-F3.md) §Skills |
+| 5 | F4 — Admin: NOC, canais, logs e configuração | [`WYDPOR-F4`](WYDPOR-F4.md) §Skills |
+| 6 | F5 — Admin: jogadores, contas e economia | [`WYDPOR-F5`](WYDPOR-F5.md) §Skills |
+| 7 | F6 — CMS e launcher | [`WYDPOR-F6`](WYDPOR-F6.md) §Skills |
+| 8 | F7 — Armaria read-only | [`WYDPOR-F7`](WYDPOR-F7.md) §Skills |
+| 9 | F8 — Mercado: carteira e venda direta | [`WYDPOR-F8`](WYDPOR-F8.md) §Skills |
+| 10 | F9 — Mercado: leilão | [`WYDPOR-F9`](WYDPOR-F9.md) §Skills |
+| 11 | F10 — Mercado: reputação e notificação | [`WYDPOR-F10`](WYDPOR-F10.md) §Skills |
+| 12 | F11 — Mercado: disputa, antifraude e fechamento | [`WYDPOR-F11`](WYDPOR-F11.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F4 → F5
-      ↘ F2 → F3
-F6 destravado: lote 0030 aprovado em 2026-11-20
-F7 → F8 → F9 → F10 → F11   (armaria e mercado; todos na 1.0.0)
-```
-
-`F7` começa depois de `F2` (layout público) e não depende de dinheiro nem de job. `F8` é a fatia que
-muda o schema e espera o lote de `game.market_escrow` (`LAC-ADM-07`) com o contrato de custódia já escrito
-(`LAC-POR-07`, fechada); `F9` não existe sem `F8`, e `F10`/`F11` não
-existem sem transação concluída. Leilão está dentro da `1.0.0`: o que se fatia é a ordem, não a
-existência.
-
-`F2` pode começar em paralelo a `F4` depois de `F1`, mas notícias só fecham quando o lote de
-`portal.news`/`banner`/`guide`/`launcher_release` for aplicado no `wyd-db`.
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 
@@ -196,3 +71,24 @@ existência.
 - Não fixa biblioteca de UI: isso é da fatia, com registro de decisão se mudar fronteira.
 
 *Página de planejamento. Nenhuma fatia foi iniciada.*
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **12** páginas, uma por fatia, no formato de `WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDPOR-F0`](WYDPOR-F0.md) | Fundação do portal (auth e sessão) |
+| [`WYDPOR-F1`](WYDPOR-F1.md) | Conta e personagens |
+| [`WYDPOR-F10`](WYDPOR-F10.md) | Mercado: reputação e notificação |
+| [`WYDPOR-F11`](WYDPOR-F11.md) | Mercado: disputa, antifraude e fechamento |
+| [`WYDPOR-F2`](WYDPOR-F2.md) | Portal público: home, notícias e rankings |
+| [`WYDPOR-F3`](WYDPOR-F3.md) | WYDpedia e atlas |
+| [`WYDPOR-F4`](WYDPOR-F4.md) | Admin: NOC, canais, logs e configuração |
+| [`WYDPOR-F5`](WYDPOR-F5.md) | Admin: jogadores, contas e economia |
+| [`WYDPOR-F6`](WYDPOR-F6.md) | CMS e launcher |
+| [`WYDPOR-F7`](WYDPOR-F7.md) | Armaria read-only |
+| [`WYDPOR-F8`](WYDPOR-F8.md) | Mercado: carteira e venda direta |
+| [`WYDPOR-F9`](WYDPOR-F9.md) | Mercado: leilão |

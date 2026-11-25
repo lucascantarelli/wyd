@@ -20,7 +20,7 @@ categoria, maestria por linhagem, afetos (buffs/debuffs) e os pontos de chaos.
 | Campo | Valor |
 |---|---|
 | Número | `0008` |
-| Arquivo | `crates/wyd-db/migrations/0008_game_skills.sql` |
+| Arquivo | `crates/wyd-db/migrations/0008-game-skills.sql` |
 | Schema | `game` |
 | Posição | 8 de 34 (segundo arquivo do bloco de estado do jogador) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges) e `0006` (`game.character` — todas as cinco tabelas têm FK para ela) |
@@ -249,7 +249,7 @@ com o DDL de `0005`/`0006`; a prova 12 usa `DELETE` de propósito, para medir a 
 caminho de operação.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0008_game_skills.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0008-game-skills.sql
 ```
 
 | # | Prova | Comando | Esperado |

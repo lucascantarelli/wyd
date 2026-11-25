@@ -87,5 +87,5 @@ rota-modelo com parâmetro literal: a URL concreta não entra na chave.
 
 ## Migration
 
-Forma (dona): `migrations/0033-ops-idempotency.md` — arquivo `0033_ops_idempotency.sql`; DDL em
+Forma (dona): `migrations/0033-ops-idempotency.md` — arquivo `0033-ops-idempotency.sql`; DDL em
 `ddl-confirmado.md` §5.33.

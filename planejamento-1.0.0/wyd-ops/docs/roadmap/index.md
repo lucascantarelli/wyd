@@ -7,30 +7,39 @@
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada. `wyd-ops` não tinha
 dashboard próprio até esta rodada.
 
-A fila tem **6 fatias** em 4 fases.
+A fila tem **6 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDOPS-001`–`002` | CI e imagem |
-| 2 | `WYDOPS-003`–`004` | ambiente e monitoramento |
-| 3 | `WYDOPS-005` | segredos e deploy |
-| 4 | `WYDOPS-006` | gate e fechamento |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| imagem nunca publicada | `WYDOPS-001` | `.github/workflows/docs-image.yml` versionado mas nunca rodou |
-| CI real | `WYDOPS-006` | `full-workflow.yml` stub; cobertura 85% no gate do sistema |
-| ambiente efêmero | `WYDOPS-003` | `LBOT-01`/`LBOT-02` |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDOPS-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **6** páginas, uma por fatia, no formato de`WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDOPS-F0`](WYDOPS-F0.md) | CI |
+| [`WYDOPS-F1`](WYDOPS-F1.md) | Imagem |
+| [`WYDOPS-F2`](WYDOPS-F2.md) | Ambiente |
+| [`WYDOPS-F3`](WYDOPS-F3.md) | Monitoramento |
+| [`WYDOPS-F4`](WYDOPS-F4.md) | Segredos e deploy |
+| [`WYDOPS-F5`](WYDOPS-F5.md) | Gate e fechamento |

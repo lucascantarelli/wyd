@@ -20,7 +20,7 @@ aparecerem no legado.
 | Campo | Valor |
 |---|---|
 | Número | `0024` (checklist, linha 108) |
-| Arquivo | `crates/wyd-db/migrations/0024_content_maps.sql` |
+| Arquivo | `crates/wyd-db/migrations/0024-content-maps.sql` |
 | Schema | `content` (2 tabelas) |
 | Posição | 24 de 34 |
 | Depende de | `0001` (schema, privilégios); `0014` (`content.item_catalog`); `0019` (`content.region`, `content.npc_definition`) |

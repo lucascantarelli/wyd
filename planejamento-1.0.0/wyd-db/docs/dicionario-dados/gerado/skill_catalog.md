@@ -99,4 +99,4 @@ por `character_skill`, que não tem FK: aposentar skill não invalida progressã
 
 ## Migration
 
-Forma (dona): `migrations/0015-content-skill.md` — arquivo `0015_content_skill.sql`.
+Forma (dona): `migrations/0015-content-skill.md` — arquivo `0015-content-skill.sql`.

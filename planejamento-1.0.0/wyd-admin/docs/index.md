@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo, arquitetura e staff técnico
 > Dono: equipe do wyd-admin
 > Base: `wyd-portal/docs/arquitetura/fronteira.md` §3 (C4); `AGENTS.md` §5/§6
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-21); custódia de item do mercado acrescentada em 2026-11-22. Planejamento
 aberto, nenhum código escrito.
@@ -40,3 +40,12 @@ audita e responde.
 Nada aqui foi implementado: nenhuma rota responde e nenhum arquivo `.rs` existe. O papel `wyd_admin` está
 planejado em `wyd-db/src/provision/spec.md` §2 (`M27`, 2026-11-21) e o schema da idempotência e da
 custódia é do `wyd-db` (`0033`/`0034`), não desta árvore.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura/adr
+
+- [ADR-ADM-0001 — Canal de controle HTTP síncrono com ack](arquitetura/adr/adr-adm-0001-canal-controle.md)
+- [ADRs — `wyd-admin`](arquitetura/adr/index.md)

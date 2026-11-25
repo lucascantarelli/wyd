@@ -50,6 +50,13 @@ npm run test:coverage
 
 O `--fail-under-lines 85` (ou equivalente do workspace) é o gate de `AGENTS.md` §8.
 
+## CI, cobertura e monitoramento
+
+- **CI:** `.github/workflows/code.yml` roda `npm ci`, `npm test`, `npx playwright test` e `npm run test:coverage`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p  --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Latência e status por rota, `trace_id`, erros de BFF, cache hit/miss e falha das fontes Prometheus/Loki. A página `arquitetura/monitoramento.md` é o dono; fonte fora aparece como “não medido”, nunca como zero.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de contrato, integração, fronteira e E2E verdes; nenhum `skip`/`ignore` sem issue dona; os comandos acima exit 0. As rotas de monitoramento (38–43) entram no critério com dublê das fontes externas, porque o contrato é de leitura HTTP.

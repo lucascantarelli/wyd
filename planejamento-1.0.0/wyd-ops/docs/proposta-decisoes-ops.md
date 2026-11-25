@@ -5,7 +5,7 @@
 > Dono: frente `wyd-ops`; custo de produção é decisão do dono do produto
 > Base: `proposta-gestao-github-e-ambientes.md` §3.2 e §7.3; `docs/index.md`;
 > `wyd-ops/plano-ci-real.md`; `wyd-ops/plano-imagem-e-compose-do-site.md`; `AGENTS.md` §4 e §9
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-23); a hospedagem foi respondida em **A** pelo dono em 2026-11-24. §8 registra a ação 2 como
 executada e §10 lista os campos do project, mas não repete os issue fields; §3.2 ainda rotula os
@@ -27,8 +27,8 @@ ainda diz "Proposta em aberto".
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| lacunas formais | **0** — `wyd-ops` não tem `lacunas.md`; das duas propostas do texto, uma foi aprovada/executada e a de hospedagem foi respondida (A) | `docs/index.md` |
-| `RF-OPS`, roadmap e plano de teste | **não existem** | `docs/index.md` "O que falta" |
+| lacunas formais | **5** — 2 fechadas, 3 bloqueadas (fronteira/contratos, aplicação de `Q-OPS-2`, autorização de GitHub) | `docs/lacunas.md` §1 |
+| `RF-OPS`, roadmap e plano de teste | **existem** desde 2026-11-25 | `docs/specs/requisitos.md`; `docs/roadmap/`; `docs/planos/plano-de-testes.md` |
 | CI real | **stub**; workflow de docs é o único gate ativo | `AGENTS.md` §4/§9; `wyd-ops/plano-ci-real.md` |
 | produção | **nada publicado**; free tier não serve | `wyd-ops/proposta-gestao-github-e-ambientes.md` §7.3 |
 | custo de hospedagem | **não medido** | idem |

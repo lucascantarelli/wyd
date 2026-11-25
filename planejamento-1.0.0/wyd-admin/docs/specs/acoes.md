@@ -95,7 +95,7 @@ nem lease a expirar. Tabela, colunas e retenção (7 dias) estão em `ddl-confir
 
 Rotas 8–11 de §4.9–§4.12 do [contrato C4](../arquitetura/contrato-c4.md). O ator é a conta do jogador
 (`X-Actor-Account-Id`), não staff, e nenhuma delas chama o `wyd-server`. A tabela `game.market_escrow` tem
-DDL aprovado em 2026-11-22: lote `0034_portal_market.sql`, texto em `ddl-confirmado.md` §5.34 e forma em
+DDL aprovado em 2026-11-22: lote `0034-portal-market.sql`, texto em `ddl-confirmado.md` §5.34 e forma em
 `wyd-db/armaria-e-mercado.md` §3.11 (`LAC-ADM-07` fechada em `M31`).
 
 ### 8.1 Custodiar (`POST /characters/{character_id}/escrow`)

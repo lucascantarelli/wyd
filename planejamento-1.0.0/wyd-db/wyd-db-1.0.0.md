@@ -12,8 +12,9 @@
 >
 > Baseline **da série herdada**, medido em 2026-11-17: `crates/wyd-db/` com **53 migrations**,
 > **24 arquivos Rust**, **5 alvos de teste** (`Cargo.toml`), **1 seed de desenvolvimento**; schema
-> com **87 tabelas** e **625 colunas** conforme `docs/arquitetura/banco-catalogo.md` (gerado em
-> 2026-11-15 por `make banco-catalogo`). Esses números descrevem o que a reescrita **substitui**,
+> com **87 tabelas** e **625 colunas**, medidos em 2026-11-17 pelo `make banco-catalogo` do legado —
+> artefato gerado e **não versionado** nesta árvore; o catálogo novo (`banco-catalogo.md`) fica
+> pós-`1.0.0` por `Q-BLK-20` = A. Esses números descrevem o que a reescrita **substitui**,
 > não o alvo: a contagem vigente é a medida depois da escrita e vive em `planos/metricas.md`.
 
 ---
@@ -58,7 +59,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-22 (`0033`/`0034`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001-bootstrap.sql` (schemas + `content_version`) e `0003-portal-person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-22 (`0033`/`0034`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -335,7 +336,7 @@ planejamento-1.0.0/wyd-db/
     └── test/provisionar-dados-de-teste/SKILL.md ▲
 ```
 
-**Totais:** 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
+**Totais do teto planejado** (a quebra medida corrente é a da nota “Medido agora”, abaixo): 1 plano diretor · 3 páginas de raiz em `docs/` · 17 em `arquitetura/` · 20 em
 `specs/` · 21 autorais + 109 de tabela em `dicionario-dados/` (escritas à mão, `M26`) · 10 em `planos/` · 42 em `roadmap/` ·
 11 em `guia-desenvolvedor/` · 8 em `guia-administrador/` · 7 em `guia-teste/` · **5** em
 `guia-documentacao/` (eram 8 até 2026-11-24, quando `Q-BLK-01` retirou três páginas que repetiam
@@ -349,11 +350,20 @@ por tabela, escritas à mão desde `M26`) e **36 em `migrations/`** (2 páginas 
 
 **Teto × escrito (2026-11-24):** os totais acima contam páginas **planejadas** e já incluem as
 desta árvore — escrever uma página **não muda nenhum deles**; muda o estado no cabeçalho e a
-medição de `planos/metricas.md`. **Medido:** **143 páginas com corpo em `docs/`**, 139 com `**Estado:**` e 4 portas de navegação sem
-estado editorial — as **3 de raiz**, **17 em `arquitetura/`**, **21 em `dicionario-dados/`**, **9 em
-`planos/`**, **11 em `guia-desenvolvedor/`**, **8 em `guia-administrador/`**, **7 em `guia-teste/`**,
-**5 em `guia-documentacao/`**, **20 em `specs/`** e **42 em `roadmap/`** (índice, fases e as 40
-`WYDDB-nnn`). O lote 6 escreveu os 21 recortes e as 40 páginas de issue; os outros três índices que
+medição de `planos/metricas.md`. **Medido em 2026-11-24 (histórico):** 143 páginas com corpo em `docs/`, 139 com `**Estado:**` e 4
+portas de navegação sem estado editorial — registro daquele lote.
+**Medido agora (gate de contagens):** **257 páginas em `docs/`**, todas com `**Estado:**`, por pasta:
+
+- **7 na raiz**;
+- **17 em `arquitetura/`**;
+- **131 em `dicionario-dados/`**;
+- **9 em `planos/`**;
+- **11 em `guia-desenvolvedor/`**;
+- **8 em `guia-administrador/`**;
+- **7 em `guia-teste/`**;
+- **5 em `guia-documentacao/`**;
+- **20 em `specs/`**;
+- **42 em `roadmap/`** (índice, fases e as 40 `WYDDB-nnn`). O lote 6 escreveu os 21 recortes e as 40 páginas de issue; os outros três índices que
 eram título de uma linha — `roadmap`, `guia-desenvolvedor` e `guia-teste` — agora são páginas. Os dois
 lotes de `Q-PAG-1` escreveram as três páginas de personagem e as quatro de economia e custódia em
 2026-11-24. O lote C escreveu `guia-documentacao/imagens-e-evidencias.md`, `planos/plano-de-manutencao.md`,
@@ -549,7 +559,7 @@ Já descrito em §5.1.
 ### 6.2 `docs/arquitetura/index.md`
 
 - Pergunta: "qual página de arquitetura eu leio para a minha dúvida?"
-- Obrigatório: mapa das 13 páginas por pergunta; ordem de leitura sugerida (visão → C4 →
+- Obrigatório: mapa de todas as páginas por pergunta (cada uma listada em `arquitetura/index.md`; o total corrente é o da nota “Medido agora”); ordem de leitura sugerida (visão → C4 →
   fronteira → fluxo → modelo → padrões); estado de cada uma; 1 diagrama de navegação.
 
 ### 6.3 `docs/arquitetura/*.md`
@@ -588,7 +598,7 @@ acompanhamento de estado fica em §12.2; a marcação, em `docs/convencoes.md`.
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
-| `index.md` | "o que há de requisito aqui?" | mapa das 8 páginas; convenção de ID; estado por área; como um requisito nasce, muda e é retirado |
+| `index.md` | "o que há de requisito aqui?" | mapa de todas as páginas de requisito (o próprio índice lista cada uma; total corrente na nota “Medido agora”); convenção de ID; estado por área; como um requisito nasce, muda e é retirado |
 | `visao-e-escolpo.md` | "o que o `wyd-db` resolve?" | problema; escopo dentro/fora (tabela); premissas de negócio; o que a `1.0.0` entrega |
 | `stakeholders.md` | "quem pede o quê?" | ator → interesse → requisito que o atende; quem aprova mudança de requisito |
 | `requisitos-funcionais.md` | "o que o banco precisa fazer?" | um bloco por `RF-DB-nnn` com: enunciado, entrada, saída, critério de aceitação verificável, tabela/porta envolvida, issue que entrega |
@@ -669,7 +679,7 @@ dois lugares que podem divergir.
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
-| `index.md` | "qual plano eu leio?" | mapa dos 9 planos; qual é vigente; como um plano é aprovado e revisado |
+| `index.md` | "qual plano eu leio?" | mapa de todos os planos (o próprio índice lista cada um; total corrente na nota “Medido agora”); qual é vigente; como um plano é aprovado e revisado |
 | `plano-de-documentacao.md` | "como esta documentação é produzida?" | ondas (espelho de §11), dono por pasta, entrada/saída de cada onda, critério de pronto, revisão por par |
 | `plano-de-testes.md` | "como provamos o banco?" | escopo; alvos; matriz capacidade × alvo; dado necessário; ambiente; critério de saída da `1.0.0` |
 | `plano-de-implantacao.md` | "como isto entra no ar?" | pré-requisitos; ordem (banco → schema → seed → serviço); janela; verificação pós-implantação; rollback; comunicação |
@@ -702,7 +712,7 @@ requisito, critério de saída e issues que contém; diagrama de dependência en
 comando/arquivo), `fora de escopo`, `risco`, `depende de`, `evidência ao fechar`. Issue sem DoD
 executável não entra na fila.
 
-Distribuição das 40 issues por fase. As páginas desta entrega usam `WYDDB-001`–`WYDDB-040`; as issues #82–#121 foram criadas no GitHub em 2026-11-22, com milestone `F1`–`F7`:
+Distribuição das 40 páginas `WYDDB-nnn` por fase. As páginas desta entrega usam `WYDDB-001`–`WYDDB-040`; as issues #82–#121 foram criadas no GitHub em 2026-11-22, com milestone `F1`–`F7`:
 
 | Fase | Escopo | Issues |
 |---|---|---|
@@ -771,6 +781,7 @@ site, §Diagramas e §Links e citações, e escrever as duas versões criaria do
 teto da pasta caiu de **8 para 5**; a página `imagens-e-evidencias.md` ficou e foi escrita na mesma data.
 
 ### 6.15 `migrations/*.md`
+**Sem arquivo no repositório:** `0016-seed-taxonomy.md`, `0016-seed-taxonomy.sql`, `0017-seed-item-catalog.md`, `0017-seed-item-catalog.sql`, `0018-seed-skill-catalog.md`, `0018-seed-skill-catalog.sql`, `0020-seed-world.md`, `0020-seed-world.sql`, `0023-seed-rules.md`, `0023-seed-rules.sql`, `0027-seed-quests-events.md`, `0027-seed-quests-events.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **`index.md`** — pergunta: "qual migration criou o quê?". Obrigatório: tabela da série na ordem, com
 `arquivo → páginas de tabela criadas → seed (sim/não) → observação`; total com fonte e data; regra
@@ -783,7 +794,7 @@ do `down` de seed; o comando de cada camada de verificação (estrutural, contra
 ciclo); o que fazer quando uma migration já rodou em produção. O **porquê** de cada regra fica em
 `arquitetura/migracoes.md` e nos ADRs correspondentes.
 
-**34 páginas `NNNN-<slug>.md`, uma por arquivo da série nova** (os 29 nomes originais foram
+**34 páginas `NNNN-<slug>.md` planejadas**, uma por arquivo da série nova (os 29 nomes originais foram
 aprovados em `P8` em 2026-11-18; a série vigente, sua ordem e os cinco adendos são de
 `plano-migrations.md` §3) — pergunta: "o que este arquivo faz e como reverto?". Formato fixo:
 `objetivo` (1–3 linhas), `tabelas criadas/alteradas` (com link para `gerado/`), `seeds inseridos`
@@ -800,43 +811,43 @@ A lista abaixo registra os 34 pares; o estado de escrita de cada página é acom
 
 | # | Arquivo da série | Página |
 |---:|---|---|
-| 1 | `0001_bootstrap.sql` | `0001-bootstrap.md` |
-| 2 | `0002_ops_audit.sql` | `0002-ops-audit.md` |
-| 3 | `0003_portal_person.sql` | `0003-portal-person.md` |
-| 4 | `0004_portal_access.sql` | `0004-portal-access.md` |
-| 5 | `0005_game_account.sql` | `0005-game-account.md` |
-| 6 | `0006_game_character.sql` | `0006-game-character.md` |
-| 7 | `0007_game_session.sql` | `0007-game-session.md` |
-| 8 | `0008_game_skills.sql` | `0008-game-skills.md` |
-| 9 | `0009_game_inventory.sql` | `0009-game-inventory.md` |
-| 10 | `0010_game_guild.sql` | `0010-game-guild.md` |
-| 11 | `0011_game_economy.sql` | `0011-game-economy.md` |
-| 12 | `0012_ops_delivery.sql` | `0012-ops-delivery.md` |
-| 13 | `0013_content_taxonomy.sql` | `0013-content-taxonomy.md` |
-| 14 | `0014_content_item.sql` | `0014-content-item.md` |
-| 15 | `0015_content_skill.sql` | `0015-content-skill.md` |
-| 16 | `0016_seed_taxonomy.sql` | `0016-seed-taxonomy.md` |
-| 17 | `0017_seed_item_catalog.sql` | `0017-seed-item-catalog.md` |
-| 18 | `0018_seed_skill_catalog.sql` | `0018-seed-skill-catalog.md` |
-| 19 | `0019_content_world.sql` | `0019-content-world.md` |
-| 20 | `0020_seed_world.sql` | `0020-seed-world.md` |
-| 21 | `0021_content_rules.sql` | `0021-content-rules.md` |
-| 22 | `0022_content_overrides.sql` | `0022-content-overrides.md` |
-| 23 | `0023_seed_rules.sql` | `0023-seed-rules.md` |
-| 24 | `0024_content_maps.sql` | `0024-content-maps.md` |
-| 25 | `0025_content_combat.sql` | `0025-content-combat.md` |
-| 26 | `0026_content_quests_events.sql` | `0026-content-quests-events.md` |
-| 27 | `0027_seed_quests_events.sql` | `0027-seed-quests-events.md` |
-| 28 | `0028_game_quests_events.sql` | `0028-game-quests-events.md` |
-| 29 | `0029_views.sql` | `0029-views.md` |
-| 30 | `0030_portal_content.sql` | `0030-portal-content.md` |
-| 31 | `0031_portal_mfa.sql` | `0031-portal-mfa.md` |
-| 32 | `0032_admin_grants.sql` | `0032-admin-grants.md` |
-| 33 | `0033_ops_idempotency.sql` | `0033-ops-idempotency.md` |
-| 34 | `0034_portal_market.sql` | `0034-portal-market.md` |
+| 1 | `0001-bootstrap.sql` | `0001-bootstrap.md` |
+| 2 | `0002-ops-audit.sql` | `0002-ops-audit.md` |
+| 3 | `0003-portal-person.sql` | `0003-portal-person.md` |
+| 4 | `0004-portal-access.sql` | `0004-portal-access.md` |
+| 5 | `0005-game-account.sql` | `0005-game-account.md` |
+| 6 | `0006-game-character.sql` | `0006-game-character.md` |
+| 7 | `0007-game-session.sql` | `0007-game-session.md` |
+| 8 | `0008-game-skills.sql` | `0008-game-skills.md` |
+| 9 | `0009-game-inventory.sql` | `0009-game-inventory.md` |
+| 10 | `0010-game-guild.sql` | `0010-game-guild.md` |
+| 11 | `0011-game-economy.sql` | `0011-game-economy.md` |
+| 12 | `0012-ops-delivery.sql` | `0012-ops-delivery.md` |
+| 13 | `0013-content-taxonomy.sql` | `0013-content-taxonomy.md` |
+| 14 | `0014-content-item.sql` | `0014-content-item.md` |
+| 15 | `0015-content-skill.sql` | `0015-content-skill.md` |
+| 16 | `0016-seed-taxonomy.sql` | `0016-seed-taxonomy.md` |
+| 17 | `0017-seed-item-catalog.sql` | `0017-seed-item-catalog.md` |
+| 18 | `0018-seed-skill-catalog.sql` | `0018-seed-skill-catalog.md` |
+| 19 | `0019-content-world.sql` | `0019-content-world.md` |
+| 20 | `0020-seed-world.sql` | `0020-seed-world.md` |
+| 21 | `0021-content-rules.sql` | `0021-content-rules.md` |
+| 22 | `0022-content-overrides.sql` | `0022-content-overrides.md` |
+| 23 | `0023-seed-rules.sql` | `0023-seed-rules.md` |
+| 24 | `0024-content-maps.sql` | `0024-content-maps.md` |
+| 25 | `0025-content-combat.sql` | `0025-content-combat.md` |
+| 26 | `0026-content-quests-events.sql` | `0026-content-quests-events.md` |
+| 27 | `0027-seed-quests-events.sql` | `0027-seed-quests-events.md` |
+| 28 | `0028-game-quests-events.sql` | `0028-game-quests-events.md` |
+| 29 | `0029-views.sql` | `0029-views.md` |
+| 30 | `0030-portal-content.sql` | `0030-portal-content.md` |
+| 31 | `0031-portal-mfa.sql` | `0031-portal-mfa.md` |
+| 32 | `0032-admin-grants.sql` | `0032-admin-grants.md` |
+| 33 | `0033-ops-idempotency.sql` | `0033-ops-idempotency.md` |
+| 34 | `0034-portal-market.sql` | `0034-portal-market.md` |
 
 A tabela de slugs da **série do rascunho descartada** saiu desta seção quando `P8` fechou: os nomes
-dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
+dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001-bootstrap.sql`
 é schemas + `content_version`) e continuam no histórico do git, não como vocabulário vigente.
 
 **Série fechada (decisão `B2`, `plano-migrations.md` §3):** 34 arquivos, contíguos de `0001` a
@@ -844,12 +855,14 @@ dela não correspondiam à série nova (lá o primeiro arquivo era de identidade
 vira `0007`, de modo que **quatro** arquivos do legado deixam de existir como arquivo próprio.
 
 ### 6.16 `src/*.md`
+**Sem arquivo no repositório:** `lib.md`, `model-person.md`, `src/model/person.rs`, `model-game-account.md`, `src/model/game_account.rs`, `model-session.md`, `src/model/session.rs`, `model-character.md`, `model-guild.md`, `model-audit.md`, `pool-config.md`, `pool-pg.md`, `repo-people.md`, `src/repo/people.rs`, `repo-game-accounts.md`, `src/repo/game_accounts.rs`, `repo-portal-sessions.md`, `src/repo/portal_sessions.rs`, `repo-characters.md`, `repo-sessions.md`, `repo-audit.md`, `repo-grants.md`, `repo-economy.md`, `repo-config.md`, `repo-content.md`, `repo-pin-reset.md`, `repo-pg.md`, `transfer-save.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **`index.md`** — pergunta: "qual página cobre o arquivo que estou lendo?". Obrigatório: árvore de
 `crates/wyd-db/src/` com uma linha por arquivo e link; quais arquivos não têm página (`model`, `pool`,
 `repo`, `transfer` são `mod.rs` de reexport) e por quê; regra de dependência entre módulos.
 
-**58 páginas de módulo:** 24 no restante do crate (tabela abaixo) e **34** em `src/migrate/` e
+**58 páginas de módulo planejadas** (nenhuma escrita: `docs/src/` não existe no repositório): 24 no
+restante do crate (tabela abaixo) e **34** em `src/migrate/` e
 `src/provision/`, uma por arquivo de código (§6.16.1 e §6.16.2). As antigas páginas únicas
 `migrate.md`/`provision.md` deixaram de existir: em módulo com camadas, a árvore sozinha não permite
 implementar arquivo nenhum.
@@ -886,7 +899,7 @@ Cada página tem, obrigatoriamente: **responsabilidade** (1 parágrafo), **API p
 **testes que cobrem** (link para `tests/alvos/`), **riscos de alteração** e **o que este módulo não
 faz**.
 
-#### 6.16.1 `src/migrate/` — 21 páginas, uma por arquivo
+#### 6.16.1 `src/migrate/` — 21 páginas planejadas, uma por arquivo
 
 Cada página traz: responsabilidade, **API Rust exata** (struct, trait, função, assinatura), invariantes,
 variantes de erro com `Display`, dependências de camada permitidas e proibidas, tabela de testes e o
@@ -918,7 +931,8 @@ leitura é a da tabela.
 | 20 | `migrate/adapter/pg.md` | `adapter/pg.rs` | "como o adapter fala com o PG17?" |
 | 21 | `migrate/adapter/fs.md` | `adapter/fs.rs` | "como o diretório da série é lido?" |
 
-#### 6.16.2 `src/provision/` — 13 páginas, uma por arquivo
+#### 6.16.2 `src/provision/` — 13 páginas planejadas, uma por arquivo
+**Sem arquivo no repositório:** `src/provision/mod.rs`, `domain/mod.rs`, `domain/spec.rs`, `observed.rs`, `script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Mesmo formato de §6.16.1; desenho de origem em `src/provision/spec.md` §5.
 
@@ -949,7 +963,7 @@ do módulo. Este bloco, `lacunas.md` e as ADRs apontam para a página, sem repet
 | construtor do adapter do provisionamento | `provision/adapter/pg.md` §2 |
 | execução do script de provisionamento | `provision/port/script.md` §3 |
 
-São 21 arquivos em `src/migrate/` e 13 em `src/provision/`; o `Dsn` dos dois é o mesmo arquivo,
+Serão 21 arquivos em `src/migrate/` e 13 em `src/provision/` (previstos; hoje o crate tem `lib.rs` e `dsn.rs`); o `Dsn` dos dois é o mesmo arquivo,
 `src/dsn.rs`, e por isso não conta em nenhum dos dois. **Regra de dependência:**
 `migration`/`domain` não importam `port`, `app` nem `adapter`; `app` não importa `adapter`; `sqlx` e
 `std::fs` só existem em `adapter/`. Cada página de `mod.md` declara a fachada (`run`, `Command`,
@@ -964,6 +978,7 @@ Arquivos sem página própria: `src/model/mod.rs`, `src/pool/mod.rs`, `src/repo/
 `src/transfer/mod.rs` — são reexport; descritos em uma linha no `index.md`.
 
 ### 6.17 `tests/*.md`
+**Sem arquivo no repositório:** `resources/accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **`index.md`** — pergunta: "como a suíte está montada?". Obrigatório: árvore de
 `crates/wyd-db/tests/`; tabela `alvo (Cargo.toml) → arquivo → tipo → precisa de banco?`; como rodar
@@ -980,7 +995,7 @@ limpeza.
 campos, quem consome, regra de que dado sensível é fictício. `resources/accounts.json` é o dado de
 apoio (`■`), não documentação: contém contas de teste com papéis distintos e nenhum segredo real.
 
-**`alvos/*.md`** (5 páginas, uma por alvo do `Cargo.toml`) — pergunta: "o que este alvo prova?".
+**`alvos/*.md`** (5 páginas, uma por alvo do `Cargo.toml`; medidas em `tests/alvos/`) — pergunta: "o que este alvo prova?".
 Obrigatório: capacidades cobertas, cenários, pré-requisito de ambiente, como interpretar falha,
 tempo esperado.
 
@@ -992,14 +1007,16 @@ tempo esperado.
 | `sistema-sessoes.md` | `sistema_sessoes` |
 | `sistema-stack-caps.md` | `sistema_stack_caps` |
 
-**`specs/*.md`** (3 páginas) — pergunta: "o que precisa ser verdade para este tipo de teste
+**`specs/*.md`** (3 páginas; medidas em `tests/specs/`) — pergunta: "o que precisa ser verdade para este tipo de teste
 passar?". `contrato.md` (regras que não precisam de banco), `sistema.md` (regras que exigem
 Postgres real e como isolar), `capacidades.md` (matriz `CAP-nn → alvo → cenário → requisito`).
 
 ### 6.18 `prompts/*.md`
+**Sem arquivo no repositório:** `plan/analise-de-requisito.md`, `plan/planejamento-de-issue.md`, `execution/execucao-de-issue.md`, `execution/escrita-de-migration.md`, `review/revisao-de-codigo.md`, `review/revisao-de-documentacao.md`, `test/execucao-de-testes.md`, `test/revisao-de-testes.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-Todos seguem o mesmo formato: **quando usar**, **entrada necessária**, **o que pedir** (passos),
-**critério de parada**, **o que não fazer**, **como verificar a saída**.
+**Páginas planejadas: nenhuma escrita** (`docs/prompts/` não existe no repositório). Todas seguem o
+mesmo formato: **quando usar**, **entrada necessária**, **o que pedir** (passos), **critério de
+parada**, **o que não fazer**, **como verificar a saída**.
 
 | Arquivo | Uso |
 |---|---|
@@ -1249,6 +1266,9 @@ Cada onda é uma entrega revisável. Nenhuma começa antes de a anterior fechar 
 A ordem segue dependência de conteúdo: primeiro o vocabulário, depois o requisito, depois a
 tabela, depois o procedimento.
 
+A coluna **Arquivos** é a composição planejada de cada onda; o total medido de páginas é o da nota
+“Medido agora” deste dashboard.
+
 | Onda | Entrega | Arquivos | Critério de saída |
 |---|---|---:|---|
 | **1. Fundação** | `convencoes`, `glossario`, `docs/index`, `arquitetura/{index,visao-geral,contexto-c4,fronteira-hot-cold}`, `guia-documentacao/` (5) | 12 | vocabulário fechado; fronteira Hot×Cold aprovada; toda página futura já tem molde **e** regra de escrita |
@@ -1258,7 +1278,7 @@ tabela, depois o procedimento.
 | **5. Histórico de schema** | `migrations/`: `index.md` + `serie-e-regras.md` (2) + 34 páginas, uma por arquivo de `0001` a `0034`; mais `arquitetura/migracoes` e `retencao-e-capacidade` | 38 | as 34 páginas de migration têm `down` e verificação, com nomes 1:1 conforme §6.15 e a série de `plano-migrations.md` §3; política da série em um único dono |
 | **6. Operação e processo** | `guia-administrador/` (8) + `planos/{index,implantacao,manutencao,qualidade,riscos,metricas}` | 14 | todo procedimento com "como confirmar" e "como reverter"; métricas com fonte |
 | **7. Dev e teste** | `guia-desenvolvedor/` (11) + `guia-teste/` (7) + `src/` (59) + `tests/` (12) | 89 | todo módulo com contrato e teste associado; todo alvo com página |
-| **8. Planejamento do trabalho** | `roadmap/` (2 + 40) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
+| **8. Planejamento do trabalho** | `roadmap/` (índice e fases + 40 páginas `WYDDB-nnn`) + `planos/{documentacao,testes,dados,registro}` | 46 | 40 issues com DoD executável; fases com critério de saída |
 | **9. Agente e publicação** | `prompts/` (9) + `skills/` (9) + navegação gerada pelo `preparar.py` + as ADRs já aceitas ou encerradas (2 hoje) | 18 + ADRs | prompt e skill sem regra de negócio duplicada; site publica só `docs/` |
 
 **Total:** teto de páginas autorais revisado em `planos/metricas.md` depois de a série nova existir; as **109** páginas de tabela (`plano-migrations.md` §3), escritas à mão em lotes (`M26`), + 1 dado de apoio (`gerado/index.md`, índice auxiliar que não conta como página de tabela); as **109** estão escritas em 2026-11-22 — **nenhuma falta** e não há lote pendente.
@@ -1285,7 +1305,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001-bootstrap.sql` (schemas + `content_version`) e `0003-portal-person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
 | `D-2` | dicionário em duas camadas: 19 páginas de domínio + **109** geradas | **aprovada em 2026-11-22** | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | **aprovada em 2026-11-22** | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | **aprovada em 2026-11-22** | Onda 5 |

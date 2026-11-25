@@ -53,7 +53,7 @@
 
 ## `patch-content`
 
-- **Responsabilidade:** conteúdo do patch e `strdef.bin` (lista candidata; lacuna `LCLI-02` aberta).
+- **Responsabilidade:** conteúdo do patch e `strdef.bin` (lista fechada em `registro-do-cliente.md` §5.1; `LCLI-02` fechada em 2026-11-25).
 - **API:** `list_patch_files() -> Vec<File>`.
 - **Invariantes:** patch descreve exatamente os arquivos; sem redistribuição sem autorização.
 - **Depende de:** `wyd-launcher` (contrato).

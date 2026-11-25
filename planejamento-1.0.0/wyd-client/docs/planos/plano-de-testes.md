@@ -41,6 +41,13 @@ cargo test -p wyd-client --all-targets
 cargo llvm-cov -p wyd-client --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-client --all-targets -- -D warnings`, `cargo test -p wyd-client --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-client --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Contagem de arquivos, hash do inventário, resultado da captura e falha de integridade. Não há telemetria do jogador nem envio de conteúdo do cliente; a prova é o artefato de captura anonimizado.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
-Todos os testes de captura, anonimização e golden verdes; `LCLI-01` fechado; `LCLI-02`/`LCLI-03`/`LCLI-05` abertas até captura/evidência; nenhuma lacuna de prova aberta. `LCLI-04` fechada; implementação pendente. A1 autorizada.
+Todos os testes de captura, anonimização e golden verdes; `LCLI-01` fechado; `LCLI-02` fechada em 2026-11-25 com teste de hash divergente no verificador do launcher; `LCLI-03`/`LCLI-05` abertas até captura/evidência; nenhuma lacuna de prova aberta. `LCLI-04` fechada; implementação pendente. A1 autorizada.

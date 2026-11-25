@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o `wyd-ops` é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o `wyd-ops` é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: equipe do `wyd-ops`
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/componentes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
@@ -15,77 +15,24 @@
 
 ## 2. Fatias
 
-### F0 — CI
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-OPS-001` |
-| Depende de | repositório existente |
-| Entrega | workflow reutilizável, permissões mínimas, pin por SHA |
-| DoD | workflow verde em PR; varredura de segredo limpa |
-| Fora | deploy |
-
-### F1 — Imagem
-
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-OPS-002` |
-| Depende de | F0 |
-| Entrega | Dockerfile, build reproduzível, publicação |
-| DoD | build ok; sem segredo na imagem; `pull` funciona |
-| Fora | ambiente |
-
-### F2 — Ambiente
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-OPS-003` |
-| Depende de | F0; `LBOT-01`/`LBOT-02` |
-| Entrega | Compose efêmero, seed, up/down |
-| DoD | ambiente sobe/desce; seed aplicado; sem estado global |
-| Fora | monitoramento |
-
-### F3 — Monitoramento
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-OPS-004` |
-| Depende de | F2 |
-| Entrega | Prometheus, Loki, métricas, logs de metadados |
-| DoD | métricas presentes; log sem payload/PII |
-| Fora | segredos |
-
-### F4 — Segredos e deploy
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-OPS-005`, `RF-OPS-006` |
-| Depende de | F0–F3 |
-| Entrega | secret store, deploy contínuo, rollback |
-| DoD | segredo nunca em código; deploy em staging; rollback validado |
-| Fora | gate |
-
-### F5 — Gate e fechamento
-
-| Campo | Valor |
-|---|---|
-| Fase | 4 |
-| Requisitos | `RF-OPS-007` e todos |
-| Depende de | F0–F4; CI real |
-| Entrega | gate verde, censos coincidem, cobertura |
-| DoD | `docker compose --profile gate run --rm gate` verde; cobertura ≥ 85% onde aplicável |
-| Fora | migrations |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — CI | [`WYDOPS-F0`](WYDOPS-F0.md) §Skills |
+| 2 | F1 — Imagem | [`WYDOPS-F1`](WYDOPS-F1.md) §Skills |
+| 3 | F2 — Ambiente | [`WYDOPS-F2`](WYDOPS-F2.md) §Skills |
+| 4 | F3 — Monitoramento | [`WYDOPS-F3`](WYDOPS-F3.md) §Skills |
+| 5 | F4 — Segredos e deploy | [`WYDOPS-F4`](WYDOPS-F4.md) §Skills |
+| 6 | F5 — Gate e fechamento | [`WYDOPS-F5`](WYDOPS-F5.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F2 → F3 → F4 → F5
-```
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 

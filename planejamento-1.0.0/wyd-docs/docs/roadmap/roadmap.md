@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o `wyd-docs` é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o `wyd-docs` é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: equipe do `wyd-docs`
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/componentes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
@@ -15,55 +15,22 @@
 
 ## 2. Fatias
 
-### F0 — Montagem e tema
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-DOC-001`, `RF-DOC-007` |
-| Depende de | `planejamento-1.0.0/<sistema>/docs/**/*.md` |
-| Entrega | `preparar.py`, tema Jinja, navegação |
-| DoD | build gera `.build/docs/` com caminho relativo preservado; sem conteúdo interno |
-| Fora | gate |
-
-### F1 — Gate de link, âncora, nav, título
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-DOC-002` |
-| Depende de | F0 |
-| Entrega | `verificar.py site` |
-| DoD | link quebrado, âncora inexistente, nav/título ausentes reprova |
-| Fora | contagens |
-
-### F2 — Contagens e censos
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-DOC-003`, `RF-DOC-004` |
-| Depende de | F0 |
-| Entrega | `verificar-contagens.py`, `verificar-censos.py` |
-| DoD | soma/citação divergente reprova; gate verde |
-| Fora | publicação |
-
-### F3 — Publicação e redirect
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-DOC-005`, `RF-DOC-006` |
-| Depende de | F0–F2; `LPDOC-01` |
-| Entrega | workflow GitHub Pages, `redirects.tsv` |
-| DoD | publicação automática em `develop`; rollback validado; redirect válido/inválido reprova duplicata |
-| Fora | geração de patch |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — Montagem e tema | [`WYDDOC-F0`](WYDDOC-F0.md) §Skills |
+| 2 | F1 — Gate de link, âncora, nav, título | [`WYDDOC-F1`](WYDDOC-F1.md) §Skills |
+| 3 | F2 — Contagens e censos | [`WYDDOC-F2`](WYDDOC-F2.md) §Skills |
+| 4 | F3 — Publicação e redirect | [`WYDDOC-F3`](WYDDOC-F3.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F2 → F3
-```
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 

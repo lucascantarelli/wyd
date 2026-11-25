@@ -69,4 +69,4 @@ aposentadoria. Aposentar categoria é ato de seed; reclassificar item é `UPDATE
 
 ## Migration
 
-Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013_content_taxonomy.sql`.
+Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013-content-taxonomy.sql`.

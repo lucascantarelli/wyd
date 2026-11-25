@@ -41,6 +41,13 @@ cargo test -p wyd-bots --all-targets
 cargo llvm-cov -p wyd-bots --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-bots --all-targets -- -D warnings`, `cargo test -p wyd-bots --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-bots --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Conexões simultâneas, duração da execução, taxa de sucesso por cenário, P50/P99 e CPU/RSS do runner. `LBOT-03` continua aberta: nenhum limiar é declarado antes da primeira medição; a execução só entra no CI depois de o cenário existir.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de cenário, carga e relatório verdes; `LBOT-01`/`LBOT-02`/`LBOT-04` implementados; `LBOT-03` aberta até medição; nenhuma lacuna de prova aberta. `LBOT-03` segue aberta como medição.

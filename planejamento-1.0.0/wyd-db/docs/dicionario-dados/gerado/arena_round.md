@@ -76,4 +76,4 @@ próprio aqui.
 
 ## Migration
 
-Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028_game_quests_events.sql`.
+Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028-game-quests-events.sql`.

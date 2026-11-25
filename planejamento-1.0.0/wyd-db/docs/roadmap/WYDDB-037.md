@@ -9,6 +9,9 @@
 **Estado:** proposto (2026-11-22)
 
 **Fase:** 7 — migrations e evolução de schema
+
+**Dono do valor:** fase, requisitos, dependência, entregável, DoD e fora de
+escopo são desta página; `fases.md` cita o link e não repete.
 **Prioridade:** P3
 
 ## Contexto
@@ -17,7 +20,7 @@ O corte vertical de login, conta, personagem e sessão é o que prova a série a
 
 ## Entregável
 
-Escrever `0003_portal_person.sql`, `0004_portal_access.sql`, `0005_game_account.sql`, `0006_game_character.sql` e `0007_game_session.sql`, com `up`/`down` por arquivo.
+Escrever `0003-portal-person.sql`, `0004-portal-access.sql`, `0005-game-account.sql`, `0006-game-character.sql` e `0007-game-session.sql`, com `up`/`down` por arquivo.
 
 ## DoD
 
@@ -37,6 +40,22 @@ O cliente 7662 pode revelar formato divergente; a issue bloqueia em vez de ajust
 ## Depende de
 
 WYDDB-035, WYDDB-036, captura do cliente 7662.
+
+## Skills
+
+| Campo | Valor |
+|---|---|
+| `skill_principal` | `planejar-sistema` |
+| `skills_complementares` | `writing-plans`, `auditar-planejamento` |
+
+A skill principal é a que o agente carrega antes de começar. A lista é a fechada de nove skills de
+`.github/ISSUE_TEMPLATE/*` (`planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §3.1).
+Duas existem **em disco** em `.agents/skills/`: `planejar-sistema` e `auditar-planejamento`. As demais
+(`documentation-writer`, `finishing-a-development-branch`, `frontend-design`, `github-actions-docs`,
+`python-testing-patterns`, `skill-creator`, `writing-plans`) são **cloud skills do projeto**: não têm
+`SKILL.md` no repositório e são carregadas pelo ambiente do agente.
+
+**Dono do valor:** esta página. O roadmap cita o link para este bloco e não repete o nome da skill.
 
 ## Evidência ao fechar
 

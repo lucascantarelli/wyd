@@ -175,11 +175,10 @@ organizados” ainda era **falsa**.
 projeto. **Se C:** “organizado” passa a significar “aberto” e os **10** sem `RF`/`1` sem plano ficam
 escondidos. **Se A:** a declaração é seletiva e verificável; nenhum sistema ganha o carimbo por simetria.
 
-**Resultado da auditoria (2026-11-25):** `wyd-db` e `wyd-admin` passaram; `wyd-portal` tem os **33**
-`RF` e o roadmap, mas não tem árvore de `src/`/`tests/` nem plano de teste; `wyd-protocol` e os demais
-da cadeia de runtime não têm `RF`, árvore, plano de teste e roadmap completos; `wyd-docs` tem site e
-gate, mas não tem `RF-DOC`; `wyd-ops` não tem dashboard nem `RF-OPS`. A lista por sistema e o que falta
-em cada um estão em `../auditoria-de-organizacao.md` §2–§3.
+**Resultado da auditoria (2026-11-25, segunda passada):** **13 de 13** sistemas passam no checklist de
+organização; `wyd-ops` mantém fronteira/contratos O1–O5 pendentes de aprovação. O que falta agora não é
+organização: é aceite editorial, captura, medição, implementação ou decisão humana. A lista por sistema
+está em `../auditoria-de-organizacao.md` §3 e as perguntas consolidadas em `lacunas.md` §4.
 
 ### D-05 — Política de dependências e versões
 
@@ -203,13 +202,13 @@ página e não autoriza código. O **ato 2** e o **ato 3** de A já foram conclu
 |---|---|---|---|
 | **A — D-01 / `wyd-db`** — runner concluído em lib/fakes → ato 4 `CAP-37`–`CAP-39` → 40 issues + 141 atos | **141 atos** (141 `docs/`), **64 células** (24 `teste` + 40 `issue`) e **40 issues** (#82–#121) (§2 e §3); ato 2/3 **concluídos**; `CAP-37`–`CAP-39` = **3 células `teste`**; passo 5 = **40 issues + 141 atos** (§0.2) | Ato 4 não depende de terceiro, mas a série real depende de **`Q-SERIE-1`**; **6 seeds** e `CAP-08` ficam para o passo 6, por dado externo | 141 atos, 64 células e 40 issues continuam parados; `portal`/`admin`/`server` seguem sem o DDL aceito |
 | **B — Executar a migração D-05** | **9 crates** (1 real + 8 `.gitkeep`), **6 comandos `--manifest-path`** e **2 imagens externas/6 referências sem digest**; **0 atos, 0 issues, 0 células**; destrava o segundo crate e um único lock/toolchain (`dossie-d-05.md` §2; `plano-migracao-d-05.md`) | Nenhuma externa; D-05 já aprovada | Os 8 crates vazios e o segundo crate ficam sem padrão; o CI continua repetindo o manifesto do `wyd-db` |
-| **C — D-04 / `wyd-portal`** — árvore `src/`/`tests/` + plano de teste | **33 `RF` + 10 `RNF`**, 9 páginas e roadmap já escritos; **0 atos/issues**; fecha o checklist D-04 de **1 sistema**; faltam árvore e teste (`auditoria-de-organizacao.md` §2–§3) | Nenhuma externa; D-04 já aprovada | O portal continua fora dos 2/13 organizados e os 33 `RF` seguem sem árvore/teste; nada do `wyd-db` fecha |
-| **D — `wyd-protocol`** | **5 de 131 páginas**, **0 `RF`**, 6 contratos e **2 lacunas de captura** (`LPRT-03`, `LPRT-06`); **0 atos/issues**; é o codec que `net`/`core` consomem | `LPRT-03`/`LPRT-06` (captura externa); código também espera D-05 e página `aceita` | As 126 páginas restantes, os `RF-PRT` e o codec continuam parados; `net` e `core` não começam a integração |
+| **C — A1 / `wyd-protocol`** — captura, peer e segunda leitura | **6 `RF` + 6 `RNF`**, árvore, teste e roadmap na segunda passada; **2 lacunas de captura** (`LPRT-03`, `LPRT-06`); **0 atos/issues** | A1 autorizada em 2026-11-23; captura externa pendente; código também espera D-05 e página `aceita` | O codec e o fio continuam sem captura; `net`, `core` e `bots` não começam a integração |
+| **D — `wyd-server`/`wyd-net`** — esqueleto de ponta a ponta e medição | **7 `RF` + 6 `RNF`** no server, **8 `RF` + 6 `RNF`** no net; árvore, teste e roadmap na segunda passada; **`LNET-01` como medição** | A1 e a fatia do server; `LNET-01` depende de CI efêmero | Sem o esqueleto não há E2E; sem medição os limites continuam sem valor |
 
 **Recomendação: A — D-01 / `wyd-db`.** É a única opção que fecha itens já mapeados **hoje**: 141 atos,
 64 células e 40 issues; B, C e D fecham **0** atos/issues no curto prazo. D-05 já está aprovada e o
-plano pode esperar a vez sem perder a decisão; C é a organização mais barata, mas não move esses
-números; D depende de captura externa e de `RF` que ainda não existem.
+plano pode esperar a vez sem perder a decisão; C depende de captura externa; D depende de A1 e de CI
+efêmero.
 
 **doneWhen do caminho A:**
 

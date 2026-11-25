@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o `wyd-core` é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o `wyd-core` é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: equipe do `wyd-core`
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/componentes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
@@ -15,68 +15,23 @@
 
 ## 2. Fatias
 
-### F0 — Fundação do crate
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-CORE-001`, `RF-CORE-002` |
-| Depende de | crate existente |
-| Entrega | `Cargo.toml`, `lib.rs` com `#![deny(missing_docs)]`, baseline fmt/clippy |
-| DoD | `cargo doc` sem warning; fmt/clippy verdes |
-| Fora | CI real |
-
-### F1 — Tick e ECS
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-CORE-003`, `RF-CORE-004` |
-| Depende de | F0 |
-| Entrega | loop de tick determinístico, ECS mínimo, cena |
-| DoD | mesmo seed produz mesmo resultado em N execuções; teste de regressão de tick verde |
-| Fora | combate, IA |
-
-### F2 — Combate
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-CORE-005` |
-| Depende de | F1; offsets de protocolo |
-| Entrega | cálculo de dano, alcance, durabilidade (modelo) |
-| DoD | fórmulas reproduzem fixture capturada; nenhum número inventado (`stat_source` declarado) |
-| Fora | feitiços, pets |
-
-### F3 — IA e capacidades
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-CORE-006`, `RF-CORE-007` |
-| Depende de | F1; catálogo funcional |
-| Entrega | IA de mob, skills, classes, quests (modelo) |
-| DoD | comportamento por classe coberto por teste; catálogo fechado (sem placeholder) |
-| Fora | implementação de conteúdo |
-
-### F4 — Suíte e anti-skip
-
-| Campo | Valor |
-|---|---|
-| Fase | 4 |
-| Requisitos | todos os `RF-CORE` |
-| Depende de | F0–F3; CI real |
-| Entrega | unitário, contrato, sistema, fixtures, anti-skip |
-| DoD | alvos de `plano-de-testes.md` §2 passam sem `SKIP`; cobertura ≥ 85% |
-| Fora | migrations |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — Fundação do crate | [`WYDCORE-F0`](WYDCORE-F0.md) §Skills |
+| 2 | F1 — Tick e ECS | [`WYDCORE-F1`](WYDCORE-F1.md) §Skills |
+| 3 | F2 — Combate | [`WYDCORE-F2`](WYDCORE-F2.md) §Skills |
+| 4 | F3 — IA e capacidades | [`WYDCORE-F3`](WYDCORE-F3.md) §Skills |
+| 5 | F4 — Suíte e anti-skip | [`WYDCORE-F4`](WYDCORE-F4.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F2
-F1 → F3
-F4 depende de F0–F3
-```
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 

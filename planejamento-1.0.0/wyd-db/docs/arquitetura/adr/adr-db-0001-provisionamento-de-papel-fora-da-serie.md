@@ -51,6 +51,7 @@ O problema concreto: **o ledger é por banco, o papel é por cluster**, e todo p
 inclusive o servidor de jogo — passaria a precisar de `CREATEROLE` para que o `0001` rodasse.
 
 ## Decisão
+**Sem arquivo no repositório:** `crates/wyd-db/src/provision/domain/spec.rs`, `db/roles.sql`, `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Adotamos **provisionamento de papel como fase anterior e separada da série versionada**, executada
 uma vez por cluster com um DSN administrativo próprio, porque o ledger é por banco e exigir
@@ -122,6 +123,7 @@ Regras que a decisão implica (`P`, nada implementado):
   é consequência de qualquer série nova e **não** faz parte desta decisão.
 
 ## Alternativas consideradas
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Alternativa | Por que foi descartada |
 |---|---|
@@ -159,6 +161,7 @@ Regras que a decisão implica (`P`, nada implementado):
   `roles.sql` nem provisionamento de papel); a numeração `WYDDB-nnn` entra quando a série for aberta.
 
 ## Revisão
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Revisão de estado — 2026-11-21 (`M27`/`0032`).** O total vigente passou de cinco para seis papéis
 com a inclusão de `wyd_admin` (`src/provision/spec.md` §2; `lacunas.md` §2.3). A série passou de 31

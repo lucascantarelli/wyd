@@ -71,7 +71,7 @@
 
 ## `dashboard`
 
-- **Responsabilidade:** dashboard do sistema (a criar: `wyd-ops-1.0.0.md`).
+- **Responsabilidade:** dashboard do sistema (`wyd-ops-1.0.0.md`).
 - **API:** documento dono.
 - **Invariantes:** mede páginas, requisitos, issues, gate.
 - **Depende de:** todos.

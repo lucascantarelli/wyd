@@ -429,6 +429,8 @@ fecha, o que apenas prepara e o que continua dependendo de terceiro.
 | **Aceite da série (`M33`) + `serie-e-regras`** | **1/28 páginas aceitas**; **34 atos** de aceite; **28 páginas de migration** já escritas; inicia `0001` e a onda A; **0 lacunas** | **0 das 19** | aceite e porta de entrada da série | nenhum terceiro; é ato do dono com revisão por par | 34 atos × 0,5–1 h = **17–34 h**, mais `serie-e-regras` | **Segunda opção** |
 | **Expandir propostas de outros sistemas** | **0–1 lacuna** alcançável (`LCLI-02`; `LCLI-03` é execução); **0 páginas do `wyd-db`** | **0** | nada além do próprio sistema | direitos do cliente (`LCLI-05`) e ficha assinada; não há pergunta de desenho isolada | baixo retorno; não medido | **Retorno marginal** |
 
+**Reauditoria de 2026-11-25.** `A20` e `M21` já têm a condição de saída cumprida do lado do planejamento: as telas e rotas do segundo fator (`/admin/seguranca`) e o mapa de 50 rotas do portal estão em `planejamento-1.0.0/wyd-portal/docs/arquitetura/rotas-e-permissoes.md`, com as fatias `WYDPOR-F0`–`F11`. O que falta nas duas é execução, não decisão nem documento. As três seguem `externa`: em 2026-11-25 o titular aceitou a recomendação de **não reclassificar** `A20`/`M21` até a execução, e `A11` continua externa de fato, porque depende da captura no cliente 7662.
+
 **O que a tabela não conta como página destravada.** `Q-RET-6` não torna nenhuma das páginas bloqueadas
 escrevível sozinha: a página `planos/plano-de-manutencao.md` depende do conjunto de rotinas, não só
 do job de `market_notification`. `Q-RET-7` não fecha `backup-e-restore` nem `recuperacao-de-desastre`
@@ -1413,6 +1415,7 @@ criada nesta execução.
 - **Não decide A1.** A captura continua autorizada e fora do foco, como em `Q-FOCO-1 = D`.
 
 ### 6.6.16 Revisão de 2026-11-24 — fonte conferida e o que é fraco
+**Sem arquivo no repositório:** `recuperacao-de-disastre.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Duas passadas, ambas lendo o arquivo e não a memória do pacote: §6.6.4–§6.6.11 na primeira tabela e
 §6.6.1–§6.6.3 na segunda. O que confere e o que mudou:
@@ -1711,7 +1714,7 @@ imagem nem recurso do host, não mediu carga e não mexeu no censo de citações
 de aceite, sem as 12 páginas de `tests/`) registram o estado de 2026-11-24 **antes** da escrita da suíte;
 a medição vigente é a de §6.6.22.1 e o valor corrente do aceite é **141**, depois do aceite das 27 páginas
 de `migrations/` (§6.6.31). A contagem de células da matriz
-foi atualizada para a medição vigente — **77** = **37** `Teste` + **40** `Issue` (`../docs/specs/rastreabilidade.md`
+foi atualizada para a medição vigente — **77** = **37** `Teste` + **40** `Issue` (`docs/specs/rastreabilidade.md`
 §1, depois de `Q-BLK-19` = A) —, porque era o único número desta tabela que o dono pediu para recontar; o
 resto fica como registro da decisão, não como contador.
 
@@ -1851,6 +1854,7 @@ teste no próprio `## DoD`; hoje nenhuma das duas colunas da matriz tem valor re
 > **Retrato de 2026-11-24, ao fim do lote H — antes do aceite das 12.** Números e estados desta seção
 > descrevem aquele dia; o valor vigente está em §6.6.23. Onde o texto disser “0 de 12” ou “página não
 > aceita”, leia-se o estado daquele momento, não o de hoje.
+**Sem arquivo no repositório:** `accounts.json`, `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 O responsável aprovou `Q-BLK-12`, `Q-BLK-13`, `Q-BLK-14`, `Q-BLK-15` e `Q-BLK-16` em **A**, e as **12**
 páginas de `tests/` foram escritas na mesma data, na ordem de §6.17. As issues, os blocos `RF-DB-1xx` e o
@@ -1932,9 +1936,14 @@ aqui: as quatro perguntas de §6.6.22.5 são do dono.
 | `prompts/` + `skills/` | **0 de 18** | `find prompts skills -name '*.md'` |
 | `docs/planos/metricas.md` | **ausente** (1 página bloqueada por `M20`) | `ls` |
 
-**Dois números não remedidos, declarados em vez de estimados:** as **0 issues criadas** (sem pedido para
-ler ou escrever o GitHub) e o **board de 40 itens** (`../wyd-ops/proposta-gestao-github-e-ambientes.md`
-§10.3, não reconferido). O resto desta tabela saiu de comando neste turno.
+**Dois números não remedidos, declarados em vez de estimados:** as **0 issues criadas** naquela medição
+(sem pedido para ler ou escrever o GitHub) e o **board de 40 itens**
+(`../wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3, não reconferido). O resto desta tabela saiu de
+comando naquele turno.
+
+**Atualização de 2026-11-25:** a leitura somente de `lucascantarelli/wyd` encontrou **40 issues abertas**
+(`WYDDB-001`–`040`) e milestones existentes; o “0” acima descreve a medição histórica, não o estado atual.
+Nada foi criado ou alterado no GitHub por esta rodada.
 
 #### 6.6.22.2 Tabela de bloqueio
 
@@ -2080,7 +2089,7 @@ recomendada; elas ficam registradas aqui, no formato do pacote, e **nenhuma est�
 
 **Q-BLK-21 — quem revisa as 12 páginas de `tests/` para o item 9 de §10?**
 
-- **Medido.** `../wyd-db-1.0.0.md` §10 exige, no item 9, revisão por **quem não escreveu**; as 12 páginas
+- **Medido.** `wyd-db-1.0.0.md` §10 exige, no item 9, revisão por **quem não escreveu**; as 12 páginas
   foram escritas pelo agente nesta rodada e **nenhuma** tem revisor registrado. A leva 1 depende disso: sem
   revisor, aceite não existe.
 - **A)** o **dono revisa e assina** — ele não escreveu as páginas, logo o item 9 é satisfeito, com o nome e
@@ -2104,8 +2113,8 @@ respondidas (§6.6.27 e §6.6.31).
 **Q-BLK-22 — as 12 páginas de `tests/` contam no critério de release de 144?**
 
 - **Medido.** O `wyd-db` tem **143** páginas autorais em `docs/` + `planos/metricas.md` bloqueada = teto
-  **144**; as 12 de `tests/` ficam **fora** de `docs/` e não entram em `../wyd-docs/preparar.py`. O critério
-  de release (`../wyd-db-1.0.0.md` §2) fala das 144 de `docs/` escritas e `aceito`/`retirado`.
+  **144**; as 12 de `tests/` ficam **fora** de `docs/` e não entram em `../../wyd-docs/preparar.py`. O critério
+  de release (`wyd-db-1.0.0.md` §2) fala das 144 de `docs/` escritas e `aceito`/`retirado`.
 - **A)** **não contam**: o critério segue **144** e as 12 são artefato de engenharia, aceitas ou não fora
   dele. **Recomendada:** aceitar a suíte não muda o tamanho da release de documentação nem o teto.
 - **B)** **contam**: o teto e o critério passam a **156** (144 + 12) e o censo de `docs/` deixa de ser o
@@ -2203,6 +2212,7 @@ critérios fechavam nas 12, **5** não. As correções de §6.6.25.4 e a assinat
    `docs/planos/plano-de-testes.md` §81. É referência a dono não escrito, não material externo.
 
 #### 6.6.25.2 Página por página, no pré-aceite
+**Sem arquivo no repositório:** `../plano-migrations.md`, `../../src/migrate/spec.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Página | Critérios que faltavam | O que faltava, em concreto |
 |---|---|---|
@@ -2238,6 +2248,7 @@ critérios fechavam nas 12, **5** não. As correções de §6.6.25.4 e a assinat
 foi fechado pela assinatura de §6.6.23.
 
 #### 6.6.25.4 Correções aplicadas (2026-11-24)
+**Sem arquivo no repositório:** `../../plano-migrations.md`, `../plano-migrations.md`, `../../src/migrate/spec.md`, `../src/migrate/spec.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Os itens 1–4 de §6.6.25.3 foram aplicados nas **12** páginas, que então seguiam `**Estado:** proposto`:
 

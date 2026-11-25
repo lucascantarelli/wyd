@@ -46,6 +46,13 @@ cargo llvm-cov -p wyd-protocol --fail-under-lines 85
 
 O `--fail-under-lines 85` é o gate de `AGENTS.md` §8; cobertura de linha não substitui os sete comportamentos acima.
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-protocol --all-targets -- -D warnings`, `cargo test -p wyd-protocol --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-protocol --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Diff de golden, diff do gerador e falha de roundtrip. O crate é puro e não expõe runtime; a prova é o job de CI e o catálogo de goldens, não uma métrica de servidor.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de golden, roundtrip e fuzz verdes; nenhuma página de `wire/` ou `payloads/` reprovada; nenhuma lacuna de prova aberta; total do catálogo publicado com fonte e data. `LPRT-03` e `LPRT-06` continuam abertas até captura real.

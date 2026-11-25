@@ -22,7 +22,7 @@ deixaram para trás por ordem de arquivo.
 | Campo | Valor |
 |---|---|
 | Número | `0014` (confirmado em 2026-11-20) |
-| Arquivo | `crates/wyd-db/migrations/0014_content_item.sql` |
+| Arquivo | `crates/wyd-db/migrations/0014-content-item.sql` |
 | Schema | `content` (1 tabela + 1 função de trigger) |
 | Posição | 14 de 34 (segundo do bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges) e `0013` (`content.fn_fold`, `content.item_kind`, `content.item_effect`). **Nada** de `portal`/`game`: não há FK de saída |
@@ -199,8 +199,9 @@ três papéis de leitura.
 | `wyd_migrator` | dono da tabela e único com `INSERT`: aplica este arquivo e o seed `0017`. |
 
 ## 9. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0014-content-item.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-1. `psql -v ON_ERROR_STOP=1 -f 0014_content_item.sql` como `wyd_migrator` → `CREATE TABLE`, `CREATE FUNCTION`, `CREATE TRIGGER` ×2, `CREATE INDEX` ×3.
+1. `psql -v ON_ERROR_STOP=1 -f 0014-content-item.sql` como `wyd_migrator` → `CREATE TABLE`, `CREATE FUNCTION`, `CREATE TRIGGER` ×2, `CREATE INDEX` ×3.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'content';` → `7` (as 5 do `0013` + `content_version` + esta).
 3. `INSERT INTO content.item_catalog (item_index, name, kind_slug, effect_names, grade) VALUES (1, 'Poção de Vida', 'consumivel', '{EF_HP}', 1);` → `INSERT 0 1`, com `name_fold = 'pocao de vida'`.
 4. Repetir o mesmo `item_index` → `23505` em `pk_item_catalog`.

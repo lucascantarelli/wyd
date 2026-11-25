@@ -536,7 +536,7 @@ Um único lugar monta as peças: o binário. A biblioteca nunca constrói adapte
 `mod.rs` continua sem I/O.
 
 ```rust
-// crates/wyd-db/src/bin/wyd-db.rs — único ponto que lê ambiente
+// crates/wyd-db/src/bin/wyd-db.rs (a escrever) — único ponto que lê ambiente
 let cfg = MigrateConfig::new(dsn_from_env()?, dir_from_env()?);  // env só aqui, no bin
 let pg  = adapter::pg::from_config(&cfg).await?;   // pool + Ledger + Executor + Lock
 let src = adapter::fs::FsSource::new(cfg.dir.clone());

@@ -19,7 +19,7 @@ Vigésimo quinto arquivo da série: 4 tabelas no schema `content`. As fichas de 
 | Campo | Valor |
 |---|---|
 | Número | `0025` (checklist, linha 109) |
-| Arquivo | `crates/wyd-db/migrations/0025_content_combat.sql` |
+| Arquivo | `crates/wyd-db/migrations/0025-content-combat.sql` |
 | Schema | `content` (4 tabelas) |
 | Posição | 25 de 34 |
 | Depende de | `0001` (schema, privilégios); `0014` (`content.item_catalog`); `0019` (`content.npc_template`) |

@@ -50,9 +50,10 @@ export nem vira consulta de BI. Trocar a derivação para `HMAC-SHA256` fecharia
 reabrir `M6` e criar segredo de hash no contrato de ambiente (`src/provision/spec.md` §3 e §7).
 
 ## Decisão — papel `wyd_admin` (`LAC-ADM-01`, 2026-11-21)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado: decidida em 2026-11-21 — A + S1 + C1 + D1.** O papel entrou em `ROLES`
-(`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032_admin_grants.sql`
+(`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032-admin-grants.sql`
 (`ddl-confirmado.md` §5.32, página `migrations/0032-admin-grants.md`). `M27` está fechada em
 `lacunas.md` §2.3 e `LAC-ADM-01` fechou com ela; `M28` fechou na mesma data com a redação **B**.
 
@@ -101,14 +102,16 @@ tabela. Nenhuma rota pede `DELETE`.
 | C3 (não escolhida) | `INSERT` sem `RETURNING` | dispensaria `SELECT` em `audit_log`, mas o `200` do C4 perderia `audit_id` — seria mudança de contrato, não de banco |
 
 #### 4. Onde o `GRANT` mora
+**Sem arquivo no repositório:** `db/roles.sql`, `roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos e as citações de contagem e gates foram atualizadas na mesma entrega. Em 2026-11-22 o `0032` foi **emendado** com os `GRANT` da custódia (`character_item`, `character`) e a série fechou em **34 arquivos e 109 tabelas** |
-| D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
+| **D1 (decidida em 2026-11-21)** | arquivo novo `0032-admin-grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos e as citações de contagem e gates foram atualizadas na mesma entrega. Em 2026-11-22 o `0032` foi **emendado** com os `GRANT` da custódia (`character_item`, `character`) e a série fechou em **34 arquivos e 109 tabelas** |
+| D2 (não escolhida) | dentro de `0001-bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
 | D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` cria papel e mexe em `public` |
 
 ### Decisão registrada
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Decidido em 2026-11-21 pelo dono: A + S1 + C1 + D1.** Um papel `wyd_admin` com `LOGIN`, `USAGE` em `game` e em `ops`, `SELECT` e
 `INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, mais `INSERT` e `SELECT (id)` em

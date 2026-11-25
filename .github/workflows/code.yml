@@ -40,6 +40,17 @@ jobs:
       - name: Testes unitários
         run: cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
 
+      # Launcher: verificação do manifesto do patch (`LCLI-02`, ADR-LCH-0001).
+      # Não precisa de PostgreSQL; o teste do patch real se auto-ignora sem a árvore do cliente.
+      - name: Formatação do launcher
+        run: cargo fmt --manifest-path crates/wyd-launcher/Cargo.toml -- --check
+
+      - name: Lint do launcher
+        run: cargo clippy --manifest-path crates/wyd-launcher/Cargo.toml --all-targets -- -D warnings
+
+      - name: Testes do launcher
+        run: cargo test --manifest-path crates/wyd-launcher/Cargo.toml --offline
+
       - name: Instalar cargo-llvm-cov
         uses: taiki-e/install-action@fe3acb53a98b62c772db35de75ce0e4595e7ca8c # v2.90.8
         with:

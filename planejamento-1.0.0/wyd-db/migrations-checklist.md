@@ -40,12 +40,15 @@ A estrutura do diretório vem do radical do arquivo `.sql`: a página troca **ca
 (`kebab-case`, sem acento), e nenhum underscore do arquivo sobrevive no nome — o par arquivo/página
 fica inequívoco:
 
-`0004_portal_access.sql` → `0004-portal-access.md`
+`0004-portal-access.sql` → `0004-portal-access.md`
 
-Nos 26 arquivos que criam tabela em um schema, o radical é `[numero]_[schema]_[nome]`, e a página sai
-`[numero]-[schema]-[nome].md`. Dois casos não seguem essa forma: os 6 arquivos de seed, cujo segmento
-do meio é `seed` e não schema (`0016_seed_taxonomy.sql` → `0016-seed-taxonomy.md`, que semeia
-`content`); e `0001` e `0029`, que não têm schema próprio — `0001` cria os quatro schemas e `0029`
+Nos 26 arquivos que criam tabela em um schema, o radical é `[numero]-[schema]-[nome]`, igual para o
+`.sql` e para a página: `0005-game-account.sql` → `0005-game-account.md`. A série **versionada** em
+`crates/wyd-db/migrations/` já usa essa forma com hífen; a grafia com underscore (`0005-game-account.sql`)
+que circulou nos rascunhos do plano não corresponde a nenhum arquivo do repositório e foi corrigida em
+todas as páginas em 2026-11-25. Dois casos não seguem essa forma: os 6 arquivos de seed, cujo segmento
+do meio é `seed` e não schema (`0016-seed-taxonomy.sql` → `0016-seed-taxonomy.md`, página planejada que
+semeia `content` e cujo estado de escrita fica em §2); e `0001` e `0029`, que não têm schema próprio — `0001` cria os quatro schemas e `0029`
 cria views de dois deles —, e por isso caem em `[numero]-[nome].md`. A exceção de `0001`/`0029` está
 dita no topo da própria página.
 
@@ -142,7 +145,7 @@ O detalhe de cada decisão fica em `lacunas.md`; aqui está só o que **impede a
 | `M16` | `coin` precisa de razão de lançamento (ledger) ou snapshot auditado basta? | `0005`, `0011` | produto + arquitetura |
 | `M17` | **Fechada em 2026-11-19:** `UUID` gerado pelo BFF, único em `0011`/`0012`, replay de 24 h. Nenhum arquivo trava por ela. | `0011` (fechada), `0012` (desenho de §5.16) | arquitetura + frente `wyd-portal` |
 | `M30` | **Fechada em 2026-11-22:** registro de idempotência em `ops.idempotency_record`, escrito e fechado na transação da ação, retido 7 dias; `GET /actions/{key}` devolve `404` depois do expurgo. Nenhum arquivo trava por ela. | `0033` (fechada) | `wyd-db` + `wyd-ops` |
-| `M31` | **Fechada em 2026-11-22:** lote `0034_portal_market.sql`, dez tabelas em `portal` e uma em `game`, com a emenda de `GRANT` em `0032`. Nenhum arquivo trava por ela. | `0034` (fechada) | `wyd-db` + arquitetura |
+| `M31` | **Fechada em 2026-11-22:** lote `0034-portal-market.sql`, dez tabelas em `portal` e uma em `game`, com a emenda de `GRANT` em `0032`. Nenhum arquivo trava por ela. | `0034` (fechada) | `wyd-db` + arquitetura |
 | `M25` | **Fechada em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta; `applied`/`failed` expurgadas 30 dias após `closed_at`, `pending` nunca. Nenhum arquivo trava por ela. | `0012` (fechada) | arquitetura + frente `wyd-server` |
 | `A19` | Loja e cash existem? Entra em `portal`, fica fora do schema, ou não existe. | `0011` | produto |
 | `A14` | Soft-delete de personagem derruba a sessão viva? | `0006` | arquitetura |

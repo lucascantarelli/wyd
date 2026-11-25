@@ -73,4 +73,4 @@ de `0022` tem precedência sobre a base; ler só esta tabela ignora a operação
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021_content_rules.sql`.
+Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021-content-rules.sql`.

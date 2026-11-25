@@ -2,11 +2,12 @@
 > Público: QA e desenvolvedor do `wyd-admin`
 > Dono: equipe do wyd-admin
 > Base: `AGENTS.md` §8; [contrato C4](../arquitetura/contrato-c4.md); [ações](../specs/acoes.md); [componentes](../arquitetura/componentes.md)
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-21); alvo de custódia acrescentado em 2026-11-22. Nenhum teste escrito.
 
 ## Pirâmide e alvos
+**Sem arquivo no repositório:** `tests/contrato.rs`, `tests/acoes.rs`, `tests/idempotencia.rs`, `tests/custodia.rs`, `tests/papel.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Nível | Alvo | O que prova | Dado |
 |---|---|---|---|
@@ -48,6 +49,13 @@ cargo llvm-cov -p wyd-admin --fail-under-lines 85
 
 O `--fail-under-lines 85` é o gate de `AGENTS.md` §8; cobertura de linha não substitui os seis
 comportamentos acima.
+
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-admin --all-targets -- -D warnings`, `cargo test -p wyd-admin --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-admin --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Log estruturado por ação com `trace_id`, contadores por rota/status e latência por ação. O painel do `wyd-ops` alerta em `5xx`, `504` e falha de escrita; o limiar numérico é medido no ambiente efêmero e não é inventado aqui.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
 
 ## Critério de saída da `1.0.0`
 

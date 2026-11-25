@@ -80,4 +80,4 @@ gravado aqui é o base.
 
 ## Migration
 
-Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025_content_combat.sql`.
+Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025-content-combat.sql`.

@@ -53,6 +53,7 @@ A mesma regra vale para `provision`: `domain/` não conhece banco nem ambiente; 
 compartilhado (`crate::provision::MIGRATOR` e `crate::dsn::Dsn`).
 
 ## 3. Onde cada coisa mora
+**Sem arquivo no repositório:** `provision/domain/spec.rs`, `provision/adapter/pg.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Se você procura | Vá para |
 |---|---|

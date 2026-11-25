@@ -1,7 +1,7 @@
 > Pergunta: "que tabelas o banco cria para o mercado entre jogadores e a custódia do item, e com que invariante?"
 > Público: Desenvolvedor novo, arquitetura e quem opera
 > Dono: equipe do `wyd-db`
-> Base: `lacunas.md` `M31` (decidida em 2026-11-22); `ddl-confirmado.md` §5.34 e §5.32 (emenda); `armaria-e-mercado.md` §3 e §6; `../wyd-admin/docs/arquitetura/contrato-c4.md` §4.9–§4.13
+> Base: `lacunas.md` `M31` (decidida em 2026-11-22); `ddl-confirmado.md` §5.34 e §5.32 (emenda); `armaria-e-mercado.md` §3 e §6; `../../wyd-admin/docs/arquitetura/contrato-c4.md` §4.9–§4.13
 > Revisado em: 2026-11-22
 
 **Estado:** aceito (2026-11-24)
@@ -19,7 +19,7 @@ custódia exige.
 | Campo | Valor |
 |---|---|
 | Número | `0034` (decidido em 2026-11-22; próximo livre depois de `0033`) |
-| Arquivo | `crates/wyd-db/migrations/0034_portal_market.sql` |
+| Arquivo | `crates/wyd-db/migrations/0034-portal-market.sql` |
 | Schema | `portal` (10 tabelas) + `game` (1 tabela) |
 | Posição | 34 de 34 |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges), `0006` (`game.character`), `0009` (`game.character_item`) e `0032` (emendado nesta rodada) |

@@ -22,7 +22,7 @@ cash ficam no `portal`; preço e imposto de jogo, em `game`.
 | Campo | Valor |
 |---|---|
 | Número | `0011` |
-| Arquivo | `crates/wyd-db/migrations/0011_game_economy.sql` |
+| Arquivo | `crates/wyd-db/migrations/0011-game-economy.sql` |
 | Schema | `game` (4 tabelas) + `portal` (6 tabelas) |
 | Posição | 11 de 34 (economia e cash) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges), `0005` (conta citada por valor), `0006` (`game.character`, dono da loja e do imposto) e `0010` concluída não é pré-requisito |
@@ -390,7 +390,7 @@ Nenhum `GRANT` explícito. Default privileges do `0001`:
 PG17 efêmero, com `0001` e `0006` aplicados e um personagem de prova (`game.character` id 1).
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0011_game_economy.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0011-game-economy.sql
 ```
 
 | # | Prova | Comando | Esperado |

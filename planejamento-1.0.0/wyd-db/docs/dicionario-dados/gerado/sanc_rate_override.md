@@ -70,4 +70,4 @@ de % para bps é do contrato de leitura, não uma coluna.
 
 ## Migration
 
-Forma (dona): `migrations/0022-content-overrides.md` — arquivo `0022_content_overrides.sql`.
+Forma (dona): `migrations/0022-content-overrides.md` — arquivo `0022-content-overrides.sql`.

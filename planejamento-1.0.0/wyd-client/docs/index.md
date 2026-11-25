@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, pesquisa (RE) e QA
 > Dono: equipe do wyd-client
 > Base: `wyd-protocol/lacunas.md` `LPRT-10`; `LPRT-03`, `LPRT-06`, `LPRT-09`
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -53,8 +53,8 @@ conteúdo do cliente. Os passos técnicos com dono estão em
 [`specs/propriedade-intelectual-e-distribuicao.md`](specs/propriedade-intelectual-e-distribuicao.md) §9;
 o inventário item a item está em [`specs/inventario-da-arvore.md`](specs/inventario-da-arvore.md) e o
 pacote do pedido em [`specs/pedido-ao-titular.md`](specs/pedido-ao-titular.md). O pedido **não foi
-enviado** e nenhum dos dois artefatos libera uso. `LCLI-05` continua `proposta` e `LCLI-02` continua
-aberta até a evidência do titular. Até lá, conteúdo do cliente não deve ser incluído em patch, release,
+enviado** e nenhum dos dois artefatos libera uso. `LCLI-05` continua `proposta`; `LCLI-02` fechou
+em 2026-11-25 como decisão de conteúdo e verificação (`../registro-do-cliente.md` §5.1), sem liberar uso. Até lá, conteúdo do cliente não deve ser incluído em patch, release,
 site ou outro artefato publicado. A árvore local ignorada pelo Git é uma salvaguarda; não prova
 titularidade nem concede licença.
 
@@ -73,4 +73,35 @@ O registro de identidade e totais permanece em `registro-do-cliente.md` — esta
   permanecem perguntas de `LCLI-05`.
 ## Decisões em aberto
 
-`LCLI-02` continua aberta e `Q-CLI-2` espera o dono; `LCLI-03` tem QA definido (**Lucas Cantarelli**, que não é o operador) e espera a primeira ficha assinada com o nome do operador; `LCLI-05` segue **proposta**, com responsável nominal, distribuição congelada, `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` aguardando evidência do titular, com `Q-IP-2` no escopo B (árvore inteira). As perguntas estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` fechou com `LPRT-09` em 2026-11-23 e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.
+`LCLI-02` fechou em 2026-11-25 — `Q-CLI-2` = A executada com lista medida, manifesto e verificador (`registro-do-cliente.md` §5.1); `LCLI-03` tem QA definido (**Lucas Cantarelli**, que não é o operador) e espera a primeira ficha assinada com o nome do operador; `LCLI-05` segue **proposta**, com responsável nominal, distribuição congelada, `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` aguardando evidência do titular, com `Q-IP-2` no escopo B (árvore inteira). As perguntas estão em [Decisões do `wyd-client`](proposta-decisoes-client.md); `LCLI-01` fechou com `LPRT-09` em 2026-11-23 e não é duplicada. O estado de cada lacuna continua em `lacunas.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Módulos do `wyd-client` — detalhamento](modulos.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+
+### arquitetura/adr
+
+- [ADR-CLI-0001 — Uso e distribuição (Q-IP-3..Q-IP-6)](arquitetura/adr/adr-cli-0001-uso-distribuicao.md)
+- [ADRs — `wyd-client`](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [Mapa de funcionalidades do cliente WYD](specs/mapa-de-funcionalidades.md)
+- [requisitos](specs/requisitos.md)

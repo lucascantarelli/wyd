@@ -12,7 +12,7 @@ Nenhuma das duas tabelas é lida pelo jogo: sessão de jogo mora em `game.sessio
 cliente 7662 nunca autentica por aqui.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0004_portal_access.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0004-portal-access.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §4, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
@@ -22,7 +22,7 @@ cliente 7662 nunca autentica por aqui.
 | Campo | Valor |
 |---|---|
 | Número | `0004` |
-| Arquivo | `crates/wyd-db/migrations/0004_portal_access.sql` |
+| Arquivo | `crates/wyd-db/migrations/0004-portal-access.sql` |
 | Schema | `portal` |
 | Posição | 4 de 34 (4º do bloco de identidade) |
 | Depende de | `0001_bootstrap` (schemas, `ops.fn_set_updated_at`, permissões) e `0003_portal_person` (`portal.person` — a FK e a coluna `password_changed_at` que o fluxo de troca de senha usa) |
@@ -42,6 +42,7 @@ limite de tentativas — de modo que recuperar senha, verificar e-mail e trocar 
 tabelas parecidas com três regras diferentes.
 
 ## 3. Pré-requisitos
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. `db/roles.sql` aplicado por `wyd-db provision apply` (papéis do cluster) — sem ele, o `0001` falha
    em `AUTHORIZATION`.
@@ -242,9 +243,9 @@ PG17 efêmero, sem tocar a série herdada. Pressupõe `provision apply` feito e 
 `wyd_migrator` (com outro papel, os default privileges não valem e as provas 10–12 mentem).
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001_bootstrap.sql
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0003_portal_person.sql
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0004_portal_access.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001-bootstrap.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0003-portal-person.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0004-portal-access.sql
 ```
 
 Supõe uma pessoa de teste já criada (`INSERT INTO portal.person (email, password_hash) VALUES

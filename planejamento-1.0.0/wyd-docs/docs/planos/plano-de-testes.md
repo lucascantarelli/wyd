@@ -40,6 +40,13 @@
 python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site && python verificar-contagens.py && python verificar-censos.py
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** `docker compose --profile gate run --rm gate` e o job de documentação de `.github/workflows/docs.yml` rodam build, links, âncoras, contagem e censo; falha em qualquer um reprova o PR.
+- **Cobertura:** A cobertura é de página, link, âncora e censo: as 471 páginas e as 469 fontes precisam fechar; não há percentual de linha para o site.
+- **Monitoramento:** Duração do build, páginas publicadas, fontes fora do censo, link quebrado e status da publicação. O gate já falha em link, âncora, contagem e censo; não há SLO de disponibilidade antes de existir deploy.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Build e verificação verdes no CI; publicação automática em `develop`; URL estável; nenhum conteúdo interno no artefato; rollback validado. `LPDOC-01` fechada. `LPDOC-12` (Windows) segue aberto como decisão.

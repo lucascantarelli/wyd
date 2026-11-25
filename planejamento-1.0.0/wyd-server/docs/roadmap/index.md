@@ -6,30 +6,37 @@
 
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada.
 
-A fila tem **7 fatias** em 4 fases.
+A fila tem **4 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDSRV-001`–`002` | baseline do crate e composição |
-| 2 | `WYDSRV-003`–`004` | um processo por canal e controle HTTP |
-| 3 | `WYDSRV-005`–`006` | integração com net/core/db/admin |
-| 4 | `WYDSRV-007` | suíte, observabilidade e anti-skip |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| captura S7 | `WYDSRV-003`–`004` | `LSRV-05` em C com condição reprovada (peer de A1) |
-| contrato admin | `WYDSRV-005` | canal de controle HTTP síncrono com ack (`LAC-ADM-03`) |
-| CI real | `WYDSRV-007` | workflow stub |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDSRV-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **4** páginas, uma por fatia, no formato de `WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDSRV-F0`](WYDSRV-F0.md) | Fundação do crate |
+| [`WYDSRV-F1`](WYDSRV-F1.md) | Composição e canal |
+| [`WYDSRV-F2`](WYDSRV-F2.md) | Controle e integração |
+| [`WYDSRV-F3`](WYDSRV-F3.md) | Observabilidade e suíte |

@@ -124,7 +124,7 @@ medição daquele commit.
 
 | Situação | Como aparece |
 |---|---|
-| outra página publicada | link relativo, ex.: `../guia-autor/index.md` |
+| outra página publicada | link relativo, ex.: `guia-autor/index.md` |
 | código ou arquivo interno | texto simples em `code`, com caminho: `wyd-docs/preparar.py` |
 | página planejada que ainda não existe | caminho em `code`, sem link: `docs/arquitetura/publicacao.md` |
 | seção de documento dono | caminho + `§`: `wyd-docs-1.0.0.md` §9.1 |

@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-22) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Exigência do guarda por slot de 0 a 7, com oito números posicionais. A tabela não nomeia as oito
 posições: o bloco do `Guard.txt` não tem semântica provada, e inventar nome seria promover hipótese a
@@ -66,4 +67,4 @@ Os oito números são posicionais: o significado de cada posição é `H`, decla
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.

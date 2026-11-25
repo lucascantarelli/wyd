@@ -12,7 +12,7 @@ sessão só pode referenciar canal cadastrado. O arquivo mantém sessão encerra
 reaper.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0007_game_session.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0007-game-session.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §5.5, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
@@ -22,7 +22,7 @@ reaper.
 | Campo | Valor |
 |---|---|
 | Número | `0007` |
-| Arquivo | `crates/wyd-db/migrations/0007_game_session.sql` |
+| Arquivo | `crates/wyd-db/migrations/0007-game-session.sql` |
 | Schema | `game` |
 | Posição | 7 de 34 (topologia de canais e sessão viva) |
 | Depende de | `0001` (schemas/função), `0005` (`game.account`), `0006` (`game.character`) |
@@ -187,7 +187,7 @@ PG17 efêmero, com `0001`, `0005`, `0006` aplicados. A fixture abaixo é de test
 migration; dados de host de produção nunca são versionados.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0007_game_session.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0007-game-session.sql
 ```
 
 | Prova | Comando/consulta | Esperado |

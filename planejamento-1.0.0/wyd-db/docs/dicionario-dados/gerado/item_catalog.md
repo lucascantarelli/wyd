@@ -94,4 +94,4 @@ Triggers `trg_item_catalog_set_updated_at` e `trg_item_catalog_effects`.
 
 ## Migration
 
-Forma (dona): `migrations/0014-content-item.md` — arquivo `0014_content_item.sql`.
+Forma (dona): `migrations/0014-content-item.md` — arquivo `0014-content-item.sql`.

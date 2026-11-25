@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Parâmetro do `gameconfig.txt` por seção e chave — o valor base que o servidor lê no boot.
 
@@ -62,4 +63,4 @@ Nenhum além da PK. Trigger `trg_game_setting_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.

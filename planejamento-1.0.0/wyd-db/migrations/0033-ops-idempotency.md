@@ -1,7 +1,7 @@
 > Pergunta: "onde o `wyd-admin` guarda a chave de idempotência das rotas do C4, e por quanto tempo?"
 > Público: Desenvolvedor novo e quem opera o banco
 > Dono: equipe do `wyd-db`
-> Base: `lacunas.md` `M30` (decidida em 2026-11-22); `ddl-confirmado.md` §5.33; `docs/arquitetura/contrato-c4.md` §2 e §5; `../wyd-admin/docs/specs/acoes.md` regra comum
+> Base: `lacunas.md` `M30` (decidida em 2026-11-22); `ddl-confirmado.md` §5.33; `docs/arquitetura/contrato-c4.md` §2 e §5; `../../wyd-admin/docs/specs/acoes.md` regra comum
 > Revisado em: 2026-11-22
 
 **Estado:** aceito (2026-11-24)
@@ -19,7 +19,7 @@ processo. Uma tabela: `ops.idempotency_record`.
 | Campo | Valor |
 |---|---|
 | Número | `0033` (decidido em 2026-11-22; próximo livre depois de `0032`) |
-| Arquivo | `crates/wyd-db/migrations/0033_ops_idempotency.sql` |
+| Arquivo | `crates/wyd-db/migrations/0033-ops-idempotency.sql` |
 | Schema | `ops` |
 | Posição | 33 de 34 |
 | Depende de | `0001` (schema `ops` e default privileges), `0032` (`USAGE` de `ops` para `wyd_admin`) |

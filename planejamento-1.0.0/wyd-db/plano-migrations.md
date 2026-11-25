@@ -217,6 +217,10 @@ entrega.
 ---
 
 ## 3. A série (34 arquivos; 109 tabelas)
+**Sem arquivo no repositório:** `db/roles.sql`, `0016-seed-taxonomy.sql`, `0017-seed-item-catalog.sql`, `0018-seed-skill-catalog.sql`, `0020-seed-world.sql`, `0023-seed-rules.sql`, `0027-seed-quests-events.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
+A contagem desta seção é **medida** (`M20`, fechada em 2026-11-18): dono único do número, nunca
+estimativa, e é ela que `planos/metricas.md` cita.
 
 Antes do arquivo 1 existe a **etapa 0**, que não é migration: `db/roles.sql`, os papéis do cluster —
 artefato gerado por `wyd-db provision render`, especificado em `src/provision/spec.md`
@@ -228,40 +232,40 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 
 | # | Arquivo | Schema | Cria | Tab. |
 |---|---|---|---|---:|
-| 1 | `0001_bootstrap.sql` | — | 4 schemas, `content_version`, `ops.fn_set_updated_at()` | 1 |
-| 2 | `0002_ops_audit.sql` | `ops` | `audit_log`, `login_attempt`, `config_revision`, `config_change` | 4 |
-| 3 | `0003_portal_person.sql` | `portal` | `person`, `person_profile`, `person_consent` | 3 |
-| 4 | `0004_portal_access.sql` | `portal` | `person_session`, `person_token` | 2 |
-| 5 | `0005_game_account.sql` | `game` | `account`, `account_wallet`, `account_ledger` (`M16`), `account_moderation`, `pin_reset` | 5 |
-| 6 | `0006_game_character.sql` | `game` | `character`, `character_status`, `character_scores`, `character_special`, `character_short_skill` | 5 |
-| 7 | `0007_game_session.sql` | `game` | `session`, `server_channel` (com `max_players`/`maintenance`/`role`, `M23`) | 2 |
-| 8 | `0008_game_skills.sql` | `game` | `character_skill`, `character_learned_skill`, `character_lineage`, `character_affect`, `character_chaos` | 5 |
-| 9 | `0009_game_inventory.sql` | `game` | `character_item`, `vault_item`, `refine_pity` | 3 |
-| 10 | `0010_game_guild.sql` | `game` | `guild`, `guild_member`, `guild_relation`, `guild_tower` | 4 |
-| 11 | `0011_game_economy.sql` | `game` + `portal` | `city`, `city_tax_ledger`, `item_price`, `personal_shop` (em `game`); `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit` (6 em `portal`, `A19`) | 10 |
-| 12 | `0012_ops_delivery.sql` | `ops` | `delivery_queue` | 1 |
-| 13 | `0013_content_taxonomy.sql` | `content` | `game_system`, `game_class`, `skill_lineage`, `item_kind`, `item_effect`, `fn_fold` | 5 |
-| 14 | `0014_content_item.sql` | `content` | `item_catalog` (PK `item_index`; `name_fold` gerada; GIN em `effect_names`) | 1 |
-| 15 | `0015_content_skill.sql` | `content` | `skill_catalog` | 1 |
-| 16 | `0016_seed_taxonomy.sql` | `content` | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | — |
-| 17 | `0017_seed_item_catalog.sql` | `content` | 3.220 itens + 55 `EF_*` (gerado) | — |
-| 18 | `0018_seed_skill_catalog.sql` | `content` | 151 skills + 3 Kersef + linhagem curada (gerado) | — |
-| 19 | `0019_content_world.sql` | `content` | `content_source`, `npc_template`, `npc_definition`, `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`, `game_matrix`, `region`, `world_item_seed`, `guild_zone` | 13 |
-| 20 | `0020_seed_world.sql` | `content` | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão (gerado) | — |
-| 21 | `0021_content_rules.sql` | `content` | `refine_rate`, `refine_gem_effect`, `sanc_rate`, `combine_value`, `accessory_refine_rule` | 5 |
-| 22 | `0022_content_overrides.sql` | `content` | `refine_rate_override`, `sanc_rate_override`, `combine_value_override` | 3 |
-| 23 | `0023_seed_rules.sql` | `content` | 14 passos de refino, 4 gemas, `sanc_rate`, combine, acessório | — |
-| 24 | `0024_content_maps.sql` | `content` | `map_definition`, `teleport_route` | 2 |
-| 25 | `0025_content_combat.sql` | `content` | `mob_template_stat`, `mob_template_equip`, `drop_rate_override`, `content_rate_override` | 4 |
-| 26 | `0026_content_quests_events.sql` | `content` | `quest`, `quest_step`, `quest_reward`, `world_event`, `event_schedule`, `arena` | 6 |
-| 27 | `0027_seed_quests_events.sql` | `content` | quests de campo, 3 `world_event` + agenda, 2 `arena` (gerado) | — |
-| 28 | `0028_game_quests_events.sql` | `game` | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` | 7 |
-| 29 | `0029_views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
-| 30 | `0030_portal_content.sql` | `portal` | `news`, `banner`, `guide`, `launcher_release` — CMS e launcher do `wyd-portal` (aprovado em 2026-11-20) | 4 |
-| 31 | `0031_portal_mfa.sql` | `portal` | `person_authenticator` — segundo fator de staff do `wyd-portal` (`A20`, aprovado em 2026-11-20) | 1 |
-| 32 | `0032_admin_grants.sql` | `game` + `ops` | `GRANT`s do papel `wyd_admin` (`M27`, decidida em 2026-11-21): `USAGE` nos dois schemas, `SELECT`/`INSERT`/`UPDATE` nas tabelas do C4, `character_item`/`character` da custódia e `INSERT` em `ops.audit_log` | — |
-| 33 | `0033_ops_idempotency.sql` | `ops` | `idempotency_record` — registro de idempotência do C4 do `wyd-admin` (`M30`, decidida em 2026-11-22) | 1 |
-| 34 | `0034_portal_market.sql` | `portal` + `game` | `market_wallet`, `market_ledger`, `market_fee_rule`, `market_listing`, `market_bid`, `market_transaction`, `market_review`, `market_reputation`, `market_notification`, `market_dispute` (dez em `portal`); `market_escrow` (uma em `game`) — mercado e armaria (`M31`, decidida em 2026-11-22) | 11 |
+| 1 | `0001-bootstrap.sql` | — | 4 schemas, `content_version`, `ops.fn_set_updated_at()` | 1 |
+| 2 | `0002-ops-audit.sql` | `ops` | `audit_log`, `login_attempt`, `config_revision`, `config_change` | 4 |
+| 3 | `0003-portal-person.sql` | `portal` | `person`, `person_profile`, `person_consent` | 3 |
+| 4 | `0004-portal-access.sql` | `portal` | `person_session`, `person_token` | 2 |
+| 5 | `0005-game-account.sql` | `game` | `account`, `account_wallet`, `account_ledger` (`M16`), `account_moderation`, `pin_reset` | 5 |
+| 6 | `0006-game-character.sql` | `game` | `character`, `character_status`, `character_scores`, `character_special`, `character_short_skill` | 5 |
+| 7 | `0007-game-session.sql` | `game` | `session`, `server_channel` (com `max_players`/`maintenance`/`role`, `M23`) | 2 |
+| 8 | `0008-game-skills.sql` | `game` | `character_skill`, `character_learned_skill`, `character_lineage`, `character_affect`, `character_chaos` | 5 |
+| 9 | `0009-game-inventory.sql` | `game` | `character_item`, `vault_item`, `refine_pity` | 3 |
+| 10 | `0010-game-guild.sql` | `game` | `guild`, `guild_member`, `guild_relation`, `guild_tower` | 4 |
+| 11 | `0011-game-economy.sql` | `game` + `portal` | `city`, `city_tax_ledger`, `item_price`, `personal_shop` (em `game`); `donate_shop_item`, `daily_reward_item`, `daily_reward_claim`, `kingdom_cape_price`, `donate_credit`, `donate_debit` (6 em `portal`, `A19`) | 10 |
+| 12 | `0012-ops-delivery.sql` | `ops` | `delivery_queue` | 1 |
+| 13 | `0013-content-taxonomy.sql` | `content` | `game_system`, `game_class`, `skill_lineage`, `item_kind`, `item_effect`, `fn_fold` | 5 |
+| 14 | `0014-content-item.sql` | `content` | `item_catalog` (PK `item_index`; `name_fold` gerada; GIN em `effect_names`) | 1 |
+| 15 | `0015-content-skill.sql` | `content` | `skill_catalog` | 1 |
+| 16 | `0016-seed-taxonomy.sql` | `content` | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | — |
+| 17 | `0017-seed-item-catalog.sql` | `content` | 3.220 itens + 55 `EF_*` (gerado) | — |
+| 18 | `0018-seed-skill-catalog.sql` | `content` | 151 skills + 3 Kersef + linhagem curada (gerado) | — |
+| 19 | `0019-content-world.sql` | `content` | `content_source`, `npc_template`, `npc_definition`, `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`, `game_matrix`, `region`, `world_item_seed`, `guild_zone` | 13 |
+| 20 | `0020-seed-world.sql` | `content` | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão (gerado) | — |
+| 21 | `0021-content-rules.sql` | `content` | `refine_rate`, `refine_gem_effect`, `sanc_rate`, `combine_value`, `accessory_refine_rule` | 5 |
+| 22 | `0022-content-overrides.sql` | `content` | `refine_rate_override`, `sanc_rate_override`, `combine_value_override` | 3 |
+| 23 | `0023-seed-rules.sql` | `content` | 14 passos de refino, 4 gemas, `sanc_rate`, combine, acessório | — |
+| 24 | `0024-content-maps.sql` | `content` | `map_definition`, `teleport_route` | 2 |
+| 25 | `0025-content-combat.sql` | `content` | `mob_template_stat`, `mob_template_equip`, `drop_rate_override`, `content_rate_override` | 4 |
+| 26 | `0026-content-quests-events.sql` | `content` | `quest`, `quest_step`, `quest_reward`, `world_event`, `event_schedule`, `arena` | 6 |
+| 27 | `0027-seed-quests-events.sql` | `content` | quests de campo, 3 `world_event` + agenda, 2 `arena` (gerado) | — |
+| 28 | `0028-game-quests-events.sql` | `game` | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` | 7 |
+| 29 | `0029-views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
+| 30 | `0030-portal-content.sql` | `portal` | `news`, `banner`, `guide`, `launcher_release` — CMS e launcher do `wyd-portal` (aprovado em 2026-11-20) | 4 |
+| 31 | `0031-portal-mfa.sql` | `portal` | `person_authenticator` — segundo fator de staff do `wyd-portal` (`A20`, aprovado em 2026-11-20) | 1 |
+| 32 | `0032-admin-grants.sql` | `game` + `ops` | `GRANT`s do papel `wyd_admin` (`M27`, decidida em 2026-11-21): `USAGE` nos dois schemas, `SELECT`/`INSERT`/`UPDATE` nas tabelas do C4, `character_item`/`character` da custódia e `INSERT` em `ops.audit_log` | — |
+| 33 | `0033-ops-idempotency.sql` | `ops` | `idempotency_record` — registro de idempotência do C4 do `wyd-admin` (`M30`, decidida em 2026-11-22) | 1 |
+| 34 | `0034-portal-market.sql` | `portal` + `game` | `market_wallet`, `market_ledger`, `market_fee_rule`, `market_listing`, `market_bid`, `market_transaction`, `market_review`, `market_reputation`, `market_notification`, `market_dispute` (dez em `portal`); `market_escrow` (uma em `game`) — mercado e armaria (`M31`, decidida em 2026-11-22) | 11 |
 
 **Total: 34 arquivos, 109 tabelas** e 6 arquivos de seed.
 
@@ -465,6 +469,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 ---
 
 ## 9. Etapas de código (a execução da série)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. **[adiado em 2026-11-17]** PR de ferramentas (`banco-parse`, `check-migrations`, `pg`, `catalogo.rs`,
    `src/migrate/`)
@@ -500,5 +505,5 @@ entra aqui; de implantação, lá.
 Regra de produto (§5), retenção final por tabela (`M22`), se a loja/cash existe (`A19`), e o formato
 de `audit_log.actor` (`M18`). **`M18` está decidido (2026-11-17):** a proposta `M18-A` foi aprovada —
 `actor_kind` + `actor_id` + `actor_ref`, 3 CHECKs de coerência, índice `ix_audit_actor` e **sem FK por
-desenho**, detalhada em `lacunas.md` §2.3. `0002_ops_audit.sql` nasce assim; não é mais pergunta
+desenho**, detalhada em `lacunas.md` §2.3. `0002-ops-audit.sql` nasce assim; não é mais pergunta
 aberta. As três de produto travam `game.account`/`portal`, não o corte vertical.

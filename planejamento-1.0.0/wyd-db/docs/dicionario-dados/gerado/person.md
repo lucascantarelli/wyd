@@ -84,4 +84,4 @@ Trigger `trg_person_set_updated_at` mantém `updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0003-portal-person.md` — arquivo `0003_portal_person.sql`.
+Forma (dona): `migrations/0003-portal-person.md` — arquivo `0003-portal-person.sql`.

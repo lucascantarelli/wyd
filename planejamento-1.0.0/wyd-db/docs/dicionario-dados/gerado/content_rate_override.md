@@ -70,4 +70,4 @@ fechada sem semântica por família verificada (`H`): o que cada uma multiplica 
 
 ## Migration
 
-Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025_content_combat.sql`.
+Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025-content-combat.sql`.

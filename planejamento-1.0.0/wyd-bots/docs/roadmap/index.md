@@ -7,29 +7,37 @@
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada.
 
 As lacunas `LBOT-01`, `LBOT-02` e `LBOT-04` fecharam em 2026-11-23; `LBOT-03` tem política
-decidida (`Q-BOT-3` = A) e só fecha com a primeira execução. A fila tem **5 fatias** em 3 fases.
+decidida (`Q-BOT-3` = A) e só fecha com a primeira execução. A fila tem **4 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDBOT-001`–`002` | baseline e ambiente efêmero |
-| 2 | `WYDBOT-003`–`004` | bots de QA, carga e convivência |
-| 3 | `WYDBOT-005` | suíte, anti-skip e medição |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| medição de carga | `WYDBOT-003`–`004` | `LBOT-03` só fecha com a primeira execução |
-| ambiente efêmero | `WYDBOT-001` | `LBOT-01`/`LBOT-02` (Postgres + servidor descartáveis) |
-| CI real | `WYDBOT-005` | workflow stub |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDBOT-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **4** páginas, uma por fatia, no formato de`WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDBOT-F0`](WYDBOT-F0.md) | Ambiente e baseline |
+| [`WYDBOT-F1`](WYDBOT-F1.md) | Bots de QA e carga |
+| [`WYDBOT-F2`](WYDBOT-F2.md) | Convivência e medição |
+| [`WYDBOT-F3`](WYDBOT-F3.md) | Suíte e anti-skip |

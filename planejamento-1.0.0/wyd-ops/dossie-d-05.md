@@ -22,6 +22,7 @@ A pergunta é decidível em A/B/C, e a resposta registrada é **A**. Ela não de
 primeiro, não muda o foco D-01 (`wyd-db`) e não autoriza código.
 
 ## 2. Evidência conferida no repositório
+**Sem arquivo no repositório:** `ls Cargo.toml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Escopo da medição: árvore viva, excluindo `deprecated/`, `wyd-client/files/`, `.build/` e `.git/`.
 O legado foi medido à parte e não é fonte de decisão (`AGENTS.md` §3).

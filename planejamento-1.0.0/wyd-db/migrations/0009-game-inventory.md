@@ -20,7 +20,7 @@ moram em `content.item_catalog` (`0014`) e nas tabelas de economia (`0011`).
 | Campo | Valor |
 |---|---|
 | Número | `0009` |
-| Arquivo | `crates/wyd-db/migrations/0009_game_inventory.sql` |
+| Arquivo | `crates/wyd-db/migrations/0009-game-inventory.sql` |
 | Schema | `game` |
 | Posição | 9 de 34 (inventário e baú, primeiro arquivo depois das skills) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges), `0005` (`game.account`, dono do baú) e `0006` (`game.character`, dono do inventário) |
@@ -219,7 +219,7 @@ PG17 efêmero, com `0001`, `0005` e `0006` aplicados e uma conta/personagem de p
 id 1, `game.character` id 1). A prova 13 usa `DELETE` de propósito, para medir a cascata.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0009_game_inventory.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0009-game-inventory.sql
 ```
 
 | # | Prova | Comando | Esperado |

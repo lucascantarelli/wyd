@@ -23,7 +23,7 @@ Trigésimo arquivo da série. Cria as quatro tabelas de conteúdo do portal que 
 | Campo | Valor |
 |---|---|
 | Número | `0030` (confirmado em 2026-11-20; próximo livre depois de `0029`) |
-| Arquivo | `crates/wyd-db/migrations/0030_portal_content.sql` |
+| Arquivo | `crates/wyd-db/migrations/0030-portal-content.sql` |
 | Schema | `portal` (4 tabelas) |
 | Posição | 30 de 34 (conteúdo editorial do portal) |
 | Depende de | `0001` (schema `portal`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, autor das linhas) |
@@ -367,12 +367,13 @@ do navegador: o BFF grava e registra autor em `ops.audit_log`.
   `game` continua sendo do `wyd-admin`, e estas tabelas **não** são estado de jogo.
 
 ## 10. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0030-portal-content.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
 do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
 §6.6.30).
 
-1. `psql -v ON_ERROR_STOP=1 -f 0030_portal_content.sql` como `wyd_migrator` → `CREATE TABLE` ×4.
+1. `psql -v ON_ERROR_STOP=1 -f 0030-portal-content.sql` como `wyd_migrator` → `CREATE TABLE` ×4.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'portal';` → **15** depois de
    `0003` (3) + `0004` (2) + `0011` (6) + estas 4; a conta por tela é a de
    `wyd-portal/docs/arquitetura/consumo-do-banco.md` §7.

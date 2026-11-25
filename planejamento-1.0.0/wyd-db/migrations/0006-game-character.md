@@ -11,7 +11,7 @@ barra curta de skills. É o primeiro estado persistente de personagem; itens vã
 aprendidas em `0008`, guilda em `0010`, e conteúdo nos arquivos `0013` em diante.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0006_game_character.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0006-game-character.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §5.10, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
@@ -21,7 +21,7 @@ aprendidas em `0008`, guilda em `0010`, e conteúdo nos arquivos `0013` em diant
 | Campo | Valor |
 |---|---|
 | Número | `0006` |
-| Arquivo | `crates/wyd-db/migrations/0006_game_character.sql` |
+| Arquivo | `crates/wyd-db/migrations/0006-game-character.sql` |
 | Schema | `game` (FK para `content.content_version`) |
 | Posição | 6 de 34 (personagem e estado-base) |
 | Depende de | `0001` (schemas/função), `0005` (`game.account`), versão `content.content_version` semeada por `0016` antes da criação de personagem |
@@ -282,7 +282,7 @@ PG17 efêmero, `0001`, `0005`, `content.content_version` aplicada/semeada e pess
 existentes. O `0007` exige um `server_channel` de fixture antes da sessão, mas não para este lote.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0006_game_character.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0006-game-character.sql
 ```
 
 | Prova | Comando/consulta | Esperado |

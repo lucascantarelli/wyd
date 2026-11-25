@@ -2,7 +2,7 @@
 > Público: QA, desenvolvedor, arquiteto e operação
 > Dono: equipe do `wyd-db`
 > Base: `wyd-db-1.0.0.md` §6.17 e §6.9; `plano-migrations.md` §7; `docs/guia-teste/`; `plano-de-qualidade-e-gates.md`
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -81,3 +81,10 @@ plano **não** mede é cobertura por linha, tempo de execução ou custo por alv
 - **CI real:** é de `plano-ci-real.md` e será aplicado depois do primeiro código; o gate local de
   docs não substitui teste do crate.
 - **Cobertura percentual:** a regra é por capacidade, não por linha; não há número de cobertura.
+
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-db --all-targets -- -D warnings`, `cargo test -p wyd-db --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-db --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Pool em uso, latência por consulta, conexões esperando, locks, tamanho e crescimento por tabela, além do ledger de migrations. Log sem DSN, SQL de jogador ou payload; alerta de pool esgotado e migration divergente.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.

@@ -1,7 +1,7 @@
 > Pergunta: "como assumo este projeto sem o dono anterior e sem descobrir tudo por leitura?"
 > Público: Operação, quem entra no projeto e revisor
 > Dono: equipe do `wyd-db` com a operação
-> Base: `wyd-db-1.0.0.md` §6.12; `pendencias-de-fechamento.md` §6.6.4 (`Q-BLK-04` = A, 2026-11-24); `lacunas.md` `M32`; `../wyd-client/lacunas.md` `LCLI-03`
+> Base: `wyd-db-1.0.0.md` §6.12; `pendencias-de-fechamento.md` §6.6.4 (`Q-BLK-04` = A, 2026-11-24); `lacunas.md` `M32`; `../../../wyd-client/lacunas.md` `LCLI-03`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)
@@ -66,7 +66,7 @@ banco nomeado: as três funções sem nome continuam sem nome até alguém assum
 | por que a rotina roda em `cron` do host | a operação já vive no host com Compose; agendador dentro do banco exigiria extensão | `pendencias-de-fechamento.md` §6.6.2 |
 | por que o teto autoral é 144 e não 147 | três páginas saíram por decisão, não por corte de escopo | `proposta-paginas.md` §2 |
 | por que `bloqueada` existe como estado | página com condição declarada não é página escrita | `docs/convencoes.md` §Estados |
-| o que é “7662” | cliente de origem do jogo; nunca fonte de dado para a árvore nova | `../wyd-client/registro-do-cliente.md` |
+| o que é “7662” | cliente de origem do jogo; nunca fonte de dado para a árvore nova | `../../../wyd-client/registro-do-cliente.md` |
 
 ## 5. Checklist de transferência
 

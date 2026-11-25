@@ -116,11 +116,12 @@ em §6.6.20 — `Q-BLK-12` (testes antes das issues), `Q-BLK-13` (as 12 páginas
 lotes) — e não se repetem aqui.
 
 ### `Q-SEED-1` — as 4 cidades entram em qual dataset?
+**Sem arquivo no repositório:** `0020-seed-world.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Medido.** As **4 cidades** aparecem na lista de contagens a preservar (`plano-migrations.md` §4) sem
 arquivo atribuído, e não há seed de economia entre os seis (`plano-de-dados-e-seeds.md` §2).
 
-- **A)** entram em **`0020_seed_world.sql`**, junto de `region` e `guild_zone` — sem arquivo novo, série
+- **A)** entram em **`0020-seed-world.sql`**, junto de `region` e `guild_zone` — sem arquivo novo, série
   continua **34**. **Recomendada:** é o dataset de conteúdo do mundo e a ordem já satisfaz a FK de
   `game.city` (`0011`).
 - **B)** ganham **arquivo próprio** (`0020` continua mundo) — a série vai a **35** e o teto de §3 muda.

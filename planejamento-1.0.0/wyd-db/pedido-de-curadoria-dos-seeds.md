@@ -12,6 +12,7 @@ Este documento é o **pedido de curadoria** dos seis seeds que seguem `bloqueada
 contagem nova e nenhum valor estimado. O que está escrito aqui é pedido, não resultado.
 
 ## 1. O que está bloqueado e por quê
+**Sem arquivo no repositório:** `0016-seed-taxonomy.sql`, `0017-seed-item-catalog.sql`, `0018-seed-skill-catalog.sql`, `0020-seed-world.sql`, `0023-seed-rules.sql`, `0027-seed-quests-events.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 A fonte dos seis é o **cliente 7662 medido** (decisão do dono, 2026-11-23), e nenhuma contagem de
 2026-11-08/15 vira verdade sem reconferência (`plano-migrations.md` §4). Enquanto a medição não voltar,
@@ -20,12 +21,12 @@ eles, e o risco é `R-6` (`docs/planos/riscos.md`).
 
 | # | Arquivo | Dataset | Contagem declarada a reconferir |
 |---:|---|---|---|
-| 16 | `0016_seed_taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias |
-| 17 | `0017_seed_item_catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` |
-| 18 | `0018_seed_skill_catalog.sql` | catálogo de skill | 151 skills + 3 Kersef (154), 63 com linhagem |
-| 20 | `0020_seed_world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens de chão |
-| 23 | `0023_seed_rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório |
-| 27 | `0027_seed_quests_events.sql` | quests e eventos | cadeia de quests do 7662, 3 `world_event` + agenda, 2 arenas |
+| 16 | `0016-seed-taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias |
+| 17 | `0017-seed-item-catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` |
+| 18 | `0018-seed-skill-catalog.sql` | catálogo de skill | 151 skills + 3 Kersef (154), 63 com linhagem |
+| 20 | `0020-seed-world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens de chão |
+| 23 | `0023-seed-rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório |
+| 27 | `0027-seed-quests-events.sql` | quests e eventos | cadeia de quests do 7662, 3 `world_event` + agenda, 2 arenas |
 
 **O que já está decidido e não se reabre aqui:** seed é conteúdo versionado, não estado de jogador; é
 escrito à mão, sem gerador; correção de dado acontece **na origem**, antes do seed, e não vira
@@ -129,6 +130,7 @@ em qual dataset ele entra; até lá, a contagem fica declarada e sem dono — e 
 nenhum.
 
 ## 4. Formato de entrega da medição
+**Sem arquivo no repositório:** `source.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 A entrega é **uma pasta por dataset** (`0016/`, `0017/`, `0018/`, `0020/`, `0023/`, `0027/`), cada uma
 com três arquivos:
@@ -155,6 +157,7 @@ com três arquivos:
    e o `path` diz qual é.
 
 ## 5. Como o `wyd-db` confere e o que muda quando a entrega chega
+**Sem arquivo no repositório:** `source.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Passo | O que acontece | Falha se |
 |---|---|---|

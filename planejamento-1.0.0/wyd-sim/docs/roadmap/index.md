@@ -6,29 +6,37 @@
 
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada.
 
-A fila tem **5 fatias** em 3 fases. Todas as 4 lacunas (`LSIM-01`–`04`) fecharam em 2026-11-23 por
-decisão explícita do dono; nenhuma fórmula ou fixture escrita.
+A fila tem **4 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDSIM-001`–`002` | baseline do crate e contrato de fórmula |
-| 2 | `WYDSIM-003`–`004` | curvas e simulações determinísticas |
-| 3 | `WYDSIM-005` | suíte, fixtures e anti-skip |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| dado de origem | `WYDSIM-003`–`004` | fórmulas dependem de captura do cliente 7662 e do catálogo funcional |
-| CI real | `WYDSIM-005` | workflow stub |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDSIM-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **4** páginas, uma por fatia, no formato de `WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDSIM-F0`](WYDSIM-F0.md) | Fundação do crate |
+| [`WYDSIM-F1`](WYDSIM-F1.md) | Fórmulas e curvas |
+| [`WYDSIM-F2`](WYDSIM-F2.md) | Simulações determinísticas |
+| [`WYDSIM-F3`](WYDSIM-F3.md) | Suíte e anti-skip |

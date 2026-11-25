@@ -3,12 +3,15 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §2, §4 e §8
 > Revisado em: 2026-11-18
+**Sem arquivo no repositório:** `src/provision/domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/provision/domain/spec.rs` — estado desejado e `render()`
+**Sem arquivo no repositório:** `src/provision/domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ## 1. Responsabilidade
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Fixar em código os seis papéis de cluster e suas memberships, e gerar deles o texto de `db/roles.sql`
 — mais o bloco fixo de `public` que o ledger pressupõe (`spec.md` §4). O código é a fonte para os
@@ -54,6 +57,7 @@ const _: () = assert!(ROLES.len() == 6);
 É a prova em tempo de compilação de que papel novo exige golden novo (spec §2).
 
 ## 4. `render()` — texto exato
+**Sem arquivo no repositório:** `tests/golden/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Emite, nesta ordem, com `\n` final único e sem `\r`:
 

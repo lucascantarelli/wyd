@@ -86,7 +86,7 @@ host/Compose e o dono é `wyd-ops`; esta página não inventa caminho de arquivo
 
 Regra: execução sem registro **não conta como feita**. O registro vive na issue de operação do GitHub,
 uma linha por execução — o projeto já organiza issue, milestone e dependência por lá
-(`../wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3).
+(`../../../wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3).
 
 ## 8. O que esta página não decide
 

@@ -46,13 +46,13 @@ A lista de itens e o detalhe da evidência deverão ter acesso e armazenamento a
 
 ## 5. Bloqueios e não-bloqueios
 
-**Bloqueia até evidência:** conteúdo de `LCLI-02`; composição final de artefatos do manifesto (`LLCH-01`); empacotamento e distribuição de launcher/cliente (`LLCH-04`); publicação de recursos, screenshots, marcas ou imagens do cliente no site; e qualquer release que inclua material cuja autorização não esteja comprovada. A assinatura técnica de `LLCH-03` não resolve essa autorização. As políticas de `Q-IP-3`–`Q-IP-6` não mudam essa lista: elas definem o que entra no repositório público, o registro de prova, a licença e o uso de marcas; **nada disso libera um item**.
+**Bloqueia até evidência:** a distribuição do conteúdo da lista de `LCLI-02` — a lista, o manifesto e o verificador existem desde 2026-11-25, o direito não —; composição final de artefatos do manifesto (`LLCH-01`); empacotamento e distribuição de launcher/cliente (`LLCH-04`); publicação de recursos, screenshots, marcas ou imagens do cliente no site; e qualquer release que inclua material cuja autorização não esteja comprovada. A assinatura técnica de `LLCH-03` não resolve essa autorização. As políticas de `Q-IP-3`–`Q-IP-6` não mudam essa lista: elas definem o que entra no repositório público, o registro de prova, a licença e o uso de marcas; **nada disso libera um item**.
 
 **Não bloqueia por si só:** inventariar localmente arquivos sem expor conteúdo, registrar hashes/metadados já permitidos pelas regras do repositório, planejar ou implementar código original sem incorporar material não liberado, nem capturar tráfego sintético conforme `LPRT-10` e `LCLI-04`. Capturas que reproduzam conteúdo protegido continuam sujeitas à classificação desta proposta antes de publicação.
 
 ## 6. Como esta proposta pode fechar
 
-O responsável por direitos está nomeado; as políticas de `Q-IP-3`–`Q-IP-6` estão decididas; falta **concluir** o pedido externo de `Q-IP-1`/`Q-IP-2`, a evidência por classe e a validação jurídica. `wyd-client`, `wyd-launcher` e `wyd-ops` refletem a decisão nos respectivos artefatos e lacunas, sem duplicar o registro de direitos. Até lá, esta página permanece `proposta`, `LCLI-05` continua `proposta`, `LCLI-02` continua aberta, a distribuição segue congelada e nada autoriza redistribuição.
+O responsável por direitos está nomeado; as políticas de `Q-IP-3`–`Q-IP-6` estão decididas; falta **concluir** o pedido externo de `Q-IP-1`/`Q-IP-2`, a evidência por classe e a validação jurídica. `wyd-client`, `wyd-launcher` e `wyd-ops` refletem a decisão nos respectivos artefatos e lacunas, sem duplicar o registro de direitos. Até lá, esta página permanece `proposta`, `LCLI-05` continua `proposta`, a distribuição segue congelada e nada autoriza redistribuição; `LCLI-02` fechou em 2026-11-25 como decisão de conteúdo e verificação, não como liberação.
 
 ## 7. Nomeação de 2026-11-23
 
@@ -77,7 +77,7 @@ O responsável por direitos está nomeado; as políticas de `Q-IP-3`–`Q-IP-6` 
 
 **Canal de envio (2026-11-23):** suporte da Raid Hut, com pedido explícito de encaminhamento ao jurídico; o dono envia, o agente não. O envio ainda não ocorreu e o pacote está pronto.
 
-**Efeito:** apenas o **escopo do pedido** muda; nada é liberado até a resposta do titular e o registro por item de `Q-IP-6`. `Q-IP-3` continua proibindo conteúdo no repositório público, `Q-IP-5` continua proibindo marca/arte/screenshot até autorização escrita, `LCLI-05` continua `proposta` e `LCLI-02` aberta. Patch, release, captura e evidência de direitos não estão autorizados; nenhuma linha acima altera as contagens.
+**Efeito:** apenas o **escopo do pedido** muda; nada é liberado até a resposta do titular e o registro por item de `Q-IP-6`. `Q-IP-3` continua proibindo conteúdo no repositório público, `Q-IP-5` continua proibindo marca/arte/screenshot até autorização escrita, `LCLI-05` continua `proposta`; `LCLI-02` fechou em 2026-11-25 como decisão de conteúdo, sem liberar distribuição. Patch, release, captura e evidência de direitos não estão autorizados; nenhuma linha acima altera as contagens.
 
 ## 9. Trabalho técnico preparatório (não é pergunta)
 
@@ -85,7 +85,7 @@ O responsável por direitos está nomeado; as políticas de `Q-IP-3`–`Q-IP-6` 
 |---|---|---|---|
 | Inventário item a item com caminho, tamanho e `sha256` | `wyd-client` | [`inventario-da-arvore.md`](inventario-da-arvore.md) + `inventario-arvore-cliente.tsv`; 7.147 itens, 576.124.039 bytes, 30 classes; **feito em 2026-11-23** | não expõe arquivo nem publica material do cliente |
 | Pacote do pedido ao titular no escopo B | `wyd-client` | [`pedido-ao-titular.md`](pedido-ao-titular.md), pronto para envio, **não enviado** | não envia, não presume resposta e não anexa conteúdo do cliente |
-| Lista candidata do patch com caminhos, hashes e versão | `wyd-client` + `wyd-launcher` | lista candidata, ainda não autorizada | inclusão só depois de `Q-IP-1`/`Q-IP-2` com evidência; o inventário da árvore não é esta lista |
+| Lista do patch com caminhos, hashes e versão | `wyd-client` + `wyd-launcher` | lista fechada em `registro-do-cliente.md` §5.1, manifesto `patch-1.0.0.json` e verificador em `crates/wyd-launcher`; **feita em 2026-11-25** | inclusão e publicação só depois de `Q-IP-1`/`Q-IP-2` com evidência; o inventário da árvore não é esta lista |
 | Lista de usos pretendidos de marca/screenshot no portal, launcher e docs | `wyd-portal` + `wyd-launcher` | inventário de usos, sem publicar | nenhum logo/arte/screenshot até `Q-IP-5` |
 | Template do registro de evidência ligado ao gate de release | `wyd-client` + `wyd-ops` | campos de §4 + bloqueio de release | revisão jurídica valida a forma; sem registro não há release |
 

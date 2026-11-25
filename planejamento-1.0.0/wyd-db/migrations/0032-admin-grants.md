@@ -3,6 +3,7 @@
 > Dono: equipe do `wyd-db`
 > Base: `lacunas.md` `M27` (decidida em 2026-11-21); `ddl-confirmado.md` §5.32; `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`"; `wyd-admin/docs/arquitetura/contrato-c4.md` §4
 > Revisado em: 2026-11-22
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24)
 
@@ -22,11 +23,12 @@ os outros cinco.
     com os lotes `0033` e `0034` e `Tab.` vai a **109** — `SCHEMA_VERSION = 34` na troca.
 
 ## 1. Identificação
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Campo | Valor |
 |---|---|
 | Número | `0032` (decidido em 2026-11-21; próximo livre depois de `0031`) |
-| Arquivo | `crates/wyd-db/migrations/0032_admin_grants.sql` |
+| Arquivo | `crates/wyd-db/migrations/0032-admin-grants.sql` |
 | Schema | `game` + `ops` (sem tabela) |
 | Posição | 32 de 34 (privilégio do papel de staff; os lotes `0033` e `0034` vêm depois) |
 | Depende de | `0001` (schemas e default privileges), `0002` (`ops.audit_log`), `0005` (`account_moderation`, `account_wallet`, `account_ledger`), `0007` (`session`, `server_channel`), `0011` (`city`, `item_price`) e do papel `wyd_admin` já criado por `db/roles.sql` |
@@ -39,6 +41,7 @@ os outros cinco.
 arquivo anterior depende dele, então entrar depois de `0031` não reordena nada.
 
 ## 2. Por que arquivo novo (`D1`)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 O `0001` concede `USAGE` e default privileges por schema; reabri-lo para um sexto papel obrigaria a
 reescrever DDL aplicado, que o runner trata como imutável (`plano-migrations.md` §2). O `db/roles.sql`
@@ -46,6 +49,7 @@ do provision não é alternativa: `src/provision/spec.md` §1 exclui privilégio
 ele só cria papel e mexe em `public`. Sobra um arquivo na série, sem tabela e sem objeto.
 
 ## 3. DDL
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 `USAGE` no schema é o direito de **atravessar**; a escrita vem dos privilégios por tabela. Os dois são
 necessários — sem o `USAGE`, o `GRANT` de tabela responderia `42501 permission denied for schema game`
@@ -113,6 +117,7 @@ adquirir um item é tirá-lo do inventário, e a custódia é a transação que 
 sendo do `wyd_game` (`0001` §7).
 
 ## 5. O que este arquivo não faz
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Não cria o papel.** `CREATE ROLE` é do provisionamento (`ADR-DB-0001`); se `db/roles.sql` não rodou,
   o `GRANT` falha com `role "wyd_admin" does not exist`.
@@ -125,6 +130,7 @@ sendo do `wyd_game` (`0001` §7).
   continua como está; o `down` revoga só o que este arquivo concedeu.
 
 ## 6. Provas
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Invariante | Como é verificado |
 |---|---|

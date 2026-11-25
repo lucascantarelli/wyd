@@ -11,7 +11,7 @@ append-only de moedas (`M16`), o estado de moderação e os tokens de reset de P
 identidades distintas; conta fechada não se apaga e devolve sua vaga para a pessoa.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0005_game_account.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0005-game-account.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §5.2, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
@@ -21,7 +21,7 @@ identidades distintas; conta fechada não se apaga e devolve sua vaga para a pes
 | Campo | Valor |
 |---|---|
 | Número | `0005` |
-| Arquivo | `crates/wyd-db/migrations/0005_game_account.sql` |
+| Arquivo | `crates/wyd-db/migrations/0005-game-account.sql` |
 | Schema | `game` (com FK de autor/identidade para `portal.person`) |
 | Posição | 5 de 34 (conta e acesso do jogo) |
 | Depende de | `0001_bootstrap` (schemas/permissões), `0003_portal_person` (pessoa e autor de moderação), `0004_portal_access` não cria FK usada aqui |
@@ -274,7 +274,7 @@ Default privileges de `0001`:
 PG17 efêmero, com `0001` e `0003` aplicados, como `wyd_migrator`. Deve existir pessoa de teste id 1.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0005_game_account.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0005-game-account.sql
 ```
 
 | Prova | Comando/consulta | Esperado |

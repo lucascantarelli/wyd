@@ -43,7 +43,7 @@ Estas regras valem a partir da mudança de `wyd-docs`; hoje nenhuma imagem é pu
 
 | Regra | Critério |
 |---|---|
-| nome | `kebab-case`, sem acento, dizendo o que a imagem prova (`erro-42501-ao-inserir.png`), nunca `print1.png` |
+| nome | `kebab-case`, sem acento, dizendo o que a imagem prova (`erro-42501-ao-inserir.png`), nunca `print1.png` — os dois são **exemplos de nome**: não existe imagem com esse nome versionada hoje |
 | pasta | junto da página que a usa; nada de imagem em `gerado/`, que é índice auxiliar |
 | texto alternativo | obrigatório, e descreve **o que a imagem prova**, não “captura de tela” |
 | formato | PNG para tela (texto nítido), WebP quando for foto; sem upscale e sem marca d'água |

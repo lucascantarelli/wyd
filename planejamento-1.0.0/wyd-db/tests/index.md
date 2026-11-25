@@ -45,6 +45,7 @@ crates/wyd-db/tests/
 recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](fixtures-e-factories.md).
 
 ## 2. Alvo → arquivo → tipo → precisa de banco
+**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Alvo (`Cargo.toml`) | Arquivo | Tipo | Precisa de banco | Capacidades |
 |---|---|---|---|---|
@@ -59,6 +60,7 @@ Um alvo por arquivo, como manda `../wyd-db-1.0.0.md` §5.13. Tipo e fronteira de
 `alvos/`.
 
 ### 2.1 Porta de entrada — as 12 páginas
+**Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 O critério de pronto exige que toda página esteja linkada no índice da pasta (`../wyd-db-1.0.0.md` §10,
 item 10). As onze abaixo são as demais páginas de `tests/`; esta porta fecha a décima segunda — são

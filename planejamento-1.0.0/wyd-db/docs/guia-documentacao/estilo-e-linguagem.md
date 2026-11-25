@@ -12,6 +12,7 @@ diferença entre uma frase que passa e uma que volta para rascunho. O contrato d
 [`convencoes.md`](../convencoes.md); aqui se escreve, lá se confere.
 
 ## 1. Voz e tempo
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Situação | Forma | Exemplo |
 |---|---|---|
@@ -75,7 +76,7 @@ glossário é o dono do significado; esta página só decide a preferência de e
 | “A série tem 109 tabelas.” | “34 arquivos e 109 tabelas (`plano-migrations.md` §3, 2026-11-22, `P`).” | número sem fonte e sem data é hipótese, não fato |
 | “Basta rodar a migration.” | “A ordem é `provision render` → `provision apply` → `0001`…`0034` (`plano-migrations.md` §1).” | “basta” esconde pré-requisito; a frase certa dá a ordem |
 | “A série nova já roda.” | “A troca da série está decidida e a execução pendente (`plano-migrations.md` §6).” | presente do indicativo sem `V` afirma o que não aconteceu |
-| “Veja `[spec](../src/migrate/spec.md)`.” | “`src/migrate/spec.md` §2 (planejamento).” | link relativo para fora de `docs/` quebra no site; caminho em `code` não é link |
+| “Veja `[spec](../src/migrate/spec.md)`” (**exemplo errado**: o destino **não existe**, link quebrado de propósito). | “`src/migrate/spec.md` §2 (planejamento).” | link relativo para fora de `docs/` quebra no site; caminho em `code` não é link |
 
 ## 6. Checklist antes de publicar
 

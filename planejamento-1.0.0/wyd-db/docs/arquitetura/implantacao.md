@@ -1,7 +1,7 @@
 > Pergunta: "como isso roda — em quantos hosts, com quantos containers, em que porta e sob qual supervisor?"
 > Público: Quem instala, quem opera e quem revisa o Compose
 > Dono: equipe do `wyd-db`
-> Base: `contexto-c4.md` §3; `../planos/plano-de-implantacao.md`; `../guia-administrador/instalacao.md`; `../guia-administrador/configuracao.md` §3; `../guia-desenvolvedor/pool-e-transacoes.md` §2; `../pendencias-de-fechamento.md` §6.6.9
+> Base: `contexto-c4.md` §3; `../planos/plano-de-implantacao.md`; `../guia-administrador/instalacao.md`; `../guia-administrador/configuracao.md` §3; `../guia-desenvolvedor/pool-e-transacoes.md` §2; `../../pendencias-de-fechamento.md` §6.6.9
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

@@ -12,7 +12,7 @@ de perfil e o histórico versionado de consentimentos. A pessoa é a identidade 
 jogo.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0003_portal_person.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0003-portal-person.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §5.1, §5.6 e §5.7, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
@@ -22,7 +22,7 @@ jogo.
 | Campo | Valor |
 |---|---|
 | Número | `0003` |
-| Arquivo | `crates/wyd-db/migrations/0003_portal_person.sql` |
+| Arquivo | `crates/wyd-db/migrations/0003-portal-person.sql` |
 | Schema | `portal` |
 | Posição | 3 de 34 (identidade da pessoa) |
 | Depende de | `0001_bootstrap` (schema, `ops.fn_set_updated_at` e permissões) |
@@ -239,8 +239,8 @@ Nenhum `GRANT` explícito. Default privileges do `0001`:
 PG17 efêmero, sem tocar a série herdada. Supõe `provision apply` e conexão como `wyd_migrator`.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001_bootstrap.sql
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0003_portal_person.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001-bootstrap.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0003-portal-person.sql
 ```
 
 | Prova | Comando/consulta | Esperado |

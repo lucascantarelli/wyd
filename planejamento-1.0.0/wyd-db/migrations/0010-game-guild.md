@@ -21,7 +21,7 @@ entram aqui.
 | Campo | Valor |
 |---|---|
 | Número | `0010` |
-| Arquivo | `crates/wyd-db/migrations/0010_game_guild.sql` |
+| Arquivo | `crates/wyd-db/migrations/0010-game-guild.sql` |
 | Schema | `game` |
 | Posição | 10 de 34 (primeiro arquivo de organização social) |
 | Depende de | `0001` (schemas, `ops.fn_set_updated_at`, default privileges) e `0006` (`game.character`, dono do vínculo) |
@@ -224,7 +224,7 @@ PG17 efêmero, com `0001` e `0006` aplicados e personagens de prova (`game.chara
 prova 13 usa `DELETE` de propósito, para medir a cascata.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0010_game_guild.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0010-game-guild.sql
 ```
 
 | # | Prova | Comando | Esperado |

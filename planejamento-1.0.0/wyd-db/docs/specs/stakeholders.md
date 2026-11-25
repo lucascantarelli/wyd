@@ -61,7 +61,7 @@ edição silenciosa.
 |---|---|---|---|
 | enunciado, limiar ou critério de aceitação | dono da página que enuncia (equipe do `wyd-db`) | a própria página dona | as páginas que a citam |
 | contrato de porta (`accounts`, `wallet`, `session`, …) | o mesmo dono, com a decisão registrada | página dona + `../arquitetura/componentes-c4.md` | o sistema consumidor da porta |
-| forma de tabela, `CHECK` ou índice | dono do DDL | `../arquitetura/ddl-confirmado.md` + migration | dicionário e `rastreabilidade.md` |
+| forma de tabela, `CHECK` ou índice | dono do DDL | `../../ddl-confirmado.md` + migration | dicionário e `rastreabilidade.md` |
 | papel, credencial ou privilégio | decisão com ADR | `../arquitetura/adr/` (`M27`, `adr-db-0001`) | `../guia-administrador/configuracao.md`; esta página |
 | retirada de requisito | dono da página dona | página com estado `retirado`, motivo e data | `rastreabilidade.md` (a linha sai) |
 

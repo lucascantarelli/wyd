@@ -7,11 +7,13 @@
 **Estado:** proposto (2026-11-22) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Guarda por índice do `Guard.txt`, ligado ao NPC que o representa. Guarda só a cabeça do registro: a
 exigência de itens é linha filha, em `guard_spawn_reward`.
 
 ## Colunas
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Observação |
 |---|---|---|---|---|
@@ -59,4 +61,4 @@ Sem carimbos e sem trigger: import puro.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.

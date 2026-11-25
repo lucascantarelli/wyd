@@ -295,5 +295,5 @@ repetindo com chave nova.
 | Canal real com o `wyd-server` (formato, porta, ack) | **decidido em 2026-11-22** (`LAC-ADM-03`, opção A): HTTP interno síncrono com ack — `autenticacao-e-controle.md` §3; o formato do endpoint é do plano do `wyd-server` |
 | Token de serviço, mTLS e assinatura do ator | **decidido em 2026-11-22** (`LAC-ADM-04`, opção A): token de serviço por ambiente com rotação de dois valores — `autenticacao-e-controle.md` §2 |
 | Dono da escrita de `account_moderation` | **fechado em 2026-11-21** (`LAC-ADM-05`): é este contrato, §4.1; o `wyd-portal` corrigiu `consumo-do-banco.md` §3 e só lê |
-| Schema de `game.market_escrow` e das tabelas `portal.market_*` | **fechado em 2026-11-22** (`LAC-ADM-07`): lote `0034_portal_market.sql`, onze tabelas (`ddl-confirmado.md` §5.34), com os `GRANT` da custódia no `0032` emendado |
+| Schema de `game.market_escrow` e das tabelas `portal.market_*` | **fechado em 2026-11-22** (`LAC-ADM-07`): lote `0034-portal-market.sql`, onze tabelas (`ddl-confirmado.md` §5.34), com os `GRANT` da custódia no `0032` emendado |
 | Verificação de que o personagem pertence à conta declarada | **fechado nesta proposta:** `game.character.account_id` lido na mesma transação; divergência é `403` |

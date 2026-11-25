@@ -85,4 +85,4 @@ diferentes em rounds da mesma partida, e a regra de troca é do runtime.
 
 ## Migration
 
-Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028_game_quests_events.sql`.
+Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028-game-quests-events.sql`.

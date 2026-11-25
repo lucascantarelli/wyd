@@ -77,4 +77,4 @@ significar castelo sem dono ou clã apagado; `last_war_at` distingue os casos no
 
 ## Migration
 
-Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028_game_quests_events.sql`.
+Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028-game-quests-events.sql`.

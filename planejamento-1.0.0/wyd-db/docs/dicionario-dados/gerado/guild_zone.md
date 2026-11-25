@@ -63,4 +63,4 @@ Nenhum além da PK — a leitura é sempre pelo par. Trigger `trg_guild_zone_set
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.

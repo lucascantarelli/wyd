@@ -2,21 +2,22 @@
 
 > **Estado: registro vivo (2026-11-22).** Único lugar onde uma lacuna do `wyd-launcher` tem dono,
 > impacto e estado. As quatro lacunas fecharam em 2026-11-23 pelas respostas do dono (`Q-LCH-1`,
-> `Q-LCH-2`, `Q-LCH-3` e `Q-LCH-4` = A); nenhuma segue aberta.
+> `Q-LCH-2`, `Q-LCH-3` e `Q-LCH-4` = A); nenhuma segue bloqueada.
 
 ## 0. Como ler
 
-Estados: **aberta**, **proposta**, **fechada** (com evidência). `arquitetura` propõe; o dono do
+Estados: **fechada** (com evidência citada) e **bloqueada** (falta decisão, execução ou evidência; a
+linha nomeia o desbloqueio — dono e documento). `arquitetura` propõe; o dono do
 sistema aprova.
 
 ## 1. Situação em uma linha
 
-| Grupo | Lacunas | Abertas | Propostas | Fechadas |
-|---|---:|---:|---:|---:|
-| Patch e manifesto | 2 | 0 | 0 | 2 |
-| Servidor e conteúdo | 1 | 0 | 0 | 1 |
-| Distribuição | 1 | 0 | 0 | 1 |
-| **Total** | **4** | **0** | **0** | **4** |
+| Grupo | Lacunas | Bloqueadas | Fechadas |
+|---|---:|---:|---:|
+| Patch e manifesto | 2 | 0 | 2 |
+| Servidor e conteúdo | 1 | 0 | 1 |
+| Distribuição | 1 | 0 | 1 |
+| **Total** | **4** | **0** | **4** |
 
 ## 2. Lacunas
 

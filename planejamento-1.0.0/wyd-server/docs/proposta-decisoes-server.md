@@ -223,6 +223,7 @@ em [`specs/endpoint-de-captura.md`](specs/endpoint-de-captura.md) §9.
 | `Q-SRV-5` | `LSRV-05` | C — servidor legado em quarentena; condição reprovada em 2026-11-23 (clone limpo, `MIGRATIONS_DIR`, gate 12000); A1 passa a A |
 
 ## 7. Autorização de A1 — resposta A (2026-11-23)
+**Sem arquivo no repositório:** `src/capture.rs`, `src/ecap.rs`, `src/peer.rs`, `src/ficha.rs`, `tests/ecap.rs`, `src/client_config.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **A1 = A.** O dono autorizou a implementação do peer da opção A com handshake mínimo local, do `ECAP` e
 da CLI, e a execução da captura A1. Não é nova lacuna e não altera as contagens do sistema

@@ -91,7 +91,8 @@ independente da captura, preserva essa separação sem transformar o dono do art
 **Resposta do dono em 2026-11-23: A — QA designado assina; dono do `wyd-protocol` é suplente.** O QA
 designado é **Lucas Cantarelli** (dono do produto), que assumiu a função na mesma data e **não é o
 operador**; `LCLI-03` continua aberta até a primeira ficha assinada, com o nome do operador. O local já está fixado: frame e ficha em
-`tests/golden/`, entrada pública em `docs/goldens/catalogo.md`, bruto fora do repositório (D5).
+`tests/golden/`, entrada pública no catálogo do `wyd-protocol`
+(`../../wyd-protocol/docs/goldens/catalogo.md`), bruto fora do repositório (D5).
 
 ### `LCLI-05` — página própria; decisões refletidas aqui
 
@@ -121,7 +122,8 @@ do cliente, incluindo assets e screenshots; custo estimado de 1–2 sessões e r
 pacote em [`specs/pedido-ao-titular.md`](specs/pedido-ao-titular.md); o pedido não foi enviado. Nada é
 liberado até a resposta e o registro por item; `Q-IP-3`, `Q-IP-5` e `LCLI-05` continuam valendo.
 
-Nenhuma dessas decisões fecha lacuna: `LCLI-05` segue `proposta` e `LCLI-02` segue aberta. O detalhe do que
+Nenhuma dessas decisões fecha lacuna: `LCLI-05` segue `proposta`; `LCLI-02` foi executada e fechada em
+2026-11-25 (`registro-do-cliente.md` §5.1). O detalhe do que
 cada uma autoriza e não autoriza está na página própria, §8.
 
 ## 5. Cobertura das lacunas
@@ -129,10 +131,10 @@ cada uma autoriza e não autoriza está na página própria, §8.
 | Lacuna | Pergunta | Situação |
 |---|---|---|
 | `LCLI-01` | — | fechada em 2026-11-23 pela decisão de `LPRT-09`/`Q-PRT-1` (cliente 7662 + SHA-256); não duplicada aqui |
-| `LCLI-02` | `Q-CLI-2` | aberta |
+| `LCLI-02` | `Q-CLI-2` | fechada (2026-11-25, executada) |
 | `LCLI-03` | `Q-CLI-3` | aberta; papel A decidido e QA definido (**Lucas Cantarelli**, dono do produto, que não é o operador); falta a primeira ficha assinada com o nome do operador; local fixado por `LPRT-10` |
 | `LCLI-04` | — | fechada em 2026-11-23 (opção A); D3–D6 decididos; implementação pendente |
-| `LCLI-05` | `Q-IP-1`–`Q-IP-6` | **proposta**; responsável nominal e distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado e sem evidência; `LCLI-02` aberta |
+| `LCLI-05` | `Q-IP-1`–`Q-IP-6` | **proposta**; responsável nominal e distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado e sem evidência; `LCLI-02` fechada em 2026-11-25 |
 
 ## 6. Registro da decisão
 
@@ -140,14 +142,14 @@ cada uma autoriza e não autoriza está na página própria, §8.
 suplente) e o nome foi definido: **Lucas Cantarelli** (dono do produto, que não é o operador; o operador
 entra na ficha). `LCLI-03` continua `aberta` até a primeira ficha assinada; a captura pode ser executada,
 não aceita. `Q-IP-3`–`Q-IP-6` foram decididas e o pedido de `Q-IP-1`/`Q-IP-2` foi iniciado, mas `LCLI-05`
-segue **proposta** até a evidência do titular; `LCLI-02` continua aberta; `LCLI-01` fechou em 2026-11-23 com
+segue **proposta** até a evidência do titular; `LCLI-02` fechou em 2026-11-25 pela opção A executada; `LCLI-01` fechou em 2026-11-23 com
 `LPRT-09` (`Q-PRT-1`, opção A).
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|
-| `Q-CLI-2` | `LCLI-02` | — |
+| `Q-CLI-2` | `LCLI-02` | A — dados + launcher próprio, executado em 2026-11-25 |
 | `Q-CLI-3` | `LCLI-03` | A — QA designado; suplente `wyd-protocol`; **Lucas Cantarelli** (dono do produto) assina |
-| `Q-IP-1`–`Q-IP-6` | `LCLI-05` | `Q-IP-3`–`Q-IP-6` = A (política); `Q-IP-1`/`Q-IP-2` = pedido externo iniciado, sem resposta; `LCLI-05` segue proposta e `LCLI-02` aberta |
+| `Q-IP-1`–`Q-IP-6` | `LCLI-05` | `Q-IP-3`–`Q-IP-6` = A (política); `Q-IP-1`/`Q-IP-2` = pedido externo iniciado, sem resposta; `LCLI-05` segue proposta; `LCLI-02` fechada em 2026-11-25 |
 | A1 | — (não é lacuna) | A — peer da opção A + `ECAP` + CLI + captura, autorizada em 2026-11-23; implementação e captura pendentes |
 
 **A1 autorizada em 2026-11-23.** A resposta A não reabre `LCLI-02`/`LCLI-03`/`LCLI-05` e não fecha

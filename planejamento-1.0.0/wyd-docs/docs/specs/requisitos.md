@@ -47,6 +47,8 @@ Requisito sem critério de aceitação é intenção. Numeração `RF-DOC-nnn` (
 - **Contrato:** `LPDOC-06`.
 
 ### RF-DOC-007 — Aplicar tema próprio
+**Sem arquivo no repositório:** `mkdocs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 - **Entrada:** MkDocs 2.0.dev6.
 - **Saída:** tema com claro/escuro, filtro, avisos, cópia, destaque.
 - **Aceitação:** sem `mkdocs.yml`; tema em `tema/`.

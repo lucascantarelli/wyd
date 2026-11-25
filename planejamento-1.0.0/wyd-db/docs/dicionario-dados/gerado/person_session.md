@@ -66,4 +66,4 @@ Retenção: 30 dias após `expires_at` (`M22`).
 
 ## Migration
 
-Forma (dona): `migrations/0004-portal-access.md` — arquivo `0004_portal_access.sql`.
+Forma (dona): `migrations/0004-portal-access.md` — arquivo `0004-portal-access.sql`.

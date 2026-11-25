@@ -22,7 +22,7 @@ lê e os vínculos de classe e linhagem que o portal filtra.
 | Campo | Valor |
 |---|---|
 | Número | `0015` (confirmado em 2026-11-20) |
-| Arquivo | `crates/wyd-db/migrations/0015_content_skill.sql` |
+| Arquivo | `crates/wyd-db/migrations/0015-content-skill.sql` |
 | Schema | `content` (1 tabela) |
 | Posição | 15 de 34 (terceiro do bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges) e `0013` (`content.fn_fold`, `content.game_class`, `content.skill_lineage`). **Nada** de `portal`/`game`: não há FK de saída |
@@ -185,8 +185,9 @@ três papéis de leitura.
 | `wyd_migrator` | dono da tabela e único com `INSERT`: aplica este arquivo e o seed `0018`. |
 
 ## 9. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0015-content-skill.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-1. `psql -v ON_ERROR_STOP=1 -f 0015_content_skill.sql` como `wyd_migrator` → `CREATE TABLE`, `CREATE TRIGGER`, `CREATE INDEX` ×2 (fora o da PK).
+1. `psql -v ON_ERROR_STOP=1 -f 0015-content-skill.sql` como `wyd_migrator` → `CREATE TABLE`, `CREATE TRIGGER`, `CREATE INDEX` ×2 (fora o da PK).
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'content';` → `8` (as 5 do `0013` + `item_catalog` + `content_version` + esta).
 3. `INSERT INTO content.skill_catalog (skill_index, name, class_slug, skill_point, mana_spent) VALUES (1, 'Golpe', 'transknight', 1, 10);` → `INSERT 0 1`, com `name_fold = 'golpe'`.
 4. Repetir o mesmo `skill_index` → `23505` em `pk_skill_catalog`.

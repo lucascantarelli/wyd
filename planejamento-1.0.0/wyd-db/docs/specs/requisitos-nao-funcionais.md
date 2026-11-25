@@ -164,6 +164,7 @@ Governa `CAP-07`. A conferência manual é **falha declarada** enquanto o gate a
 não é “verde por ausência” ([`plano-de-qualidade-e-gates.md`](../planos/plano-de-qualidade-e-gates.md) §6).
 
 ## 11. `RNF-DB-011` — catálogo e série descrevem o mesmo schema (gate `catálogo`)
+**Sem arquivo no repositório:** `dicionario-dados/banco-catalogo.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Campo | Conteúdo |
 |---|---|

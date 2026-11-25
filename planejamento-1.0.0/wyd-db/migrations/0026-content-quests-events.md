@@ -20,7 +20,7 @@ dado, não o inventa.
 | Campo | Valor |
 |---|---|
 | Número | `0026` (checklist, linha 110) |
-| Arquivo | `crates/wyd-db/migrations/0026_content_quests_events.sql` |
+| Arquivo | `crates/wyd-db/migrations/0026-content-quests-events.sql` |
 | Schema | `content` (6 tabelas) |
 | Posição | 26 de 34 |
 | Depende de | `0001`; `0013` (`content.game_class`); `0014` (`content.item_catalog`); `0024` (`content.map_definition`) |

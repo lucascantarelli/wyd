@@ -43,6 +43,7 @@
 - **Risco:** médio.
 
 ## `tema`
+**Sem arquivo no repositório:** `mkdocs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Responsabilidade:** tema Jinja completo (`base.html`, `estilo.css`, `site.js`, `mermaid.js`).
 - **API:** templates + assets.

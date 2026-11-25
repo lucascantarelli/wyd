@@ -5,7 +5,7 @@
 > Revisado em: 2026-11-23
 
 **Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22.
-As três fecharam; `LAC-POR-09` fechou em 2026-11-23 pela opção **A** — **0 abertas, 0 propostas, 9
+As três fecharam; `LAC-POR-09` fechou em 2026-11-23 pela opção **A** — **0 bloqueadas, 9
 fechadas**.
 
 Registro único de lacuna do `wyd-portal`. Lacuna sem dono não entra; lacuna fechada leva data e
@@ -18,11 +18,10 @@ redefinem.
 
 | Estado | Quantas | Quais |
 |---|---:|---|
-| Aberta | 0 | — |
-| Proposta | 0 | — |
+| Bloqueada | 0 | — |
 | Fechada | 9 | `LAC-POR-01` a `LAC-POR-09` |
 
-Todas as lacunas do portal estão fechadas. `P-POR-08` não é lacuna aberta: é o enriquecimento aditivo
+Todas as lacunas do portal estão fechadas. `P-POR-08` não é lacuna bloqueada: é o enriquecimento aditivo
 de dano/alcance, sem bloquear a F7.
 
 ## 2. Registro das lacunas
@@ -209,7 +208,7 @@ rota pública nem permissão de banco: acrescentou seis rotas de staff (38–43)
 
 **Consequência declarada para o `wyd-db`:** as três de CMS mais a tabela de launcher são **4 tabelas
 novas** em `portal`, que não existem nas 92 de `plano-migrations.md` §3. O lote
-`0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
+`0030-portal-content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
 `planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` e `ddl-confirmado.md` §5.15 —, e a série
 passou a **31 arquivos / 97 tabelas** naquela data — hoje **34 arquivos / 109 tabelas**, com os lotes
 `0033` e `0034` de 2026-11-22 —, e as cinco tabelas dos dois adendos estão entre as de DDL fechado. As
@@ -240,6 +239,6 @@ o lote `0034` (`M31`, que fechou `LAC-ADM-07`), e só as quatro views seguem em 
 1. Dono responde a pergunta com a opção escolhida e a data.
 2. A decisão vai para a página dona (`fronteira.md`, `consumo-do-banco.md` ou `rotas-e-permissoes.md`),
    não para este arquivo.
-3. Proposta técnica entra com opções e trade-off e fica `proposta` até o “sim” do dono; sem ele, não
+3. Proposta técnica entra com opções e trade-off e fica `bloqueada` até o “sim” do dono; sem ele, não
    vira `fechada`.
 4. Aqui, a linha muda para `fechada` com data e link da evidência.

@@ -24,7 +24,7 @@ e os campos de ciclo de vida que são padrão da série.
 | Campo | Valor |
 |---|---|
 | Número | `0019` (próximo lote sem desenho, `migrations-checklist.md` §2, linha 102) |
-| Arquivo | `crates/wyd-db/migrations/0019_content_world.sql` |
+| Arquivo | `crates/wyd-db/migrations/0019-content-world.sql` |
 | Schema | `content` (13 tabelas) |
 | Posição | 19 de 34 (mundo do conteúdo) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges), `0013` (`content.fn_fold`, `content.game_class`), `0014` (`content.item_catalog`) |
@@ -34,6 +34,7 @@ e os campos de ciclo de vida que são padrão da série.
 | `SCHEMA_VERSION` | **não muda**: continua `53` até a troca de série (`plano-migrations.md` §6) |
 
 ## 2. Objetivo
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Dar forma ao conteúdo de mundo que o servidor lê no boot e o portal edita com auditoria: quem é cada
 NPC e onde ele nasce, o que a loja dele vende, o que cada nível entrega, o que o guarda exige, o
@@ -49,13 +50,15 @@ zonas de guilda — sem tocar em `game` e sem criar FK para schema posterior.
 
 ## 4. DDL do `up`
 
+**Sem arquivo no repositório:** `0008-conteudo-mundo.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 Texto de `ddl-confirmado.md` §5.21, copiado sem alteração.
 
 ```sql
 -- 0019_content_world: mundo do cliente — proveniência, NPC/gerador, loja de NPC, item de nível,
 -- guarda, mercador, configuração/matriz do gameconfig, região, item de chão e zona de guilda.
 -- As 13 tabelas são as de `plano-migrations.md` §3; a forma vem das fichas de tabela do legado
--- (`deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`, geradas do `0008_conteudo_mundo.sql`)
+-- (`deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`, geradas do `0008-conteudo-mundo.sql`)
 -- e é hipótese `H` até a aprovação do dono — exceto `content_source`, cujas colunas estão em
 -- `plano-migrations.md` §4, e `guild_zone`, citada por `0010`.
 -- FK só para tabela já fechada (`content.npc_template`, `content.npc_definition`, `content.item_catalog`);
@@ -466,6 +469,7 @@ tabelas de conteúdo (`enabled`, `created_at`, `updated_at`).
 | `extras` | `JSONB` | não | `'[]'` | `H` | Bloco posicional extra não decodificado. |
 
 ### 6.6 `content.guard_spawn` e 6.7 `content.guard_spawn_reward` — 3 colunas cada
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Origem | Significado |
 |---|---|---|---|---|---|
@@ -474,6 +478,8 @@ tabelas de conteúdo (`enabled`, `created_at`, `updated_at`).
 | `source_line` | `INTEGER` | não | — | `H` | Linha do arquivo. |
 | `req_slot` | `SMALLINT` | não | — | `H` | Posição da exigência no bloco (0–7); PK composta com `guard_index`. |
 | `req_values` | `SMALLINT[]` | não | — | `H` | 8 números posicionais, sem semântica provada; tamanho fixo no CHECK. |
+
+**Sem arquivo no repositório:** `LevelItem.txt` — arquivo de dados do servidor legado, citado aqui como origem do `TYPE`; não está versionado.
 
 ### 6.8 `content.mob_merc` — 5 colunas
 
@@ -486,6 +492,7 @@ tabelas de conteúdo (`enabled`, `created_at`, `updated_at`).
 | `items` | `JSONB` | não | `'[]'` | `H` | Lista de itens ainda não normalizada (`P-09`). |
 
 ### 6.9 `content.game_setting` — 7 colunas
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Origem | Significado |
 |---|---|---|---|---|---|
@@ -497,6 +504,7 @@ tabelas de conteúdo (`enabled`, `created_at`, `updated_at`).
 | `created_at` / `updated_at` | `TIMESTAMPTZ` | não | `now()` | série | Carimbos; é a configuração editável pelo portal. |
 
 ### 6.10 `content.game_matrix` — 5 colunas
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Origem | Significado |
 |---|---|---|---|---|---|
@@ -507,6 +515,7 @@ tabelas de conteúdo (`enabled`, `created_at`, `updated_at`).
 | `source_line` | `INTEGER` | não | — | `H` | Linha do arquivo. |
 
 ### 6.11 `content.region` — 11 colunas
+**Sem arquivo no repositório:** `Regions.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Origem | Significado |
 |---|---|---|---|---|---|
@@ -580,10 +589,12 @@ Nenhum `GRANT`/`REVOKE` novo: valem os default privileges de `0001` §3.
 
 ## 9. Origem, `H` e o que falta provar
 
+**Sem arquivo no repositório:** `0008-conteudo-mundo.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 - **Fonte de conteúdo:** fichas de `deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`
   (`content_source.md`, `npc_template.md`, `npc_definition.md`, `npc_shop_item.md`, `level_item.md`,
   `guard_spawn.md`, `guard_spawn_reward.md`, `mob_merc.md`, `game_setting.md`, `game_matrix.md`,
-  `region.md`, `world_item_seed.md`, `guild_zone.md`), geradas do `0008_conteudo_mundo.sql` do legado.
+  `region.md`, `world_item_seed.md`, `guild_zone.md`), geradas do `0008-conteudo-mundo.sql` do legado.
   Nível 4: inspiram, não decidem.
 - **`H` a provar com trace:** semântica de `merchant` acima de 0; conteúdo de `generator_data`,
   `req_values`, `items` e `extras`; correspondência `class_id` 0–3 → `game_class.slug`; se todo
@@ -592,12 +603,13 @@ Nenhum `GRANT`/`REVOKE` novo: valem os default privileges de `0001` §3.
   `content_source` (§4), `map_id` de `world_item_seed` (decisão de 2026-11-20) e os campos de série.
 
 ## 10. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0019-content-world.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
 do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
 §6.6.30).
 
-1. `psql -v ON_ERROR_STOP=1 -f 0019_content_world.sql` como `wyd_migrator` → 13 `CREATE TABLE`,
+1. `psql -v ON_ERROR_STOP=1 -f 0019-content-world.sql` como `wyd_migrator` → 13 `CREATE TABLE`,
    5 `CREATE TRIGGER` e os índices listados.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'content';` → **13** neste
    arquivo, somando ao que `0013`/`0014`/`0015` já criaram.

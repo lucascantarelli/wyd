@@ -55,6 +55,7 @@ flowchart LR
 | fachada | `mod.rs`, `config.rs`, `error.rs` | montar `run`, validar `MigrateConfig`, fechar a taxonomia de erro | não lê ambiente; o binário monta a configuração |
 
 ## 2. Componentes do provisionamento
+**Sem arquivo no repositório:** `domain/spec.rs`, `domain/observed.rs`, `domain/plan.rs`, `port/catalog.rs`, `port/script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ```mermaid
 flowchart LR

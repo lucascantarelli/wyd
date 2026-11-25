@@ -4,6 +4,8 @@
 > Base: —
 > Revisado em: 2026-11-18
 
+**Estado:** proposto (2026-11-25)
+
 # wyd-db — decisões de arquitetura (ADR-DB)
 
 Uma ADR por decisão estrutural que muda schema, fronteira de escrita entre schemas ou a forma de

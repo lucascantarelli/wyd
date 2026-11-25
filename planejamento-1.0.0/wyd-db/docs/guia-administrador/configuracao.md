@@ -32,6 +32,7 @@ em runtime sem ninguém notar (`src/provision/spec.md` §3). Esta página lista 
 > correção é de `src/provision/spec.md` §3, na próxima revisão dele.
 
 ## 2. Variáveis de instalação e do runner
+**Sem arquivo no repositório:** `spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Parâmetro | Efeito | Default | Obrigatório | Onde é lido |
 |---|---|---|---|---|
@@ -74,6 +75,7 @@ que mostra a folga — **53 de 97**, com 4 pools de runtime, runner, provision e
 > Fixar um prazo é decisão nova, com número que ainda não foi medido.
 
 ## 4. DSN e segredo por nome
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | O que | Onde vive | Regra |
 |---|---|---|

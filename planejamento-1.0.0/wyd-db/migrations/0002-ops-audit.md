@@ -23,7 +23,7 @@ ou `DELETE`.
 | Campo | Valor |
 |---|---|
 | Número | `0002` |
-| Arquivo | `crates/wyd-db/migrations/0002_ops_audit.sql` |
+| Arquivo | `crates/wyd-db/migrations/0002-ops-audit.sql` |
 | Schema | `ops` |
 | Posição | 2 de 34 (primeiro arquivo do bloco operacional) |
 | Depende de | `0001_bootstrap` — schemas, papéis e `ALTER DEFAULT PRIVILEGES`; sem ele o `GRANT` daqui falha com `42501` |
@@ -39,6 +39,7 @@ tentou autenticar e como falhou** (`login_attempt`) e **qual configuração pass
 antes e depois** (`config_revision` + `config_change`).
 
 ## 3. Pré-requisitos
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. `db/roles.sql` aplicado por `wyd-db provision apply` — os papéis do cluster existem antes do `0001`.
 2. `0001_bootstrap` aplicado: `ops` existe, pertence a `wyd_owner`, e `wyd_game`/`wyd_portal` têm
@@ -303,8 +304,8 @@ histórico; ele não abre `audit_log` para o portal.
 PG17 efêmero, sem tocar a série herdada. Supõe `provision apply` feito e conexão como `wyd_migrator`.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001_bootstrap.sql
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0002_ops_audit.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001-bootstrap.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0002-ops-audit.sql
 ```
 
 | # | Prova | Comando | Esperado |

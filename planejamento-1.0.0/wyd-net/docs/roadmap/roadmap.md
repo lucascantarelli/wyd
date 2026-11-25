@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o `wyd-net` é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o `wyd-net` é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: equipe do `wyd-net`
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/componentes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
@@ -6,7 +6,7 @@
 
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada.
 
-Fatias de entrega, cada uma com DoD executável. **Nenhuma issue foi criada**: o roadmap planeja
+Fatias de entrega; o DoD executável de cada uma está na página citada em §2. **Nenhuma issue foi criada**: o roadmap planeja
 ordem e prova; abrir issue, milestone ou board é ato separado.
 
 ## 1. Regras do fatiamento
@@ -18,68 +18,23 @@ ordem e prova; abrir issue, milestone ou board é ato separado.
 
 ## 2. Fatias
 
-### F0 — Fundação do crate (baseline)
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-NET-001` a `RF-NET-002` |
-| Depende de | crate existente |
-| Entrega | `Cargo.toml`, `lib.rs` com `#![deny(missing_docs)]`, baseline de `cargo fmt`/`clippy` |
-| DoD | `cargo doc -p wyd-net --no-deps` sem warning; `cargo fmt --check` e `cargo clippy --all-targets -- -D warnings` verdes |
-| Fora | CI real, versão mínima de Rust |
-
-### F1 — Sessão e transporte async
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-NET-003`, `RF-NET-004` |
-| Depende de | F0; captura `LPRT-03`/`LPRT-06` |
-| Entrega | sessão TCP/async, handshake, keep-alive, desconexão limpa |
-| DoD | teste de sessão revogada não acessa canal; desconexão em voo não perde pacote pendente; `cargo test` verde |
-| Fora | rate-limit, hardening |
-
-### F2 — Rate-limit e hardening
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-NET-005`, `RF-NET-006` |
-| Depende de | F1; medição `LNET-01` |
-| Entrega | limites por IP/sessão, backpressure, rejeição de pacote malformado |
-| DoD | limite excedido retorna erro tipado; pacote malformado é descartado e logado sem payload; teste de carga mede `p95` |
-| Fora | observabilidade completa |
-
-### F3 — Observabilidade
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-NET-007`, `RF-NET-008` |
-| Depende de | F1 |
-| Entrega | spans, métricas de conexão/erro/bytes/latência, logs de metadados |
-| DoD | incidente simulado diagnosticado sem ler DSN ou payload; métricas presentes no `/metrics` |
-| Fora | dashboard Grafana (wyd-ops) |
-
-### F4 — Suíte, fixtures e anti-skip
-
-| Campo | Valor |
-|---|---|
-| Fase | 4 |
-| Requisitos | todos os `RF-NET` |
-| Depende de | F0–F3; CI real |
-| Entrega | unitário, contrato, sistema, fixtures centralizadas, anti-skip |
-| DoD | alvos de `plano-de-testes.md` §2 passam sem `SKIP`; cobertura ≥ 85% |
-| Fora | migrations |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — Fundação do crate (baseline) | [`WYDNET-F0`](WYDNET-F0.md) §Skills |
+| 2 | F1 — Sessão e transporte async | [`WYDNET-F1`](WYDNET-F1.md) §Skills |
+| 3 | F2 — Rate-limit e hardening | [`WYDNET-F2`](WYDNET-F2.md) §Skills |
+| 4 | F3 — Observabilidade | [`WYDNET-F3`](WYDNET-F3.md) §Skills |
+| 5 | F4 — Suíte, fixtures e anti-skip | [`WYDNET-F4`](WYDNET-F4.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F2
-      ↘ F3
-F4 depende de F0–F3
-```
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 

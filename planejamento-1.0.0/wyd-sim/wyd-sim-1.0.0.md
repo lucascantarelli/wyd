@@ -73,6 +73,7 @@ versionada.
 5. Nenhum número de balanceamento inventado: valor sem fonte é `H` com lacuna.
 
 ## 7. Próximas páginas
+**Sem arquivo no repositório:** `docs/guia-teste/vetores-deterministicos.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 `docs/arquitetura/fronteira.md`, `docs/specs/formulas/` (uma página por família de cálculo),
 `docs/guia-teste/vetores-deterministicos.md` e `docs/roadmap/` com DoD.

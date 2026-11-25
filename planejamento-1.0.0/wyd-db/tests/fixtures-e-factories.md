@@ -11,8 +11,8 @@
 - **`P`** — tudo o que a página diz sobre `common/`: nenhum dos quatro arquivos foi escrito.
 - **`H`** — dúvida aberta, dita e localizada em §5, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o arquivo ao lado.
-- **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
-  (`../../padrao-banco.md` §13).
+- **sem marca** — regra de projeto (`../docs/convencoes.md`) e comportamento do PostgreSQL
+  (`../padrao-banco.md` §13).
 
 Esta página é o **inventário planejado** de `tests/common/`; a regra de quando usar factory ou fixture é de
 `../docs/guia-teste/fixtures-e-factories.md` e não se repete aqui. A diferença de dono é a mesma das
@@ -23,6 +23,7 @@ abrem conexão ([index.md](index.md) §2). Nenhum alvo de contrato usa `common/`
 podem depender de banco (`specs/contrato.md` regra 1).
 
 ## 1. Inventário de `tests/common/`
+**Sem arquivo no repositório:** `db.rs`, `factory.rs`, `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Arquivo | Papel | O que expõe | Precisa de banco |
 |---|---|---|---|
@@ -73,6 +74,7 @@ que precisa de item usa o que o seed aplicado trouxe, ou cria a sua própria lin
 | ordem de limpeza respeita a FK (filho antes do pai) | `DELETE` que falha por FK vira verde falso se for ignorado |
 
 ## 5. Dúvidas abertas
+**Sem arquivo no repositório:** `db.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|

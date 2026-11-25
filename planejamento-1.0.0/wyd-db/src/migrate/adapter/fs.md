@@ -57,6 +57,7 @@ impl Source for FsSource {
 `std::fs`, `std::path`, `std::io`, `tokio` (spawn_blocking), `port::source`. Proibido: `sqlx`, `app`.
 
 ## 6. Testes
+**Sem arquivo no repositório:** `0001_a.sql`, `x.txt`, `0001_a.SQL`, `sub/0002_b.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Teste | Fixture | Esperado |
 |---|---|---|

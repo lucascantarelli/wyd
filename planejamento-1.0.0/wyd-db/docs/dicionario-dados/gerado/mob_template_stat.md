@@ -84,4 +84,4 @@ significa "sem ouro", não "não configurado"; `mob_template_stat` não tem flag
 
 ## Migration
 
-Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025_content_combat.sql`.
+Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025-content-combat.sql`.

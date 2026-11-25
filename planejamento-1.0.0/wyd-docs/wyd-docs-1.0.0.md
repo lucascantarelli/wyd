@@ -22,6 +22,7 @@
 > Decisão do dono (`V`, 2026-11-19): GitHub Pages é a hospedagem canônica, com publicação
 > contínua nele. Aquela evidência, por si só, não fechava `LPDOC-01`; o teste real de rollback em
 > 2026-11-19 (§7.3) é a prova que a fechou.
+**Sem arquivo no repositório:** `mkdocs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ---
 
@@ -72,7 +73,7 @@
 |---|---|---|
 | os 13 sistemas | página em `planejamento-1.0.0/<sistema>/docs/**/*.md` com cabeçalho de 5 linhas | URL estável, navegação automática, gate que reprova link quebrado |
 | `wyd-db` | estado das páginas de migration: `migrations-checklist.md` §2/§4; escopo da série: `plano-migrations.md` §3; resumo consolidado: `wyd-1.0.0.md` §1 | seção própria e ordem de leitura preservada |
-| `wyd-protocol` | 5 páginas escritas + teto de 131 (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4) | seção própria |
+| `wyd-protocol` | páginas escritas medidas no dashboard do sistema (`planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §1), com teto em §4 | seção própria |
 | `wyd-ops` | runner, Pages e deploy | workflow com permissão mínima |
 
 ---
@@ -80,6 +81,7 @@
 ## 2. O que o MkDocs 2.0 é (medido em 2026-11-19)
 
 ### 2.1 Fatos do pacote
+**Sem arquivo no repositório:** `mkdocs/mkdocs.py` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Fato | Medição |
 |---|---|
@@ -617,7 +619,7 @@ ferramenta é criada; as 109 das 109 páginas existem em 2026-11-22** (lotes `00
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
 4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-24):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **386 páginas** (medido em 2026-11-25 pelo build) e publica as que existem (`V`, 2026-11-25). O censo das 384 fontes na mesma data é **22 `aceito` · 357 `proposto` · 4 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 307 + 2 = 309 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
+**Reconciliação e estado (2026-11-24):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **471 páginas** (medido em 2026-11-25 pelo build) e publica as que existem (`V`, 2026-11-25). O censo das 469 fontes na mesma data é **35 `aceito` · 433 `proposto` · 0 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 469 + 2 = 471 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 

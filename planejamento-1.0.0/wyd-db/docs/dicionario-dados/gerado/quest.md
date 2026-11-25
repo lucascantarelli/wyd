@@ -88,4 +88,4 @@ silêncio, e detectar isso é trabalho do seed, não do banco. `cooldown_seconds
 
 ## Migration
 
-Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026_content_quests_events.sql`.
+Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026-content-quests-events.sql`.

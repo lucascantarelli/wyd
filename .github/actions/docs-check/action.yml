@@ -15,6 +15,16 @@ runs:
       run: |
         "${{ inputs.python }}" -m pip install --disable-pip-version-check -r wyd-docs/requirements.txt
 
+    - name: Verificar dono do bloco de skills
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} verificar-skills.py"
+
+    - name: Verificar evidência das lacunas fechadas
+      shell: bash
+      working-directory: wyd-docs
+      run: "${{ inputs.python }} verificar-lacunas.py"
+
     - name: Montar fontes
       shell: bash
       working-directory: wyd-docs

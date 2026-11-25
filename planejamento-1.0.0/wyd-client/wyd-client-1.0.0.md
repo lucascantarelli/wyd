@@ -68,7 +68,7 @@ repete (um fato, um dono).
 
 ## 5. O que falta
 
-`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`; aberta), `LCLI-03` (QA definido: **Lucas
+`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`; **fechada em 2026-11-25** com lista medida, manifesto e verificador), `LCLI-03` (QA definido: **Lucas
 Cantarelli**, dono do produto, que não é o operador; falta a primeira ficha assinada com o nome do
 operador; registro fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (**proposta**; responsável nominal
 e distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` com pedido externo iniciado,
@@ -100,7 +100,6 @@ só fecha após a segunda leitura, e `LPRT-06` continua nas capturas B/C.
 5. Anonimização conferida antes de qualquer captura ser aceita.
 
 ## 7. Próximas páginas
-
 `docs/arquitetura/fronteira.md`, `docs/specs/captura-e-registro.md`,
 `docs/planos/plano-de-testes.md` (E2E do cliente é Playwright, `AGENTS.md` §8) e `docs/roadmap/`.
 `docs/specs/propriedade-intelectual-e-distribuicao.md` já existe como proposta (`LCLI-05`).

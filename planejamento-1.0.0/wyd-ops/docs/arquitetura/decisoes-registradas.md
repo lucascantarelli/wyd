@@ -27,11 +27,19 @@ quando aprovada (ver `adr/index.md`).
 | `ADR-POR-0001` | wyd-portal | leilão: BFF fecha, wyd-ops agenda/alerta | aceito (2026-11-25) | wyd-portal | adr/ |
 | `ADR-DOC-0001` | wyd-docs | publicação é ato à parte | aceito (2026-11-25) | wyd-docs | adr/ |
 | `ADR-CLI-0001` | wyd-client | uso e distribuição (Q-IP-3..Q-IP-6) | aceito (2026-11-25) | wyd-client | adr/ |
-| `LNET-01` | wyd-net | limites (medição) | decidido (2026-11-25) | wyd-net | proposta-decisoes-net.md |
+| `ADR-OPS-0001` | wyd-ops | workspace Cargo único, toolchain e versões (D-05 = A) | aceito (2026-11-25) | wyd-ops | adr/ |
+| `ADR-OPS-0002` | wyd-ops | hospedagem de produção em VPS paga com Compose (Q-OPS-2 = A) | aceito (2026-11-25) | wyd-ops | adr/ |
+| `ADR-LCH-0001` | wyd-launcher | manifesto canônico + assinatura Ed25519 | aceito (2026-11-23) | wyd-launcher | adr/ |
+| `ADR-SIM-0001` | wyd-sim | aritmética inteira em bps, `f64` só em exibição | aceito (2026-11-23) | wyd-sim | adr/ |
+| `ADR-PRT-0001` | wyd-protocol | build-alvo 7662 | aceito (2026-11-23) | wyd-protocol | adr/ |
+| `ADR-BOT-0001` | wyd-bots | ambiente CI efêmero com seed descartável | aceito (2026-11-23) | wyd-bots | adr/ |
+| `D-05` = A | wyd-ops | workspace, toolchain, Makefile, lock único e digests | decidida 2026-11-25 | wyd-ops | dossie-d-05.md; ADR-OPS-0001 |
+| `Q-OPS-2` = A | wyd-ops | VPS paga com processo persistente e Compose | decidida 2026-11-24 | wyd-ops | proposta-decisoes-ops.md; ADR-OPS-0002 |
+| `LNET-01` | wyd-net | limites (medição) | **aberta como medição** (política decidida) | wyd-net | proposta-decisoes-net.md |
 | `LSRV-05` | wyd-server | captura (peer de A1) | decidido (2026-11-25) | wyd-server | wyd-server-1.0.0.md |
 | `LPRT-03`,`LPRT-06` | wyd-protocol | captura do cliente 7662 | decididos (2026-11-25) | wyd-protocol | lacunas.md |
 | `LCLI-02`,`LCLI-03`,`LCLI-05` | wyd-client | uso/distribuição | decididos (2026-11-25) | wyd-client | lacunas.md |
-| `LBOT-03` | wyd-bots | carga (medição) | decidido (2026-11-25) | wyd-bots | lacunas.md |
+| `LBOT-03` | wyd-bots | carga (medição) | **aberta como medição** (política decidida) | wyd-bots | lacunas.md |
 | `LPDOC-12` | wyd-docs | Windows | decidido (2026-11-25) | wyd-docs | lacunas.md |
 | `Q-IP-1`,`Q-IP-2` | wyd-client | pedido externo iniciado | decididos (2026-11-25) | wyd-client | lacunas.md |
 | `Q-NET-1` = A | wyd-net | política de limites | decidido | wyd-net | proposta-decisoes-net.md |
@@ -47,10 +55,17 @@ quando aprovada (ver `adr/index.md`).
 
 ## 3. Decisões abertas/propostas (não bloqueiam organização)
 
-Nenhuma. As decisões listadas anteriormente foram aprovadas pelo dono em 2026-11-25 e
-formalizadas (ver §2). Novas decisões entram aqui como `proposta` até aprovação.
+As decisões que ainda exigem resposta ou execução estão consolidadas em
+`wyd-ops/docs/lacunas.md` §4: `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LNET-01`/`LBOT-03` (medição),
+`LCLI-02`/`LCLI-05` (direitos) e `OPS-03`–`OPS-05`. Esta página não duplica a lista.
 
 ## 4. O que esta página não cobre
 
 - **Texto integral da decisão**: mora no documento dono (citado acima).
-- **ADR formal**: apenas 2 existem; candidatos listados em `adr/index.md` §4.
+- **ADR formal**: 15 existem; candidatos listados em `adr/index.md` §4.
+
+## 5. Páginas de issue
+
+As **101** páginas de issue planejadas (40 `WYDDB` + 61 por fatia dos 11 sistemas) não
+são decisão: vivem em `<sistema>/docs/roadmap/` e estão indexadas no índice de roadmap de cada
+sistema, com o inventário medido em `github-mapping.md` §7.

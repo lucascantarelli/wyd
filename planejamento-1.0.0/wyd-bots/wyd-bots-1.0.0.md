@@ -75,6 +75,5 @@ artefato) fechou em 2026-11-23 por **regra vigente**: o item 4 do gate (§6) já
 5. Nenhum segredo de jogador em configuração de bot.
 
 ## 7. Próximas páginas
-
 `docs/arquitetura/fronteira.md`, `docs/specs/cenarios.md`, `docs/planos/plano-de-testes.md` e
 `docs/roadmap/`.

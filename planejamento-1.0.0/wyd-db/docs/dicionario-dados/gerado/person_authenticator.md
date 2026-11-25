@@ -91,5 +91,5 @@ decisão nova, não linha nova de `CHECK`.
 
 ## Migration
 
-Forma (dona): `migrations/0031-portal-mfa.md` — arquivo `0031_portal_mfa.sql`; DDL em
+Forma (dona): `migrations/0031-portal-mfa.md` — arquivo `0031-portal-mfa.sql`; DDL em
 `ddl-confirmado.md` §5.20.

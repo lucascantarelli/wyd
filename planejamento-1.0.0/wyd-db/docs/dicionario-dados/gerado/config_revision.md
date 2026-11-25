@@ -58,4 +58,4 @@ Só a PK. Duas revisões no mesmo instante são permitidas; a ordem é o `id`.
 
 ## Migration
 
-Forma (dona): `migrations/0002-ops-audit.md` — arquivo `0002_ops_audit.sql`.
+Forma (dona): `migrations/0002-ops-audit.md` — arquivo `0002-ops-audit.sql`.

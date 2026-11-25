@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-22) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `LevelItem.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Item entregue por nível e classe, na ordem do arquivo `LevelItem.txt`. `ordinal` é a ordem depois de
 deduplicar o bloco repetido do insumo; não é o nível nem a sequência. Não guarda a entrega ao
@@ -78,4 +79,4 @@ Sem carimbos e sem trigger: import puro.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.

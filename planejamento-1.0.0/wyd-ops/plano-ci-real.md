@@ -19,6 +19,7 @@
 ---
 
 ## 1. Estado medido (`V`, 2026-11-19; revisto em 2026-11-24)
+**Sem arquivo no repositório:** `_portal.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Fato | Medição |
 |---|---|
@@ -42,6 +43,7 @@ o que §4.2 proíbe.
 ## 2. Inventário proposto
 
 ### 2.1 Actions compostas (`.github/actions/`)
+**Sem arquivo no repositório:** `_rust.yml`, `_db.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Action | Inputs | O que faz | Entra quando |
 |---|---|---|---|
@@ -57,6 +59,7 @@ Regras herdadas de §4.1 e válidas para todas: `using: composite`, `shell: bash
 nenhum segredo lido de variável global, nenhuma action de terceiro por tag.
 
 ### 2.2 Workflows reutilizáveis (`.github/workflows/`)
+**Sem arquivo no repositório:** `_docs.yml`, `_rust.yml`, `_db.yml`, `_portal.yml`, `_security.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Todos com `on: workflow_call`, `permissions: contents: read` no topo e inputs explícitos.
 
@@ -72,6 +75,7 @@ Todos com `on: workflow_call`, `permissions: contents: read` no topo e inputs ex
 GitHub gerencia o ciclo dele.
 
 ### 2.3 Orquestrador e publicação
+**Sem arquivo no repositório:** `_docs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Arquivo | Papel |
 |---|---|
@@ -100,6 +104,7 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  # `./.github/workflows/_docs.yml` e `./.github/workflows/_rust.yml` ainda **não existem**: são o esboço deste plano.
   docs:
     if: ${{ ... caminhos de documentação alterados ... }}
     uses: ./.github/workflows/_docs.yml
@@ -135,6 +140,7 @@ Custo: um job de ~5 s por execução. O que ele agrega é a estabilidade do nome
 ---
 
 ## 4. Status check obrigatório em `develop`
+**Sem arquivo no repositório:** `_db.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Campo | Valor proposto |
 |---|---|
@@ -160,6 +166,7 @@ recebe segredo e o `gate` roda igual.
 ---
 
 ## 5. Ordem de implementação (cada passo é um PR)
+**Sem arquivo no repositório:** `_docs.yml`, `_rust.yml`, `_db.yml`, `_portal.yml`, `_security.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Passo | Entrega | Depende de | Custo |
 |---:|---|---|---|
@@ -211,6 +218,7 @@ seus artefatos.
 ---
 
 ## 7. O que depende do dono
+**Sem arquivo no repositório:** `_security.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Habilitar `gate` como required** (passo 4): admin do repositório; o plano não altera ruleset.
 - **Aprovar a remoção de `full-workflow.yml`** (passo 3): apaga workflow existente; reversível por

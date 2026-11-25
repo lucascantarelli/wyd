@@ -40,6 +40,13 @@ cargo test -p wyd-server --all-targets
 cargo llvm-cov -p wyd-server --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-server --all-targets -- -D warnings`, `cargo test -p wyd-server --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-server --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** `/health`, `/ready`, `/metrics`, resultado do shutdown e drenagem. Alerta em `ready` diferente de 200 e em perda de drenagem; log sem payload/PII.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de composição, ready, controle e shutdown verdes; `LSRV-01`–`LSRV-05` implementadas; A1 com captura; nenhuma lacuna de prova aberta. `LSRV-05` (peer) segue dependente da captura.

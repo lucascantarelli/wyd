@@ -22,7 +22,7 @@ item — e a **função de dobra** usada nas colunas geradas de busca.
 | Campo | Valor |
 |---|---|
 | Número | `0013` (confirmado em 2026-11-20) |
-| Arquivo | `crates/wyd-db/migrations/0013_content_taxonomy.sql` |
+| Arquivo | `crates/wyd-db/migrations/0013-content-taxonomy.sql` |
 | Schema | `content` (5 tabelas + 1 função) |
 | Posição | 13 de 34 (abre o bloco de conteúdo, `0013`–`0027`) |
 | Depende de | `0001` (schema `content`, `ops.fn_set_updated_at`, default privileges). **Nada** de `portal`/`game`: não há FK de saída |
@@ -249,8 +249,9 @@ virar tela administrativa, é lote novo com `GRANT` explícito — este arquivo 
 permissão de escrita.
 
 ## 9. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0013-content-taxonomy.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-1. `psql -v ON_ERROR_STOP=1 -f 0013_content_taxonomy.sql` como `wyd_migrator` → `CREATE FUNCTION`, `CREATE TABLE` ×5, `CREATE TRIGGER` ×5.
+1. `psql -v ON_ERROR_STOP=1 -f 0013-content-taxonomy.sql` como `wyd_migrator` → `CREATE FUNCTION`, `CREATE TABLE` ×5, `CREATE TRIGGER` ×5.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'content';` → `6` (as 5 + `content_version` do `0001`).
 3. `SET ROLE wyd_migrator; INSERT INTO content.item_kind (slug, name) VALUES ('arma', 'Arma');` → `INSERT 0 1`, com `enabled = true`.
 4. Repetir o mesmo `slug` → `23505` em `pk_item_kind`.

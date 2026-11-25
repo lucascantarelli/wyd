@@ -143,7 +143,7 @@ seed-only, sem edição de staff.
 | regra de refino | regra | seleção de `kind`/`step`, custo e efeito de falha | `wyd-sim` + `wyd-core` |
 | piedade | regra | quando sobe, quando zera e o que acontece na troca de item | `wyd-core` |
 | catálogo de item | conteúdo | `item_index` sem FK; nome, preço e efeito dependem de `0014` e do seed | curadoria |
-| custódia de mercado | schema | o item sai da mochila por `DELETE` e nasce em `game.market_escrow` (`0034`) | [`../dicionario-dados/dominio-economia.md`](../../dicionario-dados/dominio-economia.md) |
+| custódia de mercado | schema | o item sai da mochila por `DELETE` e nasce em `game.market_escrow` (`0034`) | [`dominio-economia.md`](../../dicionario-dados/dominio-economia.md) |
 
 ## Rastreabilidade
 

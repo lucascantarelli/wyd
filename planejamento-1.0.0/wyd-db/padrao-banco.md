@@ -210,10 +210,11 @@ Adicionar trigger/function/view exige: (a) linha nesta tabela, (b) teste que pro
 ---
 
 ## 8. Papéis e permissões
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Papéis** ficam fora das migrations (`db/roles.sql`, gerado por `wyd-db provision render` e aplicado
 por `provision apply` uma vez por banco — papel é do cluster e não vai no `pg_dump`). **Schemas,
-`GRANT` e `ALTER DEFAULT PRIVILEGES` dos quatro schemas ficam em `0001_bootstrap.sql`**, porque são
+`GRANT` e `ALTER DEFAULT PRIVILEGES` dos quatro schemas ficam em `0001-bootstrap.sql`**, porque são
 objetos que ele cria e precisam ser versionados com ele; o estado de `public`, que já existe antes da
 série, vai no mesmo artefato (`src/provision/spec.md` §4). Ordem do ambiente: `provision render` →
 `provision apply` → migrations.
@@ -333,7 +334,7 @@ antipadrão continua sendo decisão desta seção.
 | `lacunas.md` | `B2` (lista nominal, que aponta `plano-migrations.md` §3) e `M20` (medição depois da série); o número planejado da série não mora aqui — o dono é `plano-migrations.md` §3 |
 | `wyd-db-1.0.0.md` | **pago em 2026-11-18:** a árvore de §4 e o §6.15 descrevem a série nova e os slugs de `P8` (fechado em 2026-11-18), hoje **34 arquivos** com os adendos `0030`, `0031` e `0032` e os lotes `0033` e `0034`; resta a escrita das páginas (onda 5) |
 | `docs/arquitetura/modelo-banco.md` | ER e tabela por tabela continuam na forma antiga (`public`, 53 arquivos) |
-| `docs/arquitetura/banco-catalogo.md` | artefato de conferência; só volta a bater depois do PR de ferramentas autorizado, que não é pré-requisito do DDL (`plano-migrations.md` §1) |
+| `docs/arquitetura/banco-catalogo.md` | artefato de conferência **ainda não escrito** (`Q-BLK-20` = A: pós-`1.0.0`); só passa a bater depois do PR de ferramentas autorizado, que não é pré-requisito do DDL (`plano-migrations.md` §1) |
 
 Nenhum desses é editado por este documento: ele **decide** e aponta a dívida.
 

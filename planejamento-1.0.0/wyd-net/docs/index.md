@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo e arquitetura
 > Dono: equipe do wyd-net
 > Base: `wyd-protocol-1.0.0.md` §1.4; `LPRT-08`, `LPRT-12`, `LPRT-13`
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -34,7 +34,7 @@ mensagem significa.
 ## O que falta
 
 A política de limites e rate-limit (`Q-NET-1` = A) foi decidida em 2026-11-23, mas `LNET-01` continua
-**aberta como medição**, porque não há conexão, latência nem recusa medidas. A política de versão
+**bloqueada como medição**, porque não há conexão, latência nem recusa medidas. A política de versão
 (`LNET-02`) foi decidida em 2026-11-23 (`Q-NET-2` = A: impor o build-alvo 7662 no handshake, com erro
 tipado para build não suportado) e o modelo de sessão (`LNET-03`) está decidido por
 `R6`/`D9`/`ux_session_viva_por_conta`; a observabilidade (`LNET-04`) fechou na mesma data por **regra
@@ -50,6 +50,36 @@ aberta não tem número: esta página não afirma limite nem timeout.
 ## Decisões registradas
 
 As quatro perguntas do sistema foram respondidas ou derivadas: `Q-NET-1`, `Q-NET-2` e `Q-NET-4` = A, e
-`LNET-03` pela regra de sessão por conta. `LNET-01` **continua aberta como medição**, sem número
+`LNET-03` pela regra de sessão por conta. `LNET-01` **continua bloqueada como medição**, sem número
 inventado; `LNET-02`, `LNET-03` e `LNET-04` fecharam. O estado de cada lacuna está em `lacunas.md`; o
 briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Decisões do `wyd-net` — limites, versão e observabilidade](proposta-decisoes-net.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+
+### arquitetura/adr
+
+- [ADR-NET-0001 — Política de limites (Q-NET-1 = A)](arquitetura/adr/adr-net-0001-politica-de-limites.md)
+- [ADRs — `wyd-net`](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

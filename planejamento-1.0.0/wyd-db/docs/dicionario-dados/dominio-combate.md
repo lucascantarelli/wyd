@@ -66,9 +66,11 @@ edição viva, quando existir, vai por `content_rate_override` com auditoria em 
 
 ## `H` — semântica não verificada
 
+**Sem arquivo no repositório:** `0012-combate.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 | Ponto | Falta |
 |---|---|
-| faixas de defesa e resistência | ficha de `0012_combate.sql`, sem trace no planejamento novo |
+| faixas de defesa e resistência | ficha de `0012-combate.sql`, sem trace no planejamento novo |
 | significado de cada `kind` de multiplicador | lista fechada no `CHECK`, semântica por família não verificada |
 | unidade de `exp_reward` e do ouro | herdada do legado; nenhum consumidor provado no planejamento novo |
 | se `weight` é comparado antes ou depois do multiplicador | ordem do cálculo é do runtime |

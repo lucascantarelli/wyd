@@ -90,5 +90,5 @@ até alguém desligar; a limpeza é do `wyd-ops`.
 
 ## Migration
 
-Forma (dona): `migrations/0030-portal-content.md` — arquivo `0030_portal_content.sql`; DDL em
+Forma (dona): `migrations/0030-portal-content.md` — arquivo `0030-portal-content.sql`; DDL em
 `ddl-confirmado.md` §5.15.

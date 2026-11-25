@@ -90,5 +90,5 @@ decisão do lote: o catálogo é seed de `0014`.
 
 ## Migration
 
-Forma (dona): `migrations/0034-portal-market.md` — arquivo `0034_portal_market.sql`; DDL em
+Forma (dona): `migrations/0034-portal-market.md` — arquivo `0034-portal-market.sql`; DDL em
 `ddl-confirmado.md` §5.34.

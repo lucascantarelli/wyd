@@ -67,9 +67,11 @@ para `guild` (origem e alvo) e `CHECK (guild_id <> target_guild_id)`.
 
 ## `H` — semântica não verificada
 
+**Sem arquivo no repositório:** `0028-estado-de-jogo.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 | Ponto | Falta |
 |---|---|
 | regra de fundação e custo | legado `0004_guildas.sql`, sem reverificação no planejamento novo |
 | efeito de `ally`/`hostile` no combate | regra de jogo, não de schema |
-| estado da torre além do dono | colunas vieram de `0028_estado_de_jogo.sql`, sem trace |
+| estado da torre além do dono | colunas vieram de `0028-estado-de-jogo.sql`, sem trace |
 | limite de membros | não há `CHECK`; se existe teto, é do runtime |

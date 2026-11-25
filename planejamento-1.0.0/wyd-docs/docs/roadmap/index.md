@@ -6,28 +6,37 @@
 
 **Estado:** proposto (2026-11-25). Site implementado; plano aberto. Nenhuma issue criada.
 
-A fila tem **5 fatias** em 3 fases.
+A fila tem **4 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDDOC-001`–`002` | baseline e montagem |
-| 2 | `WYDDOC-003`–`004` | gate, contagens, censos |
-| 3 | `WYDDOC-005` | publicação, redirect e tema |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| publicação | `WYDDOC-005` | `LPDOC-01` fechada; `LPDOC-12` (Windows) aberta como decisão |
-| build em Linux | `WYDDOC-001` | Python 3.15 + MkDocs 2.0.dev6 |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDDOC-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **4** páginas, uma por fatia, no formato de`WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDDOC-F0`](WYDDOC-F0.md) | Montagem e tema |
+| [`WYDDOC-F1`](WYDDOC-F1.md) | Gate de link, âncora, nav, título |
+| [`WYDDOC-F2`](WYDDOC-F2.md) | Contagens e censos |
+| [`WYDDOC-F3`](WYDDOC-F3.md) | Publicação e redirect |

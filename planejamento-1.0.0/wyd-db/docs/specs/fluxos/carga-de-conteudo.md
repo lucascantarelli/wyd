@@ -7,7 +7,7 @@
 **Estado:** proposto (2026-11-22)
 
 O conteúdo é **frio e versionado**: migrations e seeds escrevem `content.*`; o jogo lê um corte no
-boot. O corte é a linha de `content_version` criada por `0001_bootstrap.sql` e preenchida pelos seeds.
+boot. O corte é a linha de `content_version` criada por `0001-bootstrap.sql` e preenchida pelos seeds.
 Esta página cobre a leitura inicial e a falha por versão; recarga a quente e ETL da base legada não
 fazem parte do desenho.
 

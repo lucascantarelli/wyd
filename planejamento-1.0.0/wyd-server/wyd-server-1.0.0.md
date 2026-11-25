@@ -81,7 +81,6 @@ local, `ECAP`, CLI e captura; nenhuma lacuna fecha com a autorização. O que fa
 7. Plano de encerramento: `SIGTERM` drena e persiste, sem perda silenciosa.
 
 ## 7. Próximas páginas
-
 `docs/arquitetura/fronteira.md`, `docs/arquitetura/topologia-de-canais.md`,
 `docs/specs/endpoint-de-captura.md` (escrita) e `docs/roadmap/` com DoD e a issue do `ECAP`.
 O peer de A1 vem da opção A (`Q-SRV-5`): a condição de C foi medida e reprovada em 2026-11-23, com

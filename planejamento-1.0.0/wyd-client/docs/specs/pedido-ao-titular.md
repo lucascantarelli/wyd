@@ -8,8 +8,8 @@
 
 **Estado:** proposto (2026-11-23) — pacote em `P`, pronto para revisão e envio pelo dono, **não enviado** em 2026-11-23. Nenhuma
 resposta foi recebida ou presumida. A distribuição segue **congelada**; `LCLI-05` continua `proposta`;
-`LCLI-02` continua aberta até a evidência do titular, e nada aqui autoriza patch, release, captura ou
-evidência de direitos.
+`LCLI-02` fechou em 2026-11-25 (lista, manifesto e verificador), mas a distribuição do conteúdo espera a
+evidência do titular, e nada aqui autoriza patch, release, captura ou evidência de direitos.
 
 ## 1. Destinatário
 
@@ -101,7 +101,8 @@ Cada linha autorizada, negada ou condicionada terá registro próprio, com os ca
 
 O registro fica ligado ao gate de release (`Q-IP-6`): **sem registro completo, não há release**. Uma
 resposta favorável para uma classe não libera outra. Uma resposta negativa ou parcial mantém os itens
-não cobertos fora do patch e da distribuição, com `LCLI-05` ainda `proposta` e `LCLI-02` aberta.
+não cobertos fora do patch e da distribuição, com `LCLI-05` ainda `proposta`; `LCLI-02` fechada em
+2026-11-25.
 
 ## 6. Minuta para revisão e envio
 
@@ -138,5 +139,6 @@ o agente não envia, não abre ticket e não registra resposta presumida.
 - **Resposta:** nenhuma.
 - **Paralelo:** enquanto aguarda, priorizar `wyd-db` (decisão do dono; não altera escopo nem contagens).
 - **Anexo técnico:** inventário de metadados; nenhum conteúdo do cliente.
-- **Efeito:** nenhum. A distribuição segue congelada; `LCLI-05` continua `proposta`; `LCLI-02` continua
-  aberta; nenhuma decisão autoriza patch, release, captura ou evidência de direitos.
+- **Efeito:** nenhum. A distribuição segue congelada; `LCLI-05` continua `proposta`; `LCLI-02` fechou em
+  2026-11-25 como decisão de conteúdo, sem liberar distribuição; nenhuma decisão autoriza patch, release,
+  captura ou evidência de direitos.

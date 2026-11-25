@@ -81,4 +81,4 @@ sem carimbo", porque nada no schema amarra os dois.
 
 ## Migration
 
-Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028_game_quests_events.sql`.
+Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028-game-quests-events.sql`.

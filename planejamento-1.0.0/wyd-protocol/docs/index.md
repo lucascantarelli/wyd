@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do wyd-protocol
 > Base: —
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-19)
 
@@ -16,7 +16,7 @@ abre socket, não guarda sessão e não decide regra de jogo.
 > fecha — nunca afirmação.
 ## O que existe aqui
 
-Esta árvore está em **planejamento**: cinco páginas escritas, o restante é teto declarado no
+Esta árvore está em **planejamento**: seis páginas escritas, o restante é teto declarado no
 `wyd-protocol-1.0.0.md` (planejamento) e nas lacunas do sistema (planejamento).
 
 | Pasta | Responde | Estado |
@@ -25,7 +25,7 @@ Esta árvore está em **planejamento**: cinco páginas escritas, o restante é t
 | `docs/specs/` | requisitos, regras, fluxos e estados com ID | planejada |
 | `docs/wire/` | cabeçalho, enquadramento, transformação, catálogo e limites | planejada |
 | `docs/payloads/` | campos de cada mensagem, com offset, tipo e proveniência | planejada |
-| `docs/goldens/` | que bytes provam o layout e de onde vieram | parcial — 1 escrita (procedimento) |
+| `docs/goldens/` | que bytes provam o layout e de onde vieram | parcial — 2 escritas (procedimento e catálogo; 0 goldens aceitos) |
 | `docs/planos/` | plano, métrica e risco do sistema | planejada |
 | `docs/roadmap/` | issues `WYDPRT-nnn` com DoD verificável | parcial — 2 escritas (índice e fases) |
 | `docs/guia-desenvolvedor/` | como mexer no crate sem quebrar o fio | planejada |
@@ -33,16 +33,23 @@ Esta árvore está em **planejamento**: cinco páginas escritas, o restante é t
 
 ## Trilhas de leitura
 
+**Medido em 2026-11-25:** das páginas citadas abaixo, só `goldens/como-capturar.md` e
+`goldens/catalogo.md` existem. As de `arquitetura/`, `payloads/`, `guia-desenvolvedor/` e `guia-teste/`
+**ainda não foram escritas** e são teto de `wyd-protocol-1.0.0.md` §4 — os caminhos aparecem aqui como
+trilha planejada, não como página publicada.
+
 #### Rede e servidor
 
+**Sem arquivo no repositório:** `docs/arquitetura/camadas-de-codec.md`, `docs/arquitetura/fronteira-protocolo-rede.md`, `docs/guia-desenvolvedor/api-e-garantias.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-1. `docs/arquitetura/camadas-de-codec.md` — o pipeline de bytes.
-2. `docs/arquitetura/fronteira-protocolo-rede.md` — o que o codec devolve e o que a conexão decide.
-3. `docs/guia-desenvolvedor/api-e-garantias.md` — que função chamar.
+1. `docs/arquitetura/camadas-de-codec.md` — o pipeline de bytes (a escrever).
+2. `docs/arquitetura/fronteira-protocolo-rede.md` — o que o codec devolve e o que a conexão decide (a escrever).
+3. `docs/guia-desenvolvedor/api-e-garantias.md` — que função chamar (a escrever).
 #### Regra de jogo
 
+**Sem arquivo no repositório:** `docs/payloads/index.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-1. `docs/payloads/index.md` — qual família carrega o dado.
+1. `docs/payloads/index.md` — qual família carrega o dado (a escrever).
 2. `docs/payloads/<familia>.md` — campos, faixa e o que é opaco.
 3. `docs/specs/regras-de-negocio.md` — o que o crate garante sobre o valor.
 #### Pesquisa do cliente
@@ -53,9 +60,10 @@ Esta árvore está em **planejamento**: cinco páginas escritas, o restante é t
 3. `lacunas.md` do sistema (planejamento) — o que falta capturar.
 #### QA
 
+**Sem arquivo no repositório:** `docs/guia-teste/goldens-e-fixtures.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. `docs/guia-teste/piramide-e-alvos.md` — que tipo de teste escrever.
-2. `docs/guia-teste/goldens-e-fixtures.md` — que byte usar.
+2. `docs/guia-teste/goldens-e-fixtures.md` — que byte usar (a escrever).
 3. `docs/guia-teste/gates-e-anti-skip.md` — como o gate detecta teste que não roda.
 ## Antes de escrever qualquer página
 
@@ -77,3 +85,30 @@ e SHA-256 completos; qualquer outro build é não suportado. O registro está em
 seguem cobertas pelo procedimento de captura; o estado de cada lacuna continua em `lacunas.md`. **A1 foi
 autorizada em 2026-11-23 (resposta A):** peer da opção A, `ECAP` e CLI autorizados; captura não executada;
 `LPRT-03` só fecha após a segunda leitura e `LPRT-06` continua nas capturas B/C.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [adr/index](arquitetura/adr/index.md)
+
+### goldens
+
+- [catalogo](goldens/catalogo.md)
+- [como-capturar](goldens/como-capturar.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [fases](roadmap/fases.md)
+- [index](roadmap/index.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

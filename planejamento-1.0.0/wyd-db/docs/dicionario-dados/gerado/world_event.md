@@ -75,4 +75,4 @@ encaixa nas seis famílias, não um tipo com semântica definida.
 
 ## Migration
 
-Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026_content_quests_events.sql`.
+Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026-content-quests-events.sql`.

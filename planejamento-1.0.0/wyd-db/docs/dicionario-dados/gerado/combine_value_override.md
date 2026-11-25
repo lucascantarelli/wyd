@@ -71,4 +71,4 @@ enums: a lista de famílias é `H` e não existe tabela de família nesta série
 
 ## Migration
 
-Forma (dona): `migrations/0022-content-overrides.md` — arquivo `0022_content_overrides.sql`.
+Forma (dona): `migrations/0022-content-overrides.md` — arquivo `0022-content-overrides.sql`.

@@ -6,10 +6,10 @@
 > Base: `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md`
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25).
+**Estado:** aceito (2026-11-25).
 
 | ID | Título | Status |
 |---|---|---|
-| `ADR-ADM-0001` | Canal de controle HTTP síncrono com ack | proposto (não aceito) |
+| [`ADR-ADM-0001`](adr-adm-0001-canal-controle.md) | Canal de controle HTTP síncrono com ack | aceito (2026-11-25) |
 
 Índice global: `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md`.

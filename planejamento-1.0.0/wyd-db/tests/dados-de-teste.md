@@ -12,8 +12,8 @@
   também não.
 - **`H`** — dúvida aberta, dita e localizada em §5, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o arquivo ao lado.
-- **sem marca** — regra de projeto (`../../docs/convencoes.md`) ou comportamento do PostgreSQL
-  (`../../padrao-banco.md` §13).
+- **sem marca** — regra de projeto (`../docs/convencoes.md`) ou comportamento do PostgreSQL
+  (`../padrao-banco.md` §13).
 
 O catálogo concreto de contas de teste. A política — o que pode e o que não pode ser dado de teste — é de
 `../docs/guia-teste/dados-de-teste.md`; aqui ficam as contas, o papel de cada uma e o que ela prova.
@@ -51,6 +51,7 @@ vaga (`RN-DB-001`), não a pessoa (`RN-DB-003`). A vaga fechada e reutilizada é
 | 6 | — | tenta criar: falha por vaga, com erro nomeado |
 
 ## 3. Relação com `seeds/dev.sql`
+**Sem arquivo no repositório:** `resources/accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Fonte | O que é | A suíte usa? |
 |---|---|---|
@@ -62,6 +63,7 @@ Seed de desenvolvimento nunca é dado de produção e nunca é dependência de t
 `seeds/dev.sql` aplicado depende de um ambiente que o CI não tem.
 
 ## 4. O que nunca entra
+**Sem arquivo no repositório:** `resources/accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Dado de jogador real**, conta, personagem, saldo ou e-mail de pessoa real.
 - **Segredo real:** senha ou token de qualquer ambiente; a única senha de teste será a fictícia

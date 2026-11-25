@@ -41,6 +41,13 @@ cargo test -p wyd-sim --all-targets
 cargo llvm-cov -p wyd-sim --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-sim --all-targets -- -D warnings`, `cargo test -p wyd-sim --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-sim --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Deriva de fixture, `formula_version` e `content_version` usados, além da cobertura por fórmula. O crate é puro e não tem runtime; a prova é o job de CI com vetores determinísticos.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de fórmula e fixture verdes; `LSIM-01`–`LSIM-04` implementados; nenhuma lacuna de prova aberta; nenhum número de balanceamento inventado. `LSIM-01`–`LSIM-04` fechadas; implementação pendente.

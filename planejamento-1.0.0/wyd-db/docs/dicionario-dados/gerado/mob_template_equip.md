@@ -77,4 +77,4 @@ mob veste, e não existe foto do item nesta tabela. E o `RESTRICT` do item vale 
 
 ## Migration
 
-Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025_content_combat.sql`.
+Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025-content-combat.sql`.

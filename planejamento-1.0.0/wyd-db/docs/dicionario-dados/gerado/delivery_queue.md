@@ -101,4 +101,4 @@ Esta é a única tabela do dicionário com `GRANT` explícito de escrita para pa
 
 ## Migration
 
-Forma (dona): `migrations/0012-ops-delivery.md` — arquivo `0012_ops_delivery.sql`.
+Forma (dona): `migrations/0012-ops-delivery.md` — arquivo `0012-ops-delivery.sql`.

@@ -63,7 +63,8 @@ defeito de revisão, não uma segunda implementação.
 ## 3. Opcodes mínimos
 
 **Regra desta seção:** nome e valor de opcode **não** aparecem aqui. O catálogo é gerado (`LPRT-16`) e a página
-dona é `wire/opcodes/*`, com o total medido em `wire/tabela-de-opcodes.md` (`LPRT-20`). Até o golden existir, cada
+dona é `wire/opcodes/*`, com o total medido em `wire/tabela-de-opcodes.md` (a escrever, `LPRT-20`) — páginas do
+`wyd-protocol` que ainda **não foram escritas**. Até o golden existir, cada
 linha é `H` com a lacuna que a fecha — inclusive a quantidade, que é o **mínimo desta fatia**, não o total do
 sistema.
 

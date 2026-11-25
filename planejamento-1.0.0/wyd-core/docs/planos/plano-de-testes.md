@@ -41,6 +41,13 @@ cargo test -p wyd-core --all-targets
 cargo llvm-cov -p wyd-core --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-core --all-targets -- -D warnings`, `cargo test -p wyd-core --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-core --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Duração do tick, entidades ativas, fila de eventos e erros por tipo. Log só de metadados; alerta de tick acima do orçamento entra quando o orçamento for medido, não por estimativa.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de tick, combate, persistência e contrato verdes; nenhuma lacuna de prova aberta; `grep` de proibição limpo. `LCORE-01`–`LCORE-04` já fechadas; implementação pendente.

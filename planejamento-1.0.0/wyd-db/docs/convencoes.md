@@ -4,6 +4,8 @@
 > Base: —
 > Revisado em: 2026-11-23
 
+**Estado:** proposto (2026-11-25)
+
 Esta página é o contrato de **leitura** da documentação do `wyd-db`. Ela diz o que cada marca
 significa e o que você tem direito de concluir de uma frase. As regras de **escrita** ficam em
 `guia-documentacao/`, pasta que ainda não foi escrita; aqui interessa o que o leitor pode exigir.
@@ -115,7 +117,7 @@ defeito registrado, não interpretação: corrija a origem, nunca o número no t
 
 | Situação | Como aparece |
 |---|---|
-| outra página desta árvore | link relativo, ex.: `../arquitetura/visao-geral.md` |
+| outra página desta árvore | link relativo, ex.: `arquitetura/visao-geral.md` |
 | código do crate | texto simples, não link: `crates/wyd-db/src/lib.rs:29` |
 | página planejada que ainda não existe | caminho em `code`, sem link: `dicionario-dados/dominio-personagem.md` |
 | âncora dentro da página | `#secao-em-minusculas-com-hifen` |

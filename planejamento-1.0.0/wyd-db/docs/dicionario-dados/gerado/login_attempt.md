@@ -58,4 +58,4 @@ Nenhuma além da PK: a mesma tentativa pode se repetir.
 
 ## Migration
 
-Forma (dona): `migrations/0002-ops-audit.md` — arquivo `0002_ops_audit.sql`.
+Forma (dona): `migrations/0002-ops-audit.md` — arquivo `0002-ops-audit.sql`.

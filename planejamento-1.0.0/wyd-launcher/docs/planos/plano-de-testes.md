@@ -41,6 +41,13 @@ cargo test -p wyd-launcher --all-targets
 cargo llvm-cov -p wyd-launcher --fail-under-lines 85
 ```
 
+## CI, cobertura e monitoramento
+
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-launcher --all-targets -- -D warnings`, `cargo test -p wyd-launcher --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **Cobertura:** `cargo llvm-cov -p wyd-launcher --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **Monitoramento:** Resultado da verificação de manifesto, hash divergente, falha de assinatura e update aplicado. Log local sem token nem conteúdo do jogador; não há telemetria remota por desenho.
+- **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
+
 ## Critério de saída da `1.0.0`
 
 Todos os testes de manifesto, assinatura, patch e integridade verdes; `LLCH-01`–`LLCH-04` implementados; nenhuma lacuna de prova aberta. `LLCH-01`–`LLCH-04` fechadas; implementação pendente.

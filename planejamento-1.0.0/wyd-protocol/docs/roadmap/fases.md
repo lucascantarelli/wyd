@@ -44,18 +44,21 @@ escrita e nenhuma issue foi criada no GitHub. Não há data em nenhuma fatia.
 A coluna da direita diz **que trabalho pertence à versão**. Nenhum número de issue é atribuído aqui;
 a contagem por versão só existe quando as páginas forem escritas.
 
-| Versão | Que issues entram |
-|---|---|
-| **0.1.0** | fio sem payload (`HEADER`, enquadramento, transformação, limites, flags), captura do handshake de `LPRT-03` e goldens do fio; nenhuma issue de família |
-| **0.2.0** | famílias `autenticacao` e `personagem`, mais o que fecha `LPRT-06` antes delas |
-| **0.3.0** | famílias `cena-e-mundo` e `movimento` |
-| **0.4.0** | família `combate`, sem regra de jogo |
-| **0.5.0** | famílias `inventario` e `comercio` |
-| **0.6.0** | família `quest-e-eventos` |
-| **0.7.0** | família `ui-e-chat` |
-| **0.8.0** | fluxos `game ↔ db`, `db ↔ np` e `np` (`LPRT-19`) |
-| **0.9.0** | matriz de capacidade por variante (`LPRT-15`), fuzz agendado (`LPRT-14`) e fechamento das páginas `aceitas` |
-| **1.0.0** | congelamento: catálogo medido do gerador, goldens por família e compatibilidade declarada (`LPRT-09`) |
+A skill de cada fatia tem **dono único** no bloco `§Skills` da página de issue; as tabelas
+abaixo só citam o link, nunca o nome.
+
+| Versão | Que issues entram | Skill |
+|---|---|---|
+| **0.1.0** | fio sem payload (`HEADER`, enquadramento, transformação, limites, flags), captura do handshake de `LPRT-03` e goldens do fio; nenhuma issue de família | ver [`WYDPRT-0.1.0`](WYDPRT-0.1.0.md) §Skills |
+| **0.2.0** | famílias `autenticacao` e `personagem`, mais o que fecha `LPRT-06` antes delas | ver [`WYDPRT-0.2.0`](WYDPRT-0.2.0.md) §Skills |
+| **0.3.0** | famílias `cena-e-mundo` e `movimento` | ver [`WYDPRT-0.3.0`](WYDPRT-0.3.0.md) §Skills |
+| **0.4.0** | família `combate`, sem regra de jogo | ver [`WYDPRT-0.4.0`](WYDPRT-0.4.0.md) §Skills |
+| **0.5.0** | famílias `inventario` e `comercio` | ver [`WYDPRT-0.5.0`](WYDPRT-0.5.0.md) §Skills |
+| **0.6.0** | família `quest-e-eventos` | ver [`WYDPRT-0.6.0`](WYDPRT-0.6.0.md) §Skills |
+| **0.7.0** | família `ui-e-chat` | ver [`WYDPRT-0.7.0`](WYDPRT-0.7.0.md) §Skills |
+| **0.8.0** | fluxos `game ↔ db`, `db ↔ np` e `np` (`LPRT-19`) | ver [`WYDPRT-0.8.0`](WYDPRT-0.8.0.md) §Skills |
+| **0.9.0** | matriz de capacidade por variante (`LPRT-15`), fuzz agendado (`LPRT-14`) e fechamento das páginas `aceitas` | ver [`WYDPRT-0.9.0`](WYDPRT-0.9.0.md) §Skills |
+| **1.0.0** | congelamento: catálogo medido do gerador, goldens por família e compatibilidade declarada (`LPRT-09`) | ver [`WYDPRT-1.0.0`](WYDPRT-1.0.0.md) §Skills |
 
 ## 4. Como isso chega ao board
 

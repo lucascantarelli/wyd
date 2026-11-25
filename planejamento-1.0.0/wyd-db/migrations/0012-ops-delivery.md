@@ -22,7 +22,7 @@ escreve em `game` (`LAC-POR-01`).
 | Campo | Valor |
 |---|---|
 | Número | `0012` |
-| Arquivo | `crates/wyd-db/migrations/0012_ops_delivery.sql` |
+| Arquivo | `crates/wyd-db/migrations/0012-ops-delivery.sql` |
 | Schema | `ops` |
 | Posição | 12 de 34 (ponte Cold → Hot, depois do estado de jogador de leitura simples) |
 | Depende de | `0001` (schema `ops`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, autor), `0005` (`game.account`, destino de `gold`) e `0006` (`game.character`, destino de `item`/`level`) |
@@ -220,7 +220,7 @@ PG17 efêmero, com `0001`, `0003`, `0005` e `0006` aplicados e uma pessoa, uma c
 prova (ids 1). A prova 12 usa `DELETE` de propósito, para medir o `RESTRICT`.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0012_ops_delivery.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0012-ops-delivery.sql
 ```
 
 | # | Prova | Comando | Esperado |
@@ -259,7 +259,7 @@ As escolhas de forma aprovadas com o lote, incluindo as duas que `M25` fechou:
 | Concessão de item, ouro e nível no jogo | `wyd-admin`/`wyd-server`; aqui só a fila |
 | Catálogo de item e preço | `0014` e `0011` |
 | Bloqueio disciplinar e desbloqueio | `game.account_moderation` (`0005`), não a fila |
-| Retenção e expurgo da fila | decidido em `M25` (2026-11-20); a rotina é de `planos/retencao-e-capacidade.md` |
+| Retenção e expurgo da fila | decidido em `M25` (2026-11-20); a rotina é de `docs/arquitetura/retencao-e-capacidade.md` |
 | Forma do contrato HTTP que enfileira | planejamento do `wyd-admin` (`LAC-POR-01`) |
 
 *Página de planejamento. Nenhum SQL foi executado e nenhum arquivo de `crates/` foi criado.*

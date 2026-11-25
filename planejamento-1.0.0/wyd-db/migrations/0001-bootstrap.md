@@ -11,17 +11,18 @@ os quatro schemas, a fronteira de permissão entre eles, a única função de tr
 de versão do conteúdo. Tudo que vem depois pressupõe este arquivo aplicado.
 
 !!! note "Aplicado em 2026-11-24"
-    O arquivo `crates/wyd-db/migrations/0001_bootstrap.sql` existe e a série aplicou do zero em PostgreSQL 17
+    O arquivo `crates/wyd-db/migrations/0001-bootstrap.sql` existe e a série aplicou do zero em PostgreSQL 17
     nessa data, como `wyd_migrator` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.30). O
     DDL continua sendo o de `ddl-confirmado.md` §3, dono do texto; as provas de §9 não foram executadas uma a uma
     nesta leva.
 
 ## 1. Identificação
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Campo | Valor |
 |---|---|
 | Número | `0001` |
-| Arquivo | `crates/wyd-db/migrations/0001_bootstrap.sql` |
+| Arquivo | `crates/wyd-db/migrations/0001-bootstrap.sql` |
 | Schema | nenhum próprio — **cria** `content`, `game`, `portal`, `ops` |
 | Posição | 1 de 34 (primeiro da série) |
 | Depende de | `db/roles.sql` aplicado por `wyd-db provision apply` (papéis e o estado de `public` não vão na série) |
@@ -38,6 +39,7 @@ depois por `wyd_migrator` já nasça com o privilégio certo — mais a função
 linha que registra a versão do conteúdo.
 
 ## 3. Pré-requisitos de ambiente
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Os seis papéis de cluster — `wyd_owner`, `wyd_migrator`, `wyd_game`, `wyd_portal`, `wyd_admin` e
 `wyd_read` — precisam existir **antes** deste arquivo, junto com a membership `wyd_migrator` →
@@ -60,6 +62,7 @@ porque o runner cria o ledger em `public` antes do primeiro arquivo e, no PG15+,
 `prepare` com `42501`, antes de chegar a este arquivo.
 
 ## 4. DDL do `up`
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Arquivo completo, pronto para colar. Os marcadores `-- migrate:up` e `-- migrate:down` ficam sozinhos
 na linha porque o runner os procura assim.
@@ -232,7 +235,7 @@ preflight do runner (`src/migrate/spec.md` §7) recusa qualquer outro papel; com
 privileges de §7 não valem e as provas 6–8 mentem.
 
 ```bash
-psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001_bootstrap.sql
+psql "$DSN" -v ON_ERROR_STOP=1 -f crates/wyd-db/migrations/0001-bootstrap.sql
 ```
 
 | # | Prova | Comando | Esperado |
@@ -257,6 +260,7 @@ A prova 13 (up → down → up) é o gate de verdade deste arquivo: ele só exis
 estiverem inteiros, porque até lá os outros schemas têm menos objeto do que terão.
 
 ## 10. O que este arquivo não decide
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Assunto | Onde é decidido |
 |---|---|

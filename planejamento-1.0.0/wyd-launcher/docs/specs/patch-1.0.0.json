@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "channel": "stable",
+  "version": "1.0.0",
+  "client_build": "04c9d2a1235cba57f7b588347fae935a2466824ddf9d7d92e541e0cc8a27ddf8",
+  "min_version": "1.0.0",
+  "files": [
+    {
+      "path": "client/UI/strdef.bin",
+      "size": 255992,
+      "sha256": "26a6140b9a31258b018e17c53ca47df17c532e3ae362d73ba6c764d38686a81f"
+    },
+    {
+      "path": "client/UI/strdef.txt",
+      "size": 56792,
+      "sha256": "295cab75ab23f371d28d1bd2a2a462098d1cc8244e819b4e3f8fd684b31ba347"
+    },
+    {
+      "path": "client/UI/UI_strdef.bin",
+      "size": 56324,
+      "sha256": "af5f22b80ee4333dd52b603eb48cf84477e7e830b1a790727709e4e8fcdbdb89"
+    }
+  ]
+}

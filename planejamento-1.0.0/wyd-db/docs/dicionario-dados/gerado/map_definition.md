@@ -72,4 +72,4 @@ UNVERIFIED e o 255 da ficha não foi reverificado.
 
 ## Migration
 
-Forma (dona): `migrations/0024-content-maps.md` — arquivo `0024_content_maps.sql`.
+Forma (dona): `migrations/0024-content-maps.md` — arquivo `0024-content-maps.sql`.

@@ -76,4 +76,4 @@ somados pelo runtime com a fórmula de refino, que não está nesta tabela.
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021_content_rules.sql`.
+Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021-content-rules.sql`.

@@ -7,7 +7,15 @@
 > Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-25). Convenção de nomes; criação de issues/milestones/boards é ato
-separado e não foi feito.
+explícito e não foi feita nesta rodada.
+
+## 0. Estado medido do repositório (2026-11-25)
+
+Leitura somente de `lucascantarelli/wyd` pela integração GitHub: branch padrão `develop`, `has_issues`
+verdadeiro, **40 issues abertas** (a série `WYDDB-001`–`040`) e milestones existentes, incluindo
+`F7 — migrations e evolução` (milestone 13). O repositório é público e tem `develop` como base de merge.
+Esta medição não cria board nem issue: o que falta é a autorização de `OPS-05` para o board e para as
+fatias dos demais sistemas.
 
 ## 1. Título de issue
 
@@ -50,3 +58,30 @@ Formato: `[<tipo>] <sistema>: <resumo curto>`.
 
 - Criação efetiva de issues/labels/milestones/boards (requer aprovação do usuário).
 - Segredos e deploy (ver `wyd-ops/docs/...`).
+
+## 7. Inventário de issues planejadas (medido em 2026-11-25)
+
+O repositório tem **101 páginas de issue** planejadas: as **40** `WYDDB-nnn` do `wyd-db`
+e as **61** por fatia dos 11 sistemas abaixo, cada uma com estado, dependência, DoD observável e
+bloco de skills (`skill_principal` + `skills_complementares`) na lista fechada de
+`planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §3.1.
+
+| Sistema | Chave | Páginas |
+|---|---:|---:|
+| `wyd-bots` | `WYDBOT-F<n>` | 4 |
+| `wyd-client` | `WYDCLI-F<n>` | 3 |
+| `wyd-core` | `WYDCORE-F<n>` | 5 |
+| `wyd-docs` | `WYDDOC-F<n>` | 4 |
+| `wyd-launcher` | `WYDLCH-F<n>` | 4 |
+| `wyd-net` | `WYDNET-F<n>` | 5 |
+| `wyd-ops` | `WYDOPS-F<n>` | 6 |
+| `wyd-portal` | `WYDPOR-F<n>` | 12 |
+| `wyd-protocol` | `WYDPRT-F<n>` | 10 |
+| `wyd-server` | `WYDSRV-F<n>` | 4 |
+| `wyd-sim` | `WYDSIM-F<n>` | 4 |
+| `wyd-db` | `WYDDB-nnn` | 40 |
+| **Total** | — | **101** |
+
+A chave por fatia (`WYDBOT-F0`, `WYDPRT-0.1.0`) não antecipa número: `WYDDB-nnn` já é sequencial e
+criado; os demais recebem o número na criação da issue. **101** planejadas, **40** criadas no
+GitHub (todas `WYDDB`), **61** aguardando `OPS-05`.

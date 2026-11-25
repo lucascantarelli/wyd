@@ -33,21 +33,23 @@ auditoria, conteúdo, canais.
 
 ## 2. Inventário de requisitos (o que o legado prova que precisa existir)
 
+**Sem arquivo no repositório:** `0003-inventario.sql`, `0030-sessao-unica.sql`, `0028-estado-de-jogo.sql`, `0031-moderacao.sql`, `0006-delivery-queue.sql`, `0053-pin-reset-token.sql`, `0005-auditoria.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 Medido no código atual; cada linha vira requisito. Não é desenho.
 
 | # | Requisito observado | Fonte medida | Onde o desenho atende hoje |
 |---|---|---|---|
-| R1 | Login de conta de jogo tem 1..16 caracteres no fio | `0030_sessao_unica.sql` | `ck_account_login_len` + tipo `GameLogin` (`ddl-confirmado.md` §5.2) |
+| R1 | Login de conta de jogo tem 1..16 caracteres no fio | `0030-sessao-unica.sql` | `ck_account_login_len` + tipo `GameLogin` (`ddl-confirmado.md` §5.2) |
 | R2 | PIN errado acumula e bloqueia; reiniciar o processo não zera | `accounts.pin_failures`, `pin_locked_until`, `repo/accounts.rs::pin_guard` | `game.account.pin_failure_count`/`pin_locked_until` (§5.2) |
-| R3 | `Coin` é saldo **da conta**, não do personagem, teto `i32::MAX` | `0034_account_wallet.sql` | `game.account_wallet.coin` (§5.2) |
-| R4 | Cofre é da conta | `0003_inventario.sql::vault_items` | `game` (0009), outro arquivo |
-| R5 | Um resgate diário por conta por dia UTC | `0028_estado_de_jogo.sql` | `game` (0011), outro arquivo |
-| R6 | Uma sessão viva por conta; mesma conta em dois canais é recusada | `0030_sessao_unica.sql` | `ux_session_viva_por_conta` (`ddl-confirmado.md` §5.5) |
-| R7 | Bloqueio exige motivo e autor | `0031_moderacao.sql` | `game.account_moderation` (§5.2) |
+| R3 | `Coin` é saldo **da conta**, não do personagem, teto `i32::MAX` | `0034-account-wallet.sql` | `game.account_wallet.coin` (§5.2) |
+| R4 | Cofre é da conta | `0003-inventario.sql::vault_items` | `game` (0009), outro arquivo |
+| R5 | Um resgate diário por conta por dia UTC | `0028-estado-de-jogo.sql` | `game` (0011), outro arquivo |
+| R6 | Uma sessão viva por conta; mesma conta em dois canais é recusada | `0030-sessao-unica.sql` | `ux_session_viva_por_conta` (`ddl-confirmado.md` §5.5) |
+| R7 | Bloqueio exige motivo e autor | `0031-moderacao.sql` | `game.account_moderation` (§5.2) |
 | R8 | Crédito/débito de donate idempotente por chave | `0042`, `0045` | `portal` (0011); formato é `M17`, decidida em 2026-11-19 |
-| R9 | Grant pendente impede apagar conta/personagem (`RESTRICT`) | `0006_delivery_queue.sql` | `ops` (0012, desenho em `ddl-confirmado.md` §5.16) |
-| R10 | Token de reset só existe como hash sha256 hex de 64 | `0053_pin_reset_token.sql` | `portal.person_token` (§4) e `game.pin_reset` (§5.2) |
-| R11 | Auditoria append-only, sem FK | `0005_auditoria.sql` | `ops.audit_log` (§5.3), ator tripartido (`M18-A`) |
+| R9 | Grant pendente impede apagar conta/personagem (`RESTRICT`) | `0006-delivery-queue.sql` | `ops` (0012, desenho em `ddl-confirmado.md` §5.16) |
+| R10 | Token de reset só existe como hash sha256 hex de 64 | `0053-pin-reset-token.sql` | `portal.person_token` (§4) e `game.pin_reset` (§5.2) |
+| R11 | Auditoria append-only, sem FK | `0005-auditoria.sql` | `ops.audit_log` (§5.3), ator tripartido (`M18-A`) |
 | R12 | Papel do jogador no jogo: `player`/`moderator`/`admin` | `accounts_role` | `game.account.role` (§5.2) |
 | R13 | Senha e PIN só como hash resistente (argon2id) | `repo/accounts.rs` | CHECKs de prefixo (§5.1/§5.2) + política `M9` |
 | R14 | As **5** contas da mesma pessoa podem estar online ao mesmo tempo, em qualquer canal | cultura do jogo (§3) + `docs/wyd/multiconta.md` | `game.session` (§5.5): sessão só por conta |

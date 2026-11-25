@@ -48,7 +48,7 @@ recorte de leitura, não uma segunda fonte.
 | relação 1:N → FK | a FK mora no lado N; o nome e a ação (`RESTRICT`/`CASCADE`) são explícitos | `integridade-e-constraints.md`; DDL da migration |
 | relação N:N → tabela de ligação | a ligação ganha PK composta e, quando tem atributo, vira entidade | `padrao-banco.md` §1; dicionário do domínio |
 | herança → tabela satélite | o núcleo fica na tabela principal; o detalhe vai para satélite 1:1 com PK/FK | `padrao-banco.md` §5; `ddl-confirmado.md` §5.10 |
-| derivado → view | leitura cruzada vira view; cálculo de jogo não vira coluna persistida sem decisão | `padrao-banco.md` `P-17`; `0029_views.sql` |
+| derivado → view | leitura cruzada vira view; cálculo de jogo não vira coluna persistida sem decisão | `padrao-banco.md` `P-17`; `0029-views.sql` |
 | conteúdo → versão | o catálogo referencia `content_version`; a versão é o corte de coerência do boot | `plano-migrations.md` §4; `carga-de-conteudo.md` |
 
 Nenhuma tabela nova entra “porque é conveniente”: a forma nasce no DDL do arquivo da série e a

@@ -71,4 +71,4 @@ conteúdo já aposentou — a decisão é do seed e do runtime.
 
 ## Migration
 
-Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013_content_taxonomy.sql`.
+Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013-content-taxonomy.sql`.

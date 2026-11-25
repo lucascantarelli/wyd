@@ -1,4 +1,4 @@
-> Pergunta: "em que ordem o `wyd-client` é construído e como cada fatia prova que terminou?"
+> Pergunta: "em que ordem o `wyd-client` é construído?"
 > Público: produto, arquitetura e desenvolvedor novo
 > Dono: equipe do `wyd-client`
 > Base: `docs/specs/requisitos.md`; `docs/arquitetura/componentes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
@@ -15,44 +15,21 @@
 
 ## 2. Fatias
 
-### F0 — Inventário e captura
+Fase, requisitos, dependência, entregável, DoD e fora de escopo de cada fatia têm **dono único na
+página da issue**; esta página cita o link e não repete. A ordem abaixo é a do roadmap, e a prova
+de término é o `## DoD` da página citada.
 
-| Campo | Valor |
-|---|---|
-| Fase | 1 |
-| Requisitos | `RF-CLI-001`, `RF-CLI-002` |
-| Depende de | A1 autorizada; pedido ao titular |
-| Entrega | inventário item a item (`docs/specs/inventario-da-arvore.md`), pacote do pedido (`docs/specs/pedido-ao-titular.md`) |
-| DoD | inventário com hash/tamanho por arquivo; pedido enviado e protocolado |
-| Fora | patches |
-
-### F1 — Patches e configuração do cliente
-
-| Campo | Valor |
-|---|---|
-| Fase | 2 |
-| Requisitos | `RF-CLI-003`, `RF-CLI-004` |
-| Depende de | F0; `LCLI-02`/`LCLI-03` |
-| Entrega | patches de configuração, arquivos de cliente, validação |
-| DoD | patch aplica sem quebrar cliente; configuração documentada; teste de regressão verde |
-| Fora | distribuição |
-
-### F2 — Fechamento
-
-| Campo | Valor |
-|---|---|
-| Fase | 3 |
-| Requisitos | `RF-CLI-005`, `RF-CLI-006`, `RF-CLI-007` |
-| Depende de | F0–F1; CI real |
-| Entrega | lacunas fechadas, documentação final, suíte |
-| DoD | `LCLI-02`/`LCLI-03`/`LCLI-05` resolvidas ou com dono+prazo; cobertura ≥ 85% onde aplicável |
-| Fora | distribuição pública |
+| Ordem | Fatia | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | F0 — Inventário e captura | [`WYDCLI-F0`](WYDCLI-F0.md) §Skills |
+| 2 | F1 — Patches e configuração do cliente | [`WYDCLI-F1`](WYDCLI-F1.md) §Skills |
+| 3 | F2 — Fechamento | [`WYDCLI-F2`](WYDCLI-F2.md) §Skills |
 
 ## 3. Ordem e dependências
 
-```text
-F0 → F1 → F2
-```
+A sequência de execução é a da tabela de §2, na ordem das linhas. O que cada fatia exige antes
+de começar — outra fatia, lote de schema, lacuna, captura ou decisão — é o campo `## Depende de`
+da página dela; esta página não repete aresta nem grafo.
 
 ## 4. Riscos por fatia
 

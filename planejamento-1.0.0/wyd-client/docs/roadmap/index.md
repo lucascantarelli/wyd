@@ -6,30 +6,36 @@
 
 **Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada.
 
-A fila tem **5 fatias** em 3 fases. Uso/distribuição está em proposta (responsável nominal, distribuição
-congelada, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado, `Q-IP-2` no escopo B).
+A fila tem **3 fatias**, uma por página citada abaixo; cada página traz entregável, DoD
+e evidência de fechamento. Fatia sem DoD executável não entra na fila.
 
-## 1. Fila por fase
+## 1. Fila
 
-| Fase | Fatias | Foco |
-|---|---|---|
-| 1 | `WYDCLI-001`–`002` | inventário e captura (A1 autorizada 2026-11-23) |
-| 2 | `WYDCLI-003`–`004` | patches e arquivos de configuração do cliente |
-| 3 | `WYDCLI-005` | documentação, lacunas e fechamento |
+A ordem das fatias é a de `roadmap.md` §2; a fase e a prioridade de cada uma são os campos
+`**Fase:**` e `**Prioridade:**` da página dela. Esta página não repete fila, fase nem prioridade.
 
 ## 2. O que está bloqueado
 
-| Bloco | Fatias afetadas | Por quê |
-|---|---|---|
-| pedido ao titular | `WYDCLI-001`–`002` | `Q-IP-1`/`Q-IP-2` com pedido externo iniciado, não enviado |
-| segunda leitura | `WYDCLI-003` | `LCLI-03` (QA definido, operador na ficha) |
-| CI real | `WYDCLI-005` | workflow stub |
+O bloqueio de cada fatia — lacuna, captura, schema ou CI — é o `## Depende de` da página
+dela; esta página não repete o motivo nem a lista de afetadas.
 
 ## 3. Como ler uma fatia
 
-Cada `WYDCLI-nnn` tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
+Cada página de fatia tem: título, fase, prioridade, contexto, entregável, DoD, fora de escopo, risco,
 dependência e evidência ao fechar.
 
 ## 4. O que esta página não cobre
 
 - **Prazo e custo:** não há estimativa aprovada.
+
+## Páginas de issue por fatia
+
+Medido em 2026-11-25: **3** páginas, uma por fatia, no formato de`WYDDB-nnn`
+(dependências, DoD observável e bloco de skills); o estado de cada uma é o `**Estado:**` da própria página. O número sequencial de cada issue é
+atribuído na criação pelo `github-mapping.md`; a chave aqui é a fatia.
+
+| Issue | Título |
+|---|---|
+| [`WYDCLI-F0`](WYDCLI-F0.md) | Inventário e captura |
+| [`WYDCLI-F1`](WYDCLI-F1.md) | Patches e configuração do cliente |
+| [`WYDCLI-F2`](WYDCLI-F2.md) | Fechamento |

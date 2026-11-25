@@ -20,7 +20,7 @@ por aparecerem no legado.
 | Campo | Valor |
 |---|---|
 | Número | `0021` (checklist, linha 105) |
-| Arquivo | `crates/wyd-db/migrations/0021_content_rules.sql` |
+| Arquivo | `crates/wyd-db/migrations/0021-content-rules.sql` |
 | Schema | `content` (5 tabelas) |
 | Posição | 21 de 34 |
 | Depende de | `0001` (schema, privilégios); `0013` (`content.item_effect`); `0014` (`content.item_catalog`) |

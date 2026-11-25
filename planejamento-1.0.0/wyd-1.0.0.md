@@ -365,12 +365,12 @@ pode ser declarada completa, por mais páginas que o planejamento feche. Executa
 **Foco revisto em 2026-11-23, depois de `Q-SRV-5` e `Q-PRT-1`. A ordem de execução daqui para frente é
 esta seção** — §7.5 cita, não repete.
 
-### 6.1 Estado medido das lacunas (2026-11-23)
+### 6.1 Estado medido das lacunas (2026-11-23, atualizado em 2026-11-25)
 
 | Sistema | Lacunas | Abertas | Propostas | Fechadas | Externas | Fonte |
 |---|---:|---:|---:|---:|---:|---|
 | `wyd-protocol` | 20 | 2 | 0 | 18 | 0 | `lacunas.md` §1 |
-| `wyd-client` | 5 | 2 | 1 | 2 | 0 | idem |
+| `wyd-client` | 5 | 2 | 0 | 3 | 0 | idem |
 | `wyd-net` | 4 | 1 | 0 | 3 | 0 | idem |
 | `wyd-core` | 4 | 0 | 0 | 4 | 0 | idem |
 | `wyd-sim` | 4 | 0 | 0 | 4 | 0 | idem |
@@ -381,21 +381,22 @@ esta seção** — §7.5 cita, não repete.
 | `wyd-launcher` | 4 | 0 | 0 | 4 | 0 | `lacunas.md` §1 |
 | `wyd-bots` | 4 | 1 | 0 | 3 | 0 | idem |
 | `wyd-docs` | 14 | 0 | 0 | 14 | 0 | idem |
-| **Total** | **118** | **6** | **1** | **108** | **3** | `*/lacunas.md` |
+| **Total** | **118** | **6** | **0** | **109** | **3** | `*/lacunas.md` |
 
 `LAC-POR-09` = A foi o delta `0 abertas / −1 proposta / +1 fechada`; `Q-NET-1` = A não alterou as
-contagens. `wyd-ops` não tem
+contagens, e a execução de `LCLI-02` em 2026-11-25 fechou a linha com `0 abertas / −1 proposta /
++1 fechada` (lista, manifesto e verificador do patch). `wyd-ops` não tem
 `lacunas.md`; não entra na soma. As 3 externas do `wyd-db` são `A11`, `A20` e `M21`:
 decididas, mas dependentes de frente fora do banco. O total de 118 é a soma das 12 tabelas de lacunas,
 não uma estimativa; cada linha vem do registro do sistema. O `wyd-admin` registra ainda 2 decisões sem
 ID, fora da soma de lacunas.
 
-**Leitura.** 7 itens ainda não fechados: 6 abertos e 1 proposta. Desses, **0 têm pergunta de desenho
-isolada aguardando resposta** — a de `LCLI-02` existe, com recomendação A, mas depende da liberação de
-direitos —; **2 são medições com política decidida** (`LNET-01`, `Q-NET-1` = A; `LBOT-03`,
-`Q-BOT-3` = A); **4 não entram numa rodada de decisão técnica** (`LPRT-03` e `LPRT-06` são medição de fio;
-`LCLI-03` tem QA definido (Lucas Cantarelli, que não é o operador) e espera a primeira ficha assinada;
-`LCLI-02` depende da classificação de direitos); e **1 é jurídico sem recomendação** (`LCLI-05`, com
+**Leitura.** 6 itens ainda não fechados, todos abertos e nenhum em proposta. Desses, **0 têm pergunta
+de desenho isolada aguardando resposta**; **2 são medições com política decidida** (`LNET-01`,
+`Q-NET-1` = A; `LBOT-03`, `Q-BOT-3` = A), ambas com execução autorizada e artefato pendente; **3 não
+entram numa rodada de decisão técnica** (`LPRT-03` e `LPRT-06` são medição de fio e dependem do `ECAP`
+operado; `LCLI-03` tem QA definido (Lucas Cantarelli, que não é o operador) e espera a primeira ficha
+assinada); e **1 é jurídico sem recomendação** (`LCLI-05`, com
 responsável nominal, `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado e sem
 evidência, distribuição congelada). Das 16 perguntas originalmente registradas sem resposta,
 **quatorze foram respondidas pelo dono** — `Q-NET-2` = A (`LNET-02`), `Q-SIM-1` = A (`LSIM-01`),
@@ -493,7 +494,8 @@ Também decidiu as políticas de `Q-IP-3`–`Q-IP-6`, iniciou o pedido externo d
 `Q-IP-2` no escopo B (árvore inteira); o inventário item a item
 (`wyd-client/docs/specs/inventario-da-arvore.md`) e o pacote do pedido
 (`wyd-client/docs/specs/pedido-ao-titular.md`) existem, mas o pedido não foi enviado. Nenhuma dessas decisões fecha lacuna: `LCLI-03` depende da ficha assinada e `LCLI-05`, de evidência do
-titular; `LCLI-05` segue proposta e `LCLI-02` aberta.
+titular; `LCLI-05` segue proposta, e `LCLI-02` foi executada e fechada em 2026-11-25 com a lista medida,
+o manifesto e o verificador.
 
 `Q-NET-2` saiu desta fila: o dono respondeu **A** em 2026-11-23 — impor o build-alvo 7662 no handshake,
 com erro tipado para build não suportado — e `LNET-02` fechou no registro, com a decisão em
@@ -566,10 +568,11 @@ dono com data e evidência, como manda `AGENTS.md` §5, item 8.
 | `LPRT-03`, `LPRT-06` | são medição de fio, não escolha; a parte decidível já foi decidida em 2026-11-20 | B (captura A1) |
 | `LCLI-02` | depende de `Q-IP-1`/`Q-IP-2` (direitos) e da lista do patch; não é escolha isolada | `LCLI-05`/direitos |
 | `LCLI-03` | QA definido em 2026-11-23 (**Lucas Cantarelli**, dono do produto, que não é o operador); falta a primeira ficha assinada com o nome do operador | execução de B |
-| `LCLI-05` | `Q-IP-1`–`Q-IP-6` são jurídicas; `Q-IP-3`–`Q-IP-6` decididas em 2026-11-23, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote prontos, pedido não enviado e sem evidência; distribuição congelada; **segue proposta** e `LCLI-02` aberta | frente de direitos, fora desta rodada |
+| `LCLI-05` | `Q-IP-1`–`Q-IP-6` são jurídicas; `Q-IP-3`–`Q-IP-6` decididas em 2026-11-23, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote prontos, pedido não enviado e sem evidência; distribuição congelada; **segue proposta**; `LCLI-02` fechada em 2026-11-25 | frente de direitos, fora desta rodada |
 
-`LCLI-05` bloqueia patch, release e publicação de conteúdo do cliente; nenhuma resposta técnica a
-fecha. Enquanto ela estiver aberta, `LCLI-02` também não fecha.
+`LCLI-05` bloqueia a distribuição do conteúdo que a lista de `LCLI-02` descreve; nenhuma resposta
+técnica a fecha. `LCLI-02` fechou em 2026-11-25 como decisão de conteúdo e verificação, mas o patch não
+é publicado enquanto `LCLI-05` estiver aberta.
 
 ### 6.5 Depois da rodada
 
@@ -595,8 +598,8 @@ são a consequência da rodada, não a fila de perguntas.
    e o primeiro domínio é a entrada na cena.
 
 Nenhuma posição é cronograma: é dependência declarada nas fontes citadas. O que continua aberto
-depois da rodada e da captura é `LCLI-02`, a primeira ficha assinada de `LCLI-03` e as respostas de
-`LCLI-05` no cliente, e as medições de `LNET-01` e `LBOT-03`.
+depois da rodada e da captura é a primeira ficha assinada de `LCLI-03`, as respostas de `LCLI-05` no
+cliente e as medições de `LNET-01` e `LBOT-03`; `LCLI-02` fechou em 2026-11-25.
 
 ---
 
@@ -837,10 +840,11 @@ quatro sistemas não são crate Rust — o cliente é artefato binário, o site 
 Next.js e o `wyd-ops` é Dockerfile, Compose e CI.
 
 ### 8.3 Arquivos de raiz exigidos ou descobertos automaticamente pelas ferramentas
+**Sem arquivo no repositório:** `compose.yaml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Arquivo | Por que fica na raiz | O que quebraria se mudasse |
 |---|---|---|
-| `docker-compose.yml` | `docker compose` procura `compose.yaml` ou `docker-compose.yml` no diretório de trabalho | todo comando viraria `docker compose -f wyd-ops/docker-compose.yml …`; o caminho usado na operação e na documentação deixaria de existir |
+| `docker-compose.yml` | `docker compose` procura `compose.yaml` ou `docker-compose.yml` no diretório de trabalho | todo comando viraria `docker compose -f wyd-ops/docker-compose.yml …` (caminho **hipotético**, que não existe hoje); o caminho usado na operação e na documentação deixaria de existir |
 | `.dockerignore` | o Docker lê o arquivo na **raiz do contexto**, e o contexto é a raiz do repositório (o `preparar.py` lê `planejamento-1.0.0/`) | `wyd-client/` (567 MB) e `deprecated/` entrariam no contexto; build mais lento e imagem maior |
 | `.github/workflows/` | caminho fixo do GitHub Actions | workflow não é encontrado; não existe alternativa de caminho |
 | `docker-compose.override.yml` | o Compose carrega automaticamente o nome convencional de override ao rodar com o arquivo base na raiz; é o que mantém o `gate` disponível sem `-f` | se for movido ou renomeado, deixa de ser mesclado; `docker compose --profile gate run` passaria a exigir invocação explícita |

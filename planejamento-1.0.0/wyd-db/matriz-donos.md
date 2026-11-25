@@ -64,8 +64,8 @@ de linha — a linha envelhece a cada edição, a seção não.
 |---|---|---|---|
 | 1 | O critério de "100%" | — (citada em `integridade-e-constraints.md`, `Base`) | — |
 | 2 | Veredito por arquivo (29) | — (o estado é de `migrations-checklist.md` §1.2; ver *Achados*) | — |
-| 3 | `0001_bootstrap.sql` | — (`migrations/0001-bootstrap.md` cita) | — |
-| 4 | `0004_portal_access.sql` | — (`migrations/0004-portal-access.md` cita) | — |
+| 3 | `0001-bootstrap.sql` | — (`migrations/0001-bootstrap.md` cita) | — |
+| 4 | `0004-portal-access.sql` | — (`migrations/0004-portal-access.md` cita) | — |
 | 5 | DDL das tabelas já desenhadas | `docs/dicionario-dados/dominio-acesso.md` | **existe** (nota de §5) |
 | 5.1 | `portal.person` | `dominio-acesso.md` §Tabela de tabelas, §Ciclo de vida do dado | coberta pela nota de §5 |
 | 5.2 | Bloco `game` da conta | `dominio-acesso.md`, idem | coberta pela nota de §5 |

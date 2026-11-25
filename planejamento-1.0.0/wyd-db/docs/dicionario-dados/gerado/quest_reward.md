@@ -83,4 +83,4 @@ de EXP/fama são `H`, herdadas do legado. `NULLS NOT DISTINCT` é sensível ao `
 
 ## Migration
 
-Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026_content_quests_events.sql`.
+Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026-content-quests-events.sql`.

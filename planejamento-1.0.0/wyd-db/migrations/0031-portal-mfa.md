@@ -21,7 +21,7 @@ portal. **Mecanismo não reaberto:** TOTP, só `admin`/`moderator`, `member` for
 | Campo | Valor |
 |---|---|
 | Número | `0031` (confirmado em 2026-11-20; próximo livre depois de `0030`) |
-| Arquivo | `crates/wyd-db/migrations/0031_portal_mfa.sql` |
+| Arquivo | `crates/wyd-db/migrations/0031-portal-mfa.sql` |
 | Schema | `portal` (1 tabela) |
 | Posição | 31 de 34 (segundo fator de staff) |
 | Depende de | `0001` (schema `portal`, `ops.fn_set_updated_at`, default privileges), `0003` (`portal.person`, dono da credencial) |
@@ -192,12 +192,13 @@ em resposta, nem em log, nem em `Debug` de struct.
   reemite, e cada passo passa por `ops.audit_log` na mesma transação.
 
 ## 10. Prova de execução
+**Sem arquivo no repositório:** `psql -v ON_ERROR_STOP=1 -f 0031-portal-mfa.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 As consultas abaixo não foram executadas uma a uma; em 2026-11-24 rodaram a aplicação da série
 do zero e os 13 cenários de `sistema_pg` (`planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md`
 §6.6.30).
 
-1. `psql -v ON_ERROR_STOP=1 -f 0031_portal_mfa.sql` como `wyd_migrator` → `CREATE TABLE`, 2 `CREATE
+1. `psql -v ON_ERROR_STOP=1 -f 0031-portal-mfa.sql` como `wyd_migrator` → `CREATE TABLE`, 2 `CREATE
    INDEX`, `CREATE TRIGGER`.
 2. `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'portal';` → **16** (15 de
    `0003`/`0004`/`0011`/`0030` + esta).

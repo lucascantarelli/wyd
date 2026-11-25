@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, arquitetura e QA
 > Dono: equipe do wyd-core
 > Base: `wyd-protocol-1.0.0.md` §1.4; `LPRT-18`; `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7.2
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -47,3 +47,35 @@ cada lacuna continua em `lacunas.md`.
 As quatro perguntas estão em [Decisões do `wyd-core`](proposta-decisoes-core.md); `LCORE-01`–`LCORE-04`
 fecharam em 2026-11-23. A fronteira `core` × `sim` tem regra em `wyd-core-1.0.0.md` §3.1; a
 classificação de estado e a porta C4 estão em `wyd-core-1.0.0.md` §3.2.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Módulos do `wyd-core` — detalhamento](modulos.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+
+### arquitetura/adr
+
+- [ADR-CORE-0001 — Decisão C4 (wyd-core)](arquitetura/adr/adr-core-0001-decisao-c4.md)
+- [ADRs — `wyd-core`](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [Catálogo funcional — sistemas de jogo](specs/catalogo-funcional.md)
+- [requisitos](specs/requisitos.md)
+- [Sistemas de jogo — mapa de planejamento](specs/sistemas-de-jogo.md)
