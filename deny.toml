@@ -23,9 +23,14 @@ allow = [
 ]
 confidence-threshold = 0.8
 
+# O crate do projeto é GPL-2.0; a exceção vale só para ele, não para dependências.
+exceptions = [
+    { allow = ["GPL-2.0-only"], crate = "wyd-db" },
+]
+
 [licenses.private]
-# O crate é `publish = false`; a checagem de licença vale para as dependências.
-ignore = true
+# `publish = false` não pode virar bypass: dependência privada com licença proibida falha.
+ignore = false
 
 [bans]
 multiple-versions = "warn"

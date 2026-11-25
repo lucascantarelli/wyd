@@ -1,10 +1,11 @@
 # Primeiro slice do crate (Q-BLK-18 = A, 2026-11-24). Escolhas mínimas e declaradas:
-# nome do pacote, edition 2021 e nenhuma dependência. Features e dependências de `sqlx`
+# nome do pacote, edition 2021, licença GPL-2.0-only e nenhuma dependência. Features e dependências de `sqlx`
 # continuam NÃO decididas — ver docs/guia-desenvolvedor/mapa-do-crate.md §"o que não decide".
 [package]
 name = "wyd-db"
 version = "0.0.0"
 edition = "2021"
+license = "GPL-2.0-only"
 publish = false
 
 [[test]]
