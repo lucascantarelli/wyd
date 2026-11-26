@@ -56,8 +56,8 @@ recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](
 
 A movimentação não altera o comportamento: `cargo test --no-run` compilou os três alvos em 2026-11-26,
 mas a execução contra PostgreSQL 17 **não foi repetida** localmente nessa data (sem
-`WYD_DB_URL_TEST`/container) e segue pendente no job `pg` de `ci-db.yml` (matriz `schema`,
-`reversibilidade` e `runner`).
+`WYD_DB_URL_TEST`/container); o job `pg` de `ci-db.yml` (matriz `schema`, `reversibilidade` e
+`runner`) executou os três no PR #220 e passou.
 
 ## 2. Alvo → arquivo → tipo → precisa de banco
 **Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs` e `sistema/runner_pg.rs` estão versionados.

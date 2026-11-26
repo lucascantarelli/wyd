@@ -8,7 +8,7 @@
 
 **Reorganização (2026-11-26):** o arquivo passou a `crates/wyd-db/tests/sistema/sistema_pg.rs`;
 `cargo test --no-run` recompilou o alvo, mas a execução não foi repetida localmente (sem PG17 e
-`WYD_DB_URL_TEST`) e segue pendente no job `pg` (`schema`) de `ci-db.yml`.
+`WYD_DB_URL_TEST`); o job `pg` (`schema`) de `ci-db.yml` executou o alvo no PR #220 e passou.
 
 **Quatro níveis de afirmação convivem aqui:**
 
