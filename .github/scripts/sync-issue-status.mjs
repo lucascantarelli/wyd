@@ -107,11 +107,11 @@ async function getIssue(number) {
 }
 
 async function setState(issue, desired, force = false) {
-  if (!desired) return;
+  if (!desired) return null;
   const current = currentState(issue);
   if (!force && !canAdvance(current, desired)) {
     console.log(`#${issue.number}: mantém ${current} (não regride para ${desired})`);
-    return;
+    return current;
   }
 
   const labels = (issue.labels || []).map((label) => label.name);
@@ -123,6 +123,7 @@ async function setState(issue, desired, force = false) {
     await rest("POST", `/repos/${owner}/${repo}/issues/${issue.number}/labels`, { labels: [desired] });
   }
   console.log(`#${issue.number}: ${current || "sem estado"} → ${desired}`);
+  return desired;
 }
 
 async function linkedIssues(number) {
@@ -209,8 +210,10 @@ async function syncProject(issue, statusName) {
 }
 
 async function transition(issue, desired, { force = false, status = null } = {}) {
-  if (desired) await setState(issue, desired, force);
-  await syncProject(issue, status || PROJECT_STATUS[desired] || null);
+  const aplicado = await setState(issue, desired, force);
+  // O Status segue a label efetiva, não a desejada: um evento repetido pode
+  // manter `em-revisao` e não deve regredir o Project para `Em andamento`.
+  await syncProject(issue, status || PROJECT_STATUS[aplicado] || null);
 }
 
 async function handleIssue() {

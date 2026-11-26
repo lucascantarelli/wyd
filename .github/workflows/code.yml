@@ -1,4 +1,4 @@
-name: ci-code
+name: code
 
 # Um workflow por domínio. Este cobre fmt, clippy, testes e cobertura dos três
 # crates; os alvos PostgreSQL ficam em `ci-db.yml` e a segurança em `security.yml`.
