@@ -16,12 +16,12 @@ escopo são desta página; o roadmap cita o link e não repete.
 
 ## Contexto
 
-A fatia F1 do `wyd-docs` cobre `verificar.py site` e existe para
+A fatia F1 do `wyd-docs` cobre `gate/checks/links.py` e existe para
 cumprir `RF-DOC-002` sem antecipar a fatia seguinte.
 
 ## Entregável
 
-`verificar.py site`
+`gate/checks/links.py`
 
 ## DoD
 

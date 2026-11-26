@@ -119,7 +119,7 @@ própria que `componentes.md` não responda.
   (`documentation-writer`, `finishing-a-development-branch`, `frontend-design`, `github-actions-docs`,
   `python-testing-patterns`, `skill-creator`, `writing-plans`): não têm `SKILL.md` no repositório e são
   carregadas pelo ambiente do agente. Toda página de issue declara essa distinção no bloco de skills.
-- O gate confere a regra de dono com `wyd-docs/verificar-skills.py`: roadmap que nomeia a skill, citação
+- O gate confere a regra de dono com `wyd-docs/gate/checks/skills.py`: roadmap que nomeia a skill, citação
   que não resolve e página sem `**Dono do valor:**` reprovam com arquivo e linha.
 - **Fase, dependência, DoD e fora de escopo da fatia são da página da issue, não do roadmap.**
   `roadmap.md` e `fases.md` mantêm só a ordem, o risco e as regras de fatiamento; a tabela de fatias
@@ -127,7 +127,7 @@ própria que `componentes.md` não responda.
   `DoD` ou `Fora`. `index.md` é catálogo: não repete fila, fase, prioridade, bloqueio nem estado —
   aponta o campo da página. O mesmo gate reprova a célula repetida, a página de fatia não citada pelo
   roadmap e o roadmap cujo link de `§Skills` não resolve.
-- O gate de contagens (`wyd-docs/verificar-contagens.py`) mede páginas de issue, fatias e páginas
+- O gate de contagens (`wyd-docs/gate/checks/contagens.py`) mede páginas de issue, fatias e páginas
 escritas em **todos** os dashboards e em `status-planejamento.md`: citação de página de issue é
 conferida contra o `docs/roadmap/` do próprio sistema (ou o total, no status), `N fatias` contra as
 páginas de fatia (`wyd-admin` conta IDs `ADM-nn` do roadmap, exceção declarada) e `N páginas
@@ -153,7 +153,7 @@ sistemas` na linha de fatia (sistemas com página de fatia), `N páginas de dom�
 com `tests/specs/` do sistema; `N páginas, uma por arquivo|alvo` e `N arquivos em `src/migrate/``
 exigem `planejadas`/`previsto`, porque essas pastas não existem. Linha de árvore (com `▲`) e a tabela
 de ondas (coluna **Arquivos**, declarada composição planejada) ficam fora.
-- O gate também cobra a prova do ledger: `wyd-docs/verificar-lacunas.py` reprova toda lacuna marcada
+- O gate também cobra a prova do ledger: `wyd-docs/gate/checks/lacunas.py` reprova toda lacuna marcada
   como fechada que não cite um artefato existente **que trate do item** (documento, teste, ADR,
   migration ou pergunta registrada) e imprime o placar medido (`118 = 108 fechadas + 10
   bloqueadas`), reprovando qualquer documento que cite soma diferente. A mesma régua vale para as
@@ -165,7 +165,7 @@ de ondas (coluna **Arquivos**, declarada composição planejada) ficam fora.
   migration/tabela/seed, o limiar de cobertura nem o formato do cabeçalho: cada um tem dono aqui (§2,
   §6), em `wyd-1.0.0.md` §1, no índice de ADRs, em `plano-migrations.md` §3, em
   `estrategia-de-testes.md` §6 e em `wyd-db/docs/convencoes.md` §Cabeçalho de página. O mesmo gate
-  (`verificar-skills.py`) reprova a linha que republicar o valor, com arquivo e linha.
+  (`gate/checks/skills.py`) reprova a linha que republicar o valor, com arquivo e linha.
 - `docs/planos/plano-de-testes.md` de cada sistema declara CI, cobertura e monitoramento com comando
   ou artefato verificável; não há seção vazia nem limiar inventado.
 

@@ -42,7 +42,7 @@ reproduzível — `docker compose up` não subia nada.
    publicada confirmada (2026-11-23) — a medição está em §5.1.
 7. **O gate de documentação roda pelo Compose, atrás de perfil e sem montar o site durante o build
    da imagem gate.** O override acrescenta `gate` (perfil `gate`), que executa `preparar.py`,
-   `mkdocs build`, `verificar.py`, `verificar-contagens.py` e `verificar-censos.py` em um comando. Seu alvo Dockerfile `gate`
+   `mkdocs build`, `gate/checks/links.py`, `gate/checks/contagens.py` e `gate/checks/censos.py` em um comando. Seu alvo Dockerfile `gate`
    instala dependências e copia fontes, mas não faz a montagem; assim o comando a executa uma única
    vez. `docker compose --profile gate run --rm gate` valida a árvore de trabalho e sai com o código
    do último verificador; sem
@@ -127,7 +127,7 @@ causa e o que falta em `wyd-1.0.0.md` §8.3. O job não tem passo manual: build,
 | `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG:<sha>` no ambiente que precisa de reprodutibilidade; em desenvolvimento, `docker-compose.dev.yml` usa `:dev` com `pull_policy: build` |
 | build local gravar `:latest` | a imagem baixada é substituída pela da árvore | o build de dev usa `docker-compose.dev.yml` (`:dev`); quem roda `docker compose up --build docs` sem ele aceita a tag da árvore local |
 | pacote GHCR privado | `pull` sem `docker login` falha | imagem de documentação pública; se virar privada, o host precisa de credencial |
-| workflow duplicar o gate | dois builds do mesmo commit | o gate continua em `docs.yml`; a imagem não reexecuta `verificar.py` |
+| workflow duplicar o gate | dois builds do mesmo commit | o gate continua em `docs.yml`; a imagem não reexecuta `gate/checks/links.py` |
 | build de gate voltar a montar o site antes do comando | custo extra, duplicando MkDocs | eliminado: `target: gate` termina após copiar fontes; montagem, build e verificação só rodam no comando |
 
 ### 6.1 Medição da otimização do gate (`V`, 2026-11-23)

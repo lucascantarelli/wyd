@@ -122,8 +122,8 @@ presumida pelo autor.
 | 9 | molde do tipo | página de migration segue os dez itens de `migrations-checklist.md` §5 e o DDL tem `-- migrate:up`/`-- migrate:down`; página de plano segue §6.9 | falta seção obrigatória, `down` ou prova de execução |
 | 10 | revisão por par | alguém que não escreveu leu o diff e registrou o veredito | página sem segunda leitura |
 
-Depois dos dez itens, o gate do site é a prova final: `preparar.py`, `mkdocs build`, `verificar.py`,
-`verificar-contagens.py` e `verificar-censos.py` precisam sair com **exit 0**. O comando e o container são os de
+Depois dos dez itens, o gate do site é a prova final: `preparar.py`, `mkdocs build`, `gate/checks/links.py`,
+`gate/checks/contagens.py` e `gate/checks/censos.py` precisam sair com **exit 0**. O comando e o container são os de
 `wyd-docs-1.0.0.md` §7.1; a página não repete a linha de comando.
 
 ## 6. Revisão por par

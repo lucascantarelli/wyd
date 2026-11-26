@@ -1,27 +1,24 @@
 #!/usr/bin/env bash
-# Gate editorial do site — fonte única.
+# Gate editorial do site — entrada única.
 #
 # O CI (`.github/actions/docs-check`) e o `docker compose --profile gate` chamam
 # este script. As dependências Python precisam existir antes: o composite instala
 # `wyd-docs/requirements.txt`; a imagem `:gate` já as traz.
 #
 # Uso:
-#   bash wyd-docs/gate.sh [<raiz-do-repositorio>]
+#   bash wyd-docs/gate.sh [<raiz-do-repositorio>] [--json|--details]
 #
-# No Compose a árvore de evidência já está copiada na imagem `:gate`; não há bind
-# mount. A montagem, o build e a verificação rodam em `wyd-docs/` (a cópia
-# gravável da imagem), enquanto a guarda de lacunas lê a evidência em `<raiz>`.
+# O contrato de saída e os subcomandos ficam em `wyd-docs/gate/cli.py`. Este
+# arquivo só preserva o caminho estável que o Compose e o CI já usam.
 set -euo pipefail
 
 AQUI="$(cd "$(dirname "$0")" && pwd)"
-ROOT="${1:-$(cd "$AQUI/.." && pwd)}"
+if [[ "${1:-}" == --* ]]; then
+  ROOT="$(cd "$AQUI/.." && pwd)"
+else
+  ROOT="${1:-$(cd "$AQUI/.." && pwd)}"
+  shift || true
+fi
 
 cd "$AQUI"
-
-python verificar-skills.py --root "$ROOT"
-python verificar-lacunas.py --root "$ROOT"
-python preparar.py
-mkdocs build --dir .build/docs --output site
-python verificar.py site
-python verificar-contagens.py
-python verificar-censos.py
+exec python -m gate full --root "$ROOT" "$@"

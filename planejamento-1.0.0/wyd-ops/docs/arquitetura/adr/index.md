@@ -6,7 +6,7 @@
 > Base: `AGENTS.md` §3, §5 (invariante 3); `planejamento-1.0.0/wyd-db/docs/arquitetura/adr/index.md`; `planejamento-1.0.0/wyd-ops/auditoria-de-organizacao.md`; `planejamento-1.0.0/wyd-1.0.0.md` §8
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25; ADRs de DevOps acrescentados em 2026-11-26). **22 ADRs aceitos** hoje; o restante das decisões vive em
+**Estado:** proposto (2026-11-25; ADRs de DevOps acrescentados em 2026-11-26). **23 ADRs aceitos** hoje; o restante das decisões vive em
 `lacunas.md`/`docs/` do sistema dono e em `decisoes-registradas.md`.
 
 ## 1. Regra de ouro (AGENTS.md §5, item 3)
@@ -37,6 +37,7 @@ Numeração segue o sistema dono: `ADR-<SISTEMA>-NNNN` (ex.: `ADR-DB-0001`).
 | `ADR-OPS-0007` | Deploy sobre Compose, provedor de VPS a definir | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0007-deploy-sobre-compose-com-provedor-a-definir.md` |
 | `ADR-OPS-0008` | Política de actions de terceiros | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0008-politica-de-actions-de-terceiros.md` |
 | `ADR-OPS-0009` | Transição automática de estado de issue | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0009-transicao-automatica-de-issues.md` |
+| `ADR-OPS-0010` | Camada única de gate: pacote Python, contrato de saída e papéis das linguagens | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0010-camada-unica-de-gate.md` |
 | `ADR-LCH-0001` | Manifesto canônico com assinatura Ed25519 destacada (`Q-LCH-1` + `Q-LCH-3` = A) | `wyd-launcher` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-launcher/docs/arquitetura/adr/adr-lch-0001-manifesto-canonico-assinado.md` |
 | `ADR-SIM-0001` | Aritmética inteira em bps, arredondamento único (`Q-SIM-4` = A) | `wyd-sim` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-sim/docs/arquitetura/adr/adr-sim-0001-aritmetica-inteira-em-bps.md` |
 | `ADR-PRT-0001` | Build-alvo é o cliente 7662 (`Q-PRT-1` = A) | `wyd-protocol` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-protocol/docs/arquitetura/adr/adr-prt-0001-build-alvo-7662.md` |

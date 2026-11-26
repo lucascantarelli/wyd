@@ -17,7 +17,7 @@ o contrato de leitura continua em [`convencoes.md`](../convencoes.md).
 |---|---|---|
 | imagens nas páginas | **0** ocorrências de `![` em `docs/` | `grep -rn '!\[' docs --include='*.md'`, 2026-11-24 |
 | o que a montagem copia | só `*.md` (`origem.rglob("*.md")`) e os arquivos do tema (`estilo.css`, `site.js`, `mermaid.js`) | `wyd-docs/preparar.py`, linhas 96 e 215 |
-| verificação de link | não trata `src` de imagem | `wyd-docs/verificar.py` |
+| verificação de link | não trata `src` de imagem | `wyd-docs/gate/checks/links.py` |
 
 **Consequência:** um `.png` colocado em `docs/` **não chega ao site** — a montagem publica página, não
 ativo de página. Publicar imagem exige mudança no `preparar.py`, que é do **`wyd-docs`**, e essa mudança

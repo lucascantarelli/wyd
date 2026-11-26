@@ -1,7 +1,7 @@
 > Pergunta: "como uma página é revisada, aprovada e publicada sem quebrar link ou ID?"
 > Público: Autor, revisor e mantenedor do site
 > Dono: equipe do `wyd-db`
-> Base: `wyd-db-1.0.0.md` §7 e §10; `convencoes.md`; `wyd-docs/preparar.py`; `wyd-docs/verificar.py`
+> Base: `wyd-db-1.0.0.md` §7 e §10; `convencoes.md`; `wyd-docs/preparar.py`; `wyd-docs/gate/checks/links.py`
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-22)
@@ -42,8 +42,8 @@ flowchart LR
 
 ## 3. Gate local
 
-O gate é o de `wyd-docs`: `preparar.py`, `mkdocs build` e `verificar.py`, seguidos de
-`verificar-contagens.py` e `verificar-censos.py`. Ele verifica link, âncora, navegação, sintaxe 1.x,
+O gate é o de `wyd-docs`: `preparar.py`, `mkdocs build` e `gate/checks/links.py`, seguidos de
+`gate/checks/contagens.py` e `gate/checks/censos.py`. Ele verifica link, âncora, navegação, sintaxe 1.x,
 censo por estado, contagens da série e os quatro censos citados entre páginas (atos de aceite,
 páginas aceitas, células pendentes e `Q-BLK` abertas). Um build que gera HTML sem os verificadores
 **não** é gate completo.

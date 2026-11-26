@@ -29,19 +29,27 @@ propriedade do bloco de skills.
 Falha (exit 1) listando `arquivo:linha: motivo`; exit 2 quando a pasta de planejamento não existe.
 
 Uso:
-    python verificar-skills.py            # a partir de wyd-docs/
-    python verificar-skills.py --root .   # raiz do repositório explícita
+    python -m gate check skills --root ..   # a partir de wyd-docs/
 """
 
 from __future__ import annotations
 
-import argparse
 import re
-import sys
 from pathlib import Path
+
+from ..model import CheckResult
+from ..workspace import Workspace
 
 PLANEJAMENTO = "planejamento-1.0.0"
 PASTA_ROADMAP = "docs/roadmap"
+
+_WS: Workspace | None = None
+
+
+def _ws() -> Workspace:
+    if _WS is None:
+        raise RuntimeError("skills: Workspace não inicializado")
+    return _WS
 
 # Célula de skill declarada por nome no roadmap: é exatamente o que a regra proíbe.
 CELULA_SKILL = re.compile(r"^\s*\|\s*Skills? (?:principal|complementares)\s*\|", re.IGNORECASE)
@@ -110,7 +118,7 @@ def _linha(texto: str, posicao: int) -> int:
 def _checar_roadmap(
     caminho: Path, nome: str, problemas: list[str], detalhe: bool = True
 ) -> int:
-    texto = caminho.read_text(encoding="utf-8")
+    texto = _ws().read(caminho)
     linhas = texto.splitlines()
     citacoes = 0
     for numero, linha in enumerate(linhas, start=1):
@@ -130,10 +138,10 @@ def _checar_roadmap(
             citacoes += 1
             etiqueta, alvo = achado.group(1), achado.group(2)
             destino = (caminho.parent / alvo).resolve()
-            if not destino.is_file():
+            if not _ws().exists(destino) or not destino.is_file():
                 problemas.append(f"{nome}:{numero}: citação para página inexistente {alvo}")
                 continue
-            pagina = destino.read_text(encoding="utf-8")
+            pagina = _ws().read(destino)
             if SECAO_SKILLS not in pagina:
                 problemas.append(f"{nome}:{numero}: {alvo} não tem bloco {SECAO_SKILLS}")
                 continue
@@ -166,7 +174,7 @@ def _checar_roadmap(
 
 
 def _checar_paginas(caminho: Path, nome: str, problemas: list[str]) -> int:
-    texto = caminho.read_text(encoding="utf-8")
+    texto = _ws().read(caminho)
     if SECAO_SKILLS not in texto:
         problemas.append(f"{nome}:1: página de issue sem bloco {SECAO_SKILLS}")
         return 0
@@ -180,13 +188,13 @@ def _checar_arquivos_de_ia(raiz: Path, problemas: list[str]) -> int:
     arquivos: list[Path] = []
     for nome in ARQUIVOS_DE_IA:
         caminho = raiz / nome
-        if caminho.is_file():
+        if _ws().exists(caminho) and caminho.is_file():
             arquivos.append(caminho)
     pasta = raiz / PASTA_SKILLS
     if pasta.is_dir():
-        arquivos.extend(sorted(pasta.rglob("*.md")))
+        arquivos.extend(_ws().files(pasta, "*.md"))
     for arquivo in arquivos:
-        texto = arquivo.read_text(encoding="utf-8")
+        texto = _ws().read(arquivo)
         rel = arquivo.relative_to(raiz).as_posix()
         for padrao, dono, motivo in FATOS_COM_DONO:
             for achado in padrao.finditer(texto):
@@ -197,15 +205,13 @@ def _checar_arquivos_de_ia(raiz: Path, problemas: list[str]) -> int:
     return len(arquivos)
 
 
-def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", default="..", help="raiz do repositório (padrão: .., a partir de wyd-docs/)")
-    args = parser.parse_args(argv[1:])
-    raiz = Path(args.root).resolve()
+def run(ws: Workspace) -> CheckResult:
+    global _WS
+    _WS = ws
+    raiz = ws.root
     base = raiz / PLANEJAMENTO
     if not base.is_dir():
-        print(f"skills: não encontrei {PLANEJAMENTO}/ em {raiz}")
-        return 2
+        return CheckResult("skills", False, f"não encontrei {PLANEJAMENTO}/ em {raiz}")
 
     problemas: list[str] = []
     arquivos_ia = _checar_arquivos_de_ia(raiz, problemas)
@@ -226,7 +232,7 @@ def main(argv: list[str]) -> int:
                     arquivo, nome, problemas, arquivo.name in ROTEIROS
                 )
                 if arquivo.name == "roadmap.md":
-                    texto = arquivo.read_text(encoding="utf-8")
+                    texto = ws.read(arquivo)
                     ligados = {alvo for alvo in LINK.findall(texto)}
                     for fatia in sorted(pasta.glob("*.md")):
                         if not PAGINA_FATIA.match(fatia.name):
@@ -236,21 +242,10 @@ def main(argv: list[str]) -> int:
                                 f"{nome}:1: página de fatia {fatia.name} não é citada pelo roadmap"
                             )
 
-    if problemas:
-        print(
-            f"skills: {len(problemas)} problema(s) em {roadmaps} roadmap(s), "
-            f"{paginas} página(s) de issue e {arquivos_ia} arquivo(s) de IA"
-        )
-        for problema in problemas:
-            print(f" - {problema}")
-        return 1
-
-    print(
-        f"skills: {roadmaps} roadmap(s) e {paginas} página(s) de issue ok "
-        f"({citacoes} citações de §Skills; {arquivos_ia} arquivo(s) de IA sem fato repetido)"
+    resumo = (
+        f"{roadmaps} roadmap(s) e {paginas} página(s) de issue "
+        f"({citacoes} citações de §Skills; {arquivos_ia} arquivo(s) de IA)"
     )
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+    if problemas:
+        return CheckResult("skills", False, resumo, problems=problemas)
+    return CheckResult("skills", True, resumo)

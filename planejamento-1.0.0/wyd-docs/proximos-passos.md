@@ -50,26 +50,25 @@ nenhum resultado está registrado.
 ## 3. Censo por estado (um comando, rodado pelo CI)
 
 ```bash
-cd wyd-docs && ./.venv/Scripts/python.exe verificar-contagens.py
-# Linux/macOS: cd wyd-docs && .venv/bin/python verificar-contagens.py
+cd wyd-docs && py -3 -m gate fast --root ..
+# Linux/macOS: cd wyd-docs && python -m gate fast --root ..
+# JSON para agente: cd wyd-docs && python -m gate fast --root .. --json
 ```
 
-O comando lê as fontes de sistema que a montagem publica (`planejamento-1.0.0/<sistema>/docs/**/*.md`,
-a mesma regra do `preparar.py`) e conta `aceito`, `proposto` e sem linha de estado, mais o total de
-fontes censadas. Ele compara as quatro grandezas com `wyd-docs-1.0.0.md` §9.1 — o único dono do
-número — e sai com `exit 1` quando qualquer uma diverge; `exit 2` é leitura impossível (arquivo,
-pasta ou declaração ausente), não divergência. Fonte publicada com estado fora de `aceito`/`proposto`
-reprova, salvo exceção declarada no próprio script (`CENSO_ESPECIAL`), que ele imprime com o motivo.
+O comando roda os checks nativos `skills`, `lacunas`, `contagens` e `censos` sobre as fontes de sistema
+que a montagem publica (`planejamento-1.0.0/<sistema>/docs/**/*.md`, a mesma regra do `preparar.py`) e
+conta `aceito`, `proposto` e sem linha de estado, mais o total de fontes censadas. Ele compara as
+quatro grandezas com `wyd-docs-1.0.0.md` §9.1 — o único dono do número — e sai com `exit 1` quando
+qualquer uma diverge; `exit 2` é leitura impossível (arquivo, pasta ou declaração ausente), não
+divergência. Fonte publicada com estado fora de `aceito`/`proposto` reprova, salvo exceção declarada
+no módulo `gate/checks/contagens.py` (`CENSO_ESPECIAL`), que ele imprime com o motivo.
 
 O resultado não se copia para cá: total e censo continuam só em §9.1, e este comando é como o número
 se reproduz e se confere, sem leitura manual do artefato.
 
 Quem impõe o número não é quem roda o comando à mão: o `docs-check` do CI
-(`.github/actions/docs-check/`) roda `verificar-contagens.py` e `verificar-censos.py` logo depois do
-`verificar.py`, em todo
-PR e push que o workflow `docs` cobre — o filtro é a árvore `planejamento-1.0.0/**` mais
-`wyd-docs/**`, sem lista de arquivos, então painel, `lacunas.md`, `migrations/` e página de sistema
-disparam o mesmo gate.
+(`.github/actions/docs-check/`) executa o pacote `gate` em todo PR e push do workflow `docs`, sem
+filtro de caminho; painel, `lacunas.md`, `migrations/` e página de sistema disparam o mesmo gate.
 Divergência de §9.1 derruba o check como um link quebrado; o comando local é a mesma medição,
 antecipada.
 

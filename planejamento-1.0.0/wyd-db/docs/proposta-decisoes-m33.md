@@ -222,7 +222,7 @@ bloqueio de dado em bloqueio de schema; **C** porque troca critério verificáve
 - **Não escreve `metricas.md`** nem antecipa número: o dono do número medido é `M20`.
 - **Não reabre `M20`, `M22`, `M25`, `M30`, `M7`, `P-22`, `A12` nem `M32`.**
 - **Não decide o conteúdo de seed** (`0020`, `0023`, `0027`) nem a curadoria de conteúdo.
-- **Não muda o gate do site** nem o `verificar.py`: `migrations/` não é publicado, e a linha de estado
+- **Não muda o gate do site** nem o `gate/checks/links.py`: `migrations/` não é publicado, e a linha de estado
   dessas páginas é regra de planejamento, não de renderização.
 - **Não cria índice de banco nem job:** o DDL não é tocado por esta rodada.
 

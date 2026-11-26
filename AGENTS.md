@@ -184,6 +184,11 @@ escopo.
 - **Público e gratuito.** Runners padrão do GitHub são gratuitos e ilimitados em repositório
   público; **não** use runner self-hosted em job que executa código de pull request — o próprio
   GitHub desaconselha em repositório público.
+- **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (skills, lacunas, contagens e
+  censos; não precisa de Docker/MkDocs) e `make gate` para o caminho completo do CI/container
+  (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato
+  legível por agente; `--details` abre os problemas. A decisão, os papéis de Python/Bash/Node e os
+  caminhos locais vs CI estão em `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0010-camada-unica-de-gate.md`.
 - CI é feito de workflows por domínio e actions compostas em `.github/actions/`, com permissões
   mínimas, actions fixadas e cache. O estado real (workflows, gates obrigatórios, cache, limites do
   plano gratuito e transição de issues) está em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`;

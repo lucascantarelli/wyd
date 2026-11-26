@@ -27,7 +27,7 @@ não a reproduz. O que ele detalha é o critério de saída da fase 4, em §2.
 A fase só fecha quando os quatro itens do gate de `wyd-docs-1.0.0.md` §9 valerem juntos:
 
 1. **redirect decidido e implementado** — `LPDOC-06` fechada em 2026-11-19: mapa
-   `wyd-docs/redirects.tsv`, stub no `preparar.py` e checagens no `verificar.py`;
+   `wyd-docs/redirects.tsv`, stub no `preparar.py` e checagens no `gate/checks/links.py`;
 2. **busca decidida** — `LPDOC-13` fechada em 2026-11-19: sem busca de texto completo na `1.0.0`; o
    filtro de navegação é a navegação (`lacunas.md` §2.4);
 3. **métrica escrita e aceita** — qual número o site mede, onde e com que comando, com o mesmo rigor de

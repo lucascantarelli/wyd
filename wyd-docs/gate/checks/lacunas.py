@@ -25,7 +25,7 @@ medição; divergência reprova. Nas tabelas, a coluna `Fechadas` é comparada c
 `Abertas + Propostas + Externas` com as bloqueadas.
 
 Uso:
-    python verificar-lacunas.py [--root CAMINHO]
+    python -m gate check lacunas --root ..   # a partir de wyd-docs/
 
 Sai com 0 quando placar e evidências fecham, 1 quando algo diverge (imprime `arquivo:linha` e o
 motivo) e 2 quando não há registro para medir.
@@ -33,15 +33,21 @@ motivo) e 2 quando não há registro para medir.
 
 from __future__ import annotations
 
-import argparse
-import os
 import re
-import sys
 from pathlib import Path
+
+from ..model import CheckResult
+from ..workspace import Workspace
 
 PLANEJAMENTO = "planejamento-1.0.0"
 REGISTRO = "lacunas.md"
-IGNORAR_DIR = {".git", "target", "node_modules", "site", ".build", "dist", "coverage"}
+_WS: Workspace | None = None
+
+
+def _ws() -> Workspace:
+    if _WS is None:
+        raise RuntimeError("lacunas: Workspace não inicializado")
+    return _WS
 
 LINHA_LACUNA = re.compile(r"^\| `([A-Z][A-Z0-9]*-[A-Z0-9-]*\d+)`")
 LINHA_LACUNA_NEGRITO = re.compile(r"^\| \*\*([A-Z][A-Z0-9-]*\d+)\*\*")
@@ -91,30 +97,17 @@ PALAVRAS_SOMA = re.compile(
 )
 HISTORICO_SOMA = re.compile(r"\bap[oó]s\b|estado anterior|antes do briefing|naquela", re.IGNORECASE)
 
-def _indice(root: Path) -> dict[str, Path]:
-    indice: dict[str, Path] = {}
-    for pasta, subpastas, arquivos in os.walk(root):
-        subpastas[:] = [d for d in subpastas if d not in IGNORAR_DIR]
-        for nome in arquivos:
-            indice.setdefault(nome, Path(pasta) / nome)
-    return indice
-
-
 def _perguntas_registradas(root: Path, registros: list[Path]) -> set[str]:
     vistos: set[str] = set()
-    for caminho in (root / PLANEJAMENTO).rglob("*.md"):
+    for caminho in _ws().files(root / PLANEJAMENTO, "*.md"):
         if caminho in registros:
             continue
-        vistos.update(PERGUNTA.findall(caminho.read_text(encoding="utf-8", errors="ignore")))
+        vistos.update(PERGUNTA.findall(_ws().read(caminho, errors="ignore")))
     return vistos
 
 
 def _existe(root: Path, indice: dict[str, Path], citado: str) -> Path | None:
-    alvo = citado.split("#", 1)[0]
-    direto = root / alvo
-    if direto.is_file():
-        return direto
-    return indice.get(Path(alvo).name)
+    return _ws().find(citado)
 
 
 def _estado(texto: str, secao: str) -> str | None:
@@ -249,7 +242,7 @@ def _confere_numeros(
         if caminho is None:
             continue
         try:
-            conteudo = caminho.read_text(encoding="utf-8", errors="ignore")
+            conteudo = _ws().read(caminho, errors="ignore")
         except OSError:
             continue
         for numero in re.findall(r"§(\d+(?:\.\d+)*)", texto_linha):
@@ -278,7 +271,7 @@ def _confere_citacao(
         if caminho is None:
             continue
         try:
-            lidos.append((citado, caminho.read_text(encoding="utf-8", errors="ignore")))
+            lidos.append((citado, _ws().read(caminho, errors="ignore")))
         except OSError:
             continue
     if not lidos:
@@ -317,10 +310,10 @@ def _confere_somas(
     problemas: list[str],
 ) -> None:
     total = fechadas + bloqueadas
-    for caminho in sorted((root / PLANEJAMENTO).rglob("*.md")):
+    for caminho in _ws().files(root / PLANEJAMENTO, "*.md"):
         rel = caminho.relative_to(root).as_posix()
         for numero, linha in enumerate(
-            caminho.read_text(encoding="utf-8", errors="ignore").splitlines(), start=1
+            _ws().read(caminho, errors="ignore").splitlines(), start=1
         ):
             achado = TABELA_TOTAL.match(linha)
             if achado:
@@ -376,7 +369,7 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
     if not registros:
         raise SystemExit(f"verificar-lacunas: nenhum {PLANEJAMENTO}/*/{REGISTRO} em {root}")
 
-    indice = _indice(root)
+    indice = _ws().index()
     perguntas = _perguntas_registradas(root, registros)
     problemas: list[str] = []
     vistas: dict[str, str] = {}
@@ -384,7 +377,7 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
 
     for registro in registros:
         nome = registro.relative_to(root).as_posix()
-        linhas = registro.read_text(encoding="utf-8").splitlines()
+        linhas = _ws().read(registro).splitlines()
         secao = ""
         linhas_da_secao: list[int] = []
         for numero, linha in enumerate(linhas, start=1):
@@ -443,9 +436,9 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
     bloqueadas = sum(1 for e in vistas.values() if e == "bloqueada")
 
     # Placar publicado: toda citação tem de coincidir com a medição.
-    for caminho in sorted((root / PLANEJAMENTO).rglob("*.md")):
+    for caminho in _ws().files(root / PLANEJAMENTO, "*.md"):
         for numero, linha in enumerate(
-            caminho.read_text(encoding="utf-8", errors="ignore").splitlines(), start=1
+            _ws().read(caminho, errors="ignore").splitlines(), start=1
         ):
             for achado in PLACAR_CITADO.finditer(linha):
                 total, f, b = (int(g) for g in achado.groups())
@@ -461,7 +454,7 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
     for registro in registros:
         nome = registro.relative_to(root).as_posix()
         for numero, linha in enumerate(
-            registro.read_text(encoding="utf-8").splitlines(), start=1
+            _ws().read(registro).splitlines(), start=1
         ):
             if "Refletida em" not in linha:
                 continue
@@ -476,23 +469,11 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
     return len(vistas), fechadas, bloqueadas, problemas
 
 
-def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--root", default="..", help="raiz do repositório (padrão: ..)")
-    args = parser.parse_args(argv[1:])
-
-    total, fechadas, bloqueadas, problemas = verificar(Path(args.root).resolve())
-
+def run(ws: Workspace) -> CheckResult:
+    global _WS
+    _WS = ws
+    total, fechadas, bloqueadas, problemas = verificar(ws.root)
+    resumo = f"{total} medidas = {fechadas} fechadas + {bloqueadas} bloqueadas"
     if problemas:
-        print(f"lacunas: {len(problemas)} problema(s) em {total} medida(s) "
-              f"({fechadas} fechadas + {bloqueadas} bloqueadas)")
-        for problema in problemas:
-            print(f" - {problema}")
-        return 1
-
-    print(f"lacunas medidas: {total} = {fechadas} fechadas + {bloqueadas} bloqueadas")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+        return CheckResult("lacunas", False, resumo, problems=problemas)
+    return CheckResult("lacunas", True, resumo)

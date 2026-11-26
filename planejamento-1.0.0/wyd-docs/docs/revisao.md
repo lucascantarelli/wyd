@@ -87,7 +87,7 @@ typo, link ou data de revisão não reabre o estado.
 ## 5. O que a revisão não é
 
 - Não é revisão literária: estilo é do autor, desde que a afirmação seja verificável.
-- Não substitui o gate: `verificar.py` verde é pré-requisito, não veredito.
+- Não substitui o gate: `gate/checks/links.py` verde é pré-requisito, não veredito.
 - Não decide lacuna: revisor aponta; quem decide é o dono nomeado em `lacunas.md` — inclusive
   página `proposto` no ar, decidida em 2026-11-19 com aviso visível (`LPDOC-03`).
 - Não cria ADR nem fecha decisão estrutural.

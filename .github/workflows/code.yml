@@ -26,13 +26,20 @@ env:
 
 jobs:
   fmt:
-    name: fmt / ${{ matrix.crate }}
-    runs-on: ubuntu-latest
+    name: fmt / ${{ matrix.crate }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        crate: [wyd-db, wyd-ops-signer, wyd-launcher]
+        include:
+          - crate: wyd-db
+            os: ubuntu-latest
+          - crate: wyd-ops-signer
+            os: ubuntu-latest
+          # O launcher é Windows-only; até a formatação roda no alvo suportado.
+          - crate: wyd-launcher
+            os: windows-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

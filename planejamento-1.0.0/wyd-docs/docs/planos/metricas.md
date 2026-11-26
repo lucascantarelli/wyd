@@ -27,13 +27,13 @@ número e a data é o §9.1, para que duas páginas não possam divergir sobre o
 
 O gate de `wyd-docs-1.0.0.md` §7.1 monta, publica e verifica; ele imprime o total de páginas e
 reprova com `exit 1` quando há problema. O censo por estado sai do mesmo conjunto de fontes pelo
-`wyd-docs/verificar-contagens.py`, que o compara com o §9.1 e reprova quando diverge (comando em
+check `contagens` do pacote `gate`, que o compara com o §9.1 e reprova quando diverge (comando em
 `proximos-passos.md` §3). Os comandos não são copiados para cá: esta página aponta o dono de cada um,
 e o resultado medido entra só no §9.1, com data.
 
 ## 3. O que fica fora da métrica
 
-- **link externo**: o `verificar.py` não resolve destino fora do artefato, então link quebrado de
+- **link externo**: o check `links` não resolve destino fora do artefato, então link quebrado de
   fora do site não entra no número;
 - **qualidade do texto**: forma e veredito são de `convencoes.md` e `revisao.md`, não de contagem;
 - **tráfego e audiência**: não há analítica no site e a `1.0.0` não mede visita;
@@ -42,6 +42,6 @@ e o resultado medido entra só no §9.1, com data.
 
 ## 4. Quando a métrica muda
 
-Mudou o que o `verificar.py` confere, a regra de montagem do `preparar.py` ou o conjunto de
+Mudou o que o check `links` confere, a regra de montagem do `preparar.py` ou o conjunto de
 estados do cabeçalho: esta página e o §9.1 mudam **na mesma entrega**, com data e comando. Número
 sem comando que o reproduza não entra, e valor copiado de outra página é defeito.

@@ -26,13 +26,13 @@ Requisito sem critério de aceitação é intenção. Numeração `RF-DOC-nnn` (
 - **Entrada:** montagem.
 - **Saída:** pass/fail.
 - **Aceitação:** soma divergente reprova.
-- **Contrato:** `verificar-contagens.py`.
+- **Contrato:** `gate/checks/contagens.py`.
 
 ### RF-DOC-004 — Verificar censos citados
 - **Entrada:** fontes.
 - **Saída:** pass/fail.
 - **Aceitação:** citação divergente reprova.
-- **Contrato:** `verificar-censos.py`.
+- **Contrato:** `gate/checks/censos.py`.
 
 ### RF-DOC-005 — Publicar em GitHub Pages
 - **Entrada:** push em `develop`/`main`.

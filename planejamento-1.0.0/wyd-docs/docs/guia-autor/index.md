@@ -58,7 +58,7 @@ O comando é o de `wyd-docs-1.0.0.md` §7.1: no Linux/macOS, venv; no Windows, d
 porque a `2.0.dev6` falha por `PosixPath` (`LPDOC-12`). O que o gate reprova é a tabela de §7.2 —
 esta página não mantém cópia de nenhum dos dois.
 
-Cole no PR a saída do `verificar.py` e o número de páginas montadas, citado de `wyd-docs-1.0.0.md`
+Cole no PR a saída do gate e o número de páginas montadas, citado de `wyd-docs-1.0.0.md`
 §7.2. "Funcionou aqui" não é prova.
 
 ## 5. Abrir o PR

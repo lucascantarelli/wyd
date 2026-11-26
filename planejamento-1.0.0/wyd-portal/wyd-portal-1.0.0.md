@@ -130,11 +130,11 @@ grep -rL '^> Pergunta:' planejamento-1.0.0/wyd-portal/docs --include='*.md'
 # nenhum código dentro do planejamento
 find planejamento-1.0.0/wyd-portal -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' \)
 # site
-cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site
+cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output site && python -m gate check links
 ```
 
 O `wyd-portal` **já está** em `SISTEMAS` de `wyd-docs/preparar.py`: o gate publicou
-  `sistemas/wyd-portal/` e, na última medição (2026-11-25), passou com **479 páginas** e **477 fontes**
+  `sistemas/wyd-portal/` e, na última medição (2026-11-25), passou com **480 páginas** e **478 fontes**
   verificadas. As páginas de
   `docs/` são publicadas; o dashboard e `lacunas.md` ficam na raiz do sistema e são citados por
   nome, não por link.

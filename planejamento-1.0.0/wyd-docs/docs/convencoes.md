@@ -94,7 +94,7 @@ no topo (`LPDOC-03`), e esconder rascunho exigiria nova decisão.
 ## 4. Título, URL e navegação
 
 Título, URL e navegação são de `wyd-docs-1.0.0.md` §4.1–§4.3 e não se redefinem aqui. O que a forma
-acrescenta é o efeito sobre quem edita: uma heading `#` por página, porque sem ela `verificar.py`
+acrescenta é o efeito sobre quem edita: uma heading `#` por página, porque sem ela `gate/checks/links.py`
 reprova (`wyd-docs-1.0.0.md` §4.3); e renomear página publicada é mudança de contrato: exige
 redirect (`LPDOC-06`, decidido em 2026-11-19; mapa em `wyd-docs/redirects.tsv`), senão o link
 externo quebra em silêncio.
