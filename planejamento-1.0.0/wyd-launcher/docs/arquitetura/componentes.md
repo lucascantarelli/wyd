@@ -18,10 +18,14 @@
 ## `signature`
 
 - **Responsabilidade:** verificar assinatura Ed25519 destacada antes de aplicar.
-- **API:** `verify(manifest_bytes, sig_bytes, pubkey) -> bool`.
+- **API:** `TrustStore::verify(key_id, manifest_json, manifest_json.sig) -> Result<(), SignatureError>`;
+  o `.sig` é hex minúsculo de 64 bytes (`crates/wyd-launcher/src/signature.rs`).
 - **Invariantes:** chave pública + `key_id` no launcher; chave privada só no `wyd-ops`; verificação antes de aplicar.
 - **Depende de:** config.
-- **Testes:** assinatura válida/inválida; chave errada.
+- **Testes:** assinatura válida/inválida; chave errada; ciclo completo no
+  `crates/wyd-launcher/tests/ciclo-assinatura.rs`, assinado pelo `crates/wyd-ops-signer`.
+- **Outro lado:** o assinador vive no `wyd-ops` (`crates/wyd-ops-signer`, binário `wyd-ops-sign`),
+  lê a chave do secret `WYD_LAUNCHER_SIGNING_KEY` e não tem canonização própria.
 - **Risco:** alto — segurança do patch.
 
 ## `patch`

@@ -1,0 +1,60 @@
+name: release
+
+# Publica o manifesto do patch assinado. A chave privada vem do secret
+# `WYD_LAUNCHER_SIGNING_KEY` (64 hex minúsculos) e nunca é impressa; sem o secret, o job falha antes
+# de assinar qualquer coisa. O launcher verifica com a pública embutida (`LLCH-03`, ADR-LCH-0001).
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  manifesto-assinado:
+    name: assinar e publicar manifesto
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Conferir o secret da chave
+        env:
+          CHAVE: ${{ secrets.WYD_LAUNCHER_SIGNING_KEY }}
+        run: |
+          if [ -z "${CHAVE}" ]; then
+            echo "::error::secret WYD_LAUNCHER_SIGNING_KEY ausente: release cancelado antes de assinar"
+            exit 1
+          fi
+
+      - name: Assinar o manifesto
+        env:
+          WYD_LAUNCHER_SIGNING_KEY: ${{ secrets.WYD_LAUNCHER_SIGNING_KEY }}
+        run: |
+          cp planejamento-1.0.0/wyd-launcher/docs/specs/patch-1.0.0.json manifest.json
+          cargo run --manifest-path crates/wyd-ops-signer/Cargo.toml -- sign \
+            --manifest manifest.json --out manifest.json.sig
+          tamanho="$(wc -c < manifest.json.sig)"
+          if [ "${tamanho}" -ne 128 ]; then
+            echo "::error::manifest.json.sig tem ${tamanho} bytes; esperado 128 hex sem quebra de linha"
+            exit 1
+          fi
+
+      - name: Publicar manifesto e assinatura
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 || \
+            gh release create "${GITHUB_REF_NAME}" --generate-notes
+          gh release upload "${GITHUB_REF_NAME}" manifest.json manifest.json.sig --clobber
+
+      - name: Guardar os artefatos da execução manual
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: ls -l manifest.json manifest.json.sig

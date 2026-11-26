@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lucascantarelli/wyd/planejamento-1.0.0/wyd-launcher/docs/specs/manifest.schema.json",
+  "title": "Manifesto de patch do WYD 1.0.0",
+  "description": "Contrato do manifesto definido por ADR-LCH-0001 e lido por crates/wyd-launcher/src/manifest.rs. A assinatura Ed25519 destacada cobre os bytes canônicos RFC 8785 deste documento.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "channel",
+    "version",
+    "client_build",
+    "min_version",
+    "files"
+  ],
+  "properties": {
+    "schema": {
+      "description": "Versão do formato. Valor novo exige código novo, não fallback.",
+      "const": 1
+    },
+    "channel": {
+      "description": "Canal publicado em portal.launcher_release.channel.",
+      "enum": ["stable", "beta"]
+    },
+    "version": {
+      "description": "Versão do patch, semver MAJOR.MINOR.PATCH.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "client_build": {
+      "description": "Hash do build do cliente, 64 dígitos hexadecimais minúsculos.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "min_version": {
+      "description": "Versão mínima do launcher que aceita este patch, semver.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "files": {
+      "description": "Arquivos entregues pelo patch; ordem preservada e caminhos únicos.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size", "sha256"],
+        "properties": {
+          "path": {
+            "description": "Caminho relativo à raiz do cliente, com `/`; sem raiz absoluta, `..`, `\\`, `:` ou segmento vazio.",
+            "type": "string",
+            "minLength": 1,
+            "allOf": [
+              {
+                "pattern": "^[^/\\\\:]+(?:/[^/\\\\:]+)*$"
+              },
+              {
+                "not": {
+                  "pattern": "(^|/)\\.\\.?(/|$)"
+                }
+              }
+            ]
+          },
+          "size": {
+            "description": "Tamanho em bytes.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709551615
+          },
+          "sha256": {
+            "description": "SHA-256 do arquivo, 64 dígitos hexadecimais minúsculos.",
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "url": {
+            "description": "Onde o arquivo é servido; ausente enquanto não há host de release.",
+            "type": "string",
+            "pattern": "^https://"
+          }
+        }
+      }
+    }
+  }
+}

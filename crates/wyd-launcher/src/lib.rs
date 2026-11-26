@@ -8,12 +8,17 @@
 //! O conteúdo do patch da `1.0.0` está fechado por `LCLI-02` (2026-11-25, opção A) e a
 //! lista medida fica em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` §5.1.
 //!
-//! Fora de escopo aqui: assinatura Ed25519 destacada (`LLCH-03`), canonização RFC 8785
-//! (`LLCH-01`) e aplicação dos arquivos. Verificar hash detecta corrupção; não autentica
-//! a origem.
+//! A canonização RFC 8785 (`LLCH-01`) tem código em [`canon`] e a verificação da assinatura
+//! Ed25519 destacada (`LLCH-03`) em [`signature`]. Assinar e publicar é do `wyd-ops`, com a chave
+//! privada fora do repositório. Fora de escopo aqui: baixar o manifesto e aplicar os arquivos.
+//! Verificar hash detecta corrupção; a assinatura autentica a origem.
 
+pub mod canon;
 pub mod manifest;
+pub mod signature;
 pub mod verify;
 
+pub use canon::{canonicalize, canonicalize_str, CanonError};
 pub use manifest::{FileEntry, Manifest, ManifestError};
+pub use signature::{verificar, PublicKey, SignatureError, TrustStore};
 pub use verify::{verify, Divergence, Report};

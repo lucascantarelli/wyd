@@ -14,7 +14,7 @@
 `LLCH-01` (formato) e `LLCH-03` (assinatura). **Medido em 2026-11-23:** não havia manifesto, schema,
 versão, assinatura, chave nem verificador no repositório; o registro de publicação, porém, já existia —
 `portal.launcher_release` guarda `channel` (`stable`/`beta`), `version` semver, `manifest_url`,
-`manifest_sha256`, `min_version` e status (`wyd-db/migrations/0030-portal-content.md:172–203`).
+`manifest_sha256`, `min_version` e status (`wyd-db/migrations/0030_portal_content.md:172–203`).
 
 O risco declarado é execução de código arbitrário por patch adulterado: `sha256` detecta corrupção, mas
 não autentica a origem. Sem formato canônico, uma assinatura sobre JSON reordenado não verifica.
@@ -52,12 +52,19 @@ A decisão está em vigor quando existirem, e o gate os cobrar, **1 página** `d
 **1 fixture** manifesto+assinatura e **1 passo** no futuro `release.yml`. **Medido em 2026-11-25:**
 existem o descritor (`docs/specs/manifesto-e-patch.md`), o manifesto medido
 (`docs/specs/patch-1.0.0.json`), o crate com `src/manifest.rs` e `src/verify.rs` e as fixtures de
-`crates/wyd-launcher/tests/fixtures/`; **faltam** o JSON Schema, a canonização RFC 8785, a assinatura
-Ed25519 e o passo de `release.yml`. `LLCH-01` e `LLCH-03` estão fechadas como decisão.
+`crates/wyd-launcher/tests/fixtures/`; existem também a canonização (`src/canon.rs`, vetor do RFC em
+`tests/rfc8785.rs`) e a **verificação** da assinatura Ed25519 (`src/signature.rs`, fixture em
+`tests/fixtures/assinatura/`). O JSON Schema está publicado e validado por teste
+(`planejamento-1.0.0/wyd-launcher/docs/specs/manifest.schema.json`, `tests/schema.rs`), o assinador
+do `wyd-ops` existe (`crates/wyd-ops-signer`, bloco `manifesto-assinado` em
+`.github/workflows/release.yml`, secret `WYD_LAUNCHER_SIGNING_KEY`) e o ciclo assinador → verificador
+está coberto por `tests/ciclo-assinatura.rs`. **Falta apenas** o teste de ordem "assinatura reprovada
+antes de qualquer escrita", que depende do passo 6 (aplicar patch), ainda sem código. `LLCH-01` e
+`LLCH-03` estão fechadas como decisão.
 
 ## Referências
 
 - Decisões: `Q-LCH-1` = A e `Q-LCH-3` = A (2026-11-23), em `docs/proposta-decisoes-launcher.md` §4.
 - Lacunas fechadas: `LLCH-01`, `LLCH-03`.
 - Contrato: `X11` em `wyd-1.0.0.md` §7.3; itens 1 e 2 do gate em `wyd-launcher-1.0.0.md` §6.
-- Registro de publicação: `wyd-db/migrations/0030-portal-content.md:172–203`.
+- Registro de publicação: `wyd-db/migrations/0030_portal_content.md:172–203`.

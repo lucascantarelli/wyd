@@ -6,7 +6,9 @@
 > Base: `docs/arquitetura/adr/adr-lch-0001-manifesto-canonico-assinado.md`; `lacunas.md` `LLCH-01`/`LLCH-03`; `docs/specs/patch-1.0.0.json`; `crates/wyd-launcher/src/manifest.rs`; `crates/wyd-launcher/src/verify.rs`; `wyd-client/registro-do-cliente.md` §5.1
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). O formato e a ordem de verificação estão fixados pelo `ADR-LCH-0001`. **Só a leitura de forma e a conferência de hash têm código**; canonização RFC 8785 e assinatura Ed25519 não têm código nem fixture — este descritor diz o que falta, não afirma que existe.
+**Estado:** proposto (2026-11-25). O formato e a ordem de verificação estão fixados pelo `ADR-LCH-0001`. **Têm código** a leitura de forma, a conferência de hash e a canonização RFC 8785
+(`crates/wyd-launcher/src/canon.rs`, vetor do RFC em `tests/rfc8785.rs`); a assinatura Ed25519 não
+tem código nem fixture — este descritor diz o que falta, não afirma que existe.
 
 Este é o descritor que o `ADR-LCH-0001` nomeia. Ele descreve o **envelope**: como o manifesto é escrito, o que é assinado, em que ordem o launcher verifica e onde cada regra mora no código. **O conteúdo do patch não é deste dono:** quais arquivos a `1.0.0` entrega está fechado por `LCLI-02` (opção A, 2026-11-25) em `wyd-client/registro-do-cliente.md` §5.1, e o manifesto medido apenas o transcreve.
 
@@ -50,7 +52,17 @@ Toda recusa acontece **antes** de o launcher abrir um arquivo do cliente, e cada
 
 A assinatura cobre **bytes canônicos**, não o arquivo como ele foi editado. O `ADR-LCH-0001` fixa **RFC 8785 (JCS)**: UTF-8 sem BOM, sem espaço insignificante, chaves ordenadas por unidade de código UTF-16, números na forma do `Number::toString` do ECMAScript e sem quebra de linha final.
 
-Consequência que o produtor precisa respeitar: o mesmo manifesto reindentado tem a mesma forma canônica — a assinatura continua válida —, mas trocar um `1.0.0` por `1.0.1`, reordenar a lista ou trocar um hash muda os bytes canônicos e invalida a assinatura. **A canonização não está implementada:** `serde_json` serializa na ordem dos campos da `struct` e não aplica JCS, então o crate hoje serve para ler e conferir hash, não para assinar.
+Consequência que o produtor precisa respeitar: o mesmo manifesto reindentado tem a mesma forma
+canônica — a assinatura continua válida —, mas trocar um `1.0.0` por `1.0.1`, reordenar a lista ou
+trocar um hash muda os bytes canônicos e invalida a assinatura.
+
+**Implementada em 2026-11-25** em `crates/wyd-launcher/src/canon.rs`: `canonicalize` e
+`canonicalize_str` ordenam chave por unidade de código UTF-16, escapam só o que a RFC manda e
+formatam número pela regra do ECMAScript; inteiro acima de 2^53 e valor não finito são recusados em
+vez de arredondados. O vetor normativo da RFC está em `tests/rfc8785.rs`. Detalhe que a implementação
+obrigou: sem a feature `float_roundtrip`, o `serde_json` lê `333333333.33333329` como o `f64` vizinho
+errado (1 ulp, `…54` em vez de `…55`) e o vetor do RFC falha — a feature está ligada no `Cargo.toml`
+do crate.
 
 **Ponto ainda não fixado pelo ADR:** se o launcher **recusa** bytes não canônicos ou **normaliza** o documento recebido antes de verificar. As duas leituras preservam a garantia (a assinatura é sobre a forma canônica), e a escolha muda a mensagem de erro e o teste de borda; ela precisa ser tomada antes da primeira assinatura real.
 
@@ -62,7 +74,19 @@ Consequência que o produtor precisa respeitar: o mesmo manifesto reindentado te
 - **Chave privada:** só no secret do `wyd-ops`; nunca no binário, no repositório nem no manifesto.
 - **Rotação:** exige launcher novo com a nova pública (ou lista de chaves) e não exige migration; `portal.launcher_release.manifest_sha256` continua sendo o registro de publicação.
 
-**Não implementado.** Não há assinador, verificador, par de chaves nem fixture de assinatura no repositório. O encoding dos 64 bytes dentro de `manifest.json.sig` (bruto ou hexadecimal) também não está fixado pelo ADR e é decisão da primeira implementação.
+**Verificação implementada em 2026-11-25** em `crates/wyd-launcher/src/signature.rs`
+(`TrustStore::verify` e `verificar`): canonicaliza o manifesto, decodifica o `.sig`, confere com a
+chave pública Ed25519 do `key_id` e falha em `SignatureError` (`UnknownKey`, `SignatureEncoding`,
+`KeyEncoding`, `PublicKey`, `Invalid`, `Canon`). Fixture real em `tests/fixtures/assinatura/`
+(manifesto, `.sig`, chave pública e chave errada). O **encoding** dos 64 bytes, que o ADR deixou para
+a primeira implementação, ficou fixado: **hexadecimal minúsculo** com 128 caracteres, espaço ou
+quebra de linha nas pontas tolerados; a chave pública usa a mesma forma, 64 caracteres.
+
+**Assinador:** `crates/wyd-ops-signer` (`wyd-ops-sign sign --manifest <arq> --out <arq.sig>`), com
+`WYD_LAUNCHER_SIGNING_KEY` ou `--key-file`; reaproveita `wyd_launcher::canonicalize_str`, não tem
+canonização própria. O passo de release que o executa está em `.github/workflows/release.yml` e falha
+antes de assinar quando o secret `WYD_LAUNCHER_SIGNING_KEY` não existe. **A chave privada continua fora
+do repositório:** o que existe aqui é o código que a lê do secret e o teste com semente de teste.
 
 ## 4. Ordem de verificação
 
@@ -71,8 +95,8 @@ O launcher não aplica nada antes de a origem estar provada. A ordem é parte do
 | # | Passo | Mora em | Estado (2026-11-25) |
 |---|---|---|---|
 | 1 | baixar `manifest.json` e `manifest.json.sig` por HTTPS, com timeout | `http` | não implementado |
-| 2 | canonizar o manifesto (RFC 8785) | `signature` | não implementado |
-| 3 | verificar a assinatura contra a pública do `key_id` | `signature` | não implementado |
+| 2 | canonizar o manifesto (RFC 8785) | `canon` | **implementado** (falta ligar ao passo 3) |
+| 3 | verificar a assinatura contra a pública do `key_id` | `signature` | **implementado** |
 | 4 | desserializar e validar a forma (§1) | `Manifest::from_json` | **implementado** |
 | 5 | conferir `size` e `sha256` de cada arquivo sob a raiz do cliente | `verify` | **implementado** |
 | 6 | aplicar o patch só com relatório sem divergência | `patch` | não implementado |
@@ -94,20 +118,25 @@ Divergência é **resultado**, não erro de execução: o launcher recusa o patc
 
 | Critério | Comando ou artefato | Estado |
 |---|---|---|
-| forma do manifesto aceita e recusada nos dez casos | `cargo test -p wyd-launcher --all-targets` | verde (16 testes) |
+| forma do manifesto aceita e recusada nos dez casos | `cargo test -p wyd-launcher --all-targets` | verde (27 testes de unidade) |
 | patch real sem divergência contra `wyd-client/files` | `crates/wyd-launcher/tests/patch_1_0_0.rs` | verde |
-| canonização estável e igual ao vetor RFC 8785 | fixture + teste | **falta** |
-| assinatura válida, inválida e chave errada | fixture + teste | **falta** |
-| assinatura reprovada antes de qualquer escrita | teste de ordem | **falta** |
-| schema publicado como arquivo verificável | JSON Schema | **falta** |
-| release assina e publica manifesto + `.sig` | passo em `release.yml` | **falta** |
+| canonização estável e igual ao vetor RFC 8785 | `crates/wyd-launcher/tests/rfc8785.rs` | verde (3 testes) |
+| assinatura válida, inválida e chave errada | `crates/wyd-launcher/tests/assinatura.rs` | verde (7 testes) |
+| ciclo completo: assinador do `wyd-ops` → `TrustStore` do launcher | `crates/wyd-launcher/tests/ciclo-assinatura.rs` | verde (4 testes) |
+| schema publicado, validado contra a fixture e contra o manifesto medido | `docs/specs/manifest.schema.json` + `crates/wyd-launcher/tests/schema.rs` | verde (9 testes) |
+| release assina e publica manifesto + `.sig` | `crates/wyd-ops-signer` + `.github/workflows/release.yml` (secret `WYD_LAUNCHER_SIGNING_KEY`) | **existe**; falha sem o secret |
+| assinatura reprovada antes de qualquer escrita | teste de ordem | **falta** (depende do passo 6, aplicar patch) |
 
-Enquanto as quatro últimas linhas estiverem em falta, `LLCH-01` e `LLCH-03` continuam fechadas **como decisão** e abertas **como implementação**; nenhuma release é publicada com este manifesto antes disso.
+`LLCH-01` e `LLCH-03` seguem fechadas **como decisão** e implementadas nos dois lados — schema,
+canonização, verificação, assinador e passo de release. Fica aberto **apenas** o teste de ordem
+"assinatura reprovada antes de qualquer escrita": ele precisa do passo 6 (aplicar patch), que ainda
+não tem código; nenhuma release é publicada com este manifesto antes disso.
 
 ## 6. Limites deste descritor
 
 - Não afirma manifesto publicado, host de release nem tamanho de patch: nenhum artefato foi publicado.
-- Não decide o encoding de `manifest.json.sig` nem a política de bytes não canônicos.
+- O encoding de `manifest.json.sig` foi fixado pela implementação (§3): hex minúsculo; fica sem
+  decisão a política de bytes não canônicos (recusar ou normalizar).
 - Não cobre o conteúdo do patch (`LCLI-02`, dono `wyd-client`), a hospedagem (`wyd-ops`) nem o instalador e o updater (`LLCH-04`).
 
 ## Referências
@@ -116,5 +145,6 @@ Enquanto as quatro últimas linhas estiverem em falta, `LLCH-01` e `LLCH-03` con
 - Lacunas: `LLCH-01`, `LLCH-03` em `lacunas.md`.
 - Manifesto medido: `docs/specs/patch-1.0.0.json`.
 - Lista do patch: `wyd-client/registro-do-cliente.md` §5.1.
-- Código: `crates/wyd-launcher/src/manifest.rs`, `src/verify.rs`, `tests/manifesto.rs`, `tests/patch_1_0_0.rs`.
+- Código: `crates/wyd-launcher/src/manifest.rs`, `src/canon.rs`, `src/signature.rs`, `src/verify.rs`;
+  testes `tests/manifesto.rs`, `tests/rfc8785.rs`, `tests/assinatura.rs`, `tests/patch_1_0_0.rs`.
 - Contrato: `X11` em `wyd-1.0.0.md` §7.3; unidade `signature` em `docs/arquitetura/componentes.md`.

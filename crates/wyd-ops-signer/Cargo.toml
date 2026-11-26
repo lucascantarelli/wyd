@@ -1,0 +1,21 @@
+# Assinador do manifesto do patch (`LLCH-03`, ADR-LCH-0001). Fica no `wyd-ops` porque a chave
+# privada é da operação de release; o launcher só verifica. Reaproveita a canonização RFC 8785 e o
+# encoding do `.sig` já implementados em `crates/wyd-launcher`, sem reimplementar nenhum dos dois.
+[package]
+name = "wyd-ops-signer"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[[bin]]
+name = "wyd-ops-sign"
+path = "src/main.rs"
+
+[dependencies]
+ed25519-dalek = "2.2.0"
+thiserror = "2.0.21"
+wyd-launcher = { path = "../wyd-launcher" }
+
+[lints.rust]
+unsafe_code = "forbid"

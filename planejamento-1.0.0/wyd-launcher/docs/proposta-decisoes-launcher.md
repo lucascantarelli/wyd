@@ -62,7 +62,7 @@ schema e uma canonização. **Fontes:** `lacunas.md` `LLCH-01`; `wyd-1.0.0.md` X
 `schema`, `channel`, `version`, `client_build`, `min_version` e `files[{path, size, sha256, url}]` —,
 com canonização RFC 8785 para que a assinatura cubra bytes estáveis. O registro de publicação já
 existe: `portal.launcher_release` guarda `channel` (`stable`/`beta`), `version` semver, `manifest_url`,
-`manifest_sha256`, `min_version` e status (`0030-portal-content.md:172–203`). A decisão fixa o formato;
+`manifest_sha256`, `min_version` e status (`0030_portal_content.md:172–203`). A decisão fixa o formato;
 **não é migration nem código**, e nenhum manifesto foi criado.
 
 | Alternativa | Por que foi descartada |

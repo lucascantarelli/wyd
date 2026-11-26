@@ -15,7 +15,12 @@ pub const SCHEMA: u32 = 1;
 const CHANNELS: [&str; 2] = ["stable", "beta"];
 
 /// Manifesto do patch, como declarado no `ADR-LCH-0001`.
+///
+/// Campo desconhecido reprova: o schema publicado
+/// (`planejamento-1.0.0/wyd-launcher/docs/specs/manifest.schema.json`) também fecha o objeto, e os
+/// dois não podem divergir.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Manifest {
     pub schema: u32,
     pub channel: String,
@@ -28,6 +33,7 @@ pub struct Manifest {
 
 /// Um arquivo entregue pelo patch.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct FileEntry {
     /// Caminho relativo à raiz do cliente, com `/` como separador.
     pub path: String,
@@ -58,6 +64,18 @@ impl Manifest {
         }
         require_non_empty(&self.version, "version")?;
         require_non_empty(&self.min_version, "min_version")?;
+        if !is_semver(&self.version) {
+            return Err(ManifestError::Semver {
+                campo: "version",
+                valor: self.version.clone(),
+            });
+        }
+        if !is_semver(&self.min_version) {
+            return Err(ManifestError::Semver {
+                campo: "min_version",
+                valor: self.min_version.clone(),
+            });
+        }
         if !is_sha256(&self.client_build) {
             return Err(ManifestError::ClientBuild(self.client_build.clone()));
         }
@@ -99,6 +117,8 @@ pub enum ManifestError {
     Channel(String),
     #[error("campo vazio: {0}")]
     Empty(&'static str),
+    #[error("`{campo}` não é semver MAJOR.MINOR.PATCH: {valor}")]
+    Semver { campo: &'static str, valor: String },
     #[error("`client_build` não é SHA-256: {0}")]
     ClientBuild(String),
     #[error("manifesto sem arquivos")]
@@ -118,6 +138,15 @@ fn require_non_empty(valor: &str, campo: &'static str) -> Result<(), ManifestErr
         return Err(ManifestError::Empty(campo));
     }
     Ok(())
+}
+
+/// `true` para `MAJOR.MINOR.PATCH`, só dígitos (sem pré-release nem build).
+pub fn is_semver(valor: &str) -> bool {
+    let partes: Vec<&str> = valor.split('.').collect();
+    partes.len() == 3
+        && partes
+            .iter()
+            .all(|parte| !parte.is_empty() && parte.bytes().all(|b| b.is_ascii_digit()))
 }
 
 /// `true` para 64 dígitos hexadecimais minúsculos.
@@ -233,6 +262,50 @@ mod tests {
             Manifest::from_json(&texto),
             Err(ManifestError::Url(_))
         ));
+    }
+
+    #[test]
+    fn recusa_versao_fora_do_semver() {
+        for versao in ["1.0", "1.0.0.0", "v1.0.0", "1.0.x"] {
+            let texto = manifesto(&arquivo("a.bin", HASH)).replace(
+                "\"version\":\"1.0.0\"",
+                &format!("\"version\":\"{versao}\""),
+            );
+            assert!(
+                matches!(
+                    Manifest::from_json(&texto),
+                    Err(ManifestError::Semver {
+                        campo: "version",
+                        ..
+                    })
+                ),
+                "aceitou {versao}"
+            );
+        }
+    }
+
+    #[test]
+    fn recusa_campo_desconhecido() {
+        let texto = manifesto(&arquivo("a.bin", HASH))
+            .replace("{\"schema\":1", "{\"extra\":1,\"schema\":1");
+        assert!(matches!(
+            Manifest::from_json(&texto),
+            Err(ManifestError::Json(_))
+        ));
+        let arquivo_com_extra =
+            format!(r#"{{"path":"a.bin","size":1,"sha256":"{HASH}","extra":true}}"#);
+        assert!(matches!(
+            Manifest::from_json(&manifesto(&arquivo_com_extra)),
+            Err(ManifestError::Json(_))
+        ));
+    }
+
+    #[test]
+    fn reconhece_semver() {
+        assert!(is_semver("1.0.0"));
+        assert!(is_semver("10.20.30"));
+        assert!(!is_semver("1.0"));
+        assert!(!is_semver("1.0.0-rc1"));
     }
 
     #[test]
