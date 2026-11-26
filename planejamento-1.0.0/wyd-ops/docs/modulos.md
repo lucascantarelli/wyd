@@ -18,7 +18,7 @@
 - **Testes:** workflow verde em PR; permissões mínimas; pin por SHA.
 - **Segurança:** permissões mínimas; segredos só em secret store.
 - **Monitoramento:** status do workflow.
-- **DoD:** `code.yml`/`docs.yml` verdes; `full-workflow.yml` sai de stub.
+- **DoD:** `code.yml`, `ci-db.yml`, `docs.yml`, `security.yml` e `issue-status.yml` verdes; `full-workflow.yml` removido em 2026-11-26.
 
 ### imagem
 - **Objetivo:** imagem Docker do servidor e do site.

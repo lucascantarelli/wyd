@@ -83,10 +83,10 @@ B pode numerar os **48** `RF` em paralelo, mas a implementação de `portal`/`ad
 
 **Aprovada em 2026-11-24 (B).**
 
-**Bloqueado hoje:** o `code.yml` tem **19** testes (**6** unitários + **13** de schema) e **0** medição de
-cobertura; não há `cargo audit` nem `cargo deny`. A matriz tem **24** células (tipo `teste`) pendentes e **26**
-capacidades sem execução. O `AGENTS.md` §8 exige **85%** por sistema, medido no gate; o `full-workflow.yml`
-segue stub e não mede nada.
+**Bloqueado hoje:** o `code.yml` cobre fmt/clippy/unitários e publica cobertura informativa; o `ci-db.yml`
+roda os 13 cenários de schema em matriz PG17; `security.yml` roda `cargo audit`/`cargo deny`. A matriz tem
+**24** células (tipo `teste`) pendentes e **26** capacidades sem execução. O `AGENTS.md` §8 exige **85%**
+por sistema, medido no gate; o antigo `full-workflow.yml` foi removido em 2026-11-26.
 
 **O que travava:** o **ato 3** (runner) esperava esta política; respondida em B, ele deixa de ter essa
 dependência. O **ato 2** (`serie-e-regras`) nunca dependeu dela.

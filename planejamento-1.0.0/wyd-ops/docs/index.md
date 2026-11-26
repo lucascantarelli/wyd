@@ -21,6 +21,9 @@ ele garante que o que existe seja construível, publicável, observável e repro
 | versões por linha de release e a cobertura funcional por versão | 2026-11-20 | `proposta-versoes-e-cobertura-funcional.md` §7 |
 | elo de controle admin → servidor com segredo próprio e ack antes de escrita | 2026-11-22 | `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3 |
 | imagem do site é construída pelo CI e consumida pelo Compose | 2026-11-22 | `plano-imagem-e-compose-do-site.md` |
+| CI híbrido por domínio, com um gate agregador por domínio | 2026-11-26 | `docs/arquitetura/adr/adr-ops-0003-arquitetura-hibrida-de-workflows.md` |
+| gate de documentação com fonte única em `wyd-docs/gate.sh` | 2026-11-26 | `docs/arquitetura/adr/adr-ops-0006-gate-unico-de-documentacao.md` |
+| deploy sobre Compose, fornecedor de VPS ainda a definir | 2026-11-26 | `docs/arquitetura/adr/adr-ops-0007-deploy-sobre-compose-com-provedor-a-definir.md` |
 | layout do repositório: artefato executável na pasta real do projeto; Compose, `.dockerignore` e workflows na raiz | 2026-11-22 | `planejamento-1.0.0/wyd-1.0.0.md` §8 |
 | hospedagem de produção: VPS paga com processo persistente e Compose (A); contrato e backup pendentes | 2026-11-24 | `proposta-decisoes-ops.md` §4 e §6 |
 
@@ -50,9 +53,10 @@ as lacunas abertas — e a trajetória recomendada estão em [Prioridade do proj
 ## O que falta
 
 O planejamento de organização está fechado: dashboard (`wyd-ops-1.0.0.md`), `RF-OPS`/`RNF-OPS`, plano de
-teste e roadmap com DoD existem. O que falta é aprovação de fronteira/contratos O1–O5, implementação de
-CI/imagem/ambiente/monitoramento/segredos/deploy e aplicação de `Q-OPS-2`. O registro único é
-[lacunas.md](lacunas.md).
+teste e roadmap com DoD existem. O CI, o gate único, o cache e a matriz PostgreSQL foram implementados
+em F0+F1 (2026-11-26); o estado real e o que falta (imagem, deploy, observabilidade e governança) estão
+em [DevOps](devops/index.md). Continuam pendentes a aprovação de fronteira/contratos O1–O5 e a escolha
+do fornecedor de VPS. O registro único é [lacunas.md](lacunas.md).
 
 ## Limite desta documentação
 

@@ -58,9 +58,9 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: páginas montadas e censo por estado em `wyd-docs-1.0.0.md` §9.1 (2026-11-22), build e verificação verdes; lacunas com estado e dono em `planejamento-1.0.0/wyd-docs/lacunas.md` §1 |
 | Lacunas do `wyd-db` | registradas por estado em `planejamento-1.0.0/wyd-db/lacunas.md` §1 |
 | Código Rust | primeiro slice em `crates/wyd-db/`: `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (19 testes locais); os outros 8 `crates/*` só têm `.gitkeep`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
-| Raiz | sem `Cargo.toml` de workspace, `rust-toolchain.toml` ou `Makefile`; o crate tem `crates/wyd-db/Cargo.toml` próprio |
+| Raiz | sem `Cargo.toml` de workspace; `rust-toolchain.toml` (1.100.0) e `Makefile` existem; cada crate tem `Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4; projeto `WYD 1.0.0` com os campos, as views e as dependências `blocked by` medidos em `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
-| CI | o gate de documentação roda em `.github/workflows/docs.yml` (PR e push em `develop`/`main`, disparado por qualquer mudança na árvore `planejamento-1.0.0/` ou em `wyd-docs/`, sem lista de arquivos — 2026-11-22); `code.yml` roda fmt, clippy, os testes unitários e de schema contra PG17 migrado, cobertura informativa sem `--fail-under` e `cargo audit`/`cargo deny` bloqueantes com `deny.toml`; `full-workflow.yml` segue stub de versão. As contagens de teste e o limiar de cobertura têm dono em `planejamento-1.0.0/wyd-ops/docs/planos/estrategia-de-testes.md` §6–§7 (execução, job e log em `planejamento-1.0.0/wyd-ops/` §2.1) |
+| CI | `.github/workflows/docs.yml` (gate `gate-docs`), `code.yml` (fmt, clippy, unitários em matriz de 3 crates, cobertura informativa e `gate-code`), `ci-db.yml` (matriz PG17 e `gate-db`) e `security.yml` (audit/deny e `gate-security`); `issue-status.yml` mantém labels e Project. `full-workflow.yml` foi removido em 2026-11-26. O estado real e o que falta estão em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`; as contagens de teste e o limiar de cobertura têm dono em `estrategia-de-testes.md` §6–§7 |
 | Imagem e Compose | `.github/workflows/docs-image.yml` está versionado mas **nunca rodou e nunca publicou** (2026-11-23): o arquivo não está no remoto e o pacote no GHCR não existe. `docker compose pull docs` / `up -d docs` consomem a imagem publicada (`:latest`, com `build:` de fallback); `docker-compose.override.yml` (automático) traz só o serviço `gate` sob perfil e `docker-compose.dev.yml` (opt-in, `-f`) constrói a árvore com `:dev`. Build, fumaça e contagem provados localmente; `pull` reprova com exit 1 enquanto não houver pacote. Estado medido e o que falta para publicar em `planejamento-1.0.0/wyd-1.0.0.md` §8; decisão, DoD e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
@@ -184,9 +184,10 @@ escopo.
 - **Público e gratuito.** Runners padrão do GitHub são gratuitos e ilimitados em repositório
   público; **não** use runner self-hosted em job que executa código de pull request — o próprio
   GitHub desaconselha em repositório público.
-- CI é feito de workflows reutilizáveis e actions compostas em `.github/actions/`, com permissões
-  mínimas, actions fixadas e cache. O fluxo de documentação (`.github/workflows/docs.yml`) já roda o
-  gate em PR e push; o CI de código tem `code.yml` (fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes) e `full-workflow.yml` ainda é stub de versão, descritos em `planejamento-1.0.0/wyd-ops/`.
+- CI é feito de workflows por domínio e actions compostas em `.github/actions/`, com permissões
+  mínimas, actions fixadas e cache. O estado real (workflows, gates obrigatórios, cache, limites do
+  plano gratuito e transição de issues) está em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`;
+  `full-workflow.yml` não existe desde 2026-11-26.
 - O site não se configura por `mkdocs.yml`: versão, build, tema e verificação têm dono em
   `planejamento-1.0.0/wyd-docs/wyd-docs-1.0.0.md` §9 e `wyd-docs/docs/convencoes.md`. Não crie
   `mkdocs.yml`; tema e montagem vivem em `wyd-docs/`.

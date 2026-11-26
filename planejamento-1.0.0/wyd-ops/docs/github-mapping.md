@@ -6,8 +6,8 @@
 > Base: `.github/ISSUE_TEMPLATE/*`; `proposta-gestao-github-e-ambientes.md`; `AGENTS.md` §7, §9
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Convenção de nomes; criação de issues/milestones/boards é ato
-explícito e não foi feita nesta rodada.
+**Estado:** aceito (2026-11-26). Convenção de nomes; a transição automática de estado está em
+§2.2. Criação de issues/milestones/boards continua ato explícito e não é feita por esta página.
 
 ## 0. Estado medido do repositório (2026-11-25)
 
@@ -34,7 +34,7 @@ Formato: `[<tipo>] <sistema>: <resumo curto>`.
   página prescrevia antes da decisão de 2026-11-25 (§2.1).
 - `tipo/<planejamento|decisao|tarefa|defeito>` — previsto; **não existe** no repositório hoje.
 - `fase/<1..7>` ou `fatia/F0..`.
-- `estado/<bloqueada|proposta|aceita>` — `estado/bloqueada` já existe.
+- `estado/<proposta|aceita|em-andamento|em-revisao|bloqueada|aguardando-decisao>` — no máximo uma; a sequência está em §2.2.
 - `prioridade/P1|P2|P3`.
 - `marco/M0..M5`.
 
@@ -45,6 +45,28 @@ A leitura do repositório em 2026-11-25 encontrou em uso `area/<sistema>` (por e
 manter `area/*` e ajustar este mapping**, em vez de renomear labels e reetiquetar as 40 issues. As 61
 páginas por fatia de `OPS-05` nascem com `area/<sistema>`; `tipo/*` pode ser criado no mesmo ato, sem
 renomear o que já existe.
+
+## 2.2 Transição automática de estado (2026-11-26)
+
+O workflow `.github/workflows/issue-status.yml` executa `.github/scripts/sync-issue-status.mjs` em
+eventos de issue e de PR. Labels são a fonte de verdade; o campo `Status` do Project `WYD 1.0.0`
+(nº 10) é espelho e só é atualizado se o secret `PROJECT_TOKEN` existir (PAT com escopo `project`).
+
+| Evento | Label aplicada | Status do Project |
+|---|---|---|
+| issue aberta | `estado/proposta` | Backlog |
+| label `estado/aceita` | `estado/aceita` | Pronto |
+| PR aberto/reaberto com `Closes #N` | `estado/em-andamento` | Em andamento |
+| PR em `ready_for_review` | `estado/em-revisao` | Em revisão |
+| PR fechado sem merge | `estado/aceita` | Pronto |
+| PR mergeado ou issue fechada | mantém a última label | Done |
+| issue reaberta | retoma a última label não lateral | status correspondente |
+| `estado/bloqueada` / `estado/aguardando-decisao` | a label lateral | Bloqueado |
+| remoção da última label de estado | `estado/proposta` | Backlog |
+
+Regras: no máximo uma label `estado/*`; o script não regride `em-revisao` para `em-andamento` por
+evento repetido; `pull_request_target` não faz checkout do código do PR; sem `PROJECT_TOKEN`, o
+board fica manual e o log avisa. A decisão está em `ADR-OPS-0009`.
 
 ## 3. Branch
 

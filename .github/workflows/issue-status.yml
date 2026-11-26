@@ -1,0 +1,49 @@
+name: issue-status
+
+# Transição automática de estado. Labels são a fonte de verdade; o Status do
+# Project é espelho e só é atualizado quando PROJECT_TOKEN existe (PAT com
+# escopo `project`). Sem o segredo, as labels continuam funcionando.
+#
+# `pull_request_target` é intencional: o job não faz checkout do código do PR,
+# só lê o evento e chama a API. Assim o token de escrita funciona também em PR
+# de fork, sem executar código não confiável.
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled, closed, reopened]
+  pull_request_target:
+    types: [opened, ready_for_review, closed, reopened]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Número da issue para reaplicar a sequência
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: issue-status-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  sincronizar:
+    name: sincronizar estado
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Aplicar a sequência
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          PROJECT_OWNER: ${{ github.repository_owner }}
+          PROJECT_NUMBER: "10"
+        run: node .github/scripts/sync-issue-status.mjs

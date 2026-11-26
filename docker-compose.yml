@@ -27,5 +27,7 @@ services:
       dockerfile: wyd-ops/wyd-docs.Dockerfile
     container_name: wyd-docs
     ports:
-      - "${WYD_DOCS_PORT:-8000}:8000"
+      # Loopback apenas: o site de planejamento não precisa ficar exposto na
+      # rede local (e não deve, por padrão).
+      - "127.0.0.1:${WYD_DOCS_PORT:-8000}:8000"
     restart: unless-stopped

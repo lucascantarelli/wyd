@@ -1,9 +1,10 @@
 # Plano do CI real — Fase 4 (`wyd-ops`)
 
-> **Estado: proposta (`P`, 2026-11-19; estado revisto em 2026-11-24).** Especifica, arquivo por arquivo,
-> o CI da Fase 4: workflows reutilizáveis, actions compostas, jobs e o status check que passa a ser
-> obrigatório em `develop`. O `docs-check` e o `code.yml` já existem; os demais workflows, actions e o
-> status check continuam proposta e não estão aplicados.
+> **Estado: histórico (`H`, 2026-11-19; superado em 2026-11-26).** Especificou, arquivo por arquivo,
+> o CI da Fase 4. A arquitetura vigente é a híbrida por domínio (`ADR-OPS-0003`), implementada em
+> `code.yml`, `ci-db.yml`, `docs.yml`, `docs-image.yml`, `security.yml` e `release.yml`; o estado real
+> e o que falta estão em `docs/devops/index.md`. Esta página é registro da proposta original, não
+> contrato vigente.
 >
 > **Decisão vigente (`V`, 2026-11-24):** D-02 = **B** — cobertura de 85% bloqueante no gate do sistema,
 > informativa no `code.yml`; `cargo audit` e `cargo deny` bloqueantes. **Passo 8a executado em

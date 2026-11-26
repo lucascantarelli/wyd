@@ -119,7 +119,7 @@ Tipo responde “que natureza”; label responde “que área”. Não use label
 | Grupo | Labels | Uso |
 |---|---|---|
 | Área | `area/wyd-protocol`, `area/wyd-net`, `area/wyd-core`, `area/wyd-server`, `area/wyd-sim`, `area/wyd-db`, `area/wyd-admin`, `area/wyd-portal`, `area/wyd-launcher`, `area/wyd-client`, `area/wyd-bots`, `area/wyd-docs`, `area/wyd-ops` | uma por issue |
-| Estado | `estado/bloqueada`, `estado/aguardando-decisao`, `estado/em-revisao` | no máximo uma |
+| Estado | `estado/proposta`, `estado/aceita`, `estado/em-andamento`, `estado/em-revisao`, `estado/bloqueada`, `estado/aguardando-decisao` | no máximo uma; sequência em `docs/github-mapping.md` §2.2 |
 | Origem | `origem/legado` | afirmação `H` vinda do `deprecated` |
 | Contribuição | `good first issue`, `help wanted` | labels padrão, para repositório público |
 | Risco | `risco/seguranca`, `risco/dados` | quando o PR exige revisão extra |

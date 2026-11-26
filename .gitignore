@@ -37,3 +37,5 @@ wyd-client/files/*
 /wyd-docs/.venv/
 /wyd-docs/.build/
 __pycache__/
+
+.tmp/

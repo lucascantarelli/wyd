@@ -6,7 +6,7 @@
 > Base: `AGENTS.md` §7 e §9; `wyd-ops/docs/specs/requisitos.md` (`RF-OPS-001`, `RF-OPS-002`, `RF-OPS-006`, `RF-OPS-007`, `RNF-OPS-001`–`005`); `wyd-ops/docs/arquitetura/componentes.md`; `wyd-ops/docs/github-mapping.md`; `wyd-ops/auditoria-de-organizacao.md` §2–§3
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Planejamento; nenhum workflow, job, issue ou deploy foi criado ou alterado por este documento.
+**Estado:** aceito (2026-11-26) — F0+F1 implementados; F2–F5 continuam propostos. O que está no ar e o que falta estão em [DevOps](../devops/index.md); este documento mantém o desenho e as decisões.
 
 ## 1. Escopo e dono
 
@@ -16,10 +16,13 @@ Este documento planeja a esteira de CI/CD do projeto. Ele não implementa workfl
 
 | Workflow | Gatilho medido | Status | O que prova hoje |
 |---|---|---|---|
-| `.github/workflows/docs.yml` | PR/push em `develop`/`main` quando toca `planejamento-1.0.0/**`, `wyd-docs/**`, `AGENTS.md`, workflow ou action | verde no gate | montagem, links, âncoras, navegação, sintaxe e censos |
-| `.github/workflows/code.yml` | PR/push em `develop`/`main` quando toca `crates/**`, `deny.toml`, workflow | parcial | fmt, clippy, 6 testes unitários, 13 testes de schema contra PG17, cobertura informativa, `cargo audit`/`cargo deny` bloqueantes |
-| `.github/workflows/docs-image.yml` | PR/push em `develop`/`main` quando toca docs/site/compose/Dockerfile/workflow | nunca rodou/publicou | build da imagem do site e fumaça HTTP 200; publicação só fora de PR |
-| `.github/workflows/full-workflow.yml` | push/PR em `develop`/`main` e cron semanal | stub | versão e commit do run; não mede cobertura nem gate de sistema |
+| `.github/workflows/docs.yml` | todo push/PR em `develop`/`main` | implementado | `gate-docs` (montagem, links, âncoras, navegação, sintaxe e censos) e Pages em push |
+| `.github/workflows/code.yml` | todo push/PR em `develop`/`main` | implementado | `fmt`, `clippy` e `unit` em matriz de 3 crates (Windows para signer/launcher), cobertura informativa e `gate-code` |
+| `.github/workflows/ci-db.yml` | todo push/PR em `develop`/`main` | implementado | matriz `schema`/`reversibility`/`runner` com `postgres:17` como service container e `gate-db` |
+| `.github/workflows/docs-image.yml` | PR/push quando toca docs/site/compose/Dockerfile | implementado | build da imagem e fumaça HTTP 200; publicação no GHCR só fora de PR |
+| `.github/workflows/security.yml` | todo push/PR + schedule semanal | implementado | `cargo audit`/`cargo deny` em cada crate, `dependency-review` em PR e `gate-security` |
+| `.github/workflows/issue-status.yml` | eventos de issue e PR | implementado | sequência de labels `estado/*` e espelho no `Status` do Project; não é gate de código |
+| `.github/workflows/release.yml` | tag `v*` | implementado | assinatura e publicação do manifesto; sem binários até a F3 |
 
 Fonte: `AGENTS.md` §4 e §9; `wyd-ops/docs/index.md`.
 
@@ -27,14 +30,12 @@ Fonte: `AGENTS.md` §4 e §9; `wyd-ops/docs/index.md`.
 
 | Check | Workflow/job | Bloqueante? | Observação |
 |---|---|---|---|
-| gate de documentação | `docs.yml` / `verificar` | sim | `docker compose --profile gate run --rm gate`; censos devem coincidir |
-| formatação Rust | `code.yml` / `cargo` | sim | `cargo fmt --check` |
-| lint Rust | `code.yml` / `cargo` | sim | `cargo clippy -- -D warnings` |
-| testes unitários | `code.yml` / `cargo` | sim | `cargo test --lib` |
-| testes de schema | `code.yml` / `cargo` | sim | PG17 migrado, `sistema_pg` com `--test-threads=1` |
-| segurança de dependências | `code.yml` / `security` | sim | `cargo audit` e `cargo deny` |
-| cobertura de linha | `code.yml` / `cargo` | não, até o gate do sistema fechar | informativa por decisão `D-02 = B` |
-| build/fumaça da imagem do site | `docs-image.yml` / `imagem` | sim em PR quando o caminho for tocado | publicação no GHCR continua restrita a push não-PR |
+| documentação | `docs.yml` / `gate-docs` | sim | chama `wyd-docs/gate.sh`; censos devem coincidir |
+| formatação, lint e unitários | `code.yml` / `gate-code` | sim | matriz de 3 crates; Windows para signer/launcher |
+| PostgreSQL | `ci-db.yml` / `gate-db` | sim | matriz `schema`, `reversibility`, `runner` em PG17 |
+| segurança de dependências | `security.yml` / `gate-security` | sim | `cargo audit`/`deny` + `dependency-review` em PR |
+| cobertura de linha | `code.yml` / `cobertura` | não, até o gate do sistema fechar | informativa por decisão `D-02 = B`; 2 arquivos, 7 dias |
+| build/fumaça da imagem do site | `docs-image.yml` / `imagem` | não nesta fase | publicação no GHCR restrita a push não-PR; vira obrigatório na F2 |
 | gate de sistema | a definir por sistema | sim quando o sistema declarar o gate fechado | não existe hoje para `wyd-net`, `wyd-core`, `wyd-server`, `wyd-portal`, etc. |
 
 ## 4. Gates por camada
@@ -54,7 +55,8 @@ Fonte: `AGENTS.md` §4 e §9; `wyd-ops/docs/index.md`.
 - Actions de terceiros pinadas por SHA, com versão em comentário.
 - Preferir `run:` para operações de login/publicação; não introduzir action sem justificativa.
 - `concurrency` com cancelamento em PR; não cancelar release/deploy sem decisão explícita.
-- `paths` amplos o suficiente para não perder gate, mas específicos o suficiente para evitar execução inútil.
+- **Check obrigatório não pode ser filtrado por caminho**: o check ficaria em `Expected` em PR que não toca o caminho. Por isso `code`, `ci-db`, `docs` e `security` rodam em todo PR; `docs-image` mantém filtro porque não é obrigatório.
+- `paths` são usados só em workflow não obrigatório, para evitar execução inútil sem bloquear merge.
 - Segredos apenas em secret do GitHub ou `.env` local ignorado; nunca em workflow, log ou documento.
 - Artefatos de cobertura com retenção definida e sem segredo.
 - Proibido runner self-hosted em job que executa código de PR em repositório público.
@@ -82,20 +84,14 @@ Fonte de organização de skills: `wyd-ops/docs/arquitetura/ia-e-skills.md`.
 | `wyd-ops/docs/github-mapping.md` | nomes de issue, branch, PR, label e milestone usados pelos workflows |
 | `wyd-ops/docs/prioridade-do-projeto.md` (`D-02`, `D-05`, `D-06`) | política de cobertura, workspace e frente de execução |
 
-## 8. Decisões abertas (não decididas por este documento)
+## 8. Decisões aplicadas (2026-11-26)
 
-1. **Nomes dos required checks no GitHub** — hoje os workflows não declaram `required_status_checks`.
-   - Opções: A) exigir `docs`, `code` e `security` em todos os PRs para `develop`/`main`; B) exigir também `docs-image`; C) exigir por caminho alterado.
-   - Recomendação: A para o gate editorial/código/segurança; B apenas após a primeira publicação bem-sucedida da imagem.
-2. **`full-workflow.yml`** — hoje é stub de versão.
-   - Opções: A) transformá-lo em orquestrador de gates; B) removê-lo e manter workflows separados; C) mantê-lo como sentinela semanal.
-   - Recomendação: C no curto prazo e A quando houver mais de um crate.
-3. **Deploy** — hoje nenhum deploy existe.
-   - Opções: A) deploy automático em `main` após gates verdes; B) deploy manual com aprovação; C) deploy apenas por release tag.
-   - Recomendação: B até existir rollback validado; A apenas depois de staging verde.
-4. **Runner self-hosted** — proibido para código de PR em repositório público.
-   - Opções: A) manter GitHub-hosted; B) self-hosted apenas para tarefas sem código de PR; C) híbrido por job.
-   - Recomendação: A para PR; B apenas para publicação de imagem se necessário.
+1. **Required checks** — `gate-code`, `gate-db`, `gate-docs` e `gate-security` em todo PR para `develop`/`main`; `docs-image` não é obrigatório até a F2. Ver `ADR-OPS-0003`.
+2. **`full-workflow.yml`** — removido; era stub e duplicava os gatilhos dos workflows reais.
+3. **Deploy** — adiado até a escolha do fornecedor de VPS; o contrato é Compose + imagem por SHA + smoke + rollback, sem workflow fictício. Ver `ADR-OPS-0007`.
+4. **Runner self-hosted** — proibido para código de PR; nenhum job usa runner self-hosted.
+5. **Cache e artefatos** — `rust-cache` por crate, cobertura com 7 dias, GHCR público. Ver `ADR-OPS-0004`.
+6. **Gate de documentação** — um script (`wyd-docs/gate.sh`) para CI e Compose. Ver `ADR-OPS-0006`.
 
 ## 9. O que esta página não cobre
 

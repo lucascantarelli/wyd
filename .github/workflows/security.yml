@@ -1,0 +1,106 @@
+name: security
+
+# Advisory, licença e dependência vulnerável. Roda em todo PR (é check
+# obrigatório) e semanalmente, porque o advisory envelhece sem commit.
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analise:
+    name: audit e deny
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+        with:
+          crate: wyd-db
+      - name: Instalar cargo-audit e cargo-deny
+        uses: taiki-e/install-action@893d6ee8d714b6c7dfe2bcd94e5759e9a7958a7e # v2.90.10
+        with:
+          tool: cargo-audit,cargo-deny
+      - name: cargo audit (cada lockfile)
+        run: |
+          set -euo pipefail
+          for lock in crates/*/Cargo.lock; do
+            echo "== $lock"
+            cargo audit --file "$lock"
+          done
+      - name: cargo deny (cada crate)
+        run: |
+          set -euo pipefail
+          for manifest in crates/*/Cargo.toml; do
+            echo "== $manifest"
+            cargo deny --config deny.toml --manifest-path "$manifest" check advisories bans licenses sources
+          done
+
+  dependency-review:
+    name: revisão de dependência
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5.0.1
+        with:
+          fail-on-severity: high
+
+  gate-security:
+    name: gate-security
+    if: always()
+    needs: [analise, dependency-review]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ANALISE: ${{ needs.analise.result }}
+      REVISAO: ${{ needs.dependency-review.result }}
+      EVENTO: ${{ github.event_name }}
+    steps:
+      - name: Agregar os jobs
+        run: |
+          falhou=0
+          if [ "$ANALISE" != "success" ]; then
+            echo "::error::audit/deny terminou com '$ANALISE'"
+            falhou=1
+          fi
+          if [ "$EVENTO" = "pull_request" ] && [ "$REVISAO" != "success" ]; then
+            echo "::error::revisão de dependência terminou com '$REVISAO'"
+            falhou=1
+          fi
+          exit "$falhou"
+
+  notify:
+    name: notificar falha
+    if: always() && (failure() || cancelled())
+    needs: [gate-security]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/notify-failure
+        with:
+          workflow: security

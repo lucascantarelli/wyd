@@ -19,11 +19,11 @@
 
 | # | Item da missão | Estado | Evidência |
 |---|---|---|---|
-| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 471 páginas / 469 fontes / 35 aceito / 433 proposto / 0 sem linha |
+| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 479 páginas / 477 fontes / 45 aceito / 431 proposto / 0 sem linha |
 | 2 | Planejar todos os gaps | Feito | `lacunas.md` por sistema; `wyd-ops/auditoria-de-organizacao.md` |
 | 3 | Estrutura de pastas com `.gitkeep` (todo o projeto) | Feito | `planejamento-1.0.0/*/src/.gitkeep`, `*/tests/.gitkeep` (12 sistemas); `crates/*/` (`.gitkeep`); `wyd-client/files/.gitkeep`; `wyd-db/prompts/.gitkeep` e `wyd-db/skills/.gitkeep`; mapa em `wyd-ops/docs/estrutura-de-pastas-e-modulos.md` |
 | 4 | Documentação detalhada por módulo | Feito | `docs/arquitetura/componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) + `docs/modulos.md` em 6 sistemas; os 7 restantes usam `componentes.md` como documento de módulo, sem duplicar `modulos.md` |
-| 5 | Docs organizados, limpos, padronizados, sem redundância | Feito | gate valida links/âncoras/censos; o gate de links (`wyd-docs/verificar.py`) confere link, âncora e navegação lateral das **471 páginas montadas**; não publica razão de alcançáveis, então esta célula não afirma percentual; índice local de ADR alinhado ao estado `aceito` |
+| 5 | Docs organizados, limpos, padronizados, sem redundância | Feito | gate valida links/âncoras/censos; o gate de links (`wyd-docs/verificar.py`) confere link, âncora e navegação lateral das **479 páginas montadas**; não publica razão de alcançáveis, então esta célula não afirma percentual; índice local de ADR alinhado ao estado `aceito` |
 | 6 | Projeto organizado e mapeado no GitHub | Parcial | `.github/ISSUE_TEMPLATE/*`, `pull_request_template.md`, workflows; **40 páginas de issue `WYDDB-nnn`** e milestones no repositório; o estado do board é do GitHub e **não é medido localmente** (leitura de 2026-11-25), e board/novas issues exigem autorização |
 | 7 | Padronização de issues (incl. skills a carregar) | Feito | `skill_principal` obrigatória em lista fechada de 9 skills nos 4 templates; `skills_complementares` opcional na mesma lista; conferido contra `.agents/skills` e cloud skills |
 | 8 | Uso das skills pelo agente | Feito (processo) | `.agents/skills/` (2) + cloud skills; `ia-e-skills.md` documenta quando carregar |
@@ -31,8 +31,8 @@
 | 10 | Padrões de qualidade de código/testes/boas práticas/docs/segurança/monitoramento/deploy | Feito | documentado em `plano-de-testes.md` de 13 sistemas e `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`); código só em `wyd-db` |
 | 11 | Todos os testes implementados, documentados e funcionando | Parcial | `wyd-db`: 19 testes locais (medido em 2026-11-25 no crate: 13 em `tests/sistema_pg.rs` + 6 em `src/dsn.rs`; contagem de código, fora do gate de docs); demais: 0 (planejados) |
 | 12 | SOLID, design patterns, clean code, arquitetura | Parcial | documentado (componentes, contratos); sem código para validar |
-| 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Feito (planejamento) | documentado em `plano-de-testes.md` de 13 sistemas, com seção própria de CI, cobertura e monitoramento; CI de código segue stub (`full-workflow.yml`) — implementação pendente |
-| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial | `code.yml`, `docs.yml`, `docs-image.yml` (nunca rodou), `full-workflow.yml` (stub) |
+| 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Parcial (F0+F1) | `plano-de-testes.md` de 13 sistemas; CI de código, banco e docs implementado em F0+F1 (2026-11-26), cobertura informativa com retenção de 7 dias; E2E e observabilidade na F4 |
+| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial (F0+F1) | `code.yml` (matriz), `ci-db.yml` (service containers), `docs.yml`, `docs-image.yml`, `security.yml`, `release.yml`; Slack e métricas na F4; deploy na F3 |
 | 15 | Reuso de código, modularização, desacoplamento, coesão, baixo acoplamento | Feito (planejamento) | documentado em `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) |
 | 16 | Centralização de fixtures, mocks, stubs, dados de teste | Feito (planejamento) | documentado em `plano-de-testes.md` de 13 sistemas |
 | 17 | Baixa complexidade, alta legibilidade/manutenibilidade/escalabilidade | N/A | sem código ainda |
@@ -43,7 +43,7 @@
 | 22 | Decisões documentadas, justificadas e aprovadas | Feito | 11 decisões formalizadas em 2026-11-25; `decisoes-registradas.md` §2/§3 atualizados |
 | 23 | Funcionalidades do cliente mapeadas e documentadas | Feito | `wyd-client/docs/specs/mapa-de-funcionalidades.md` + inventário |
 | 24 | Sistemas de jogo funcionando (guerras, mobs, …) | N/A (planejamento) | `wyd-core/docs/specs/catalogo-funcional.md` (mapa de fronteira) |
-| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 471 páginas / 469 fontes / 35 aceito / 433 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
+| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 479 páginas / 477 fontes / 45 aceito / 431 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
 | 26 | Skills do agente funcionando, documentadas, testadas, aprovadas | Parcial | documentadas em `ia-e-skills.md`; sem testes automatizados de skill |
 | 27 | Documentação atualizada, coerente, sem duplicidade/redundância/erros | Feito (gate) | gate de links/âncoras/censos verde; `componentes.md` é o documento de módulo dos sistemas sem `modulos.md`, sem página duplicada |
 | 28 | Documentação rigorosamente padronizada | Feito (gate) | cabeçalho de 5 linhas, `Estado` com data, links relativos e ADR local `aceito`; gate reprova link, âncora, navegação e sintaxe |
@@ -137,7 +137,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 ## 7. Verificação final
 
 - `docker compose --profile gate run --rm gate` → `censos: medidas e citações coincidem`.
-- Contagens: 471 páginas / 469 fontes / 433 proposto / 35 aceito / 0 sem linha de estado.
+- Contagens: 479 páginas / 477 fontes / 431 proposto / 45 aceito / 0 sem linha de estado.
 - Nenhum commit/push/PR/issue/deploy realizado nesta rodada.
 
 ## 8. Fechamentos da terceira passada (2026-11-25)
@@ -145,7 +145,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 | Item | Evidência concreta |
 |---|---|
 | Pastas reservadas completas | `planejamento-1.0.0/wyd-db/prompts/.gitkeep` e `planejamento-1.0.0/wyd-db/skills/.gitkeep` criados; `find planejamento-1.0.0 -type d -empty` retorna 0 |
-| Links e navegação | `wyd-docs/verificar.py` confere link interno, âncora e navegação lateral em **471 páginas montadas**; a razão alcançáveis/total não é publicada por nenhum gate, então não há percentual nem contagem de órfãos nesta célula |
+| Links e navegação | `wyd-docs/verificar.py` confere link interno, âncora e navegação lateral em **479 páginas montadas**; a razão alcançáveis/total não é publicada por nenhum gate, então não há percentual nem contagem de órfãos nesta célula |
 | Índices de ADR coerentes | cada sistema que registra ADR mantém índice local com o estado e o link do arquivo; a contagem de aceitos é do índice global (`planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md` §2), que não é repetida aqui |
 | Issues com skill verificável | `skill_principal` obrigatória nos 4 templates, com 9 opções fechadas; `skills_complementares` opcional; lista conferida contra `.agents/skills` (2) e cloud skills (7) |
 | Planos de teste completos | 13 de 13 `plano-de-testes.md` com `## CI, cobertura e monitoramento`, comando de CI, piso de cobertura e métrica/log por sistema; `LNET-01`/`LBOT-03` sem limiar inventado |
