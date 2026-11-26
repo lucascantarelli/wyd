@@ -41,7 +41,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   VALUES (1, 1, repeat('a', 17), '$argon2id$...')` falha com `23514` em `ck_account_login_len`;
   com 16 caracteres, insere.
 - **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
-- **Issue:** a alocar na onda 8; `D-7` aprovada em 2026-11-22, página `WYDDB-nnn` ainda não escrita.
+- **Issue:** #118.
 
 ## RF-DB-002 — falha de PIN acumula e bloqueia
 
@@ -53,7 +53,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   game.account WHERE id = 1` devolve `5` e instante não nulo; reiniciar o servidor e repetir a
   consulta mantém os valores. O limiar é de código: o banco só guarda o estado.
 - **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-003 — saldo é da conta, em inteiro de 32 bits
 
@@ -64,7 +64,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   falha com `23514` em `ck_account_wallet_coin`; `2147483647` passa.
 - **Tabela e porta:** `game.account_wallet` (`migrations/0005_game_account.md`); porta `wallet`
   (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-004 — cofre pertence à conta
 
@@ -76,7 +76,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   da conta não remove a linha (a FK é da conta).
 - **Tabela e porta:** `game.vault_item` (`migrations/0009_game_inventory.md`); porta `inventory`
   (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #119.
 
 ## RF-DB-005 — um resgate diário por conta e dia
 
@@ -88,7 +88,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   fuso é de código.
 - **Tabela e porta:** `portal.daily_reward_claim` (`migrations/0011_game_economy.md`); porta
   `rewards` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #119.
 
 ## RF-DB-006 — uma sessão viva por conta
 
@@ -100,7 +100,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   segundo `23505` em `ux_session_viva_por_conta`; depois de `UPDATE ... SET released_at = now(),
   released_reason = 'disconnect'`, a nova sessão entra.
 - **Tabela e porta:** `game.session` (`migrations/0007_game_session.md`); porta `session` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-007 — bloqueio exige motivo, autor e instante
 
@@ -113,7 +113,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   falha em `ck_account_moderation_autor`; sem `blocked_at`, em `ck_account_moderation_instante`.
 - **Tabela e porta:** `game.account_moderation` (`migrations/0005_game_account.md`); porta `moderation`
   (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-008 — crédito e débito de donate idempotentes
 
@@ -125,7 +125,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   em `uq_donate_credit_idem` (ou `uq_donate_debit_idem`); o valor é positivo por `CHECK`.
 - **Tabela e porta:** `portal.donate_credit`/`donate_debit` (`migrations/0011_game_economy.md`);
   porta `donate` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #119.
 
 ## RF-DB-009 — grant pendente impede apagar conta e personagem
 
@@ -138,7 +138,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `fk_delivery_queue_character`.
 - **Tabela e porta:** `ops.delivery_queue` (`migrations/0012_ops_delivery.md`); porta `delivery`
   (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #119.
 
 ## RF-DB-010 — token de reset só existe como hash
 
@@ -150,7 +150,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `ck_person_token_hash_forma` (ou `ck_pin_reset_token_forma`); 64 hexadecimais passam.
 - **Tabela e porta:** `portal.person_token` (`migrations/0004_portal_access.md`) e `game.pin_reset`
   (`migrations/0005_game_account.md`); porta `identity` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-011 — auditoria append-only, sem FK
 
@@ -161,7 +161,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `SET ROLE wyd_game; UPDATE ops.audit_log SET action = 'x'` falha com
   `42501`; `INSERT` de `wyd_game` passa; `\d ops.audit_log` não mostra FK.
 - **Tabela e porta:** `ops.audit_log` (`migrations/0002_ops_audit.md`); porta `audit` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #117.
 
 ## RF-DB-012 — papel de jogo é fechado
 
@@ -172,7 +172,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `UPDATE game.account SET role = 'gm' WHERE id = 1` falha com `23514` em
   `ck_account_role`; `player` passa.
 - **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-013 — senha e PIN só como hash argon2id
 
@@ -185,7 +185,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `$argon2id$` passa.
 - **Tabela e porta:** `portal.person` (`migrations/0003_portal_person.md`) e `game.account`
   (`migrations/0005_game_account.md`); porta `identity` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-014 — cinco contas da mesma pessoa online
 
@@ -197,7 +197,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   WHERE released_at IS NULL` devolve `5`; a sexta conta não existe, porque a vaga é 1–5
   (`RN-DB-001`).
 - **Tabela e porta:** `game.session` (`migrations/0007_game_session.md`); porta `session` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #118.
 
 ## RF-DB-015 — contas da mesma pessoa formam grupo e trocam entre si
 
@@ -209,7 +209,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `game.session` além da FK da conta; a prova é a ausência de objeto no DDL
   (`ddl-confirmado.md` §5.5), não um comando.
 - **Tabela e porta:** nenhuma tabela; regra de jogo (frente `wyd-server`).
-- **Issue:** a alocar na onda 8.
+- **Issue:** — (frente `wyd-server`; sem issue no `wyd-db`).
 
 ## RF-DB-016 — limite por IP comporta cinco clientes por pessoa
 
@@ -221,7 +221,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   cinco de outra, do mesmo IP, somam `10` e passam; a décima terceira conexão do mesmo IP é recusada.
   É requisito de **fronteira**, não de schema.
 - **Tabela e porta:** nenhuma tabela; `cpsock/limits.rs` (frente `wyd-server`, `D10`).
-- **Issue:** a alocar na onda 8, com dono `wyd-server`.
+- **Issue:** — (frente `wyd-server`; sem issue no `wyd-db`).
 
 ## RF-DB-017 — uma versão corrente de conteúdo, referenciada por FK
 
@@ -236,7 +236,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `fk_character_content_version`.
 - **Tabela e porta:** `content.content_version` (`migrations/0001_bootstrap.md` §4 e §9, prova 9) e a FK de
   `game.character` (`migrations/0006_game_character.md`); porta `catalog` (planejada).
-- **Issue:** a alocar na onda 8.
+- **Issue:** #116.
 
 ## O que este recorte não cobre
 
@@ -245,7 +245,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 | requisitos de personagem, inventário, economia, conteúdo e entrega | não foram levantados como `R`; só o desenho existe | ondas donas, com `RF-DB` próprio |
 | requisitos não funcionais (limiar, latência, capacidade) | nenhum limiar foi medido | [`requisitos-nao-funcionais.md`](requisitos-nao-funcionais.md), escrita com 5 limiares e 2 a medir |
 | matriz requisito → tabela → porta → teste → issue | porta e teste existem como **alvo** — o teste tem matriz `CAP-nn` desde 2026-11-24 —, e a issue segue sem artefato | [`rastreabilidade.md`](rastreabilidade.md), escrita em 2026-11-24 |
-| issue de entrega | `D-7` aprovada; falta a página `WYDDB-nnn` com DoD | onda 8 |
+| issue de entrega | `D-7` aprovada; páginas e issues criadas (#82–#121) | `Issue` de cada `RF` |
 
 *Os `RF-DB-001`–`RF-DB-017` são a numeração de requisito funcional do `wyd-db`; o número 018 é o
 próximo livre.*
