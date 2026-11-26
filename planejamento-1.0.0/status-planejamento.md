@@ -217,7 +217,7 @@ adiamento (`OPS-04`).
 ## 12. Publicação no GitHub (2026-11-26)
 
 O trabalho local foi publicado sem reescrever histórico: branch `docs/fechar-planejamento-1.0.0`, commits
-`387d9a3` (launcher), `aadb56d` (wyd-db), `33ec823` (documentação) e o commit desta seção, com PR
+`387d9a3` (launcher), `aadb56d` (wyd-db), `33ec823` (documentação), `8b16490` (estado) e `0b9056d` (CI), com PR
 [#128](https://github.com/lucascantarelli/wyd/pull/128) contra `develop` — **sem merge**. O namespace de
 label ficou em `area/*` (decisão de 2026-11-25), e `OPS-05` criou:
 
