@@ -98,7 +98,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | `crates/*` | 9 pastas, só `.gitkeep` | `git ls-files` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
-| CI | `code`: fmt, clippy, 6 unitários, 13 de schema, cobertura informativa e audit/deny bloqueantes (2026-11-24); `full-workflow`: 1 job (`Get Info`), **verde**, sem build/teste e com `version`/`commit` vazios (`V`: run #14 `44505419869`, job `135495629487`; detalhe em `wyd-ops` §2.1); `docs`: gate + publicação | `.github/workflows/` |
+| CI | 7 workflows (2026-11-26): `code` (fmt/clippy/unitários em matriz + cobertura informativa + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos e 567 MB em `wyd-client/files/`, ignorado; `WYD.exe` com hash medido | `wyd-client/registro-do-cliente.md`, 2026-11-22 |
@@ -822,8 +822,8 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente (2026-11-23): traz **só** o `gate` sob perfil; não toca `docs` |
 | `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
-| workflow de CI | `.github/workflows/` | `wyd-ops` | 4: `docs.yml`, `docs-image.yml`, `code.yml` (fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes) e `full-workflow.yml` (stub de versão) |
-| action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 1: `docs-check` |
+| workflow de CI | `.github/workflows/` | `wyd-ops` | 7: `code.yml`, `ci-db.yml`, `docs.yml`, `docs-image.yml`, `security.yml`, `issue-status.yml` e `release.yml` (2026-11-26) |
+| action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 3: `docs-check`, `setup-rust`, `notify-failure` |
 | crate Rust | `crates/<sistema>/` | o sistema | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários); os outros 8 só `.gitkeep` |
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
 | portal Next.js | `wyd-portal/` | `wyd-portal` | só `.gitkeep` |

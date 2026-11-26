@@ -5,6 +5,8 @@ on:
   # check filtrado por caminho fica "Expected" em PR que não toca docs. O gate
   # custa segundos; o bloqueio eterno custa mais.
   push:
+    # O job `publicar` só roda em push; fora de `develop`/`main` o ambiente `github-pages`
+    # recusa o deploy. PR de feature continua verificando pelo evento `pull_request`.
     branches: [develop, main]
   pull_request:
   workflow_dispatch:
