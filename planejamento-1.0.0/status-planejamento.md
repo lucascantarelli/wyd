@@ -214,9 +214,8 @@ adiamento (`OPS-04`).
 
 ## 12. Publicação no GitHub (2026-11-26)
 
-O trabalho local foi publicado sem reescrever histórico: branch `docs/fechar-planejamento-1.0.0`, commits
-`387d9a3` (launcher), `aadb56d` (wyd-db), `33ec823` (documentação), `8b16490` (estado) e `0b9056d` (CI), com PR
-[#128](https://github.com/lucascantarelli/wyd/pull/128) contra `develop` — **sem merge**. O namespace de
+O PR [#128](https://github.com/lucascantarelli/wyd/pull/128), aberto em 2026-11-26 contra `develop`, não foi
+integrado e permanece apenas como registro histórico. A publicação efetiva desta rodada é a §14. O namespace de
 label ficou em `area/*` (decisão de 2026-11-25), e `OPS-05` criou:
 
 | Artefato | Resultado |
@@ -251,11 +250,11 @@ O PR foi integrado em `develop`; a publicação e o rollback acima usam o commit
 | Issues no repositório | **121** issues abertas: 40 `WYDDB`, 61 fatias, 10 lacunas e 10 `ADM` (#208–#217) |
 | Board `WYD 1.0.0` nº 10 | **121 itens**, 5 views (`Fila`, `Por sistema`, `Bloqueados`, `Minhas issues`, `Roadmap`) e todos os campos preenchidos |
 | Campos do board | `Sistema` em 121/121; `Status` em 121/121 (96 Backlog, 24 Bloqueado, 1 Pronto); `Fase`, `Prioridade` e `Marco` em 121/121 |
-| Links e corpo das issues | 111 corpos que apontavam para a branch morta `docs/fechar-planejamento-1.0.0` foram corrigidos para `develop`; os mesmos 111 receberam `**Gate de verificação:**` e o bloco `## Skills`; a varredura final encontrou **0** links antigos, **0** headings antigos e **0** corpos sem gate |
+| Links e corpo das issues | 111 corpos que apontavam para uma branch não integrada foram corrigidos para `develop`; os mesmos 111 receberam `**Gate de verificação:**` e o bloco `## Skills`; a varredura final encontrou **0** links antigos, **0** headings antigos e **0** corpos sem gate |
 | `ADM-01`–`ADM-10` | páginas locais convertidas em issues #208–#217, com `area/wyd-admin`, `estado/proposta`, fase e corpo da página dona |
 | Título e estado | as 40 `WYDDB` receberam o prefixo `[tarefa] wyd-db:` e a label `estado/proposta`; a varredura final encontrou **0** títulos fora do formato e **0** issues sem label de estado |
 | Skills | `make test-gate`: 23 testes, 22 OK + 1 skip Windows; `test_skill_contract` 5/5: lista do gate = template, 4 formulários com as 9 skills, 2 skills locais com frontmatter e PR template com registro da skill |
-| Entrega versionada | branch `docs/wyd-ops-mapeamento-github`, commit inicial `2a4da47`, PR [#218](https://github.com/lucascantarelli/wyd/pull/218) contra `develop`; o status é parte do próprio PR |
+| Entrega versionada | PR [#218](https://github.com/lucascantarelli/wyd/pull/218), squash [adcf018](https://github.com/lucascantarelli/wyd/commit/adcf01864d5b79a0d526adf41f319f48dc9ffed1) em `develop`; checks do PR e workflows pós-merge `code`, `ci-db`, `docs`, `docs-image` e `security` com conclusão **success** |
 
 A importação usou as labels `area/*` como fonte de `Sistema`, `estado/bloqueada` e
 `estado/aguardando-decisao` como `Bloqueado`, e os marcos por sistema (`wyd-db` M2, `wyd-ops` M5, os
