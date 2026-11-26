@@ -1,0 +1,12 @@
+# Estrutura inicial do `wyd-net` (2026-11-26): transporte, sessão, roteamento e
+# backpressure. Nenhum socket ou regra de sessão existe ainda; módulos e critérios são
+# do plano em `planejamento-1.0.0/wyd-net/`.
+[package]
+name = "wyd-net"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[lints.rust]
+unsafe_code = "forbid"

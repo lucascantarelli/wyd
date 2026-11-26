@@ -9,7 +9,7 @@ antes da assinatura e as 12 páginas estão `aceito (2026-11-24)`. O registro es
 
 > **Atualizado em 2026-11-24, depois desta revisão:** `Q-BLK-20` = A foi decidida e `CAP-08` está
 > declarada não executável; as 27 páginas de `migrations/` foram aceitas e `crates/wyd-db/` já tem
-> `Cargo.toml`, `src/dsn.rs` e `tests/sistema_pg.rs`. O retrato de §1 (“os cinco alvos não existem”,
+> `Cargo.toml`, `src/dsn.rs` e `tests/sistema/sistema_pg.rs`. O retrato de §1 (“os cinco alvos não existem”,
 > “0 de 23 capacidades”) é o daquele dia; o vigente está em `pendencias-de-fechamento.md` §6.6.31 e em
 > `tests/specs/capacidades.md` §7.
 

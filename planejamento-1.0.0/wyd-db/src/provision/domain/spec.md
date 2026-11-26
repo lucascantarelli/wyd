@@ -3,12 +3,11 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §2, §4 e §8
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/domain/spec.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/domain/spec.rs` — estado desejado e `render()`
-**Sem arquivo no repositório:** `src/provision/domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ## 1. Responsabilidade
 **Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
@@ -74,7 +73,9 @@ Emite, nesta ordem, com `\n` final único e sem `\r`:
    `MIGRATOR`, nesta ordem; o texto exato é o de `spec.md` §4.
 
 Implementação: `String` com `push_str`/`writeln!` (nunca `format!` aninhado). O golden de
-`tests/golden/roles.sql` é comparado com `assert_eq!(render(), include_str!(…))`.
+`tests/golden/roles.sql` é comparado com `assert_eq!(render(), include_str!(…))` e entra em
+`WYDDB-015`; nesta entrega o alvo de contrato verifica as linhas obrigatórias, a ausência de `PASSWORD`
+e o determinismo, sem gravar o golden.
 
 ## 5. Regras
 
@@ -97,6 +98,9 @@ Implementação: `String` com `push_str`/`writeln!` (nunca `format!` aninhado). 
 | `migrator_is_member_of_owner` | o `GRANT wyd_owner TO wyd_migrator;` existe |
 | `render_emits_no_forbidden_sql` | sem `PASSWORD`, `ALTER ROLE`, `DROP`; `GRANT … ON` só no bloco de `public` |
 | `render_emits_public_block` | o bloco de `public` vem depois das memberships e na ordem de `spec.md` §4 |
+
+O golden de §6 entra com `WYDDB-015`; nesta entrega o contrato verifica as linhas obrigatórias, a ausência
+de `PASSWORD` e o determinismo, sem gravar `db/roles.sql`.
 
 ## 7. Pronto quando
 

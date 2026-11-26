@@ -53,7 +53,7 @@ cargo fmt --all -- --check
 cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 cargo audit --file Cargo.lock
-cargo deny --config deny.toml check advisories bans licenses sources
+cargo deny --config wyd-ops/deny.toml check advisories bans licenses sources
 
 # gate de documentação (não compila Rust)
 docker compose --profile gate run --rm gate

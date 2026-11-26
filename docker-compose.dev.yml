@@ -1,18 +1,21 @@
-# Camada de desenvolvimento do site — **opt-in**, não é carregada automaticamente.
+# Camada de desenvolvimento — **opt-in**, não é carregada automaticamente.
 #
-# Serve para construir e servir o site a partir da árvore de trabalho, sem depender do GHCR e
-# sem gravar por cima da imagem publicada. O caminho padrão (`docker compose up -d docs`) usa
-# a imagem que o CI publica; este é o caminho de quem está editando página.
+# Serve para construir e servir a árvore de trabalho, sem depender do GHCR e sem gravar por
+# cima da imagem publicada. O caminho padrão (`docker compose up -d docs`) usa a imagem que
+# o CI publica; este é o caminho de quem está editando página ou rodando os esqueletos.
 #
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile stack up -d --build
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml down
 #
 # Diferenças em relação ao Compose base, e só elas:
 #   - tag `:dev`: o build local não se confunde com `:latest` nem com o SHA do CI
 #   - `pull_policy: build`: `up` constrói da árvore em vez de puxar imagem antiga
-#   - `restart: "no"`: o site de dev não reinicia sozinho depois de `down` ou de falha
+#   - `restart: "no"`: serviço de dev não reinicia sozinho depois de `down` ou de falha
+#   - perfil `stack`: `server`, `admin` e `portal` em esqueleto, sem `build:` no base
 #
-# A porta vem do base; o `build:` fica aqui porque o base só consome a imagem publicada.
+# `docs` mantém a porta do base; os esqueletos trazem porta e build só aqui, porque o base
+# só consome imagem publicada.
 #
 # Dono: `wyd-ops` (imagem e Compose); decisão em
 # `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §2.6.
@@ -24,4 +27,47 @@ services:
     build:
       context: .
       dockerfile: wyd-ops/wyd-docs.Dockerfile
+    restart: "no"
+
+  # Esqueleto do `wyd-server`: sobe as sondas `/health` e `/ready`. `EPROD` (CPSock),
+  # canais e ECAP não existem; não há porta de jogo publicada.
+  server:
+    profiles: ["stack"]
+    image: wyd/server:dev
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-server.Dockerfile
+    environment:
+      WYD_SERVER_HEALTH_BIND: 0.0.0.0:7100
+    ports:
+      - "127.0.0.1:${WYD_SERVER_HEALTH_PORT:-7100}:7100"
+    restart: "no"
+
+  # Esqueleto do `wyd-admin`: só as sondas. O contrato C4 e o banco não estão ligados.
+  admin:
+    profiles: ["stack"]
+    image: wyd/admin:dev
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-admin.Dockerfile
+    environment:
+      WYD_ADMIN_BIND: 0.0.0.0:7600
+    ports:
+      - "127.0.0.1:${WYD_ADMIN_PORT:-7600}:7600"
+    restart: "no"
+
+  # Esqueleto do portal Next.js: uma página estática, sem BFF, login ou banco.
+  portal:
+    profiles: ["stack"]
+    image: wyd/portal:dev
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-portal.Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:${WYD_PORTAL_PORT:-3000}:3000"
     restart: "no"

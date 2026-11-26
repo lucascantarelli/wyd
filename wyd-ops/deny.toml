@@ -1,0 +1,55 @@
+# Política do `cargo deny` — D-02 = B (2026-11-24).
+# Bloqueia advisory, licença fora da lista, fonte desconhecida e dependência com `*`.
+# Dono da decisão: `planejamento-1.0.0/wyd-ops/docs/prioridade-do-projeto.md` §0.1 (D-02).
+# Uso no CI: `.github/workflows/security.yml`, job `analise`.
+
+[advisories]
+# Nenhum advisory ignorado: qualquer RUSTSEC ativo derruba o job.
+ignore = []
+
+[licenses]
+# Lista permissiva mínima; licença fora dela derruba o job.
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "Zlib",
+    "CC0-1.0",
+    "Unlicense",
+    # Dados de raiz de CA do `webpki-roots` (usado pelo rustls do sqlx): licença permissiva
+    # sobre o bundle de certificados, não sobre código do projeto.
+    "CDLA-Permissive-2.0",
+]
+confidence-threshold = 0.8
+
+# Os crates do projeto são GPL-2.0; a exceção vale só para eles, não para dependências.
+exceptions = [
+    { allow = ["GPL-2.0-only"], crate = "wyd-db" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-ops-signer" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-launcher" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-protocol" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-net" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-core" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-sim" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-server" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-admin" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-bots" },
+]
+
+[licenses.private]
+# `publish = false` não pode virar bypass: dependência privada com licença proibida falha.
+ignore = false
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

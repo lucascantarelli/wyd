@@ -17,25 +17,42 @@ pub type Result<T> = std::result::Result<T, MigrateError>;
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum MigrateError {
+    /// Configuração inválida antes de tocar o banco.
     Config(ConfigError),
+    /// Falha ao abrir a conexão com o PostgreSQL.
     Connect(ConnectError),
+    /// Falha ao ler a série do disco.
     Source(SourceError),
+    /// O papel conectado não é o esperado pela operação.
     WrongRole {
+        /// Papel encontrado na sessão.
         found: String,
+        /// Papel exigido pela operação.
         expected: &'static str,
     },
+    /// O servidor não é o PostgreSQL esperado.
     WrongServer {
+        /// Versão encontrada no servidor.
         found: String,
+        /// Versão mínima exigida.
         expected: u8,
     },
+    /// A série de migrations não passou na validação.
     SetInvalid(SetError),
+    /// Outro processo mantém o advisory lock da série.
     LockBusy {
+        /// Tempo esperado antes de desistir.
         waited: Duration,
     },
+    /// O disco e o ledger divergem.
     Drift(Vec<Drift>),
+    /// Falha de leitura ou de forma do ledger.
     Ledger(LedgerError),
+    /// Falha ao executar o SQL de uma versão.
     Sql {
+        /// Versão cujo SQL falhou.
         version: Version,
+        /// Erro devolvido pelo executor.
         source: SqlError,
     },
 }
@@ -118,20 +135,36 @@ impl std::error::Error for MigrateError {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum ConfigError {
+    /// O timeout do lock está fora da faixa aceita.
     #[error("lock_timeout fora da faixa: {given:?}")]
-    TimeoutOutOfRange { given: Duration },
+    TimeoutOutOfRange {
+        /// Valor recebido na configuração.
+        given: Duration,
+    },
+    /// Uma variável de ambiente obrigatória não foi definida.
     #[error("variável de ambiente ausente: {name}")]
-    MissingEnv { name: &'static str },
+    MissingEnv {
+        /// Nome da variável ausente.
+        name: &'static str,
+    },
 }
 
 /// Falha de conexão com o PostgreSQL, já sem DSN.
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum ConnectError {
+    /// A conexão foi recusada pelo servidor.
     #[error("não conectou: {detail}")]
-    Refused { detail: String },
+    Refused {
+        /// Detalhe do erro, sem DSN.
+        detail: String,
+    },
+    /// O pool de conexões não abriu.
     #[error("não abriu o pool: {detail}")]
-    Pool { detail: String },
+    Pool {
+        /// Detalhe do erro, sem DSN.
+        detail: String,
+    },
 }
 
 impl From<ConfigError> for MigrateError {

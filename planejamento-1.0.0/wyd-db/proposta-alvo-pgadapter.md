@@ -19,8 +19,8 @@ Hoje há duas provas parciais e nenhuma do meio:
 
 | Prova | Como | O que cobre | O que não cobre |
 |---|---|---|---|
-| `tests/sistema_pg.rs` | `psql` por `docker exec` (`V`, 2026-11-25) | contrato do schema: constraint, índice, privilégio, view, FK | a porta: ledger, checksum, transação por arquivo, lock |
-| `tests/reversibilidade_pg.rs` | `psql` por `docker exec` (executado contra PG17 em 2026-11-25; log `/tmp/wyd-reversibilidade.log`) | ciclo `up → down → up` da série materializada (`V`: 3/3) | `PgAdapter`, ledger e advisory lock |
+| `tests/sistema/sistema_pg.rs` | `psql` por `docker exec` (`V`, 2026-11-25) | contrato do schema: constraint, índice, privilégio, view, FK | a porta: ledger, checksum, transação por arquivo, lock |
+| `tests/sistema/reversibilidade_pg.rs` | `psql` por `docker exec` (executado contra PG17 em 2026-11-25; log `/tmp/wyd-reversibilidade.log`) | ciclo `up → down → up` da série materializada (`V`: 3/3) | `PgAdapter`, ledger e advisory lock |
 | `src/migrate/app/runner.rs` (`#[cfg(test)]`) | portas falsas (`V`, 63 testes em `--lib`) | ordem de preflight, plano, drift, `down`, falha no meio | o adapter real: `PgAdapter`, `PgTxn`, `pg_advisory_lock` |
 
 O elo que falta é entre o SQL provado pela série e a porta do runner: os `down` e o ciclo SQL passaram,

@@ -10,9 +10,13 @@ use std::fmt;
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RawMigration {
+    /// Versão lida do prefixo do nome.
     pub version: Version,
+    /// Nome lógico lido do sufixo do nome.
     pub slug: Slug,
+    /// SQL do marcador `-- migrate:up`.
     pub up: Sql,
+    /// SQL do marcador `-- migrate:down`.
     pub down: Sql,
 }
 
@@ -135,30 +139,49 @@ pub fn parse(stem: &str, content: &str) -> Result<RawMigration, FileError> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FileError {
+    /// O nome do arquivo não segue `NNNN_slug`.
     BadName {
+        /// Nome sem a extensão `.sql`.
         stem: String,
+        /// Regra do nome que falhou.
         reason: NameReason,
     },
+    /// Falta o marcador `-- migrate:up`.
     MissingUp,
+    /// Falta o marcador `-- migrate:down`.
     MissingDown,
+    /// Os marcadores aparecem fora da ordem `up` → `down`.
     MarkerOutOfOrder,
+    /// O mesmo marcador aparece duas vezes.
     DuplicateMarker {
+        /// Marcador repetido.
         marker: &'static str,
     },
+    /// Um marcador não está sozinho na linha.
     MarkerNotAlone {
+        /// Linha do arquivo onde o marcador apareceu.
         line: usize,
     },
+    /// Há instrução fora de comentário antes do primeiro `up`.
     HeaderNotComment {
+        /// Linha do arquivo onde a instrução apareceu.
         line: usize,
     },
+    /// O corpo de uma das partes está vazio.
     EmptySql {
+        /// Parte vazia: `up` ou `down`.
         part: &'static str,
     },
+    /// O corpo não passou na validação de SQL.
     Sql {
+        /// Parte inválida: `up` ou `down`.
         part: &'static str,
+        /// Erro devolvido pelo parser de SQL.
         source: SqlTextError,
     },
+    /// O prefixo não é uma versão válida.
     BadVersion(VersionError),
+    /// O sufixo não é um slug válido.
     BadSlug(SlugError),
 }
 
@@ -166,8 +189,11 @@ pub enum FileError {
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NameReason {
+    /// Não há separador entre versão e slug.
     NoSeparator,
+    /// O prefixo não tem exatamente quatro dígitos.
     BadVersionDigits,
+    /// O sufixo depois do separador está vazio.
     MissingSlug,
 }
 

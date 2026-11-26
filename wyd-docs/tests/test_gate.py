@@ -8,10 +8,10 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from unittest import mock
 
-from gate.checks import censos, contagens, lacunas, links, skills
+from gate.checks import censos, contagens, lacunas, layout, links, skills
 from gate.workspace import Workspace
 from tests import fixtures
 
@@ -33,6 +33,36 @@ class WorkspaceTests(unittest.TestCase):
         self.assertIs(ws.read(caminho), ws.read(caminho))
         self.assertEqual(ws.find("planejamento-1.0.0/wyd-teste/evidencia.md"), caminho)
         self.assertEqual(ws.find("evidencia.md"), caminho)
+
+
+class LayoutTests(unittest.TestCase):
+    def test_scripts_de_ci_so_em_wyd_ops(self):
+        self.assertIsNotNone(layout.validar_caminho(PurePosixPath("scripts/ci/db-prepare.sh")))
+        self.assertIsNone(layout.validar_caminho(PurePosixPath("wyd-ops/scripts/ci/db-prepare.sh")))
+
+    def test_deny_so_em_wyd_ops(self):
+        self.assertIsNotNone(layout.validar_caminho(PurePosixPath("deny.toml")))
+        self.assertIsNone(layout.validar_caminho(PurePosixPath("wyd-ops/deny.toml")))
+
+    def test_planejamento_nao_aceita_artefato_solto_nem_executavel(self):
+        self.assertIsNotNone(
+            layout.validar_caminho(PurePosixPath("planejamento-1.0.0/slice-wyd-db-001-wyd-net-001.md"))
+        )
+        self.assertIsNotNone(
+            layout.validar_caminho(PurePosixPath("planejamento-1.0.0/wyd-db/scripts/schema.py"))
+        )
+        self.assertIsNone(
+            layout.validar_caminho(PurePosixPath("planejamento-1.0.0/wyd-db/lacunas.md"))
+        )
+
+    def test_gitkeep_so_em_pasta_reservada(self):
+        self.assertIsNone(layout.validar_caminho(PurePosixPath("wyd-portal/src/auth/.gitkeep")))
+        self.assertIsNone(layout.validar_caminho(PurePosixPath("wyd-client/tools/.gitkeep")))
+        self.assertIsNotNone(layout.validar_caminho(PurePosixPath("crates/wyd-core/.gitkeep")))
+
+    def test_dockerfile_so_em_wyd_ops(self):
+        self.assertIsNone(layout.validar_caminho(PurePosixPath("wyd-ops/wyd-server.Dockerfile")))
+        self.assertIsNotNone(layout.validar_caminho(PurePosixPath("wyd-server/Dockerfile")))
 
 
 class LacunaTests(unittest.TestCase):

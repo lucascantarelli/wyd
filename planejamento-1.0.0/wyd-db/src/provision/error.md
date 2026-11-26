@@ -3,12 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §6
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/error.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/error.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/error.rs` — erro do provisionamento
-**Sem arquivo no repositório:** `src/provision/error.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/error.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -85,6 +85,9 @@ pergunta do binário que não passa pelo módulo (spec §6).
 |---|---|
 | `drift_exits_4` | `Drift` → `4` |
 | `config_exits_2` | `MissingEnv` → `2`, texto contém o nome da variável |
+
+`ProvisionConfigError` e a variante `Config` entram com `WYDDB-009`; nesta entrega o erro cobre
+`Catalog`, `Script` e `Drift`, que são os caminhos do runner.
 | `no_dsn_in_display` | `InvalidDsn` formatado não contém a senha da fixture |
 
 ## 7. Pronto quando

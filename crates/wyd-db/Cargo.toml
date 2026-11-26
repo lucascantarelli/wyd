@@ -10,15 +10,23 @@ publish = false
 
 [[test]]
 name = "sistema_pg"
-path = "tests/sistema_pg.rs"
+path = "tests/sistema/sistema_pg.rs"
 
 [[test]]
 name = "reversibilidade_pg"
-path = "tests/reversibilidade_pg.rs"
+path = "tests/sistema/reversibilidade_pg.rs"
 
 [[test]]
 name = "runner_pg"
-path = "tests/runner_pg.rs"
+path = "tests/sistema/runner_pg.rs"
+
+[[test]]
+name = "contrato_api_migrate"
+path = "tests/contrato/contrato_api_migrate.rs"
+
+[[test]]
+name = "contrato_api_provision"
+path = "tests/contrato/contrato_api_provision.rs"
 
 [dependencies]
 sha2 = "0.11.1"

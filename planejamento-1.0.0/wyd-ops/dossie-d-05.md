@@ -61,7 +61,7 @@ um ganhar seu próprio lock. O dossiê usa “1 hoje; até 9 se B for seguido”
 - O Rust é compilado diretamente no runner do `code.yml`, com `cargo ... --manifest-path
   crates/wyd-db/Cargo.toml`. O `security` procura **o primeiro** `Cargo.toml`/`Cargo.lock` com
   `find ... -print -quit`.
-- O `code.yml` só dispara em `crates/**`, `deny.toml` e no próprio workflow. Um `Cargo.toml`,
+- O `code.yml` só dispara em `crates/**`, `wyd-ops/deny.toml` e no próprio workflow. Um `Cargo.toml`,
   `Cargo.lock`, `rust-toolchain.toml` ou `Makefile` **na raiz** não está na lista de gatilhos.
 - `python:3.15-slim` aparece em dois estágios do Dockerfile e `postgres:17` no `code.yml`; nenhum dos
   dois está fixado por digest. As três tags GHCR (`latest`, `dev`, `gate`) também não usam digest.

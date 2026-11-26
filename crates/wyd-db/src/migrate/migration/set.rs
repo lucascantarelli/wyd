@@ -11,8 +11,11 @@ use std::fmt;
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
+    /// Conteúdo já parseado do arquivo.
     pub raw: RawMigration,
+    /// Checksum do conteúdo cru, calculado uma vez.
     pub checksum: Checksum,
+    /// Nome do arquivo com a extensão `.sql`.
     pub file_name: String,
 }
 
@@ -130,22 +133,36 @@ impl MigrationSet {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SetError {
+    /// A lista de arquivos está vazia.
     Empty,
+    /// A sequência de versões tem buraco ou não começa em 1.
     NotContiguous {
+        /// Próxima versão esperada.
         expected: u32,
+        /// Versão encontrada no lugar.
         found: u32,
     },
+    /// A mesma versão aparece em dois arquivos.
     DuplicateVersion {
+        /// Versão repetida.
         version: u32,
+        /// Primeiro arquivo com a versão.
         first: String,
+        /// Segundo arquivo com a versão.
         second: String,
     },
+    /// O mesmo slug aparece em duas versões.
     DuplicateSlug {
+        /// Slug repetido.
         slug: String,
+        /// Par de versões que usam o slug.
         versions: (u32, u32),
     },
+    /// Um arquivo da série não passou no parser.
     File {
+        /// Nome do arquivo com a extensão `.sql`.
         file_name: String,
+        /// Erro devolvido pelo parser.
         source: FileError,
     },
 }

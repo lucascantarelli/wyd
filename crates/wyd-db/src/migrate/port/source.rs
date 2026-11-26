@@ -13,7 +13,9 @@ pub trait Source: Send + Sync {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LoadedFile {
+    /// Caminho de origem do arquivo.
     pub path: PathBuf,
+    /// Conteúdo cru, sem parse nem validação.
     pub content: String,
 }
 
@@ -21,10 +23,24 @@ pub struct LoadedFile {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum SourceError {
+    /// O diretório configurado não existe.
     #[error("diretório da série não existe: {path}")]
-    Missing { path: PathBuf },
+    Missing {
+        /// Caminho configurado.
+        path: PathBuf,
+    },
+    /// O caminho configurado existe, mas não é diretório.
     #[error("caminho da série não é diretório: {path}")]
-    NotADirectory { path: PathBuf },
+    NotADirectory {
+        /// Caminho configurado.
+        path: PathBuf,
+    },
+    /// Um arquivo da série não pôde ser lido.
     #[error("falha ao ler {path}: {detail}")]
-    Read { path: PathBuf, detail: String },
+    Read {
+        /// Arquivo que falhou.
+        path: PathBuf,
+        /// Detalhe do erro de leitura.
+        detail: String,
+    },
 }

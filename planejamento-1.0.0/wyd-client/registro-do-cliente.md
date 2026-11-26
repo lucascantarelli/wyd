@@ -4,7 +4,7 @@
 > Público: pesquisa (RE), arquitetura e QA
 > Dono: equipe do `wyd-client`
 > Base: `LPRT-10` (processo de captura), `goldens/como-capturar.md` (procedimento)
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-26
 
 **Estado:** registro medido (`V`), 2026-11-22. Substitui qualquer estimativa anterior de tamanho,
 contagem ou build. **Não** é captura de protocolo: não há um byte de tráfego aqui.
@@ -27,7 +27,7 @@ contagem ou build. **Não** é captura de protocolo: não há um byte de tráfeg
 |---|---|
 | Sistema | Windows, estação de desenvolvimento do dono |
 | Raiz local | `wyd-client/files/` (ignorada pelo git) |
-| Versionado no git | 0 arquivo — `git ls-files wyd-client` devolve só `wyd-client/.gitkeep` |
+| Versionado no git | 0 arquivo — `git ls-files wyd-client` devolve só `wyd-client/tools/.gitkeep` |
 | Data da medição | 2026-11-22 |
 
 ## 3. Totais
@@ -124,6 +124,66 @@ verifica; não autoriza publicá-lo.
 Qualquer afirmação das colunas da direita exige **captura datada** ou leitura de conteúdo com fonte
 declarada, não inferência a partir desta tabela.
 
+## 6.1 Evidência estática local e auditoria de `deprecated` (2026-11-26)
+
+**Escopo medido:** análise offline do `WYD.exe` local e leitura de amostras de assets. Isso não executa
+o cliente, não captura tráfego e não valida comportamento em runtime. A pasta `deprecated/` é ignorada
+pelo git e continua sendo referência de investigação, não fonte normativa (`AGENTS.md` §3).
+
+**Reprodução da análise do executável** (Node v26.13.0 e `objdump` disponível nesta estação):
+
+```bash
+cd deprecated
+node tools/client/analyse.mjs ../wyd-client/files/client/WYD.exe
+```
+
+O comando terminou com exit 0 e conferiu o executável contra o build-alvo 7662 já registrado em §4.
+Gerou localmente `deprecated/docs/cliente/gerado/{pe,strings,evidencia,formatos}.json` e
+`ancoras.txt`; esses arquivos ficam sob uma árvore ignorada, não são evidência versionada e não
+substituem este registro.
+
+| Medição reproduzida | Resultado | Limite da conclusão |
+|---|---|---|
+| Formato PE | PE32 / i386; 4 seções; 18 DLLs importadas e 268 funções | inventário estático do executável, não comportamento em runtime |
+| Endereços herdados no pipeline | 6/6 endereços são início de instrução no disassemble; apenas 1/6 coincide com prólogo detectado | os nomes herdados não provam entradas de função; cinco endereços são pontos internos, não funções confirmadas |
+| Sites de checksum | 3/3 contêm instrução `jmp rel8` (`EB`) nos endereços herdados | prova os bytes/opcodes no arquivo local; não prova o efeito dinâmico de cada fluxo |
+| CPSock | bloco de tabela de 512 bytes idêntico à tabela usada pelo analisador; constante `INITCODE` localizada como dado | a conclusão do pipeline para o header de 12 bytes é **indireta**; offsets/campos continuam sem trace dinâmico |
+| Candidatos de limite | padrão imediato `0x2000` encontrado em seis posições | são candidatos estáticos, não prova isolada de regra de enquadramento |
+
+**Amostras de assets**, lidas sem exportar ou versionar conteúdo. Comando reproduzível, a partir de
+`deprecated/`:
+
+```bash
+node --input-type=module -e "import { analyseFormats } from './tools/client/formats.mjs'; console.log(JSON.stringify(analyseFormats({root:'../wyd-client/files/client'}), null, 2));"
+```
+
+| Amostra | Resultado observado | Estado da interpretação |
+|---|---|---|
+| `client/NUI/ServerList.wyt` | magic `WT10`, 287×280, 32 bpp | estrutura raster decodificada nesta amostra |
+| `client/NUI/ccmode.wyt` | magic `WT10`, 64×64, 24 bpp | estrutura raster decodificada nesta amostra |
+| `client/UI/AutoTrade.wyt` | magic `WT10`, 220×199, 24 bpp | estrutura raster decodificada nesta amostra |
+| `client/UI/Combine102.wyt` | magic `WT10`, 228×313, 32 bpp | estrutura raster decodificada nesta amostra |
+| `client/Mesh/Bownew1.msa`, `client/Mesh/CharmPowder.msa` | em ambas: `u32 @0 = 274`, `u32 @4 = 32`, `u32 @8 = 1`; caminho de textura lido em `@34` | analisador mantém geometria, esqueleto e animação opacos; os valores repetidos são candidatos, não semântica aprovada |
+| `client/sn.bin` | leitura por NUL encontra rótulos; primeiro byte `0xd6` não explicado | primeiro byte continua não verificado |
+| `client/serverlist.bin` | 7.040 bytes; tentativas do analisador não produziram estrutura textual coerente | layout permanece opaco; grupo, índice, IP e porta não foram provados |
+
+**Auditoria dos artefatos legados de captura:** `deprecated/tools/client/captura.mjs` declara que gera
+fixtures sintéticas; a validação `node tools/client/captura.mjs --check` terminou 0 e aceitou 5/5 desses
+fixtures como válidos para o codec. Isso não é prova de comportamento do cliente. O arquivo legado
+`deprecated/crates/wyd-protocol/tests/fixtures/cliente/captura-handshake.json` tem `conexoes: []`, não
+contém `frames` nem bytes capturados, e registra endereço `0.0.0.0:8281`; portanto não comprova handshake
+nem é golden. O conversor `deprecated/tools/client/captura-live.mjs` também oferece modos de servidor
+falso e proxy para um alvo configurável, com armazenamento de fluxo bruto; ele não implementa o
+contrato ECAP aprovado para A1 e **não foi executado** nesta medição.
+
+**Conclusão e rastreabilidade:** há evidência estática reproduzida sobre a identidade do executável,
+alguns endereços/instruções e amostras de formatos; não há evidência dinâmica de comunicação cliente–servidor.
+Os resultados que sugerem layout ou semântica permanecem `H` vinculadas a `LPRT-03`/`LPRT-06`, e dados
+que aparecem só no legado não são promovidos a regra. A captura completa continua dependendo do aceite
+técnico do ECAP, da implementação do peer A + ECAP + CLI, do operador nomeado em `LCLI-03` e da segunda
+leitura prevista em `goldens/como-capturar.md`. Esta seção não aceita o mapa funcional nem fecha qualquer
+lacuna.
+
 ## 7. Plano de captura — o que falta para a base real
 
 O procedimento é do `wyd-protocol` (`goldens/como-capturar.md`) e não é replicado aqui. O que este
@@ -135,11 +195,37 @@ registro fixa é o **estado**:
 | ferramenta de gravação de tráfego | não existe; pasta e escopo aprovados | `LCLI-04` (D3–D6 decididos; implementação pendente) |
 | endpoint que aceita a conexão do cliente | não existe — nenhum servidor roda esta versão | `wyd-server` / listener sob nosso controle |
 | ficha de origem + anonimização | processo decidido (`LPRT-10`); QA designado: **Lucas Cantarelli** (dono do produto), que **não é o operador**; quem captura não assina; o nome do operador entra na ficha quando ela existir | `LCLI-03` |
-| primeira captura aceita | **0 capturas** (2026-11-22) | os quatro itens acima |
+| primeira captura aceita | **0 capturas** (tentativa medida em 2026-11-26 sem conexão CPSock; §7.1) | os quatro itens acima |
 
 Enquanto o passo 3 não existir, não há como produzir tráfego legítimo do cliente: gravar bytes exige
 algo do outro lado do socket. Por isso `LPRT-03` e `LPRT-06` seguem abertas — e por isso nenhuma delas
 foi respondida por estimativa. `LPRT-09` não esperou captura: fechou por decisão de alvo em 2026-11-23.
+
+### 7.1 Tentativa de captura real (2026-11-26, medida e sem captura)
+
+Execução local nesta estação, para medir até onde o cliente chega sem peer. Não gerou `capture.wydcap`,
+não gerou golden e não alterou o cliente de forma permanente.
+
+| Passo | Execução | Resultado observado |
+|---|---|---|
+| 1. apontar o cliente para loopback | `serverlist.bin` e `local-serverlist.bin` reescritos no formato 10×11×64 (grupo 1, canal 1 = `127.0.0.1`) | `--print` devolveu `1 1 127.0.0.1` nos dois; originais restaurados depois (`serverlist.bin` com hash `d835aef985d7256683f5370a526bf783c72a611cccb62eba714e483370e8cec0`) |
+| 2. responder o status | listener HTTP em `0.0.0.0:80` devolvendo o `serv00.htm` mínimo | `GET /serv00.htm HTTP/1.1` recebido do cliente — tráfego real do binário, mas não é handshake |
+| 3. abrir o CPSock | listener TCP em `127.0.0.1:8281`, janela de 240 s | nenhuma conexão; `netstat -ano` listou apenas o listener |
+| 4. dirigir o cliente | `WYD.exe` elevado (`requireAdministrator`) e cliques por `SendInput` `MOVE\\|ABSOLUTE` em servidor (330,318), canal (465,318) e Conectar (330,504) | o cliente chegou à tela de Login sem abrir socket |
+| 5. enviar o login | não executado | exigiria credencial, e [`como-capturar.md`](../wyd-protocol/docs/goldens/como-capturar.md) §8 proíbe capturar senha, PIN ou token |
+
+**O que a tentativa prova.** O cliente não abre o CPSock antes do envio do login: chegou ao Login com o
+listener ativo e nenhuma conexão em 240 s. O `GET /serv00.htm` é tráfego real e foi atendido; a coluna
+Canal depende dele, mas ele não é handshake e não vira golden.
+
+**Entrada aberta (a única).** Para existir sessão A1 falta **conta de teste em um peer que responda ao
+CPSock** ou **aprovação escrita para uma sessão com credencial sintética**, descartando os frames de
+login antes de qualquer artefato. Nem a conta nem o peer existem no repositório; o nome do operador na
+ficha continua pendente em `LCLI-03`. Sem uma das duas, `LPRT-03`/`LPRT-06` não têm bruto.
+
+**Evidência datada deste estado (2026-11-26):**
+`planejamento-1.0.0/wyd-ops/docs/devops/evidencias-de-depreciacao.md` §4 e
+`planejamento-1.0.0/wyd-ops/inventario-depreciacao.tsv` (CAP-01 e CAP-02).
 
 ## 8. Como re-medir
 

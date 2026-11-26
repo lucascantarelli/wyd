@@ -146,13 +146,26 @@ pub enum SlugError {
     /// Texto vazio.
     Empty,
     /// Passou do limite de 60 caracteres.
-    TooLong { len: usize, max: usize },
+    TooLong {
+        /// Comprimento recebido.
+        len: usize,
+        /// Limite permitido.
+        max: usize,
+    },
     /// O primeiro caractere é um dígito.
     LeadingDigit,
     /// Caractere fora de `[a-z0-9_]`.
-    InvalidChar { ch: char, index: usize },
+    InvalidChar {
+        /// Caractere recusado.
+        ch: char,
+        /// Posição em bytes do caractere.
+        index: usize,
+    },
     /// Dois underscores seguidos.
-    DoubleUnderscore { index: usize },
+    DoubleUnderscore {
+        /// Posição do primeiro underscore do par.
+        index: usize,
+    },
     /// Slug terminando em `_`.
     TrailingUnderscore,
 }

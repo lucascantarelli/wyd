@@ -34,7 +34,7 @@ hospedagem (`wyd-ops`).
 | build-alvo | **decidido em 2026-11-23** (`Q-PRT-1`/`LPRT-09`): cliente 7662, versão + SHA-256 | `registro-do-cliente.md` §4 |
 | tamanho de `WYD.exe` | **2.347.008 bytes** | `registro-do-cliente.md` |
 | hash de `WYD.exe` | SHA-256 completo medido em 2026-11-22; promovido a identidade do alvo em 2026-11-23 | idem |
-| arquivos do cliente versionados no git | **0** — só `wyd-client/.gitkeep` | `registro-do-cliente.md` §3 |
+| arquivos do cliente versionados no git | **0** — só `wyd-client/tools/.gitkeep` | `registro-do-cliente.md` §3 |
 | capturas existentes | **0** | `docs/index.md` |
 | código do cliente | **0** | `lacunas.md`; `AGENTS.md` §5, item 6 |
 

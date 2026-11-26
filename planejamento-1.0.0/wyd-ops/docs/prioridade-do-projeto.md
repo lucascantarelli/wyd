@@ -4,7 +4,7 @@
 > Base: `planejamento-1.0.0/wyd-1.0.0.md` §1 e §6; `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.22–§6.6.24; `planejamento-1.0.0/wyd-db/tests/specs/capacidades.md`; `planejamento-1.0.0/wyd-db/docs/specs/rastreabilidade.md` §1.1–§3.4; `AGENTS.md` §8 e §9; `docs/devops/index.md`; `proposta-versoes-e-cobertura-funcional.md`
 > Revisado em: 2026-11-24
 
-**Estado:** proposto (2026-11-24) — **quadro canônico de foco e decisões**; recomendação publicada; nenhuma frente iniciada e nenhuma página aceita por causa dela.
+**Estado:** proposto (2026-11-24) — **quadro canônico de foco e decisões**; recomendação publicada. A frente A foi iniciada em 2026-11-26, com `WYDDB-001` e `WYDNET-F0` aceitas; esta página continua `proposto`.
 
 **Esta é a página canônica.** As páginas que medem frentes citam este quadro e não publicam uma segunda recomendação. O `foco-e-sequencia.md` continua dono da medição interna do `wyd-db` e das perguntas de seed; o dossiê histórico foi absorvido pela pauta em `pauta-de-decisoes-pendentes.md` e pelos `lacunas.md` dos sistemas. Nenhum dos dois substitui a ordem e as escolhas registradas aqui.
 
@@ -13,7 +13,7 @@
 **Foco aprovado em 2026-11-24 (D-01 = A): frente A — finalizar o `wyd-db`. A leva `migrations/` executou 28 `.sql` do zero, 13 cenários verdes e teve as 27 páginas aceitas (D-03 = A).**
 
 O `wyd-db` tem **24** células pendentes (todas `Teste`; as 40 `Issue` estão vinculadas) em `rastreabilidade.md` §1, **26** das **39**
-capacidades sem execução (`capacidades.md` §7) e **142** atos de aceite, todos em `docs/` (`pendencias` §1):
+capacidades sem execução (`capacidades.md` §7) e **138** atos de aceite, todos em `docs/` (`pendencias` §1):
 as **27** páginas de `migrations/` foram aceitas em 2026-11-24, e a pasta está com **28 de 28**. Já rodaram
 **14** capacidades (`CAP-24`–`CAP-37`, `sistema_pg` §1.1 + `runner_pg`) e a matriz está **14 de 39**.
 
@@ -57,7 +57,7 @@ finalizar o `wyd-db`; D-05 permanece aprovada e não é reaberta. **Ato 2 e ato 
 
 **Aprovada em 2026-11-24 (A):** o foco é finalizar o `wyd-db`; a ordem dos atos está em §0.2.
 
-**Bloqueado hoje:** **142** atos de aceite, **24** células `teste` pendentes (as **40** `issue` estão vinculadas), **40** issues
+**Bloqueado hoje:** **138** atos de aceite, **24** células `teste` pendentes (as **40** `issue` estão vinculadas), **40** issues
 abertas (#82–#121) e **25** capacidades sem execução (**14 de 39**); as **2**
 `Q-BLK` (`20`, `22`) foram respondidas em A em 2026-11-24. A alternativa B tem **48** `RF` (15 `admin` + 33 `portal`), **10** sistemas sem
 `RF`, **12** planos e **1** plano diretor ausente (`wyd-ops`); a C tem **3** células `teste`, **9** linhas
@@ -111,7 +111,7 @@ gate do sistema.
 **O que a aprovação em B vale a partir de agora:** a cobertura de **85%** continua **bloqueante no gate do
 sistema**, não no PR — no `code.yml` ela é **informativa** até o sistema declarar o gate fechado; `cargo audit`
 e `cargo deny` são **bloqueantes**. **Passo 8a executado em 2026-11-24:** o job `security` do `code.yml`
-roda os dois com `deny.toml`, o job `cargo` publica cobertura sem `--fail-under`, e a falha aparece como
+roda os dois com `wyd-ops/deny.toml`, o job `cargo` publica cobertura sem `--fail-under`, e a falha aparece como
 job vermelho (advisory: exit 1; licença: exit 4; `Cargo.toml` sem lock: `::error::`). O `pip-audit`/hash do
 site (`mkdocs==2.0.dev6`) continua item separado, e D-05 foi aprovada em A para toolchain e versões (dossiê em `../dossie-d-05.md`).
 
@@ -150,7 +150,7 @@ declarada não executável, sem esconder a lacuna.
 sistemas; **12** não têm código de produto (o `wyd-docs` tem implementação Python de documentação), **8**
 dos **9** diretórios de crate estão vazios, **10** sistemas não têm `RF` numerado e **1** (`wyd-ops`) não
 tem plano diretor. Só há **2** manifestos de dependência reais (`crates/wyd-db/Cargo.toml` e
-`wyd-docs/requirements.txt`; `deny.toml` é política).
+`wyd-docs/requirements.txt`; `wyd-ops/deny.toml` é política).
 
 **O que travava:** a declaração dos **12** sistemas, não a sequência de A (§0.2).
 
@@ -312,7 +312,7 @@ seria inflar o ranking.
 | linhas da matriz de rastreabilidade com página que **nomeia** o requisito | **31 de 40** (29 em `sistema-pg`, 1 em `sistema-sessoes`, 1 em `sistema-stack-caps`); **9** sem página e **4** sem `CAP-nn` na coluna `Teste` (`RF-DB-003`, `006`, `014` e `RNF-DB-001`); **3** células são `—` por regra | `docs/specs/rastreabilidade.md` §1, §1.1 e §3.4 |
 | páginas de `tests/` assinadas pelo dono | **12 de 12** `aceito (2026-11-24)`; **0** `proposto` | `wyd-db/revisao-de-q-blk-21.md` §5 |
 | páginas de `migrations/` `aceito` | **28 de 28** (2026-11-24: 27 na leva, `0002` desde 2026-11-20) | `grep -l '^\*\*Estado:\*\* aceito' planejamento-1.0.0/wyd-db/migrations/*.md`; `pendencias` §6.6.31 |
-| atos de aceite pendentes no `wyd-db` | **142** (142 `docs/` + **0** `src/` + **0** `migrations/` + **0** `tests/`) | `pendencias-de-fechamento.md` §6.6.22.1, §6.6.27 e §6.6.31 |
+| atos de aceite pendentes no `wyd-db` | **138** (138 `docs/` + **0** `src/` + **0** `migrations/` + **0** `tests/`) | `pendencias-de-fechamento.md` §6.6.22.1, §6.6.27 e §6.6.31 |
 
 ## 3. As quatro frentes, com número e fonte
 
@@ -418,7 +418,7 @@ hoje; C fecha 3 células e para; B abre planejamento alheio sem fechar nada do p
    `RNF-DB-001`) — a matriz está em **14 de 39** cobertas.
 
 **Leva `migrations/` — executada em 2026-11-24.** Os **28** arquivos de `migrations/` aplicaram do zero
-num `postgres:17` vazio, como `wyd_migrator`, em ordem e sem erro; `crates/wyd-db/tests/sistema_pg.rs`
+num `postgres:17` vazio, como `wyd_migrator`, em ordem e sem erro; `crates/wyd-db/tests/sistema/sistema_pg.rs`
 rodou **13** cenários verdes contra essa base (`CAP-24`–`CAP-36`) e a matriz passou a **13 de 39**. As **27**
 páginas de `migrations/` seguiam `proposto` naquele momento; foram aceitas em 2026-11-24 (`pendencias`
 §6.6.31), porque a série já nascida não substitui o aceite (`§6.6.30`).
@@ -518,7 +518,7 @@ executada na mesma data — o dono revisou e assinou as 12 páginas, que estão 
 | Fato | Deixa de valer quando | Onde atualizar |
 |---|---|---|
 | **25** capacidades sem execução (14 de 39 cobertas) | os alvos restantes rodarem, ou `CAP-38`–`CAP-39` ganharem código | `tests/specs/capacidades.md` §7 e §2–§6 |
-| **142** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
+| **138** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
 | **28** páginas de `migrations/` `aceito` | uma página deixar de estar `aceito` | §5; `pendencias` §6.6.31 |
 | **D-02** = B (cobertura informativa; audit/deny bloqueantes) | uma checagem sair do `code.yml` ou a política mudar | `docs/devops/index.md` §5; `docs/planos/estrategia-de-testes.md` §6; esta página §0.1 |
 | **D-04** = A (organização definida) | a auditoria de 2026-11-25 for revista | `../auditoria-de-organizacao.md`; esta página §0.1 |

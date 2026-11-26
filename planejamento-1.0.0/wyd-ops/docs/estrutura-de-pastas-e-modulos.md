@@ -3,20 +3,24 @@
 > Pergunta: "onde mora cada artefato do projeto, qual sistema é dono dele e qual documento detalha cada módulo?"
 > Público: Arquitetura, desenvolvimento e agentes
 > Dono: `wyd-ops` (layout físico); cada sistema é dono de sua pasta e de seus módulos
-> Base: `planejamento-1.0.0/wyd-1.0.0.md` §8; `planejamento-1.0.0/wyd-ops/auditoria-de-organizacao.md` §2-§5; `AGENTS.md` §5-§6
-> Revisado em: 2026-11-25
+> Base: `planejamento-1.0.0/wyd-1.0.0.md` §8 (origem); `planejamento-1.0.0/wyd-ops/auditoria-de-organizacao.md` §2-§5; `AGENTS.md` §5-§6
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25). Consolida o layout de §8 do panorama e o mapa de módulos já existente; não cria pasta, código ou issue.
+**Estado:** proposto (2026-11-26); consolidado e verificável. Esta é a **página autoritativa operacional** do
+layout: o §8 do panorama registra a origem e o histórico, mas onde os dois divergirem vale esta página,
+porque é a que o `make layout` executa. Ela não cria pasta, código, issue ou requisito novo.
 
 ## 1. Regra de ouro
 
 `planejamento-1.0.0/` é só documentação (`AGENTS.md` §5, item 6). Artefato executável mora na pasta real
-do projeto, na raiz. O dono único do layout físico é `planejamento-1.0.0/wyd-1.0.0.md` §8; esta página
-consolida e indexa, não substitui.
+do projeto, na raiz. A árvore de §2 é a **árvore medida** em 2026-11-26; a regra por tipo de artefato
+está em §2.4 e o verificador em §6.
 
-- Pasta com `.gitkeep` é **reservada**, não implementada.
+- Pasta com `.gitkeep` é **reservada**, não implementada; `.gitkeep` só é aceito nas pastas de §2.4.
 - `src/`, `tests/`, `prompts/` e `skills/` só nascem onde o dono abriu uma pergunta própria.
-- Nenhum `.rs`, `.sql`, `.ts`, `.py` ou script executável entra em `planejamento-1.0.0/`.
+- Nenhum `.rs`, `.sql`, `.ts`, `.py`, `.sh` ou script executável entra em `planejamento-1.0.0/`.
+- Script de CI, imagem e política de dependência moram em `wyd-ops/`, não na raiz: `wyd-ops/scripts/`
+  (incluindo `ci/`), `wyd-ops/*.Dockerfile` e `wyd-ops/deny.toml`.
 - Mudança de fronteira entre sistemas exige decisão registrada (`AGENTS.md` §5, item 10).
 
 ## 2. Estrutura reservada e implementada
@@ -25,62 +29,107 @@ consolida e indexa, não substitui.
 
 ```text
 .
-├── crates/<sistema>/              # crate Rust por sistema; hoje com código: wyd-db, wyd-launcher,
-│                                  #   wyd-ops-signer (assinador do manifesto)
-├── wyd-portal/                    # portal Next.js; hoje só .gitkeep
-├── wyd-docs/                      # site MkDocs, tema, preparar.py, verificar*.py
-├── wyd-ops/                       # imagem, Compose auxiliar, scripts, smoke tests
-├── wyd-client/                    # binário ignorado + ferramenta de captura (LCLI-04)
-├── .github/workflows/             # CI (caminho fixo do GitHub Actions)
-├── .github/actions/               # actions compostas
-├── docker-compose.yml             # raiz por descoberta da ferramenta
-├── docker-compose.override.yml     # gate automático
-├── docker-compose.dev.yml         # build opt-in da árvore de trabalho
-└── .dockerignore                  # raiz por contexto do Docker
+├── .agents/                       # README, prompts/ e skills/; memory/ é ignorado
+├── .github/                       # workflows/, actions/ e ISSUE_TEMPLATE/ (caminho fixo)
+├── .vscode/                       # settings, launch, tasks e extensions (descoberta da IDE)
+├── crates/<sistema>/              # crate Rust por sistema; 10 crates em 2026-11-26
+├── planejamento-1.0.0/            # só documentação (panorama, status e 13 sistemas)
+├── wyd-client/                    # tools/ (CLI de captura); files/ existe e é ignorado
+├── wyd-docs/                      # site MkDocs, tema, gate, preparar.py, verificar*.py
+├── wyd-ops/                       # dono de imagem, scripts, política e smoke tests
+│   ├── *.Dockerfile               # wyd-docs, wyd-server, wyd-admin e wyd-portal
+│   ├── deny.toml                  # política do cargo-deny
+│   └── scripts/                   # ci/ (db-prepare, apply-series, db-schema-local) e sync-issue-status.mjs
+├── wyd-portal/                    # Next.js: src/app + módulos do plano; tests/ e public/
+├── docker-compose.yml             # raiz por descoberta da ferramenta; sem build:
+├── docker-compose.override.yml    # gate automático
+├── docker-compose.dev.yml         # build opt-in: docs `:dev` e perfil `stack`
+├── .dockerignore                  # raiz por contexto do Docker
+├── Makefile                       # fachada de comandos (make gate, gate-fast, layout)
+├── rust-toolchain.toml            # descoberta do cargo/rustc
+└── AGENTS.md, README.md, LICENSE, .env.example, .gitignore, .gitattributes
 ```
+
+A raiz **não** tem `scripts/`, `deny.toml` nem Dockerfile. `wyd-ops/tests/smoke/` é reservado e só
+nasce quando o primeiro teste de fumaça for escrito; não é `.gitkeep` de projeto vazio.
 
 ### 2.2 Planejamento por sistema
 
 ```text
 planejamento-1.0.0/
-├── wyd-1.0.0.md                   # panorama e dono do layout (§8)
+├── wyd-1.0.0.md                   # panorama; §8 registra a origem do layout
 ├── status-planejamento.md         # relatório consolidado e índice de artefatos
-├── <sistema>/
-│   ├── <sistema>-1.0.0.md         # dashboard e plano diretor (exceto wyd-ops)
+├── <sistema>/                     # 13 pastas de sistema
+│   ├── <sistema>-1.0.0.md         # dashboard e plano diretor
 │   ├── lacunas.md                 # dono único de lacuna (exceto wyd-ops)
+│   ├── inventario-*.tsv           # evidência de captura/inventário (hoje: wyd-client)
 │   ├── docs/
 │   │   ├── arquitetura/           # fronteira, contratos, componentes, ADRs
 │   │   ├── specs/                 # requisitos, contratos, fluxos, estados
-│   │   ├── planos/                # testes, dados, qualidade, riscos, execução
+│   │   ├── planos/                # testes, dados, qualidade, riscos, execução e fatias
 │   │   ├── roadmap/               # fases, DoD e fatias por issue
 │   │   └── modulos.md             # índice de módulos (onde existe)
 │   ├── src/.gitkeep               # reservado; nasce com a página aceita
-│   └── tests/.gitkeep             # reservado; nasce com o plano de teste
+│   ├── tests/.gitkeep             # reservado; nasce com o plano de teste
+│   └── prompts|skills/.gitkeep    # só wyd-db, onde a pergunta própria já foi aberta
 └── wyd-ops/
-    ├── docs/                      # propostas, prioridade, imagem/Compose, ADR global
+    ├── docs/                      # propostas, prioridade, imagem/Compose, ADR global e planos
     └── src/.gitkeep, tests/.gitkeep
 ```
+
+Não há `.gitkeep` na raiz de um sistema: o dashboard já mantém a pasta. `planejamento-1.0.0/` não
+recebe `.sql`, `.rs`, `.ts`, `.py`, `.sh`, manifesto, Dockerfile nem Compose; um plano novo nasce em
+`<sistema>/docs/planos/` e uma fatia de produção em `<sistema>/docs/planos/fatia-*.md`.
 
 ### 2.3 Rust e testes
 
 ```text
 crates/<sistema>/
-├── Cargo.toml                     # membro do workspace (D-05 = A aprovada)
+├── Cargo.toml                     # manifesto próprio; não há workspace na raiz (D-05 aprovada)
+├── Cargo.lock                     # lock próprio, versionado
 ├── src/
 │   ├── lib.rs                     # API pública
-│   ├── domain/                    # regras puras, sem I/O
-│   ├── application/               # casos de uso e portas
-│   ├── adapter/                   # PostgreSQL, HTTP, filesystem, relógio
-│   └── bin/<sistema>.rs           # composição
-├── tests/
-│   ├── contract_<alvo>.rs
-│   ├── system_<alvo>.rs
-│   └── fixtures/
+│   ├── main.rs                    # composição, quando o crate tem binário
+│   └── <módulo>.rs                # um módulo por responsabilidade do plano
+├── tests/                         # contrato, sistema e fixtures (quando existirem)
 └── migrations/                    # somente wyd-db
 ```
 
-Sistema puro (`wyd-protocol`, `wyd-sim`) não cria `adapter/` vazio. `wyd-client`, `wyd-docs`,
-`wyd-ops` e `wyd-portal` não são crate Rust.
+**Medido em 2026-11-26:** os 10 crates têm `Cargo.toml`, `Cargo.lock` e `src/lib.rs`; `wyd-server`,
+`wyd-admin` e `wyd-ops-signer` têm `src/main.rs`; `wyd-db` tem `migrations/` e `tests/`. O alvo
+`domain/`/`application/`/`adapter/` de §8.7 continua valendo para código com I/O, mas **não** se
+move um binário para `src/bin/` só por simetria: `src/main.rs` é o caminho padrão do Cargo para um
+crate com um binário. Sistema puro (`wyd-protocol`, `wyd-sim`) não cria `adapter/` vazio.
+`wyd-client`, `wyd-docs`, `wyd-ops` e `wyd-portal` não são crate Rust.
+
+### 2.4 Regra por tipo de artefato
+
+| Artefato | Lugar previsto | Regra e dono |
+|---|---|---|
+| plano, dashboard, lacuna, ADR, fatia | `planejamento-1.0.0/<sistema>/` | Markdown/TSV de planejamento; a raiz do planejamento só tem o panorama e o status. Dono: o sistema. |
+| evidência e captura | `planejamento-1.0.0/<sistema>/` (`inventario-*.tsv`, `docs/`); binário em `wyd-client/files/` | Evidência versionada é texto/tabela; binário capturado é ignorado e descrito por hash. Não vira script. Dono: o sistema que mede; captura do cliente em `wyd-client/`, análise de build/dependência em `wyd-ops/`. |
+| script de CI, banco ou issues | `wyd-ops/scripts/` (CI em `ci/`) | Só `wyd-ops`; a raiz não tem `scripts/`. Dono: `wyd-ops`. |
+| política de dependência | `wyd-ops/deny.toml` | `cargo deny --config wyd-ops/deny.toml`; não fica na raiz. Dono: `wyd-ops`. |
+| config de IDE | `.vscode/` na raiz | `settings.json`, `launch.json`, `tasks.json` e `extensions.json`; descoberta da IDE. Dono: `wyd-ops` (experiência de desenvolvimento). |
+| Dockerfile de serviço | `wyd-ops/<serviço>.Dockerfile` | Quatro: docs, server, admin e portal; nenhum Dockerfile dentro de `wyd-*` ou crate. Dono: `wyd-ops`. |
+| Compose | raiz (`docker-compose*.yml`) | Base, override automático e dev opt-in; `dockerfile:` sempre aponta para `wyd-ops/`. Dono: `wyd-ops`. |
+| código de crate | `crates/<sistema>/` | `Cargo.toml`, `Cargo.lock`, `src/` e `tests/`; `migrations/` só no `wyd-db`. Dono: o sistema. |
+| código do portal | `wyd-portal/src/app` e `src/<módulo>` | Módulos do plano (`auth`, `banco`, `bff`, `admin`, `cache`, `monitoramento`, `observabilidade`); testes em `tests/`. Dono: `wyd-portal`. |
+| dados, migration e seed | `crates/wyd-db/migrations/*.sql` | SQL é artefato do `wyd-db`, nunca de `planejamento-1.0.0/`; seed segue a mesma série. Dono: `wyd-db`. |
+| site e gate | `wyd-docs/` | `preparar.py`, `verificar*.py`, `gate/`, `tema/`, `docs/` e `tests/`. Dono: `wyd-docs`. |
+| cliente e ferramenta de captura | `wyd-client/tools/` | CLI/captura; `files/` é ignorado. Dono: `wyd-client`. |
+
+**Exceções de raiz** são só as que a ferramenta descobre: `.github/`, `.vscode/`, `.agents/`,
+`docker-compose*.yml`, `.dockerignore`, `Makefile`, `rust-toolchain.toml` e os arquivos de
+repositório (`README`, `AGENTS`, `LICENSE`, `.gitignore`, `.gitattributes`, `.env.example`).
+
+### 2.5 Portal: por que `src/app`
+
+O plano genérico de D-04 em `wyd-1.0.0.md` §8.7 desenhou `app/` na raiz do portal; a árvore real do
+Next.js 16 e o plano de componentes do `wyd-portal` usam `src/app` e `src/<módulo>`. Esta página
+resolve o conflito em favor da árvore real: **`wyd-portal/src/app`**, com os módulos de §2.4, e
+`tests/` na raiz do portal. O `docker-compose.dev.yml` e `wyd-ops/wyd-portal.Dockerfile` já apontam
+para `wyd-portal/`; o Dockerfile continua em `wyd-ops/`, não no portal.
 
 ## 3. Mapa de documentação por módulo
 
@@ -196,26 +245,60 @@ de ondas (coluna **Arquivos**, declarada composição planejada) ficam fora.
 
 ## 6. Como verificar
 
-```bash
-# 1. nenhum artefato executável dentro do planejamento
-find planejamento-1.0.0 -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts' -o -name '*.py' -o -name '*.sh' \)
+O verificador executável é o domínio `layout` do gate. Ele varre a árvore de trabalho (incluindo
+não rastreados), ignora só `deprecated/`, `target/`, `node_modules/`, `site/`, `.build/`, `.venv/`,
+`.next/`, `.tmp/`, `.freebuff/` e `wyd-client/files/`, e reprova com `caminho: motivo`:
 
-# 2. o único Dockerfile do projeto novo é o do wyd-ops
+```bash
+make layout          # só o layout, com a lista completa de desvios
+make gate-fast       # layout + skills + lacunas + contagens + censos (sem Docker/MkDocs)
+make gate            # caminho completo do CI/container (build, links e todos os domínios)
+```
+
+O que o check exige, além da zona de cada arquivo:
+
+- os 10 crates com `Cargo.toml`, `Cargo.lock` e `src/lib.rs`; `main.rs` em server/admin/signer;
+  `migrations/` no `wyd-db`;
+- portal com `package.json`, lock, `src/app/page.jsx` e `layout.jsx`; site com `preparar.py`,
+  `gate.sh`, `gate/checks` e `tests`;
+- os quatro `wyd-ops/*.Dockerfile`, os scripts `wyd-ops/scripts/ci/`, `deny.toml` e
+  `wyd-client/tools/.gitkeep`;
+- todo `dockerfile:` do Compose aponta para arquivo existente e o Compose base não tem `build:`;
+- nenhuma referência a `scripts/ci/` da raiz em `Makefile`, `.vscode/` ou workflows.
+
+Conferências manuais complementares (não substituem o `make layout`):
+
+```bash
+# 1. nenhum artefato executável dentro do planejamento (saída vazia)
+find planejamento-1.0.0 -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts' \
+  -o -name '*.py' -o -name '*.sh' \)
+
+# 2. Dockerfiles do projeto novo, todos em wyd-ops/
 find . -name '*Dockerfile*' -not -path './deprecated/*' -not -path './.git/*'
 
-# 3. pastas reservadas com .gitkeep (inclui prompts/ e skills/ do wyd-db)
-find planejamento-1.0.0 -name .gitkeep | sort
+# 3. referências antigas que não podem voltar
+grep -rnE '(^|/)scripts/ci/|\.github/scripts/' Makefile .vscode .github/workflows
 
-# 4. nenhuma página de docs/ fora do alcance de docs/index.md
-#    (script de travessia de links; 0 órfãos é o esperado)
-
-# 5. templates declaram skill existente
+# 4. templates declaram skill existente
 grep -A12 'id: skill_principal' .github/ISSUE_TEMPLATE/*.yml
 ls .agents/skills
-
-# 6. gate de documentação
-docker compose --profile gate run --rm gate
 ```
+
+## 7. Conflitos resolvidos nesta consolidação
+
+| Conflito | Resolução | Evidência |
+|---|---|---|
+| `scripts/ci/` na raiz versus `wyd-ops/scripts/` | Movido para `wyd-ops/scripts/ci/`; `ROOT`/`RAIZ` recalculados para `../../..`. | `git mv`; `make layout`; `make gate-fast`. |
+| `.github/scripts/sync-issue-status.mjs` | Movido para `wyd-ops/scripts/sync-issue-status.mjs`; workflow e ADR-OPS-0009 citam o novo caminho. | `issue-status.yml`; `grep`. |
+| `deny.toml` na raiz | Movido para `wyd-ops/deny.toml`; workflows e planos usam `--config wyd-ops/deny.toml`. | `security.yml`; `rg`. |
+| Dockerfile do portal em `wyd-portal/` (texto antigo de §8.6) versus `wyd-ops/` | Vale `wyd-ops/wyd-portal.Dockerfile`; nenhum Dockerfile dentro do portal. | §8.2 do panorama já lista `wyd-ops/`; `find`. |
+| Portal `app/` (árvore genérica de §8.7) versus `src/app` | Vale `src/app`, com os módulos do plano do portal; §2.5 registra. | `wyd-portal/src/app`; `componentes.md`. |
+| `slice-wyd-db-001-wyd-net-001.md` solto na raiz do planejamento | Movido para `wyd-ops/docs/planos/fatia-001-wyd-db-wyd-net.md`; status atualizado. | `git mv`; `make layout`. |
+| `.vscode/` na raiz | Exceção de descoberta da IDE, como `.github/`; JSON de configuração, não código de domínio. | `make layout`; `tasks.json`. |
+| `.gitkeep` em projeto já implementado | Removido de `crates/*`, `wyd-ops/`, `wyd-docs/`, `wyd-portal/` e `.github/actions/`; mantido só em pasta reservada de §2.4. | `find`; `make layout`. |
+| Evidência de captura do cliente | `inventario-arvore-cliente.tsv` fica no sistema `wyd-client`; binário em `files/` ignorado. | `make layout`; `registro-do-cliente.md`. |
+| Evidência de depreciação | `wyd-ops/inventario-depreciacao.tsv` e `wyd-ops/docs/devops/evidencias-de-depreciacao.md`; mede toolchain, portal e scripts. | `make layout`; `make gate-fast`. |
+| `.agents/memory/` | Ignorado pelo git e pelo layout; não é doc publicável. | `.gitignore`; `make layout`. |
 
 ## 7. Decisões e perguntas abertas
 

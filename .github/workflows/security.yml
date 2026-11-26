@@ -46,7 +46,7 @@ jobs:
           set -euo pipefail
           for manifest in crates/*/Cargo.toml; do
             echo "== $manifest"
-            cargo deny --config deny.toml --manifest-path "$manifest" check advisories bans licenses sources
+            cargo deny --config wyd-ops/deny.toml --manifest-path "$manifest" check advisories bans licenses sources
           done
 
   dependency-review:

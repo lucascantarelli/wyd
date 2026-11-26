@@ -2,13 +2,12 @@
 > Público: Desenvolvedor de `crates/wyd-db` que vai implementar `src/provision/app/mod.rs`
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §5
-> Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/app/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+> Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`) com o runner abaixo.
 
 # `src/provision/app/mod.rs` — orquestração
-**Sem arquivo no repositório:** `src/provision/app/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `crates/wyd-db/src/provision/app/mod.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -23,7 +22,6 @@ pub use runner::run;
 ```
 
 ## 3. Regras
-**Sem arquivo no repositório:** `provision/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Regra | Por que |
 |---|---|
@@ -39,4 +37,5 @@ Permitido: `domain`, `port`, `error`. Proibido: `adapter`, `sqlx`, `std::fs`, `s
 ## 5. Pronto quando
 
 - `grep -n "sqlx" src/provision/app/` vazio;
-- nenhum `#[cfg(test)]` aqui: a sequência é provada pelos testes de contrato de `runner`.
+- nenhum `#[cfg(test)]` aqui: a sequência é provada por `tests/contrato/contrato_api_provision.rs`, que
+  exercita `run` com portas falsas e conta chamadas de catálogo e script.

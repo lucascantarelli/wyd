@@ -3,12 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3 e §5; `ADR-DB-0001` itens 3 e 4
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/domain/plan.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/domain/plan.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/domain/plan.rs` — a decisão
-**Sem arquivo no repositório:** `src/provision/domain/plan.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/domain/plan.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -99,6 +99,9 @@ invariante; o comentário da variante registra que o golden não o alcança.
 | `extra_membership_is_ignored` | `wyd_game` membro de `wyd_owner` | nenhum `Step` de remoção |
 | `plan_ignores_membership_order` | mesmo papel com `member_of` em ordens diferentes | `Plan` idêntico |
 | `order_is_deterministic` | duas chamadas | `Vec` idêntico |
+
+Os cenários de §6 pertencem a `WYDDB-007`; o contrato de 2026-11-26 cobre o uso pelo runner com
+cluster vazio (6 criações + 1 grant, sem drift).
 
 ## 7. Pronto quando
 

@@ -1,10 +1,14 @@
 # Fachada de comandos. Nenhuma lógica de negócio mora aqui: o gate é
-# `wyd-docs/gate.sh`, os scripts de CI são `scripts/ci/*.sh` e o Compose é a
+# `wyd-docs/gate.sh`, os scripts de CI são `wyd-ops/scripts/ci/*.sh` e o Compose é a
 # definição do ambiente. `make` só evita decorar caminhos.
 
 # `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS); os demais crates são
 # portáveis. O `make` não tenta compilar o launcher em Linux/macOS.
-CRATES := wyd-db wyd-ops-signer
+CRATES := wyd-db wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
+# Crates com teste que entram no `make test`; o `wyd-db` roda a `lib` e os
+# contratos `contrato_api_migrate`/`contrato_api_provision` (os alvos PostgreSQL
+# têm `ci-db.yml`) e o launcher é Windows-only.
+TEST_CRATES := wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
 ifeq ($(OS),Windows_NT)
 CRATES += wyd-launcher
 LAUNCHER_TEST := cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked
@@ -14,7 +18,7 @@ LAUNCHER_TEST :=
 PYTHON ?= python
 endif
 
-.PHONY: gate gate-fast test-gate fmt lint test docs docs-up docs-down db-up db-down rollback
+.PHONY: gate gate-fast layout test-gate build fmt lint test docs docs-up docs-down db-up db-down rollback
 
 gate:
 	docker compose --profile gate run --rm gate
@@ -24,8 +28,18 @@ gate:
 gate-fast:
 	cd wyd-docs && $(PYTHON) -m gate fast --root ..
 
+# Só o layout: compara a árvore real com a página autoritativa e lista cada
+# caminho fora do padrão. O `gate-fast` e o `gate` já o executam.
+layout:
+	cd wyd-docs && $(PYTHON) -m gate check layout --root .. --details
+
 test-gate:
 	cd wyd-docs && $(PYTHON) -m unittest discover -s tests -v
+
+build:
+	@for c in $(CRATES); do \
+		cargo build --manifest-path crates/$$c/Cargo.toml || exit 1; \
+	done
 
 fmt:
 	@for c in $(CRATES); do \
@@ -39,7 +53,11 @@ lint:
 
 test:
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
-	cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --locked
+	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_migrate --locked
+	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_provision --locked
+	@for c in $(TEST_CRATES); do \
+		cargo test --manifest-path crates/$$c/Cargo.toml --locked || exit 1; \
+	done
 	$(LAUNCHER_TEST)
 
 docs:

@@ -51,7 +51,7 @@ renomear o que já existe.
 
 ## 2.2 Transição automática de estado (2026-11-26)
 
-O workflow `.github/workflows/issue-status.yml` executa `.github/scripts/sync-issue-status.mjs` em
+O workflow `.github/workflows/issue-status.yml` executa `wyd-ops/scripts/sync-issue-status.mjs` em
 eventos de issue e de PR. Labels são a fonte de verdade; o campo `Status` do Project `WYD 1.0.0`
 (nº 10) é espelho e só é atualizado se o secret `PROJECT_TOKEN` existir (PAT com escopo `project`).
 

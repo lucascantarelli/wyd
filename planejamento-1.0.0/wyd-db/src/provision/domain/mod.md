@@ -3,12 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §2, §5
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/domain/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/domain/mod.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/domain/mod.rs` — modelo puro
-**Sem arquivo no repositório:** `src/provision/domain/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/domain/mod.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -48,7 +48,7 @@ pub use spec::{memberships, render, RoleSpec, MIGRATOR, OWNER, ROLES};
 | `domain_types_are_reachable` | `use wyd_db::provision::domain::{ROLES, plan};` compila |
 
 ## 6. Pronto quando
-**Sem arquivo no repositório:** `spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `spec.rs` (`WYDDB-003`).
 
 - `render()` pode ser chamada em teste sem banco, disco ou relógio;
 - o `pub use` não cria caminho para tipo que já tem dono em `spec.rs`.

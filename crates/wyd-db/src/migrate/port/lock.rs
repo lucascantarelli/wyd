@@ -16,8 +16,16 @@ pub trait AdvisoryLock: Send + Sync {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum LockError {
+    /// O lock continua com outro processo depois do timeout.
     #[error("outro processo está migrando (esperei {waited:?}); verifique pg_locks")]
-    Busy { waited: Duration },
+    Busy {
+        /// Tempo esperado antes de desistir.
+        waited: Duration,
+    },
+    /// A consulta ao advisory lock falhou.
     #[error("falha ao consultar o lock: {detail}")]
-    Query { detail: String },
+    Query {
+        /// Detalhe do erro do driver.
+        detail: String,
+    },
 }

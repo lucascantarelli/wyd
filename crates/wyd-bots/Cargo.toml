@@ -1,0 +1,13 @@
+# Estrutura inicial do `wyd-bots` (2026-11-26): bots de QA, carga e convivência.
+# Nenhum bot, cenário ou relatório existe ainda; módulos e critérios são do plano em
+# `planejamento-1.0.0/wyd-bots/`. Sem binário: o protocolo do cliente ainda não está
+# implementado.
+[package]
+name = "wyd-bots"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[lints.rust]
+unsafe_code = "forbid"

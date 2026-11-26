@@ -1,0 +1,40 @@
+:root {
+  color-scheme: dark;
+  --fundo: #10131a;
+  --texto: #e8eaf0;
+  --borda: #2a3140;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 2rem;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+code {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.35rem;
+}

@@ -1,0 +1,17 @@
+# Estrutura inicial do `wyd-admin` (2026-11-26): administração por HTTP/JSON interno.
+# O binário desta entrega sobe o composition root com as sondas `/health` e `/ready`; o
+# contrato C4 (kick, broadcast, saldo, custódia) e a autenticação de serviço continuam
+# não implementados. Fronteira em `planejamento-1.0.0/wyd-admin/`.
+[package]
+name = "wyd-admin"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[[bin]]
+name = "wyd-admin"
+path = "src/main.rs"
+
+[lints.rust]
+unsafe_code = "forbid"

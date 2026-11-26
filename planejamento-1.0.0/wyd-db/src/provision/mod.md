@@ -2,13 +2,12 @@
 > Público: Desenvolvedor de `crates/wyd-db` que vai implementar `src/provision/mod.rs`
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §2, §5 e §6
-> Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+> Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24) — `crates/wyd-db/src/provision/` não existe; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`) — fachada, domínio, portas e runner. O adapter entra em `WYDDB-015`; o golden e o CLI ficam fora desta entrega.
 
 # `src/provision/mod.rs` — fachada do provisionamento
-**Sem arquivo no repositório:** `src/provision/mod.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `crates/wyd-db/src/provision/mod.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -18,7 +17,6 @@ Declarar os submódulos e expor `run`, `Command`, `Report` e o estado desejado (
 ## 2. Conteúdo exato
 
 ```rust
-pub mod adapter;
 pub mod app;
 pub mod domain;
 pub mod error;
@@ -28,8 +26,6 @@ pub use app::runner::run;
 pub use domain::plan::{Drift, Plan, Step};
 pub use domain::spec::{memberships, render, RoleSpec, MIGRATOR, OWNER, ROLES};
 pub use error::{ProvisionError, Result};
-
-use crate::provision::port::{Catalog, Script}; // só os bounds de `run`
 
 #[non_exhaustive]
 pub enum Command {
@@ -46,13 +42,16 @@ pub enum Report {
     Applied { steps: usize },
 }
 
-pub async fn run<B>(cmd: Command, backend: &B) -> Result<Report, ProvisionError>
+pub async fn run<B>(command: Command, backend: &B) -> Result<Report, ProvisionError>
 where
     B: Catalog + Script;
 ```
 
 `crate::provision::MIGRATOR` **precisa** existir como reexport: `src/migrate/config.rs` o consome como
 `EXPECTED_ROLE` (spec §2). É a única razão de o root reexportar constante.
+
+O `pub mod adapter;` do desenho de `spec.md` §5 entra em `WYDDB-015`, junto do `PgProvisionAdapter`;
+esta entrega para em `app`, `domain`, `error` e `port`, que é o que o contrato de 2026-11-26 cobre.
 
 ## 3. Regras
 
@@ -73,10 +72,15 @@ camadas).
 
 | Teste | O que prova |
 |---|---|
-| `root_reexports_migrator` | `crate::provision::MIGRATOR == crate::migrate::config::EXPECTED_ROLE` |
-| `facade_runs_with_fakes` | `run(Command::Plan, &fake)` compila e devolve `Planned` |
+| `render_devolve_texto_sem_tocar_o_backend` | `Command::Render` devolve `Rendered(render())`, sem catálogo nem script |
+| `plan_e_check_leem_o_catalogo_e_nunca_o_script` | os dois leem `Catalog` e não chamam `Script` |
+| `apply_entrega_o_texto_de_render_uma_vez` | `Apply` lê o catálogo, conta 7 passos e envia `render()` uma vez |
+
+O alvo externo é `tests/contrato/contrato_api_provision.rs`; a execução está em §Evidência de execução da
+`WYDDB-003`.
 
 ## 6. Pronto quando
 
 - o binário escreve `wyd_db::provision::{run, Command, Report}` sem tocar em `app`;
-- nenhum tipo do driver em assinatura pública.
+- nenhum tipo do driver em assinatura pública;
+- `adapter` não existe nesta entrega: entra em `WYDDB-015`.

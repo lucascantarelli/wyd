@@ -4,9 +4,10 @@
 > Público: Desenvolvedor, QA e revisor
 > Dono: equipe do `wyd-db`
 > Base: `fases.md`; `wyd-db-1.0.0.md` §6.10; `D-7` aprovada em 2026-11-22
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-22)
+**Estado:** aceito (2026-11-26)
+**Aceite:** o dono autorizou a execução de todas as issues registradas em 2026-11-26, nesta sessão; a evidência fica em §Evidência de execução.
 
 **Gate de verificação:** comandos do `## DoD` desta página + `make gate` na raiz; o PR só fecha com os dois verdes.
 
@@ -25,10 +26,10 @@ Fixar a API de `src/provision/mod.rs` e `provision/app/runner.rs` com `Command::
 
 ## DoD
 
-- [ ] Um alvo `contrato_api_provision` compila os quatro comandos e o `Report`.
-- [ ] `render` devolve texto e não escreve arquivo; a comparação é do binário.
-- [ ] `plan` e `check` não chamam `Script`.
-- [ ] `provision/mod.md` e `provision/app/mod.md` citam a mesma assinatura.
+- [x] Um alvo `contrato_api_provision` compila os quatro comandos e o `Report`.
+- [x] `render` devolve texto e não escreve arquivo; a comparação é do binário.
+- [x] `plan` e `check` não chamam `Script`.
+- [x] `provision/mod.md` e `provision/app/mod.md` citam a mesma assinatura.
 
 ## Fora de escopo
 
@@ -57,3 +58,26 @@ A lista fechada e a distinção entre skill em disco e cloud estão em
 ## Evidência ao fechar
 
 Saída de `cargo test -p wyd-db --test contrato_api_provision` e páginas de módulo atualizadas.
+
+## Evidência de execução (2026-11-26)
+
+Executado em `crates/wyd-db`:
+
+```text
+$ cargo test --test contrato_api_provision
+running 3 tests
+test plan_e_check_leem_o_catalogo_e_nunca_o_script ... ok
+test apply_entrega_o_texto_de_render_uma_vez ... ok
+test render_devolve_texto_sem_tocar_o_backend ... ok
+test result: ok. 3 passed; 0 failed
+
+$ cargo fmt --check
+(sem saída; exit 0)
+
+$ cargo clippy --all-targets -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s)
+```
+
+Alvo: `crates/wyd-db/tests/contrato/contrato_api_provision.rs`, registrado em `crates/wyd-db/Cargo.toml`. Ele compila `Command::{Render, Plan, Apply, Check}`, `Report::{Rendered, Planned, Applied}` e `run::<Fake>`, e prova: `render` devolve `render()` sem tocar catálogo ou script; `plan`/`check` leem o catálogo e não chamam `Script`; `apply` conta 7 passos no cluster vazio e entrega o texto de `render()` uma vez. O adapter PostgreSQL, o golden de `db/roles.sql` e o CLI não existem nesta entrega — o “Fora de escopo” os atribui à fase 7/`WYDDB-015`.
+
+O alvo entrou no `make test` (`cargo test ... --test contrato_api_provision --locked`) e na matriz `unit` de `.github/workflows/code.yml` (`--test contrato_api_provision`, espelhado em `code-stable.yml`). Rodada da raiz: `make test` → exit 0, **140 passed** em **30** linhas `test result`, com `Running tests\contrato\contrato_api_provision.rs`; `actionlint` 1.7.12 → exit 0; `make gate` → PASS.

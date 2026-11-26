@@ -127,7 +127,7 @@ e de boot não existe (`../../docs/specs/requisitos-nao-funcionais.md` §4–§5
 | Medida | Número | Fonte |
 |---|---:|---|
 | capacidades na matriz | **39** | §2–§6 |
-| cobertas por teste executado | **13** | `crates/wyd-db/tests/sistema_pg.rs`: 13 verdes em 2026-11-24 |
+| cobertas por teste executado | **13** | `crates/wyd-db/tests/sistema/sistema_pg.rs`: 13 verdes em 2026-11-24 |
 | com requisito nomeado (`RF`/`RN`/`RNF`) | **39** | `CAP-01`–`CAP-39` |
 | governadas por gate solto | **0** | as 11 que citavam gate passaram a citar `RNF-DB-008`–`013` (`Q-BLK-19` = A) |
 | alvos | **5** | `../index.md` §2 |
@@ -158,7 +158,7 @@ container (`WYD_DB_TEST_CONTAINER`); `CAP-37` mediu a **porta** pelo `PgAdapter`
 
 **O aceite é a outra metade:** as 12 páginas foram aceitas em 2026-11-24 (`Q-BLK-21` = A), e o código dos
 cinco alvos foi liberado por `Q-BLK-18` = A (2026-11-24); `crates/wyd-db/` tem `Cargo.toml`, `src/dsn.rs`,
-`tests/sistema_pg.rs`, `tests/reversibilidade_pg.rs` e `tests/runner_pg.rs` — **3 dos 7 alvos** declarados,
+`tests/sistema/sistema_pg.rs`, `tests/sistema/reversibilidade_pg.rs` e `tests/sistema/runner_pg.rs` — **3 dos 7 alvos** declarados,
 e a matriz está **14 de 39** cobertas.
 
 ## 8. Como uma capacidade entra ou muda

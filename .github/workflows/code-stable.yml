@@ -30,7 +30,7 @@ jobs:
       matrix:
         include:
           - crate: wyd-db
-            args: --lib
+            args: --lib --test contrato_api_migrate --test contrato_api_provision
           - crate: wyd-ops-signer
             args: --locked
     steps:

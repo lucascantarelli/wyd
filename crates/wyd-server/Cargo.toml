@@ -1,0 +1,17 @@
+# Estrutura inicial do `wyd-server` (2026-11-26): composição do canal, health,
+# controle e ECAP. O binário desta entrega é um composition root mínimo com as sondas
+# `/health` e `/ready`; `EPROD` (listener CPSock) e o ECAP continuam não implementados.
+# Fronteira e critérios em `planejamento-1.0.0/wyd-server/`.
+[package]
+name = "wyd-server"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[[bin]]
+name = "wyd-server"
+path = "src/main.rs"
+
+[lints.rust]
+unsafe_code = "forbid"

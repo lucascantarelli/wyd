@@ -1,7 +1,7 @@
 # Contexto de build da imagem do site/gate. A imagem `:gate` precisa da árvore de
 # evidência (planejamento, docs, crates, .github, .agents e arquivos da raiz) para
-# conferir citações sem bind mount. Cliente e legado ficam fora — o cliente sozinho
-# tem 567 MB.
+# conferir citações sem bind mount. Os binários do cliente e o legado ficam fora —
+# o cliente sozinho tem 567 MB; `tools/.gitkeep` entra para o check de layout.
 
 .git
 .freebuff
@@ -10,8 +10,13 @@
 .env.*
 
 deprecated
-wyd-client
-wyd-portal
+wyd-client/files
+
+# O portal é contexto da imagem dele (perfil `stack` do `docker-compose.dev.yml`);
+# saída de build e dependências continuam fora.
+wyd-portal/node_modules
+wyd-portal/.next
+wyd-portal/out
 
 **/node_modules
 **/.venv
@@ -19,6 +24,7 @@ wyd-portal
 **/target
 **/site
 **/.build
+**/.next
 **/__pycache__
 **/*.pyc
 

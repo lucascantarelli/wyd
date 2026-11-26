@@ -94,11 +94,20 @@ fn hex_nibble(byte: u8, index: usize) -> Result<u8, ChecksumError> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ChecksumError {
     /// Não tem 64 caracteres.
-    Length { found: usize },
+    Length {
+        /// Comprimento recebido.
+        found: usize,
+    },
     /// Tem uma letra maiúscula.
-    NotLowercaseHex { index: usize },
+    NotLowercaseHex {
+        /// Posição do caractere recusado.
+        index: usize,
+    },
     /// Tem um caractere fora de hexadecimal.
-    NotHex { index: usize },
+    NotHex {
+        /// Posição do caractere recusado.
+        index: usize,
+    },
 }
 
 impl fmt::Display for ChecksumError {
