@@ -27,6 +27,7 @@ Um workflow (`issue-status.yml`) com um script único (`wyd-ops/scripts/sync-iss
 | issue reaberta | retoma a última label não lateral | status correspondente |
 | `estado/bloqueada` ou `estado/aguardando-decisao` | a label lateral | Bloqueado |
 | remoção da última label de estado | `estado/proposta` | Backlog |
+| mudança de label feita pelo próprio script | não reprocessa | não mexe |
 
 Regras:
 
@@ -35,6 +36,10 @@ Regras:
 3. **Labels são a fonte de verdade.** O Project é espelho; se `PROJECT_TOKEN` (PAT com escopo `project`) não existir, o script avisa e continua só com labels.
 4. **`pull_request_target` sem checkout do PR.** O job roda o script da branch padrão; não executa código do PR. Isso mantém o token de escrita em PR de fork sem o risco de rodar código não confiável. Como o GitHub bloqueia esse evento por padrão em repositórios públicos a partir de 2/dez/2026, a política de execução do repositório tem uma exceção escopada **somente** para `.github/workflows/issue-status.yml`, permitindo `issues`, `pull_request_target` e `workflow_dispatch`; nenhum outro workflow ganha a exceção.
 5. **Issue fechada não perde a label.** O fechamento é o fato; a label preservada permite retomar o estado ao reabrir.
+6. **Troca atômica.** O estado é aplicado com uma única requisição `PUT /issues/{n}/labels` contendo o conjunto final; remover e adicionar em duas chamadas abria uma janela sem estado e publicava um `unlabeled` que reprocessava a issue.
+7. **Eco do próprio script é ignorado.** A troca usa o `GITHUB_TOKEN`, então o GitHub a atribui a `github-actions[bot]`; evento de label com esse autor não é decisão de ninguém e não é reprocessado. Sem essa guarda, o `unlabeled` da label antiga chegava depois do `labeled` da nova e devolvia a issue entregue para `estado/proposta`.
+8. **Estado lido da API.** A decisão usa o estado corrente do `GET /issues/{n}`, nunca o payload do evento, que pode estar desatualizado quando a execução enfileirada começa.
+9. **`unlabeled` não regride com outra label presente.** Só a remoção da última label de estado devolve a issue à fila; havendo outra, ela é o estado vigente.
 
 ## Consequências
 
@@ -53,7 +58,7 @@ Regras:
 
 ## Como verificar
 
-Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --check wyd-ops/scripts/sync-issue-status.mjs` valida a sintaxe; `gh api repos/lucascantarelli/wyd/actions/policies` mostra a exceção escopada ao workflow.
+Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --test wyd-ops/tests/unitario/` prova as regras sem falar com o GitHub (troca em lista única, `unlabeled` sem outra label e eco do bot ignorado); `node --check wyd-ops/scripts/sync-issue-status.mjs` valida a sintaxe; `gh api repos/lucascantarelli/wyd/actions/policies` mostra a exceção escopada ao workflow.
 
 ## Referências
 
