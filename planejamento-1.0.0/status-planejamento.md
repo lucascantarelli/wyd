@@ -238,7 +238,7 @@ títulos existentes antes de criar e a reexecução não duplica issue.
 | Prova | Evidência | Estado |
 |---|---|---|
 | PR e checks do pacote | PR [#205](https://github.com/lucascantarelli/wyd/pull/205), squash `0c4a612`; `gate-code`, `gate-db`, `gate-docs` e `gate-security` com conclusão **success** | comprovado |
-| Imagem publicada | run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`; tags `:SHA`, `:develop` e `:latest`; digest `sha256:462029e…`; SBOM SPDX + provenance SLSA v1; smoke HTTP 200 | comprovado |
+| Imagem publicada | run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`; naquela publicação, tags `:SHA`, `:develop` e `:latest`, digest `sha256:462029e…`; SBOM SPDX + provenance SLSA v1; smoke HTTP 200 | comprovado |
 | Sinal stable | run [`45828077654`](https://github.com/lucascantarelli/wyd/actions/runs/45828077654); `wyd-db` e `wyd-ops-signer` concluíram com Rust `stable` | comprovado |
 | Rollback | `make rollback TAG=f271caab…` e `TAG=0c4a612a…` puxaram as imagens do GHCR e responderam HTTP 200 sem build local | comprovado |
 | Node 20 | logs recentes de `code`, `docs`, `docs-image`, `security`, `ci-db` e `code-stable` sem o aviso nem a SHA `ea165f8…` | comprovado |
