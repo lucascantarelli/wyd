@@ -4,9 +4,10 @@
 > Público: Desenvolvedor, QA e revisor
 > Dono: equipe do `wyd-net`
 > Base: `docs/roadmap/roadmap.md` fatia F0; `docs/specs/requisitos.md` (`RF-NET-001` a `RF-NET-002`); `docs/arquitetura/componentes.md`
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25)
+**Estado:** aceito (2026-11-26)
+**Aceite:** o dono autorizou a execução e o aceite desta página em 2026-11-26, nesta sessão; a evidência está em §Evidência de execução.
 
 **Gate de verificação:** comandos do `## DoD` desta página + `make gate` na raiz; o PR só fecha com os dois verdes.
 
@@ -25,8 +26,8 @@ cumprir `RF-NET-001` a `RF-NET-002` sem antecipar a fatia seguinte.
 
 ## DoD
 
-- [ ] `cargo doc -p wyd-net --no-deps` sem warning.
-- [ ] `cargo fmt --check` e `cargo clippy --all-targets -- -D warnings` verdes.
+- [x] `cargo doc -p wyd-net --no-deps` sem warning.
+- [x] `cargo fmt --check` e `cargo clippy --all-targets -- -D warnings` verdes.
 
 ## Fora de escopo
 
@@ -51,3 +52,20 @@ A lista fechada e a distinção entre skill em disco e cloud estão em
 ## Evidência ao fechar
 
 Saída do comando do DoD no PR, com a fatia F0 concluída em `docs/roadmap/roadmap.md`.
+
+## Evidência de execução (2026-11-26)
+
+Executado em `crates/wyd-net` com Rust 1.100.0:
+
+```text
+$ cargo doc -p wyd-net --no-deps
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.41s
+
+$ cargo fmt --check
+(sem saída; exit 0)
+
+$ cargo clippy --all-targets -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.29s
+```
+
+`lib.rs` recebeu `#![deny(missing_docs)]` sobre uma árvore que já tinha `Cargo.toml`, `src/lib.rs` e os módulos reservados; `cargo test --lib` → 0 passed (esqueleto, sem teste ainda).

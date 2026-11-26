@@ -9,7 +9,10 @@ use crate::migrate::migration::version::{Slug, Version};
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AppliedMigration {
+    /// Versão registrada no ledger.
     pub version: Version,
+    /// Slug registrado no ledger.
     pub slug: Slug,
+    /// Checksum registrado no ledger.
     pub checksum: Checksum,
 }

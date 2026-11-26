@@ -19,7 +19,7 @@
 
 | # | Item da missão | Estado | Evidência |
 |---|---|---|---|
-| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 497 páginas / 495 fontes / 48 aceito / 446 proposto / 0 sem linha |
+| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 497 páginas / 495 fontes / 52 aceito / 442 proposto / 0 sem linha |
 | 2 | Planejar todos os gaps | Feito | `lacunas.md` por sistema; `wyd-ops/auditoria-de-organizacao.md` |
 | 3 | Estrutura de pastas com `.gitkeep` (todo o projeto) | Feito | `planejamento-1.0.0/*/src/.gitkeep`, `*/tests/.gitkeep` (12 sistemas); `crates/*/` (`.gitkeep`); `wyd-client/files/.gitkeep`; `wyd-db/prompts/.gitkeep` e `wyd-db/skills/.gitkeep`; mapa em `wyd-ops/docs/estrutura-de-pastas-e-modulos.md` |
 | 4 | Documentação detalhada por módulo | Feito | `docs/arquitetura/componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) + `docs/modulos.md` em 6 sistemas; os 7 restantes usam `componentes.md` como documento de módulo, sem duplicar `modulos.md` |
@@ -43,7 +43,7 @@
 | 22 | Decisões documentadas, justificadas e aprovadas | Feito | 12 decisões respondidas em 2026-11-25; O4/O5 formalizadas em `ADR-OPS-0011`, `ADR-OPS-0007` revisado e `ADR-OPS-0012` criada em 2026-11-26 |
 | 23 | Funcionalidades do cliente mapeadas e documentadas | Feito | `wyd-client/docs/specs/mapa-de-funcionalidades.md` + inventário |
 | 24 | Sistemas de jogo funcionando (guerras, mobs, …) | N/A (planejamento) | `wyd-core/docs/specs/catalogo-funcional.md` (mapa de fronteira) |
-| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 497 páginas / 495 fontes / 48 aceito / 446 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
+| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 497 páginas / 495 fontes / 52 aceito / 442 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
 | 26 | Skills do agente funcionando, documentadas, testadas, aprovadas | Feito | documentadas em `ia-e-skills.md` e no inventário; `wyd-docs/tests/test_skill_contract.py` compara a lista do gate, o template, os quatro formulários e as duas skills em disco; 4/4 verdes em 2026-11-26 (§14) |
 | 27 | Documentação atualizada, coerente, sem duplicidade/redundância/erros | Feito (gate) | gate de links/âncoras/censos verde; `componentes.md` é o documento de módulo dos sistemas sem `modulos.md`, sem página duplicada |
 | 28 | Documentação rigorosamente padronizada | Feito (gate) | cabeçalho de 5 linhas, `Estado` com data, links relativos e ADR local `aceito`; gate reprova link, âncora, navegação e sintaxe |

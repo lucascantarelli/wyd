@@ -86,7 +86,9 @@ jobs:
         include:
           - crate: wyd-db
             os: ubuntu-latest
-            args: --lib
+            # A lib e o contrato público de `migrate`; os alvos PostgreSQL
+            # ficam em `ci-db.yml` e não rodam aqui.
+            args: --lib --test contrato_api_migrate
           - crate: wyd-ops-signer
             os: ubuntu-latest
             args: --locked

@@ -4,9 +4,10 @@
 > Público: Produto, arquitetura, desenvolvimento e QA
 > Dono: arquitetura (coordenação cross-sistema); `wyd-db` e `wyd-net` executam suas fatias
 > Base: `wyd-db/docs/roadmap/WYDDB-001.md`; `wyd-net/docs/roadmap/roadmap.md` (F0); `wyd-db/docs/guia-desenvolvedor/index.md`; `wyd-net/docs/arquitetura/componentes.md`; `wyd-net/docs/specs/requisitos.md`; `wyd-ops/docs/planos/plano-de-testes.md`
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25). Artefato de planejamento; nenhuma implementação, issue, commit, push, deploy ou segredo foi criado.
+**Estado:** aceito (2026-11-26); execução e aceite do dono em 2026-11-26. Nenhum commit, push, deploy, issue ou segredo foi criado.
+**Aceite:** o dono autorizou a execução e o aceite da fatia em 2026-11-26, com a evidência das duas issues; a implementação foi executada pelo agente.
 
 ## 1. Objetivo da fatia
 
@@ -127,3 +128,14 @@ A issue criada no GitHub deve usar o template `tarefa.yml` e preencher o campo "
 - Os donos e skills estão nomeados por papel.
 - As referências cruzadas apontam para documentos donos, não para cópia de fato.
 - Nenhum número de censo do `wyd-db` foi citado; portanto esta página não altera a medição vigente.
+
+## 12. Execução (2026-11-26)
+
+As duas issues foram executadas no mesmo ciclo, como a fatia exige:
+
+| Issue | Entrega executada | DoD |
+|---|---|---|
+| `WYDDB-001` | `#![deny(missing_docs)]`, 133 itens públicos documentados, guia §3 com os três comandos | `doc`, `fmt`, `clippy` verdes; 63 testes da lib verdes |
+| `WYDNET-F0` | `#![deny(missing_docs)]` sobre o esqueleto reservado | `doc`, `fmt`, `clippy` verdes |
+
+O dono autorizou e registrou o aceite da fatia em 2026-11-26, com a evidência acima; a implementação foi executada pelo agente. O que **não** foi feito: commit, push, criação ou fechamento de issue. Esses atos continuam fora desta rodada.

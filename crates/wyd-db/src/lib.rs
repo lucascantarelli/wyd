@@ -4,5 +4,7 @@
 //! `AGENTS.md`. Neste primeiro slice, `dsn` (página `src/dsn.md`, aceita em 2026-11-24);
 //! a árvore completa está em `docs/guia-desenvolvedor/mapa-do-crate.md`.
 
+#![deny(missing_docs)]
+
 pub mod dsn;
 pub mod migrate;

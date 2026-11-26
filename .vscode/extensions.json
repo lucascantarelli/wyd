@@ -11,5 +11,13 @@
     "ms-azuretools.vscode-containers",
     "ms-vscode-remote.remote-containers",
     "cweijan.vscode-postgresql-client2"
+  ],
+  // O adapter swellaby mantém um único `rootCargoManifestFilePath` e varre
+  // `deprecated/`; o rust-analyzer é o controller que enxerga os 10 crates.
+  // O bundle `1yib` traz um rust-analyzer antigo e disputa o mesmo espaço.
+  "unwantedRecommendations": [
+    "swellaby.vscode-rust-test-adapter",
+    "hbenl.vscode-test-explorer",
+    "1yib.rust-bundle"
   ]
 }

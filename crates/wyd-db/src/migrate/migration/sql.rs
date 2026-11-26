@@ -181,7 +181,10 @@ pub enum SqlTextError {
     /// Um marcador `-- migrate:` reapareceu fora de comentário/literal.
     MarkerInSql,
     /// Controle de transação no começo de uma instrução.
-    TransactionControl { keyword: &'static str },
+    TransactionControl {
+        /// Palavra reservada encontrada.
+        keyword: &'static str,
+    },
     /// Um comentário de bloco não fechou.
     UnterminatedBlockComment,
 }

@@ -20,6 +20,10 @@ path = "tests/reversibilidade_pg.rs"
 name = "runner_pg"
 path = "tests/runner_pg.rs"
 
+[[test]]
+name = "contrato_api_migrate"
+path = "tests/contrato_api_migrate.rs"
+
 [dependencies]
 sha2 = "0.11.1"
 sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }

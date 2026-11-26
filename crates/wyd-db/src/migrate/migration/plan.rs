@@ -11,6 +11,7 @@ use std::collections::HashMap;
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Plan {
+    /// Disco e ledger coincidem; nada a fazer.
     UpToDate,
     /// Pendentes, em ordem crescente.
     Apply(Vec<Version>),
@@ -22,7 +23,9 @@ pub enum Plan {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Drift {
+    /// Versão afetada pela divergência.
     pub version: Version,
+    /// Causa da divergência.
     pub kind: DriftKind,
 }
 
@@ -30,8 +33,11 @@ pub struct Drift {
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DriftKind {
+    /// O conteúdo do arquivo mudou depois de aplicado.
     Checksum,
+    /// O slug do arquivo mudou depois de aplicado.
     Slug,
+    /// O ledger tem uma versão que não existe mais no disco.
     MissingFile,
 }
 

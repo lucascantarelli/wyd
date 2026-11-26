@@ -5,6 +5,7 @@
 //! implementado. Os módulos são reservas do plano e ganham código com a página dona
 //! aceita (`AGENTS.md` §5, item 1).
 
+#![deny(missing_docs)]
 #![forbid(unsafe_code)]
 
 pub mod backpressure;

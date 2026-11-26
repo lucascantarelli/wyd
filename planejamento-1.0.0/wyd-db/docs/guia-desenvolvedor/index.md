@@ -34,16 +34,21 @@ certa e provar com teste. Ele é para quem mexe no crate; instalação do banco 
 
 ## 3. Os três comandos que provam o ambiente
 
-**Este recorte ainda não tem os três comandos.** O `crate` e o `Cargo.toml` existem desde 2026-11-24, mas só
-havia `dsn` implementado e nenhum alvo de teste declarado; escrever comandos que não rodam seria pior que
-declarar a falta. Quando a fase 1 do roadmap fechar, o guia ganha três comandos executáveis e a saída
-esperada de cada um. Até lá, o critério é:
+Com o crate em `crates/wyd-db`, os três comandos do baseline da fase 1 rodam sem PostgreSQL:
 
-- o crate compila;
-- o alvo de contrato roda sem PostgreSQL;
-- o alvo de sistema roda com `WYD_DB_URL_TEST` e um banco descartável.
+```bash
+cargo doc -p wyd-db --no-deps
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+```
 
-Nenhum dos três é "verde" hoje; a evidência é a issue `WYDDB-001` e as seguintes.
+Saída esperada:
+
+- `cargo doc -p wyd-db --no-deps` termina com `Finished` e sem `missing documentation`; o `lib.rs` declara `#![deny(missing_docs)]`.
+- `cargo fmt --check` termina sem diff e com código 0.
+- `cargo clippy --all-targets -- -D warnings` termina com `Finished` e sem warning.
+
+O alvo de sistema (`sistema_pg`) continua exigindo um PostgreSQL 17 descartável e não faz parte destes três comandos; os alvos PostgreSQL estão nas issues e no CI de banco.
 
 ## 4. Mapa dos guias
 

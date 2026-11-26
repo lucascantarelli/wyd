@@ -2,9 +2,9 @@
 > Público: Desenvolvedor de `crates/wyd-db` que vai implementar `src/migrate/app/mod.rs`
 > Dono: equipe do `wyd-db`
 > Base: `src/migrate/spec.md` §8 e §10
-> Revisado em: 2026-11-18
+> Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26, com a assinatura congelada por `tests/contrato_api_migrate.rs` (`WYDDB-002`).
 
 # `src/migrate/app/mod.rs` — orquestração
 
@@ -19,6 +19,15 @@ código e um reexport.
 pub mod runner;
 
 pub use runner::run;
+```
+
+A assinatura reexportada é a mesma da fachada em `migrate/mod.rs`:
+
+```rust
+pub async fn run<B, S>(command: Command, backend: &B, source: &S) -> Result<Report, MigrateError>
+where
+    B: Ledger + MigrationExecutor + AdvisoryLock,
+    S: Source;
 ```
 
 ## 3. Regras
@@ -39,4 +48,4 @@ Permitido: `migration`, `port`, `error`. Proibido: `adapter`, `sqlx`, `std::fs`,
 - `grep -n "sqlx" src/migrate/app/` vazio;
 - `cargo tree -p wyd-db -e features` não mostra `sqlx` puxado por `app`;
 - nenhum `#[cfg(test)]` neste diretório: o fluxo é provado pelos testes de contrato de `runner` com
-  portas falsas.
+  portas falsas; o alvo externo `tests/contrato_api_migrate.rs` congela a assinatura pública.

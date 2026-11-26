@@ -1920,11 +1920,11 @@ aqui: as quatro perguntas de §6.6.22.5 são do dono.
 
 | Medida | Valor medido agora | Como foi medido |
 |---|---:|---|
-| páginas autorais de `docs/` | **143**: 139 com `**Estado:**` (**137** `proposto`, **2** `aceito`) + 4 portas | `find docs -name '*.md' -not -path 'docs/dicionario-dados/gerado/*' -not -name 'proposta-*'`; `grep -l '^\*\*Estado:\*\*'` |
+| páginas autorais de `docs/` | **143**: 139 com `**Estado:**` (**135** `proposto`, **4** `aceito`) + 4 portas | `find docs -name '*.md' -not -path 'docs/dicionario-dados/gerado/*' -not -name 'proposta-*'`; `grep -l '^\*\*Estado:\*\*'` |
 | páginas de `tests/` | **12 de 12** com `Estado`; **12** `aceito` (2026-11-24) | `find tests -name '*.md'` + `grep -l '^\*\*Estado:\*\* aceito'` |
 | páginas de `src/` | **37** escritas; **37** `aceito` (2026-11-24) | `find src -name '*.md'` + `grep -l '^\*\*Estado:\*\* aceito'` |
 | arquivos de `migrations/` | **29**: 28 páginas + `index`; **28** `aceito` (2026-11-24, §6.6.31) | `find migrations -name '*.md'` |
-| **atos de aceite pendentes** | **142**: **142** em `docs/` + **0** em `src/` + **0** em `migrations/` + **0** em `tests/` | soma das quatro linhas acima; §10 tem 11 itens por página; migrations aceitas em §6.6.31 |
+| **atos de aceite pendentes** | **140**: **140** em `docs/` + **0** em `src/` + **0** em `migrations/` + **0** em `tests/` | soma das quatro linhas acima; §10 tem 11 itens por página; migrations aceitas em §6.6.31 |
 | matriz `CAP-nn` | **39** capacidades; **13** cobertas por teste executado; **39** com requisito; **0** só com gate | `tests/specs/capacidades.md` §7; cobertura medida em §6.6.30 |
 | rastreabilidade | **40** linhas (17 `RF` + 7 `RN` + 13 `RNF` + 3 `UC`); **13** com teste executado, **24** em `P` e **3** `—`; **0** com issue | `docs/specs/rastreabilidade.md` §2; §6.6.30 |
 | tabelas com requisito nomeado | **16 de 109** → **93** sem | `grep -oh 'schema.tabela'` em `requisitos-funcionais.md` + `regras-de-negocio.md` |
@@ -2454,7 +2454,7 @@ o total de páginas não mudou, porque nenhuma página nasceu.
 > **Histórico, não contador.** As quatro perguntas desta seção foram aprovadas em **A** e as quatro páginas
 > existem (§6.6.19). Os números abaixo são os de antes daquela execução (139 páginas, 7 de 109 tabelas,
 > 34 atos) e **não** valem hoje: a medição vigente é a de **§6.6.22.1** — 143 páginas em `docs/`, **15** de
-> **109** tabelas com requisito e **142** atos de aceite; o censo de rastreabilidade vigente é **15 de 34**
+> **109** tabelas com requisito e **140** atos de aceite; o censo de rastreabilidade vigente é **15 de 34**
 > linhas com cenário (§6.6.24, recontado em §6.6.26 (h)). Onde este texto divergir, vale §6.6.22, §6.6.24 ou a página dona.
 
 **Pergunta:** "das frentes abertas do projeto, qual atacar agora, e o que cada uma espera de quem?" Esta

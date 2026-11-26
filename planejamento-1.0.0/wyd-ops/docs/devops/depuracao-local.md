@@ -6,7 +6,7 @@
 > Base: `.vscode/tasks.json`; `.vscode/launch.json`; `AGENTS.md` §9; `.github/workflows/code.yml`
 > Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-26); a medição abaixo é `V` e foi executada nesta data. O depurador foi exercitado por linha de comando em **quatro crates** (oito configs), com breakpoint de linha atingido na thread do teste e teste concluído verde. A UI do VS Code **não** foi usada: a configuração foi exercitada com o mesmo programa, os mesmos argumentos, o mesmo `cwd` e o mesmo ambiente herdado do launch.
+**Estado:** proposto (2026-11-26); a medição abaixo é `V` e foi executada nesta data. O depurador foi exercitado por linha de comando em **quatro crates** (oito configs), com breakpoint de linha atingido na thread do teste e teste concluído verde. A UI do VS Code **não** foi usada: a configuração foi exercitada com o mesmo programa, os mesmos argumentos, o mesmo `cwd` e o mesmo ambiente herdado do launch. A §7 repete a prova com `CARGO_TARGET_DIR` novo e vazio e registra a descoberta dos 10 crates pelo servidor LSP.
 
 ## 1. Configuração que localiza testes em todos os crates
 
@@ -235,10 +235,13 @@ No binário, a linha 24 (`if args.is_empty()…`) não recebeu parada neste buil
 - [x] config de launch do `reversibilidade_pg` criada com só `WYD_DB_TEST_CONTAINER` (o alvo não lê DSN)
 - [x] rodada fecha com `make fmt`, `make lint`, `make test`, `make gate-fast` e `make gate` (registro da rodada, 2026-11-26)
 - [x] `make build` criado (não existia) e exit 0; bins de `wyd-ops-sign`, `wyd-server` e `wyd-admin` presentes
-- [x] 18 tasks executadas com exit 0, incluindo a task PostgreSQL com banco preparado
+- [x] 19 tasks executadas com exit 0, incluindo a task de layout e a PostgreSQL com banco preparado
 - [x] task genérica de testes corrigida: `--lib --bins`, porque `--locked` sozinho falhava no `wyd-db` (exit 101)
 - [x] 8 configs de launch pararam em breakpoint e saíram com status 0
 - [x] descoberta: 10/10 crates no rust-analyzer; 127 funções visíveis e 30 do launcher com causa medida (§5.2)
+- [x] revalidação §7.2: 106 funções lib/bin listadas e executadas em 10/10 crates com `CARGO_TARGET_DIR` limpo
+- [x] revalidação §7.3: `experimental/discoverTest` devolve 10/10 crates e 127 funções após `quiescent=true`
+- [x] revalidação §7.4: binário `wyd-ops-sign` e harness de `wyd-server` param em breakpoint e saem com status 0 sob `lldb --batch`
 
 ## 5. Tasks e descoberta de testes
 
@@ -249,27 +252,28 @@ No binário, a linha 24 (`if args.is_empty()…`) não recebeu parada neste buil
 | # | Task | Comando equivalente | Exit |
 |---|---|---|---|
 | 1 | `gate: fast (sem Docker)` | `make gate-fast` | 0 — `gate: PASS (fast, 5.0s)` |
-| 2 | `gate: completo (Docker)` | `make gate` | 0 — `gate: PASS (full, 29.6s)`; `links`: 495 páginas, 493 fontes |
-| 3 | `gate: testes do gate (Python)` | `make test-gate` | 0 — `Ran 23 tests … OK (skipped=1)` |
-| 4 | `rust: check do crate (escolher)` | 10 opções × `cargo check --all-targets` | 0 em todas |
-| 5 | `rust: testes do crate (escolher)` | 10 opções × `cargo test --locked --lib --bins` | 0 em todas |
-| 6 | `rust: check dos 3 crates` | `dependsOn` 7–9, em sequência | 0 |
-| 7 | `rust: check wyd-db` | `cargo check --manifest-path crates/wyd-db/Cargo.toml --all-targets` | 0 |
-| 8 | `rust: check wyd-ops-signer` | idem, no crate | 0 |
-| 9 | `rust: check wyd-launcher` | idem, no crate | 0 |
-| 10 | `rust: fmt (check)` | `make fmt` | 0 |
-| 11 | `rust: clippy` | `make lint` | 0 |
-| 12 | `rust: testes (todos)` | `make test` | 0 |
-| 13 | `rust: testes wyd-db (lib)` | `cargo test --manifest-path crates/wyd-db/Cargo.toml --lib` | 0 — 63 testes |
-| 14 | `rust: testes wyd-db PostgreSQL (sistema_pg)` | `bash wyd-ops/scripts/ci/db-schema-local.sh` (recria o banco vazio, aplica papéis `nologin` e a série, e roda `sistema_pg`) | 0 — 13 passed, 40.91 s; repetido após `make db-up`: 41.99 s |
-| 15 | `rust: testes wyd-launcher` | `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked` | 0 |
-| 16 | `rust: testes wyd-ops-signer` | idem, no crate | 0 |
-| 17 | `db: subir` | `make db-up` | 0 — container `wyd-db-1` healthy |
-| 18 | `db: derrubar` | `make db-down` | 0 — container e rede removidos |
+| 2 | `layout: verificar árvore` | `make layout` | 0 — `layout PASS`, 917 arquivos, 0 desvios |
+| 3 | `gate: completo (Docker)` | `make gate` | 0 — `gate: PASS (full, 29.6s)`; `links`: 495 páginas, 493 fontes |
+| 4 | `gate: testes do gate (Python)` | `make test-gate` | 0 — `Ran 23 tests … OK (skipped=1)` |
+| 5 | `rust: check do crate (escolher)` | 10 opções × `cargo check --all-targets` | 0 em todas |
+| 6 | `rust: testes do crate (escolher)` | 10 opções × `cargo test --locked --lib --bins` | 0 em todas |
+| 7 | `rust: check dos 3 crates` | `dependsOn` 8–10, em sequência | 0 |
+| 8 | `rust: check wyd-db` | `cargo check --manifest-path crates/wyd-db/Cargo.toml --all-targets` | 0 |
+| 9 | `rust: check wyd-ops-signer` | idem, no crate | 0 |
+| 10 | `rust: check wyd-launcher` | idem, no crate | 0 |
+| 11 | `rust: fmt (check)` | `make fmt` | 0 |
+| 12 | `rust: clippy` | `make lint` | 0 |
+| 13 | `rust: testes (todos)` | `make test` | 0 |
+| 14 | `rust: testes wyd-db (lib)` | `cargo test --manifest-path crates/wyd-db/Cargo.toml --lib` | 0 — 63 testes |
+| 15 | `rust: testes wyd-db PostgreSQL (sistema_pg)` | `bash wyd-ops/scripts/ci/db-schema-local.sh` (recria o banco vazio, aplica papéis `nologin` e a série, e roda `sistema_pg`) | 0 — 13 passed, 40.91 s; repetido após `make db-up`: 41.99 s |
+| 16 | `rust: testes wyd-launcher` | `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked` | 0 |
+| 17 | `rust: testes wyd-ops-signer` | idem, no crate | 0 |
+| 18 | `db: subir` | `make db-up` | 0 — container `wyd-db-1` healthy |
+| 19 | `db: derrubar` | `make db-down` | 0 — container e rede removidos |
 
-A task 5 estava quebrada para o `wyd-db`: `cargo test --locked` inclui os três alvos PostgreSQL e, sem banco, termina em exit 101 com `thread 'ciclo_up_down_up_em_pg17' panicked at tests/comum/mod.rs:84`. O comando passou a `--lib --bins`; os alvos PostgreSQL ficam na task 14 e nas configs de launch, e as integrações do launcher na task 15.
+A task 6 estava quebrada para o `wyd-db`: `cargo test --locked` inclui os três alvos PostgreSQL e, sem banco, termina em exit 101 com `thread 'ciclo_up_down_up_em_pg17' panicked at tests/comum/mod.rs:84`. O comando passou a `--lib --bins`; os alvos PostgreSQL ficam na task 15 e nas configs de launch, e as integrações do launcher na task 16.
 
-A task 14 também não dependia mais de preparo manual: `wyd-ops/scripts/ci/db-schema-local.sh` recria o container (`docker compose --profile db rm -sf db` e `up -d --wait db` — o `tmpfs` garante banco vazio), aplica `db-prepare.sh nologin` e roda `apply-series.sh` dentro do container (o host não tem `psql`), depois executa `sistema_pg` com `WYD_DB_TEST_CONTAINER=wyd-db-1`. O script exporta `MSYS_NO_PATHCONV=1`, porque o Git Bash convertia `/tmp/...` antes de chamar o `docker cp`.
+A task 15 também não dependia mais de preparo manual: `wyd-ops/scripts/ci/db-schema-local.sh` recria o container (`docker compose --profile db rm -sf db` e `up -d --wait db` — o `tmpfs` garante banco vazio), aplica `db-prepare.sh nologin` e roda `apply-series.sh` dentro do container (o host não tem `psql`), depois executa `sistema_pg` com `WYD_DB_TEST_CONTAINER=wyd-db-1`. O script exporta `MSYS_NO_PATHCONV=1`, porque o Git Bash convertia `/tmp/...` antes de chamar o `docker cp`.
 
 ### 5.2 Descoberta de testes
 
@@ -309,4 +313,167 @@ Não há correção de configuração que mantenha os 10 projetos e os dois lado
 
 O depurador é o binário do CodeLLDB, não um `lldb` no `PATH`; o caminho está no item 2. Em outra máquina sem a extensão, a config aponta para o mesmo adaptador e o comando equivalente exige o `lldb` do pacote. A UI continua sendo o caminho normal (`F5` na config genérica); esta página registra o caminho sem UI para agentes e CI-like. Nos alvos PostgreSQL, `make db-up` sobe o banco **vazio**: `sistema_pg` e `runner_pg` precisam de papéis e série (§2.3); `reversibilidade_pg` precisa de papéis `nologin` e banco vazio (§2.5), porque ele mesmo aplica e reverte a série.
 
-O Test Explorer nativo do rust-analyzer mostra os 10 crates, mas com os 10 `linkedProjects` não materializa os 6 alvos de integração do launcher (30 funções); a causa medida e as reproduções estão em §5.2. Esses testes continuam cobertos pela task 15 (`cargo test` do launcher) e não foram escondidos por uma troca de configuração que perderia os 3 testes do bin do signer.
+O Test Explorer nativo do rust-analyzer mostra os 10 crates, mas com os 10 `linkedProjects` não materializa os 6 alvos de integração do launcher (30 funções); a causa medida e as reproduções estão em §5.2. Esses testes continuam cobertos pela task 16 (`cargo test` do launcher) e não foram escondidos por uma troca de configuração que perderia os 3 testes do bin do signer.
+
+## 7. Revalidação do workspace com target limpo (2026-11-26T17:25-03:00)
+
+Esta rodada reexecutou as configurações versionadas em `.vscode/` sem reutilizar cache de build. O objetivo foi provar três coisas por execução: os quatro JSONC são válidos e apontam para caminhos existentes; os testes dos 10 crates são enumerados e executados a partir de um `CARGO_TARGET_DIR` novo e vazio; e o binário e o harness de teste iniciam sob o `lldb` do CodeLLDB em modo batch. A UI do VS Code não foi usada; os mesmos programas, argumentos, `cwd` e ambiente das configs foram executados no shell.
+
+### 7.1 Arquivos e ferramentas
+
+| Item | Medição |
+|---|---|
+| `.vscode/settings.json` | JSONC válido; 10 `linkedProjects`; `rust-analyzer.testExplorer=true`; `check.command=clippy` com `allTargets` |
+| `.vscode/tasks.json` | JSONC válido; 19 tasks; `input:crate` com os 10 crates |
+| `.vscode/launch.json` | JSONC válido; 8 configs; os 7 `cwd` fixos existem e a genérica usa `crates/${input:crate}` |
+| `.vscode/extensions.json` | JSONC válido; 9 recomendações (rust-analyzer, CodeLLDB e apoio) |
+| Toolchain | `cargo 1.100.0 (3acc79c0c 2026-11-05)`; `rustc 1.100.0 (0ef1bc386 2026-11-09)` |
+| rust-analyzer | `0.3.3130-standalone (37721d1413 2026-11-22)`, binário da extensão `rust-lang.rust-analyzer-0.3.3130-win32-x64` |
+| `lldb` | CodeLLDB `1.12.3`, `~/.vscode/extensions/vadimcn.vscode-lldb-1.12.3/lldb/bin/lldb.exe` |
+
+A validação dos JSONC foi feita com um parser que remove comentários `//` sem tocar em strings (Python 3.15.2). Nenhum arquivo novo nasceu fora de `.vscode/`; o harness LSP temporário ficou em `.tmp/` (ignorado pelo layout) e foi removido depois da medição.
+
+### 7.2 Enumeração e execução dos testes — target limpo
+
+```bash
+CLEAN=$(mktemp -d)
+for c in wyd-db wyd-ops-signer wyd-launcher wyd-protocol wyd-net \
+         wyd-core wyd-sim wyd-server wyd-admin wyd-bots; do
+  CARGO_TARGET_DIR="$CLEAN" cargo test --manifest-path "crates/$c/Cargo.toml" \
+    --locked --lib --bins -- --list
+  CARGO_TARGET_DIR="$CLEAN" cargo test --manifest-path "crates/$c/Cargo.toml" \
+    --locked --lib --bins
+done
+```
+
+| Crate | Funções listadas | Execução |
+|---|---:|---|
+| `wyd-db` | 63 | 63 passed; exit 0 |
+| `wyd-ops-signer` | 7 | 4 (lib) + 3 (bin) passed; exit 0 |
+| `wyd-launcher` | 27 | 27 passed; exit 0 |
+| `wyd-protocol` | 0 | 0 passed; exit 0 |
+| `wyd-net` | 0 | 0 passed; exit 0 |
+| `wyd-core` | 0 | 0 passed; exit 0 |
+| `wyd-sim` | 0 | 0 passed; exit 0 |
+| `wyd-server` | 5 | 5 passed; exit 0 |
+| `wyd-admin` | 4 | 4 passed; exit 0 |
+| `wyd-bots` | 0 | 0 passed; exit 0 |
+| **Total** | **106** | **106 passed em 10/10 crates** |
+
+A suíte completa do launcher, que a task genérica não cobre, foi executada no mesmo target limpo: `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked` → **57 passed** (27 da lib + 30 dos 6 alvos de integração), exit 0. Os alvos PostgreSQL do `wyd-db` não entram em `--lib --bins`; eles foram exercitados pela task 15 (§7.5).
+
+### 7.3 Descoberta pelo rust-analyzer
+
+A descoberta foi exercitada no servidor LSP real da extensão, com `capabilities.experimental.testExplorer=true` e `experimental.serverStatusNotification=true`, e `initializationOptions` iguais aos de `.vscode/settings.json` (10 `linkedProjects`, `cargo.allTargets`, `files.exclude`). O harness esperou `experimental/serverStatus` com `health=ok` e `quiescent=true` e chamou `experimental/discoverTest` sem `testId`; os nós foram resolvidos por `testId` e contados por `id` único.
+
+```text
+initialize OK, server= 0.3.3130-standalone (37721d1413 2026-11-22)
+serverStatus {'health': 'ok', 'quiescent': True, 'message': None}
+raw_roots= 18 dedup_roots= 14
+  wyd_db             tests=63   modules=24  kind=package
+  reversibilidade_pg tests=3    modules=0   kind=test
+  runner_pg          tests=5    modules=0   kind=test
+  sistema_pg         tests=13   modules=0   kind=test
+  wyd_launcher       tests=27   modules=8   kind=package
+  wyd_ops_signer     tests=4    modules=1   kind=package
+  wyd_ops_sign       tests=3    modules=1   kind=package
+  wyd_server         tests=5    modules=2   kind=package
+  wyd_admin          tests=4    modules=2   kind=package
+  wyd_protocol, wyd_net, wyd_core, wyd_sim, wyd_bots: 0
+TOTAL_TESTS= 127
+```
+
+Os 10 crates têm raiz; o total visível é **127** funções. A diferença para as 157 da suíte completa é conhecida e medida em §5.2: os 6 alvos de integração do launcher (30 funções) não entram no grafo enquanto `wyd-ops-signer` e `wyd-launcher` estiverem os dois em `linkedProjects`. A configuração não foi trocada para esconder isso; a suíte completa continua na task 16.
+
+### 7.4 Depurador em modo batch
+
+#### 7.4.1 Binário `wyd-ops-sign` (config `Debug: wyd-ops-sign (bin)`)
+
+```bash
+rm -rf crates/wyd-ops-signer/target
+cd crates/wyd-ops-signer && cargo build --bin wyd-ops-sign
+"$LLDB" --batch -o "breakpoint set --file main.rs --line 17" -o run \
+  -o "bt 3" -o "breakpoint disable 1" -o continue \
+  -- target/debug/wyd-ops-sign.exe
+```
+
+```text
+Compiling wyd-ops-signer v0.0.0 (...)
+Finished `dev` profile [unoptimized + debuginfo] target(s) in 41.21s
+Breakpoint 1: where = wyd-ops-sign.exe`wyd_ops_sign::main + 16 at main.rs:19
+Process 692 stopped
+* thread #1, name = 'main', stop reason = breakpoint 1.1
+  * frame #0: ... wyd_ops_sign::main at main.rs:19
+uso: wyd-ops-sign sign --manifest <manifest.json> --out <manifest.json.sig> \
+[--key-file <arquivo>]
+Process 692 exited with status = 0 (0x00000000)
+```
+
+O `lldb` saiu com 0. A config não codifica linha; o breakpoint foi pedido em `main.rs:17` e o mapa resolveu para `main.rs:19`, como já registrado em §2.6.
+
+#### 7.4.2 Harness de teste `wyd-server` (config `Debug: teste da lib (escolher crate)`)
+
+```bash
+cd crates/wyd-server && rm -rf target
+cargo test --lib --no-run --message-format=json   # executable = .../wyd_server-<hash>.exe
+"$LLDB" --batch -o "breakpoint set --file health/mod.rs --line 54" -o run \
+  -o "bt 3" -o "frame variable" -o "breakpoint disable 1" -o continue \
+  -- "$EXE" --test-threads=1 --nocapture
+```
+
+```text
+Finished `test` profile [unoptimized + debuginfo] target(s) in 1.37s
+Breakpoint 1: where = wyd_server-...exe`wyd_server::health::avaliar + 184 at mod.rs:55
+* thread #5, name = 'health::testes::health_responde_200', stop reason = breakpoint 1.1
+  * frame #0: ... wyd_server::health::avaliar(pronto=false, requisicao=(...)) at mod.rs:55
+    frame #1: ... wyd_server::health::testes::health_responde_200 at mod.rs:121
+(bool) pronto = false
+(ref$<str$>) caminho = (data_ptr = "/health HTTP/1.1\xc8", length = 7)
+...
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+Process 15576 exited with status = 0 (0x00000000)
+```
+
+O `lldb` saiu com 0. O programa, os argumentos (`--test-threads=1 --nocapture`) e o `cwd` são os da config genérica; o caminho do harness veio do `cargo test --lib --no-run`, exatamente como o CodeLLDB resolve na UI.
+
+### 7.5 Tasks executadas nesta rodada
+
+| Task | Comando | Resultado |
+|---|---|---|
+| `rust: fmt (check)` | `make fmt` | exit 0 |
+| `rust: clippy` | `make lint` | exit 0; 0 linha `warning:`/`error:` |
+| `rust: testes (todos)` | `make test` | exit 0; 136 passed, 0 failed (28 linhas `test result`) |
+| `gate: testes do gate (Python)` | `make test-gate` | exit 0; `Ran 28 tests … OK (skipped=1)` |
+| `rust: check do crate (escolher)` | 10 × `cargo check --all-targets` | 10/10 exit 0 |
+| `rust: testes do crate (escolher)` | 10 × `cargo test --locked --lib --bins` | 10/10 exit 0 (106 testes; §7.2) |
+| `db: subir` | `make db-up` | exit 0; `wyd-db-1` healthy |
+| `rust: testes wyd-db PostgreSQL (sistema_pg)` | `bash wyd-ops/scripts/ci/db-schema-local.sh` | exit 0; 13 passed em 33,75 s |
+| `db: derrubar` | `make db-down` | exit 0; container e rede removidos |
+
+As tasks de gate (§7.6) fecham a rodada. As configs de launch PostgreSQL e o launcher não foram reexercitados nesta rodada; a medição deles continua em §2.3–§2.5 e §2.6.
+
+### 7.6 Gates e inventário
+
+| Comando | Resultado |
+|---|---|
+| `make layout` | PASS |
+| `make gate-fast` | PASS |
+| `make gate` | PASS |
+
+Nenhuma linha do `planejamento-1.0.0/wyd-ops/inventario-depreciacao.tsv` mudou por esta rodada: a configuração de IDE não altera deprecated, dependência nem captura. `CAP-01` e `CAP-02` continuam bloqueadas pelos insumos de `wyd-client/registro-do-cliente.md` §7.1 — conta de teste em peer que responda ao CPSock ou aprovação escrita para sessão com credencial sintética, mais o nome do operador. Não há lacuna de IDE em `wyd-ops/lacunas.md` para fechar.
+
+### 7.7 Limites desta revalidação
+
+- A UI do VS Code não foi usada. O que foi provado é que os mesmos programas, argumentos, `cwd` e ambiente das configs executam; a renderização do Test Explorer e o painel de debug não foram inspecionados.
+- O `lldb` do CodeLLDB continua sem plugin de Rust: a inspeção de variáveis é limitada e o aviso aparece na saída. A prova é o breakpoint na thread correta e o teste/binário concluído.
+- A descoberta do rust-analyzer cobre 127 funções, não as 157 da suíte completa; a causa e as reproduções estão em §5.2.
+- O target limpo foi descartado ao fim da medição; os caminhos em `.vscode/` continuam apontando para os `target/` padrão de cada crate, que o Cargo recria.
+
+### 7.8 Ruído de testes herdados (2026-11-26)
+
+A aba Testing mostrava testes de `deprecated/wyd-portal` por duas fontes instaladas, nenhuma delas o rust-analyzer:
+
+- `vitest.explorer` varria o workspace e encontrava `deprecated/wyd-portal/src/**/*.test.ts` e `deprecated/wyd-portal/tests/**/*.spec.ts`; o `wyd-portal` real ainda não tem teste nem config de Vitest.
+- `swellaby.vscode-rust-test-adapter` aceita um único `rustTestExplorer.rootCargoManifestFilePath` (não há workspace Cargo na raiz) e, sem ele, varria os manifestos de `deprecated/`.
+
+Correção versionada: `vitest.configSearchPatternExclude` ganhou `**/deprecated/**`, `deprecated` entrou em `search.exclude`, e `swellaby.vscode-rust-test-adapter`, `hbenl.vscode-test-explorer` e `1yib.rust-bundle` entraram em `unwantedRecommendations`. O controller que enumera os 10 crates é o `rust-analyzer` com a aba Testing nativa. Extensão já instalada não é removida por configuração: o usuário precisa desabilitá-la no workspace (ou desinstalá-la) para o ruído sumir de vez.

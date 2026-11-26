@@ -12,7 +12,7 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (db/signer em Ubuntu; launcher em Windows), `unit` (db e signer em Ubuntu/Windows; launcher só em Windows), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
+| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (db/signer em Ubuntu; launcher em Windows), `unit` (db e signer em Ubuntu/Windows; launcher só em Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate`), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
 | `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar falha` | `gate-db` |
 | `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar falha` | `gate-docs` |
 | `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
@@ -37,7 +37,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 ## 2. O que cada gate prova
 
-- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates; `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
+- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates e o contrato público de `migrate` (`wyd-db --test contrato_api_migrate`); `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
 - **`gate-docs`**: `wyd-docs/gate.sh` — roda primeiro os testes unitários dos verificadores e depois o pacote `python -m gate` (skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos). A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
 - **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`; `workflow-lint` roda actionlint 1.7.12 em imagem por digest.
@@ -51,7 +51,7 @@ make gate-fast   # checks nativos (skills, lacunas, contagens, censos), sem Dock
 make test-gate   # atalho isolado para os testes de fixture dos verificadores
 make fmt         # cargo fmt --check nos três crates
 make lint        # cargo clippy -D warnings nos três crates
-make test        # testes unitários (wyd-db --lib; signer --locked; launcher só no Windows)
+make test        # testes unitários (wyd-db --lib + contrato_api_migrate; signer --locked; launcher só no Windows)
 
 make docs-up     # puxa a imagem publicada e sobe com --no-build em 127.0.0.1:8000
 make docs        # constrói da árvore de trabalho (dev, tag :dev)

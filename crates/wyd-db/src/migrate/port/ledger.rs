@@ -13,8 +13,16 @@ pub trait Ledger: Send + Sync {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum LedgerError {
+    /// A tabela do ledger existe com colunas ou tipos divergentes.
     #[error("ledger com forma divergente: {detail}")]
-    Shape { detail: String },
+    Shape {
+        /// Detalhe da divergência encontrada.
+        detail: String,
+    },
+    /// A consulta ao ledger falhou.
     #[error("falha ao consultar o ledger: {detail}")]
-    Query { detail: String },
+    Query {
+        /// Detalhe do erro do driver.
+        detail: String,
+    },
 }

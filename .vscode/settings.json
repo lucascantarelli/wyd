@@ -62,6 +62,17 @@
     "**/target": true,
     "**/site": true,
     "**/.venv": true,
-    "**/__pycache__": true
-  }
+    "**/__pycache__": true,
+    "deprecated": true
+  },
+
+  // O Vitest Explorer varria `deprecated/wyd-portal` (testes herdados, em
+  // `.test.ts`/`.spec.ts`) e enchia a aba Testing com eles. O portal real
+  // ainda não tem teste; a busca de config do Vitest exclui `deprecated/`.
+  "vitest.configSearchPatternExclude": "{**/node_modules/**,**/vendor/**,**/.*/**,**/*.d.ts,**/deprecated/**}",
+
+  // Usa a aba Testing nativa do VS Code, alimentada pelo rust-analyzer. O
+  // adapter swellaby (Rust Test Explorer) aceita um único manifesto raiz e
+  // varre `deprecated/`; a recomendação dele está em `extensions.json`.
+  "testExplorer.useNativeTesting": true
 }
