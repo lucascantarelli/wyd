@@ -1943,7 +1943,12 @@ comando naquele turno.
 
 **Atualização de 2026-11-25:** a leitura somente de `lucascantarelli/wyd` encontrou **40 issues abertas**
 (`WYDDB-001`–`040`) e milestones existentes; o “0” acima descreve a medição histórica, não o estado atual.
-Nada foi criado ou alterado no GitHub por esta rodada.
+
+**Atualização de 2026-11-26:** o estado local foi publicado no branch
+`docs/fechar-planejamento-1.0.0` com PR [#128](https://github.com/lucascantarelli/wyd/pull/128) (sem
+merge), e `OPS-05` criou as **61 fatias** (#129–#189) e **10 lacunas** (#190–#199) com labels `area/*`,
+`estado/*` e `fase/*`. As 40 linhas `WYDDB` continuam sem vínculo de issue — as fatias novas são dos
+outros sistemas e não preenchem a coluna `Issue` desta matriz.
 
 #### 6.6.22.2 Tabela de bloqueio
 

@@ -153,7 +153,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 
 **Placar do ledger, medido:** lacunas medidas: 118 = 109 fechadas + 9 bloqueadas — a conta é a das tabelas de `lacunas.md`, deduplicada por id e conferida por `wyd-docs/verificar-lacunas.py` no gate; `LCLI-02` fechou em 2026-11-25 com lista medida, manifesto e verificador, e as 9 bloqueadas são `LPRT-03`, `LPRT-06`, `LCLI-03`, `LCLI-05`, `LNET-01`, `LBOT-03`, `A11`, `A20` e `M21` (registro em `wyd-db/lacunas.md` e `wyd-db/pendencias-de-fechamento.md`).
 
-**O que continua aberto:** `LPRT-03`/`LPRT-06` **bloqueadas por artefato inexistente** (sem `ECAP`/`PEER-A1`), `LNET-01`/`LBOT-03` autorizados com execução pendente, `LCLI-05` aguardando o titular, `LCLI-03` aguardando o operador e as capturas, `A11` na mesma janela de captura e `A20`/`M21` externas — o mapa está em `wyd-ops/auditoria-de-organizacao.md` §8; `LCLI-02` fechou em 2026-11-25 com lista, manifesto e verificador. As decisões de dono têm resposta: `OPS-03.1`–`OPS-03.5` aprovadas na forma, `D-06` = A, `Q-SERIE-1` = B implementada, `OPS-05` autorizada e `OPS-04` adiada; a única escolha executável ainda em aberto é `Q-SEP-1` (A′/B′/C′). A lista consolidada é `wyd-ops/docs/lacunas.md` §4.
+**O que continua aberto:** `LPRT-03`/`LPRT-06` **bloqueadas por artefato inexistente** (sem `ECAP`/`PEER-A1`), `LNET-01`/`LBOT-03` autorizados com execução pendente, `LCLI-05` aguardando o titular, `LCLI-03` aguardando o operador e as capturas, `A11` na mesma janela de captura e `A20`/`M21` externas — o mapa está em `wyd-ops/auditoria-de-organizacao.md` §8; `LCLI-02` fechou em 2026-11-25 com lista, manifesto e verificador. As decisões de dono têm resposta: `OPS-03.1`–`OPS-03.5` aprovadas na forma, `D-06` = A, `Q-SERIE-1` = B implementada, `OPS-05` **executada em 2026-11-26** e `OPS-04` adiada. `Q-SEP-1` = A′ foi decidida e aplicada, então não resta escolha executável em aberto. A lista consolidada é `wyd-ops/docs/lacunas.md` §4.
 
 ## Issues padronizadas por página (2026-11-25)
 
@@ -161,7 +161,9 @@ Medido no repositório: **101 páginas de issue** — 40 `WYDDB-nnn` e 61 por fa
 cada uma com cabeçalho de 5 linhas, `**Estado:**`, dependências, DoD observável, fora de escopo e bloco
 de skills (`skill_principal` + `skills_complementares`) na lista fechada de nove skills. O inventário por
 sistema e a regra de numeração estão em `wyd-ops/docs/github-mapping.md` §7; os índices locais são o
-`docs/roadmap/index.md` de cada sistema (no `wyd-portal`, o `roadmap.md`). **40** issues existem no GitHub; **61** aguardam `OPS-05`.
+`docs/roadmap/index.md` de cada sistema (no `wyd-portal`, o `roadmap.md`). **111** issues existem no GitHub:
+as **40** `WYDDB-nnn`, as **61** fatias (#129–#189) e **10** de lacuna (#190–#199); nenhuma aguarda
+`OPS-05`.
 
 ## 9. Por que o planejamento ainda não está fechado (2026-11-25)
 
@@ -173,7 +175,7 @@ escrevendo outra página**.
 |---|---|---|---|
 | `OPS-03.4`, `OPS-03.5` | escrever `ADR-OPS-0003`/`0004` antes de implementar; O1–O3 já aprovados na forma | arquitetura + `wyd-ops` | `wyd-ops/docs/lacunas.md` §4 |
 | `OPS-04` | aplicar `Q-OPS-2`: provedor, VPS, backup e RPO/RTO — adiada para depois do primeiro deploy interno | produto + `wyd-ops` | `wyd-ops/docs/arquitetura/adr/adr-ops-0002-hospedagem-producao.md` |
-| `OPS-05` | executar o board e as 61 páginas por fatia (autorizado, não executado) e decidir o namespace de label | produto | `wyd-ops/docs/github-mapping.md` §7 |
+| `OPS-05` | issues e labels executados em 2026-11-26 (#129–#199, `area/*`); o board do projeto segue não montado | produto | `wyd-ops/docs/github-mapping.md` §7 |
 | `D-06` | já decidida em A (frente `wyd-db`); falta executar o ato 4 | produto | `wyd-ops/docs/prioridade-do-projeto.md` §0.1 |
 | `CAP-38`/`CAP-39` | p95 da leitura de personagem e boot medidos; falta código | `wyd-db` | `wyd-db/tests/specs/capacidades.md` §7 |
 | `LPRT-03`, `LPRT-06`, `A11` | captura do cliente 7662 sobre `ECAP` | `wyd-server` + `wyd-client` | `wyd-protocol/lacunas.md` §1 |
@@ -183,11 +185,12 @@ escrevendo outra página**.
 | catálogo funcional | medir total e cobertura | `wyd-core` + `wyd-sim` + `wyd-db` | `wyd-1.0.0.md` §1.5 |
 | placar do `wyd-ops` | o ledger vive em `wyd-ops/docs/lacunas.md` e `wyd-docs/verificar-lacunas.py` lê `<sistema>/lacunas.md`; as decisões OPS ficam fora do placar impresso pelo gate | `wyd-ops` | `wyd-docs/verificar-lacunas.py` |
 
-**Atualização de 2026-11-25:** `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `Q-ALVO-1`–`03`, `OPS-03.1`–`OPS-03.3` e
+**Atualização de 2026-11-26:** `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `Q-ALVO-1`–`03`, `OPS-03.1`–`OPS-03.3` e
 `OPS-05` têm resposta do dono registrada (§11); `Q-SERIE-1` foi implementada e provada como ciclo SQL,
-`Q-SEP-1` = A′ renomeou os 28 arquivos para `_` e **`CAP-37` foi fechada por `runner_pg` (5/5 em PG17)**.
-Das linhas acima, o que resta é execução (`OPS-05`, `LNET-01`/`LBOT-03`), `CAP-38`/`CAP-39`, ADR
-(`OPS-03.4`/`OPS-03.5`), terceiro (`LCLI-05`) ou adiamento (`OPS-04`).
+`Q-SEP-1` = A′ renomeou os 28 arquivos para `_`, **`CAP-37` foi fechada por `runner_pg` (5/5 em PG17)** e
+`OPS-05` publicou labels e as 71 issues novas. Das linhas acima, o que resta é execução
+(`LNET-01`/`LBOT-03`, board), `CAP-38`/`CAP-39`, ADR (`OPS-03.4`/`OPS-03.5`), terceiro (`LCLI-05`) ou
+adiamento (`OPS-04`).
 
 ## 10. Correções desta revisão (2026-11-25)
 
@@ -208,9 +211,23 @@ Das linhas acima, o que resta é execução (`OPS-05`, `LNET-01`/`LBOT-03`), `CA
 | `Q-ALVO-1`–`03` | A1 (porta em `127.0.0.1`), B1 (fixture contígua) e papel de teste; `runner_pg` verde 5/5 | `wyd-db/tests/alvos/runner-pg.md` |
 | `OPS-03.1`–`OPS-03.3` | aprovados na forma | `wyd-ops/docs/lacunas.md` §4 e §5 |
 | `OPS-03.4`, `OPS-03.5` | aprovados na forma, com ADR antes de implementar | `wyd-ops/docs/lacunas.md` §4 |
-| `OPS-05` | criar board e as fatias restantes — autorizado, não executado | `wyd-ops/docs/lacunas.md` §4 |
+| `OPS-05` | fatias, lacunas e labels publicados em 2026-11-26 (#129–#199); board pendente | `wyd-ops/docs/github-mapping.md` §7 |
 | `OPS-04` | adiada para depois do primeiro deploy interno | `wyd-ops/docs/lacunas.md` §4 |
 
-Nesta rodada, o ciclo SQL rodou em PG17 e passou; nenhum board, issue, commit, push ou deploy foi criado.
-`OPS-05` ainda depende de decisão de namespace de label antes de criar as issues: o repositório usa
-`area/*`, enquanto `github-mapping.md` prescreve `sistema/*`.
+## 12. Publicação no GitHub (2026-11-26)
+
+O trabalho local foi publicado sem reescrever histórico: branch `docs/fechar-planejamento-1.0.0`, commits
+`387d9a3` (launcher), `aadb56d` (wyd-db), `33ec823` (documentação) e o commit desta seção, com PR
+[#128](https://github.com/lucascantarelli/wyd/pull/128) contra `develop` — **sem merge**. O namespace de
+label ficou em `area/*` (decisão de 2026-11-25), e `OPS-05` criou:
+
+| Artefato | Resultado |
+|---|---|
+| Labels novas | `estado/proposta`, `estado/aceita`, `fase/1`–`fase/6`, além das `area/*` e `estado/bloqueada` existentes |
+| 61 fatias | [#129](https://github.com/lucascantarelli/wyd/issues/129)–[#189](https://github.com/lucascantarelli/wyd/issues/189), uma por página de `docs/roadmap/` |
+| 10 lacunas | [#190](https://github.com/lucascantarelli/wyd/issues/190)–[#199](https://github.com/lucascantarelli/wyd/issues/199): `CAP-38`, `CAP-39`, os seis seeds `0016`/`0017`/`0018`/`0020`/`0023`/`0027`, `OPS-04` e `LCLI-05` |
+| Board do Project | não montado nesta rodada |
+
+Cada issue nova tem documento de origem com link, critérios de aceite observáveis e a seção
+"Skills a carregar" com `skill_principal` e complementares. A criação foi idempotente: o script consulta os
+títulos existentes antes de criar e a reexecução não duplica issue.

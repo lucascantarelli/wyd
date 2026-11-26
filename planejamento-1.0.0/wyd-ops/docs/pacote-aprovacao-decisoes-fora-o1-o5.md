@@ -9,8 +9,8 @@
 **Estado:** proposto (2026-11-25). Instrumento de leitura e aprovação das decisões que o pacote O1–O5
 declara fora de escopo; **não decide, não aprova e não altera** `docs/lacunas.md` §4. Em 2026-11-25 o dono
 respondeu às decisões de §2–§5: `Q-SERIE-1` = B foi implementada e provada como ciclo SQL em PG17,
-`D-06` = A, `OPS-04` foi adiada, `OPS-05` foi autorizada e `Q-SEP-1` = A′ renomeou os 28 nomes para `_`
-(todos parseiam). Nenhuma mensagem foi enviada.
+`D-06` = A, `OPS-04` foi adiada, `OPS-05` foi executada em 2026-11-26 (labels e 71 issues, PR #128) e
+`Q-SEP-1` = A′ renomeou os 28 nomes para `_` (todos parseiam). Nenhuma mensagem foi enviada.
 
 ## 1. Como responder
 
@@ -24,7 +24,7 @@ Cada seção tem uma pergunta fechada e um conjunto de donos. **Sim** aprova a d
 | `OPS-05` | O produto autoriza criar o board e as novas issues a partir de `docs/github-mapping.md`? | ato de gestão no GitHub, não arquitetura | não |
 | `D-06` | O produto confirma a próxima frente depois de `D-05`? | prioridade entre sistemas | não |
 
-**Se ficar aberto:** sem `OPS-04` a produção continua inexistente e o backup e o RPO/RTO seguem indefinidos; sem `OPS-05` o repositório fica com as 40 issues atuais e sem board. **`D-06` = A foi decidida em 2026-11-25** (frente `wyd-db`) e não está mais aberta.
+**Se ficar aberto:** sem `OPS-04` a produção continua inexistente e o backup e o RPO/RTO seguem indefinidos; `OPS-05` **já foi executada em 2026-11-26** — 61 fatias e 10 lacunas criadas com `area/*`, restando apenas o board. **`D-06` = A foi decidida em 2026-11-25** (frente `wyd-db`) e não está mais aberta.
 
 ## 3. Arquitetura e `wyd-db` — `Q-SERIE-1` e `Q-SEP-1`
 
@@ -93,6 +93,8 @@ registro continua sendo `docs/lacunas.md` §4 e um "sim" dito na conversa só va
 > o repositório já tem 40 issues e milestones, a autorização existe e nada foi criado; falta decidir o
 > namespace de label (`area/*` existente × `sistema/*` do mapping). **D-06** está **decidida em A** desde
 > 2026-11-25 (frente `wyd-db`) e não pede nova resposta.
+>
+> **OPS-05 executada em 2026-11-26:** labels e 71 issues no repositório, com PR #128. Resta o board.
 >
 > Se ficar aberto: sem `OPS-04` a produção continua inexistente, sem backup nem RPO/RTO; sem `OPS-05`
 > o board não existe e as fatias restantes não têm onde morar. Pode responder por item — um "sim" parcial

@@ -186,7 +186,10 @@ tabela, DDL e dicionário, e nenhum `RF`/`RN` que o nomeie. `content.content_ver
 
 **As 40 linhas** têm onda de alocação e **nenhuma** tem número de issue — o roadmap tem 40 issues
 abertas (#82–#121, 2026-11-22) e nenhuma vinculada (`../planos/riscos.md` `R-5`). Enquanto a alocação
-não acontece, `Issue` é promessa de onda, não vínculo.
+não acontece, `Issue` é promessa de onda, não vínculo. Em 2026-11-26 `OPS-05` criou as **61 fatias** dos
+demais sistemas (#129–#189) e as **10 lacunas** (#190–#199), com `area/*`, `estado/*` e `fase/*`; elas
+não preenchem a coluna `Issue` desta matriz, cujo detalhe está em
+`planejamento-1.0.0/wyd-ops/docs/github-mapping.md` §7 (fora do site do `wyd-db`).
 
 **`onda 8` não é alocação de execução.** As **37** linhas com `onda 8` e as **3** `UC` com a onda dos `RF`
 cobertos repetem a nota de `requisitos-funcionais.md`: a issue **nasce** na Onda 8 de

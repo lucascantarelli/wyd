@@ -29,7 +29,7 @@ Status possíveis: **bloqueada** (sem o sim) ou **fechada** com evidência. Enqu
 | `OPS-03.4` | O4 — segredos | arquitetura + `wyd-ops` | Inventário, emissor, consumidor, armazenamento e rotação estão aprovados? | deploy de servidor e admin; auditoria de segurança | sim, após o sim | deploy bloqueado; segredo sem dono | [§7.1](pacote-aprovacao-o1-o5.md#71-arquitetura-o1-a-o5) e [§7.3](pacote-aprovacao-o1-o5.md#73-wyd-ops-o1-a-o5) |
 | `OPS-03.5` | O5 — deploy e rollback | produto + arquitetura + `wyd-ops` | Staging, gatilho, aprovação, artefato e rollback de servidor e launcher estão aprovados? | primeiro deploy real; release com critério de volta | sim, após o sim | sem staging nem rollback ensaiado | [§7.2](pacote-aprovacao-o1-o5.md#72-produto-o5) |
 | `OPS-04` | Hospedagem `Q-OPS-2` | produto + `wyd-ops` | Provedor, contrato, região, backup e RPO/RTO estão definidos? | produção provisionada; rotina de backup e restauração | não | produção inexistente | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
-| `OPS-05` | Board e novas issues | produto | Autoriza criar o board e as novas issues do `github-mapping.md`? | board montado e fatias restantes criadas | não | repositório com as 40 issues atuais e sem board | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
+| `OPS-05` | Board e novas issues | produto | Autoriza criar o board e as novas issues do `github-mapping.md`? | board montado e fatias restantes criadas | não | **executada em 2026-11-26** — 61 fatias (#129–#189) e 10 lacunas (#190–#199) com `area/*`; board pendente | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
 | `D-06` | Próxima frente | produto | Qual frente vem depois de `D-05`? | ordem de execução explícita | não | cada agente escolhe a própria ordem | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
 | `Q-SERIE-1` | Política de `down` | arquitetura + `wyd-db` | Qual política para os arquivos que só têm `up`? Opções e recomendação em `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9 | política de reversão da série de migrations | sim, se a opção dispensar `down` ou marcar baseline | **decidida em B** — 28 `down` escritos e ciclo SQL provado em PG17 | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
 | `Q-SEP-1` | Separador/slug de migration | arquitetura + `wyd-db` | Decidir A′/B′/C′ para 26 slugs com hífen recusados por `Slug`; detalhe em §9.1 | nomenclatura estável e série carregável | não | **decidida em A′ e aplicada em 2026-11-25** — 28 nomes com `_`; todos parseiam | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
@@ -38,7 +38,7 @@ Status possíveis: **bloqueada** (sem o sim) ou **fechada** com evidência. Enqu
 
 **Total: 12 decisões de dono; todas têm resposta registrada em 2026-11-25** — duas na primeira rodada e
 dez na segunda (§2.1) —, mais **3 escolhas técnicas** da série (`Q-ALVO-1`–`03`, §2.2). Nenhuma se fecha
-por documentação: resta execução (`OPS-05`, `LNET-01`/`LBOT-03`), `CAP-38`/`CAP-39`, ADR (`OPS-03.4`,
+por documentação: resta execução (`LNET-01`/`LBOT-03`, board), `CAP-38`/`CAP-39`, ADR (`OPS-03.4`,
 `OPS-03.5`), artefato de terceiro (`LCLI-05`) ou o adiamento declarado (`OPS-04`).
 
 ## 2.1 Respostas de 2026-11-25 (segunda rodada)
@@ -46,11 +46,11 @@ por documentação: resta execução (`OPS-05`, `LNET-01`/`LBOT-03`), `CAP-38`/`
 | Decisão | Resposta do dono | O que muda |
 |---|---|---|
 | `D-06` | **A** — finalizar o `wyd-db` | a ordem das frentes deixa de ser implícita; `D-05` vem depois |
-| `Q-SERIE-1` | **escrever os 28 `down` reais** | mantém `ADR-DB-0002`; os 28 `down` e o ciclo `up → down → up` passaram em PG17 por `psql`; `CAP-37` pelo `PgAdapter` continua aberto |
+| `Q-SERIE-1` | **escrever os 28 `down` reais** | mantém `ADR-DB-0002`; os 28 `down` e o ciclo `up → down → up` passaram em PG17 por `psql`; `CAP-37` foi fechada por `runner_pg` |
 | `Q-SEP-1` | **ler `-` e `_`, usar `_` nos arquivos novos** — depois substituída por **A′** | `Slug` recusava hífen em 26 slugs; A′ renomeou os 28 para `_` e todos parseiam (§9.1) |
 | `OPS-03.1`–`OPS-03.3` | **aprovados na forma** | `LBOT-03` ganha ambiente, `RF-OPS-004` ganha formato, a publicação ganha contrato e rollback exigível |
 | `OPS-03.4`, `OPS-03.5` | **aprovados na forma, com ADR antes de implementar** | segredos e deploy ficam a um ADR de distância; nada bloqueado por falta de “sim” |
-| `OPS-05` | **autorizado** | criar board e as 61 fatias; execução pendente e sujeita à decisão de namespace de label |
+| `OPS-05` | **executado em 2026-11-26** | 61 fatias (#129–#189) e 10 lacunas (#190–#199) criadas com labels `area/*`; board pendente |
 | `OPS-04` | **adiada** para depois do primeiro deploy interno | provedor, backup e RPO/RTO continuam indefinidos, sem número inventado |
 
 ## 2.2 Escolhas técnicas da prova do `PgAdapter` (2026-11-25)
