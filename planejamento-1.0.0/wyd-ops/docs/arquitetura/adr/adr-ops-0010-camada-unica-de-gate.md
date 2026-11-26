@@ -69,8 +69,8 @@ portáveis; a matriz antiga executava testes do launcher em Linux.
 ```bash
 make gate-fast                         # sem Docker/MkDocs, exit 0
 cd wyd-docs && python -m gate fast --json
-make gate                              # container, exit 0
-cd wyd-docs && python -m unittest discover -s tests -v
+make gate                              # container: testes + gate full, exit 0
+cd wyd-docs && python -m unittest discover -s tests -v  # atalho isolado
 MSYS_NO_PATHCONV=1 docker run --rm -v "$(pwd -W):/repo:ro" -w /repo rhysd/actionlint:latest .github/workflows/*.yml
 ```
 

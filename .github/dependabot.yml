@@ -13,6 +13,26 @@ updates:
       actions:
         patterns: ["*"]
 
+  - package-ecosystem: docker
+    directory: /wyd-ops
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      docker-imagens:
+        patterns: ["*"]
+
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      docker-compose:
+        patterns: ["*"]
+
   - package-ecosystem: cargo
     directory: /crates/wyd-db
     schedule:

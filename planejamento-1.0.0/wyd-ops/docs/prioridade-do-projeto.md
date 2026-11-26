@@ -1,12 +1,12 @@
 > Pergunta: "qual é o foco efetivo daqui por diante e, para cada decisão aberta de foco, gate de código, escopo das `migrations/`, critério de organização e dependências, qual opção resolve mais bloqueios, o que ela adia e o que só o dono pode decidir?"
 > Público: dono do produto, arquitetura, `wyd-ops` e quem coordena as frentes
 > Dono: arquitetura publica; **foco e escopo são decisão do dono do produto; gate e dependências são de `wyd-ops` + arquitetura**
-> Base: `planejamento-1.0.0/wyd-1.0.0.md` §1 e §6; `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.22–§6.6.24; `planejamento-1.0.0/wyd-db/tests/specs/capacidades.md`; `planejamento-1.0.0/wyd-db/docs/specs/rastreabilidade.md` §1.1–§3.4; `AGENTS.md` §8 e §9; `plano-ci-real.md`; `proposta-versoes-e-cobertura-funcional.md`
+> Base: `planejamento-1.0.0/wyd-1.0.0.md` §1 e §6; `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §6.6.22–§6.6.24; `planejamento-1.0.0/wyd-db/tests/specs/capacidades.md`; `planejamento-1.0.0/wyd-db/docs/specs/rastreabilidade.md` §1.1–§3.4; `AGENTS.md` §8 e §9; `docs/devops/index.md`; `proposta-versoes-e-cobertura-funcional.md`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24) — **quadro canônico de foco e decisões**; recomendação publicada; nenhuma frente iniciada e nenhuma página aceita por causa dela.
 
-**Esta é a página canônica.** As páginas que medem frentes citam este quadro e não publicam uma segunda recomendação. O `foco-e-sequencia.md` continua dono da medição interna do `wyd-db` e das perguntas de seed; o `briefing-de-decisoes-1.0.0.md` continua dono do dossiê das decisões de sistema. Nenhum dos dois substitui a ordem e as escolhas registradas aqui.
+**Esta é a página canônica.** As páginas que medem frentes citam este quadro e não publicam uma segunda recomendação. O `foco-e-sequencia.md` continua dono da medição interna do `wyd-db` e das perguntas de seed; o dossiê histórico foi absorvido pela pauta em `pauta-de-decisoes-pendentes.md` e pelos `lacunas.md` dos sistemas. Nenhum dos dois substitui a ordem e as escolhas registradas aqui.
 
 ## 0. A recomendação
 
@@ -46,8 +46,8 @@ deixa de ser possível na opção não escolhida. **D-01, D-03, D-04 e D-05 fora
 2026-11-24 (D-04 em 2026-11-25)**; a execução de D-01/D-03 está em §0.2 e a política de D-02, em §0.1
 e no plano de CI. **D-05 foi aprovada em A em 2026-11-25**; o dossiê está em
 `../dossie-d-05.md` e o plano de migração, em `../plano-migracao-d-05.md`; a auditoria de D-04 está
-em `../auditoria-de-organizacao.md`. **D-06 está ABERTA — aguardando decisão do usuário**
-(§0.1, D-06); D-05 permanece aprovada e não é reaberta. **Ato 2 e ato 3 concluídos em 2026-11-25**
+em `../auditoria-de-organizacao.md`. **D-06 = A foi decidida em 2026-11-25** (§0.1, D-06): a frente é
+finalizar o `wyd-db`; D-05 permanece aprovada e não é reaberta. **Ato 2 e ato 3 concluídos em 2026-11-25**
 (`migrations/serie-e-regras.md` em `aceito` e runner em lib/fakes — 63 testes verdes; ver
 `../../wyd-db/migrations/serie-e-regras.md` §8); a próxima fatia é o **ato 4** (`CAP-38`–`CAP-39`), com
 `CAP-37` já fechada por `runner_pg`.
@@ -175,7 +175,7 @@ projeto. **Se C:** “organizado” passa a significar “aberto” e os **10** 
 escondidos. **Se A:** a declaração é seletiva e verificável; nenhum sistema ganha o carimbo por simetria.
 
 **Resultado da auditoria (2026-11-25, segunda passada):** **13 de 13** sistemas passam no checklist de
-organização; `wyd-ops` mantém fronteira/contratos O1–O5 pendentes de aprovação. O que falta agora não é
+organização; os contratos O1–O5 do `wyd-ops` estão aprovados e O4/O5 formalizados. O que falta agora não é
 organização: é aceite editorial, captura, medição, implementação ou decisão humana. A lista por sistema
 está em `../auditoria-de-organizacao.md` §3 e as perguntas consolidadas em `lacunas.md` §4.
 
@@ -474,8 +474,8 @@ detalhada em §0.1. **`Q-SERIE-1` = B está implementada e provada como SQL** em
 recomendação e consequência está em §10.
 
 **Notas correspondentes:** `D-06` é detalhada em §0.1; `Q-SERIE-1` em
-`../../wyd-db/migrations/serie-e-regras.md` §9; `Q-SEP-1` na mesma nota, §9.1. As perguntas de sistema
-do `briefing-de-decisoes-1.0.0.md` continuam no dossiê de sistema e não são duplicadas aqui; esta tabela
+`../../wyd-db/migrations/serie-e-regras.md` §9; `Q-SEP-1` na mesma nota, §9.1. As perguntas de sistema estão na pauta em `pauta-de-decisoes-pendentes.md` e nos `lacunas.md` dos sistemas e
+não são duplicadas aqui; esta tabela
 cobre as decisões de foco, execução e contrato que o quadro precisa resolver.
 
 | Pergunta | Opções | Recomendação | Consequência de cada opção |
@@ -520,7 +520,7 @@ executada na mesma data — o dono revisou e assinou as 12 páginas, que estão 
 | **25** capacidades sem execução (14 de 39 cobertas) | os alvos restantes rodarem, ou `CAP-38`–`CAP-39` ganharem código | `tests/specs/capacidades.md` §7 e §2–§6 |
 | **142** atos de aceite | qualquer página de `docs/` virar `aceito` | `pendencias` §6.6.31 |
 | **28** páginas de `migrations/` `aceito` | uma página deixar de estar `aceito` | §5; `pendencias` §6.6.31 |
-| **D-02** = B (cobertura informativa; audit/deny bloqueantes) | uma checagem sair do `code.yml` ou a política mudar | `plano-ci-real.md` §1, §5 e §7; esta página §0.1 |
+| **D-02** = B (cobertura informativa; audit/deny bloqueantes) | uma checagem sair do `code.yml` ou a política mudar | `docs/devops/index.md` §5; `docs/planos/estrategia-de-testes.md` §6; esta página §0.1 |
 | **D-04** = A (organização definida) | a auditoria de 2026-11-25 for revista | `../auditoria-de-organizacao.md`; esta página §0.1 |
 | **D-05** = A (workspace Cargo) | o plano de migração for executado ou revisto | `../dossie-d-05.md`; `../plano-migracao-d-05.md`; esta página §0.1 e §10 |
 | **D-06** = A (frente depois de D-05) | a frente for revista | esta página §0.1 e §10 |
@@ -543,7 +543,7 @@ executada na mesma data — o dono revisou e assinou as 12 páginas, que estão 
 | origem dos “59” | **1** pendência declarada **não localizável** | `pendencias` §6.6.16 |
 
 **D-02 = B aprovada e passo 8a executado em 2026-11-24:** 85% bloqueante no gate do sistema, cobertura
-informativa no `code.yml` e `cargo audit`/`deny` bloqueantes; a alteração está em `plano-ci-real.md` §5
+informativa no `code.yml` e `cargo audit`/`deny` bloqueantes; a alteração está em `docs/devops/index.md` §5
 (dossiê §0.1).
 
 **D-04 = A aprovada em 2026-11-25 e auditada:** **2 de 13** sistemas organizados (`wyd-db` e

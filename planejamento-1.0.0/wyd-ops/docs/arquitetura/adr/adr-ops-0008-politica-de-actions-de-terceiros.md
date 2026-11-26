@@ -6,7 +6,7 @@
 > Base: `docs/planos/pipeline-ci-cd.md` §5; configuração do repositório no GitHub
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-26).
+**Estado:** aceito (2026-11-26). A configuração do repositório foi aplicada na mesma data: `sha_pinning_required=true`, `allowed_actions=selected` e allowlist com GitHub + `Swatinem/rust-cache`, `taiki-e/install-action`, `dtolnay/rust-toolchain` e `docker/*`.
 
 ## Contexto
 
@@ -36,7 +36,7 @@ O repositório já usava `taiki-e/install-action` e passou a usar `Swatinem/rust
 
 ## Como verificar
 
-`gh api repos/lucascantarelli/wyd/actions/permissions` mostra `sha_pinning_required: true`; todo `uses:` de terceiro tem SHA; Dependabot existe; o PR de atualização roda o gate.
+`gh api repos/lucascantarelli/wyd/actions/permissions` mostra `sha_pinning_required: true` e `allowed_actions: selected`; `gh api repos/lucascantarelli/wyd/actions/permissions/selected-actions` mostra a allowlist; todo `uses:` de terceiro tem SHA completo (inclusive o commit `d1527c8...` do `rust-cache`); Dependabot existe; o PR de atualização roda o gate.
 
 ## Referências
 

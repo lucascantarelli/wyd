@@ -76,7 +76,7 @@ ADR.
 Textos curtos derivados de §2–§5 e de `docs/lacunas.md` §4, para copiar e enviar ao dono indicado.
 Cada item é o desbloqueio citado em `docs/lacunas.md` §4, que aponta `§7.1`–`§7.4` e não repete a
 pergunta. A visão consolidada de todas as decisões pendentes do projeto é a
-[pauta de decisões](pauta-de-decisoes-pendentes.md); ela aponta de volta para cada item desta seção. **Nenhuma foi enviada**: não houve issue, e-mail, Slack ou qualquer outro canal. A repetição
+pauta de decisões em `pauta-de-decisoes-pendentes.md`; ela aponta de volta para cada item desta seção. **Nenhuma foi enviada**: não houve issue, e-mail, Slack ou qualquer outro canal. A repetição
 da pergunta e do impacto é intencional, porque a mensagem precisa se sustentar fora do repositório; o
 registro continua sendo `docs/lacunas.md` §4 e um "sim" dito na conversa só vale depois de registrado lá.
 

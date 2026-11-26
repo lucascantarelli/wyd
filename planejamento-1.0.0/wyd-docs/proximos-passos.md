@@ -11,8 +11,8 @@
 Esta é a **fonte única da fila** do site. O critério de saída da fase 4 é do
 [roadmap-fase-3-para-4.md](roadmap-fase-3-para-4.md) §2, a ordem de produção é de
 `wyd-docs-1.0.0.md` §9 e o estado de cada lacuna é de `lacunas.md` §1; nenhum dos três é
-recontado aqui. As decisões dos sistemas que o site publica estão ordenadas no
-`../briefing-de-decisoes-1.0.0.md` (2026-11-23); esta fila não as repete.
+recontado aqui. As decisões dos sistemas que o site publica estão na
+pauta em `../wyd-ops/docs/pauta-de-decisoes-pendentes.md`; esta fila não as repete.
 
 O total e o censo são de `wyd-docs-1.0.0.md` §9.1: **267 páginas** e **15 `aceito` · 245
 `proposto` · 4 sem linha de estado** (2026-11-22). Item concluído não entra nesta fila: o que fechou em

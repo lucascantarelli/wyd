@@ -1,7 +1,7 @@
 # Política do `cargo deny` — D-02 = B (2026-11-24).
 # Bloqueia advisory, licença fora da lista, fonte desconhecida e dependência com `*`.
 # Dono da decisão: `planejamento-1.0.0/wyd-ops/docs/prioridade-do-projeto.md` §0.1 (D-02).
-# Uso no CI: `.github/workflows/code.yml`, job `security`.
+# Uso no CI: `.github/workflows/security.yml`, job `analise`.
 
 [advisories]
 # Nenhum advisory ignorado: qualquer RUSTSEC ativo derruba o job.

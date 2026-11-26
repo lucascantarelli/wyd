@@ -33,13 +33,13 @@ Regras:
 1. **No máximo uma label `estado/*`.** O script remove as demais antes de adicionar a desejada.
 2. **Sem regressão automática.** `em-revisao` não volta para `em-andamento` por um evento repetido; reabertura e fechamento sem merge são exceções explícitas.
 3. **Labels são a fonte de verdade.** O Project é espelho; se `PROJECT_TOKEN` (PAT com escopo `project`) não existir, o script avisa e continua só com labels.
-4. **`pull_request_target` sem checkout do PR.** O job roda o script da branch padrão; não executa código do PR. Isso mantém o token de escrita em PR de fork sem o risco de rodar código não confiável.
+4. **`pull_request_target` sem checkout do PR.** O job roda o script da branch padrão; não executa código do PR. Isso mantém o token de escrita em PR de fork sem o risco de rodar código não confiável. Como o GitHub bloqueia esse evento por padrão em repositórios públicos a partir de 2/dez/2026, a política de execução do repositório tem uma exceção escopada **somente** para `.github/workflows/issue-status.yml`, permitindo `issues`, `pull_request_target` e `workflow_dispatch`; nenhum outro workflow ganha a exceção.
 5. **Issue fechada não perde a label.** O fechamento é o fato; a label preservada permite retomar o estado ao reabrir.
 
 ## Consequências
 
 - Positivas: label e board deixam de divergir; a sequência é testável em um arquivo; PR de fork não precisa de token manual.
-- Negativas/custos: o espelho do Project exige um PAT e um segredo; sem ele, o board continua manual. `pull_request_target` exige disciplina para nunca fazer checkout do head do PR.
+- Negativas/custos: o espelho do Project exige um PAT e um segredo; sem ele, o board continua manual. `pull_request_target` exige disciplina para nunca fazer checkout do head do PR e depende da exceção de política revisada quando o workflow mudar.
 - Contratos afetados: `github-mapping.md` passa a documentar a sequência; o label `estado/em-andamento` foi criado; a proteção de branch não exige este workflow (ele não é gate de código).
 
 ## Alternativas consideradas
@@ -53,7 +53,7 @@ Regras:
 
 ## Como verificar
 
-Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --check .github/scripts/sync-issue-status.mjs` valida a sintaxe; o workflow é `issue-status.yml`.
+Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --check .github/scripts/sync-issue-status.mjs` valida a sintaxe; `gh api repos/lucascantarelli/wyd/actions/policies` mostra a exceção escopada ao workflow.
 
 ## Referências
 

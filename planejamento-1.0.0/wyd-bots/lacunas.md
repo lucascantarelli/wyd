@@ -8,8 +8,8 @@
 > do valor final: não há número, conexão nem latência medidos, e a **autorização de execução** da medição
 > — com o ambiente efêmero de `OPS-03.1` — foi **autorizada em 2026-11-25**, mas o ambiente ainda depende da aprovação de `OPS-03.1` na
 > [`pauta de decisões`](../wyd-ops/docs/pauta-de-decisoes-pendentes.md) (dono: QA + `wyd-ops`). Nada foi
-> aprovado em 2026-11-25 além do aceite da opção A e da autorização de execução: o que existe é a política de 2026-11-23, não a medição. O briefing das respostas é
-> `../briefing-de-decisoes-1.0.0.md` §2 e §3.
+> aprovado em 2026-11-25 além do aceite da opção A e da autorização de execução: o que existe é a política de 2026-11-23, não a medição. A pauta em `../wyd-ops/docs/pauta-de-decisoes-pendentes.md` §2 e os documentos donos registram as
+> respostas.
 
 ## 0. Como ler
 

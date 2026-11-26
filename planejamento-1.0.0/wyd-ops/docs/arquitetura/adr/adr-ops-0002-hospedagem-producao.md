@@ -3,14 +3,14 @@
 > Pergunta: "qual decisão estrutural esta ADR registra e como verificá-la?"
 > Público: Arquitetura, `wyd-ops` e dono do produto
 > Dono: `wyd-ops` (com aprovação do dono do produto)
-> Base: `docs/proposta-decisoes-ops.md` §4 e §6; `proposta-gestao-github-e-ambientes.md` §7.3; `plano-ci-real.md` §3; `AGENTS.md` §9
+> Base: `docs/proposta-decisoes-ops.md` §4 e §6; `proposta-gestao-github-e-ambientes.md` §7.3; `docs/devops/index.md`; `AGENTS.md` §9
 > Revisado em: 2026-11-25
 
 **Estado:** aceito (2026-11-25). `Q-OPS-2` = A aprovada pelo dono em 2026-11-24; provedor, contrato, VPS e backup ainda não aplicados.
 
 ## Contexto
 
-O `wyd-ops` precisa de um host com processo persistente, porta TCP e estado em memória para o servidor de jogo. O free tier hiberna, expira ou não oferece compute suficiente; por isso não serve para produção de jogo (`AGENTS.md` §9). O runtime já decidido é `docker compose` em host com systemd, não Kubernetes (`plano-ci-real.md` §3). Nada está publicado e não há custo, VPS ou backup medidos (`V`, 2026-11-25).
+O `wyd-ops` precisa de um host com processo persistente, porta TCP e estado em memória para o servidor de jogo. O free tier hiberna, expira ou não oferece compute suficiente; por isso não serve para produção de jogo (`AGENTS.md` §9). O runtime já decidido é `docker compose` em host com systemd, não Kubernetes (esta decisão; estado em `docs/devops/index.md`). Nada está publicado e não há custo, VPS ou backup medidos (`V`, 2026-11-25).
 
 ## Decisão
 
@@ -46,4 +46,4 @@ A decisão está em vigor quando existe host provisionado, Compose ativo, health
 - Lacuna fechada: `Q-OPS-2` (decisão), aplicação em `OPS-04`.
 - Achado da auditoria: `wyd-ops/auditoria-de-organizacao.md` §3.
 - Seção de especificação: `AGENTS.md` §9; `wyd-1.0.0.md` §8.
-- Documentos donos: `docs/proposta-decisoes-ops.md`; `proposta-gestao-github-e-ambientes.md`; `plano-ci-real.md`.
+- Documentos donos: `docs/proposta-decisoes-ops.md`; `proposta-gestao-github-e-ambientes.md`; `docs/devops/index.md`.

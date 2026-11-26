@@ -65,15 +65,32 @@ jobs:
         with:
           fail-on-severity: high
 
+  workflow-lint:
+    name: lint de workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: actionlint
+        run: |
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/repo:ro" \
+            --workdir /repo \
+            rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 \
+            .github/workflows/*.yml
+
   gate-security:
     name: gate-security
     if: always()
-    needs: [analise, dependency-review]
+    needs: [analise, dependency-review, workflow-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       ANALISE: ${{ needs.analise.result }}
       REVISAO: ${{ needs.dependency-review.result }}
+      WORKFLOW_LINT: ${{ needs.workflow-lint.result }}
       EVENTO: ${{ github.event_name }}
     steps:
       - name: Agregar os jobs
@@ -87,6 +104,10 @@ jobs:
             echo "::error::revisão de dependência terminou com '$REVISAO'"
             falhou=1
           fi
+          if [ "$WORKFLOW_LINT" != "success" ]; then
+            echo "::error::lint de workflows terminou com '$WORKFLOW_LINT'"
+            falhou=1
+          fi
           exit "$falhou"
 
   notify:
@@ -96,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

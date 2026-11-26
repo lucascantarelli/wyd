@@ -61,8 +61,8 @@ aberta `LBOT-03` (limiar de carga), mas com a **política** fixada em 2026-11-23
 medir no CI efêmero, congelar o valor com data e, ao atingi-lo, parar de subir, drenar e reportar;
 nenhum número antes da medição. `LBOT-04` (o que o bot faz quando o cenário falha — relatório e
 artefato) fechou em 2026-11-23 por **regra vigente**: o item 4 do gate (§6) já exige log + captura, e
-`AGENTS.md` §5, item 7/`P-22` fixam a higiene. O briefing das respostas é
-`../briefing-de-decisoes-1.0.0.md`.
+`AGENTS.md` §5, item 7/`P-22` fixam a higiene. O estado das respostas está em `../lacunas.md`; a
+pauta em `../wyd-ops/docs/pauta-de-decisoes-pendentes.md` reúne os ponteiros.
 
 ## 6. Gate para sair do papel
 

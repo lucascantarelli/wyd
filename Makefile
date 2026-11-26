@@ -47,7 +47,7 @@ docs:
 
 docs-up:
 	docker compose pull docs
-	docker compose up -d --wait docs
+	docker compose up -d --no-build --wait docs
 
 docs-down:
 	docker compose down
@@ -60,4 +60,5 @@ db-down:
 
 rollback:
 	@test -n "$(TAG)" || { echo "uso: make rollback TAG=<sha>"; exit 1; }
-	WYD_DOCS_TAG=$(TAG) docker compose up -d --wait docs
+	WYD_DOCS_TAG=$(TAG) docker compose pull docs
+	WYD_DOCS_TAG=$(TAG) docker compose up -d --no-build --wait docs

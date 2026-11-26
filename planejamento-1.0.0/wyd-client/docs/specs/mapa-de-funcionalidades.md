@@ -16,7 +16,7 @@
 | 2 | Pedido ao titular dos direitos | `RF-CLI-002` | iniciado (não enviado) | `docs/specs/pedido-ao-titular.md` |
 | 3 | Patches e arquivos de configuração | `RF-CLI-003`,`RF-CLI-004` | proposto | `docs/specs/requisitos.md` |
 | 4 | Uso e distribuição (IP) | `RF-CLI-005`,`RF-CLI-006` | em proposta (`Q-IP-3`–`Q-IP-6` decididas) | `docs/specs/propriedade-intelectual-e-distribuicao.md` |
-| 5 | Lacunas e fechamento | `RF-CLI-007` | parcial (`LCLI-02`/`03`/`05` abertas) | `wyd-client-1.0.0.md`, `lacunas.md` |
+| 5 | Lacunas e fechamento | `RF-CLI-007` | parcial (`LCLI-03`/`05` abertas; `LCLI-02` fechada em 2026-11-25) | `wyd-client-1.0.0.md`, `lacunas.md` |
 
 ## 2. O que não está mapeado
 

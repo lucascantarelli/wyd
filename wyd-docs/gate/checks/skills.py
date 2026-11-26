@@ -9,8 +9,10 @@ Medida (fonte: os arquivos de `planejamento-1.0.0/<sistema>/docs/roadmap/`, lido
 2. **citação resolve** — cada `[<ID>](ID.md) §Skills` aponta para arquivo existente na mesma pasta,
    o arquivo tem `## Skills`, o ID do título do alvo é o mesmo do link e, se a citação trouxer um
    segundo identificador em `código` (o valor), esse valor existe no bloco da página.
-3. **página de issue tem o bloco e a linha de dono** — todo `WYD*.md` da pasta de roadmap tem
-   `## Skills` e, depois dele, a linha `**Dono do valor:**`.
+3. **página de issue segue o padrão único** — todo `WYD*.md` da pasta de roadmap tem o cabeçalho de
+   cinco campos, `**Estado:**`, o campo `**Gate de verificação:**`, uma fase ou fatia, as sete seções
+   do template, `## Skills` com skills da lista fechada e, depois dele, a linha `**Dono do valor:**`.
+   A explicação das nove skills não pode ser repetida na página; ela vive no template.
 4. **arquivo de IA cita o fato normativo, não o publica** — AGENTS.md e as skills não repetem o
    comando do gate, a lista/contagem de sistemas, contagem de ADR, de migration/tabela/seed, o
    limiar de cobertura nem o formato do cabeçalho: cada um tem dono em documento de planejamento e
@@ -109,6 +111,35 @@ SECAO_SKILLS = "## Skills"
 PRINCIPAL = re.compile(r"\|\s*`skill_principal`\s*\|\s*`([^`]+)`\s*\|")
 COMPLEMENTARES = re.compile(r"\|\s*`skills_complementares`\s*\|\s*(.+?)\s*\|")
 DONO = "**Dono do valor:**"
+GATE = "**Gate de verificação:**"
+CABECALHO = (
+    r"^> Pergunta:",
+    r"^> Público:",
+    r"^> Dono:",
+    r"^> Base:",
+    r"^> Revisado em:",
+)
+SECOES = (
+    "## Contexto",
+    "## Entregável",
+    "## DoD",
+    "## Fora de escopo",
+    "## Depende de",
+    SECAO_SKILLS,
+    "## Evidência ao fechar",
+)
+SKILLS = {
+    "auditar-planejamento",
+    "documentation-writer",
+    "finishing-a-development-branch",
+    "frontend-design",
+    "github-actions-docs",
+    "planejar-sistema",
+    "python-testing-patterns",
+    "skill-creator",
+    "writing-plans",
+}
+EXPLICACAO_REPETIDA = "A skill principal é a que o agente carrega"
 
 
 def _linha(texto: str, posicao: int) -> int:
@@ -175,12 +206,47 @@ def _checar_roadmap(
 
 def _checar_paginas(caminho: Path, nome: str, problemas: list[str]) -> int:
     texto = _ws().read(caminho)
+    for padrao in CABECALHO:
+        if not re.search(padrao, texto, re.M):
+            problemas.append(
+                f"{nome}:1: página de issue sem o campo de cabeçalho `{padrao[2:-1]}`"
+            )
+    if "**Estado:**" not in texto:
+        problemas.append(f"{nome}:1: página de issue sem `**Estado:**`")
+    if GATE not in texto:
+        problemas.append(f"{nome}:1: página de issue sem `{GATE}`")
+    if "**Fase:**" not in texto and "**Fatia:**" not in texto:
+        problemas.append(f"{nome}:1: página de issue sem `**Fase:**` ou `**Fatia:**`")
+    for secao in SECOES:
+        if secao not in texto:
+            problemas.append(f"{nome}:1: página de issue sem a seção `{secao}`")
     if SECAO_SKILLS not in texto:
-        problemas.append(f"{nome}:1: página de issue sem bloco {SECAO_SKILLS}")
         return 0
     if DONO not in texto:
         linha = _linha(texto, texto.index(SECAO_SKILLS))
         problemas.append(f"{nome}:{linha}: página de issue sem a linha {DONO} do bloco de skills")
+    if EXPLICACAO_REPETIDA in texto:
+        linha = _linha(texto, texto.index(EXPLICACAO_REPETIDA))
+        problemas.append(
+            f"{nome}:{linha}: página de issue repete a explicação das skills; "
+            "o padrão e a lista fechada são do template-de-issue §3"
+        )
+    principal = PRINCIPAL.search(texto)
+    if not principal:
+        problemas.append(f"{nome}:1: página de issue sem `skill_principal`")
+    elif principal.group(1) not in SKILLS:
+        problemas.append(
+            f"{nome}:{_linha(texto, principal.start())}: skill principal "
+            f"`{principal.group(1)}` fora da lista fechada"
+        )
+    complementares = COMPLEMENTARES.search(texto)
+    if complementares:
+        for valor in CODIGO.findall(complementares.group(1)):
+            if valor not in SKILLS:
+                problemas.append(
+                    f"{nome}:{_linha(texto, complementares.start())}: skill complementar "
+                    f"`{valor}` fora da lista fechada"
+                )
     return 1
 
 

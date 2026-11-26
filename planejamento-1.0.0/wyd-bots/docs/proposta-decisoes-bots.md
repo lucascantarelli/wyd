@@ -216,8 +216,8 @@ segredo de jogador (`wyd-bots-1.0.0.md` §6). C (“nada além do exit code”) 
 textual”) reprova a parte “captura”; `AGENTS.md` §5, item 7 e `P-22` fixam a higiene. A execução falha entrega
 **log estruturado + frame/captura anonimizada no ponto da falha**, com cenário e `ClientTick`, sem
 payload, credencial, nome de personagem nem dado de jogador; trace é opcional e segue a mesma higiene. A
-lacuna `LBOT-04` fechou por essa regra. O briefing das respostas é
-`../../briefing-de-decisoes-1.0.0.md` §2.2.
+lacuna `LBOT-04` fechou por essa regra. A pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` e `../../lacunas.md`
+registram as respostas.
 
 ## 5. Cobertura das lacunas
 
@@ -233,8 +233,7 @@ lacuna `LBOT-04` fechou por essa regra. O briefing das respostas é
 **Nenhuma aguarda o dono; `Q-BOT-1`–`Q-BOT-3` foram respondidas e `Q-BOT-4` derivada em 2026-11-23.**
 `LBOT-03` continua `aberta` em `lacunas.md` como **medição**; `LBOT-01` e `LBOT-02` fecharam pelas
 respostas do dono (`Q-BOT-1`/`Q-BOT-2` = A), `LBOT-04` pela regra do próprio gate, sem escolha do
-usuário, e a política de `LBOT-03` foi fixada por `Q-BOT-3` = A. O briefing com a ordem das respostas é
-`../../briefing-de-decisoes-1.0.0.md`.
+usuário, e a política de `LBOT-03` foi fixada por `Q-BOT-3` = A. A pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` reúne a ordem das respostas.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|

@@ -99,7 +99,7 @@ Fonte: `wyd-ops/docs/arquitetura/ia-e-skills.md`.
 
 | Referência | Relação com este documento |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados, mas `wyd-ops` tem fronteira/contratos parciais; este padrão não fecha a organização por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` tem os contratos O1–O5 aprovados; este padrão não fecha a organização por si só |
 | `wyd-ops/docs/specs/requisitos.md` (`RF-OPS-001`, `RF-OPS-003`, `RF-OPS-004`, `RF-OPS-007`, `RNF-OPS-005`) | CI, ambiente efêmero, monitoramento, gate e cobertura |
 | `wyd-ops/docs/arquitetura/componentes.md` (`ci`, `ambiente`, `monitoramento`, `gate`) | unidades e invariantes de teste de infraestrutura |
 | `wyd-ops/docs/planos/plano-de-testes.md` | alvos de teste por nível no `wyd-ops` |

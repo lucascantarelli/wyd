@@ -7,8 +7,8 @@
 > fixou a **política** de limites em 2026-11-23, formalizada em `ADR-NET-0001` (aceito em 2026-11-25);
 > `LNET-01` continua **bloqueada como medição** do valor final — não há conexão, latência nem recusa
 > medidas —; a **autorização de execução foi dada em 2026-11-25** (opção A do bloco), registrada na
-> [`pauta de decisões`](../wyd-ops/docs/pauta-de-decisoes-pendentes.md) (dono: QA + `wyd-ops`); falta executar. O briefing das
-> respostas é `../briefing-de-decisoes-1.0.0.md` §2 e §3.
+> [`pauta de decisões`](../wyd-ops/docs/pauta-de-decisoes-pendentes.md) (dono: QA + `wyd-ops`); falta executar. A pauta em `../wyd-ops/docs/pauta-de-decisoes-pendentes.md` §2 e os documentos donos registram as
+> respostas.
 
 ## 0. Como ler
 

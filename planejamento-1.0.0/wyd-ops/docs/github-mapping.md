@@ -93,12 +93,12 @@ board fica manual e o log avisa. A decisão está em `ADR-OPS-0009`.
 - Criação efetiva de issues/labels/milestones/boards (requer aprovação do usuário).
 - Segredos e deploy (ver `wyd-ops/docs/...`).
 
-## 7. Inventário de issues planejadas (medido em 2026-11-25)
+## 7. Inventário de issues planejadas (medido em 2026-11-26)
 
-O repositório tem **101 páginas de issue** planejadas: as **40** `WYDDB-nnn` do `wyd-db`
-e as **61** por fatia dos 11 sistemas abaixo, cada uma com estado, dependência, DoD observável e
-bloco de skills (`skill_principal` + `skills_complementares`) na lista fechada de
-`planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §3.1.
+O repositório tem **111 páginas de issue** planejadas: as **40** `WYDDB-nnn` do `wyd-db`, as
+**61** por fatia dos 11 sistemas abaixo e as **10** `ADM-nn` do `wyd-admin`, cada uma com estado,
+dependência, DoD observável e bloco de skills (`skill_principal` + `skills_complementares`) na lista
+fechada do `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md` §3.
 
 | Sistema | Chave | Páginas |
 |---|---:|---:|
@@ -113,12 +113,13 @@ bloco de skills (`skill_principal` + `skills_complementares`) na lista fechada d
 | `wyd-protocol` | `WYDPRT-F<n>` | 10 |
 | `wyd-server` | `WYDSRV-F<n>` | 4 |
 | `wyd-sim` | `WYDSIM-F<n>` | 4 |
+| `wyd-admin` | `ADM-nn` | 10 |
 | `wyd-db` | `WYDDB-nnn` | 40 |
-| **Total** | — | **101** |
+| **Total** | — | **111** |
 
 A chave por fatia (`WYDBOT-F0`, `WYDPRT-0.1.0`) não antecipa número: `WYDDB-nnn` já é sequencial e
-criado; os demais recebem o número na criação da issue. **101** planejadas e **101** criadas no
-GitHub: **40** `WYDDB` e **61** fatias (#129–#189), mais **10** issues de lacuna (#190–#199) que não
-fazem parte do inventário de fatias. Cada issue nova nasceu com `area/<sistema>`, `estado/proposta` e
-`fase/<n>` (quando a página tem fase), documento de origem com link, DoD observável e a seção
-"Skills a carregar".
+criado; os demais recebem o número na criação da issue. Das **111** páginas planejadas, **101** já
+foram criadas no GitHub (as **40** `WYDDB` e as **61** fatias #129–#189); as **10** `ADM-nn` ainda não
+foram criadas. Além delas, **10** issues de lacuna (#190–#199) existem e não fazem parte do inventário
+de fatias. Cada issue criada nasceu com `area/<sistema>`, `estado/proposta` e `fase/<n>` (quando a
+página tem fase), documento de origem com link, DoD observável e a seção "Skills a carregar".

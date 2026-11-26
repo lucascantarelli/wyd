@@ -1,114 +1,322 @@
-# Pauta de decisões pendentes — o que falta aprovar para fechar o planejamento
+# Pauta de decisões pendentes — registro canônico
 
-> Pergunta: "o que ainda depende de um sim do dono para o planejamento fechar, quem responde e o que cada resposta libera?"
-> Público: dono do produto, arquitetura, `wyd-ops`, QA, `wyd-db`, revisão jurídica e agentes
-> Dono: equipe do `wyd-ops` (consolidação); cada decisão pertence ao dono listado na linha
-> Base: `docs/lacunas.md` §4; `docs/pacote-aprovacao-o1-o5.md` §7; `docs/pacote-aprovacao-decisoes-fora-o1-o5.md` §7; `docs/arquitetura/adr/candidatos.md`; varredura de 2026-11-25 descrita em §4
-> Revisado em: 2026-11-25
+> Pergunta: "quais são as 11 pendências que ainda exigem decisão ou evidência externa, o que cada uma bloqueia, quais opções existem e o que a aprovação libera?"
+> Público: dono do produto, arquitetura, `wyd-ops`, QA, `wyd-db`, `wyd-client`, `wyd-protocol`, `wyd-net`, `wyd-bots`, `wyd-portal`, revisão jurídica e agentes
+> Dono: equipe do `wyd-ops` (consolidação); cada decisão pertence ao dono listado no item
+> Base: `docs/lacunas.md` §4; `docs/pacote-aprovacao-o1-o5.md` §7; `docs/pacote-aprovacao-decisoes-fora-o1-o5.md` §7; ledgers `lacunas.md` dos sistemas; `docs/github-mapping.md` §7; `docs/arquitetura/adr/index.md` §2
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25). Ponto de entrada único das decisões de dono. Ele **não decide, não aprova e não envia nada**: cada linha é um resumo que aponta para a mensagem canônica do §7 do pacote de origem, e o registro de estado continua sendo `docs/lacunas.md` §4. Em 2026-11-25 o dono respondeu **às doze** — duas na primeira rodada e dez na segunda (§2.1) —; `Q-SERIE-1` foi implementada e provada como ciclo SQL em PG17, e `Q-SEP-1` foi **reaberta** porque a resposta A não parseia 26 dos 28 nomes.
+**Estado:** proposto (2026-11-26). Esta é a **página canônica** das decisões e pendências abertas. Ela não decide, não aprova e não envia mensagem: reúne o que falta, as opções e o critério de pronto, e aponta para o ledger e o documento dono de cada item. O estado de cada lacuna continua em `docs/lacunas.md` §4 e nos `lacunas.md` dos sistemas; os pacotes O1–O5 guardam os textos de origem. Não existe uma segunda pauta.
+
+**Escopo:** 11 itens abertos. Decisões já respondidas e formalizadas — `OPS-03.1`–`OPS-03.5`, `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LCLI-02` — não são reabertas aqui; o histórico está em `docs/lacunas.md` §4 e nos pacotes.
 
 ## 1. Como usar
 
 | Elemento | Onde vive |
 |---|---|
-| Pergunta completa, forma de responder e impacto detalhado | §7 do pacote de origem, ancorado na coluna **Mensagem** |
-| Estado da lacuna, dono e ADR | `docs/lacunas.md` §4 |
-| Texto pronto para enviar ao dono | §7 do pacote indicado na linha |
-| Esta página | índice de leitura: uma linha por decisão, sem repetir o texto da mensagem |
+| Estado, dono e evidência da lacuna | `docs/lacunas.md` §4 e o `lacunas.md` do sistema |
+| Pergunta completa e mensagem de origem | §7 do pacote O1–O5 ou do pacote fora de O1–O5 |
+| Opções, recomendação e critério de pronto | item correspondente nesta página |
+| Board e inventário de issues | `docs/github-mapping.md` §7 |
 
-Status possíveis: **bloqueada** (sem o sim) ou **fechada** com evidência. Enquanto a linha estiver bloqueada, nada do que ela libera pode ser implementado, publicado ou provisionado.
+Status possíveis: **bloqueada** (sem decisão, evidência ou execução externa) ou **fechada** com a evidência registrada no ledger. Um "sim" dito no chat não fecha a linha: a resposta precisa ser registrada no ledger com data, dono e artefato.
 
-## 2. As 12 decisões de dono
+## 2. Índice
 
-| ID em `lacunas.md` §4 | Decisão | Dono | Pergunta objetiva | O que a aprovação libera | ADR | Se ficar aberta | Mensagem |
-|---|---|---|---|---|---|---|---|
-| `OPS-03.1` | O1 — ambiente efêmero | arquitetura + `wyd-ops` + `wyd-bots` | Postgres e servidor descartáveis por execução, com ciclo, cleanup e artefato, estão aprovados? | ambiente isolado dos bots; execução de `LBOT-03` no CI; plano de teste dos bots | não | bots sem ambiente aprovado e medição sem CI | [§7.4](pacote-aprovacao-o1-o5.md#74-wyd-bots-o1) e [§7.3](pacote-aprovacao-o1-o5.md#73-wyd-ops-o1-a-o5) |
-| `OPS-03.2` | O2 — métricas e logs | arquitetura + `wyd-ops` + `wyd-server` + `wyd-net` | Nomes e labels de métrica, intervalo, retenção e schema de log estão aprovados? | `RF-OPS-004` implementável; dashboards, alertas e diagnóstico | não | monitoramento sem formato; incidente manual | [§7.5](pacote-aprovacao-o1-o5.md#75-wyd-server-o2) e [§7.6](pacote-aprovacao-o1-o5.md#76-wyd-net-o2) |
-| `OPS-03.3` | O3 — publicação do site | arquitetura + `wyd-ops` + `wyd-docs` | Artefato, workflow, janela de publicação e rollback estão aprovados? | publicação reproduzível e rollback exigível | não | cada publicação vira exceção manual | [§7.7](pacote-aprovacao-o1-o5.md#77-wyd-docs-o3) |
-| `OPS-03.4` | O4 — segredos | arquitetura + `wyd-ops` | Inventário, emissor, consumidor, armazenamento e rotação estão aprovados? | deploy de servidor e admin; auditoria de segurança | sim, após o sim | deploy bloqueado; segredo sem dono | [§7.1](pacote-aprovacao-o1-o5.md#71-arquitetura-o1-a-o5) e [§7.3](pacote-aprovacao-o1-o5.md#73-wyd-ops-o1-a-o5) |
-| `OPS-03.5` | O5 — deploy e rollback | produto + arquitetura + `wyd-ops` | Staging, gatilho, aprovação, artefato e rollback de servidor e launcher estão aprovados? | primeiro deploy real; release com critério de volta | sim, após o sim | sem staging nem rollback ensaiado | [§7.2](pacote-aprovacao-o1-o5.md#72-produto-o5) |
-| `OPS-04` | Hospedagem `Q-OPS-2` | produto + `wyd-ops` | Provedor, contrato, região, backup e RPO/RTO estão definidos? | produção provisionada; rotina de backup e restauração | não | produção inexistente | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
-| `OPS-05` | Board e novas issues | produto | Autoriza criar o board e as novas issues do `github-mapping.md`? | board montado e fatias restantes criadas | não | **executada em 2026-11-26** — 61 fatias (#129–#189) e 10 lacunas (#190–#199) com `area/*`; board pendente | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
-| `D-06` | Próxima frente | produto | Qual frente vem depois de `D-05`? | ordem de execução explícita | não | cada agente escolhe a própria ordem | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
-| `Q-SERIE-1` | Política de `down` | arquitetura + `wyd-db` | Qual política para os arquivos que só têm `up`? Opções e recomendação em `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9 | política de reversão da série de migrations | sim, se a opção dispensar `down` ou marcar baseline | **decidida em B** — 28 `down` escritos e ciclo SQL provado em PG17 | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
-| `Q-SEP-1` | Separador/slug de migration | arquitetura + `wyd-db` | Decidir A′/B′/C′ para 26 slugs com hífen recusados por `Slug`; detalhe em §9.1 | nomenclatura estável e série carregável | não | **decidida em A′ e aplicada em 2026-11-25** — 28 nomes com `_`; todos parseiam | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
-| `LNET-01`/`LBOT-03` | Medições de rede e carga | QA + `wyd-ops` | Autoriza a implementação mínima e a execução da medição no CI efêmero? | valores medidos; limites e carga com base | não | **autorizada em 2026-11-25** — falta executar a medição; sem execução não há valor medido nem P50/P99 citável | [§7.3](pacote-aprovacao-decisoes-fora-o1-o5.md#73-qa-e-wyd-ops-lnet-01-e-lbot-03) |
-| `LCLI-02`/`LCLI-05` | Direitos do cliente | produto + revisão jurídica | Há liberação do titular para distribuir o cliente e para a classificação jurídica? | distribuição e patch do cliente | não | **autorizada em 2026-11-25** (opção A de cada bloco; pedido ao titular aprovado para envio) — `LCLI-02` foi executada e fechada em 2026-11-25 (lista, manifesto e verificador); falta a evidência do titular para `LCLI-05` e o cliente segue congelado | [§7.4](pacote-aprovacao-decisoes-fora-o1-o5.md#74-juridico-lcli-02-e-lcli-05) |
+| # | Item | Pergunta curta | Responde | Estado |
+|---:|---|---|---|---|
+| 1 | [`OPS-04`](#ops-04) | Provedor, VPS, backup e RPO/RTO | infra/owner | bloqueada |
+| 2 | [`OPS-05`](#ops-05) | Board do GitHub Project | infra/owner | bloqueada |
+| 3 | [`LPRT-03`](#lprt-03) | Origem da `KeyWord` e prova da captura A1 | runtime | bloqueada como prova |
+| 4 | [`LPRT-06`](#lprt-06) | Encoding, tamanho e terminador de string | runtime | bloqueada como prova |
+| 5 | [`LCLI-03`](#lcli-03) | Operador e primeira ficha de captura | infra/owner | bloqueada como evidência |
+| 6 | [`LCLI-05`](#lcli-05) | Evidência do titular para distribuir o cliente | dono + titular | bloqueada como evidência |
+| 7 | [`LNET-01`](#lnet-01) | Limites de conexão, timeout e rate-limit medidos | runtime | bloqueada como medição |
+| 8 | [`LBOT-03`](#lbot-03) | Limiar de carga dos bots medido | runtime | bloqueada como medição |
+| 9 | [`A11`](#a11) | Charset do `GameLogin` | runtime | bloqueada como medição |
+| 10 | [`A20`](#a20) | MFA de staff antes do portal público | infra/owner | bloqueada por execução |
+| 11 | [`M21`](#m21) | Telas e rotas do portal | infra/owner | bloqueada por execução |
 
-**Total: 12 decisões de dono; todas têm resposta registrada em 2026-11-25** — duas na primeira rodada e
-dez na segunda (§2.1) —, mais **3 escolhas técnicas** da série (`Q-ALVO-1`–`03`, §2.2). Nenhuma se fecha
-por documentação: resta execução (`LNET-01`/`LBOT-03`, board), `CAP-38`/`CAP-39`, ADR (`OPS-03.4`,
-`OPS-03.5`), artefato de terceiro (`LCLI-05`) ou o adiamento declarado (`OPS-04`).
+## 3. Itens
 
-## 2.1 Respostas de 2026-11-25 (segunda rodada)
+### OPS-04
 
-| Decisão | Resposta do dono | O que muda |
-|---|---|---|
-| `D-06` | **A** — finalizar o `wyd-db` | a ordem das frentes deixa de ser implícita; `D-05` vem depois |
-| `Q-SERIE-1` | **escrever os 28 `down` reais** | mantém `ADR-DB-0002`; os 28 `down` e o ciclo `up → down → up` passaram em PG17 por `psql`; `CAP-37` foi fechada por `runner_pg` |
-| `Q-SEP-1` | **ler `-` e `_`, usar `_` nos arquivos novos** — depois substituída por **A′** | `Slug` recusava hífen em 26 slugs; A′ renomeou os 28 para `_` e todos parseiam (§9.1) |
-| `OPS-03.1`–`OPS-03.3` | **aprovados na forma** | `LBOT-03` ganha ambiente, `RF-OPS-004` ganha formato, a publicação ganha contrato e rollback exigível |
-| `OPS-03.4`, `OPS-03.5` | **aprovados na forma, com ADR antes de implementar** | segredos e deploy ficam a um ADR de distância; nada bloqueado por falta de “sim” |
-| `OPS-05` | **executado em 2026-11-26** | 61 fatias (#129–#189) e 10 lacunas (#190–#199) criadas com labels `area/*`; board pendente |
-| `OPS-04` | **adiada** para depois do primeiro deploy interno | provedor, backup e RPO/RTO continuam indefinidos, sem número inventado |
+**O que é.** Aplicação da decisão `Q-OPS-2` = A: provedor de VPS, contrato, região, backup e RPO/RTO da hospedagem de produção. A forma já está em `ADR-OPS-0002`; falta o provisionamento e os valores operacionais.
 
-## 2.2 Escolhas técnicas da prova do `PgAdapter` (2026-11-25)
+**Por que está bloqueado e por quem.** O dono do produto adiou provedor, região, backup e RPO/RTO para depois do primeiro deploy interno e informou que não há valores definidos. Depende de produto + `wyd-ops`; não é decisão de arquitetura.
 
-Não são decisões de dono do produto: são as três perguntas da
-`planejamento-1.0.0/wyd-db/proposta-alvo-pgadapter.md` §6, respondidas pela equipe do `wyd-db` e
-arquitetura, e implementadas no alvo `runner_pg`.
+**Evidência/artefato que falta.** Custo mensal cotado, provedor e região escolhidos, contrato/credencial, destino de backup, RPO/RTO numéricos e um ensaio de restauração. Nada foi provisionado; não há custo, VPS ou backup medidos (`V`, 2026-11-25).
 
-| Decisão | Resposta | O que mudou |
-|---|---|---|
-| `Q-ALVO-1` — transporte | **A1** — porta publicada em `127.0.0.1` | job `runner` do `code.yml` usa `-p 127.0.0.1::5432`; nunca `0.0.0.0` |
-| `Q-ALVO-2` — série | **B1** — fixture contígua agora | `tests/resources/fixture/` (4 arquivos) e `fixture_falha/` (2) |
-| `Q-ALVO-3` — papel | **`wyd_migrator` com `LOGIN` só no teste** | sem `allow_superuser(true)`; o preflight é exercitado de verdade |
+**Opções.**
 
-Resultado: `cargo test --test runner_pg` **5/5** em PG17 (log `/tmp/wyd-runner-pg.log`), fechando
-`CAP-37`. Detalhe em `../../wyd-db/tests/alvos/runner-pg.md`.
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Medir 2–3 alternativas de VPS com Compose, cotação, backup e RPO/RTO; decidir com esses dados e manter produção desligada até a aprovação | custo de cotação e tempo; risco de atraso; esforço médio | **recomendada** |
+| B | Escolher um provedor agora, sem cotação, backup ou RPO/RTO definidos | custo desconhecido; risco de retrabalho e backup frágil; esforço baixo no papel, alto depois | não recomendada |
+| C | Manter adiado até depois do primeiro deploy interno | custo zero agora; produção e backup continuam inexistentes; esforço zero | aceitável como estado atual, mas não fecha |
 
-## 3. Quem responde o quê
+**Por que A.** É a única opção que produz os números que o dono pediu para decidir; evita escolher provedor por impulso e deixa o critério de backup verificável. O adiamento do dono continua respeitado: A prepara a decisão, não provisiona.
 
-| Dono | Decisões |
-|---|---|
-| produto | `OPS-03.5`, `OPS-04`, `OPS-05`, `D-06`, `LCLI-02`/`LCLI-05` |
-| arquitetura | as 12 (aprova a forma de cada uma) |
-| `wyd-ops` | as 12 (é dono do contrato ou da operação) |
-| `wyd-bots` | `OPS-03.1` |
-| `wyd-server` | `OPS-03.2` |
-| `wyd-net` | `OPS-03.2` |
-| `wyd-docs` | `OPS-03.3` |
-| `wyd-db` | `Q-SERIE-1`, `Q-SEP-1` |
-| QA | `LNET-01`/`LBOT-03` |
-| revisão jurídica | `LCLI-02`/`LCLI-05` |
+**Pronto quando.** O dono aprovar provedor, região, contrato, destino de backup e RPO/RTO numéricos; o ensaio de restauração passar; `ADR-OPS-0002` e o ledger registrarem data e evidência; a issue [#198](https://github.com/lucascantarelli/wyd/issues/198) for atualizada.
 
-## 4. Varredura: o que não é decisão de dono
+**Origem.** [`docs/lacunas.md` §4](lacunas.md); [`ADR-OPS-0002`](arquitetura/adr/adr-ops-0002-hospedagem-producao.md); [`pacote fora de O1–O5` §7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06); issue [#198](https://github.com/lucascantarelli/wyd/issues/198).
 
-Critério medido em 2026-11-25: busca por "decisão pendente", "pendente de aprovação", "sem resposta", "não decidid", "em aberto", "espera o dono", "aguarda o dono", "continua aberta" e "segue proposta" em `planejamento-1.0.0/**/*.md`, mais os estados de cada `lacunas.md` e o backlog de `docs/arquitetura/adr/candidatos.md`. Resultado: **nenhuma decisão de dono fora das 12 acima**; os dois achados da varredura de 2026-11-25 estão nas linhas abaixo — `Q-CLI-2` já foi decidido e o pedido ao titular ainda não foi enviado. O que a varredura encontrou são bloqueios de execução, evidência ou terceiro — não pedidos de aprovação —, listados aqui para que não pareçam esquecidos:
+### OPS-05
 
-| Item | Por que não é decisão de dono | Onde está |
-|---|---|---|
-| `LPRT-03` e `LPRT-06` | captura A1 do pacote 7662 já autorizada em 2026-11-23; falta executar a captura e registrar o golden | `planejamento-1.0.0/wyd-protocol/lacunas.md` §1 |
-| `LCLI-03` | segunda leitura com QA definido; falta a ficha assinada com o nome do operador | `planejamento-1.0.0/wyd-client/lacunas.md` §1 |
-| `Q-DP-2/validação` | o artefato foi escolhido em 2026-11-24 (parecer jurídico por finalidade); falta produzir o parecer | `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §3.3.1 |
-| `Q-RET-7/aplicação` | a rotina foi aprovada em 2026-11-24; fornecedor, RPO/RTO e ensaio de restore dependem da decisão `OPS-04`, já nesta pauta | `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` §3.3 |
-| `Q-CAP-3` | sinal de capacidade sem limiar; o limite só existe depois da medição | `planejamento-1.0.0/wyd-db/docs/arquitetura/retencao-e-capacidade.md` |
-| seis seeds de conteúdo | bloqueio de conteúdo do piloto, com dono no `wyd-db`; não pede aprovação de arquitetura | `planejamento-1.0.0/wyd-db/pendencias-de-fechamento.md` |
-| `Q-CLI-2` (o que o patch entrega e como versiona) | decisão aprovada em 2026-11-25, registrada em `planejamento-1.0.0/wyd-client/lacunas.md` §2; falta entregar o manifesto/lista — não há pergunta ao dono | `planejamento-1.0.0/wyd-client/lacunas.md` §2 |
-| envio do pedido ao titular (`Q-IP-1`/`Q-IP-2`) | o pedido está pronto e **não enviado**: falta o dono confirmar signatário e dados e abrir o ticket; é ato do dono, não escolha de arquitetura, e precede qualquer resposta do titular de `LCLI-05` | `planejamento-1.0.0/wyd-client/docs/specs/pedido-ao-titular.md` §7 |
+**O que é.** Montagem do board do GitHub Project para as 111 páginas/issues planejadas. As 61 fatias (#129–#189) e 10 lacunas (#190–#199) já foram criadas com labels `area/*`; o board não existe.
 
-Medições futuras de `adr/candidatos.md` (limites medidos, captura validada, primeiro deploy) são gatilhos de ADR, não decisões pendentes: elas só existem depois de executar o que as linhas acima liberam.
+**Por que está bloqueado e por quem.** O dono do produto autorizou as issues, mas a criação do board é ato de gestão no GitHub e continua pendente. Depende do produto; não é arquitetura.
 
-## 5. Como esta pauta se mantém
+**Evidência/artefato que falta.** Projeto `WYD 1.0.0` criado, campos e views de `wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3, dependências `blocked by` e as 111 issues importadas.
 
-1. O dono responde na mensagem do §7 indicado.
-2. A resposta é registrada em `docs/lacunas.md` §4, com data e evidência; só então a linha daqui muda de status.
-3. Se aprovada e o ADR for exigido, o ADR é escrito antes da implementação, sem numerar antes do sim.
-4. Se a resposta for "não", a objeção volta ao dono e a linha continua bloqueada — esta página não arbitra.
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Criar um Project com os campos/views já propostos e importar as 111 issues, mantendo labels e milestones como estão | custo zero; risco baixo de duplicidade se o import for conferido; esforço baixo | **recomendada** |
+| B | Adiar o board e operar só por labels/milestones | custo zero; perde views, dependências e leitura de portfólio; esforço zero | aceitável temporariamente |
+| C | Criar vários boards por sistema | custo de manutenção; fragmenta a visão e duplica configuração; esforço médio | não recomendada |
+
+**Por que A.** O inventário e os campos já estão definidos; um único board preserva a dependência entre sistemas e evita uma segunda fonte de status. B não quebra o repositório, mas não cumpre o mapeamento pedido.
+
+**Pronto quando.** O board existir com os campos/views acordados, as 111 issues estiverem associadas e as dependências registradas; `docs/github-mapping.md` §7 apontar para ele.
+
+**Origem.** [`docs/lacunas.md` §4](lacunas.md); [`github-mapping.md` §5 e §7](github-mapping.md).
+
+### LPRT-03
+
+**O que é.** A origem da `KeyWord` usada na ofuscação do handshake. A política já foi decidida: o crate recebe a `KeyWord` do chamador e não assume origem; falta provar o byte no cliente 7662.
+
+**Por que está bloqueado e por quem.** A captura A1 não foi executada: não há `ECAP`/`PEER-A1` operado, `crates/wyd-server`/`wyd-net`/`wyd-protocol` não têm código e `wyd-client/tools/` não existe. Depende de runtime/captura e da segunda leitura de QA; não é uma nova escolha de desenho.
+
+**Evidência/artefato que falta.** `ECAP` e CLI implementados, captura A1 datada, frame anonimizado, golden com origem e segunda leitura assinada. Até lá a afirmação de byte fica `H`.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Implementar o `ECAP` + CLI já autorizados, capturar A1, fazer a segunda leitura e registrar o golden | custo de implementação e operação; risco de a captura revelar comportamento diferente do legado; esforço médio | **recomendada** |
+| B | Capturar por ferramenta externa/proxy sem implementar o `ECAP` operado | custo menor inicial; risco de captura não reproduzível e fora do processo `LPRT-10`; esforço baixo/médio | não recomendada |
+| C | Manter a validação permissiva e a prova como `H` até o loop jogável | custo zero agora; o handshake fica sem prova e bloqueia a onda C; esforço zero | não fecha a lacuna |
+
+**Por que A.** É a execução já autorizada em 2026-11-23; produz golden reproduzível e satisfaz `LPRT-10`. B economiza implementação, mas não resolve o endpoint operado nem a segunda leitura.
+
+**Pronto quando.** A captura A1 tiver ficha datada, frame anonimizado e golden; a segunda leitura independente estiver assinada; o comportamento da `KeyWord` estiver escrito com `V`; `LPRT-03` fechar no ledger do `wyd-protocol`.
+
+**Origem.** [`wyd-protocol/lacunas.md` §2.2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-protocol/lacunas.md); [`endpoint-de-captura.md`](../wyd-server/specs/endpoint-de-captura.md); [`como-capturar.md`](../wyd-protocol/goldens/como-capturar.md); [`proposta-decisoes-protocol.md` §6](../wyd-protocol/proposta-decisoes-protocol.md).
+
+### LPRT-06
+
+**O que é.** Encoding, tamanho e terminador das strings do fio. A política já foi decidida: o codec não transcodifica e a string é bytes de tamanho fixo declarado; falta medir encoding e terminador com texto acentuado.
+
+**Por que está bloqueado e por quem.** Depende das capturas B/C com personagem sintético criado no servidor; o mesmo `ECAP`/`PEER-A1` de `LPRT-03` não existe e não há runtime operado. Depende de runtime/captura e QA.
+
+**Evidência/artefato que falta.** Capturas B/C com texto acentuado, seed sintético, frame anonimizado, golden e segunda leitura. Não há golden de string registrado no ledger.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Depois de A1, executar B/C com personagem sintético e seed, registrar golden e segunda leitura | custo de mais capturas; risco de revelar encoding diferente do esperado; esforço médio | **recomendada** |
+| B | Inferir encoding/terminador do legado ou de uma única captura | custo baixo; risco de generalizar sem `V` e corromper nome/chat; esforço baixo | não recomendada |
+| C | Adiar até o loop jogável e manter `H` | custo zero agora; texto acentuado fica sem prova; esforço zero | não fecha |
+
+**Por que A.** É a única opção que cobre texto real e o processo de golden; B repete a contaminação do legado que `AGENTS.md` §3 proíbe como fato.
+
+**Pronto quando.** As capturas B/C tiverem ficha, frame e golden; encoding/tamanho/terminador estiverem provados com `V`; `LPRT-06` fechar no ledger.
+
+**Origem.** [`wyd-protocol/lacunas.md` §2.2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-protocol/lacunas.md); [`como-capturar.md`](../wyd-protocol/goldens/como-capturar.md); [`proposta-decisoes-protocol.md` §6](../wyd-protocol/proposta-decisoes-protocol.md).
+
+### LCLI-03
+
+**O que é.** O nome do operador da primeira ficha de captura e a assinatura da segunda leitura. Lucas Cantarelli (dono do produto) é o QA designado e não pode ser o operador; o nome do operador ainda não existe.
+
+**Por que está bloqueado e por quem.** Falta a primeira ficha assinada; a captura A1 também não foi executada. Depende do dono do produto/QA e do operador nomeado.
+
+**Evidência/artefato que falta.** Ficha com data, cenário, operador nomeado e assinatura da segunda leitura por pessoa diferente de quem capturou (D6).
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Nomear um operador distinto do QA e assinar a ficha na primeira captura A1 | custo de coordenação; risco baixo; esforço baixo | **recomendada** |
+| B | Usar o próprio QA como operador e revisor | custo zero; viola D6 e a independência da segunda leitura; esforço baixo | não recomendada |
+| C | Deixar a ficha para depois da captura | custo zero agora; mantém LPRT-03/06 e A1 bloqueados; esforço zero | não fecha |
+
+**Por que A.** Preserva a separação operador/revisor já decidida e é pré-requisito da prova de captura. B economiza uma pessoa, mas torna a aceitação inválida.
+
+**Pronto quando.** A ficha da primeira captura tiver operador nomeado, data e assinatura de segunda leitura independente; `LCLI-03` fechar no ledger do `wyd-client`.
+
+**Origem.** [`wyd-client/lacunas.md` §2 e §2.2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-client/lacunas.md); [`como-capturar.md`](../wyd-protocol/goldens/como-capturar.md).
+
+### LCLI-05
+
+**O que é.** A evidência do titular sobre qual conteúdo do cliente e quais marcas podem ser copiados, modificados, publicados ou redistribuídos. A política e o responsável nominal estão definidos; a distribuição segue congelada.
+
+**Por que está bloqueado e por quem.** O pedido `Q-IP-1`/`Q-IP-2` está redigido e **não enviado**; falta o dono confirmar signatário/dados, abrir o pedido e obter a resposta do titular, com revisão jurídica. Depende de produto + revisão jurídica + terceiro.
+
+**Evidência/artefato que falta.** Pedido enviado e protocolado, resposta escrita do titular por classe de conteúdo, registro de evidência de `Q-IP-6` e atualização do inventário. Nenhum arquivo é liberado por presença local.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Enviar o pedido já redigido, manter tudo congelado e liberar somente o que a resposta escrita autorizar, item a item | custo de revisão jurídica e espera; risco de resposta parcial; esforço médio | **recomendada** |
+| B | Manter congelado sem enviar o pedido | custo zero; nenhum avanço e nenhuma evidência; esforço zero | não recomendada |
+| C | Distribuir ou publicar por conta própria, sem evidência | custo zero aparente; risco jurídico e de retirada; esforço baixo | proibida |
+
+**Por que A.** É o único caminho que produz evidência verificável sem presumir titularidade; B apenas posterga e C troca risco técnico por risco jurídico. A distribuição continua congelada até a resposta.
+
+**Pronto quando.** O pedido estiver enviado e protocolado; a resposta do titular cobrir as classes inventariadas; `Q-IP-6` registrar a evidência por item; o ledger e a issue [#199](https://github.com/lucascantarelli/wyd/issues/199) refletirem o escopo liberado — e somente ele.
+
+**Origem.** [`wyd-client/lacunas.md` §2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-client/lacunas.md); [`pedido-ao-titular.md`](../wyd-client/specs/pedido-ao-titular.md); [`propriedade-intelectual-e-distribuicao.md`](../wyd-client/specs/propriedade-intelectual-e-distribuicao.md); issue [#199](https://github.com/lucascantarelli/wyd/issues/199).
+
+### LNET-01
+
+**O que é.** Os valores medidos de limite por conexão, teto por IP, teto por shard, timeout de handshake, timeout ocioso e rate-limit. A política estrita (`Q-NET-1` = A) já está formalizada em `ADR-NET-0001`; falta o número.
+
+**Por que está bloqueado e por quem.** A execução de prontidão encontrou 0 `Cargo.toml` em `crates/wyd-net`, 0 listeners e 0 cenário de carga. A medição foi autorizada, mas depende do `ECAP`/servidor mínimo e do CI efêmero; dono QA + `wyd-ops`, com arquitetura revisando.
+
+**Evidência/artefato que falta.** Relatório datado da escada de carga com conexões aceitas/recusadas, recusas por motivo, timeouts e ambiente; valores aplicados no transporte e teste de recusa.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Executar a escada de carga e congelar valores absolutos após o relatório | custo de runtime/CI; risco de revelar limite abaixo do esperado; esforço médio | **recomendada** |
+| B | Adotar política adaptativa por taxa de recusa | custo de implementação; comportamento imprevisível para jogador/teste; esforço alto | não recomendada |
+| C | Fixar valores provisórios agora | custo zero; número sem fonte vira promessa; esforço baixo | não recomendada |
+
+**Por que A.** `ADR-NET-0001` já fixou política estrita; o que falta é o valor que o teste de recusa consegue provar. B e C trocam medição por estimativa.
+
+**Pronto quando.** O relatório de `medicoes-lnet-01-lbot-03.md` §4.6 estiver anexado com ambiente/data/commit; os valores estiverem aplicados e o teste de recusa por motivo passar; `LNET-01` fechar no ledger do `wyd-net`.
+
+**Origem.** [`wyd-net/lacunas.md` §4](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-net/lacunas.md); [`medicoes-lnet-01-lbot-03.md`](planos/medicoes-lnet-01-lbot-03.md); [`ADR-NET-0001`](../wyd-net/arquitetura/adr/adr-net-0001-politica-de-limites.md).
+
+### LBOT-03
+
+**O que é.** O limiar de carga dos bots: conexões, duração, P50/P99, taxa de sucesso e o que reprova. A política (`Q-BOT-3` = A: medir, congelar, parar/drenar/reportar) já foi decidida; falta o número.
+
+**Por que está bloqueado e por quem.** Não há `crates/wyd-bots`, cenário nem listener; a primeira medição não foi executada. Depende do servidor mínimo, do seed sintético e do CI efêmero; dono QA + `wyd-ops`.
+
+**Evidência/artefato que falta.** Cenário em degraus, relatório com P50/P99, taxa de sucesso e recusas por motivo; limiar congelado com ambiente/data e job que reprova abaixo dele.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Medir em degraus, congelar o primeiro degrau de saturação e transformá-lo em gate | custo de runtime/CI; risco de o limite ser baixo; esforço médio | **recomendada** |
+| B | Usar um teto provisório de infraestrutura | custo baixo; mede o processo, não o jogo; esforço baixo | não recomendada |
+| C | Fixar conexões/latência alvo agora | custo zero; número sem fonte; esforço baixo | não recomendada |
+
+**Por que A.** É a política já aprovada e a única que produz um gate com causa medida. B pode bloquear jogador legítimo; C inventa promessa.
+
+**Pronto quando.** O cenário e o relatório de `medicoes-lnet-01-lbot-03.md` §4.6 existirem; o limiar estiver congelado com data/ambiente; o job reprovar abaixo dele; `LBOT-03` fechar no ledger do `wyd-bots`.
+
+**Origem.** [`wyd-bots/lacunas.md` §2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-bots/lacunas.md); [`proposta-decisoes-bots.md` §4](../wyd-bots/proposta-decisoes-bots.md); [`medicoes-lnet-01-lbot-03.md`](planos/medicoes-lnet-01-lbot-03.md).
+
+### A11
+
+**O que é.** O charset aceito no `GameLogin` do cliente 7662. Até a captura, o campo fica permissivo (1..16, sem espaço nas bordas) e marcado `H`; a validação estrita não tem fonte.
+
+**Por que está bloqueado e por quem.** Depende da captura do `GameLogin` e da leitura do cliente 7662; a frente `wyd-server` não tem runtime operado. Dono: frente `wyd-server`/`wyd-client` + QA.
+
+**Evidência/artefato que falta.** Frame `GameLogin` capturado, charset e limites provados, golden e segunda leitura; depois, validação e testes no servidor.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Capturar o `GameLogin` com o mesmo `ECAP`/A1 e então restringir a validação ao charset provado | custo de captura; risco de rejeitar nome legítimo se a prova for incompleta; esforço médio | **recomendada** |
+| B | Manter 1..16 permissivo indefinidamente | custo zero; aceita entrada não provada e mantém `H`; esforço zero | aceitável só como fallback |
+| C | Restringir a ASCII agora, sem captura | custo baixo; pode recusar nome válido do cliente; esforço baixo | não recomendada |
+
+**Por que A.** Troca a hipótese permissiva por uma regra com `V`; B não fecha e C arrisca compatibilidade. O fallback B continua válido até A produzir o golden.
+
+**Pronto quando.** O frame e o golden estiverem registrados; charset/limites estiverem provados; a validação e os testes de aceitação/recusa passarem; `A11` fechar no ledger do `wyd-db`.
+
+**Origem.** [`wyd-db/lacunas.md` §2.2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-db/lacunas.md); [`como-capturar.md`](../wyd-protocol/goldens/como-capturar.md); [`endpoint-de-captura.md`](../wyd-server/specs/endpoint-de-captura.md).
+
+### A20
+
+**O que é.** O segundo fator obrigatório para staff (`admin`/`moderator`) antes de o portal ir a público. O escopo e o DDL de `portal.person_authenticator` no lote `0031` já estão decididos; falta implementar as telas/rotas e os testes.
+
+**Por que está bloqueado e por quem.** A execução é da frente `wyd-portal`: sessão em `WYDPOR-F0`, middleware de papel em `F4` e a tela `/admin/seguranca` com recuperação em `F5`; o titular manteve a classificação `externa` até a execução. Depende do dono do portal + produto.
+
+**Evidência/artefato que falta.** `/admin/seguranca` e o fluxo TOTP de staff implementados, recuperação de staff testada, testes de admissão/recusa e a condição de “portal público” ligada a esse gate.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Implementar o MFA de staff em `WYDPOR-F0`/`F4`/`F5` e só abrir o portal público depois dos testes | custo de implementação; risco de atrasar o portal; esforço médio | **recomendada** |
+| B | Abrir o portal público sem MFA de staff e adicionar depois | custo baixo agora; risco de conta privilegiada sem segundo fator; esforço baixo | não recomendada |
+| C | Adiar o portal público até a fatia de segurança | custo de espera; risco de bloquear outras telas; esforço baixo | aceitável, mas A entrega o mesmo gate com escopo claro |
+
+**Por que A.** A política e o DDL já existem; implementar antes da exposição é o único caminho que satisfaz a decisão sem aceitar risco de staff. B viola a condição registrada.
+
+**Pronto quando.** A rota `/admin/seguranca` e o fluxo TOTP estiverem implementados; o ADR de MFA de staff estiver aceito; os testes de staff (adesão, login, recuperação e recusa) passarem; o portal público estiver condicionado a esse gate; `A20` fechar no ledger do `wyd-db`.
+
+**Origem.** [`wyd-db/lacunas.md` §2.2](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-db/lacunas.md); [`rotas-e-permissoes.md` §3](../wyd-portal/arquitetura/rotas-e-permissoes.md); [`ddl-confirmado.md` §5.20](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-db/ddl-confirmado.md).
+
+### M21
+
+**O que é.** A implementação das telas e rotas do portal: área pública e administrativa (NOC, jogadores/contas, economia, conteúdo/CMS, launcher, logs e segurança), com configuração do servidor, monitoramento e dashboards. O escopo e as rotas já estão planejados; falta executar as fatias `WYDPOR-F0`–`F11`.
+
+**Por que está bloqueado e por quem.** A execução é da frente `wyd-portal`; a classificação `externa` foi mantida pelo titular até a execução. Depende do dono do portal + produto.
+
+**Evidência/artefato que falta.** Rotas e telas do §3 implementadas, testes de contrato/permissão, estados de erro e carregamento, e as fatias do roadmap com DoD fechado.
+
+**Opções.**
+
+| Opção | O que é | Custo/risco/esforço | Recomendação |
+|---|---|---|---|
+| **A** | Executar o escopo planejado de `WYDPOR-F0`–`F11`, priorizando segurança e operação | custo de implementação; risco de prazo; esforço alto | **recomendada** |
+| B | Entregar um MVP com poucas telas e reclassificar o restante | custo menor; risco de mudar escopo já decidido; esforço médio | só com decisão explícita do dono |
+| C | Manter apenas o planejamento e não implementar o portal | custo zero agora; portal e administração continuam inexistentes; esforço zero | não fecha |
+
+**Por que A.** O escopo e as rotas já foram decididos e mapeados; executar as fatias evita reabrir a decisão. B é uma mudança de escopo, não uma opção de execução.
+
+**Pronto quando.** As rotas/telas do §3 estiverem implementadas e testadas; as fatias `WYDPOR-F0`–`F11` tiverem evidência de DoD; `M21` fechar no ledger do `wyd-db`.
+
+**Origem.** [`wyd-db/lacunas.md` §2.3](https://github.com/lucascantarelli/wyd/blob/develop/planejamento-1.0.0/wyd-db/lacunas.md); [`rotas-e-permissoes.md`](../wyd-portal/arquitetura/rotas-e-permissoes.md); [`roadmap do portal`](../wyd-portal/roadmap/roadmap.md).
+
+## 4. Perguntas numeradas por respondedor
+
+As perguntas abaixo são a forma curta de responder. Cada uma aponta para o item detalhado acima e para o ledger; a resposta só vale depois de registrada. São **11 itens**; o item `LCLI-05` tem **duas respostas separadas** porque a autorização de envio e a evidência do titular pertencem a pessoas diferentes: **6a** (dono) e **6b** (titular).
+
+### Infra/owner
+
+1. **`OPS-04`** — Você aprova medir 2–3 alternativas de VPS com cotação, backup e RPO/RTO antes de provisionar, em vez de escolher provedor sem esses dados? **Default recomendado: A (medir e decidir com dados; produção desligada até a aprovação).**
+2. **`OPS-05`** — Você autoriza criar o board único do Project com os campos/views propostos e importar as 111 issues? **Default: A (criar agora).**
+3. **`LCLI-03`** — Você nomeia um operador distinto do QA para a primeira captura e assina a segunda leitura? **Default: A (nomear operador e assinar a ficha).**
+4. **`A20`** — Você confirma o MFA de staff como condição para o portal público e autoriza implementá-lo em `WYDPOR-F0`/`F4`/`F5`? **Default: A (implementar antes de abrir).**
+5. **`M21`** — Você mantém o escopo completo das telas/rotas do portal e autoriza executar `WYDPOR-F0`–`F11`? **Default: A (executar o escopo planejado).**
+6a. **`LCLI-05` — autorização do dono** — Você confirma o signatário e os dados do pedido, autoriza o envio ao titular e mantém a distribuição congelada até a resposta escrita? **Default: A (enviar e manter congelado; liberar somente o escopo escrito).**
+
+### Terceiro
+
+6b. **`LCLI-05` — resposta do titular** — O titular confirma por escrito, por classe de conteúdo, o que pode ser copiado, modificado, publicado ou redistribuído, com signatário e data? **Default: aguardar a resposta escrita e não liberar nada sem ela.**
+
+### Runtime
+
+7. **`LPRT-03`** — Você confirma a execução da captura A1 via `ECAP` + CLI, com segunda leitura e golden, para provar a origem da `KeyWord`? **Default: A (executar A1).**
+8. **`LPRT-06`** — Você confirma as capturas B/C com personagem sintético e seed para provar encoding e terminador? **Default: A (executar B/C e registrar golden).**
+9. **`LNET-01`** — Você autoriza executar a escada de carga e congelar os limites absolutos no relatório, sem valor provisório? **Default: A (medir e congelar).**
+10. **`LBOT-03`** — Você autoriza medir o limiar de carga dos bots e transformar o primeiro degrau de saturação no gate? **Default: A (medir e congelar).**
+11. **`A11`** — Você autoriza capturar o `GameLogin` do cliente 7662 e só então restringir o charset, mantendo o fallback permissivo até a prova? **Default: A (capturar e provar).**
+
+## 5. Manutenção
+
+1. O dono responde na pergunta numerada ou na mensagem de origem.
+2. A resposta é registrada no `lacunas.md` do sistema e em `docs/lacunas.md` §4, com data, dono e artefato.
+3. Só então o estado muda nesta pauta; uma resposta verbal não altera o ledger.
+4. Se a resposta for "não", a objeção volta ao dono e o item continua bloqueado.
+5. Se um item fechar, ele sai do índice e permanece no histórico do ledger; esta página não mantém uma segunda cópia do estado.
 
 ## 6. Limites
 
 - Não cria issue, board, commit, push, deploy, ADR ou mensagem; nada foi enviado.
-- Não substitui `docs/lacunas.md` §4 nem o §7 dos dois pacotes: só reúne os ponteiros.
-- Não reabre decisão já fechada nem conta como resposta o que não está registrado.
+- Não substitui o ledger nem os documentos donos: consolida a leitura e o critério de pronto.
+- Não reabre decisão já fechada (`OPS-03.1`–`OPS-03.5`, `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LCLI-02`).
+- Não inventa provedor, custo, RPO/RTO, limite, charset ou data; onde o dado não existe, o critério de pronto exige a medição.

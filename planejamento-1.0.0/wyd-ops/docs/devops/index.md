@@ -3,57 +3,80 @@
 > Pergunta: "quais workflows existem, o que cada gate prova, como rodar local e como reverter?"
 > Público: Desenvolvimento, operação, arquitetura e agentes
 > Dono: `wyd-ops`
-> Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0008`
+> Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0012`
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-26) — F0 + F1 implementados; F2–F5 estão planejados e **não** implementados. Nenhum deploy de produção existe.
+**Estado:** aceito (2026-11-26) — F0 + F1 implementados; F2 parcialmente implementado (Buildx/cache/atestados e bases por digest; runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
 
 ## 1. O que está no ar
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
 | `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (db/signer em Ubuntu; launcher em Windows), `unit` (db e signer em Ubuntu/Windows; launcher só em Windows), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
-| `ci-db.yml` | todo push/PR | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` como service), `gate-db`, `notificar falha` | `gate-db` |
-| `docs.yml` | todo push/PR | `gate-docs`, `publicar` (Pages, só push), `notificar falha` | `gate-docs` |
-| `docs-image.yml` | caminhos de docs/imagem | build, smoke HTTP 200, push GHCR (só push) | não (F2 torna obrigatório) |
-| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `dependency-review` (PR), `gate-security`, `notificar falha` | `gate-security` |
-| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project | não (automação, não gate) |
+| `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar falha` | `gate-db` |
+| `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar falha` | `gate-docs` |
+| `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
+| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar falha` | `gate-security` |
+| `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
+| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
 | `release.yml` | tag `v*` | assina e publica manifesto | não |
 
 `full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
 
 ### Por que os workflows obrigatórios não têm filtro de caminho
 
-Um check obrigatório filtrado por caminho fica em **Expected** em PR que não toca aquele caminho e bloqueia o merge para sempre. Por isso `code`, `ci-db`, `docs` e `security` rodam em todo PR; o custo é baixo em repositório público e o bloqueio eterno é pior. `docs-image` continua filtrado porque não é obrigatório nesta fase.
+Um check obrigatório filtrado por caminho fica em **Expected** em PR que não toca aquele caminho e bloqueia o merge para sempre. Por isso `code`, `ci-db`, `docs` e `security` rodam em todo PR; o custo é baixo em repositório público e o bloqueio eterno é pior. `docs-image` continua filtrado porque não é obrigatório nesta fase. Os quatro agregadores estão aplicados nos rulesets de `develop` e `main` desde 2026-11-26; `strict` é `false` em `develop` e `true` em `main`.
 
 ## 2. O que cada gate prova
 
 - **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates; `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
-- **`gate-docs`**: `wyd-docs/gate.sh` — o pacote `python -m gate` roda skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos. A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
-- **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`.
+- **`gate-docs`**: `wyd-docs/gate.sh` — roda primeiro os testes unitários dos verificadores e depois o pacote `python -m gate` (skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos). A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
+- **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`; `workflow-lint` roda actionlint 1.7.12 em imagem por digest.
 - CodeQL continua em **default setup** do GitHub (actions, JS/TS, Python, Rust); não há workflow CodeQL duplicado.
 
 ## 3. Como rodar local
 
 ```bash
-make gate        # mesmo gate do CI, dentro da imagem :gate
+make gate        # mesmo gate do CI, dentro da imagem :gate (testes + gate full)
 make gate-fast   # checks nativos (skills, lacunas, contagens, censos), sem Docker/MkDocs
-make test-gate   # testes de fixture dos verificadores
+make test-gate   # atalho isolado para os testes de fixture dos verificadores
 make fmt         # cargo fmt --check nos três crates
 make lint        # cargo clippy -D warnings nos três crates
 make test        # testes unitários (wyd-db --lib; signer --locked; launcher só no Windows)
 
-make docs-up     # puxa a imagem publicada e sobe em 127.0.0.1:8000
+make docs-up     # puxa a imagem publicada e sobe com --no-build em 127.0.0.1:8000
 make docs        # constrói da árvore de trabalho (dev, tag :dev)
 make docs-down   # para o site
 
 make db-up       # PostgreSQL 17 local em 127.0.0.1:5432, tmpfs
 make db-down     # para e descarta o banco local
-make rollback TAG=<sha>   # volta a imagem do site para o SHA indicado
+make rollback TAG=<sha>   # puxa a tag e sobe com --no-build, sem construir a árvore
 ```
 
-O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois. A imagem copia a árvore de evidência no build e roda `/app` **sem bind mount**: em 2026-11-26, o mesmo gate levava 2m20s com o bind mount do Docker Desktop e passou a cerca de 1m20 (duas medições: 59s e 1m25s) com a cópia e o cache de resolução de links. Cliente e legado continuam fora do contexto por `.dockerignore`.
+O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois, e `gate.sh` roda os testes unitários antes do `gate full`. O teste paralelo-vs-sequencial é executado no Linux e no macOS, onde `fork` existe; o **skip é apenas do Windows**, porque não há `fork` lá. A imagem copia a árvore de evidência no build e roda `/app` **sem bind mount**, que é a condição da medição controlada abaixo; as duas últimas execuções após as edições de 2026-11-26 ficaram em **24,2–27,0s** (494 páginas); a medição controlada de 480 páginas permanece **20,5–21,5s**. Medições com bind mount pertencem a outra condição e não são repetidas aqui. Cliente e legado continuam fora do contexto por `.dockerignore`.
+
+### Medição do gate completo e do check de links (2026-11-26)
+
+Ambiente: Docker Desktop 29.9.3, imagem `python:3.15-slim` (Python 3.15.2), 8 CPUs e 16 GB, host Windows; `MSYS_NO_PATHCONV=1` no Git Bash para preservar `/app`. A mesma árvore de 480 páginas e os mesmos argumentos foram usados nos dois lados: a imagem construída de um worktree de `f271caa` (`git worktree add .gate-antes f271caa`, removido após a medição) e a árvore de trabalho. A partir da raiz:
+
+```bash
+docker build -f wyd-ops/wyd-docs.Dockerfile --target gate -t wyd-gate-antes:local .
+docker run --rm wyd-gate-antes:local python -m gate full --root /app --json
+docker run --rm wyd-gate-antes:local bash -c "python preparar.py && mkdocs build --dir .build/docs --output site && python -m gate check links --root /app --json"
+```
+
+Para o lado atual, os mesmos comandos com a tag `wyd-gate-depois:local`, construída da árvore de trabalho. Cada lado foi executado duas vezes; a tabela registra as duas medições, não uma estimativa.
+
+| Medição | Antes (f271caa) | Depois (árvore atual) | Fração de `links` no gate |
+|---|---|---|---|
+| Gate completo | 35,9s e 40,1s | 21,5s e 20,5s | — |
+| `links` dentro do gate completo | 25,0s e 28,0s | 9,4s e 8,6s | 69,6%/69,9% → 43,5%/41,9% |
+| `links` isolado | 23,9s e 27,8s | 8,8s e 8,1s | — |
+
+Estado, resumo e lista de problemas são idênticos nas oito execuções: PASS, `480 páginas, 478 fontes`, zero problemas. O `build` (9,5–10,1s depois) passou a ser o maior domínio; `links` deixou de dominar o total. A primeira etapa (índice do site em memória, hash por string normalizada e limpeza única de code span) levou o gate a 25,2–29,4s e `links` a 11,9–16,0s; a segunda (parse HTML em processos com `fork` explícito, sem reimportar o módulo principal) fechou em 20,5–21,5s. O parse sequencial de 480 páginas leva 10,9s no container e 5,6s com 8 processos.
+
+A medição de ~43s citada antes desta revisão não pôde ser reproduzida: não há comando ou condição de ambiente registrados, e a própria imagem pré-otimização mede 25,0–28,0s de `links` e 35,9–40,1s de gate completo nesta condição. Este documento registra apenas as medições acima.
 
 O ciclo curto é nativo e não depende de Docker/MkDocs porque o `mkdocs==2.0.dev6` usa `PosixPath` e não roda no Windows. O caminho completo é o do CI/container.
 
@@ -92,32 +115,32 @@ Os composites de `.github/actions/` só instalam ferramentas e chamam esses arqu
 | Recurso | Limite | Uso neste projeto |
 |---|---|---|
 | Runners padrão em repo público | gratuitos | todos os jobs |
-| Cache | 10 GB/repo, 7 dias por entrada | `rust-cache` por crate; pip via `setup-python` |
+| Cache | 10 GB/repo, 7 dias por entrada | `rust-cache` por crate; pip via `setup-python`; Buildx `type=gha` com escopo `docs-image` |
 | Artefatos | 500 MB (Free), 90 dias padrão | cobertura: 2 arquivos, 7 dias |
-| GHCR | imagem pública gratuita | `ghcr.io/lucascantarelli/wyd-docs` |
+| GHCR | imagem pública gratuita | `ghcr.io/lucascantarelli/wyd-docs` com SHA, `develop` e `latest` em `develop` |
 | CodeQL | incluído | default setup |
 
 Não há `sccache`, registry pago, runner self-hosted nem action de cobertura paga.
 
 ## 5. Segurança
 
-- Toda action é pinada por SHA; `sha_pinning_required` deve estar ligado na configuração do repositório.
-- Dependabot semanal cobre `github-actions`, `cargo` (três crates) e `pip`; sem ele, o SHA congela o runtime (foi a causa do warning de Node 20).
+- Toda action é pinada por SHA; `sha_pinning_required=true` e `allowed_actions=selected` estão aplicados no repositório. A allowlist cobre GitHub, `Swatinem/rust-cache`, `taiki-e/install-action`, `dtolnay/rust-toolchain` e `docker/*`.
+- Dependabot semanal cobre `github-actions`, `cargo` (três crates), `pip`, `docker` (Dockerfile do site) e `docker-compose`; sem ele, o SHA congela o runtime (foi a causa do warning de Node 20).
 - `GITHUB_TOKEN` começa em `contents: read`; `pages: write`, `packages: write` e `pull-requests: write` são concedidos só no job que precisa.
 - `checkout` usa `persist-credentials: false` onde o job não publica.
-- `SLACK_WEBHOOK_URL` é secret opcional; sem ele, o step de aviso é ignorado e o gate continua valendo.
+- `SLACK_CI_WEBHOOK` é o secret opcional; os workflows o expõem como `SLACK_WEBHOOK_URL` para a action. Sem ele, o step de aviso é ignorado e o gate continua valendo.
 - Nenhum segredo é impresso; `WYD_LAUNCHER_SIGNING_KEY` continua restrito ao `release.yml`.
 
 ## 6. Regras de branch
 
-A proteção de `develop` e `main` deve exigir:
+A proteção de `develop` e `main` está aplicada e exige:
 
 - PR (sem push direto);
 - checks `gate-code`, `gate-db`, `gate-docs`, `gate-security`;
 - histórico linear; force push bloqueado;
 - bypass apenas para admin, auditado.
 
-Os nomes são os jobs agregadores, não os jobs internos da matriz. Se um job interno for renomeado, a regra não muda.
+`develop` usa `strict=false` para não exigir rebase a cada merge; `main` usa `strict=true`. Os nomes são os jobs agregadores, não os jobs internos da matriz. `main` está arquivada e não é publicada enquanto o release 1.0.0 não reconciliar a história (ADR-OPS-0012).
 
 ## 7. Notificação de falha
 
@@ -126,7 +149,7 @@ O job `notificar falha` roda com `if: always() && (failure() || cancelled())` e:
 1. escreve um resumo com run, commit e ref em `$GITHUB_STEP_SUMMARY`;
 2. se `SLACK_WEBHOOK_URL` existir, posta uma mensagem curta via `curl` + `jq`.
 
-O secret é configurado em **Settings → Secrets and variables → Actions**. Sem ele, não há Slack, mas o run continua vermelho e o check bloqueia.
+O job lê o secret `SLACK_CI_WEBHOOK` e o expõe como `SLACK_WEBHOOK_URL`. O secret é configurado em **Settings → Secrets and variables → Actions**. Sem ele, não há Slack, mas o run continua vermelho e o check bloqueia.
 
 ## 7.1 Transição de issues
 
@@ -140,10 +163,10 @@ eventos, as regras de não regressão e o que fazer sem o PAT estão em `github-
 
 | Fase | Escopo | Critério de saída |
 |---|---|---|
-| **F2 — imagem** | buildx + cache GHA; runtime nginx unprivileged; base por digest; SBOM/provenance; rollback testado | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
+| **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM e tags por branch **feitos**; runtime nginx unprivileged e rollback ensaiado pendentes | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
 | **F3 — deploy** | contrato sobre Compose; workflow manual com `environment`; OIDC; smoke e rollback; **provedor de VPS a definir** | nenhum segredo de longa duração; deploy não roda sem alvo |
 | **F4 — observabilidade** | métricas de duração/fila/falha; relatório semanal; sentinelas de advisory e imagem | falha notifica em menos de 1 min; relatório semanal publicado |
-| **F5 — governança** | ruleset aplicado; allowlist de actions; CODEOWNERS; onboarding e ADRs revisados | PR vermelho não mergeia; action fora da allowlist falha |
+| **F5 — governança** | ruleset, allowlist e ADR-OPS-0012 **feitos**; CODEOWNERS, onboarding e revisão de ADRs pendentes | PR vermelho não mergeia; action fora da allowlist falha |
 
 F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do fornecedor de VPS, não de código.
 

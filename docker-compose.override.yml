@@ -1,8 +1,8 @@
 # Camada carregada automaticamente pelo `docker compose` na raiz.
 #
 # Ela **não** altera o serviço `docs`: o caminho padrão do Compose consome a imagem publicada
-# pelo CI (`docker-compose.yml`). Aqui mora só o `gate`, que é ferramenta local e precisa
-# estar disponível em qualquer `docker compose` da raiz, sem `-f` extra.
+# pelo CI (`docker-compose.yml`). Aqui moram o `gate` e o `db` de teste, ferramentas locais
+# disponíveis em qualquer `docker compose` da raiz, sem `-f` extra.
 #
 # `gate` — o mesmo gate que o CI roda, em um comando:
 #   docker compose --profile gate run --rm gate
@@ -36,8 +36,7 @@ services:
   # descartável e a porta fica só em loopback.
   db:
     profiles: ["db"]
-    image: postgres:17
-    container_name: wyd-db-local
+    image: postgres:17@sha256:87c8b42f423b45d5247e6aa8fdb2e7762fec164c68a50fe3eb07e7bfcaf4dbcf
     environment:
       POSTGRES_PASSWORD: test
       POSTGRES_DB: wyd

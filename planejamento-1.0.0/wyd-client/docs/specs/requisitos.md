@@ -4,7 +4,7 @@
 > Base: `wyd-client-1.0.0.md` §1, §3, §6; `wyd-portal/docs/specs/requisitos.md` (molde, não conteúdo)
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Requisitos derivados da abertura; `LCLI-01` fechado, `LCLI-02`/`LCLI-03`/`LCLI-05` abertas/propostas.
+**Estado:** proposto (2026-11-25). Requisitos derivados da abertura; `LCLI-01` e `LCLI-02` fechados, `LCLI-03`/`LCLI-05` abertas.
 
 Requisito sem critério de aceitação é intenção. Numeração `RF-CLI-nnn` (funcional) e `RNF-CLI-nnn` (não funcional).
 

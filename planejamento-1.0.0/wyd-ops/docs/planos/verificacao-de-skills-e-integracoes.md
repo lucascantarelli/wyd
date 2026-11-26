@@ -69,7 +69,7 @@ Regra: segredos só via secret do GitHub ou `.env` local ignorado. Nenhum token,
 
 | Referência | Relação |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` mantém fronteira/contratos parciais; este documento não fecha organização por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` tem os contratos O1–O5 aprovados; este documento não fecha organização por si só |
 | `wyd-ops/docs/arquitetura/ia-e-skills.md` | organização de pastas, skills e integrações |
 | `wyd-ops/docs/github-mapping.md` | convenções de issue, branch, PR e label |
 | `wyd-ops/docs/specs/requisitos.md` | requisitos de CI, monitoramento, segredos e deploy |

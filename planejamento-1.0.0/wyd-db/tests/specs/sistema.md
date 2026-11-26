@@ -82,6 +82,6 @@ que a suíte faz em cada caso, e o que acontece quando alguém desvia.
 - **Não lista capacidades nem cenários:** `../specs/capacidades.md` e `../alvos/`.
 - **Não define a política de teste:** `../../docs/planos/plano-de-testes.md` e `../../docs/guia-teste/`.
 - **Não decide CI:** não existe página de CI em `docs/planos/` do `wyd-db`; o plano do projeto é
-  `../../../wyd-ops/plano-ci-real.md` (`proposta`, 2026-11-19), e `docs/planos/plano-de-testes.md` §81
+  `../../../wyd-ops/docs/devops/index.md` (`aceito`, 2026-11-26), e `docs/planos/plano-de-testes.md` §81
   anuncia a página local para depois do primeiro código.
 - **Não mede tempo:** nenhum alvo roda; tempo esperado entra com execução registrada.

@@ -1,0 +1,45 @@
+name: code-stable
+
+# Sinal de atualização, não gate de PR. O projeto fixa Rust 1.100.0 em
+# `rust-toolchain.toml`; este workflow roda a mesma suíte com `stable` uma vez por dia
+# para descobrir cedo o que a próxima toolchain vai quebrar. Falha aqui não bloqueia merge.
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-stable-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: "1"
+
+jobs:
+  stable:
+    name: stable / ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - crate: wyd-db
+            args: --lib
+          - crate: wyd-ops-signer
+            args: --locked
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+        with:
+          crate: ${{ matrix.crate }}
+          toolchain: stable
+      - name: Testes com stable
+        run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }}

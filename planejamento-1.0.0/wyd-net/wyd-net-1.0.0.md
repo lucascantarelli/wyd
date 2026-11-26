@@ -63,7 +63,8 @@ só depois da primeira execução no CI efêmero. `LNET-02` (política de versã
 `LNET-03` (modelo de sessão e identidade por conexão) fechou pela regra
 `R6`/`D9`/`ux_session_viva_por_conta`; e `LNET-04` (observabilidade) fechou na mesma data por **regra
 vigente** (`X10`, `LAC-POR-06` e `AGENTS.md` §5, item 7). O transporte só implementa as três, e nenhuma volta
-à fila. O briefing das respostas é `../briefing-de-decisoes-1.0.0.md`.
+à fila. O estado das respostas está em `../lacunas.md`; a
+pauta em `../wyd-ops/docs/pauta-de-decisoes-pendentes.md` reúne os ponteiros.
 
 ## 6. Gate para sair do papel
 

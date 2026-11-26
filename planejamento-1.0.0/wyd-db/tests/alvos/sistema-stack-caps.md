@@ -86,7 +86,7 @@ DSN. Nenhum número entra aqui sem execução registrada.
 - **Comportamento do banco:** `sistema_pg` e `sistema_sessoes`.
 - **Cobertura por linha:** a regra é por capacidade, e percentual não substitui.
 - **CI:** não existe página de CI em `docs/planos/` do `wyd-db`; o plano do projeto é
-  `../../../wyd-ops/plano-ci-real.md` (`proposta`, 2026-11-19), e `docs/planos/plano-de-testes.md` §81
+  `../../../wyd-ops/docs/devops/index.md` (`aceito`, 2026-11-26), e `docs/planos/plano-de-testes.md` §81
   anuncia a página local. Aqui o comando local.
 - **Que a matriz esteja correta:** ela prova que está **ligada**; o acerto de cada capacidade é revisão de
   quem escreve o cenário.

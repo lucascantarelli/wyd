@@ -1,6 +1,6 @@
 name: ci-db
 
-# Alvos PostgreSQL em matriz. Os três modos usam o mesmo `postgres:17` como
+# Alvos PostgreSQL em matriz. Os três modos usam o mesmo `postgres:17` por digest como
 # service container e compartilham os scripts de preparação; o que muda é o papel,
 # a série aplicada e o alvo de teste.
 
@@ -54,7 +54,7 @@ jobs:
             url: postgres://wyd_migrator:test@127.0.0.1:5432/wyd
     services:
       postgres:
-        image: postgres:17
+        image: postgres:17@sha256:87c8b42f423b45d5247e6aa8fdb2e7762fec164c68a50fe3eb07e7bfcaf4dbcf
         env:
           POSTGRES_PASSWORD: test
           POSTGRES_DB: wyd
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

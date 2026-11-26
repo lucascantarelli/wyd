@@ -77,7 +77,7 @@ Fonte: `wyd-ops/docs/arquitetura/ia-e-skills.md`.
 
 | Referência | Relação com este documento |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | `wyd-ops` está organizado e mantém fronteira/contratos O1–O5 pendentes de aprovação; este baseline fecha parte do checklist de operação, mas não declara a implementação por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | `wyd-ops` está organizado e tem os contratos O1–O5 aprovados; este baseline fecha parte do checklist de operação, mas não declara a implementação por si só |
 | `wyd-ops/docs/specs/requisitos.md` (`RF-OPS-004`, `RF-OPS-005`, `RF-OPS-006`, `RNF-OPS-003`, `RNF-OPS-004`) | monitoramento, segredos, deploy, ausência de segredo e ausência de payload/PII |
 | `wyd-ops/docs/arquitetura/componentes.md` (`monitoramento`, `segredos`, `deploy`, `ambiente`, `imagem`) | unidades e invariantes de operação |
 | `wyd-ops/docs/planos/plano-de-testes.md` | alvos de teste de monitoramento, segredos e deploy |

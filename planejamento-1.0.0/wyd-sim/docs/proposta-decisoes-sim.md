@@ -280,8 +280,8 @@ quanto à localização/formato; escrever as fixtures continua pendente de imple
 
 **As quatro perguntas respondidas em 2026-11-23.** `LSIM-01`–`LSIM-04` fecharam na opção A. As respostas
 `Q-SIM-2` e `Q-SIM-3` fecharam decisões documentais — versão da fórmula e local/formato dos vetores —, não
-implementaram fórmulas, vetores ou fixtures. O briefing atualizado (`../../briefing-de-decisoes-1.0.0.md`
-§6) registra `Q-SIM-2` e `Q-SIM-3` concluídas e as remove da fila pendente.
+implementaram fórmulas, vetores ou fixtures. O registro de `LSIM-02`/`LSIM-03` está em `../../lacunas.md` e na
+pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md`.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|
