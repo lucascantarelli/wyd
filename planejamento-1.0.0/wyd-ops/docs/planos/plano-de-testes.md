@@ -4,13 +4,13 @@
 > Base: `AGENTS.md` §8; `wyd-ops/docs/index.md`; `wyd-protocol/docs/planos/plano-de-testes.md` (molde, não conteúdo)
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Nenhum teste escrito.
+**Estado:** proposto (2026-11-25). Um teste unitário escrito em 2026-11-26 (`sync-issue-status`); os demais alvos continuam sem teste.
 
 ## Pirâmide e alvos
 
 | Nível | Alvo | O que prova | Dado |
 |---|---|---|---|
-| Unitário | `gate`, `config` | comando, configuração | funções puras |
+| Unitário | `gate`, `config`, `sync-issue-status` | comando, configuração e transição de estado da issue | funções puras |
 | Contrato | `tests/contrato/` | (n/a) | — |
 | Integração | `tests/integracao/` | smoke de ambiente | ambiente efêmero |
 | Sistema | `tests/sistema/` | deploy, rollback | GitHub Pages/servidor |
@@ -26,6 +26,8 @@
 5. **Segredos:** varredura de segredo no repo.
 6. **Deploy:** deploy em staging; rollback validado.
 7. **Gate:** `docker compose --profile gate run --rm gate` verde; censos coincidem.
+8. **Transição de issue:** `estado/*` trocada em uma requisição, `unlabeled` sem outra label e eco do
+   próprio bot ignorado (`wyd-ops/tests/unitario/sync-issue-status.test.mjs`).
 
 ## Isolamento
 
@@ -36,6 +38,7 @@
 ## Comandos
 
 ```bash
+node --test wyd-ops/tests/unitario/
 docker compose --profile gate run --rm gate
 ```
 

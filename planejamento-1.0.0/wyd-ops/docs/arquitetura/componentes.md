@@ -91,7 +91,7 @@ src/                      # planejamento; código real mora em wyd-ops/ (raiz)
 ├── gate/                 # comando de gate
 └── dashboard/            # wyd-ops-1.0.0.md
 tests/
-├── unitario/            # (n/a)
+├── unitario/            # sync-issue-status (regras da transição de estado)
 ├── contrato/            # (n/a)
 ├── integracao/          # smoke de ambiente
 ├── sistema/             # deploy/rollback

@@ -119,6 +119,7 @@ No CI, `wyd-ops/scripts/ci/db-prepare.sh` cria os papéis e `wyd-ops/scripts/ci/
 | `wyd-ops/scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
 | `wyd-ops/scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
 | `wyd-ops/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
+| `wyd-ops/tests/unitario/sync-issue-status.test.mjs` | Node | regras da transição de estado | `node --test wyd-ops/tests/unitario/` |
 
 Os composites de `.github/actions/` só instalam ferramentas e chamam esses arquivos; não duplicam regra. Um script novo fora deste mapa precisa de issue e dono.
 
@@ -167,9 +168,11 @@ O job lê o secret `SLACK_CI_WEBHOOK` e o expõe como `SLACK_WEBHOOK_URL`. O sec
 
 O workflow `issue-status.yml` mantém a sequência `proposta → aceita → em-andamento → em-revisao → Done`.
 Ele roda em eventos de issue e em `pull_request_target` (sem checkout do PR), aplica no máximo uma
-label `estado/*` e espelha no campo `Status` do Project quando `PROJECT_TOKEN` existe. A tabela de
-eventos, as regras de não regressão e o que fazer sem o PAT estão em `github-mapping.md` §2.2 e
-`ADR-OPS-0009`.
+label `estado/*` em **uma** requisição `PUT /labels` — a troca é atômica desde 2026-11-26 —, ignora o
+evento de label que ele mesmo gerou (autor `github-actions[bot]`) e espelha no campo `Status` do Project
+quando `PROJECT_TOKEN` existe. A tabela de eventos, as regras de não regressão e o que fazer sem o PAT
+estão em `github-mapping.md` §2.2 e `ADR-OPS-0009`; a regressão unitária roda com
+`node --test wyd-ops/tests/unitario/`.
 
 ## 8. O que falta (F2–F5)
 
