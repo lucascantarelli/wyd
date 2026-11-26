@@ -1,0 +1,54 @@
+version: 2
+
+# Pin por SHA protege a supply chain, mas congela o runtime da action. Sem
+# Dependabot, o próximo Node 20/22/26 vira o mesmo warning de novo.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: cargo
+    directory: /crates/wyd-db
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-wyd-db:
+        patterns: ["*"]
+
+  - package-ecosystem: cargo
+    directory: /crates/wyd-ops-signer
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-wyd-ops-signer:
+        patterns: ["*"]
+
+  - package-ecosystem: cargo
+    directory: /crates/wyd-launcher
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-wyd-launcher:
+        patterns: ["*"]
+
+  - package-ecosystem: pip
+    directory: /wyd-docs
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      docs-python:
+        patterns: ["*"]

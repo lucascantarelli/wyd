@@ -31,8 +31,8 @@
 | 10 | Padrões de qualidade de código/testes/boas práticas/docs/segurança/monitoramento/deploy | Feito | documentado em `plano-de-testes.md` de 13 sistemas e `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`); código só em `wyd-db` |
 | 11 | Todos os testes implementados, documentados e funcionando | Parcial | `wyd-db`: 19 testes locais (medido em 2026-11-25 no crate: 13 em `tests/sistema_pg.rs` + 6 em `src/dsn.rs`; contagem de código, fora do gate de docs); demais: 0 (planejados) |
 | 12 | SOLID, design patterns, clean code, arquitetura | Parcial | documentado (componentes, contratos); sem código para validar |
-| 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Feito (planejamento) | documentado em `plano-de-testes.md` de 13 sistemas, com seção própria de CI, cobertura e monitoramento; CI de código segue stub (`full-workflow.yml`) — implementação pendente |
-| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial | `code.yml`, `docs.yml`, `docs-image.yml` (nunca rodou), `full-workflow.yml` (stub) |
+| 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Parcial (F0+F1) | `plano-de-testes.md` de 13 sistemas; CI de código, banco e docs implementado em F0+F1 (2026-11-26), cobertura informativa com retenção de 7 dias; E2E e observabilidade na F4 |
+| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial (F0+F1) | `code.yml` (matriz), `ci-db.yml` (service containers), `docs.yml`, `docs-image.yml`, `security.yml`, `release.yml`; Slack e métricas na F4; deploy na F3 |
 | 15 | Reuso de código, modularização, desacoplamento, coesão, baixo acoplamento | Feito (planejamento) | documentado em `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) |
 | 16 | Centralização de fixtures, mocks, stubs, dados de teste | Feito (planejamento) | documentado em `plano-de-testes.md` de 13 sistemas |
 | 17 | Baixa complexidade, alta legibilidade/manutenibilidade/escalabilidade | N/A | sem código ainda |

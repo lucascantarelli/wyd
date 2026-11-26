@@ -31,14 +31,26 @@ services:
     # montada somente-leitura; nada é escrito nela.
     volumes:
       - .:/repo:ro
-    command:
-      - sh
-      - -c
-      - |
-        python verificar-skills.py --root /repo &&
-        python verificar-lacunas.py --root /repo &&
-        python preparar.py &&
-        mkdocs build --dir .build/docs --output site &&
-        python verificar.py site &&
-        python verificar-contagens.py &&
-        python verificar-censos.py
+    # O comando mora em `wyd-docs/gate.sh`, o mesmo que o CI chama. A cópia
+    # gravável é a da imagem; `/repo` é só a evidência somente-leitura.
+    command: ["bash", "gate.sh", "/repo"]
+
+  # PostgreSQL local para os alvos de integração. `tmpfs` mantém o banco
+  # descartável e a porta fica só em loopback.
+  db:
+    profiles: ["db"]
+    image: postgres:17
+    container_name: wyd-db-local
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: wyd
+    ports:
+      - "127.0.0.1:5432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d wyd"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: "no"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cont="${WYD_PSQL_CONTAINER:-wyd-db-url}"
+args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|-p) shift 2 ;;
+    *) args+=("$1"); shift ;;
+  esac
+done
+exec docker exec -i -e PGPASSWORD="${PGPASSWORD:-test}" "$cont" psql -U "${PGUSER:-postgres}" -d "${PGDATABASE:-wyd}" "${args[@]}"

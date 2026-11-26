@@ -47,6 +47,7 @@ ROTULOS = {
     "src": "Código",
     "tests": "Testes",
     "planos": "Planos",
+    "devops": "DevOps",
     "roadmap": "Roadmap",
     "guia-desenvolvedor": "Guia do desenvolvedor",
     "guia-administrador": "Guia do administrador",
