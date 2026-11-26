@@ -163,7 +163,7 @@ fechadas em 2026-11-19.
 | **B2** | Série nova sem número, ordem e tamanho | arquitetura | enumeração fechada antes da onda 1; `SCHEMA_VERSION` concreto | numeração contígua, ledger, página por migration | — | **fechada** Refletida em `planejamento-1.0.0/wyd-db/docs/arquitetura/visao-geral.md`. |
 | **B3** | Política de credencial: restam o PIN e o limiar — a senha foi decidida em `M9` | produto + arquitetura | **decidida em 2026-11-19:** PIN 4–6 dígitos, 5 falhas/10 min, desbloqueio por tempo; `game.account.pin_failure_count`/`pin_locked_until`; senha 15–128 e `argon2id` como `M9` | `src/security/policy.rs`, S7/S8, §política da ADR de fronteira pessoa × conta | **P1** | fechada Refletida em `planejamento-1.0.0/wyd-db/docs/arquitetura/seguranca.md`. |
 | **B4** | Pessoa suspensa sem autor, motivo ou instante | arquitetura | 3 colunas na própria pessoa (`suspended_reason`, `suspended_by`, `suspended_at`) + CHECK de coerência; histórico no `audit_log` | auditoria de staff, S17, `dominio-acesso.md` | — | **fechada** |
-| **B5** | Multibox por IP sem onde morar | arquitetura + `wyd-server` | `game.session.ip`; IP é auditoria, nunca identidade | `docs/wyd/multiconta.md` §"Controles recomendados", S18, M22 | — | **fechada** |
+| **B5** | Multibox por IP sem onde morar | arquitetura + `wyd-server` | `game.session.ip`; IP é auditoria, nunca identidade | `planejamento-1.0.0/wyd-db/rascunho-accounts.md` §6 `D12`, S18, M22 | — | **fechada** |
 
 **Evidência das fechadas**
 
