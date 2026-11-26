@@ -77,6 +77,8 @@ actionlint .github/workflows/*.yml
 
 O PR de teste deve mostrar `gate-code`, `gate-db`, `gate-docs` e `gate-security` como checks obrigatórios; a imagem publicada em `develop` deve ter `latest`, `develop` e o SHA; o smoke deve responder 200.
 
+**Prova real em 2026-11-26:** PR [#205](https://github.com/lucascantarelli/wyd/pull/205), squash `0c4a612`, com os quatro checks `success`; `docs-image` run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542) publicou as três tags com SBOM SPDX/provenance SLSA v1 e smoke 200; `make rollback` com `f271caa` e `0c4a612` serviu HTTP 200 sem build local.
+
 ## Referências
 
 - Decisão do dono: respostas 1A–11A em 2026-11-26

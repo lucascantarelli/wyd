@@ -32,7 +32,7 @@
 | 11 | Todos os testes implementados, documentados e funcionando | Parcial | `wyd-db`: 19 testes locais (medido em 2026-11-25 no crate: 13 em `tests/sistema_pg.rs` + 6 em `src/dsn.rs`; contagem de código, fora do gate de docs); demais: 0 (planejados) |
 | 12 | SOLID, design patterns, clean code, arquitetura | Parcial | documentado (componentes, contratos); sem código para validar |
 | 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Parcial (F0+F1) | `plano-de-testes.md` de 13 sistemas; CI de código, banco e docs implementado em F0+F1 (2026-11-26), cobertura informativa com retenção de 7 dias; E2E e observabilidade na F4 |
-| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial (F0+F1) | `code.yml` (matriz), `ci-db.yml` (service containers), `docs.yml`, `docs-image.yml` (Buildx), `security.yml` (actionlint), `code-stable.yml`, `release.yml`; Slack e métricas na F4; deploy na F3 |
+| 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial (F0+F1) | `code.yml` (matriz), `ci-db.yml` (service containers), `docs.yml`, `docs-image.yml` (Buildx/GHCR publicado), `security.yml` (actionlint), `code-stable.yml` (executado), `release.yml`; prova real no PR #205 e runs de 2026-11-26; Slack e métricas na F4; deploy na F3 |
 | 15 | Reuso de código, modularização, desacoplamento, coesão, baixo acoplamento | Feito (planejamento) | documentado em `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) |
 | 16 | Centralização de fixtures, mocks, stubs, dados de teste | Feito (planejamento) | documentado em `plano-de-testes.md` de 13 sistemas |
 | 17 | Baixa complexidade, alta legibilidade/manutenibilidade/escalabilidade | N/A | sem código ainda |
@@ -114,8 +114,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
    `planejar-sistema`. **Nada foi criado nesta rodada** (sem autorização).
 2. **Segredos e deploy** — valores de DSN/tokens só via secret do GitHub ou `.env` local; nunca em
    chat. Deploy/release/push exigem pedido explícito. Skill: `planejar-sistema`.
-3. **Imagem do site** — `.github/workflows/docs-image.yml` versionado mas nunca rodou; publicar
-   requer aprovação (ver `wyd-ops/plano-imagem-e-compose-do-site.md`). Skill: `planejar-sistema`.
+3. **Imagem do site** — `docs-image` publicou em `develop` em 2026-11-26 (run `45827609542`), com `:SHA`/`:develop`/`:latest`, provenance/SBOM e smoke 200; `make rollback` foi provado com duas tags publicadas. Restam runtime nginx e produção (ver `wyd-ops/plano-imagem-e-compose-do-site.md`). Skill: `planejar-sistema`.
 4. **Primeira fatia de código** — D-01 mantém `wyd-db` como foco; recomendação: `WYDDB-001`
    (baseline do crate) e, em paralelo, `WYDNET-001`. Skill: `planejar-sistema`.
 5. **Roadmaps de sistema** — `wyd-protocol` e `wyd-admin` têm roadmap com DoD após a segunda passada;
@@ -233,3 +232,17 @@ label ficou em `area/*` (decisão de 2026-11-25), e `OPS-05` criou:
 Cada issue nova tem documento de origem com link, critérios de aceite observáveis e a seção
 "Skills a carregar" com `skill_principal` e complementares. A criação foi idempotente: o script consulta os
 títulos existentes antes de criar e a reexecução não duplica issue.
+
+## 13. Prova real do DevOps 1A–11A (2026-11-26)
+
+| Prova | Evidência | Estado |
+|---|---|---|
+| PR e checks do pacote | PR [#205](https://github.com/lucascantarelli/wyd/pull/205), squash `0c4a612`; `gate-code`, `gate-db`, `gate-docs` e `gate-security` com conclusão **success** | comprovado |
+| Imagem publicada | run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`; tags `:SHA`, `:develop` e `:latest`; digest `sha256:462029e…`; SBOM SPDX + provenance SLSA v1; smoke HTTP 200 | comprovado |
+| Sinal stable | run [`45828077654`](https://github.com/lucascantarelli/wyd/actions/runs/45828077654); `wyd-db` e `wyd-ops-signer` concluíram com Rust `stable` | comprovado |
+| Rollback | `make rollback TAG=f271caab…` e `TAG=0c4a612a…` puxaram as imagens do GHCR e responderam HTTP 200 sem build local | comprovado |
+| Node 20 | logs recentes de `code`, `docs`, `docs-image`, `security`, `ci-db` e `code-stable` sem o aviso nem a SHA `ea165f8…` | comprovado |
+| Produção, `OPS-04`/`OPS-05`, `PROJECT_TOKEN` | provedor/VPS, backup, RPO/RTO e PAT continuam fora deste pacote; nenhum deploy de produção foi feito | pendente do dono |
+| Runtime nginx | F2 ainda usa o servidor Python atual; migração não foi decidida nem executada | pendente de decisão |
+
+O PR foi integrado em `develop`; a publicação e o rollback acima usam o commit integrado, não uma árvore local.

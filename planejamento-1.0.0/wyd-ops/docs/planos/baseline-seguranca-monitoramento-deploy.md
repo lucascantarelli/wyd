@@ -43,7 +43,7 @@ Fonte: `wyd-ops/docs/specs/requisitos.md` (`RF-OPS-004`, `RNF-OPS-004`).
 | Área | Regra mínima | Estado medido |
 |---|---|---|
 | Hospedagem de produção | VPS paga com processo persistente e Compose (`Q-OPS-2 = A`) | decisão registrada; contrato, VPS, backup e operação não executados |
-| Imagem do site | construída pelo CI e consumida pelo Compose | workflow versionado, nunca rodou/publicou |
+| Imagem do site | construída pelo CI e consumida pelo Compose | publicada em 2026-11-26 (run `45827609542`): tags SHA/develop/latest, provenance/SBOM e smoke 200 |
 | Deploy | permissões mínimas e rollback validado | planejado; nenhum deploy existe |
 | Ambiente | provisionamento efêmero em CI; sem estado global | planejado |
 | Segredo em deploy | rotação documentada; valor nunca em chat | planejado |
@@ -92,9 +92,9 @@ Fonte: `wyd-ops/docs/arquitetura/ia-e-skills.md`.
 2. **Ambiente de staging** — quando criar.
    - Opções: A) antes do primeiro deploy; B) junto com produção; C) apenas efêmero em CI.
    - Recomendação: C primeiro, A quando houver release candidata.
-3. **Publicação da imagem do site** — hoje nunca rodou.
-   - Opções: A) publicar na próxima execução do workflow; B) aguardar aprovação explícita; C) manter build local.
-   - Recomendação: B, conforme política de deploy/release.
+3. **Runtime da imagem do site** — a publicação já foi provada em `develop` em 2026-11-26; o runtime nginx unprivileged da F2 continua pendente.
+   - Opções: A) manter o servidor Python atual até o deploy; B) migrar para nginx unprivileged antes do deploy; C) decidir no release 1.0.0.
+   - Recomendação: B, com smoke 200 antes de promover.
 4. **Rotação de segredos** — frequência e dono.
    - Opções: A) rotina documentada por segredo; B) rotação manual por incidente; C) automação futura.
    - Recomendação: A para segredos de produção; B para desenvolvimento.
