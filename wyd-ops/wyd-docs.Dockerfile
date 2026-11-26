@@ -4,7 +4,8 @@
 # Construída pelo CI em .github/workflows/docs-image.yml e consumida por docker-compose.yml.
 # Dono da decisão: planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md
 #
-# Contexto de build é a raiz do repositório: o `preparar.py` lê `planejamento-1.0.0/`.
+# Contexto de build é a raiz do repositório: o `preparar.py` lê `planejamento-1.0.0/` e
+# o gate confere evidência em `AGENTS.md`, `crates/`, `.github/`, `.agents/` e scripts.
 # Use a raiz como diretório de trabalho, não o diretório deste arquivo.
 #
 # Uso local (mesmo comando do CI):
@@ -20,9 +21,10 @@ WORKDIR /app
 COPY wyd-docs/requirements.txt wyd-docs/requirements.txt
 RUN pip install --no-cache-dir --disable-pip-version-check -r wyd-docs/requirements.txt
 
-# Fontes: `preparar.py` lê `planejamento-1.0.0/<sistema>/docs/` e o tema de `wyd-docs/tema/`.
-COPY planejamento-1.0.0 planejamento-1.0.0
-COPY wyd-docs wyd-docs
+# Fontes e evidência: `preparar.py` lê `planejamento-1.0.0/<sistema>/docs/`; o gate de
+# lacunas confere citações em `AGENTS.md`, `crates/`, `.github/`, `.agents/` e scripts.
+# O `.dockerignore` exclui só o que é grande e não é evidência (cliente e legado).
+COPY . .
 
 WORKDIR /app/wyd-docs
 

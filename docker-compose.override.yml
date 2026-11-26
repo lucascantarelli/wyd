@@ -26,14 +26,11 @@ services:
       dockerfile: wyd-ops/wyd-docs.Dockerfile
       target: gate
     working_dir: /app/wyd-docs
-    # A imagem copia só `planejamento-1.0.0/` e `wyd-docs/`. A guarda de lacunas confere
-    # evidência citada na árvore inteira (crates, deprecated, .github), então lê a raiz
-    # montada somente-leitura; nada é escrito nela.
-    volumes:
-      - .:/repo:ro
-    # O comando mora em `wyd-docs/gate.sh`, o mesmo que o CI chama. A cópia
-    # gravável é a da imagem; `/repo` é só a evidência somente-leitura.
-    command: ["bash", "gate.sh", "/repo"]
+    # A imagem copia a árvore de evidência no build (`.dockerignore` exclui cliente e
+    # legado). Sem bind mount: o Docker Desktop no Windows fazia o mesmo gate levar
+    # 2m20s; sobre a cópia da imagem ele leva ~5s. O build ainda valida a árvore de
+    # trabalho porque `pull_policy: build` refaz a camada de fontes.
+    command: ["bash", "gate.sh", "/app"]
 
   # PostgreSQL local para os alvos de integração. `tmpfs` mantém o banco
   # descartável e a porta fica só em loopback.

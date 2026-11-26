@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import re
 import sys
+import os
+from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -69,14 +71,24 @@ def _analisar(caminho: Path) -> Coletor:
     return coletor
 
 
+@lru_cache(maxsize=None)
+def _existe(caminho: Path) -> bool:
+    return caminho.exists()
+
+
+@lru_cache(maxsize=None)
+def _e_diretorio(caminho: Path) -> bool:
+    return caminho.is_dir()
+
+
 def _destino(pagina: Path, raiz: Path, caminho: str) -> Path | None:
     if not caminho:
         return pagina
     if caminho.startswith("/"):
-        alvo = (raiz / caminho.lstrip("/")).resolve()
+        alvo = Path(os.path.normpath(raiz / caminho.lstrip("/")))
     else:
-        alvo = (pagina.parent / caminho).resolve()
-    if alvo.is_dir():
+        alvo = Path(os.path.normpath(pagina.parent / caminho))
+    if _e_diretorio(alvo):
         alvo = alvo / "index.html"
     return alvo
 
@@ -136,10 +148,10 @@ def _checar_redirects(raiz: Path, analisados: dict[Path, Coletor]) -> list[str]:
             continue
         stub = raiz / origem / "index.html"
         alvo = (raiz / destino / "index.html").resolve()
-        if not stub.exists():
+        if not _existe(stub):
             problemas.append(f"redirects.tsv:{numero}: origem sem pagina-stub {origem}")
             continue
-        if not alvo.exists():
+        if not _existe(alvo):
             problemas.append(f"redirects.tsv:{numero}: destino inexistente {destino}")
             continue
         coletor = analisados.get(stub) or _analisar(stub)
@@ -193,7 +205,7 @@ def main(argv: list[str]) -> int:
             alvo = _destino(pagina, raiz, unquote(partes.path))
             if alvo is None:
                 continue
-            if not alvo.exists():
+            if not _existe(alvo):
                 problemas.append(f"{relativo}: destino inexistente {partes.path}")
                 continue
             if partes.fragment:

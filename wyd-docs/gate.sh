@@ -8,9 +8,9 @@
 # Uso:
 #   bash wyd-docs/gate.sh [<raiz-do-repositorio>]
 #
-# No Compose a árvore de trabalho é montada em `/repo` somente-leitura; por isso
-# a montagem, o build e a verificação rodam em `wyd-docs/` (a cópia gravável da
-# imagem), enquanto a guarda de lacunas lê a evidência em `<raiz>`.
+# No Compose a árvore de evidência já está copiada na imagem `:gate`; não há bind
+# mount. A montagem, o build e a verificação rodam em `wyd-docs/` (a cópia
+# gravável da imagem), enquanto a guarda de lacunas lê a evidência em `<raiz>`.
 set -euo pipefail
 
 AQUI="$(cd "$(dirname "$0")" && pwd)"
