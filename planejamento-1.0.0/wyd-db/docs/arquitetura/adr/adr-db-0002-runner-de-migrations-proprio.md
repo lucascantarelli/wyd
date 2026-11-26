@@ -121,7 +121,7 @@ O preflight de papel (`current_user = wyd_migrator`, comparação estrita) já �
   de domínio não existem e `public.schema_migrations` fica **vazia e com a forma validada**, pronta para
   o `apply` seguinte. O `DROP SCHEMA IF EXISTS public CASCADE` do herdado
   (`crates/wyd-db/src/migrate.rs:236-240`) não serve: derruba só `public`, deixaria os quatro schemas
-  vivos sem ledger e o `CASCADE` anularia o gate que `migrations/0001-bootstrap.md` §8 usa ao derrubar
+  vivos sem ledger e o `CASCADE` anularia o gate que `migrations/0001_bootstrap.md` §8 usa ao derrubar
   os schemas **sem** `CASCADE`. A flag `--reset` passa a ser composição no chamador (`down` até vazio +
   `apply`); `wyd-admin` é legado (`run_dir(dsn, dir, reset)`, `crates/wyd-admin/src/main.rs:1429`), será
   replanejado inteiro e não é razão para desenhar o módulo em torno da assinatura dele.
@@ -180,7 +180,7 @@ Cada prova é um teste do módulo (`src/migrate/spec.md` §13), não uma confer�
 
 **Revisão de estado — 2026-11-21 (`M27`/`0032`).** A série passou de 31 para 32 arquivos; `0032`
 concede privilégios a `wyd_admin` e não altera o número de tabelas (`plano-migrations.md` §3;
-`migrations/0032-admin-grants.md`). O total vigente de papéis passou de cinco para seis com a decisão
+`migrations/0032_admin_grants.md`). O total vigente de papéis passou de cinco para seis com a decisão
 `M27` (`src/provision/spec.md` §2; `lacunas.md` §2.3). Esta nota atualiza os números de estado, sem
 reescrever a decisão original: contagens e menções anteriores refletem o desenho considerado no aceite
 de 2026-11-18.

@@ -29,7 +29,7 @@ lacuna, não renumera ID e não altera as contagens de `lacunas.md`.
 | decisões de capacidade | **0 abertas**; `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` decididas em 2026-11-23; a matriz de `Q-CAP-2` está aplicada na página | `proposta-decisoes-capacidade.md` §4 e §9 |
 | páginas de migration bloqueadas por dado | **6**: `0016`–`0018`, `0020`, `0023`, `0027` | `migrations-checklist.md` §3 |
 | issues do roadmap | **40** com DoD, **0** criadas no GitHub; board com 40 itens | `docs/planos/riscos.md` `R-5`; §6.6.20 |
-| páginas de `tests/` | **12 de 12** escritas e **12** `aceito` (2026-11-24); matriz `CAP-nn` com **39** capacidades e **13** cobertas por teste executado | §6.6.21, §6.6.23 e §6.6.30; `plano-de-testes.md` §5 |
+| páginas de `tests/` | **13 de 13** escritas e **13** `aceito` (12 em 2026-11-24 e a do `runner_pg` em 2026-11-25); matriz `CAP-nn` com **39** capacidades e **14** cobertas por teste executado | §6.6.21, §6.6.23 e §6.6.30; `plano-de-testes.md` §5 |
 | arquivos `.sql` da série | **28**, aplicados do zero como `wyd_migrator` em `postgres:17`; 13 cenários `sistema_pg` verdes | §6.6.30; `ls migrations/0*.sql` |
 
 **O que não mudou:** as 38 lacunas continuam 0/0/35/3; `M33` continua fechada como decisão e
@@ -294,7 +294,7 @@ verificada (`plano-migrations.md` §4). Custo é estimativa de curadoria + escri
 | ID | Pendência | Dono | Custo estimado | Dependência externa | Consequência de não fazer | Desbloqueia |
 |---|---|---|---|---|---|---|
 | `M20/metricas` | escrever `planos/metricas.md` com número medido | arquitetura + operação | 1 sessão, **depois** da série | a série precisa existir e ser medida | o critério de saída da documentação 1.0.0 não fecha; o item 10 de §10 segue com a metade suspensa | métrica, contagem real e aceite de página |
-| `SERIE-REGRAS` | ~~escrever `migrations/serie-e-regras.md`~~ — **feito em 2026-11-25**, `aceito` | `wyd-db` | concluído | nenhuma decisão nova; a fonte é `plano-migrations.md` §2/§6 e `src/migrate/spec.md` | a página existe, mas a política de `down` continua aberta em `Q-SERIE-1` | 5ª onda e operação da série |
+| `SERIE-REGRAS` | ~~escrever `migrations/serie-e-regras.md` e os 28 `down`~~ — **feito/provado em PG17 via `psql`, 2026-11-25** | `wyd-db` | concluído | Q-SERIE-1 = B; fonte `migrations/serie-e-regras.md` §9.2 | ciclo SQL provado; nomes com `_` desde `Q-SEP-1` = A′; a série real só não roda pelas 6 versões ausentes | base para a troca da série no runner |
 | `Q-RET-1/aplicação` | criar o índice completo por `expires_at` e o `DELETE` diário de `portal.person_token` | `wyd-db` + `wyd-ops` | 2–4 h de índice/migration + 1 sessão de job | outra frente: `wyd-ops`; sem jurídico | a decisão existe, mas a tabela não está pronta para produção nem tem expurgo | produção de `person_token`, expurgo diário e a linha de índice |
 | `Q-RET-2/aplicação` | criar o `DELETE` diário de `ops.login_attempt` usando `ix_login_attempt_occurred` | `wyd-ops` | 1 sessão de job | outra frente: `wyd-ops`; sem jurídico e sem índice novo | a decisão existe, mas a tabela continua sem expurgo e não vai a produção | produção de `login_attempt` e expurgo diário |
 | `Q-RET-4/aplicação` | criar o índice por `expires_at` e o `DELETE` diário de `game.pin_reset` | `wyd-db` + `wyd-ops` | 2–4 h de índice/migration + 1 sessão de job | outra frente: `wyd-ops`; sem jurídico; TTL ainda é `B1` | a decisão existe, mas `pin_reset` não vai a produção e pedidos nunca usados crescem | produção e expurgo de `pin_reset` |
@@ -1228,7 +1228,7 @@ DDL.
 | credenciais no C4 | **6**: jogo, portal/BFF, staff, operação/BI, runner de migrations, provisionamento | `docs/arquitetura/contexto-c4.md` §2 | `V` |
 | credenciais de **produto** | **4** (as quatro primeiras) | idem | `V` |
 | credenciais de **infraestrutura** | **2**: runner e provisionamento | idem | `V` |
-| valores de `person.role` | **3**: `member`, `moderator`, `admin`; é papel **do portal, não de jogo** | `docs/dicionario-dados/gerado/person.md` (`ck_person_role`); `migrations/0003-portal-person.md` | `V` |
+| valores de `person.role` | **3**: `member`, `moderator`, `admin`; é papel **do portal, não de jogo** | `docs/dicionario-dados/gerado/person.md` (`ck_person_role`); `migrations/0003_portal_person.md` | `V` |
 | papéis de cluster | **6** + `wyd_owner` `NOLOGIN` — não são atores de produto | `docs/arquitetura/seguranca.md`; `plano-de-implantacao.md` §Verificação | `V` |
 | requisitos com ID | **31** (16 `RF` + 7 `RN` + 3 `UC` + 5 `RNF`) | `docs/specs/index.md` | `V` |
 | atores nomeados hoje | **0** — `specs/stakeholders.md` não existe | `proposta-paginas.md` §6 | ausência |
@@ -1870,7 +1870,7 @@ uma esperava o seu gatilho — as issues, o aceite da 1ª leva, que veio em 2026
 | 5 | `tests/alvos/contrato-migrations.md` | `CAP-01`–`CAP-07`, **7** cenários, cada um contra a série real e contra a fixture que falha | **0** tempo medido |
 | 6 | `tests/alvos/contrato-catalogo.md` | `CAP-08`, paridade catálogo × série: **109** tabelas e **2** views | bloqueado: `banco-catalogo.md` não existe |
 | 7 | `tests/alvos/sistema-pg.md` | `CAP-09`–`CAP-19`, **11** cenários contra PG17 real | PostgreSQL **17**; DSN `WYD_DB_URL_TEST` |
-| 8 | `tests/alvos/sistema-sessoes.md` | `CAP-20`–`CAP-21`: `permission denied` observado, leitura só por view, auditoria append-only | papéis do provisionamento + `0032-admin-grants.md` |
+| 8 | `tests/alvos/sistema-sessoes.md` | `CAP-20`–`CAP-21`: `permission denied` observado, leitura só por view, auditoria append-only | papéis do provisionamento + `0032_admin_grants.md` |
 | 9 | `tests/alvos/sistema-stack-caps.md` | `CAP-22`–`CAP-23` e a conferência que impede `CAP` órfã | **23** capacidades somadas nas seções da matriz |
 | 10 | `tests/specs/contrato.md` | **8** regras da camada sem banco | parser único (`serie.rs`) |
 | 11 | `tests/specs/sistema.md` | **18** regras: preparo, DSN, isolamento, dado | sem `SKIP`, sem `sleep`, sem id mágico |
@@ -2332,7 +2332,7 @@ e o roteiro de §1.1 (`requisito → alvo → página`) passa a apontar para um 
 
 1. **`CAP-18` não é executável como está escrito.** `content_version` nasce em `0001` com
    `pk_content_version` (`id`) e `ck_content_version_linha_unica CHECK (id = 1)`, e a prova 9 de
-   `migrations/0001-bootstrap.md` §9 já recusa `id = 2` com `23514`. Duas linhas correntes **não são
+   `migrations/0001_bootstrap.md` §9 já recusa `id = 2` com `23514`. Duas linhas correntes **não são
    representáveis**: o banco impede a ambiguidade na escrita, então não há boot que a recuse. O cenário
    pede uma entrada que o schema não produz.
 2. **Os três `RNF` não têm capacidade própria.** `RNF-DB-002` promete "o teste de concorrência com
@@ -2407,7 +2407,7 @@ executada primeiro, a série dela vira `RNF-DB-008`–`013` (regra do próximo l
 
 **(f) Fontes fechadas:** `tests/specs/capacidades.md` §4 e §9; `tests/alvos/sistema-pg.md` §2 e §6;
 `docs/specs/requisitos-nao-funcionais.md` §2–§5 e §9; `docs/specs/rastreabilidade.md` §2.3;
-`docs/specs/stakeholders.md` §2; `migrations/0001-bootstrap.md` §4, §6 e §9 (prova 9);
+`docs/specs/stakeholders.md` §2; `migrations/0001_bootstrap.md` §4, §6 e §9 (prova 9);
 `docs/guia-administrador/configuracao.md` §3; `docs/guia-desenvolvedor/pool-e-transacoes.md` §1 e §3;
 `docs/specs/visao-e-escolpo.md` §1; `docs/arquitetura/modelo-logico.md` §3;
 `docs/specs/fluxos/carga-de-conteudo.md` §2–§3; `docs/arquitetura/implantacao.md` §1; `padrao-banco.md`
@@ -2745,7 +2745,7 @@ recusa `' Bob '` em `ck_account_login_forma` antes de qualquer fold, e o cenári
 | Resultado | Quais |
 |---|---|
 | **verde** | `CAP-24`, `25`, `26`, `27`, `28`, `29`, `30`, `31`, `32`, `33`, `34`, `35`, `36` |
-| **sem código que execute** | `CAP-37` (`RNF-DB-002`: `MigrateConfig`/runner), `CAP-38` (`RNF-DB-004`: consulta da porta C4), `CAP-39` (`RNF-DB-005`: boot do binário) |
+| **sem código que execute** | `CAP-38` (`RNF-DB-004`: consulta da porta C4) e `CAP-39` (`RNF-DB-005`: boot do binário); `CAP-37` foi fechada por `runner_pg` em 2026-11-25 |
 
 **O que mudou nos censos, medido nesta passada:** cobertas por teste executado **0 → 13 de 39**; células
 pendentes da rastreabilidade **77 → 64** (**24** `Teste` em `P` + **40** `Issue`; **13** `Teste` em `V`, **3**
@@ -2767,7 +2767,7 @@ páginas de `migrations/` agora), com `Q-BLK-20` = **A** e `Q-BLK-22` = **A**. O
 decisões é `../wyd-ops/docs/prioridade-do-projeto.md` §0.1; esta seção registra o ato e a medição.
 
 **O que foi executado:** as **27** páginas escritas de `migrations/` passaram a
-`**Estado:** aceito (2026-11-24)` — com `0002-ops-audit.md`, que já estava `aceito (2026-11-20)`, a pasta
+`**Estado:** aceito (2026-11-24)` — com `0002_ops_audit.md`, que já estava `aceito (2026-11-20)`, a pasta
 fica com **28 de 28**. A assinatura é o ato do dono (`Q-FOCO-4`); a revisão de quem não escreveu é o item 9 de §10 de
 `wyd-db-1.0.0.md`. Antes de assinar, as **16** páginas que ainda diziam “nada disto rodou” ou “prova
 prevista (não executada)” foram corrigidas para o fato medido: o `.sql` existe, a série aplicou do zero em

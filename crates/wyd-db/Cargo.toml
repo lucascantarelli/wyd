@@ -12,6 +12,14 @@ publish = false
 name = "sistema_pg"
 path = "tests/sistema_pg.rs"
 
+[[test]]
+name = "reversibilidade_pg"
+path = "tests/reversibilidade_pg.rs"
+
+[[test]]
+name = "runner_pg"
+path = "tests/runner_pg.rs"
+
 [dependencies]
 sha2 = "0.10.9"
 sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }

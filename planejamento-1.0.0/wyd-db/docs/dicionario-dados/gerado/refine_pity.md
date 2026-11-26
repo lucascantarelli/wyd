@@ -56,4 +56,4 @@ Nenhum além da PK: `(character_id, slot)` já cobre a leitura pela chave do ite
 
 ## Migration
 
-Forma (dona): `migrations/0009-game-inventory.md` — arquivo `0009-game-inventory.sql`.
+Forma (dona): `migrations/0009_game_inventory.md` — arquivo `0009_game_inventory.sql`.

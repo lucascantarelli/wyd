@@ -23,7 +23,7 @@ aqui.
 | `rate_bps` | `INTEGER` | não | — | taxa em pontos-base, 0–10000 |
 
 Não há `created_at`/`updated_at`, trigger nem coluna de origem: a tabela é base de seed e não recebe
-escrita do staff (`migrations/0021-content-rules.md` §7).
+escrita do staff (`migrations/0021_content_rules.md` §7).
 
 ## Chave primária
 
@@ -66,11 +66,11 @@ de `0022` tem precedência sobre a base; ler só esta tabela ignora a operação
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0023`), que está `bloqueada`; nenhum `GRANT` de escrita em
-  runtime (`migrations/0021-content-rules.md` §7).
+  runtime (`migrations/0021_content_rules.md` §7).
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021-content-rules.sql`.
+Forma (dona): `migrations/0021_content_rules.md` — arquivo `0021_content_rules.sql`.

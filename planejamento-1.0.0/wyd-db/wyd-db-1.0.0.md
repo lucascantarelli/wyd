@@ -11,7 +11,7 @@
 > versão final, revisada e detalhada.
 >
 > Baseline **da série herdada**, medido em 2026-11-17: `crates/wyd-db/` com **53 migrations**,
-> **24 arquivos Rust**, **5 alvos de teste** (`Cargo.toml`), **1 seed de desenvolvimento**; schema
+> **24 arquivos Rust**, **6 alvos de teste** planejados (3 declarados no `Cargo.toml`), **1 seed de desenvolvimento**; schema
 > com **87 tabelas** e **625 colunas**, medidos em 2026-11-17 pelo `make banco-catalogo` do legado —
 > artefato gerado e **não versionado** nesta árvore; o catálogo novo (`banco-catalogo.md`) fica
 > pós-`1.0.0` por `Q-BLK-20` = A. Esses números descrevem o que a reescrita **substitui**,
@@ -59,7 +59,7 @@ PostgreSQL 17 e Rust — de modo que:
 
 | Dentro | Fora |
 |---|---|
-| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001-bootstrap.sql` (schemas + `content_version`) e `0003-portal-person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-22 (`0033`/`0034`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
+| a série de migrations **reescrita do zero** para a `1.0.0`, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma série: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — **planejado** em 2026-11-17 e revisto em 2026-11-22 (`0033`/`0034`), dono único `plano-migrations.md` §3 | desenho de domínio que a identidade não decide: personagem, inventário, economia, conteúdo |
 | o crate `crates/wyd-db` (portas, adapter, pool, migrations runner, filas) | `wyd-core`, `wyd-server`, `wyd-net`, `wyd-admin`, portal |
 | o seed de desenvolvimento (`seeds/dev.sql`) | dados de jogador reais |
 | operação do banco (instalação, backup, retenção, diagnóstico) | operação do jogo e do portal |
@@ -757,7 +757,7 @@ Distribuição das 40 páginas `WYDDB-nnn` por fase. As páginas desta entrega u
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
-| `index.md` | "como testo este crate?" | mapa dos 6 guias; os 5 alvos e o que cada um prova; comando único de suíte |
+| `index.md` | "como testo este crate?" | mapa dos 6 guias; os 6 alvos e o que cada um prova; comando único de suíte |
 | `piramide-e-alvos.md` | "que tipo de teste eu escrevo?" | pirâmide (unit × contrato × sistema × E2E fora do crate); critério de escolha; o que cada nível pode tocar |
 | `fixtures-e-factories.md` | "como crio dado de teste?" | factory por agregado; fixture de conteúdo; regra de id; limpeza por chave; proibição de estado global |
 | `dados-de-teste.md` | "que dado existe para teste?" | catálogo de contas de teste (papel, o que cada uma prova); seed de desenvolvimento; como provisionar; o que nunca usar em produção |
@@ -811,43 +811,43 @@ A lista abaixo registra os 34 pares; o estado de escrita de cada página é acom
 
 | # | Arquivo da série | Página |
 |---:|---|---|
-| 1 | `0001-bootstrap.sql` | `0001-bootstrap.md` |
-| 2 | `0002-ops-audit.sql` | `0002-ops-audit.md` |
-| 3 | `0003-portal-person.sql` | `0003-portal-person.md` |
-| 4 | `0004-portal-access.sql` | `0004-portal-access.md` |
-| 5 | `0005-game-account.sql` | `0005-game-account.md` |
-| 6 | `0006-game-character.sql` | `0006-game-character.md` |
-| 7 | `0007-game-session.sql` | `0007-game-session.md` |
-| 8 | `0008-game-skills.sql` | `0008-game-skills.md` |
-| 9 | `0009-game-inventory.sql` | `0009-game-inventory.md` |
-| 10 | `0010-game-guild.sql` | `0010-game-guild.md` |
-| 11 | `0011-game-economy.sql` | `0011-game-economy.md` |
-| 12 | `0012-ops-delivery.sql` | `0012-ops-delivery.md` |
-| 13 | `0013-content-taxonomy.sql` | `0013-content-taxonomy.md` |
-| 14 | `0014-content-item.sql` | `0014-content-item.md` |
-| 15 | `0015-content-skill.sql` | `0015-content-skill.md` |
+| 1 | `0001_bootstrap.sql` | `0001_bootstrap.md` |
+| 2 | `0002_ops_audit.sql` | `0002_ops_audit.md` |
+| 3 | `0003_portal_person.sql` | `0003_portal_person.md` |
+| 4 | `0004_portal_access.sql` | `0004_portal_access.md` |
+| 5 | `0005_game_account.sql` | `0005_game_account.md` |
+| 6 | `0006_game_character.sql` | `0006_game_character.md` |
+| 7 | `0007_game_session.sql` | `0007_game_session.md` |
+| 8 | `0008_game_skills.sql` | `0008_game_skills.md` |
+| 9 | `0009_game_inventory.sql` | `0009_game_inventory.md` |
+| 10 | `0010_game_guild.sql` | `0010_game_guild.md` |
+| 11 | `0011_game_economy.sql` | `0011_game_economy.md` |
+| 12 | `0012_ops_delivery.sql` | `0012_ops_delivery.md` |
+| 13 | `0013_content_taxonomy.sql` | `0013_content_taxonomy.md` |
+| 14 | `0014_content_item.sql` | `0014_content_item.md` |
+| 15 | `0015_content_skill.sql` | `0015_content_skill.md` |
 | 16 | `0016-seed-taxonomy.sql` | `0016-seed-taxonomy.md` |
 | 17 | `0017-seed-item-catalog.sql` | `0017-seed-item-catalog.md` |
 | 18 | `0018-seed-skill-catalog.sql` | `0018-seed-skill-catalog.md` |
-| 19 | `0019-content-world.sql` | `0019-content-world.md` |
+| 19 | `0019_content_world.sql` | `0019_content_world.md` |
 | 20 | `0020-seed-world.sql` | `0020-seed-world.md` |
-| 21 | `0021-content-rules.sql` | `0021-content-rules.md` |
-| 22 | `0022-content-overrides.sql` | `0022-content-overrides.md` |
+| 21 | `0021_content_rules.sql` | `0021_content_rules.md` |
+| 22 | `0022_content_overrides.sql` | `0022_content_overrides.md` |
 | 23 | `0023-seed-rules.sql` | `0023-seed-rules.md` |
-| 24 | `0024-content-maps.sql` | `0024-content-maps.md` |
-| 25 | `0025-content-combat.sql` | `0025-content-combat.md` |
-| 26 | `0026-content-quests-events.sql` | `0026-content-quests-events.md` |
+| 24 | `0024_content_maps.sql` | `0024_content_maps.md` |
+| 25 | `0025_content_combat.sql` | `0025_content_combat.md` |
+| 26 | `0026_content_quests_events.sql` | `0026_content_quests_events.md` |
 | 27 | `0027-seed-quests-events.sql` | `0027-seed-quests-events.md` |
-| 28 | `0028-game-quests-events.sql` | `0028-game-quests-events.md` |
-| 29 | `0029-views.sql` | `0029-views.md` |
-| 30 | `0030-portal-content.sql` | `0030-portal-content.md` |
-| 31 | `0031-portal-mfa.sql` | `0031-portal-mfa.md` |
-| 32 | `0032-admin-grants.sql` | `0032-admin-grants.md` |
-| 33 | `0033-ops-idempotency.sql` | `0033-ops-idempotency.md` |
-| 34 | `0034-portal-market.sql` | `0034-portal-market.md` |
+| 28 | `0028_game_quests_events.sql` | `0028_game_quests_events.md` |
+| 29 | `0029_views.sql` | `0029_views.md` |
+| 30 | `0030_portal_content.sql` | `0030_portal_content.md` |
+| 31 | `0031_portal_mfa.sql` | `0031_portal_mfa.md` |
+| 32 | `0032_admin_grants.sql` | `0032_admin_grants.md` |
+| 33 | `0033_ops_idempotency.sql` | `0033_ops_idempotency.md` |
+| 34 | `0034_portal_market.sql` | `0034_portal_market.md` |
 
 A tabela de slugs da **série do rascunho descartada** saiu desta seção quando `P8` fechou: os nomes
-dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001-bootstrap.sql`
+dela não correspondiam à série nova (lá o primeiro arquivo era de identidade; aqui `0001_bootstrap.sql`
 é schemas + `content_version`) e continuam no histórico do git, não como vocabulário vigente.
 
 **Série fechada (decisão `B2`, `plano-migrations.md` §3):** 34 arquivos, contíguos de `0001` a
@@ -995,7 +995,7 @@ limpeza.
 campos, quem consome, regra de que dado sensível é fictício. `resources/accounts.json` é o dado de
 apoio (`■`), não documentação: contém contas de teste com papéis distintos e nenhum segredo real.
 
-**`alvos/*.md`** (5 páginas, uma por alvo do `Cargo.toml`; medidas em `tests/alvos/`) — pergunta: "o que este alvo prova?".
+**`alvos/*.md`** (6 páginas, uma por alvo do `Cargo.toml`; medidas em `tests/alvos/`) — pergunta: "o que este alvo prova?".
 Obrigatório: capacidades cobertas, cenários, pré-requisito de ambiente, como interpretar falha,
 tempo esperado.
 
@@ -1305,7 +1305,7 @@ A release de documentação fecha quando **todas** forem verdadeiras ao mesmo te
 
 | # | Decisão | Recomendação | Bloqueia |
 |---|---|---|---|
-| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001-bootstrap.sql` (schemas + `content_version`) e `0003-portal-person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
+| `D-1` | escopo da `1.0.0` = série reescrita do zero, com a identidade em `0001_bootstrap.sql` (schemas + `content_version`) e `0003_portal_person.sql` (pessoa), e os demais domínios escritos inteiros na mesma ordem: **34 arquivos**, **109 tabelas** e `SCHEMA_VERSION = 34` na troca — planejado, fonte `plano-migrations.md` §3 (recontado em 2026-11-22, `M30`/`M31`) | **aprovada em 2026-11-19** (§1.2) | Ondas 2–9 |
 | `D-2` | dicionário em duas camadas: 19 páginas de domínio + **109** geradas | **aprovada em 2026-11-22** | Onda 4 |
 | `D-3` | **revista em 2026-11-18:** 58 páginas de módulo (§6.16) — 24 no restante do crate e, em `src/migrate/` e `src/provision/`, **uma página por arquivo** (34), com `mod.rs` incluído; o espelho 1:1 continua proibido no resto do crate | **aprovada em 2026-11-22** | Onda 7 |
 | `D-4` | uma página por arquivo da série nova (**34** arquivos, `0001`–`0034`), sem SQL na pasta | **aprovada em 2026-11-22** | Onda 5 |

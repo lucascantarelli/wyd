@@ -20,7 +20,7 @@ O corte vertical de login, conta, personagem e sessão é o que prova a série a
 
 ## Entregável
 
-Escrever `0003-portal-person.sql`, `0004-portal-access.sql`, `0005-game-account.sql`, `0006-game-character.sql` e `0007-game-session.sql`, com `up`/`down` por arquivo.
+Escrever `0003_portal_person.sql`, `0004_portal_access.sql`, `0005_game_account.sql`, `0006_game_character.sql` e `0007_game_session.sql`, com `up`/`down` por arquivo.
 
 ## DoD
 

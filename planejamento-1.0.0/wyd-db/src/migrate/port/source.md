@@ -52,7 +52,7 @@ ler …").
 | arquivo não-UTF-8 | `Err(Read { path, detail: "não é UTF-8" })` — série é texto, não blob |
 | sucesso | todos os `*.sql`, **ordem do diretório** (o `set` ordena) |
 
-Não filtra por padrão de nome: `0001-bootstrap.sql` e lixo (`README.md`) são separados pela extensão;
+Não filtra por padrão de nome: `0001_bootstrap.sql` e lixo (`README.md`) são separados pela extensão;
 nome fora de `NNNN_slug` morre em `set.rs` com `SetError::File { file_name, source: FileError::BadName { .. } }`,
 que é erro de série (`4`), não de ambiente (`2`).
 

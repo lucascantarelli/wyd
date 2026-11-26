@@ -1,7 +1,7 @@
 > Pergunta: "que dados entram, mudam e saem, e onde eles podem se perder ou ficar parados?"
 > Público: Arquiteto de schema, desenvolvedor de jogo/portal/admin e operação
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0029-views.md` §7–§8; `migrations/0012-ops-delivery.md` §8; `migrations/0033-ops-idempotency.md`; `migrations/0022-content-overrides.md` §2; `docs/arquitetura/fronteira-hot-cold.md` §1–§3; `docs/arquitetura/contexto-c4.md` §2; `docs/dicionario-dados/gerado/index.md`
+> Base: `migrations/0029_views.md` §7–§8; `migrations/0012_ops_delivery.md` §8; `migrations/0033_ops_idempotency.md`; `migrations/0022_content_overrides.md` §2; `docs/arquitetura/fronteira-hot-cold.md` §1–§3; `docs/arquitetura/contexto-c4.md` §2; `docs/dicionario-dados/gerado/index.md`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)
@@ -20,7 +20,7 @@ destino, a classificação do dado e o **ponto de perda** de cada caminho.
 | `game` | **36** tabelas | idem |
 | `portal` | **26** tabelas | idem |
 | `ops` | **6** tabelas | idem |
-| views | **2** (`game.v_live_session`, `portal.v_person_identity`) | `migrations/0029-views.md` |
+| views | **2** (`game.v_live_session`, `portal.v_person_identity`) | `migrations/0029_views.md` |
 | arquivos na série | **34** (28 com página escrita, 6 seeds bloqueados) | `migrations-checklist.md` §2 |
 | volume, crescimento e latência | **não medidos** (`M20`) | `retencao-e-capacidade.md` |
 
@@ -63,7 +63,7 @@ flowchart LR
 
 As setas para `v_live_session` e `v_person_identity` são **desenho, não leitura ativa**: as duas views
 existem desde `0029`, mas `0001` não dá `USAGE` no schema cruzado e `0029` não tem `GRANT` — a permissão
-ficou sem decisão em 2026-11-21 (`0029-views.md` §7–§8). O caminho está declarado e **não funciona hoje**.
+ficou sem decisão em 2026-11-21 (`0029_views.md` §7–§8). O caminho está declarado e **não funciona hoje**.
 
 ## 3. Origem → caminho → destino
 
@@ -86,8 +86,8 @@ cada uma. O destino cita o schema ou o grupo, e a coluna de classe usa a defini�
 | 12 | migration/seed (`wyd_migrator`) | série aplicada e carga de conteúdo | `content.*` + `content_version` | persistente (frio) | seed bloqueado (6 arquivos) e recarga a quente **não desenhada**: o jogo lê no boot e não tem contrato de reload |
 | 13 | portal, na edição de regra | loader lê `COALESCE(override, base)` | `content.refine_rate_override`, `sanc_rate_override`, `combine_value_override` | derivado (valor efetivo) | apagar o override devolve o valor base; o valor efetivo nunca é gravado, então não há histórico do que o jogador viu |
 | 14 | `wyd-server` e portal | `INSERT` por runtime | `ops.audit_log` | persistente, append-only | nada é reescrito (`UPDATE`/`DELETE` não existem para runtime); a atomicidade entre a ação e a trilha não está decidida (`H`), então a ação pode ficar sem linha |
-| 15 | `wyd-server`, para o portal | view `game.v_live_session` | leitura de presença | derivado | **sem `GRANT`**: hoje a leitura não acontece (`0029-views.md` §7–§8) |
-| 16 | portal, para o jogo | view `portal.v_person_identity` | leitura de identidade mínima (`person_id`, `role`, `status`) | derivado | **sem `GRANT`**: idem; e a view nunca expõe e-mail ou credencial (`0029-views.md` §8) |
+| 15 | `wyd-server`, para o portal | view `game.v_live_session` | leitura de presença | derivado | **sem `GRANT`**: hoje a leitura não acontece (`0029_views.md` §7–§8) |
+| 16 | portal, para o jogo | view `portal.v_person_identity` | leitura de identidade mínima (`person_id`, `role`, `status`) | derivado | **sem `GRANT`**: idem; e a view nunca expõe e-mail ou credencial (`0029_views.md` §8) |
 
 ## 4. Efêmero, persistente e derivado
 
@@ -111,7 +111,7 @@ tabela de regra efetiva: as duas seriam uma segunda verdade.
 | escrow sem desfecho | item 8 | contrato do `wyd-admin` e `LAC-POR-01` |
 | replay além da janela | item 11 | `M30` fixou 7 dias; ampliar exige decisão, não código |
 | recarga de conteúdo | item 12 | `padrao-banco.md` §2; contrato de reload não desenhado (`fronteira-hot-cold.md` §3) |
-| leitura cruzada bloqueada | itens 15–16 | decisão de fronteira pendente desde 2026-11-21 (`0029-views.md` §8) |
+| leitura cruzada bloqueada | itens 15–16 | decisão de fronteira pendente desde 2026-11-21 (`0029_views.md` §8) |
 | ação sem trilha | item 14 | atomicidade entre ação e trilha não decidida (`H`); `WYDDB-019` é o precedente de ordem |
 
 Nenhuma dessas situações tem prazo, volume ou custo medido: `M20` continua pendente, e esta página não

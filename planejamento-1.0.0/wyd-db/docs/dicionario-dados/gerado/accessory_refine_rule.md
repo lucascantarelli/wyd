@@ -31,7 +31,7 @@ segue `bloqueada`. Não há override desta tabela em `0022`.
 | `material_qty` | `SMALLINT` | não | `1` | quantidade exigida, maior que 0 |
 
 Sem `created_at`/`updated_at`, trigger ou coluna de origem: é base de seed e não recebe escrita do
-staff em runtime (`migrations/0021-content-rules.md` §7).
+staff em runtime (`migrations/0021_content_rules.md` §7).
 
 ## Chave primária
 
@@ -88,11 +88,11 @@ origem, e uma regra “de 3 a 7” não cabe nesta tabela. Receitas e desfechos 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0023`), que está `bloqueada`; nenhum `GRANT` de escrita em
-  runtime (`migrations/0021-content-rules.md` §7).
+  runtime (`migrations/0021_content_rules.md` §7).
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021-content-rules.sql`.
+Forma (dona): `migrations/0021_content_rules.md` — arquivo `0021_content_rules.sql`.

@@ -42,7 +42,7 @@ chave e pode se repetir em ordinais diferentes.
 - **Entrada:** nenhuma.
 - **Sem FK em `class_id`:** `content.game_class` (`0013`) tem `slug`, não o código numérico do arquivo;
   a correspondência código → slug é curadoria do seed (`0017`/`0018`) e é `H`, declarada em
-  `migrations/0019-content-world.md` §9.
+  `migrations/0019_content_world.md` §9.
 
 ## Unicidade
 
@@ -73,10 +73,10 @@ Sem carimbos e sem trigger: import puro.
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

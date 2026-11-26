@@ -78,9 +78,9 @@ de EXP/fama são `H`, herdadas do legado. `NULLS NOT DISTINCT` é sensível ao `
 - **Escreve:** `wyd_migrator`, no seed de quests (`0027`, `bloqueada`, `migrations-checklist.md` §2);
   nenhum `GRANT` de escrita em runtime.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026-content-quests-events.sql`.
+Forma (dona): `migrations/0026_content_quests_events.md` — arquivo `0026_content_quests_events.sql`.

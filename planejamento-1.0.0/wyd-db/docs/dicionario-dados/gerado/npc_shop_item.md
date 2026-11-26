@@ -53,16 +53,16 @@ Nenhum além da PK — a leitura é sempre pela loja. Sem carimbos e sem trigger
 
 **Não existe FK para `item_catalog`, e isso é decisão, não esquecimento:** o insumo de loja cita item que
 o catálogo do cliente não tem — 22 casos, um deles negativo (`H`, pendência em
-`migrations/0019-content-world.md` §9). O `CHECK (item_index > 0)` recusa o negativo, e o seed de `0020`
+`migrations/0019_content_world.md` §9). O `CHECK (item_index > 0)` recusa o negativo, e o seed de `0020`
 reporta o que falta em vez de o lote falhar na carga.
 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

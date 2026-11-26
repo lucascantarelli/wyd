@@ -26,7 +26,7 @@ Tabela seed-only e read-only em runtime; o seed é o `0023`, que segue `bloquead
 | `allows_ancient` | `BOOLEAN` | não | `true` | se a regra aceita item Ancient |
 
 Sem `created_at`/`updated_at` e sem trigger: base de seed, sem escrita do staff em runtime
-(`migrations/0021-content-rules.md` §7).
+(`migrations/0021_content_rules.md` §7).
 
 ## Chave primária
 
@@ -58,7 +58,7 @@ Só a PK — nenhum único adicional; `effect_code` pode se repetir entre gemas 
 ## Índices
 
 Nenhum além do índice da PK. Não há índice preventivo em `effect_code`: `item_effect` é look-up
-somente-leitura e a leitura primária é pela gema (`P-15`, `migrations/0021-content-rules.md` §7).
+somente-leitura e a leitura primária é pela gema (`P-15`, `migrations/0021_content_rules.md` §7).
 
 ## Armadilha de leitura
 
@@ -69,11 +69,11 @@ somados pelo runtime com a fórmula de refino, que não está nesta tabela.
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0023`), que está `bloqueada`; nenhum `GRANT` de escrita em
-  runtime (`migrations/0021-content-rules.md` §7).
+  runtime (`migrations/0021_content_rules.md` §7).
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021-content-rules.sql`.
+Forma (dona): `migrations/0021_content_rules.md` — arquivo `0021_content_rules.sql`.

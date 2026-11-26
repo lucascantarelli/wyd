@@ -53,8 +53,8 @@ reabrir `M6` e criar segredo de hash no contrato de ambiente (`src/provision/spe
 **Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado: decidida em 2026-11-21 — A + S1 + C1 + D1.** O papel entrou em `ROLES`
-(`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032-admin-grants.sql`
-(`ddl-confirmado.md` §5.32, página `migrations/0032-admin-grants.md`). `M27` está fechada em
+(`src/provision/spec.md` §2) e no golden `db/roles.sql`; o `GRANT` é o `0032_admin_grants.sql`
+(`ddl-confirmado.md` §5.32, página `migrations/0032_admin_grants.md`). `M27` está fechada em
 `lacunas.md` §2.3 e `LAC-ADM-01` fechou com ela; `M28` fechou na mesma data com a redação **B**.
 
 **O que o serviço `wyd-admin` precisa.** As sete rotas de ação do C4 (`wyd-admin/docs/arquitetura/contrato-c4.md`
@@ -106,8 +106,8 @@ tabela. Nenhuma rota pede `DELETE`.
 
 | Opção | Forma | Consequência |
 |---|---|---|
-| **D1 (decidida em 2026-11-21)** | arquivo novo `0032-admin-grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos e as citações de contagem e gates foram atualizadas na mesma entrega. Em 2026-11-22 o `0032` foi **emendado** com os `GRANT` da custódia (`character_item`, `character`) e a série fechou em **34 arquivos e 109 tabelas** |
-| D2 (não escolhida) | dentro de `0001-bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
+| **D1 (decidida em 2026-11-21)** | arquivo novo `0032_admin_grants.sql` | não reabriu `0001`; a série passou de 31 para 32 arquivos e as citações de contagem e gates foram atualizadas na mesma entrega. Em 2026-11-22 o `0032` foi **emendado** com os `GRANT` da custódia (`character_item`, `character`) e a série fechou em **34 arquivos e 109 tabelas** |
+| D2 (não escolhida) | dentro de `0001_bootstrap.sql` | manteria a série em 31 arquivos (à época, com `0030`/`0031`), mas reabriria o DDL de `0001`, que o registro trata como congelável |
 | D3 (recusada) | no `db/roles.sql` do provision | `src/provision/spec.md` §1 exclui privilégio de schema da série dali; `roles.sql` cria papel e mexe em `public` |
 
 ### Decisão registrada
@@ -154,7 +154,7 @@ do `wyd-admin`.
 
 - `ddl-confirmado.md` §5.15: a oração que atribuía à "API interna" a credencial `wyd_portal` para estas
   quatro tabelas foi substituída pela redação B.
-- `0030-portal-content.md` §8, antes sob o rótulo **"Escrita pelo `wyd-admin`"**: o rótulo e o parágrafo
+- `0030_portal_content.md` §8, antes sob o rótulo **"Escrita pelo `wyd-admin`"**: o rótulo e o parágrafo
   passaram a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**, com o papel de `M27` nomeado.
 
 #### Redação A — não escolhida — "API interna" é o BFF administrativo do portal
@@ -164,7 +164,7 @@ do `wyd-admin`.
   com a credencial `wyd_portal`; essa credencial **não** alcança `game` (o `0001` não dá `USAGE` no
   schema a `wyd_portal`); as ações do C4 em `game` continuam sendo do `wyd-admin` (`LAC-POR-01`)."
 
-**`0030-portal-content.md` §8, na redação A:** o rótulo passaria a **"Escrita pelo BFF do portal"** e o parágrafo seria:
+**`0030_portal_content.md` §8, na redação A:** o rótulo passaria a **"Escrita pelo BFF do portal"** e o parágrafo seria:
   "O papel `wyd_admin` existe para `game` e `ops.audit_log` (`M27`, `0032`). As rotas
   `/admin/conteudo/*` e `/admin/launcher` usam a credencial `wyd_portal`; ela **não** cobre `game`, cujas
   ações do C4 são do `wyd-admin` (`LAC-POR-01`)."
@@ -181,7 +181,7 @@ estas tabelas não são estado de jogo) e `fronteira.md` §7 do `wyd-admin` (o a
   com a credencial `wyd_portal`; o serviço `wyd-admin` **não** as escreve. `wyd_portal` não serve para
   `game` (o `0001` não dá `USAGE` no schema a `wyd_portal`)."
 
-**`0030-portal-content.md` §8, na redação B:** o rótulo passou a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
+**`0030_portal_content.md` §8, na redação B:** o rótulo passou a **"Escrita pelo BFF do portal (não pelo `wyd-admin`)"**
   e o parágrafo ficou: "Estas quatro tabelas são escritas pelo BFF do portal com a credencial `wyd_portal`;
   o `wyd-admin` não as escreve e, para `game` e `ops.audit_log`, tem papel próprio (`M27`, `0032`) e não
   usa `wyd_portal` para `game`."
@@ -239,7 +239,7 @@ privileges cannot be set for columns`.
 tendo a matriz da seção "Decisão — papel `wyd_admin`" como lista fechada do que pode ser `true`.
 
 **Registrada:** `M29` em `lacunas.md` §2.3 (fechada em 2026-11-22); o escopo do `0032` fica em
-`migrations/0032-admin-grants.md` §5 e a nota de DDL em `ddl-confirmado.md` §5.32.
+`migrations/0032_admin_grants.md` §5 e a nota de DDL em `ddl-confirmado.md` §5.32.
 
 ## O que é hash e com que algoritmo
 

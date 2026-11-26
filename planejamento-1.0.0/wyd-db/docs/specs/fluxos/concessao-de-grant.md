@@ -1,7 +1,7 @@
 > Pergunta: "como um pedido da web vira grant, quem o aplica e em que ponto do caminho ele pode parar?"
 > Público: Desenvolvedor novo e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0012-ops-delivery.md` §4–§10; `migrations/0033-ops-idempotency.md` §5–§6; `migrations/0032-admin-grants.md` §4; `docs/dicionario-dados/dominio-ponte-web-jogo.md`; `docs/arquitetura/fronteira-hot-cold.md` §2; `docs/roadmap/WYDDB-018.md` e `WYDDB-019.md`; `lacunas.md` `M17`, `M25`, `A12`
+> Base: `migrations/0012_ops_delivery.md` §4–§10; `migrations/0033_ops_idempotency.md` §5–§6; `migrations/0032_admin_grants.md` §4; `docs/dicionario-dados/dominio-ponte-web-jogo.md`; `docs/arquitetura/fronteira-hot-cold.md` §2; `docs/roadmap/WYDDB-018.md` e `WYDDB-019.md`; `lacunas.md` `M17`, `M25`, `A12`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

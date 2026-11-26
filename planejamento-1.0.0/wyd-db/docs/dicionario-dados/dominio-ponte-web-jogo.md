@@ -1,7 +1,7 @@
 > Pergunta: "como o portal entrega algo ao jogo sem escrever estado vivo, e o que a fila garante?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.16; `migrations-checklist.md` §2; `0012-ops-delivery.md`
+> Base: `ddl-confirmado.md` §5.16; `migrations-checklist.md` §2; `0012_ops_delivery.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

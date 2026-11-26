@@ -61,4 +61,4 @@ Nenhum além da PK: o acesso é sempre por personagem.
 
 ## Migration
 
-Forma (dona): `migrations/0006-game-character.md` — arquivo `0006-game-character.sql`.
+Forma (dona): `migrations/0006_game_character.md` — arquivo `0006_game_character.sql`.

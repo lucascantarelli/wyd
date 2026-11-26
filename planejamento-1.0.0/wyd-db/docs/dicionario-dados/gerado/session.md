@@ -77,4 +77,4 @@ Retenção: 365 dias após `released_at` (`M22`).
 
 ## Migration
 
-Forma (dona): `migrations/0007-game-session.md` — arquivo `0007-game-session.sql`.
+Forma (dona): `migrations/0007_game_session.md` — arquivo `0007_game_session.sql`.

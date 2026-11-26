@@ -66,9 +66,9 @@ conteúdo já aposentou — a decisão é do seed e do runtime.
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0016`), que está `bloqueada`.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7). Dono da permissão: `migrations/0013-content-taxonomy.md` §8.
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7). Dono da permissão: `migrations/0013_content_taxonomy.md` §8.
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013-content-taxonomy.sql`.
+Forma (dona): `migrations/0013_content_taxonomy.md` — arquivo `0013_content_taxonomy.sql`.

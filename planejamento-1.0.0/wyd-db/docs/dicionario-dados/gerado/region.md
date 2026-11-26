@@ -53,7 +53,7 @@ regiões podem compartilhar nome e não podem compartilhar nome e as quatro coor
 | `ck_region_origem` | `source_line` menor ou igual a zero |
 
 O `CHECK` do retângulo **não tem teto**: `y2 = 6841` é aceito porque o limite de 4095 é regra do loader
-do cliente, não do banco (`migrations/0024-content-maps.md` §4 registra o caso real).
+do cliente, não do banco (`migrations/0024_content_maps.md` §4 registra o caso real).
 
 ## Índices
 
@@ -67,10 +67,10 @@ Trigger `trg_region_set_updated_at`. `name_fold` sai de `content.fn_fold(name)` 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

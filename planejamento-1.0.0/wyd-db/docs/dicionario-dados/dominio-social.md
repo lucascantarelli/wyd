@@ -1,7 +1,7 @@
 > Pergunta: "como guilda, membros, relações e torre se organizam no banco e o que o schema garante?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.13, §5.21; `migrations-checklist.md` §2; `0010-game-guild.md`
+> Base: `ddl-confirmado.md` §5.13, §5.21; `migrations-checklist.md` §2; `0010_game_guild.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

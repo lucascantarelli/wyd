@@ -2,21 +2,22 @@
 > Público: QA / testador
 > Dono: equipe do `wyd-db`
 > Base: `../specs/capacidades.md` §4; `../specs/sistema.md`; `../../docs/guia-teste/testes-de-sistema.md`
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
 
-**Estado:** aceito (2026-11-24) — alvo executado em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). O runner foi implementado em lib/fakes em 2026-11-25, mas `CAP-37`–`CAP-39` continuam sem execução contra PG17.
+**Estado:** aceito (2026-11-24) — alvo executado inicialmente em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). Reexecutado contra PG17 em 2026-11-25: **13/13** dos cenários implementados passaram (log `/tmp/wyd-ci-schema.log`). `CAP-37` saiu deste alvo e está verde em `runner_pg`; `CAP-38` e `CAP-39` continuam sem implementação.
 
 **Quatro níveis de afirmação convivem aqui:**
 
 - **`P`** — tudo o que a página diz sobre o alvo: `sistema_pg` está em `Cargo.toml` e em `tests/` desde
   2026-11-24, e 13 dos **27** cenários rodaram.
 - **`H`** — dúvida aberta, dita e localizada em §6, com o dono que a fecha; **nenhuma** hoje — as duas que existiam fecharam em 2026-11-24 por `Q-BLK-24` = A.
-- **`V`** — o que foi medido nesta árvore em 2026-11-24, com o arquivo ao lado.
+- **`V`** — o que foi medido nesta árvore em 2026-11-25, com o arquivo ao lado.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
   (`../../padrao-banco.md` §13).
 
 **Alvo escrito e executado:** `sistema_pg` — arquivo `crates/wyd-db/tests/sistema_pg.rs`, declarado no
-`Cargo.toml` do crate em 2026-11-24; o nome do alvo é o de [../index.md](../index.md) §2.
+`Cargo.toml` do crate em 2026-11-24; 13 cenários passaram novamente em 2026-11-25 (log
+`/tmp/wyd-ci-schema.log`). O nome do alvo é o de [../index.md](../index.md) §2.
 
 O alvo de sistema: **27** capacidades que só existem contra PostgreSQL 17 real — transação, `CHECK`,
 índice único parcial, FK, concorrência, ledger, pool, a série e as três medições de `RNF-DB-002`, `004` e `005`. Sem banco, ele **falha** nomeando
@@ -50,7 +51,7 @@ O alvo de sistema: **27** capacidades que só existem contra PostgreSQL 17 real 
 | `CAP-34` | autenticar no portal deixa sessões revogáveis e tentativa registrada | `autenticar_portal` |
 | `CAP-35` | criar conta na vaga grava conta e carteira e recusa a sexta | `criar_conta_na_vaga` |
 | `CAP-36` | abrir sessão de jogo grava `character_id` nulo e recusa canal inexistente | `abrir_sessao_de_jogo` |
-| `CAP-37` | a segunda execução da série espera no advisory lock no máximo **10 s** | `espera_de_ddl` |
+| `CAP-37` | a segunda execução da série espera no advisory lock no máximo **10 s** | `espera_de_ddl` — provado em `runner_pg` (`alvos/runner-pg.md`), não por `psql` |
 | `CAP-38` | o p95 da leitura de personagem é medido e registrado, sem limiar | `p95_leitura_personagem` |
 | `CAP-39` | o tempo de boot até a primeira conexão aceita é medido e registrado | `tempo_de_boot` |
 
@@ -64,11 +65,13 @@ cenário, não no DDL; rodou de novo e passou.
 
 | Resultado | Quais | Por quê |
 |---|---|---|
-| **verde** | `CAP-24`–`CAP-36` | o schema recusa e aceita o que a capacidade enuncia |
-| **sem código de sistema que execute** | `CAP-37`, `CAP-38`, `CAP-39` | `RNF-DB-002`: runner existe em lib/fakes, mas o cenário de sistema ainda não roda; `RNF-DB-004` (consulta da porta C4) e `RNF-DB-005` (boot do binário) continuam sem implementação em `crates/wyd-db/` |
+| **verde no alvo `sistema_pg`** | `CAP-24`–`CAP-36` | o schema recusa e aceita o que a capacidade enuncia; 13/13 cenários implementados passaram em PG17 em 2026-11-25 |
+| **sem execução pelo código de sistema** | `CAP-38`, `CAP-39` | `CAP-38`: falta consulta de personagem no caminho `repo`/`pool`; `CAP-39`: falta binário/boot instrumentado. `CAP-37` foi provado pelo `PgAdapter` real em `runner_pg` (2026-11-25) |
 
-O harness chama `psql` no container por `docker exec`; ele prova o **schema**, não a porta do crate. A
-decisão de cliente (`sqlx`) segue aberta, e trocar `psql` pelo cliente é leva posterior.
+O harness chama `psql` no container por `docker exec`; ele prova o **schema**, não a porta do crate.
+A fronteira está decidida em [`../index.md`](../index.md) §5: `psql` é o oráculo de schema e `sqlx` é
+a porta do runner. O ciclo `up → down → up` da série foi provado por `psql` em PG17 (§1.2); a porta, o
+ledger e o advisory lock são provados por `runner_pg` (`alvos/runner-pg.md`), que cobre `CAP-37`.
 
 ## 2. Cenários
 
@@ -147,7 +150,7 @@ esta página não estima: o tempo entra quando houver execução registrada, com
 | Dúvida fechada | Como fechou |
 |---|---|
 | `CAP-17` usa quatro processos, mas qual tempo limite conta como falha? | **tempo não é a falha:** o que reprova é o `SQLSTATE` **`40P01`**, limiar **0** de `RNF-DB-006` (`../../docs/specs/requisitos-nao-funcionais.md` §6). O teto de tempo do harness segue sem número aprovado (`../../docs/guia-teste/testes-de-sistema.md` §"Tempo limite") |
-| `CAP-18` precisa de duas `content_version` correntes para provar a ambiguidade; o DDL permite? | **não.** `0001` fecha a tabela em uma linha (`pk_content_version` + `ck_content_version_linha_unica CHECK (id = 1)`, prova 9 de `../../migrations/0001-bootstrap.md` §9). A entrada do cenário passou a ser a recusa de `id = 2`, e a propriedade ganhou requisito próprio: `RF-DB-017` |
+| `CAP-18` precisa de duas `content_version` correntes para provar a ambiguidade; o DDL permite? | **não.** `0001` fecha a tabela em uma linha (`pk_content_version` + `ck_content_version_linha_unica CHECK (id = 1)`, prova 9 de `../../migrations/0001_bootstrap.md` §9). A entrada do cenário passou a ser a recusa de `id = 2`, e a propriedade ganhou requisito próprio: `RF-DB-017` |
 
 **O que continua sem número:** o teto de tempo de execução de `concorrencia_4`, como parâmetro de harness.
 Não é limiar de requisito, e a primeira execução o mede.

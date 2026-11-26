@@ -85,11 +85,11 @@ decisão nova, não linha nova de `CHECK`.
 ## Papéis
 
 - **Escreve:** `wyd_portal` — `SELECT, INSERT, UPDATE, DELETE` herdados do default privilege de `portal`
-  (`0001-bootstrap.md` §7), pelo BFF do portal. Nenhum seed cria fator.
+  (`0001_bootstrap.md` §7), pelo BFF do portal. Nenhum seed cria fator.
 - **Não leem:** `wyd_read` tem `USAGE` em `portal` mas não recebe `SELECT` por default; `wyd_game` não
   alcança o schema; `wyd_admin` não lê `portal` e não participa do segundo fator.
 
 ## Migration
 
-Forma (dona): `migrations/0031-portal-mfa.md` — arquivo `0031-portal-mfa.sql`; DDL em
+Forma (dona): `migrations/0031_portal_mfa.md` — arquivo `0031_portal_mfa.sql`; DDL em
 `ddl-confirmado.md` §5.20.

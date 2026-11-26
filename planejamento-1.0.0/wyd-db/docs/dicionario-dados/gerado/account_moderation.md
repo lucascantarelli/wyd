@@ -63,4 +63,4 @@ Dono do assunto no dicionário: [moderação](../dominio-moderacao.md).
 
 ## Migration
 
-Forma (dona): `migrations/0005-game-account.md` — arquivo `0005-game-account.sql`.
+Forma (dona): `migrations/0005_game_account.md` — arquivo `0005_game_account.sql`.

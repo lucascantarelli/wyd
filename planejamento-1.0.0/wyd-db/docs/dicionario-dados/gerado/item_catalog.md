@@ -46,7 +46,7 @@ itens podem ter o mesmo nome, e não há `UNIQUE (name)`.
   (`0024`); `fk_mob_template_equip_item` e `fk_drop_rate_override_item` (`0025`); `fk_quest_reward_item`
   (`0026`). Item referenciado não é apagado em silêncio.
 - **Sem FK de `character_item`, `vault_item`, `item_price` e `delivery_queue`:** esses arquivos fecharam
-  na série antes deste e a FK seria migração aditiva (`0014-content-item.md` §10).
+  na série antes deste e a FK seria migração aditiva (`0014_content_item.md` §10).
 - **Sem FK em `effect_names`:** `TEXT[]` não referencia tabela; quem garante o conjunto é o trigger.
 
 ## Unicidade
@@ -88,10 +88,10 @@ Triggers `trg_item_catalog_set_updated_at` e `trg_item_catalog_effects`.
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0017`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0014-content-item.md` §8.
+  `migrations/0014_content_item.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0014-content-item.md` — arquivo `0014-content-item.sql`.
+Forma (dona): `migrations/0014_content_item.md` — arquivo `0014_content_item.sql`.

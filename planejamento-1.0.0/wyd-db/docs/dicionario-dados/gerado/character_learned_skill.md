@@ -55,4 +55,4 @@ Nenhum além da PK. Trigger `trg_character_learned_skill_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0008-game-skills.md` — arquivo `0008-game-skills.sql`.
+Forma (dona): `migrations/0008_game_skills.md` — arquivo `0008_game_skills.sql`.

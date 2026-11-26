@@ -1,7 +1,7 @@
 > Pergunta: "como o personagem progride — skills, linhagem, afetos e chaos — e o que o banco guarda de cada um?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.11, §5.19; `migrations-checklist.md` §2; `0008-game-skills.md`
+> Base: `ddl-confirmado.md` §5.11, §5.19; `migrations-checklist.md` §2; `0008_game_skills.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

@@ -1,7 +1,7 @@
 > Pergunta: "o que define o inimigo e a chance de drop — stats, equipamento e multiplicador — e o que não é probabilidade?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.25; `migrations-checklist.md` §2; `0025-content-combat.md`
+> Base: `ddl-confirmado.md` §5.25; `migrations-checklist.md` §2; `0025_content_combat.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

@@ -66,4 +66,4 @@ validade e consumo.
 
 ## Migration
 
-Forma (dona): `migrations/0004-portal-access.md` — arquivo `0004-portal-access.sql`.
+Forma (dona): `migrations/0004_portal_access.md` — arquivo `0004_portal_access.sql`.

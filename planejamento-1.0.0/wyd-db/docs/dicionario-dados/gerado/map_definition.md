@@ -59,17 +59,17 @@ Sem carimbos e sem trigger: tabela base de seed, read-only em runtime.
 ## Armadilha de leitura
 
 Quais mapas têm cada flag é `H`: o planejamento novo não tem fonte para o valor por mapa
-(`migrations/0024-content-maps.md` §10), então `false` significa "não preenchido", não "provado que o
+(`migrations/0024_content_maps.md` §10), então `false` significa "não preenchido", não "provado que o
 mapa não é PvP". O `map_id` também não tem teto, pelo mesmo motivo: a lista de mapas do 7662 segue
 UNVERIFIED e o 255 da ficha não foi reverificado.
 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0024-content-maps.md` §7.
+  `migrations/0024_content_maps.md` §7.
 
 ## Migration
 
-Forma (dona): `migrations/0024-content-maps.md` — arquivo `0024-content-maps.sql`.
+Forma (dona): `migrations/0024_content_maps.md` — arquivo `0024_content_maps.sql`.

@@ -1,4 +1,4 @@
-# WYDDB-036 — escrever 0002-ops-audit.sql
+# WYDDB-036 — escrever 0002_ops_audit.sql
 
 > Pergunta: "o que esta issue entrega e como sei que terminou?"
 > Público: Desenvolvedor, QA e revisor
@@ -20,14 +20,14 @@ Auditoria e tentativa de login são a trilha de operação; precisam nascer cedo
 
 ## Entregável
 
-Escrever `0002-ops-audit.sql` com `ops.audit_log` e `ops.login_attempt`, incluindo `actor_kind`/`actor_id`/`actor_ref`, CHECKs e índice, conforme `ddl-confirmado.md` §5.3–§5.4.
+Escrever `0002_ops_audit.sql` com `ops.audit_log` e `ops.login_attempt`, incluindo `actor_kind`/`actor_id`/`actor_ref`, CHECKs e índice, conforme `ddl-confirmado.md` §5.3–§5.4.
 
 ## DoD
 
 - [ ] `up` cria as duas tabelas com constraints nomeadas; `down` as remove.
 - [ ] Nenhuma FK para tabela criada depois.
 - [ ] O teste de contrato passa e o teste de sistema prova um CHECK violado.
-- [ ] A página `migrations/0002-ops-audit.md` existe.
+- [ ] A página `migrations/0002_ops_audit.md` existe.
 
 ## Fora de escopo
 

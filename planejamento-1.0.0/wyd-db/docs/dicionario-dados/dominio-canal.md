@@ -1,7 +1,7 @@
 > Pergunta: "o que é um canal de jogo, quem o opera e o que o schema garante sobre ele?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.5; `migrations-checklist.md` §2; `0007-game-session.md`
+> Base: `ddl-confirmado.md` §5.5; `migrations-checklist.md` §2; `0007_game_session.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.
@@ -23,7 +23,7 @@ O domínio tem uma tabela só. A sessão que ocupa o canal (`game.session`) é a
 |---|---|---|---|---|
 | `game.server_channel` (0007) | topologia: grupo 0–9 e canal 0–10, com host, capacidade e papel | operação (fora da série) | jogo, portal (status), `wyd_read` | `gerado/server_channel.md` |
 
-A forma (coluna, tipo, `CHECK`, trigger) é da página `migrations/0007-game-session.md`, que
+A forma (coluna, tipo, `CHECK`, trigger) é da página `migrations/0007_game_session.md`, que
 `gerado/server_channel.md` resume; esta página lê o significado.
 
 ## Relações

@@ -61,4 +61,4 @@ Nenhuma além da PK: eventos iguais em sequência são legítimos.
 
 ## Migration
 
-Forma (dona): `migrations/0002-ops-audit.md` — arquivo `0002-ops-audit.sql`.
+Forma (dona): `migrations/0002_ops_audit.md` — arquivo `0002_ops_audit.sql`.

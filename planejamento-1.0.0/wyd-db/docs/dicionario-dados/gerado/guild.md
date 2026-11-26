@@ -61,4 +61,4 @@ Trigger `trg_guild_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0010-game-guild.md` — arquivo `0010-game-guild.sql`.
+Forma (dona): `migrations/0010_game_guild.md` — arquivo `0010_game_guild.sql`.

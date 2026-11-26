@@ -1,7 +1,7 @@
 > Pergunta: "o que o banco precisa fazer no bloco de identidade, e como provar cada requisito?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `rascunho-accounts.md` §2; `ddl-confirmado.md` §4, §5.1–§5.7, §5.16; `lacunas.md` §2; `migrations/0001-bootstrap.md` §4, §6 e §9; `migrations/0006-game-character.md`; `pendencias-de-fechamento.md` §6.6.26 (`Q-BLK-24` = A)
+> Base: `rascunho-accounts.md` §2; `ddl-confirmado.md` §4, §5.1–§5.7, §5.16; `lacunas.md` §2; `migrations/0001_bootstrap.md` §4, §6 e §9; `migrations/0006_game_character.md`; `pendencias-de-fechamento.md` §6.6.26 (`Q-BLK-24` = A)
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-22)
@@ -40,7 +40,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `INSERT INTO game.account (person_id, slot, login, password_hash)
   VALUES (1, 1, repeat('a', 17), '$argon2id$...')` falha com `23514` em `ck_account_login_len`;
   com 16 caracteres, insere.
-- **Tabela e porta:** `game.account` (`migrations/0005-game-account.md`); porta `accounts` (planejada).
+- **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
 - **Issue:** a alocar na onda 8; `D-7` aprovada em 2026-11-22, página `WYDDB-nnn` ainda não escrita.
 
 ## RF-DB-002 — falha de PIN acumula e bloqueia
@@ -52,7 +52,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** após cinco falhas, `SELECT pin_failure_count, pin_locked_until FROM
   game.account WHERE id = 1` devolve `5` e instante não nulo; reiniciar o servidor e repetir a
   consulta mantém os valores. O limiar é de código: o banco só guarda o estado.
-- **Tabela e porta:** `game.account` (`migrations/0005-game-account.md`); porta `accounts` (planejada).
+- **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-003 — saldo é da conta, em inteiro de 32 bits
@@ -62,7 +62,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Saída:** linha em `game.account_wallet`, uma por conta.
 - **Critério de aceitação:** `UPDATE game.account_wallet SET coin = 2147483648 WHERE account_id = 1`
   falha com `23514` em `ck_account_wallet_coin`; `2147483647` passa.
-- **Tabela e porta:** `game.account_wallet` (`migrations/0005-game-account.md`); porta `wallet`
+- **Tabela e porta:** `game.account_wallet` (`migrations/0005_game_account.md`); porta `wallet`
   (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -74,7 +74,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `\d game.vault_item` não tem coluna de personagem; `INSERT` com
   `account_id` inexistente falha com `23503` em `fk_vault_item_account`; `DELETE FROM game.character`
   da conta não remove a linha (a FK é da conta).
-- **Tabela e porta:** `game.vault_item` (`migrations/0009-game-inventory.md`); porta `inventory`
+- **Tabela e porta:** `game.vault_item` (`migrations/0009_game_inventory.md`); porta `inventory`
   (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -86,7 +86,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** dois `INSERT` com o mesmo `(account_id, claim_date)` resultam no segundo
   `23505` em `uq_daily_reward_claim_dia`. A fronteira do dia é UTC; o banco guarda a data, a regra de
   fuso é de código.
-- **Tabela e porta:** `portal.daily_reward_claim` (`migrations/0011-game-economy.md`); porta
+- **Tabela e porta:** `portal.daily_reward_claim` (`migrations/0011_game_economy.md`); porta
   `rewards` (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -99,7 +99,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** dois `INSERT` com o mesmo `account_id` e `released_at IS NULL` resultam no
   segundo `23505` em `ux_session_viva_por_conta`; depois de `UPDATE ... SET released_at = now(),
   released_reason = 'disconnect'`, a nova sessão entra.
-- **Tabela e porta:** `game.session` (`migrations/0007-game-session.md`); porta `session` (planejada).
+- **Tabela e porta:** `game.session` (`migrations/0007_game_session.md`); porta `session` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-007 — bloqueio exige motivo, autor e instante
@@ -111,7 +111,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `INSERT ... (account_id, blocked, reason, blocked_by, blocked_at) VALUES
   (1, true, '', 1, now())` falha com `23514` em `ck_account_moderation_motivo`; sem `blocked_by`,
   falha em `ck_account_moderation_autor`; sem `blocked_at`, em `ck_account_moderation_instante`.
-- **Tabela e porta:** `game.account_moderation` (`migrations/0005-game-account.md`); porta `moderation`
+- **Tabela e porta:** `game.account_moderation` (`migrations/0005_game_account.md`); porta `moderation`
   (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -123,7 +123,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Saída:** linha em `portal.donate_credit` ou `portal.donate_debit`.
 - **Critério de aceitação:** dois `INSERT` com a mesma `idempotency_key` resultam no segundo `23505`
   em `uq_donate_credit_idem` (ou `uq_donate_debit_idem`); o valor é positivo por `CHECK`.
-- **Tabela e porta:** `portal.donate_credit`/`donate_debit` (`migrations/0011-game-economy.md`);
+- **Tabela e porta:** `portal.donate_credit`/`donate_debit` (`migrations/0011_game_economy.md`);
   porta `donate` (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -136,7 +136,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** com grant pendente, `DELETE FROM game.account WHERE id = 1` falha com
   `23503` em `fk_delivery_queue_account`; o mesmo para `game.character` em
   `fk_delivery_queue_character`.
-- **Tabela e porta:** `ops.delivery_queue` (`migrations/0012-ops-delivery.md`); porta `delivery`
+- **Tabela e porta:** `ops.delivery_queue` (`migrations/0012_ops_delivery.md`); porta `delivery`
   (planejada).
 - **Issue:** a alocar na onda 8.
 
@@ -148,8 +148,8 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Saída:** linha em `portal.person_token` ou `game.pin_reset`.
 - **Critério de aceitação:** `INSERT` com `token_hash = 'XYZ'` falha com `23514` em
   `ck_person_token_hash_forma` (ou `ck_pin_reset_token_forma`); 64 hexadecimais passam.
-- **Tabela e porta:** `portal.person_token` (`migrations/0004-portal-access.md`) e `game.pin_reset`
-  (`migrations/0005-game-account.md`); porta `identity` (planejada).
+- **Tabela e porta:** `portal.person_token` (`migrations/0004_portal_access.md`) e `game.pin_reset`
+  (`migrations/0005_game_account.md`); porta `identity` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-011 — auditoria append-only, sem FK
@@ -160,7 +160,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Saída:** linha imutável em `ops.audit_log`.
 - **Critério de aceitação:** `SET ROLE wyd_game; UPDATE ops.audit_log SET action = 'x'` falha com
   `42501`; `INSERT` de `wyd_game` passa; `\d ops.audit_log` não mostra FK.
-- **Tabela e porta:** `ops.audit_log` (`migrations/0002-ops-audit.md`); porta `audit` (planejada).
+- **Tabela e porta:** `ops.audit_log` (`migrations/0002_ops_audit.md`); porta `audit` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-012 — papel de jogo é fechado
@@ -171,7 +171,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Saída:** linha em `game.account`.
 - **Critério de aceitação:** `UPDATE game.account SET role = 'gm' WHERE id = 1` falha com `23514` em
   `ck_account_role`; `player` passa.
-- **Tabela e porta:** `game.account` (`migrations/0005-game-account.md`); porta `accounts` (planejada).
+- **Tabela e porta:** `game.account` (`migrations/0005_game_account.md`); porta `accounts` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-013 — senha e PIN só como hash argon2id
@@ -183,8 +183,8 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** `INSERT` com `password_hash = 'texto'` falha com `23514` em
   `ck_person_senha_hasheada` (portal) ou `ck_account_senha_hasheada` (jogo); o prefixo
   `$argon2id$` passa.
-- **Tabela e porta:** `portal.person` (`migrations/0003-portal-person.md`) e `game.account`
-  (`migrations/0005-game-account.md`); porta `identity` (planejada).
+- **Tabela e porta:** `portal.person` (`migrations/0003_portal_person.md`) e `game.account`
+  (`migrations/0005_game_account.md`); porta `identity` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-014 — cinco contas da mesma pessoa online
@@ -196,7 +196,7 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
 - **Critério de aceitação:** cinco `INSERT` (uma por conta) passam e `SELECT count(*) FROM game.session
   WHERE released_at IS NULL` devolve `5`; a sexta conta não existe, porque a vaga é 1–5
   (`RN-DB-001`).
-- **Tabela e porta:** `game.session` (`migrations/0007-game-session.md`); porta `session` (planejada).
+- **Tabela e porta:** `game.session` (`migrations/0007_game_session.md`); porta `session` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## RF-DB-015 — contas da mesma pessoa formam grupo e trocam entre si
@@ -234,8 +234,8 @@ criadas). `$argon2id$...` representa um hash válido, nunca uma senha real.
   `23514` em `ck_content_version_linha_unica`; `UPDATE content.content_version SET id = 2` falha no mesmo
   `CHECK`; `INSERT` em `game.character` com `content_version` inexistente falha com `23503` em
   `fk_character_content_version`.
-- **Tabela e porta:** `content.content_version` (`migrations/0001-bootstrap.md` §4 e §9, prova 9) e a FK de
-  `game.character` (`migrations/0006-game-character.md`); porta `catalog` (planejada).
+- **Tabela e porta:** `content.content_version` (`migrations/0001_bootstrap.md` §4 e §9, prova 9) e a FK de
+  `game.character` (`migrations/0006_game_character.md`); porta `catalog` (planejada).
 - **Issue:** a alocar na onda 8.
 
 ## O que este recorte não cobre

@@ -49,8 +49,12 @@ impl PgAdapter {
         })
     }
 
-    /// Fecha o pool de execução; útil para o chamador liberar recursos.
+    /// Fecha os pools; útil para o chamador liberar recursos.
+    ///
+    /// A conexão que mantém o advisory lock precisa voltar ao pool antes do `close`: com
+    /// `max_connections(1)`, fechar o `lock_pool` com ela ainda presa esperaria para sempre.
     pub async fn close(self) {
+        drop(self.lock_held.lock().await.take());
         self.pool.close().await;
         self.lock_pool.close().await;
     }

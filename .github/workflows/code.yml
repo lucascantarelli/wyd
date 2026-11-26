@@ -40,6 +40,16 @@ jobs:
       - name: Testes unitários
         run: cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
 
+      # Assinador do `wyd-ops` (`LLCH-03`): canonização e encoding vêm do launcher, sem cópia.
+      - name: Formatação do assinador
+        run: cargo fmt --manifest-path crates/wyd-ops-signer/Cargo.toml -- --check
+
+      - name: Lint do assinador
+        run: cargo clippy --manifest-path crates/wyd-ops-signer/Cargo.toml --all-targets -- -D warnings
+
+      - name: Testes do assinador
+        run: cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --offline
+
       # Launcher: verificação do manifesto do patch (`LCLI-02`, ADR-LCH-0001).
       # Não precisa de PostgreSQL; o teste do patch real se auto-ignora sem a árvore do cliente.
       - name: Formatação do launcher
@@ -91,14 +101,85 @@ jobs:
             GRANT wyd_owner TO wyd_migrator;
             GRANT CREATE, CONNECT ON DATABASE wyd TO wyd_migrator;
           "
+          # Cada arquivo inclui `up` e `down`: aplique apenas o `up`. Remova CRLF na leitura para
+          # comparar os marcadores; pipefail garante que erro do extrator OU do psql falhe o step.
+          set -euo pipefail
           for arquivo in crates/wyd-db/migrations/*.sql; do
-            docker exec -i wyd-db-ci psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q < "$arquivo" >/dev/null
+            awk '
+              { linha = $0; sub(sprintf("%c", 13), "", linha) }
+              linha == "-- migrate:up"   { if (up) exit 4; up = 1; dentro = 1; next }
+              linha == "-- migrate:down" { if (!up || down) exit 5; down = 1; dentro = 0; next }
+              dentro { print linha }
+              END { if (!up || !down) exit 6 }
+            ' "$arquivo" \
+              | docker exec -i wyd-db-ci psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q
           done
 
       - name: Testes de schema
         env:
           WYD_DB_TEST_CONTAINER: wyd-db-ci
         run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
+
+  reversibilidade:
+    name: up → down → up da série em PostgreSQL 17
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Container vazio, com os papéis de `db/roles.sql`: o alvo confere que o ciclo começa do zero.
+      - name: Subir PostgreSQL 17 vazio
+        run: |
+          docker run -d --name wyd-db-rev -e POSTGRES_PASSWORD=test -e POSTGRES_DB=wyd postgres:17
+          for _ in $(seq 1 30); do
+            if docker exec wyd-db-rev psql -U postgres -d wyd -tAc 'SELECT 1' >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          docker exec -i wyd-db-rev psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q -c "
+            CREATE ROLE wyd_owner NOLOGIN;
+            CREATE ROLE wyd_migrator NOLOGIN;
+            CREATE ROLE wyd_game NOLOGIN;
+            CREATE ROLE wyd_portal NOLOGIN;
+            CREATE ROLE wyd_admin NOLOGIN;
+            CREATE ROLE wyd_read NOLOGIN;
+            GRANT wyd_owner TO wyd_migrator;
+            GRANT CREATE, CONNECT ON DATABASE wyd TO wyd_migrator;
+          "
+
+      - name: Ciclo up → down → up (bloqueante)
+        env:
+          WYD_DB_TEST_CONTAINER: wyd-db-rev
+        run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test reversibilidade_pg -- --test-threads=1
+
+  runner:
+    name: porta PgAdapter e advisory lock em PostgreSQL 17 (CAP-37)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Q-ALVO-1 = A1: porta publicada só em loopback; Q-ALVO-3: `wyd_migrator` com LOGIN
+      # apenas neste container descartável, para o preflight recusar outro papel de verdade.
+      - name: Subir PostgreSQL 17 em 127.0.0.1
+        run: |
+          docker run -d --name wyd-db-runner -e POSTGRES_PASSWORD=test -e POSTGRES_DB=wyd -p 127.0.0.1::5432 postgres:17
+          for _ in $(seq 1 30); do
+            if docker exec wyd-db-runner pg_isready -U postgres -d wyd >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          docker exec -i wyd-db-runner psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q -c "
+            CREATE ROLE wyd_migrator LOGIN PASSWORD 'test';
+            GRANT CREATE, CONNECT ON DATABASE wyd TO wyd_migrator;
+            GRANT CREATE, USAGE ON SCHEMA public TO wyd_migrator;
+          "
+          porta=$(docker port wyd-db-runner 5432/tcp | cut -d: -f2)
+          echo "WYD_DB_TEST_URL=postgres://wyd_migrator:test@127.0.0.1:${porta}/wyd" >> "$GITHUB_ENV"
+
+      # Q-ALVO-2 = B1: fixture contígua de `tests/resources/fixture`, até a série real fechar.
+      - name: Porta PgAdapter, drift e lock (bloqueante)
+        run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test runner_pg -- --test-threads=1
 
   security:
     name: audit e deny (bloqueante)

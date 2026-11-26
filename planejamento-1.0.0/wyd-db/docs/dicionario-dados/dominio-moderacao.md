@@ -1,7 +1,7 @@
 > Pergunta: "como o bloqueio de conta é representado e o que o schema exige para ele ser válido?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.2; `migrations-checklist.md` §2; `0005-game-account.md`
+> Base: `ddl-confirmado.md` §5.2; `migrations-checklist.md` §2; `0005_game_account.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

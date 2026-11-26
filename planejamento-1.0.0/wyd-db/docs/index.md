@@ -214,8 +214,8 @@ apontavam `RNF` alheio: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` (§6.6.26 daque
 revisão de `Q-BLK-21` está na raiz do sistema (`revisao-de-q-blk-21.md`, arquivo não publicado): o dono
 aprovou **A**, as correções de redação foram aplicadas e as **12** páginas de `tests/` estão `aceito
 (2026-11-24)`. O aceite não cobre capacidade por si — mas em 2026-11-24 a leva de `migrations/` aplicou os
-**28** `.sql` do zero e 13 cenários de `sistema_pg` rodaram verdes: a matriz está **13 de 39** — e o código
-dos 5 alvos já tem permissão: `Q-BLK-18` = A.
+**28** `.sql` do zero, 13 cenários de `sistema_pg` e 5 casos de `runner_pg` rodaram verdes: a matriz está **14 de 39** — e o código
+dos 6 alvos já tem permissão: `Q-BLK-18` = A.
 
 **A medição do foco do sistema é `foco-e-sequencia.md`**, na raiz deste sistema — arquivo de raiz não é
 publicado no site, e por isso é citado aqui como código: ele mantém as seis frentes, a cadeia de
@@ -227,7 +227,7 @@ para a medição do sistema.
 ## 📦 Escopo desta edição
 
 > [!NOTE] O que está documentado e o que fica fora
-> **Dentro:** o schema da série 1.0.0 (`0001-bootstrap.sql` … `0029-views.sql` — contagem de
+> **Dentro:** o schema da série 1.0.0 (`0001_bootstrap.sql` … `0029_views.sql` — contagem de
 > arquivos, tabelas e `SCHEMA_VERSION` em `plano-migrations.md` §3), o crate `wyd-db`
 > (portas, adapter, pool, migrations, filas), o seed de desenvolvimento, a operação do banco e os
 > requisitos que ele precisa cumprir.
@@ -295,8 +295,8 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 - [WYDDB-032 — testar stack de capacidades](roadmap/WYDDB-032.md)
 - [WYDDB-033 — criar fixtures e factories isoladas](roadmap/WYDDB-033.md)
 - [WYDDB-034 — fechar gate anti-skip e matriz CAP](roadmap/WYDDB-034.md)
-- [WYDDB-035 — escrever 0001-bootstrap.sql](roadmap/WYDDB-035.md)
-- [WYDDB-036 — escrever 0002-ops-audit.sql](roadmap/WYDDB-036.md)
+- [WYDDB-035 — escrever 0001_bootstrap.sql](roadmap/WYDDB-035.md)
+- [WYDDB-036 — escrever 0002_ops_audit.sql](roadmap/WYDDB-036.md)
 - [WYDDB-037 — escrever 0003 a 0007 do corte vertical](roadmap/WYDDB-037.md)
 - [WYDDB-038 — escrever 0008 a 0012 do estado de jogo](roadmap/WYDDB-038.md)
 - [WYDDB-039 — escrever 0013 a 0029 de conteúdo e views](roadmap/WYDDB-039.md)

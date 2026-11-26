@@ -214,7 +214,7 @@ Adicionar trigger/function/view exige: (a) linha nesta tabela, (b) teste que pro
 
 **Papéis** ficam fora das migrations (`db/roles.sql`, gerado por `wyd-db provision render` e aplicado
 por `provision apply` uma vez por banco — papel é do cluster e não vai no `pg_dump`). **Schemas,
-`GRANT` e `ALTER DEFAULT PRIVILEGES` dos quatro schemas ficam em `0001-bootstrap.sql`**, porque são
+`GRANT` e `ALTER DEFAULT PRIVILEGES` dos quatro schemas ficam em `0001_bootstrap.sql`**, porque são
 objetos que ele cria e precisam ser versionados com ele; o estado de `public`, que já existe antes da
 série, vai no mesmo artefato (`src/provision/spec.md` §4). Ordem do ambiente: `provision render` →
 `provision apply` → migrations.
@@ -232,7 +232,7 @@ Provisionamento (`render|plan|apply|check`) e por que papel fica fora da série:
 Escrever o bloco `CREATE ROLE` à mão é divergência: o gate de CI compara `db/roles.sql` com `render`.
 
 O DDL de schema e de permissão **não se copia aqui**: o dono do texto dos quatro schemas é
-`ddl-confirmado.md` §3 e a página que o executa é `0001-bootstrap.md` §4 (efeitos tabelados em §7);
+`ddl-confirmado.md` §3 e a página que o executa é `0001_bootstrap.md` §4 (efeitos tabelados em §7);
 o do estado de `public` é `src/provision/spec.md` §4, aplicado por `provision apply`. O que este padrão
 fixa é a **fronteira**, em prosa:
 

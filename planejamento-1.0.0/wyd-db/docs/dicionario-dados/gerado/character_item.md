@@ -76,4 +76,4 @@ Trigger `trg_character_item_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0009-game-inventory.md` — arquivo `0009-game-inventory.sql`.
+Forma (dona): `migrations/0009_game_inventory.md` — arquivo `0009_game_inventory.sql`.

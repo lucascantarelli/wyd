@@ -25,12 +25,12 @@ continua na página dona, e a coluna, o tipo e o `CHECK` continuam no dicionári
 | `Página` | a página de `tests/` que descreve o cenário que prova a linha; caminho de pasta, porque `tests/` não é publicada no site | a própria página de `tests/`; aqui é só o ponteiro |
 | `Issue` | onda em que a issue do roadmap deve ser alocada | `../roadmap/` (40 issues) |
 
-**13 das 37 células de `Teste` têm teste executado** desde 2026-11-24: as 13 capacidades `CAP-24`–`CAP-36`
-rodaram em `crates/wyd-db/tests/sistema_pg.rs` (13 verdes, §3.1). As outras **24** seguem em `P`; as **3**
-restantes são `—` por regra, porque não são teste do banco (`RF-DB-015` e `RF-DB-016`, frente `wyd-server`, e
-`RN-DB-003`, regra de cultura). Das 24 com `P`, **20** têm `CAP-nn` escrita na matriz
-(`CAP-01`–`CAP-23`, `CAP-37`–`CAP-39`) e **4** não (`RF-DB-003`, `RF-DB-006`, `RF-DB-014` e `RNF-DB-001`, que é
-gate de CI). As seis linhas de gate de série (`RNF-DB-008`–`RNF-DB-013`) seguem medidas em
+**14 das 37 células de `Teste` têm teste executado** desde 2026-11-25: as 13 capacidades `CAP-24`–`CAP-36`
+rodaram em `crates/wyd-db/tests/sistema_pg.rs` (13 verdes, §3.1) e `CAP-37` rodou em
+`crates/wyd-db/tests/runner_pg.rs` (5/5). As outras **20** seguem em `P`; as **3** restantes são `—` por
+regra, porque não são teste do banco (`RF-DB-015` e `RF-DB-016`, frente `wyd-server`, e `RN-DB-003`, regra de
+cultura). Das 20 com `P`, **16** têm `CAP-nn` escrita na matriz (`CAP-01`–`CAP-23`, `CAP-38`–`CAP-39`) e **4**
+não (`RF-DB-003`, `RF-DB-006`, `RF-DB-014` e `RNF-DB-001`, que é gate de CI). As seis linhas de gate de série (`RNF-DB-008`–`RNF-DB-013`) seguem medidas em
 [`../planos/plano-de-qualidade-e-gates.md`](../planos/plano-de-qualidade-e-gates.md) §1, sem alvo Rust.
 
 **Células pendentes da matriz: 64** = **24** na coluna `Teste` (as que seguem em `P`) + **40** na coluna `Issue` (onda
@@ -214,10 +214,10 @@ página, não execução da série.
 | gate de CI, não alvo Rust | **1** | `RNF-DB-001` | `wyd-ops` (gate de cobertura) |
 | gate de série, não cenário | **6** | `RNF-DB-008`–`RNF-DB-013` | o próprio gate (`../planos/plano-de-qualidade-e-gates.md` §1) |
 
-**Nenhuma linha com `P` fica sem cenário:** as **18** que seguem em `P` têm página, e **13** das **16** que
-ganharam cenário em 2026-11-24 com `Q-BLK-23` = A (`CAP-24` a `CAP-36`, em
-`tests/alvos/sistema-pg.md`) já rodaram e viraram `V`; as três restantes (`CAP-37`–`CAP-39`) dependem de código
-que não existe. Os três `RNF` que perderam o ponteiro falso para `sistema-pg` em `Q-BLK-24` = A (`RNF-DB-002`,
+**Nenhuma linha com `P` fica sem cenário:** as **18** que seguem em `P` têm página, e **14** das **16** que
+ganharam cenário em 2026-11-24 com `Q-BLK-23` = A (`CAP-24` a `CAP-39`, em
+`tests/alvos/sistema-pg.md` e `tests/alvos/runner-pg.md`) já rodaram e viraram `V` — `CAP-37` inclusive; as
+duas restantes (`CAP-38`–`CAP-39`) dependem de código que não existe. Os três `RNF` que perderam o ponteiro falso para `sistema-pg` em `Q-BLK-24` = A (`RNF-DB-002`,
 `004`, `005`) voltaram a apontar página na mesma data: o cenário mede e registra, e não fixa limiar que o
 requisito não tem. A coluna `Teste` marca natureza **e** resultado — `V` onde o cenário rodou e passou.
 

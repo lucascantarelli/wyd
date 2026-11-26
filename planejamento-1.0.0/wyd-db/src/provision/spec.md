@@ -27,7 +27,7 @@ código é a fonte para os papéis; o bloco de `public` é constante do gerador;
 - administração de credencial: nenhuma senha, `PASSWORD` ou rotação (§7);
 - alteração de papel existente: `apply` só adiciona (`ADR-DB-0001`, Decisão item 3);
 - concessão de privilégio nos quatro schemas da série (`content`, `game`, `portal`, `ops`) ou default
-  privileges (é `0001-bootstrap.md` §7, `P-18`); `public` é a exceção declarada em §4, porque existe
+  privileges (é `0001_bootstrap.md` §7, `P-18`); `public` é a exceção declarada em §4, porque existe
   antes da série e é onde o ledger mora;
 - remoção de papel: ato manual auditado, fora desta página;
 - escritor de arquivo: quem escreve `db/roles.sql` é o subcomando `render` da CLI.
@@ -53,7 +53,7 @@ A ordem da tabela **é** a ordem de emissão do SQL e não pode mudar sem regene
 **`wyd_admin` entrou em 2026-11-21 (`M27`):** o dono escolheu **A + S1 + C1 + D1** em
 `docs/arquitetura/seguranca.md` §"Decisão — papel `wyd_admin`" — papel com `LOGIN`, sem membership,
 `USAGE` em `game`/`ops` e `SELECT`/`INSERT`/`UPDATE` nas sete tabelas do C4, sem `DELETE`, com o
-`GRANT` no arquivo novo `0032-admin-grants.sql` (31 → 32 na série naquele momento; hoje a série fechou em
+`GRANT` no arquivo novo `0032_admin_grants.sql` (31 → 32 na série naquele momento; hoje a série fechou em
 **34**). Nenhum privilégio de schema mora
 nesta página (§1): o papel entra em `ROLES` e no golden, o `GRANT` entra na série.
 
@@ -96,7 +96,7 @@ o golden quebra a compilação antes de qualquer teste rodar.
 (§4): o `CREATE` é revogado de `PUBLIC` e `USAGE` e `CREATE` são concedidos a `MIGRATOR`. Ele é
 constante do gerador, não dado de `RoleSpec`, porque não descreve papel nenhum; `plan`/`check` continuam
 olhando só `pg_roles`/`pg_auth_members`, e a conferência desse bloco é pelas provas de
-`migrations/0001-bootstrap.md` §9 — `check` não lê ACL de schema.
+`migrations/0001_bootstrap.md` §9 — `check` não lê ACL de schema.
 
 ## 3. DSN por papel (`M24`, decidido em 2026-11-18)
 **Sem arquivo no repositório:** `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
@@ -391,6 +391,6 @@ papel (`ADR-DB-0001`).
 | Por que papel fica fora da série versionada | `ADR-DB-0001` (Contexto e Alternativas) |
 | Senha, `pg_hba`, TLS, rotação | §7 desta página (regra) + ambiente (valor) |
 | Remoção de papel | ato manual auditado: `DROP OWNED BY` antes, `DROP ROLE` dos que têm `member_of` e `wyd_owner` por último (`2BP01` enquanto houver dependência) |
-| `GRANT` e default privileges nos quatro schemas da série | `migrations/0001-bootstrap.md` §7 (`P-18`) |
+| `GRANT` e default privileges nos quatro schemas da série | `migrations/0001_bootstrap.md` §7 (`P-18`) |
 | Estado do schema `public` (ACL do ledger) | §4 desta página; decisão em `ADR-DB-0001`, item 8 |
 | Quem conecta com cada papel em produção | `docs/planos/plano-de-implantacao.md` §1 (cada serviço sobe com a DSN do seu papel) |

@@ -2,7 +2,7 @@
 > Público: Dono do projeto, curadoria de conteúdo e equipe do `wyd-db`
 > Dono: equipe do `wyd-db`
 > Base: `migrations-checklist.md` §1–§4; `plano-migrations.md` §3–§4; `docs/planos/plano-de-dados-e-seeds.md` §2; `docs/planos/plano-de-testes.md` §5; `docs/specs/rastreabilidade.md`; `pendencias-de-fechamento.md` §1 e §6.6.20; `pedido-de-curadoria-dos-seeds.md`; `../wyd-1.0.0.md` §1
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-24)
 
@@ -11,9 +11,11 @@
 mantém as perguntas de seed. Ela **não** publica um segundo ranking do projeto: onde divergir, vale a
 página canônica.
 
-**Atualização de 2026-11-25:** o ato 2 (`migrations/serie-e-regras.md`) e o ato 3 (runner em
-lib/fakes, 63 testes) estão concluídos; o próximo elo de F2 é o **ato 4** (`CAP-37`–`CAP-39`), e a
-série real depende de **`Q-SERIE-1`**. O registro completo está em `migrations/serie-e-regras.md` §8–§10.
+**Atualização de 2026-11-25:** o ato 2 (`migrations/serie-e-regras.md`) tem os 28 `down` escritos e
+provados por ciclo PG17 via `psql`; o ato 3 (runner em lib/fakes, 63 testes) está concluído. `Q-SERIE-1`
+foi implementada e `Q-SEP-1` = A′ renomeou os 28 arquivos para `_`; a série real segue bloqueada só pelas
+seis versões ausentes. O ato 4 ficou reduzido a `CAP-38` e `CAP-39`: **`CAP-37` foi fechada por
+`runner_pg`** (5/5 em PG17). Ver `migrations/serie-e-regras.md` §7–§10.
 
 Este documento mede as frentes do `wyd-db` e preserva as perguntas de seed: enumera as frentes abertas
 com o número que cada uma tem no arquivo dono e registra o custo/dependência de cada uma. Ele não é
@@ -29,8 +31,8 @@ seção onde vivem.
 | # | Frente | Número | Fonte |
 |---:|---|---|---|
 | **F1** | **Curadoria e medição do 7662** | **6** datasets parados; **6** linhas `bloqueada` por dado; **0** por decisão; **0** por dependência; **6** páginas de migration faltando (28 de 34) | `migrations-checklist.md` §3 (motivo por arquivo), §4 (soma `28 + 6 = 34`), §1 (o que cada estado significa); `plano-de-dados-e-seeds.md` §2 |
-| **F2** | **Issues + suíte de testes** | **40** issues abertas (#82–#121) e **0** vinculadas; **12 de 12** páginas de `tests/`, todas `aceito` (2026-11-24); matriz `CAP-nn` com **39** capacidades e **13** cobertas por teste executado; **64** células pendentes na matriz (**24** `teste` + **40** `issue`; **13** `teste` já em `V` e outras **3** são `—` por regra); **31 de 40** linhas com página que nomeia o requisito (**9** sem página, **0** sem cenário) | `docs/roadmap/` (40 páginas `WYDDB-nnn`); `docs/planos/riscos.md` `R-5`; `wyd-db-1.0.0.md` §6.17; `rastreabilidade.md` §2; `plano-de-testes.md` §5 |
-| **F3** | **Aceite de página** | **141** atos pendentes, todos em `docs/` (**0** em `src/`, `migrations/` e `tests/`); **80** páginas `aceito` (2 ADRs + **28** de `migrations/` + 1 de `serie-e-regras.md` + 12 de `tests/` + 37 de `src/`); a série de **28** `.sql` já aplica do zero e 13 cenários rodaram; as **27** páginas de `migrations/` foram aceitas em 2026-11-24 | contagem de `**Estado:**`; `wyd-db-1.0.0.md` §10 (11 itens por página); `proposta-decisoes-m33.md` §2; `pendencias-de-fechamento.md` §6.6.31 |
+| **F2** | **Issues + suíte de testes** | **40** issues abertas (#82–#121) e **0** vinculadas; **13 de 13** páginas de `tests/`, todas `aceito` (a 13ª em 2026-11-25); matriz `CAP-nn` com **39** capacidades e **14** cobertas por teste executado; **64** células pendentes na matriz (**24** `teste` + **40** `issue`; **13** `teste` já em `V` e outras **3** são `—` por regra); **31 de 40** linhas com página que nomeia o requisito (**9** sem página, **0** sem cenário) | `docs/roadmap/` (40 páginas `WYDDB-nnn`); `docs/planos/riscos.md` `R-5`; `wyd-db-1.0.0.md` §6.17; `rastreabilidade.md` §2; `plano-de-testes.md` §5 |
+| **F3** | **Aceite de página** | **141** atos pendentes, todos em `docs/` (**0** em `src/`, `migrations/` e `tests/`); **81** páginas `aceito` (2 ADRs + **28** de `migrations/` + 1 de `serie-e-regras.md` + 13 de `tests/` + 37 de `src/`); a série de **28** `.sql` já aplica do zero e 13 cenários rodaram; as **27** páginas de `migrations/` foram aceitas em 2026-11-24 | contagem de `**Estado:**`; `wyd-db-1.0.0.md` §10 (11 itens por página); `proposta-decisoes-m33.md` §2; `pendencias-de-fechamento.md` §6.6.31 |
 | **F4** | **Requisito das 109 tabelas** | **16 de 109** tabelas com `RF`/`RN`; o critério de §11.1 exige cobertura de todas | `rastreabilidade.md` §3.2; `wyd-db-1.0.0.md` §11.1 |
 | **F5** | **Expansão para outros sistemas** | **12** sistemas fora do `wyd-db`; **6** lacunas abertas + **1** proposta, todas de captura (protocol 2, client 2+1, net 1, bots 1); `wyd-protocol` com **5 de 131** páginas | `../wyd-1.0.0.md` §1.1; `AGENTS.md` §6 |
 | **F6** | **Perguntas ao dono** | **0** `Q-BLK` abertas (`17` a `24` respondidas em A em 2026-11-24; `20` e `22` na mesma data) + **0** de foco (`Q-FOCO-3` e `Q-FOCO-4` respondidas em A) + **4** de seed (§5 deste documento) = **4**; **0** lacunas abertas no `wyd-db` | `pendencias-de-fechamento.md` §6.6.22.5, §6.6.23, §6.6.24, §6.6.29 e §6.6.31; `../wyd-ops/docs/prioridade-do-projeto.md` §0.1, §7 e §10; `lacunas.md` §1 |
@@ -183,6 +185,6 @@ registra "origem posterior ao 7662; sem regra oficial".
 | Fato | Quando deixa de valer | Onde atualizar |
 |---|---|---|
 | 6 datasets `bloqueada` | a primeira medição chegar | `migrations-checklist.md` §3; §4 deste arquivo |
-| 26 de 39 capacidades cobertas | os quatro alvos restantes rodarem (ou as lacunas de `CAP-37`–`CAP-39` fecharem) | `tests/specs/capacidades.md`; §1 deste arquivo |
+| 25 de 39 capacidades sem execução (14 cobertas) | os alvos restantes rodarem (ou `CAP-38`–`CAP-39` fecharem) | `tests/specs/capacidades.md`; §1 deste arquivo |
 | **142** atos de aceite | qualquer página de `docs/` virar `aceito` | §1 deste arquivo; `proposta-decisoes-m33.md` §2 |
 | 16 de 109 tabelas | `Q-BLK-15` = A ou B for executada | `rastreabilidade.md` §3.2 |

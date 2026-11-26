@@ -36,8 +36,8 @@ flowchart LR
 
 O portal **não escreve** em `game`. Quando precisa entregar item, moeda ou grant, grava uma linha em
 `ops.delivery_queue`; o servidor drena a fila e aplica o efeito no schema quente. A fila é a ponte
-única desenhada em `ddl-confirmado.md` §5.16 (`0012-ops-delivery.sql`). O caminho de leitura cruzada
-usa as duas views de `0029-views.sql`; nenhum dos lados recebe `SELECT` na tabela crua do outro.
+única desenhada em `ddl-confirmado.md` §5.16 (`0012_ops_delivery.sql`). O caminho de leitura cruzada
+usa as duas views de `0029_views.sql`; nenhum dos lados recebe `SELECT` na tabela crua do outro.
 
 ## 3. O que a fronteira garante
 

@@ -30,7 +30,7 @@ certa e provar com teste. Ele é para quem mexe no crate; instalação do banco 
 | Rust e Cargo | planejado; versão mínima não foi decidida em documento |
 | DSNs por papel | nomes em `src/provision/spec.md` §3; valores são do ambiente |
 | crate `crates/wyd-db` | existe desde 2026-11-24 com `Cargo.toml`, `src/lib.rs` e `src/dsn.rs`; o resto da árvore é a de `wyd-db-1.0.0.md` §6.16 |
-| suíte de testes | planejada; o `Cargo.toml` existe, mas ainda não declara nenhum dos 5 alvos |
+| suíte de testes | parcial; o `Cargo.toml` declara 3 dos 6 alvos (`sistema_pg`, `reversibilidade_pg`, `runner_pg`) |
 
 ## 3. Os três comandos que provam o ambiente
 

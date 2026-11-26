@@ -5,7 +5,7 @@
 > Revisado em: 2026-11-22
 
 **Estado:** forma aprovada em 2026-11-22 (`M31`, fechando `LAC-ADM-07`). O lote é o
-`0034-portal-market.sql`, o texto do DDL é `ddl-confirmado.md` §5.34 e a série passa a **34 arquivos e
+`0034_portal_market.sql`, o texto do DDL é `ddl-confirmado.md` §5.34 e a série passa a **34 arquivos e
 109 tabelas**. Este documento continua sendo a **razão** da forma — fronteira, relação e consulta —, não
 o texto executável.
 

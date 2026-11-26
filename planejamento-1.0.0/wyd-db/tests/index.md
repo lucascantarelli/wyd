@@ -4,12 +4,14 @@
 > Base: `../wyd-db-1.0.0.md` §6.17; `../docs/planos/plano-de-testes.md` §2–§4; `../docs/guia-teste/piramide-e-alvos.md`
 > Revisado em: 2026-11-24
 
-**Estado:** aceito (2026-11-24) — página escrita; 1 dos 5 alvos implementado e 13 dos 39 cenários executados (2026-11-24).
+**Estado:** aceito (2026-11-24) — página escrita; 3 dos 7 alvos implementados e 14 dos 39 cenários
+executados (2026-11-25). `reversibilidade_pg` e `runner_pg` entraram depois do aceite original.
 
 **Quatro níveis de afirmação convivem aqui:**
 
-- **`P`** — tudo o que a página diz sobre a suíte: só `sistema_pg` existe em `crates/wyd-db/Cargo.toml`;
-  os outros quatro alvos, `common/` e `resources/serie/` não têm arquivo escrito.
+- **`P`** — tudo o que a página diz sobre a suíte: `sistema_pg`, `reversibilidade_pg` e `runner_pg`
+  existem em `crates/wyd-db/Cargo.toml`; os outros quatro alvos e `resources/serie/` não têm arquivo
+  escrito. `common/` também não existe: os alvos com banco usam `tests/comum/mod.rs`.
 - **`H`** — dúvida aberta, dita e localizada em §5, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o § ao lado.
 - **sem marca** — regra de projeto (`../docs/convencoes.md`) e comportamento do PostgreSQL
@@ -27,6 +29,8 @@ crates/wyd-db/tests/
 ├── contrato_catalogo.rs      # alvo de contrato: catálogo × série
 ├── contrato_migrations.rs    # alvo de contrato: forma da série
 ├── sistema_pg.rs             # alvo de sistema: comportamento no PG17
+├── reversibilidade_pg.rs     # alvo de sistema: ciclo up → down → up por psql
+├── runner_pg.rs              # alvo de sistema: porta PgAdapter, ledger e lock
 ├── sistema_sessoes.rs        # alvo de sistema: papel, fronteira e view
 ├── sistema_stack_caps.rs     # meta-alvo: a matriz e o anti-skip
 ├── common/
@@ -45,13 +49,15 @@ crates/wyd-db/tests/
 recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](fixtures-e-factories.md).
 
 ## 2. Alvo → arquivo → tipo → precisa de banco
-**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema_pg.rs`, `reversibilidade_pg.rs` e `runner_pg.rs` estão versionados.
 
 | Alvo (`Cargo.toml`) | Arquivo | Tipo | Precisa de banco | Capacidades |
 |---|---|---|---|---|
 | `contrato_migrations` | `contrato_migrations.rs` | contrato | **não** | `CAP-01`–`CAP-07` |
 | `contrato_catalogo` | `contrato_catalogo.rs` | contrato | **não** | `CAP-08` |
-| `sistema_pg` | `sistema_pg.rs` | sistema | **sim** | `CAP-09`–`CAP-19` e `CAP-24`–`CAP-39` |
+| `sistema_pg` | `sistema_pg.rs` | sistema | **sim** | `CAP-09`–`CAP-19` e `CAP-24`–`CAP-36`, `CAP-38`–`CAP-39` |
+| `reversibilidade_pg` | `reversibilidade_pg.rs` | sistema | **sim** | `CAP-02` (ciclo SQL da série) |
+| `runner_pg` | `runner_pg.rs` | sistema | **sim** | `CAP-01`–`CAP-07` (metade runner) e `CAP-37` |
 | `sistema_sessoes` | `sistema_sessoes.rs` | sistema | **sim** | `CAP-20`–`CAP-21` |
 | `sistema_stack_caps` | `sistema_stack_caps.rs` | meta | **sim** | `CAP-22`–`CAP-23` |
 
@@ -59,12 +65,12 @@ Um alvo por arquivo, como manda `../wyd-db-1.0.0.md` §5.13. Tipo e fronteira de
 `../docs/guia-teste/piramide-e-alvos.md`; o que cada um **não** prova está na seção 4 de cada página de
 `alvos/`.
 
-### 2.1 Porta de entrada — as 12 páginas
+### 2.1 Porta de entrada — as 13 páginas
 **Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 O critério de pronto exige que toda página esteja linkada no índice da pasta (`../wyd-db-1.0.0.md` §10,
-item 10). As onze abaixo são as demais páginas de `tests/`; esta porta fecha a décima segunda — são
-**12** páginas, medido em 2026-11-24. Cada linha
+item 10). As doze abaixo são as demais páginas de `tests/`; esta porta fecha a décima terceira — são
+**13** páginas, medido em 2026-11-25 (a página do `runner_pg` entrou depois do aceite). Cada linha
 diz **a pergunta que a página responde**, **quando abri-la** e **para onde ir depois** — não é uma lista
 de arquivos, é o caminho de leitura.
 
@@ -73,7 +79,8 @@ de arquivos, é o caminho de leitura.
 | [specs/capacidades.md](specs/capacidades.md) | que capacidade existe, qual alvo a prova e onde ela é provada | **primeiro**, quando quiser saber o que a suíte promete | a página do alvo que a linha nomeia |
 | [alvos/contrato-migrations.md](alvos/contrato-migrations.md) | o que a **forma** da série prova (`CAP-01`–`CAP-07`) | ao mexer em migration ou revisar contrato | [specs/contrato.md](specs/contrato.md), [resources/README.md](resources/README.md) |
 | [alvos/contrato-catalogo.md](alvos/contrato-catalogo.md) | a paridade catálogo × série (`CAP-08`) | ao tocar o dicionário; hoje está bloqueada | [specs/contrato.md](specs/contrato.md) |
-| [alvos/sistema-pg.md](alvos/sistema-pg.md) | o comportamento contra PG17 (`CAP-09`–`CAP-19` e `CAP-24`–`CAP-39`) | ao escrever teste que abre conexão | [specs/sistema.md](specs/sistema.md), [fixtures-e-factories.md](fixtures-e-factories.md) |
+| [alvos/sistema-pg.md](alvos/sistema-pg.md) | o comportamento do schema contra PG17 (`CAP-09`–`CAP-19`, `CAP-24`–`CAP-36`, `CAP-38`–`CAP-39`) | ao escrever teste que abre conexão por `psql` | [specs/sistema.md](specs/sistema.md), [fixtures-e-factories.md](fixtures-e-factories.md) |
+| [alvos/runner-pg.md](alvos/runner-pg.md) | a porta `PgAdapter`: ledger, transação, drift e lock (`CAP-01`–`CAP-07` e `CAP-37`) | ao mexer no runner ou no lock | [../../src/migrate/spec.md](../../src/migrate/spec.md) |
 | [alvos/sistema-sessoes.md](alvos/sistema-sessoes.md) | papel, fronteira e leitura por view (`CAP-20`–`CAP-21`) | ao mexer em `GRANT`, view ou auditoria | [specs/sistema.md](specs/sistema.md), [dados-de-teste.md](dados-de-teste.md) |
 | [alvos/sistema-stack-caps.md](alvos/sistema-stack-caps.md) | a suíte sobre a suíte: DSN, anti-skip e matriz ligada (`CAP-22`–`CAP-23`) | ao mexer em ambiente de teste ou na matriz | [specs/capacidades.md](specs/capacidades.md) |
 | [fixtures-e-factories.md](fixtures-e-factories.md) | o que existe em `common/` e como o dado é limpo | **antes** do primeiro teste de sistema | [dados-de-teste.md](dados-de-teste.md), [resources/README.md](resources/README.md) |

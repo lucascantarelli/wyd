@@ -1,7 +1,7 @@
 > Pergunta: "que estados uma concessão tem, o que o banco recusa e o que continua sem operação decidida?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0012-ops-delivery.md` §4 e §6–§10; `docs/dicionario-dados/dominio-ponte-web-jogo.md`; `docs/roadmap/WYDDB-018.md`; `lacunas.md` `M17`, `M25`; `docs/specs/requisitos-funcionais.md` `RF-DB-009`
+> Base: `migrations/0012_ops_delivery.md` §4 e §6–§10; `docs/dicionario-dados/dominio-ponte-web-jogo.md`; `docs/roadmap/WYDDB-018.md`; `lacunas.md` `M17`, `M25`; `docs/specs/requisitos-funcionais.md` `RF-DB-009`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

@@ -102,7 +102,7 @@ formato:
 ```text
 <N> migrations (crates/wyd-db/migrations/, AAAA-MM-DD)
 <N> tabelas (crates/wyd-db/migrations/, AAAA-MM-DD)
-5 alvos de teste (crates/wyd-db/Cargo.toml, 2026-11-17)
+6 alvos de teste planejados, 3 declarados (crates/wyd-db/Cargo.toml, 2026-11-25)
 SCHEMA_VERSION = <N> (crates/wyd-db/src/lib.rs:29, AAAA-MM-DD)
 ```
 

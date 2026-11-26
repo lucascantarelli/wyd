@@ -1,7 +1,7 @@
 > Pergunta: "o que é um personagem no banco, o que é estado dele e o que o schema garante?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.10, §5.8; `migrations-checklist.md` §2; `0006-game-character.md`
+> Base: `ddl-confirmado.md` §5.10, §5.8; `migrations-checklist.md` §2; `0006_game_character.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

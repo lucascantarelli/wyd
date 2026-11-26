@@ -1,4 +1,4 @@
-# WYDDB-035 — escrever 0001-bootstrap.sql
+# WYDDB-035 — escrever 0001_bootstrap.sql
 
 > Pergunta: "o que esta issue entrega e como sei que terminou?"
 > Público: Desenvolvedor, QA e revisor
@@ -20,14 +20,14 @@ escopo são desta página; `fases.md` cita o link e não repete.
 
 ## Entregável
 
-Escrever `0001-bootstrap.sql` com `up`/`down`, schemas `content`, `game`, `portal`, `ops`, função e `content_version`, conforme `ddl-confirmado.md` §3.
+Escrever `0001_bootstrap.sql` com `up`/`down`, schemas `content`, `game`, `portal`, `ops`, função e `content_version`, conforme `ddl-confirmado.md` §3.
 
 ## DoD
 
 - [ ] `up` cria os quatro schemas, a função e a versão; `down` remove tudo que criou.
 - [ ] Nenhum `ALTER`, seed de conteúdo ou FK para arquivo futuro.
 - [ ] O contrato estrutural passa e o ciclo `up → down → up` é idempotente.
-- [ ] A página `migrations/0001-bootstrap.md` existe e cita o arquivo.
+- [ ] A página `migrations/0001_bootstrap.md` existe e cita o arquivo.
 
 ## Fora de escopo
 

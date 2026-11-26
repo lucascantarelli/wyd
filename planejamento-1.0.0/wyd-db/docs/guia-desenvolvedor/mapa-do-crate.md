@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo e revisor de PR
 > Dono: equipe do `wyd-db`
 > Base: `wyd-db-1.0.0.md` §6.16; `src/migrate/spec.md` §10; `src/provision/spec.md` §5
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -69,8 +69,12 @@ compartilhado (`crate::provision::MIGRATOR` e `crate::dsn::Dsn`).
 
 - **Conteúdo de cada arquivo:** as páginas de `src/` são as donas da API; aqui só há o mapa.
 - **Contrato de `model`, `pool`, `repo` e `transfer`:** ainda não existe; a árvore é planejada.
-- **Build, features e dependências de Cargo:** decidido só o mínimo em 2026-11-24 — `name = "wyd-db"`,
-  `version = "0.0.0"`, `edition = "2021"`, `publish = false` e nenhuma dependência. Features e dependências
-  de `sqlx` (e o `edition`/versão mínima de Rust, `docs/guia-desenvolvedor/index.md` §2) seguem **não
-decididos** e entram quando o módulo que as usa for implementado.
+- **Build, features e dependências de Cargo:** esta página não decide pacote. O `Cargo.toml` do crate
+  fixa `name = "wyd-db"`, `version = "0.0.0"`, `edition = "2021"`, `publish = false` e as dependências
+  `sha2`, `sqlx` (`0.8.6`, `default-features = false`, features `runtime-tokio-rustls` e `postgres`),
+  `thiserror` e `tokio`, com `tempfile` apenas em `dev-dependencies` (`V`, 2026-11-25); `sqlx` fica
+  confinado a `migrate/adapter/` pela regra do §2. Features de `sqlx` além dessas duas continuam **não
+  decididas** e entram quando o módulo que as usar for implementado; `edition` e versão mínima de Rust
+  são de `docs/guia-desenvolvedor/index.md` §2. Quem usa `psql` e quem usa `sqlx` em teste é de
+  [`../guia-teste/index.md`](../guia-teste/index.md) §5.
 - **Testes por arquivo:** o mapa de alvos é de [`../guia-teste/index.md`](../guia-teste/index.md).

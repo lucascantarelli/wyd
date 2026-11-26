@@ -1,7 +1,7 @@
 > Pergunta: "onde ficam os itens do personagem e do baú, o que é refino neles e o que o schema impede?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.12; `migrations-checklist.md` §2; `0009-game-inventory.md`
+> Base: `ddl-confirmado.md` §5.12; `migrations-checklist.md` §2; `0009_game_inventory.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

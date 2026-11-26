@@ -147,7 +147,7 @@ Regras que a decisão implica (`P`, nada implementado):
 - Planejamento que esta ADR consome (marca **planejamento**, fora de `docs/`):
   `planejamento-1.0.0/wyd-db/padrao-banco.md` §8,
   `planejamento-1.0.0/wyd-db/src/provision/spec.md`,
-  `planejamento-1.0.0/wyd-db/migrations/0001-bootstrap.md`.
+  `planejamento-1.0.0/wyd-db/migrations/0001_bootstrap.md`.
 - Controle de andamento que esta ADR afeta: `planejamento-1.0.0/wyd-db/migrations-checklist.md` (na raiz
   da pasta de planejamento) — a fase de provisionamento não entra nas 29 linhas nem na soma de tabelas.
 - Páginas desta árvore a atualizar na implementação: `docs/guia-administrador/index.md` (passo de
@@ -165,14 +165,14 @@ Regras que a decisão implica (`P`, nada implementado):
 
 **Revisão de estado — 2026-11-21 (`M27`/`0032`).** O total vigente passou de cinco para seis papéis
 com a inclusão de `wyd_admin` (`src/provision/spec.md` §2; `lacunas.md` §2.3). A série passou de 31
-para 32 arquivos com `0032` (`plano-migrations.md` §3; `migrations/0032-admin-grants.md`). Esta nota
+para 32 arquivos com `0032` (`plano-migrations.md` §3; `migrations/0032_admin_grants.md`). Esta nota
 atualiza os números de estado, sem reescrever a decisão original: as menções a cinco papéis acima
 registram o desenho considerado no aceite de 2026-11-17.
 
 **Revisão de estado — 2026-11-22 (`M30`/`M31`).** O `0032` foi emendado com os `GRANT` da custódia
 (`game.character_item`, `game.character`) e a série fechou em **34 arquivos e 109 tabelas** com os lotes
-`0033` e `0034` (`plano-migrations.md` §3; `migrations/0032-admin-grants.md`, `0033-ops-idempotency.md`
-e `0034-portal-market.md`). O papel e a forma da decisão não mudaram: só o escopo de privilégio de um
+`0033` e `0034` (`plano-migrations.md` §3; `migrations/0032_admin_grants.md`, `0033_ops_idempotency.md`
+e `0034_portal_market.md`). O papel e a forma da decisão não mudaram: só o escopo de privilégio de um
 arquivo e o total da série.
 
 - Revisar quando: houver mais de um banco por cluster com séries diferentes; entrar réplica de leitura

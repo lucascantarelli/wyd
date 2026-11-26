@@ -2,61 +2,21 @@
 //!
 //! Roda cada cenário num PostgreSQL 17 já migrado, por `psql` dentro do container
 //! indicado em `WYD_DB_TEST_CONTAINER` (`WYD_DB_TEST_USER` e `WYD_DB_TEST_DB` são
-//! opcionais, com default `postgres` e `wyd`). O alvo ainda não usa cliente nativo:
-//! a decisão de `sqlx` segue aberta (`docs/guia-desenvolvedor/mapa-do-crate.md`), e
-//! este harness prova o **schema**, não a porta.
+//! opcionais, com default `postgres` e `wyd`). O alvo fala por `psql` de propósito: `psql` é o
+//! oráculo do schema e `sqlx` é a porta do runner (`docs/guia-teste/index.md` §5). Este harness
+//! prova o **schema**, não a porta.
 //!
-//! **Bloqueados, não pulados:** `CAP-37` (`RNF-DB-002`, exige o `MigrateConfig` do
-//! runner), `CAP-38` (`RNF-DB-004`, exige a consulta da porta C4) e `CAP-39`
-//! (`RNF-DB-005`, exige o boot do binário) dependem de código que não existe. Eles
-//! não estão nesta suíte e ficam declarados em `tests/specs/capacidades.md` §9.
+//! **Fora deste alvo:** `CAP-38` (`RNF-DB-004`, exige a consulta da porta C4) e `CAP-39`
+//! (`RNF-DB-005`, exige o boot do binário) dependem de código que não existe e ficam declarados em
+//! `tests/specs/capacidades.md`. `CAP-37` é provada por `tests/runner_pg.rs`, que exercita o
+//! `PgAdapter` e o advisory lock; o ciclo `up → down → up` da série tem alvo próprio:
+//! `tests/reversibilidade_pg.rs`.
 
-use std::io::Write;
-use std::process::{Command, Stdio};
+mod comum;
+
+use comum::psql;
 
 const HASH: &str = "$argon2id$v=19$m=8,t=1,p=1$c2FsdGQ$Zml4dHVyZQ";
-
-fn psql(sql: &str) -> (bool, String) {
-    let container = std::env::var("WYD_DB_TEST_CONTAINER").unwrap_or_else(|_| {
-        panic!("WYD_DB_TEST_CONTAINER não definida: o alvo sistema_pg precisa do container PostgreSQL 17 migrado")
-    });
-    let user = std::env::var("WYD_DB_TEST_USER").unwrap_or_else(|_| "postgres".to_string());
-    let database = std::env::var("WYD_DB_TEST_DB").unwrap_or_else(|_| "wyd".to_string());
-    let mut child = Command::new("docker")
-        .args([
-            "exec",
-            "-i",
-            &container,
-            "psql",
-            "-U",
-            &user,
-            "-d",
-            &database,
-            "-X",
-            "-q",
-            "-t",
-            "-A",
-            "-v",
-            "ON_ERROR_STOP=1",
-            "-f",
-            "-",
-        ])
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap_or_else(|erro| panic!("falha ao executar `docker exec`: {erro}"));
-    child
-        .stdin
-        .as_mut()
-        .expect("stdin do psql")
-        .write_all(format!("\\set VERBOSITY verbose\n{sql}\n").as_bytes())
-        .expect("envio do SQL ao psql");
-    let saida = child.wait_with_output().expect("leitura da saída do psql");
-    let mut texto = String::from_utf8_lossy(&saida.stdout).to_string();
-    texto.push_str(&String::from_utf8_lossy(&saida.stderr));
-    (saida.status.success(), texto)
-}
 
 /// Exige sucesso e devolve a saída (usada para `SELECT` de uma coluna).
 fn ok(sql: &str) -> String {

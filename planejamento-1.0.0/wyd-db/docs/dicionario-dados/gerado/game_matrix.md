@@ -63,4 +63,4 @@ tabela de import puro.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019-content-world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

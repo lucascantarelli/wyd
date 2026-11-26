@@ -367,7 +367,7 @@ troca de série, por dois motivos independentes:
   não como baseline.
 - **`CASCADE` anula o gate.** O `down` do `0001` derruba os quatro schemas **sem** `CASCADE`, de
   propósito: se outro arquivo esqueceu um objeto, o `down` estoura com "other objects depend on it" e
-  aponta o culpado (`planejamento-1.0.0/wyd-db/migrations/0001-bootstrap.md` §8). Com `CASCADE`, o
+  aponta o culpado (`planejamento-1.0.0/wyd-db/migrations/0001_bootstrap.md` §8). Com `CASCADE`, o
   mesmo defeito passa verde e a sobra desaparece sem ninguém saber.
 
 O reset passa a ser **um alvo do `down`**: `Command::Down { to: DownTo::Empty }`, exposto na CLI como
@@ -653,11 +653,14 @@ evidência no documento de contrato que a nota cita como `Base:`.
 | `cargo clippy --manifest-path crates/wyd-db/Cargo.toml --all-targets -- -D warnings` | concluído sem aviso (exit 0) |
 | `cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check` | concluído sem diferença (exit 0) |
 
-**Cobertura:** a prova é de **lib/fakes** (unidade e contrato), não de sistema com PostgreSQL. Não
-foram executados `tests/sistema_pg.rs` (falta `WYD_DB_TEST_CONTAINER`/PG17), o gate de documentação em
-container nem teste de binário/CLI. As 28 migrations materializadas têm **28** `up`, **0** `down` e
-não foram alteradas; a decisão de rollback é `Q-SERIE-1` em `../../migrations/serie-e-regras.md` §9, com
-recomendação **B** (escrever os 28 `down` reais).
+**Cobertura do ato 3:** a evidência tabulada acima é de **lib/fakes**. Depois dela, `sistema_pg` rodou
+contra PG17 migrado (13/13; log `/tmp/wyd-ci-schema.log`), `reversibilidade_pg` contra PG17 vazio (3/3;
+log `/tmp/wyd-reversibilidade.log`) e `runner_pg` contra PG17 em loopback (5/5; log
+`/tmp/wyd-runner-pg.log`). Os dois primeiros usam `psql`; `runner_pg` exercita `PgAdapter`, ledger,
+transação por arquivo e `pg_advisory_lock`, e é ele que fecha `CAP-37` (`Q-ALVO-1` = A1,
+`Q-ALVO-2` = B1, `Q-ALVO-3` = papel de teste). A decisão `Q-SERIE-1 = B` está implementada em §9.2 e
+`Q-SEP-1` = A′ foi aplicada: os 28 nomes usam `_` e parseiam. A série real ainda não é contígua —
+faltam `0016`, `0017`, `0018`, `0020`, `0023` e `0027` —, por isso o alvo aplica fixture própria.
 
-A próxima frente canônica continua **A — D-01/`wyd-db`**, com a fatia **ato 4** (`CAP-37`–`CAP-39`,
-3 células) e depois **ato 5** (40 issues + 141 atos).
+A próxima frente canônica continua **A — D-01/`wyd-db`**, com o **ato 4** reduzido a `CAP-38` e
+`CAP-39` (2 células) e depois o **ato 5** (40 issues + 141 atos).

@@ -9,7 +9,7 @@
 ## Papel
 
 Classe jogável, com uma coluna de regra: `mastery_cap`, o teto de maestria **por classe**. É a única
-tabela de `0013` que guarda número de regra; `0008-game-skills.md` §10 manda o limite de maestria ser
+tabela de `0013` que guarda número de regra; `0008_game_skills.md` §10 manda o limite de maestria ser
 lido daqui, e o `CHECK` global de `game.character_skill` (320) é só o teto do cliente. O conteúdo
 (6 classes) está previsto no seed `0016`, que segue `bloqueada` até as contagens serem reconferidas na
 fonte (`plano-migrations.md` §4).
@@ -72,9 +72,9 @@ regra de maestria sem mudar a do cliente.
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0016`), que está `bloqueada`.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7). Dono da permissão: `migrations/0013-content-taxonomy.md` §8.
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7). Dono da permissão: `migrations/0013_content_taxonomy.md` §8.
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0013-content-taxonomy.md` — arquivo `0013-content-taxonomy.sql`.
+Forma (dona): `migrations/0013_content_taxonomy.md` — arquivo `0013_content_taxonomy.sql`.
