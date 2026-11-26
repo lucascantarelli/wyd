@@ -25,7 +25,8 @@ consolida e indexa, não substitui.
 
 ```text
 .
-├── crates/<sistema>/              # crate Rust por sistema; hoje só wyd-db tem código
+├── crates/<sistema>/              # crate Rust por sistema; hoje com código: wyd-db, wyd-launcher,
+│                                  #   wyd-ops-signer (assinador do manifesto)
 ├── wyd-portal/                    # portal Next.js; hoje só .gitkeep
 ├── wyd-docs/                      # site MkDocs, tema, preparar.py, verificar*.py
 ├── wyd-ops/                       # imagem, Compose auxiliar, scripts, smoke tests

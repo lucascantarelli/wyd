@@ -3,7 +3,7 @@
 > Pergunta: "qual é a menor fatia que prova, com bytes e com banco, que o cliente entra no mundo e anda?"
 > Público: Produto, arquitetura, `wyd-server`, `wyd-protocol`, `wyd-net`, `wyd-core`, `wyd-db`, `wyd-client`, `wyd-bots` e QA
 > Dono: equipe do `wyd-server` (composição); o fio é de `wyd-protocol`, a captura é de `wyd-client`, o dado é de `wyd-db`
-> Base: `wyd-1.0.0.md` §7.3 e §7.7; `wyd-protocol-1.0.0.md` §9.1; `wyd-protocol/docs/goldens/como-capturar.md` §1, §2 e §7; `wyd-client/lacunas.md` (`LCLI-04`, D3–D6); `wyd-core/lacunas.md` (`LCORE-01`–`LCORE-04`); `wyd-db/migrations/0006-game-character.md` §6.1 e `0007-game-session.md` §6.2/§7; `docs/specs/endpoint-de-captura.md`; `LPRT-10`
+> Base: `wyd-1.0.0.md` §7.3 e §7.7; `wyd-protocol-1.0.0.md` §9.1; `wyd-protocol/docs/goldens/como-capturar.md` §1, §2 e §7; `wyd-client/lacunas.md` (`LCLI-04`, D3–D6); `wyd-core/lacunas.md` (`LCORE-01`–`LCORE-04`); `wyd-db/migrations/0006_game_character.md` §6.1 e `0007_game_session.md` §6.2/§7; `docs/specs/endpoint-de-captura.md`; `LPRT-10`
 > Revisado em: 2026-11-23
 
 **Estado:** proposto (`P`, 2026-11-23). Define **qual** fatia prova o encaixe das fronteiras e **como** se reconhece
@@ -23,7 +23,7 @@ sistema.
 | autenticação de conta de jogo | cadastro e login web: `wyd-portal` (auto-cadastro decidido em `A7`); a fatia usa conta sintética do seed de desenvolvimento |
 | lista e seleção de personagem | criação/edição de personagem: não é necessária para entrar e andar |
 | entrada na cena com estado inicial | combate, inventário, chat e comércio: famílias de `0.4.0`–`0.7.0` (`wyd-protocol-1.0.0.md` §9.1) |
-| um passo com resultado observável | durabilidade da posição: `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y` (`wyd-db/migrations/0006-game-character.md` §6.1, `V` 2026-11-22); `LCORE-02` decidiu que posição é durável eventual com checkpoint no release, mas a fatia não prova save e o schema da posição continua futuro |
+| um passo com resultado observável | durabilidade da posição: `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y` (`wyd-db/migrations/0006_game_character.md` §6.1, `V` 2026-11-22); `LCORE-02` decidiu que posição é durável eventual com checkpoint no release, mas a fatia não prova save e o schema da posição continua futuro |
 | ciclo de vida da sessão: aberta e liberada | dois canais no mesmo gate; o segundo entra depois da primeira fatia (`LSRV-02`) |
 | — | patch, launcher e serverlist: `X11` decidida em 2026-11-23 (JSON canônico + Ed25519), implementação pendente; carga e convivência: onda E, com ambiente e conta decididos em 2026-11-23 (`LBOT-01`/`LBOT-02`) |
 

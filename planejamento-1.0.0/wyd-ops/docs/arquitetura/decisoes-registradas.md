@@ -52,12 +52,23 @@ quando aprovada (ver `adr/index.md`).
 | `LLCH-01`–`04` | wyd-launcher | fechadas 2026-11-23 | fechadas | wyd-launcher | lacunas.md |
 | `LBOT-01`,`02`,`04` | wyd-bots | fechadas 2026-11-23 | fechadas | wyd-bots | lacunas.md |
 | `D-04` = A | todos | checklist de organização | fechada 2026-11-25 | todos | auditoria-de-organizacao.md |
+| `D-06` = A | wyd-ops | foco no `wyd-db` depois de `D-05` | decidida 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/prioridade-do-projeto.md` §0.1 |
+| `Q-SERIE-1` = B | wyd-db | 28 `down` escritos; ciclo PG17 via `psql` provado | implementada/provada 2026-11-25 | wyd-db | `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9.2 |
+| `Q-SEP-1` = A′ | wyd-db | 28 arquivos renomeados para `NNNN_slug_com_underscores.sql`; todos parseiam | decidida e aplicada 2026-11-25 | arquitetura + wyd-db | `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9.1 |
+| `Q-ALVO-1`–`Q-ALVO-3` | wyd-db | porta em `127.0.0.1`, fixture contígua e `wyd_migrator` de teste; `CAP-37` fechada | decididas e implementadas 2026-11-25 | wyd-db + arquitetura | `planejamento-1.0.0/wyd-db/tests/alvos/runner-pg.md` |
+| `OPS-03.1`–`OPS-03.3` | wyd-ops | contratos O1–O3 aprovados na forma | aprovadas 2026-11-25 | arquitetura + `wyd-ops` | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
+| `OPS-03.4`, `OPS-03.5` | wyd-ops | O4 e O5 aprovados na forma, com ADR antes de implementar | aprovadas 2026-11-25 | arquitetura + `wyd-ops` + produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
+| `OPS-04` | wyd-ops | hospedagem adiada para depois do primeiro deploy interno | adiada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
+| `OPS-05` | wyd-ops | board e 61 fatias autorizados, não executados | autorizada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
 
 ## 3. Decisões abertas/propostas (não bloqueiam organização)
 
-As decisões que ainda exigem resposta ou execução estão consolidadas em
-`wyd-ops/docs/lacunas.md` §4: `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LNET-01`/`LBOT-03` (medição),
-`LCLI-02`/`LCLI-05` (direitos) e `OPS-03`–`OPS-05`. Esta página não duplica a lista.
+As respostas às decisões registradas em 2026-11-25 ficam indexadas na §2. `Q-SERIE-1` = B foi
+implementada e provada como ciclo SQL em PG17; `Q-SEP-1` = A′ foi aplicada (28 nomes com `_`) e
+`Q-ALVO-1`–`03` fecharam `CAP-37` com o alvo `runner_pg`. O restante é execução (`OPS-05`,
+`LNET-01`/`LBOT-03`), ADR (`OPS-03.4`/`OPS-03.5`), terceiro (`LCLI-05`) ou adiamento declarado (`OPS-04`).
+Índice e estado canônico: `pauta-de-decisoes-pendentes.md` §2 e `lacunas.md` §4. Esta página não duplica a
+lista.
 
 ## 4. O que esta página não cobre
 

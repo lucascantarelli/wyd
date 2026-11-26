@@ -15,7 +15,7 @@ determinismo que é a garantia central do sistema ("mesma entrada, mesma saída"
 dinheiro inteiro (`P-07`).
 
 **Medido em 2026-11-23:** vida, AC e dano são `INTEGER`/`SMALLINT` em `game.character_scores`
-(`wyd-db/migrations/0006-game-character.md`), o dano de arena é `BIGINT` (`0028`), dinheiro é inteiro na
+(`wyd-db/migrations/0006_game_character.md`), o dano de arena é `BIGINT` (`0028`), dinheiro é inteiro na
 menor unidade e percentual é bps inteiro (`0011`, `0021`, `0034`); **nenhuma** migration escrita tem
 coluna `NUMERIC`, `REAL`, `DOUBLE` ou `FLOAT` — a busca só encontra essas palavras em prosa.
 

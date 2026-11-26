@@ -104,7 +104,7 @@ amarrar tudo ao `content_version` mistura dado e código; uma versão própria s
 
 **Recomendação: A.** Separa o que muda por código do que muda por dado, sem perder a combinação.
 **Custo:** um identificador de versão. **Fontes:** `lacunas.md` `LSIM-02`;
-`wyd-1.0.0.md` X4; `wyd-db/migrations/0006-game-character.md` §6.1 (`content_version`). **Recusa B** por
+`wyd-1.0.0.md` X4; `wyd-db/migrations/0006_game_character.md` §6.1 (`content_version`). **Recusa B** por
 misturar; **C** por quebrar reprodutibilidade.
 
 **Resposta do dono em 2026-11-23: A.** Cada fórmula carrega **versão própria** (`formula_version`,
@@ -130,7 +130,7 @@ fecha com esta escolha.
 
 **Observação de schema, fora desta decisão.** `game.character.content_version SMALLINT NOT NULL` tem FK
 para `content.content_version (id)` e `id` é preso a `1` por `ck_content_version_linha_unica`
-(`wyd-db/migrations/0001-bootstrap.md` §4; `0006-game-character.md` §4). A coluna aponta sempre para a
+(`wyd-db/migrations/0001_bootstrap.md` §4; `0006_game_character.md` §4). A coluna aponta sempre para a
 linha única e não distingue versões. Se o personagem deve persistir o número da versão de conteúdo, isso
 é decisão do `wyd-db` e não foi tomada aqui; `Q-SIM-2` fixa apenas que o cálculo e o fixture registram o
 número.
@@ -241,7 +241,7 @@ economia, com a regra numérica abaixo; `f64` existe só na formatação de exib
 
 **Por que a escala 1/1000 foi dispensada (`V`, 2026-11-23).** Ela não tem consumidor no domínio: vida,
 AC e dano são `INTEGER`/`SMALLINT` em `game.character_scores`
-(`wyd-db/migrations/0006-game-character.md`), o dano de arena é `BIGINT` (`0028`), dinheiro é inteiro
+(`wyd-db/migrations/0006_game_character.md`), o dano de arena é `BIGINT` (`0028`), dinheiro é inteiro
 na menor unidade e percentual é bps inteiro (`P-07`; `0011`, `0021` e `0034`). Nenhuma migration
 escrita tem coluna `NUMERIC`, `REAL`, `DOUBLE` ou `FLOAT` — a busca em `wyd-db/migrations` só encontra
 essas palavras em prosa. Chance já é comparação inteira: sorteio em `[0, 10000)` contra o `rate_bps`

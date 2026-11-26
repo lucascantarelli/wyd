@@ -6,7 +6,7 @@
 > Base: `docs/lacunas.md` §4; `docs/pacote-aprovacao-o1-o5.md` §7; `docs/pacote-aprovacao-decisoes-fora-o1-o5.md` §7; `docs/arquitetura/adr/candidatos.md`; varredura de 2026-11-25 descrita em §4
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Ponto de entrada único das decisões de dono. Ele **não decide, não aprova e não envia nada**: cada linha é um resumo que aponta para a mensagem canônica do §7 do pacote de origem, e o registro de estado continua sendo `docs/lacunas.md` §4. Em 2026-11-25 o dono respondeu **duas** das doze — `LNET-01`/`LBOT-03` e `LCLI-02`/`LCLI-05` —, aceitando a recomendação; nelas o que falta é execução e evidência, não outra aprovação.
+**Estado:** proposto (2026-11-25). Ponto de entrada único das decisões de dono. Ele **não decide, não aprova e não envia nada**: cada linha é um resumo que aponta para a mensagem canônica do §7 do pacote de origem, e o registro de estado continua sendo `docs/lacunas.md` §4. Em 2026-11-25 o dono respondeu **às doze** — duas na primeira rodada e dez na segunda (§2.1) —; `Q-SERIE-1` foi implementada e provada como ciclo SQL em PG17, e `Q-SEP-1` foi **reaberta** porque a resposta A não parseia 26 dos 28 nomes.
 
 ## 1. Como usar
 
@@ -31,12 +31,42 @@ Status possíveis: **bloqueada** (sem o sim) ou **fechada** com evidência. Enqu
 | `OPS-04` | Hospedagem `Q-OPS-2` | produto + `wyd-ops` | Provedor, contrato, região, backup e RPO/RTO estão definidos? | produção provisionada; rotina de backup e restauração | não | produção inexistente | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
 | `OPS-05` | Board e novas issues | produto | Autoriza criar o board e as novas issues do `github-mapping.md`? | board montado e fatias restantes criadas | não | repositório com as 40 issues atuais e sem board | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
 | `D-06` | Próxima frente | produto | Qual frente vem depois de `D-05`? | ordem de execução explícita | não | cada agente escolhe a própria ordem | [§7.1](pacote-aprovacao-decisoes-fora-o1-o5.md#71-produto-ops-04-ops-05-e-d-06) |
-| `Q-SERIE-1` | Política de `down` | arquitetura + `wyd-db` | A) `down` só com reversão provada, B) nenhum, ou C) todos? | política de reversão das 28 migrations | sim, após o sim | `down` novo vira decisão ad hoc | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
-| `Q-SEP-1` | Separador de migration | arquitetura + `wyd-db` | `_` (já usado) ou `-`? | nomenclatura estável da série | não | troca posterior quebra o histórico | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
+| `Q-SERIE-1` | Política de `down` | arquitetura + `wyd-db` | Qual política para os arquivos que só têm `up`? Opções e recomendação em `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9 | política de reversão da série de migrations | sim, se a opção dispensar `down` ou marcar baseline | **decidida em B** — 28 `down` escritos e ciclo SQL provado em PG17 | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
+| `Q-SEP-1` | Separador/slug de migration | arquitetura + `wyd-db` | Decidir A′/B′/C′ para 26 slugs com hífen recusados por `Slug`; detalhe em §9.1 | nomenclatura estável e série carregável | não | **decidida em A′ e aplicada em 2026-11-25** — 28 nomes com `_`; todos parseiam | [§7.2](pacote-aprovacao-decisoes-fora-o1-o5.md#72-arquitetura-e-wyd-db-q-serie-1-e-q-sep-1) |
 | `LNET-01`/`LBOT-03` | Medições de rede e carga | QA + `wyd-ops` | Autoriza a implementação mínima e a execução da medição no CI efêmero? | valores medidos; limites e carga com base | não | **autorizada em 2026-11-25** — falta executar a medição; sem execução não há valor medido nem P50/P99 citável | [§7.3](pacote-aprovacao-decisoes-fora-o1-o5.md#73-qa-e-wyd-ops-lnet-01-e-lbot-03) |
 | `LCLI-02`/`LCLI-05` | Direitos do cliente | produto + revisão jurídica | Há liberação do titular para distribuir o cliente e para a classificação jurídica? | distribuição e patch do cliente | não | **autorizada em 2026-11-25** (opção A de cada bloco; pedido ao titular aprovado para envio) — `LCLI-02` foi executada e fechada em 2026-11-25 (lista, manifesto e verificador); falta a evidência do titular para `LCLI-05` e o cliente segue congelado | [§7.4](pacote-aprovacao-decisoes-fora-o1-o5.md#74-juridico-lcli-02-e-lcli-05) |
 
-**Total: 12 decisões; 2 com aceite do dono registrado em 2026-11-25 e 10 ainda sem resposta.** O aceite não fecha linha nenhuma — nas duas, falta execução/evidência; as outras dez continuam bloqueadas até o dono responder, e nenhuma delas pode ser marcada como aprovada por documentação.
+**Total: 12 decisões de dono; todas têm resposta registrada em 2026-11-25** — duas na primeira rodada e
+dez na segunda (§2.1) —, mais **3 escolhas técnicas** da série (`Q-ALVO-1`–`03`, §2.2). Nenhuma se fecha
+por documentação: resta execução (`OPS-05`, `LNET-01`/`LBOT-03`), `CAP-38`/`CAP-39`, ADR (`OPS-03.4`,
+`OPS-03.5`), artefato de terceiro (`LCLI-05`) ou o adiamento declarado (`OPS-04`).
+
+## 2.1 Respostas de 2026-11-25 (segunda rodada)
+
+| Decisão | Resposta do dono | O que muda |
+|---|---|---|
+| `D-06` | **A** — finalizar o `wyd-db` | a ordem das frentes deixa de ser implícita; `D-05` vem depois |
+| `Q-SERIE-1` | **escrever os 28 `down` reais** | mantém `ADR-DB-0002`; os 28 `down` e o ciclo `up → down → up` passaram em PG17 por `psql`; `CAP-37` pelo `PgAdapter` continua aberto |
+| `Q-SEP-1` | **ler `-` e `_`, usar `_` nos arquivos novos** — depois substituída por **A′** | `Slug` recusava hífen em 26 slugs; A′ renomeou os 28 para `_` e todos parseiam (§9.1) |
+| `OPS-03.1`–`OPS-03.3` | **aprovados na forma** | `LBOT-03` ganha ambiente, `RF-OPS-004` ganha formato, a publicação ganha contrato e rollback exigível |
+| `OPS-03.4`, `OPS-03.5` | **aprovados na forma, com ADR antes de implementar** | segredos e deploy ficam a um ADR de distância; nada bloqueado por falta de “sim” |
+| `OPS-05` | **autorizado** | criar board e as 61 fatias; execução pendente e sujeita à decisão de namespace de label |
+| `OPS-04` | **adiada** para depois do primeiro deploy interno | provedor, backup e RPO/RTO continuam indefinidos, sem número inventado |
+
+## 2.2 Escolhas técnicas da prova do `PgAdapter` (2026-11-25)
+
+Não são decisões de dono do produto: são as três perguntas da
+`planejamento-1.0.0/wyd-db/proposta-alvo-pgadapter.md` §6, respondidas pela equipe do `wyd-db` e
+arquitetura, e implementadas no alvo `runner_pg`.
+
+| Decisão | Resposta | O que mudou |
+|---|---|---|
+| `Q-ALVO-1` — transporte | **A1** — porta publicada em `127.0.0.1` | job `runner` do `code.yml` usa `-p 127.0.0.1::5432`; nunca `0.0.0.0` |
+| `Q-ALVO-2` — série | **B1** — fixture contígua agora | `tests/resources/fixture/` (4 arquivos) e `fixture_falha/` (2) |
+| `Q-ALVO-3` — papel | **`wyd_migrator` com `LOGIN` só no teste** | sem `allow_superuser(true)`; o preflight é exercitado de verdade |
+
+Resultado: `cargo test --test runner_pg` **5/5** em PG17 (log `/tmp/wyd-runner-pg.log`), fechando
+`CAP-37`. Detalhe em `../../wyd-db/tests/alvos/runner-pg.md`.
 
 ## 3. Quem responde o quê
 

@@ -181,7 +181,7 @@ A resposta seguinte do `sim`, `Q-SIM-2`, foi registrada em §3.2.
 registrada junto do `content_version` usado no cálculo.
 
 **Motivo medido.** `game.character` já carrega `content_version SMALLINT NOT NULL` com FK para
-`content.content_version` (`wyd-db/migrations/0006-game-character.md` §6.1, linhas 70 e 77). O contrato
+`content.content_version` (`wyd-db/migrations/0006_game_character.md` §6.1, linhas 70 e 77). O contrato
 `X4` está decidido como função pura e determinística (`wyd-1.0.0.md` §7.3), e o fixture de `LSIM-03`
 precisa de um campo de versão (`wyd-sim/docs/proposta-decisoes-sim.md` §4, `Q-SIM-3`). Sem versão
 própria, mudar código sem mudar conteúdo fica invisível; sem nenhuma versão, o cálculo antigo não é
@@ -266,7 +266,7 @@ para ser auditável e assinável por inteiro.
 **Motivo medido.** O contrato L1 exige arquivo publicado com hash por arquivo
 (`wyd-launcher-1.0.0.md:33`) e `X11` estava em lacuna (`wyd-1.0.0.md:592`); o portal já publica
 `portal.launcher_release` com `channel`, `version`, `manifest_url`, `manifest_sha256` e `min_version`
-(`0030-portal-content.md:172–203`). O legado tem um manifesto de texto v1 com `build`, `protocol` e
+(`0030_portal_content.md:172–203`). O legado tem um manifesto de texto v1 com `build`, `protocol` e
 hash/tamanho/caminho por linha (`deprecated/crates/wyd-launcher/core/src/manifest.rs:16,28–31`), mas
 não tem canal, `min_version`, URL nem assinatura e não pode ser copiado (`AGENTS.md` §5, item 2).
 
@@ -318,7 +318,7 @@ launcher; a rota lê `game.server_channel` (capacidade, manutenção, papel, `st
 `game.v_live_session`; o launcher gera o `serverlist.bin` a partir da última lista boa.
 
 **Motivo medido.** O banco já tem a grade do cliente — `group_id` 0–9, `channel` 0–10, `status_url`,
-`host`, `maintenance`, `enabled` (`0007-game-session.md:50–74`) — e o portal planeja `/admin/canais`
+`host`, `maintenance`, `enabled` (`0007_game_session.md:50–74`) — e o portal planeja `/admin/canais`
 lendo/escrevendo `game.server_channel` com auditoria (`rotas-e-permissoes.md:76`; `RF-POR-010`).
 `LSRV-02` fixou 2 canais e escolha por lista no launcher (`wyd-server/lacunas.md:28`). O legado já gerava
 `serverlist.bin` no formato 10 × 11 × 64 B (`deprecated/crates/wyd-launcher/core/src/serverlist.rs:3–13`),

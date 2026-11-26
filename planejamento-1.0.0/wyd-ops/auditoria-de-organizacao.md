@@ -72,8 +72,8 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 ## 4. O que a aprovação de D-04 = A muda
 
 - **Muda o critério, não o estado:** “organizado” passa a ser um resultado auditável de planejamento,
-  não sinônimo de “sistema aberto”. `wyd-db` e `wyd-admin` são a referência; os outros **11** não
-  recebem o carimbo até fechar o checklist.
+  não sinônimo de “sistema aberto”. `wyd-db` e `wyd-admin` são o molde; os outros **11** receberam o
+  carimbo na segunda passada (§2) e o que resta em cada um, fora da organização, está em §3.
 - **Não autoriza código:** a árvore de `src/`/`tests/` é planejada antes do primeiro arquivo, mas a
   implementação continua subordinada à página `aceita` e ao gate do sistema (`AGENTS.md` §5, item 1).
 - **Não muda D-01:** o foco continua finalizar o `wyd-db`. A auditoria só define o padrão que os
@@ -193,5 +193,47 @@ não esperam aprovação nenhuma.
    as capturas de §8.2, que destravam mais sistemas por esforço. Impacto: define a ordem das ondas; não
    fecha lacuna por si.
 
-As demais decisões de dono do projeto (`OPS-03.1`–`OPS-03.5`, `OPS-04`, `OPS-05`, `Q-SERIE-1`,
-`Q-SEP-1`) não pertencem a esta auditoria e continuam na [pauta](docs/pauta-de-decisoes-pendentes.md).
+As demais decisões de dono do projeto (`OPS-03.1`–`OPS-03.5`, `OPS-04`, `OPS-05`, `D-06` e a
+`Q-SEP-1`) não pertencem a esta auditoria; seu estado está na
+[pauta](docs/pauta-de-decisoes-pendentes.md). `Q-SERIE-1` = B foi implementada e provada como ciclo SQL
+em PG17, `Q-SEP-1` = A′ renomeou os 28 nomes e `CAP-37` foi fechada por `runner_pg` no mesmo dia.
+
+---
+
+## 9. Decisão registrada — cobertura do classificador de citações (2026-11-25)
+
+**DEC-CIT-01.** Não é ADR: não muda schema, fronteira nem operação; fica no documento dono, com ID
+(`AGENTS.md` §7, Etapa 3).
+
+**Contexto.** O classificador de citações (ferramenta de medição, fora do repositório) nasceu lendo
+backticks e caminhos com `/`. Duas classes ficaram declaradas em prosa sem medição: caminho **sem
+extensão** (`Makefile`, `Dockerfile`) e nome **não-ASCII** (`grão.json`); **não existe** nenhum
+desses arquivos no repositório — são o vocabulário da ferramenta, não artefatos do projeto.
+
+**Medição (V, 2026-11-25).** Fixture descartável com 18 defeitos — 10 de nome sem extensão em prosa,
+tabela, lista, blockquote, ADR, `AGENTS.md`, `.agents/`, `SKILL.md` e cerca; 8 de nome não-ASCII nos
+mesmos contextos — mais 3 controles que declaram a ausência. Antes do ajuste: **0/18 (0 %)**. Depois:
+**18/18 (100 %)**, controles **3/3** não acusados. Revalidação dos quatro conjuntos anteriores, todos
+em 100 %: 5 citações antigas (overlay `DEMO`), 10 defeitos da passagem anterior, fixture de
+links/HTML/prosa com `/` (11/11) e fixture de caminhos nus sem `/` (13/13, já com um nome
+não-ASCII entre os defeitos).
+
+**Decisão.** (a) Nome sem extensão é extraído por **lista fechada** — `Makefile`, `Dockerfile*`,
+`LICENSE`/`LICENCE`, `CODEOWNERS`, `Jenkinsfile`, `Procfile`, `Gemfile`, `Rakefile`, `Justfile`,
+`rust-toolchain`, `.gitignore`, `.dockerignore`, `.editorconfig`, `.gitattributes`, `.mailmap` — nunca
+por heurística de maiúscula, que acusaria nome próprio do texto. (b) Nome não-ASCII passa a ser
+extraído como qualquer outro, com `\p{L}` na fronteira do token.
+
+**Medição da forma `arquivo.md` sem barra (V, 2026-11-25).** Extraídas **146 citações** nessa forma
+nos 613 documentos; **135 resolvem**, **11 estão declaradas** (`mkdocs.yml`, com nota no próprio
+local) e **0 são acusadas**. Discriminador lexical de "exemplo de nome" (`exemplo`/`ilustra`/
+`nome do arquivo`) encontraria **0 linhas** e foi **recusado**: esconderia citação real introduzida
+por "por exemplo, ver …". Os exemplos de nome que existem hoje são resolvidos por outra via — série
+placeholder (`0001-….md`), exemplo de sintaxe em code span (`` `](pagina.md)` ``) e nota de ausência.
+
+**Custo medido.** Varredura do repositório: **124 menções** a nome sem extensão em documento; **0
+acusações** — todas resolvem (`LICENSE` na raiz; `Makefile` e `Dockerfile.*` existem só em
+`deprecated/`, contados como existentes pela resolução por basename) ou estão declaradas; nome
+não-ASCII citado: **0**. Nome sem extensão **fora da lista** não é extraído: medido **0 caso** hoje,
+e é o limite conhecido desta decisão — acrescentar nome novo à lista é uma linha no classificador,
+não muda documento.

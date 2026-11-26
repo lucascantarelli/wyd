@@ -90,7 +90,7 @@ CLAIM_RE = re.compile(r"([0-9]+)[ ]+(tabelas|arquivos)")
 SITE_PAGE_RE = re.compile(
     r"(?:site passa com|passou com)[ ]+\*{0,2}[ ]*([0-9]+)[ ]*\*{0,2}[ ]*páginas"
 )
-PLAN_FILE_RE = re.compile(r"[0-9]{4}-[a-z0-9-]+[.]sql")
+PLAN_FILE_RE = re.compile(r"[0-9]{4}[-_][a-z0-9_-]+[.]sql")
 ESTADO_RE = re.compile(r"^[\s>]*\*\*Estado:\*\*[ ]*([^\s(]+)", re.IGNORECASE)
 CENSO_FONTES_RE = re.compile(r"censo das ([0-9]+) fontes")
 ISSUE_PAGE_RE = re.compile(r"([0-9]+)\s+p\u00E1ginas de issue")
@@ -107,7 +107,7 @@ INV_SPECS_RE = re.compile(r"specs/[*][.]md`[*][*] [(]([0-9]+) páginas")
 INV_SRC_RE = re.compile(r"[0-9]+ arquivos em `src/migrate/`")
 PREVISTO_RE = re.compile(r"previst|planejad", re.IGNORECASE)
 DOMINIO_RE = re.compile(r"([0-9]+) páginas (?:de|por) domínio")
-MIGRACAO_PAG_RE = re.compile(r"[0-9]+ páginas `NNNN-")
+MIGRACAO_PAG_RE = re.compile(r"[0-9]+ páginas `NNNN[-_]")
 PLANO_SISTEMAS_RE = re.compile(r"`plano-de-testes.md` (?:nos|de) ([0-9]+) sistemas")
 WYDDB_PAGINAS_RE = re.compile(r"([0-9]+) (?:páginas )?`WYDDB-nnn`")
 FATIA_SPLIT_RE = re.compile(r"([0-9]+) por fatia")
@@ -128,7 +128,7 @@ HISTORICO_RE = re.compile(
     r"terceira passada|históric|Medido em 2026-\d\d-\d\d|Teto × escrito|medição de então|naquele|naquela|revista em 20\d\d-",
     re.IGNORECASE,
 )
-HISTORICO_DATA_RE = re.compile("\(20" + "\d\d-\d\d-\d\d\)")
+HISTORICO_DATA_RE = re.compile(r"\(20\d\d-\d\d-\d\d\)")
 # Sistemas cujo roadmap não tem página por fatia: a medida é outra e a exceção imprime o motivo.
 FATIAS_ESPECIAIS = {
     "wyd-admin": "roadmap.md lista `ADM-nn` em tabela; não há página de fatia",

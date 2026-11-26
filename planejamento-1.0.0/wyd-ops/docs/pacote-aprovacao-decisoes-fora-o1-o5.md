@@ -6,7 +6,11 @@
 > Base: `docs/lacunas.md` §4 (`OPS-04`, `OPS-05`, `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LNET-01`/`LBOT-03`, `LCLI-02`/`LCLI-05`); `docs/planos/medicoes-lnet-01-lbot-03.md`; `docs/proposta-decisoes-ops.md`; `ADR-OPS-0002`
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Instrumento de leitura e aprovação das decisões que o pacote O1–O5 declara fora de escopo; **não decide, não aprova e não altera** `docs/lacunas.md` §4. Em 2026-11-25 o dono respondeu às duas decisões de §4 (medições) e às duas de §5 (direitos), aceitando a recomendação; `OPS-04`, `OPS-05`, `D-06`, `Q-SERIE-1` e `Q-SEP-1` continuam sem resposta, e nenhuma mensagem foi enviada.
+**Estado:** proposto (2026-11-25). Instrumento de leitura e aprovação das decisões que o pacote O1–O5
+declara fora de escopo; **não decide, não aprova e não altera** `docs/lacunas.md` §4. Em 2026-11-25 o dono
+respondeu às decisões de §2–§5: `Q-SERIE-1` = B foi implementada e provada como ciclo SQL em PG17,
+`D-06` = A, `OPS-04` foi adiada, `OPS-05` foi autorizada e `Q-SEP-1` = A′ renomeou os 28 nomes para `_`
+(todos parseiam). Nenhuma mensagem foi enviada.
 
 ## 1. Como responder
 
@@ -20,15 +24,24 @@ Cada seção tem uma pergunta fechada e um conjunto de donos. **Sim** aprova a d
 | `OPS-05` | O produto autoriza criar o board e as novas issues a partir de `docs/github-mapping.md`? | ato de gestão no GitHub, não arquitetura | não |
 | `D-06` | O produto confirma a próxima frente depois de `D-05`? | prioridade entre sistemas | não |
 
-**Se ficar aberto:** sem `OPS-04` a produção continua inexistente e o backup e o RPO/RTO seguem indefinidos; sem `OPS-05` o repositório fica com as 40 issues atuais e sem board; sem `D-06` a ordem das frentes fica implícita e cada agente escolhe a sua.
+**Se ficar aberto:** sem `OPS-04` a produção continua inexistente e o backup e o RPO/RTO seguem indefinidos; sem `OPS-05` o repositório fica com as 40 issues atuais e sem board. **`D-06` = A foi decidida em 2026-11-25** (frente `wyd-db`) e não está mais aberta.
 
 ## 3. Arquitetura e `wyd-db` — `Q-SERIE-1` e `Q-SEP-1`
 
-**Pergunta (sim/não):** a arquitetura e o `wyd-db` aprovam a política de `down` da série de 28 migrations (`Q-SERIE-1`: A, só onde há reversão provada; B, nenhum `down`; C, todos com `down`) e o separador dos nomes (`Q-SEP-1`: A, `_`, já usado; B, `-`)?
+**Pergunta única em aberto — `Q-SEP-1` revisitada:** a arquitetura e o `wyd-db` escolhem **A′** (renomear
+os 28 para `_`), **B′** (`Slug` aceitar `-`) ou **C′** (normalizar `-`→`_` no parser)? As opções, a
+recomendação **A′** e o custo de cada uma estão no documento dono,
+`planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9.1; esta página não repete as letras porque
+uma cópia local já descreveu opção diferente da canônica.
 
-**O que aprova:** duas decisões de forma da série de migrations; `Q-SERIE-1` é estrutural (política de reversão) e `Q-SEP-1` é nomenclatura. **ADR:** sim para `Q-SERIE-1`, depois do "sim"; não para `Q-SEP-1`.
+**`Q-SERIE-1` = B já está decidida e implementada:** os 28 `down` existem e o ciclo `up → down → up`
+passou em PG17 por `psql`; `ADR-DB-0002` fica como está. **`Q-SEP-1` = A′ foi decidida e aplicada:** os
+28 arquivos foram renomeados para `NNNN_slug_com_underscores.sql` e todos parseiam. **`CAP-37` também já
+fechou**, por `runner_pg` (5/5 em PG17, incluindo o advisory lock em duas sessões).
 
-**Se ficar aberto:** a série segue com 28 arquivos sem política de reversão escrita; qualquer `down` novo é decisão ad hoc, e uma mudança de separador depois da primeira migration publicada quebra o histórico.
+**O que resta na série:** as versões `0016`, `0017`, `0018`, `0020`, `0023` e `0027` dependem de curadoria
+de seed; sem elas o runner não aplica a série real, embora a porta já esteja provada. `Q-SEP-1` não gerou
+ADR.
 
 ## 4. QA e `wyd-ops` — `LNET-01` e `LBOT-03`
 
@@ -53,8 +66,8 @@ Cada seção tem uma pergunta fechada e um conjunto de donos. **Sim** aprova a d
 | `OPS-04` | produto + `wyd-ops` | §7.1 |
 | `OPS-05` | produto | §7.1 |
 | `D-06` | produto | §7.1 |
-| `Q-SERIE-1` | arquitetura + `wyd-db` | §7.2 |
-| `Q-SEP-1` | arquitetura + `wyd-db` | §7.2 |
+| `Q-SERIE-1` | arquitetura + `wyd-db` | §7.2 — **decidida em B e provada como SQL** |
+| `Q-SEP-1` | arquitetura + `wyd-db` | §7.2 — **decidida em A′ e aplicada** |
 | `LNET-01`/`LBOT-03` | QA + `wyd-ops` | §7.3 |
 | `LCLI-02`/`LCLI-05` | produto + revisão jurídica | §7.4 |
 
@@ -69,34 +82,36 @@ registro continua sendo `docs/lacunas.md` §4 e um "sim" dito na conversa só va
 
 ### 7.1 Produto — OPS-04, OPS-05 e D-06
 
-**Para:** dono do produto · **Assunto:** Três aprovações fora dos contratos O1–O5 (sim/não)
+**Para:** dono do produto · **Assunto:** Duas aprovações em aberto fora dos contratos O1–O5 (sim/não)
 
 *Registro consolidado: [pauta de decisões pendentes](pauta-de-decisoes-pendentes.md).*
 
-> Preciso do seu sim/não em três itens que ficaram fora do pacote O1–O5. **OPS-04** — provedor de VPS,
+> Preciso do seu sim/não em dois itens que ficaram fora do pacote O1–O5. **OPS-04** — provedor de VPS,
 > contrato, região, rotina de backup e RPO/RTO da hospedagem `Q-OPS-2` = A: a decisão já existe em
-> `ADR-OPS-0002`, falta aplicação, custo e credencial. **OPS-05** — autorização para criar o board e as
-> novas issues a partir do `github-mapping.md`; o repositório já tem 40 issues e milestones, e nada foi
-> criado. **D-06** — qual frente vem depois de `D-05`; a recomendação é manter `wyd-db` até o gate e
-> então `wyd-server`/`wyd-net`.
+> `ADR-OPS-0002`, falta aplicação, custo e credencial; ela foi **adiada** para depois do primeiro deploy
+> interno. **OPS-05** — autorização para criar o board e as novas issues a partir do `github-mapping.md`;
+> o repositório já tem 40 issues e milestones, a autorização existe e nada foi criado; falta decidir o
+> namespace de label (`area/*` existente × `sistema/*` do mapping). **D-06** está **decidida em A** desde
+> 2026-11-25 (frente `wyd-db`) e não pede nova resposta.
 >
 > Se ficar aberto: sem `OPS-04` a produção continua inexistente, sem backup nem RPO/RTO; sem `OPS-05`
-> o board não existe e as fatias restantes não têm onde morar; sem `D-06` a ordem das frentes fica
-> implícita. Pode responder por item — um "sim" parcial também serve.
+> o board não existe e as fatias restantes não têm onde morar. Pode responder por item — um "sim" parcial
+> também serve.
 
 ### 7.2 Arquitetura e wyd-db — Q-SERIE-1 e Q-SEP-1
 
-**Para:** arquitetura + equipe do `wyd-db` · **Assunto:** Política de `down` e separador das migrations (sim/não)
+**Para:** arquitetura + equipe do `wyd-db` · **Assunto:** Compatibilidade dos nomes das migrations (A′/B′/C′)
 
 *Registro consolidado: [pauta de decisões pendentes](pauta-de-decisoes-pendentes.md).*
 
-> A arquitetura e o `wyd-db` aprovam duas decisões de forma da série de 28 migrations? **Q-SERIE-1** —
-> a política de `down`: A) só onde há reversão provada, B) nenhum `down`, C) todos com `down`; a
-> recomendação é A, e isso exige ADR depois do sim, porque é política de reversão. **Q-SEP-1** — o
-> separador dos nomes: A) `_`, já usado, ou B) `-`; sem impacto estrutural e sem ADR.
+> A arquitetura e o `wyd-db` escolhem como resolver **`Q-SEP-1` revisitada**, agora que `Q-SERIE-1` = B
+> está implementada e provada como ciclo SQL em PG17? **A′** renomear os 28 arquivos para `_`
+> (**recomendada**), **B′** fazer `Slug` aceitar `-`, **C′** normalizar `-`→`_` no parser. O custo e o
+> risco de cada uma estão em `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9.1; nada foi
+> renomeado nem alterado no parser.
 >
-> Se ficar aberto: a série continua com 28 arquivos sem política de reversão escrita, cada `down` novo
-> vira decisão ad hoc, e trocar o separador depois da primeira migration publicada quebra o histórico.
+> **Resolvido sem nova pergunta:** `Q-SEP-1` = A′ foi decidida e aplicada em 2026-11-25 — os 28 nomes
+> usam `_` — e `CAP-37` fechou por `runner_pg`. Resta apenas a contiguidade das seis versões ausentes.
 
 ### 7.3 QA e wyd-ops — LNET-01 e LBOT-03
 

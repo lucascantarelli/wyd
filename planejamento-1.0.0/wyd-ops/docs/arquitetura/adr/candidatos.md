@@ -16,9 +16,6 @@ ADR só existe quando uma decisão foi **tomada e aprovada pelo dono** (AGENTS.m
 
 | Gatilho | Sistema | Decisão candidata | Quando vira ADR | Evidência mínima |
 |---|---|---|---|---|
-| `D-06` respondido | projeto | frente de execução depois de `D-05` | após escolha do dono | resposta registrada em `prioridade-do-projeto.md` |
-| `Q-SERIE-1` respondido | `wyd-db` | política de `down` dos 28 arquivos | após escolha do dono | política registrada e testada |
-| `Q-SEP-1` respondido | `wyd-db` | separador de nomes de migration | após escolha do dono | regra de nomenclatura registrada |
 | primeira execução real de carga | `wyd-bots` | limites medidos (`LBOT-03`) | após medição real | `p95` e taxa de erro registrados |
 | primeira captura do cliente 7662 | `wyd-client`/`wyd-protocol` | protocolo e árvore do cliente | após captura validada | golden e inventário conferidos |
 | `OPS-03.4` aprovado | `wyd-ops` | inventário, armazenamento e rotação de segredos | após o dono aprovar O4 | inventário fechado; rotação e consumo provados |
@@ -52,7 +49,7 @@ ADR só existe quando uma decisão foi **tomada e aprovada pelo dono** (AGENTS.m
 | `wyd-ops/docs/arquitetura/adr/index.md` | índice e regra de ouro dos ADRs |
 | `wyd-ops/docs/arquitetura/adr/template.md` | molde para futuros ADRs |
 | `wyd-ops/docs/arquitetura/decisoes-registradas.md` | registro consolidado de decisões |
-| `wyd-ops/docs/prioridade-do-projeto.md` | decisões de foco e execução (`D-06`, `Q-SERIE-1`, `Q-SEP-1`) |
+| `wyd-ops/docs/prioridade-do-projeto.md` | decisões de foco e execução (`D-06`, `Q-SERIE-1`, `Q-SEP-1` revisitada) |
 | `wyd-ops/docs/specs/requisitos.md` | requisitos que podem gerar decisões futuras |
 
 ## 6. O que esta página não cobre

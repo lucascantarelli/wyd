@@ -27,12 +27,21 @@ Formato: `[<tipo>] <sistema>: <resumo curto>`.
 
 ## 2. Labels (namespaces)
 
-- `sistema/<nome>` — dono do trabalho.
-- `tipo/<planejamento|decisao|tarefa|defeito>`.
+- `area/<nome>` — dono do trabalho. **Em uso** no repositório; substitui o `sistema/<nome>` que esta
+  página prescrevia antes da decisão de 2026-11-25 (§2.1).
+- `tipo/<planejamento|decisao|tarefa|defeito>` — previsto; **não existe** no repositório hoje.
 - `fase/<1..7>` ou `fatia/F0..`.
-- `estado/<bloqueada|proposta|aceita>`.
+- `estado/<bloqueada|proposta|aceita>` — `estado/bloqueada` já existe.
 - `prioridade/P1|P2|P3`.
 - `marco/M0..M5`.
+
+## 2.1 Decisão — namespace de label (2026-11-25)
+
+A leitura do repositório em 2026-11-25 encontrou em uso `area/<sistema>` (por exemplo `area/wyd-db`) e
+`estado/bloqueada`; `sistema/<nome>` e `tipo/<nome>` **não existiam**. **Decisão do dono em 2026-11-25:
+manter `area/*` e ajustar este mapping**, em vez de renomear labels e reetiquetar as 40 issues. As 61
+páginas por fatia de `OPS-05` nascem com `area/<sistema>`; `tipo/*` pode ser criado no mesmo ato, sem
+renomear o que já existe.
 
 ## 3. Branch
 

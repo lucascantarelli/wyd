@@ -29,7 +29,7 @@ Regra: teste de linha não substitui capacidade provada. A matriz de rastreabili
 
 | Sistema | Plano de teste | Estado medido |
 |---|---|---|
-| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 19 testes locais; 13 de 39 capacidades cobertas |
+| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 18 testes de sistema (13 schema + 5 porta); 14 de 39 capacidades cobertas |
 | `wyd-ops` | `wyd-ops/docs/planos/plano-de-testes.md` | planejado; nenhum teste escrito |
 | demais 11 sistemas | `docs/planos/plano-de-testes.md` por sistema | planejado; 0 testes implementados |
 
@@ -60,7 +60,7 @@ Fonte: `wyd-ops/auditoria-de-organizacao.md` §2–§3.
 - `cargo audit` e `cargo deny` são bloqueantes desde já.
 - Para Python do site (`mkdocs==2.0.dev6`), usar `pip-audit`/hash em item separado; não entra em `cargo audit`.
 - Gate de documentação (`docker compose --profile gate run --rm gate`) continua obrigatório e independente de cobertura.
-- Cobertura de linha não substitui capacidade provada: 13 de 39 capacidades do `wyd-db` ainda não têm teste executado.
+- Cobertura de linha não substitui capacidade provada: 25 de 39 capacidades do `wyd-db` ainda não têm teste executado.
 
 ## 7. Integração com CI
 

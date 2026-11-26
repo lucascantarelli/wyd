@@ -84,7 +84,7 @@ classificação falha fechada como **durável crítico**. Todo estado novo entra
 aparecer em código; a classificação não é inferida pela tabela do banco.
 
 **Posição hoje.** `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y`
-(`wyd-db/migrations/0006-game-character.md` §6.1, `V` 2026-11-22). A posição é **durável eventual**,
+(`wyd-db/migrations/0006_game_character.md` §6.1, `V` 2026-11-22). A posição é **durável eventual**,
 mas a primeira fatia não prova save e esta decisão **não cria coluna**. O checkpoint de posição no
 release depende de schema futuro; não se inventa DDL aqui.
 

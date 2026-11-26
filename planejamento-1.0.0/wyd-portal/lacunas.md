@@ -59,7 +59,7 @@ de dano/alcance, sem bloquear a F7.
   nunca autoatendimento do titular (`A20`).
 - **DDL fechado em 2026-11-20:** `A20` reservou nome, colunas conceituais e o `kind` inicial; o lote
   `0031` (`ddl-confirmado.md` §5.20) desenhou colunas, constraints, índices, permissão e revogação, e a
-  página `migrations/0031-portal-mfa.md` está `concluída`. O requisito `RF-POR-013` pode ser implementado
+  página `migrations/0031_portal_mfa.md` está `concluída`. O requisito `RF-POR-013` pode ser implementado
   quando a série for aplicada; a escolha de mecanismo e de dono não foi reaberta.
 - **Opções apresentadas:** (1) confirmar `A20` com autenticador separado em `portal` — **escolhida**;
   (2) reabrir `A20` e usar `game.account` — recusada.
@@ -208,8 +208,8 @@ rota pública nem permissão de banco: acrescentou seis rotas de staff (38–43)
 
 **Consequência declarada para o `wyd-db`:** as três de CMS mais a tabela de launcher são **4 tabelas
 novas** em `portal`, que não existem nas 92 de `plano-migrations.md` §3. O lote
-`0030-portal-content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
-`planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` e `ddl-confirmado.md` §5.15 —, e a série
+`0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
+`planejamento-1.0.0/wyd-db/migrations/0030_portal_content.md` e `ddl-confirmado.md` §5.15 —, e a série
 passou a **31 arquivos / 97 tabelas** naquela data — hoje **34 arquivos / 109 tabelas**, com os lotes
 `0033` e `0034` de 2026-11-22 —, e as cinco tabelas dos dois adendos estão entre as de DDL fechado. As
 duas contagens citadas aqui concordam com as do `wyd-db`.
