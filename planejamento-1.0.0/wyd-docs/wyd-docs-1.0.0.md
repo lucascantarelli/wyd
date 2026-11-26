@@ -108,7 +108,7 @@ Fonte: inspeção de `mkdocs 2.0.dev6` instalado em 2026-11-19
 | sem navegação agrupada | `preparar.py` gera `templates/navegacao.html` com a árvore real |
 | sem tema | `tema/base.html`, `estilo.css` e `site.js` são o tema |
 | sem admonition/abas | material antigo convertido para GFM em 2026-11-19; página nova usa GFM (§6) |
-| sem validação | `verificar.py` é o gate (§7.1) |
+| sem validação | `gate/checks/links.py` é o gate (§7.1) |
 | sem Windows | build roda em Linux: container `python:3.15-slim` no local e runner Ubuntu no CI |
 
 ### 2.3 Consequência declarada
@@ -156,7 +156,7 @@ minúsculas). URL é **contrato**: renomear página publicada exige redirect (`L
 ### 4.3 Título
 
 Da primeira heading `#` do arquivo; sem H1, o nome do arquivo é humanizado e isso é defeito a
-corrigir na página. O `verificar.py` reprova página sem título.
+corrigir na página. O `gate/checks/links.py` reprova página sem título.
 
 ---
 
@@ -168,9 +168,10 @@ Legenda: `●` implementado nesta entrega · `▲` a escrever.
 wyd-docs/
 ├── requirements.txt                  ● mkdocs==2.0.dev6
 ├── preparar.py                       ● monta .build/docs e a navegação
-├── verificar.py                      ● gate de link, âncora, nav, título e sintaxe 1.x
-├── verificar-contagens.py            ● contagens da série e censo por estado
-├── verificar-censos.py               ● censos citados entre páginas (mede e compara)
+├── gate.sh                           ● entrada estável do gate
+├── gate/                             ● pacote: cli, workspace e checks/
+│   └── checks/                       ● links, lacunas, contagens, censos, skills
+├── tests/                            ● fixtures e testes dos verificadores
 ├── redirects.tsv                     ● mapa origem → destino dos redirects
 ├── tema/
 │   ├── base.html                     ● tema Jinja completo
@@ -235,7 +236,7 @@ planejamento-1.0.0/wyd-docs/
 | Copiar código | `content.code.copy` | **não existe** | `site.js` adiciona o botão |
 | Mermaid | `custom_fences` | **não existe** | `mermaid.js` 12.3.0 renderiza `language-mermaid` |
 | Tema claro/escuro | `palette` com alternância | **não existe** | variáveis CSS + `localStorage` |
-| Modo estrito | `--strict` | **não existe** | `verificar.py` |
+| Modo estrito | `--strict` | **não existe** | `gate/checks/links.py` |
 | Build no Windows | suportado | **quebrado** (`PosixPath`) | build em container Linux |
 
 **Regra:** página nova usa só GFM + `> [!TIPO]` + cerca `mermaid`. Os recursos da coluna 1 existiram
@@ -253,19 +254,18 @@ O build roda em **Linux com Python 3.15** — no Windows o MkDocs 2.0.dev6 falha
 ```bash
 # Windows: build dentro do container
 docker run --rm -v "D:/dolorestec/wyd2:/work" -w /work/wyd-docs python:3.15-slim sh -c \
-  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site && python verificar-contagens.py && python verificar-censos.py"
+  "pip install -r requirements.txt && bash gate.sh /work"
 
 # Linux/macOS
 cd wyd-docs
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python preparar.py
 .venv/bin/mkdocs build --dir .build/docs --output site
-.venv/bin/python verificar.py site
-.venv/bin/python verificar-contagens.py
-.venv/bin/python verificar-censos.py
+.venv/bin/python -m gate full --root ..
 ```
 
-`preparar.py` e `verificar.py` são Python puro e rodam também no Windows, para iteração rápida.
+`preparar.py` e `python -m gate fast` são Python puro e podem rodar no Windows para iteração rápida;
+o build MkDocs e os links ficam no container/CI. O contrato completo está no ADR-OPS-0010.
 
 ### 7.2 O que o gate reprova
 
@@ -280,7 +280,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | contagens da série | soma de `Tab.`, arquivos, tabelas, páginas do site ou censo por estado diverge da medida, ou citação sem dono declarado |
 | censos citados | citação de atos de aceite, páginas aceitas, células pendentes ou `Q-BLK` abertas diverge da medida nas fontes; linha histórica precisa da marca (`na medição de então`) |
 
-**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; `verificar.py` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Esta é a medição histórica de 2026-11-19; o total e o censo vigentes estão em §9.1, e `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam aquela seção em vez de repetir os números.
+**Medido em 2026-11-19 (gate em container Linux, `python:3.15-slim`):** 34 páginas montadas de 3 sistemas; check `links` sem problema. Censo por estado na mesma montagem: **12 `proposto` · 16 sem linha de estado · 6 `aceito` = 34**. Esta é a medição histórica de 2026-11-19; o total e o censo vigentes estão em §9.1, e `convencoes.md`, `AGENTS.md`, `proximos-passos.md` e `docs/planos/metricas.md` citam aquela seção em vez de repetir os números.
 
 ### 7.3 Publicação
 
@@ -348,7 +348,7 @@ e pode publicar o tip da ref escolhida. Referências: [eventos e workflow_dispat
    permissões do ator da execução original.
 3. Sem publicar, valide o commit-alvo num checkout local destacado ou container Linux: confirme
    `git rev-parse HEAD` contra o SHA registrado e rode `preparar.py`, `mkdocs build` e
-   `verificar.py site`. Guarde o resultado do gate.
+   `gate/checks/links.py`. Guarde o resultado do gate.
 4. Confirme que não há deploy `docs` concorrente para a mesma ref. O grupo atual
    `docs-${{ github.ref }}` usa `cancel-in-progress: true`; uma nova execução da mesma ref pode
    cancelar a execução ativa. Verifique também as regras de proteção/revisão do ambiente
@@ -446,7 +446,7 @@ na janela declarada, com o resultado registrado ao final desta seção.
 | # | Passo | Desbloqueia concretamente | Exige do usuário | Custo / risco |
 |---:|---|---|---|---|
 | 1 | Abrir a janela de congelamento de `develop` e executar o checklist abaixo — **feito** em 2026-11-19 | o teste real inteiro, que fechou `LPDOC-01` | declarar a janela e não mergear durante ela (~20 min) | baixo: coordenação apenas; nenhuma alteração de código, workflow ou configuração |
-| 2 | Validar os dois SHAs localmente antes da janela (checkout destacado + `preparar.py`, `mkdocs build`, `verificar.py site`) | tira falha de build do meio da janela, onde cada minuto conta | nenhuma autorização nova: não publica | baixo: minutos de container Linux; **feito** em 2026-11-19, ver bloco de validação local abaixo |
+| 2 | Validar os dois SHAs localmente antes da janela (checkout destacado + `preparar.py`, `mkdocs build`, `gate/checks/links.py`) | tira falha de build do meio da janela, onde cada minuto conta | nenhuma autorização nova: não publica | baixo: minutos de container Linux; **feito** em 2026-11-19, ver bloco de validação local abaixo |
 | 3 | Decidir o estado do site depois da restauração — **decidido** em 2026-11-19: fica `0d765858…` até o merge do PR, que publica o tip `aedd1f73…` de conteúdo idêntico | fecha sem execução extra: o merge do PR já dispara `docs` | — | nenhum: sem republicação manual |
 | 4 | Se a janela falhar de novo, mudar o mecanismo (alternativa D) — **não aplicável**: a janela funcionou em 2026-11-19 | reduz a dependência de disciplina de merge | autorização + admin do repositório | médio-alto e permanente; ler a tabela de alternativas |
 
@@ -503,10 +503,10 @@ registrado como vínculo árvore↔SHA, e o gate rodou no mesmo container Linux 
 
 ```bash
 docker run --rm -v "D:/dolorestec/wyd2:/work" -w <árvore>/wyd-docs python:3.15-slim sh -c \
-  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site"
+  "pip install -r requirements.txt && python preparar.py && mkdocs build --dir .build/docs --output site && python -m gate check links"
 ```
 
-| Commit | Tree | `preparar.py` | `mkdocs build` | `verificar.py site` | Exit |
+| Commit | Tree | `preparar.py` | `mkdocs build` | `gate/checks/links.py` | Exit |
 |---|---|---|---|---|---|
 | `2378b62b658303e6378c15be0a8ff38d248b019c` | `747989dd0d8a9e6f83feecc5926f50852dd6237b` | 30 páginas de 3 sistemas | ok | 30 páginas, links, âncoras e navegação ok | 0 |
 | `0d76585821583d5ef60e790fa44fb65572576d4b` | `f817fa94e80a75763cd18aebc3db14f9395136e3` | 30 páginas de 3 sistemas | ok | 30 páginas, links, âncoras e navegação ok | 0 |
@@ -594,7 +594,7 @@ Não há ADR nesta entrega: GitHub Pages foi aprovado como hospedagem canônica 
 | 1 | site funcionando: montagem, tema, gate local | **feito** (2026-11-19) |
 | 2 | publicação: workflow, Pages, rollback | workflow e Pages publicados e validados (`V`, 2026-11-19); GitHub Pages aprovado como hospedagem canônica (`V`, 2026-11-19); validação de rollback feita (`V`, 2026-11-19; `LPDOC-01` fechada) |
 | 3 | padrão editorial: convenções, guia do autor, revisão | **feito** (2026-11-19): `docs/convencoes.md`, `docs/guia-autor/index.md` e `docs/revisao.md` `aceito` pelo dono de `documentação` |
-| 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `verificar.py`); busca decidida e métrica aceita em 2026-11-19 |
+| 4 | robustez: redirect, busca, métrica | pendente: commit e CI do pacote — redirect implementado em 2026-11-19 (`LPDOC-06` fechada; `wyd-docs/redirects.tsv`, stub e checagens no `gate/checks/links.py`); busca decidida e métrica aceita em 2026-11-19 |
 | 5 | 109 páginas por tabela do `wyd-db` | **decidido em 2026-11-21 (`M26`)**: escritas à mão em lotes no `wyd-db`, sem gerador; **98 escritas** em 2026-11-22 (lotes `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031` e `0033`) |
 
 ### 9.1 As 109 páginas por tabela — escritas à mão (`M26`)
@@ -617,9 +617,9 @@ ferramenta é criada; as 109 das 109 páginas existem em 2026-11-22** (lotes `00
 1. Exatamente **109 páginas + `gerado/index.md`**, uma por tabela de `plano-migrations.md` §3; a 110ª é defeito de escopo.
 2. Cada página tem cabeçalho de 5 campos, título, referência explícita à página de `migrations/` dona da forma (em `code`, porque `migrations/` não é publicado) e origem declarada; não contém PII nem segredo.
 3. Nenhuma página copia o DDL: a forma é ligada, não duplicada (`wyd-db-1.0.0.md` §3, item 3).
-4. `preparar.py` e `verificar.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
+4. `preparar.py` e `gate/checks/links.py` passam com as páginas presentes; **nenhum stub afirma que elas existem** antes de existirem.
 
-**Reconciliação e estado (2026-11-24):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **479 páginas** (medido em 2026-11-26 pelo build) e publica as que existem (`V`, 2026-11-25). O censo das 477 fontes na mesma data é **45 `aceito` · 431 `proposto` · 0 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 477 + 2 = 479 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/verificar-contagens.py`, que reprova quando qualquer uma diverge da montagem.
+**Reconciliação e estado (2026-11-24):** não há exceção de tabela — as páginas, quando escritas, cobrem as 109 tabelas planejadas, uma por tabela, conforme `planejamento-1.0.0/wyd-db/plano-migrations.md` §3; o índice é artefato auxiliar fora do teto. As 109 são contagem planejada, não medida de catálogo aplicado. **109 das 109 páginas existem em 2026-11-22:** `gerado/` tem as páginas de tabela dos arquivos `0001`–`0012`, `0013`, `0014`, `0015`, `0019`, `0021`, `0022`, `0024`, `0025`, `0026`, `0028`, `0030`, `0031`, `0033` e `0034` e o `index.md` de navegação, que lista as 109 existentes. A cobertura não é pré-requisito do site atual: o site passa com **480 páginas** (medido em 2026-11-26 pelo build) e publica as que existem (`V`, 2026-11-25). O censo das 478 fontes na mesma data é **46 `aceito` · 431 `proposto` · 0 sem linha de estado**, mais o `gerado/index.md` de navegação, que tem a contagem no lugar do estado editorial; as 2 páginas próprias do site ficam fora do censo, e 478 + 2 = 480 páginas montadas (13 sistemas publicados). Este parágrafo é o único dono do total e do censo; as demais páginas citam esta seção em vez de repetir os números. As quatro grandezas são conferidas por comando, `wyd-docs/gate/checks/contagens.py`, que reprova quando qualquer uma diverge da montagem.
 
 A fila de próximos passos do sistema fica em [proximos-passos.md](proximos-passos.md).
 
@@ -661,7 +661,7 @@ fixo até a próxima dev).
 | 8 | Arquitetura aprova sistema novo e a entrada em `SISTEMAS`; documentação publica (decidido em 2026-11-19) | `LPDOC-08` |
 | 9 | Publicar as 109 páginas do `wyd-db`, uma por tabela planejada (decidido em 2026-11-19); a **produção** voltou à mesa em 2026-11-21 como `M26` do `wyd-db`, sem gerador presumido (§9.1) | `LPDOC-09` |
 | 10 | Não publicar catálogo de opcodes gerado na `1.0.0` (decidido em 2026-11-19) | `LPDOC-10` |
-| 11 | Manter `2.0.dev6` fixo; revisar quando a próxima dev for publicada, com build e `verificar.py` antes (decidido em 2026-11-19) | `LPDOC-11` |
+| 11 | Manter `2.0.dev6` fixo; revisar quando a próxima dev for publicada, com build e `gate/checks/links.py` antes (decidido em 2026-11-19) | `LPDOC-11` |
 | 12 | Build no Windows ou só em Linux/CI | `LPDOC-12` |
 | 13 | Sem busca de texto completo na `1.0.0`: o filtro de navegação é a navegação (decidido em 2026-11-19) | `LPDOC-13` |
 | 14 | Até quando a ponte `compat.py` existiu | `LPDOC-14` |

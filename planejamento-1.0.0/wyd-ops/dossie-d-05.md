@@ -56,7 +56,7 @@ um ganhar seu próprio lock. O dossiê usa “1 hoje; até 9 se B for seguido”
 ### 2.2 O que o gate e o Compose fazem hoje
 
 - `docker compose --profile gate run --rm gate` constrói apenas o estágio Python do site e roda
-  `preparar.py`, MkDocs, `verificar.py`, `verificar-contagens.py` e `verificar-censos.py`. **Não
+  `preparar.py`, MkDocs, `gate/checks/links.py`, `gate/checks/contagens.py` e `gate/checks/censos.py`. **Não
   compila Rust** e não depende de `Cargo.toml`.
 - O Rust é compilado diretamente no runner do `code.yml`, com `cargo ... --manifest-path
   crates/wyd-db/Cargo.toml`. O `security` procura **o primeiro** `Cargo.toml`/`Cargo.lock` com

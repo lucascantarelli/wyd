@@ -16,12 +16,12 @@ escopo são desta página; o roadmap cita o link e não repete.
 
 ## Contexto
 
-A fatia F2 do `wyd-docs` cobre `verificar-contagens.py`, `verificar-censos.py` e existe para
+A fatia F2 do `wyd-docs` cobre `gate/checks/contagens.py`, `gate/checks/censos.py` e existe para
 cumprir `RF-DOC-003`, `RF-DOC-004` sem antecipar a fatia seguinte.
 
 ## Entregável
 
-`verificar-contagens.py`, `verificar-censos.py`
+`gate/checks/contagens.py`, `gate/checks/censos.py`
 
 ## DoD
 

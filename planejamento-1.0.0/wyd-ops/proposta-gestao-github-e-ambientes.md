@@ -199,7 +199,7 @@ Rulesets e branch protection estão disponíveis em repositório público no pla
 ├── actions/
 │   ├── setup-rust/action.yml       # toolchain + cache
 │   ├── setup-node/action.yml       # node + npm cache
-│   ├── docs-check/action.yml       # preparar.py + mkdocs build + verificar.py
+│   ├── docs-check/action.yml       # preparar.py + mkdocs build + gate/checks/links.py
 │   └── coverage-gate/action.yml    # lê cobertura e falha abaixo de 85%
 └── workflows/
     ├── ci.yml                      # orquestra em estágios
@@ -257,7 +257,7 @@ runs:
     - name: Verificar
       shell: bash
       working-directory: wyd-docs
-      run: python verificar.py site
+      run: python -m gate check links
 ```
 
 Exemplo de workflow reutilizável:

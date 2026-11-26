@@ -25,17 +25,25 @@ Falha (exit 1) em divergência; exit 2 quando não dá para medir (arquivo ou pa
 Vive em `wyd-docs/` porque `planejamento-1.0.0/` é documentação e não aceita executável (AGENTS §5.6).
 
 Uso:
-    python verificar-censos.py            # a partir de wyd-docs/
-    python verificar-censos.py --root .   # raiz do repositório explícita
+    python -m gate check censos --root ..   # a partir de wyd-docs/
 """
 
 from __future__ import annotations
 
-import argparse
 import re
-import sys
 from pathlib import Path
 from typing import NamedTuple
+
+from ..model import CheckResult
+from ..workspace import Workspace
+
+_WS: Workspace | None = None
+
+
+def _ws() -> Workspace:
+    if _WS is None:
+        raise RuntimeError("censos: Workspace não inicializado")
+    return _WS
 
 PLANEJAMENTO = "planejamento-1.0.0"
 SISTEMA = "planejamento-1.0.0/wyd-db"
@@ -88,13 +96,13 @@ class Erro(Exception):
 
 def ler(raiz: Path, relativo: str) -> str:
     caminho = raiz / relativo
-    if not caminho.is_file():
+    if not _ws().exists(caminho) or not caminho.is_file():
         raise Erro(f"arquivo ausente: {caminho}")
-    return caminho.read_text(encoding="utf-8")
+    return _ws().read(caminho)
 
 
 def _estado(arquivo: Path) -> str | None:
-    for linha in arquivo.read_text(encoding="utf-8").splitlines():
+    for linha in _ws().read(arquivo).splitlines():
         achado = ESTADO_RE.match(linha)
         if achado:
             return achado.group(1).lower()
@@ -102,9 +110,9 @@ def _estado(arquivo: Path) -> str | None:
 
 
 def _paginas(pasta: Path) -> list[Path]:
-    if not pasta.is_dir():
+    if not _ws().is_dir(pasta):
         raise Erro(f"pasta ausente: {pasta}")
-    return sorted(pasta.rglob("*.md"))
+    return list(_ws().files(pasta, "*.md"))
 
 
 def medir_atos(raiz: Path) -> dict[str, int]:
@@ -139,7 +147,7 @@ def medir_aceitas(raiz: Path) -> tuple[int, dict[str, int]]:
     if not base.is_dir():
         raise Erro(f"pasta ausente: {base}")
     por_pasta: dict[str, int] = {}
-    for pagina in sorted(base.rglob("*.md")):
+    for pagina in _ws().files(base, "*.md"):
         if _estado(pagina) != "aceito":
             continue
         pasta = pagina.relative_to(base).parts[0]
@@ -196,9 +204,9 @@ def citacoes(raiz: Path) -> tuple[list[Citacao], list[tuple[Citacao, str]]]:
     base = raiz / PLANEJAMENTO
     if not base.is_dir():
         raise Erro(f"pasta ausente: {base}")
-    for pagina in sorted(base.rglob("*.md")):
+    for pagina in _ws().files(base, "*.md"):
         relativo = pagina.relative_to(raiz).as_posix()
-        for numero, linha in enumerate(pagina.read_text(encoding="utf-8").splitlines(), start=1):
+        for numero, linha in enumerate(_ws().read(pagina).splitlines(), start=1):
             achados: list[Citacao] = []
             for achado in ATOS_RE.finditer(linha):
                 achados.append(Citacao(relativo, numero, int(achado.group(1)), "atos"))
@@ -236,14 +244,10 @@ def citacoes(raiz: Path) -> tuple[list[Citacao], list[tuple[Citacao, str]]]:
     return vigentes, historicas
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Confere os censos de estado do wyd-db.")
-    parser.add_argument(
-        "--root",
-        default=str(Path(__file__).resolve().parent.parent),
-        help="raiz do repositório (default: pasta acima deste script)",
-    )
-    raiz = Path(parser.parse_args().root).resolve()
+def run(ws: Workspace) -> CheckResult:
+    global _WS
+    _WS = ws
+    raiz = ws.root
 
     try:
         atos = medir_atos(raiz)
@@ -252,8 +256,7 @@ def main() -> int:
         qblk = medir_qblk(raiz)
         vigentes, historicas = citacoes(raiz)
     except Erro as erro:
-        print(f"censos: {erro}", file=sys.stderr)
-        return 2
+        return CheckResult("censos", False, str(erro))
 
     medido = {
         "atos": atos["total"],
@@ -276,8 +279,8 @@ def main() -> int:
                 f"{citacao.extra[1]} issue, medido {teste} + {issue}"
             )
 
-    print(
-        f"censos: {atos['total']} atos de aceite "
+    resumo = (
+        f"{atos['total']} atos de aceite "
         f"({atos['docs']} docs + {atos['src']} src + {atos['migrations']} migrations + "
         f"{atos['tests']} tests); {aceitas} páginas aceitas "
         f"({', '.join(f'{pasta} {numero}' for pasta, numero in sorted(aceitas_por_pasta.items()))}); "
@@ -285,22 +288,13 @@ def main() -> int:
         f"{len(qblk)} Q-BLK abertas ({', '.join(qblk) or 'nenhuma'}); "
         f"{len(vigentes)} citação(ões) conferida(s), {len(historicas)} histórica(s)"
     )
-    for citacao, marca in historicas:
-        print(
-            f"  ignorado {citacao.arquivo}:{citacao.linha}: {citacao.valor} {citacao.unidade} "
-            f"({marca})"
-        )
-    for citacao in vigentes:
-        print(f"  ok {citacao.arquivo}:{citacao.linha}: {citacao.valor} {citacao.unidade}")
-
+    detalhes = [
+        f"ignorado {c.arquivo}:{c.linha}: {c.valor} {c.unidade} ({marca})"
+        for c, marca in historicas
+    ]
+    detalhes += [
+        f"ok {c.arquivo}:{c.linha}: {c.valor} {c.unidade}" for c in vigentes
+    ]
     if problemas:
-        for problema in problemas:
-            print(f"  divergência: {problema}")
-        print(f"censos: {len(problemas)} problema(s)")
-        return 1
-    print("censos: medidas e citações coincidem")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+        return CheckResult("censos", False, resumo, problems=problemas, details=detalhes)
+    return CheckResult("censos", True, resumo, details=detalhes)

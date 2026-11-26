@@ -11,17 +11,22 @@ renderiza — `preparar.py` copia a página como está, então o defeito tem de 
 
 from __future__ import annotations
 
-import re
-import sys
 import os
-from functools import lru_cache
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-BASE = Path(__file__).resolve().parent
-REDIRECTS = BASE / "redirects.tsv"
-FONTES = BASE.parent / "planejamento-1.0.0"
+from ..model import CheckResult
+from ..workspace import Workspace
+
+_WS: Workspace | None = None
+
+
+def _ws() -> Workspace:
+    if _WS is None:
+        raise RuntimeError("links: Workspace não inicializado")
+    return _WS
 
 # Construções do MkDocs 1.x que a 2.0 não renderiza. A varredura ignora bloco e code span, para que
 # a documentação possa citar a sintaxe proibida como exemplo.
@@ -67,18 +72,16 @@ class Coletor(HTMLParser):
 
 def _analisar(caminho: Path) -> Coletor:
     coletor = Coletor()
-    coletor.feed(caminho.read_text(encoding="utf-8"))
+    coletor.feed(_ws().read(caminho))
     return coletor
 
 
-@lru_cache(maxsize=None)
 def _existe(caminho: Path) -> bool:
-    return caminho.exists()
+    return _ws().exists(caminho)
 
 
-@lru_cache(maxsize=None)
 def _e_diretorio(caminho: Path) -> bool:
-    return caminho.is_dir()
+    return _ws().is_dir(caminho)
 
 
 def _destino(pagina: Path, raiz: Path, caminho: str) -> Path | None:
@@ -108,10 +111,10 @@ def _checar_sintaxe(raiz: Path) -> tuple[list[str], int]:
         docs = sistema / "docs"
         if not docs.is_dir():
             continue
-        for arquivo in sorted(docs.rglob("*.md")):
+        for arquivo in _ws().files(docs, "*.md"):
             arquivos += 1
             em_codigo = False
-            for numero, linha in enumerate(arquivo.read_text(encoding="utf-8").splitlines(), 1):
+            for numero, linha in enumerate(_ws().read(arquivo).splitlines(), 1):
                 if linha.lstrip().startswith("```"):
                     em_codigo = not em_codigo
                     continue
@@ -124,13 +127,14 @@ def _checar_sintaxe(raiz: Path) -> tuple[list[str], int]:
     return problemas, arquivos
 
 
-def _checar_redirects(raiz: Path, analisados: dict[Path, Coletor]) -> list[str]:
+def _checar_redirects(raiz: Path, ws: Workspace, analisados: dict[Path, Coletor]) -> list[str]:
     """Confere o mapa: origem vira stub, destino existe e nao e outro stub, sem ciclo."""
     problemas: list[str] = []
-    if not REDIRECTS.exists():
+    redirects = ws.root / "wyd-docs" / "redirects.tsv"
+    if not ws.exists(redirects):
         return problemas
     vistos: set[str] = set()
-    for numero, linha in enumerate(REDIRECTS.read_text(encoding="utf-8").splitlines(), 1):
+    for numero, linha in enumerate(ws.read(redirects).splitlines(), 1):
         linha = linha.strip()
         if not linha or linha.startswith("#"):
             continue
@@ -172,11 +176,12 @@ def _checar_redirects(raiz: Path, analisados: dict[Path, Coletor]) -> list[str]:
     return problemas
 
 
-def main(argv: list[str]) -> int:
-    raiz = Path(argv[1]).resolve() if len(argv) > 1 else BASE / "site"
+def run(ws: Workspace, site: Path | None = None) -> CheckResult:
+    global _WS
+    _WS = ws
+    raiz = site.resolve() if site is not None else ws.root / "wyd-docs" / "site"
     if not raiz.is_dir():
-        print(f"verificação: saída não encontrada em {raiz}", file=sys.stderr)
-        return 2
+        return CheckResult("links", False, f"saída não encontrada em {raiz}")
 
     paginas = sorted(raiz.rglob("*.html"))
     problemas: list[str] = []
@@ -214,23 +219,12 @@ def main(argv: list[str]) -> int:
                 if partes.fragment not in analisados[alvo].ids:
                     problemas.append(f"{relativo}: âncora inexistente {partes.path}#{partes.fragment}")
 
-    sintaxe, fontes = _checar_sintaxe(FONTES)
+    sintaxe, fontes = _checar_sintaxe(ws.root / "planejamento-1.0.0")
     problemas.extend(sintaxe)
 
-    problemas.extend(_checar_redirects(raiz, analisados))
+    problemas.extend(_checar_redirects(raiz, ws, analisados))
 
+    resumo = f"{len(paginas)} páginas, {fontes} fontes"
     if problemas:
-        print(f"verificação: {len(problemas)} problema(s) em {len(paginas)} página(s)")
-        for problema in problemas:
-            print(f" - {problema}")
-        return 1
-
-    print(
-        f"verificação: {len(paginas)} páginas, links, âncoras, navegação e sintaxe ok "
-        f"({fontes} fontes verificadas)"
-    )
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+        return CheckResult("links", False, resumo, problems=problemas)
+    return CheckResult("links", True, resumo)

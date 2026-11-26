@@ -32,6 +32,8 @@ jobs:
           cache-dependency-path: wyd-docs/requirements.txt
       - name: Gate do site
         uses: ./.github/actions/docs-check
+      - name: Testes dos verificadores
+        run: cd wyd-docs && python -m unittest discover -s tests -v
       - name: Guardar artefato
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

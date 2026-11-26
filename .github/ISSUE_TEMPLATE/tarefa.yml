@@ -47,7 +47,7 @@ body:
       label: Definition of Done
       description: Verificável, com comando ou arquivo. "Funciona" não é DoD.
       placeholder: |
-        - [ ] `python verificar.py site` sem problema
+        - [ ] `make gate` ou `make gate-fast` sem problema
         - [ ] página publicada em /sistemas/wyd-db/
     validations:
       required: true

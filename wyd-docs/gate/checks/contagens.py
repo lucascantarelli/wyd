@@ -42,7 +42,7 @@ Medidas (fontes independentes):
     uma por arquivo|alvo` e `N arquivos em `src/migrate/`` exigem `planejadas`/`previsto`, porque essas
     pastas ainda não existem (`N páginas, uma por alvo` na linha de `alvos/*.md` é medida, não planejada). Linha de árvore (com `▲`) fica fora.
 
-Percentual de alcançabilidade não é publicado: `wyd-docs/verificar.py` confere link, âncora e
+Percentual de alcançabilidade não é publicado: o check `links` confere link, âncora e
 navegação lateral de cada página, mas não calcula a razão alcançáveis/total. Enquanto não houver essa
 linha no gate, documento nenhum afirma percentual — e o status não repete “0 órfãos”.
 
@@ -67,17 +67,25 @@ Falha (exit 1) em divergência; exit 2 quando não dá para medir (arquivo ou pa
 Vive em `wyd-docs/` porque `planejamento-1.0.0/` é documentação e não aceita executável (AGENTS §5.6).
 
 Uso:
-    python verificar-contagens.py            # a partir de wyd-docs/
-    python verificar-contagens.py --root .   # raiz do repositório explícita
+    python -m gate check contagens --root ..   # a partir de wyd-docs/
 """
 
 from __future__ import annotations
 
-import argparse
 import re
-import sys
 from pathlib import Path
 from typing import NamedTuple
+
+from ..model import CheckResult
+from ..workspace import Workspace
+
+_WS: Workspace | None = None
+
+
+def _ws() -> Workspace:
+    if _WS is None:
+        raise RuntimeError("contagens: Workspace não inicializado")
+    return _WS
 
 SISTEMAS = "planejamento-1.0.0"
 STATUS = "planejamento-1.0.0/status-planejamento.md"
@@ -172,9 +180,9 @@ class Erro(Exception):
 
 def ler(raiz: Path, relativo: str) -> str:
     caminho = raiz / relativo
-    if not caminho.is_file():
+    if not _ws().exists(caminho) or not caminho.is_file():
         raise Erro(f"arquivo ausente: {caminho}")
-    return caminho.read_text(encoding="utf-8")
+    return _ws().read(caminho)
 
 
 def medir_checklist(raiz: Path) -> tuple[int, int]:
@@ -207,7 +215,7 @@ def medir_plano(raiz: Path) -> int:
 
 
 def _paginas_md(base: Path) -> int:
-    return sum(1 for _ in base.rglob("*.md"))
+    return len(_ws().files(base, "*.md"))
 
 
 def medir_paginas_sistema(raiz: Path, sistema: str) -> int:
@@ -250,7 +258,7 @@ def medir_paginas_pasta(raiz: Path, sistema: str, pasta: str | None) -> int:
     destino = base / pasta
     if not destino.is_dir():
         raise Erro(f"pasta de docs ausente: {destino}")
-    return sum(1 for _ in destino.rglob("*.md"))
+    return len(_ws().files(destino, "*.md"))
 def medir_planos_teste(raiz: Path) -> int:
     return sum(1 for _ in (raiz / SISTEMAS).glob("*/docs/planos/plano-de-testes.md"))
 
@@ -275,7 +283,7 @@ def medir_planos_com_ci(raiz: Path) -> int:
     )
     total = 0
     for plano in sorted((raiz / SISTEMAS).glob("*/docs/planos/plano-de-testes.md")):
-        texto = plano.read_text(encoding="utf-8")
+        texto = _ws().read(plano)
         if all(padrao.search(texto) for padrao in padroes):
             total += 1
     return total
@@ -284,9 +292,9 @@ def medir_planos_com_ci(raiz: Path) -> int:
 def medir_fatias(raiz: Path, sistema: str) -> int:
     if sistema in FATIAS_ESPECIAIS:
         roadmap = raiz / SISTEMAS / sistema / "docs/roadmap/roadmap.md"
-        if not roadmap.is_file():
+        if not _ws().exists(roadmap) or not roadmap.is_file():
             raise Erro(f"roadmap ausente: {roadmap}")
-        return len(set(re.findall(r"`(?:ADM)-[0-9]{2}`", roadmap.read_text(encoding="utf-8"))))
+        return len(set(re.findall(r"`(?:ADM)-[0-9]{2}`", _ws().read(roadmap))))
     return _paginas_issue(raiz / SISTEMAS / sistema / "docs/roadmap")
 
 
@@ -306,12 +314,12 @@ def medir_paginas_site(raiz: Path) -> int:
     for base in bases:
         if not base.is_dir():
             raise Erro(f"pasta de páginas ausente: {base}")
-    return sum(1 for base in bases for _ in base.rglob("*.md"))
+    return sum(len(_ws().files(base, "*.md")) for base in bases)
 
 
 def _estado(arquivo: Path) -> str | None:
     """Valor da linha `**Estado:**`, em minúsculas, ou `None` quando a página não tem a linha."""
-    for linha in arquivo.read_text(encoding="utf-8").splitlines():
+    for linha in _ws().read(arquivo).splitlines():
         achado = ESTADO_RE.match(linha)
         if achado:
             return achado.group(1).lower()
@@ -330,7 +338,7 @@ def medir_censo(raiz: Path) -> tuple[dict[str, int], list[tuple[str, str]]]:
     contagem = {"aceito": 0, "proposto": 0, "sem linha": 0, "fontes": 0}
     especiais: list[tuple[str, str]] = []
     for base in bases:
-        for arquivo in sorted(base.rglob("*.md")):
+        for arquivo in _ws().files(base, "*.md"):
             relativo = arquivo.relative_to(raiz).as_posix()
             estado = _estado(arquivo)
             contagem["fontes"] += 1
@@ -586,14 +594,10 @@ def _checar_arquivo(
     return problemas, ok
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Confere as contagens da série 1.0.0.")
-    parser.add_argument(
-        "--root",
-        default=str(Path(__file__).resolve().parent.parent),
-        help="raiz do repositório (default: pasta acima deste script)",
-    )
-    raiz = Path(parser.parse_args().root).resolve()
+def run(ws: Workspace) -> CheckResult:
+    global _WS
+    _WS = ws
+    raiz = ws.root
 
     try:
         arquivos, soma_tab = medir_checklist(raiz)
@@ -604,8 +608,7 @@ def main() -> int:
         da_serie, ignoradas = citacoes(raiz)
         declaradas = censo_declarado(raiz)
     except Erro as erro:
-        print(f"contagens: {erro}", file=sys.stderr)
-        return 2
+        return CheckResult("contagens", False, str(erro))
 
     problemas: list[str] = []
     if soma_tab != tabelas_ddl:
@@ -648,34 +651,21 @@ def main() -> int:
                 f"{citacao.arquivo}:{citacao.linha}: {citacao.valor} {citacao.unidade} no censo"
             )
 
-    print(
-        f"contagens: {arquivos} arquivos, `Tab.` {soma_tab}, DDL {tabelas_ddl}, "
+    resumo = (
+        f"{arquivos} arquivos, `Tab.` {soma_tab}, DDL {tabelas_ddl}, "
         f"plano {arquivos_plano}, site {paginas} páginas; "
         f"censo {censo['fontes']} fontes = {censo['aceito']} aceito + {censo['proposto']} proposto + "
         f"{censo['sem linha']} sem linha + {len(especiais)} fora do censo; "
         f"{len(da_serie) + len(declaradas)} citação(ões) da série, {len(ignoradas)} de outro dono, "
         f"{len(de_paginas)} de páginas/fatias"
     )
-    for relativo, motivo in especiais:
-        print(f"  fora do censo {relativo} ({motivo})")
-    for citacao, dono in ignoradas:
-        print(f"  ignorado {citacao.arquivo}:{citacao.linha}: {citacao.valor} {citacao.unidade} ({dono})")
-    for linha in [f"  ok {c.arquivo}:{c.linha}: {c.valor} {c.unidade}" for c in da_serie]:
-        print(linha)
-    for linha in de_paginas:
-        print(f"  ok {linha}")
-    for linha in censos_ok:
-        print(f"  ok {linha}")
-
+    detalhes = [f"fora do censo {relativo} ({motivo})" for relativo, motivo in especiais]
+    detalhes += [
+        f"ignorado {c.arquivo}:{c.linha}: {c.valor} {c.unidade} ({dono})"
+        for c, dono in ignoradas
+    ]
+    detalhes += [f"ok {c.arquivo}:{c.linha}: {c.valor} {c.unidade}" for c in da_serie]
+    detalhes += [f"ok {linha}" for linha in de_paginas + censos_ok]
     if problemas:
-        for problema in problemas:
-            print(f"  divergência: {problema}")
-        print(f"contagens: {len(problemas)} problema(s)")
-        return 1
-    print("contagens: medidas e citações coincidem")
-    print("censos: medidas e citações coincidem")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+        return CheckResult("contagens", False, resumo, problems=problemas, details=detalhes)
+    return CheckResult("contagens", True, resumo, details=detalhes)

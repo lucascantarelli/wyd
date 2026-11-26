@@ -36,7 +36,7 @@ template Jinja e nada mais. Por isso o projeto tem quatro peças:
 | `preparar.py` | copia `planejamento-1.0.0/<sistema>/docs/` para `.build/docs/sistemas/<sistema>/`, aplica a ponte de sintaxe e gera a navegação |
 | `tema/base.html` | o tema inteiro: topo, navegação, sumário, conteúdo e rodapé |
 | `tema/estilo.css` e `tema/site.js` | apresentação, tema claro e escuro, cópia de código, destaque e avisos |
-| `verificar.py` | o gate: link interno, âncora, navegação e título de toda página |
+| `python -m gate` | o gate: link interno, âncora, navegação, título e regras editoriais |
 
 Nenhuma página é editada dentro de `wyd-docs/`: a fonte é o diretório do sistema dono.
 
@@ -50,7 +50,7 @@ Nenhuma página é editada dentro de `wyd-docs/`: a fonte é o diretório do sis
     .venv/Scripts/python.exe -m pip install -r requirements.txt
     .venv/Scripts/python.exe preparar.py
     .venv/Scripts/mkdocs.exe build --dir .build/docs --output site
-    .venv/Scripts/python.exe verificar.py site
+    .venv/Scripts/python.exe -m gate check links
     .venv/Scripts/mkdocs.exe serve --dir .build/docs
     ```
 
@@ -62,7 +62,7 @@ Nenhuma página é editada dentro de `wyd-docs/`: a fonte é o diretório do sis
     .venv/bin/python -m pip install -r requirements.txt
     .venv/bin/python preparar.py
     .venv/bin/mkdocs build --dir .build/docs --output site
-    .venv/bin/python verificar.py site
+    .venv/bin/python -m gate check links
     .venv/bin/mkdocs serve --dir .build/docs
     ```
 

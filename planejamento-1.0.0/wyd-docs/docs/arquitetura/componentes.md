@@ -15,31 +15,22 @@
 - **Testes:** montagem de N páginas; navegação gerada.
 - **Risco:** alto — é a fonte do site.
 
-## `verificar`
+## `gate`
 
-- **Responsabilidade:** gate de link, âncora, nav, título, redirect e sintaxe 1.x.
-- **API:** `verificar.py site`.
+- **Responsabilidade:** orquestrar `full`, `fast` e `check`, com resumo curto e `--json`.
+- **API:** `python -m gate` (pacote `gate/`), chamado por `gate.sh`.
 - **Invariantes:** reprova quando qualquer verificação falha; sem modo tolerante.
-- **Depende de:** `site/` gerado.
-- **Testes:** link quebrado reprova; âncora inexistente reprova.
+- **Depende de:** `site/` gerado no modo full; `gate/workspace.py` compartilha índice e cache.
+- **Testes:** `tests/test_gate.py` cobre CLI/JSON e as fixtures de link, lacuna, contagem e censo.
 - **Risco:** alto — é o gate.
 
-## `verificar-contagens`
+## `checks`
 
-- **Responsabilidade:** contagens da série e censo por estado.
-- **API:** `verificar-contagens.py`.
-- **Invariantes:** soma de `Tab.`, arquivos, tabelas, páginas do site ou censo por estado diverge → reprova.
-- **Depende de:** montagem.
-- **Testes:** contagem divergente reprova.
-- **Risco:** médio.
-
-## `verificar-censos`
-
-- **Responsabilidade:** censos citados entre páginas (mede e compara).
-- **API:** `verificar-censos.py`.
-- **Invariantes:** citação de atos, páginas aceitas, células pendentes ou `Q-BLK` abertas diverge → reprova.
-- **Depende de:** fontes.
-- **Testes:** censo divergente reprova.
+- **Responsabilidade:** regras por domínio: `links`, `lacunas`, `contagens`, `censos` e `skills`.
+- **API:** `python -m gate check <domínio>`; `fast` roda os quatro checks nativos.
+- **Invariantes:** as regras são as mesmas de antes; a consolidação é behavior-preserving.
+- **Depende de:** `Workspace` compartilhado.
+- **Testes:** fixtures centralizadas em `tests/fixtures.py`; `make test-gate`.
 - **Risco:** médio.
 
 ## `tema`
@@ -66,7 +57,7 @@
 - **Responsabilidade:** mapa origem → destino em `redirects.tsv`; stub e checagens.
 - **API:** `redirects.tsv`.
 - **Invariantes:** redirect obrigatório ao renomear; origem duplicada reprova.
-- **Depende de:** `verificar.py`.
+- **Depende de:** `gate/checks/links.py`.
 - **Testes:** redirect válido/inválido.
 - **Risco:** baixo.
 
@@ -75,7 +66,7 @@
 - **Responsabilidade:** definição e coleta da métrica do site (páginas, fontes, estado).
 - **API:** `docs/planos/metricas.md`.
 - **Invariantes:** uma fonte, um dono; números citados por seção.
-- **Depende de:** `verificar-contagens.py`.
+- **Depende de:** `gate/checks/contagens.py`.
 - **Testes:** métrica reproduzível.
 - **Risco:** baixo.
 
@@ -84,15 +75,14 @@
 ```text
 src/                      # planejamento; código real mora em wyd-docs/ (raiz)
 ├── preparar/             # montagem e navegação
-├── verificar/            # gate de link/âncora/nav/título
-├── contagens/            # verificar-contagens
-├── censos/               # verificar-censos
+├── gate/                 # CLI, Workspace e checks/
+├── checks/               # links, lacunas, contagens, censos, skills
 ├── tema/                 # base.html, css, js, mermaid
 ├── publicacao/           # workflow, Pages
 ├── redirects/            # redirects.tsv
 └── metricas/             # definição da métrica
 tests/
-├── unitario/            # preparar, verificar
+├── unitario/            # preparar, gate, checks
 ├── contrato/            # (n/a)
 ├── integracao/          # build completo
 ├── sistema/             # (n/a)
@@ -100,4 +90,4 @@ tests/
 └── propriedade/         # (n/a)
 ```
 
-*Página de planejamento. Nenhuma unidade foi implementada.*
+*Página de planejamento. O pacote `gate` e seus testes foram implementados em 2026-11-26; o restante da árvore continua planejado.*

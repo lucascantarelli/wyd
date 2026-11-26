@@ -6,7 +6,7 @@
 > Base: `docs/arquitetura/componentes.md`; `docs/specs/requisitos.md`
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25).
+**Estado:** proposto (2026-11-25; módulo `gate` implementado em 2026-11-26).
 
 ## Módulos
 
@@ -20,32 +20,22 @@
 - **Monitoramento:** n/a.
 - **DoD:** build gera `.build/docs/`.
 
-### verificar
-- **Objetivo:** gate de link, âncora, nav, título, redirect, sintaxe.
-- **Escopo:** `verificar.py site`.
-- **Interfaces:** pass/fail.
-- **Dependências:** site gerado.
-- **Testes:** link quebrado reprova.
+### gate
+- **Objetivo:** orquestrar `full`, `fast` e `check` com resumo curto e `--json`.
+- **Escopo:** `gate/cli.py`, `gate/workspace.py`, `gate.sh`.
+- **Interfaces:** pass/fail e JSON; detalhes sob demanda.
+- **Dependências:** site gerado no full; checks nativos no fast.
+- **Testes:** `tests/test_gate.py`; `make test-gate`.
 - **Segurança:** n/a.
 - **Monitoramento:** n/a.
 - **DoD:** gate verde.
 
-### verificar-contagens
-- **Objetivo:** contagens da série e censo por estado.
-- **Escopo:** `verificar-contagens.py`.
+### checks
+- **Objetivo:** regras de links, lacunas, contagens, censos e skills.
+- **Escopo:** `gate/checks/*.py`.
 - **Interfaces:** pass/fail.
-- **Dependências:** montagem.
-- **Testes:** contagem divergente reprova.
-- **Segurança:** n/a.
-- **Monitoramento:** n/a.
-- **DoD:** gate verde.
-
-### verificar-censos
-- **Objetivo:** censos citados entre páginas.
-- **Escopo:** `verificar-censos.py`.
-- **Interfaces:** pass/fail.
-- **Dependências:** fontes.
-- **Testes:** censo divergente reprova.
+- **Dependências:** `Workspace` compartilhado.
+- **Testes:** fixtures centralizadas em `tests/fixtures.py`.
 - **Segurança:** n/a.
 - **Monitoramento:** n/a.
 - **DoD:** gate verde.
@@ -74,7 +64,7 @@
 - **Objetivo:** mapa origem → destino.
 - **Escopo:** `redirects.tsv`.
 - **Interfaces:** stub de redirect.
-- **Dependências:** verificar.py.
+- **Dependências:** gate/checks/links.py.
 - **Testes:** redirect válido/inválido.
 - **Segurança:** n/a.
 - **Monitoramento:** n/a.
@@ -84,7 +74,7 @@
 - **Objetivo:** definição e coleta da métrica do site.
 - **Escopo:** `docs/planos/metricas.md`.
 - **Interfaces:** número reproduzível.
-- **Dependências:** verificar-contagens.py.
+- **Dependências:** gate/checks/contagens.py.
 - **Testes:** métrica reproduzível.
 - **Segurança:** n/a.
 - **Monitoramento:** n/a.

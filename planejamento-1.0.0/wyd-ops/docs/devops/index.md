@@ -30,7 +30,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 - **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates; `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
-- **`gate-docs`**: `wyd-docs/gate.sh` — skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos.
+- **`gate-docs`**: `wyd-docs/gate.sh` — o pacote `python -m gate` roda skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos. A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
 - **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`.
 - CodeQL continua em **default setup** do GitHub (actions, JS/TS, Python, Rust); não há workflow CodeQL duplicado.
 
@@ -38,6 +38,8 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 ```bash
 make gate        # mesmo gate do CI, dentro da imagem :gate
+make gate-fast   # checks nativos (skills, lacunas, contagens, censos), sem Docker/MkDocs
+make test-gate   # testes de fixture dos verificadores
 make fmt         # cargo fmt --check nos três crates
 make lint        # cargo clippy -D warnings nos três crates
 make test        # testes unitários (wyd-db --lib; signer --locked; launcher só no Windows)
@@ -53,6 +55,8 @@ make rollback TAG=<sha>   # volta a imagem do site para o SHA indicado
 
 O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois. A imagem copia a árvore de evidência no build e roda `/app` **sem bind mount**: em 2026-11-26, o mesmo gate levava 2m20s com o bind mount do Docker Desktop e passou a cerca de 1m20 (duas medições: 59s e 1m25s) com a cópia e o cache de resolução de links. Cliente e legado continuam fora do contexto por `.dockerignore`.
 
+O ciclo curto é nativo e não depende de Docker/MkDocs porque o `mkdocs==2.0.dev6` usa `PosixPath` e não roda no Windows. O caminho completo é o do CI/container.
+
 ### Testes PostgreSQL locais
 
 O harness aceita dois modos:
@@ -66,13 +70,17 @@ No CI, `scripts/ci/db-prepare.sh` cria os papéis e `scripts/ci/apply-series.sh`
 
 | Arquivo | Linguagem | Papel | Entrada / saída |
 |---|---|---|---|
-| `wyd-docs/gate.sh` | bash | entrada única do gate de documentação | raiz opcional; exit 0/1/2 |
+| `wyd-docs/gate.sh` | bash | porta estável do gate; delega ao pacote | raiz opcional; exit 0/1/2 |
+| `wyd-docs/gate/cli.py` | Python | `full`, `fast`, `check` e saída/JSON | raiz; exit 0/1/2 |
+| `wyd-docs/gate/workspace.py` | Python | índice e cache compartilhados | uma instância por execução |
+| `wyd-docs/gate/checks/links.py` | Python | links, âncoras, navegação e sintaxe 1.x | `site/` |
+| `wyd-docs/gate/checks/lacunas.py` | Python | evidência de lacuna e placar | raiz |
+| `wyd-docs/gate/checks/contagens.py` | Python | contagens publicadas | raiz |
+| `wyd-docs/gate/checks/censos.py` | Python | censo de fontes e atos | raiz |
+| `wyd-docs/gate/checks/skills.py` | Python | skills e páginas de issue | raiz |
+| `wyd-docs/tests/test_gate.py` | Python | testes de fixture das regras e do JSON | `python -m unittest discover -s tests` |
+| `wyd-docs/tests/fixtures.py` | Python | árvores mínimas de link, lacuna, contagem, censo e skills | importado pelos testes |
 | `wyd-docs/preparar.py` | Python | monta `.build/docs` e a navegação | árvore do repositório |
-| `wyd-docs/verificar.py` | Python | links, âncoras, navegação e sintaxe 1.x | `site/`; exit 0/1/2 |
-| `wyd-docs/verificar-lacunas.py` | Python | evidência de lacuna e placar | raiz; exit 0/1 |
-| `wyd-docs/verificar-contagens.py` | Python | contagens publicadas | raiz; exit 0/1 |
-| `wyd-docs/verificar-censos.py` | Python | censo de fontes e atos | raiz; exit 0/1 |
-| `wyd-docs/verificar-skills.py` | Python | skills e páginas de issue | raiz; exit 0/1 |
 | `scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
 | `scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
 | `.github/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |

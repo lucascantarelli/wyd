@@ -39,7 +39,7 @@ Os comandos abaixo rodam da raiz do repositório e são a projeção dos itens j
 | cabeçalho de 5 linhas, na ordem | ver bloco abaixo | `5/5` | `wyd-docs/docs/convencoes.md` §3; `wyd-db-1.0.0.md` §10.1 |
 | linha de estado com data | `grep -c '^\*\*Estado:\*\*' arquivo` | `1`, com `(AAAA-MM-DD)` | `convencoes.md` §Estados (`proposto`/`aceito`/`substituído`/`retirado`) |
 | placeholder | `grep -nE '\bTODO\b\|\bTBD\b\|em constru\|a preencher\|XXX'` | `0` linhas | `wyd-db-1.0.0.md` §10.8; `convencoes.md` §7 |
-| link, âncora, título, navegação e sintaxe 1.x | `docker compose --profile gate run --rm gate` | `exit 0` | `wyd-docs/docs/convencoes.md` §7; `verificar.py` |
+| link, âncora, título, navegação e sintaxe 1.x | `docker compose --profile gate run --rm gate` | `exit 0` | `wyd-docs/docs/convencoes.md` §7; `gate/checks/links.py` |
 | adjetivo sem medida | `grep -nE '\b(rápido\|robusto\|escalável)\b'` | `0` linhas | `convencoes.md` §7 |
 
 O probe do cabeçalho, copiável:
@@ -61,7 +61,7 @@ deste probe, em 2026-11-23, deu `TODO` em seis páginas do `wyd-db` e todas eram
 (`V`, saída do comando). O comando corrigido deu zero.
 
 **Citar o placeholder não é usá-lo.** O probe normativo roda fora de cerca e de `code span`, como
-`_sem_code_span` já faz no gate de sintaxe (`wyd-docs/verificar.py`): esta própria página contém `TODO` e
+`_sem_code_span` já faz no gate de sintaxe (`wyd-docs/gate/checks/links.py`): esta própria página contém `TODO` e
 `TBD` entre crases, como exemplo, e o comando bruto as contaria. Para o veredito, descarte a linha cujo
 único acerto está entre crases; a regra existe justamente para que a documentação possa citar o que proíbe.
 
@@ -156,7 +156,7 @@ este é o que não estava visível.
 
 Sobre o `!!!`: as 28 páginas de migration usam admonição do MkDocs 1.x, e o gate do site **não as vê**
 porque `_checar_sintaxe` percorre só `<sistema>/docs/**` e `migrations/` não é publicado
-(`V`, `wyd-docs/verificar.py`; `wyd-db-1.0.0.md` §5.1). Hoje não é defeito de renderização; vira defeito no
+(`V`, `wyd-docs/gate/checks/links.py`; `wyd-db-1.0.0.md` §5.1). Hoje não é defeito de renderização; vira defeito no
 dia em que a página for promovida a `docs/`, porque lá a regra de `convencoes.md` §2–§7 se aplica e a 2.0
 não renderiza `!!!`.
 
@@ -183,7 +183,7 @@ endpoint; 6 depende de dado de origem conferido.
 - Não cria `planos/metricas.md` nem decide a exceção do item 10 de `wyd-db-1.0.0.md` §10.
 - Não decide severidade de defeito: 1–4 devolvem a rascunho, 5–8 bloqueiam e 9–11 são pendência, como em
   `wyd-db-1.0.0.md` §10 e `revisao.md` §3.
-- Não muda o gate do site, o `verificar.py` nem o Compose.
+- Não muda o gate do site, o `gate/checks/links.py` nem o Compose.
 - Não define o que é a onda A: isso é de `wyd-1.0.0.md` §7.7.
 - Não unifica o vocabulário de estado dos arquivos da raiz: os `proposta-*.md` escrevem `proposta` e esta
   página escreve `proposto`, o termo de `convencoes.md` §Estados. A unificação é decisão do dono do
@@ -210,6 +210,6 @@ done
 
 O laço acima é o **probe bruto**: ele conta acerto em `code span`, então uma página que cita o placeholder
 como exemplo aparece suja. Para o veredito, a leitura é a de §2 — fora de cerca e de `code span`, como
-`_sem_code_span` faz em `verificar.py`. O resultado de 2026-11-23 está em §5.2, e foi lido assim. Quem
+`_sem_code_span` faz em `gate/checks/links.py`. O resultado de 2026-11-23 está em §5.2, e foi lido assim. Quem
 re-medir depois precisa atualizar §5 com a data nova — número de gate sem data envelhece como qualquer
 outro (`convencoes.md` §5.1).

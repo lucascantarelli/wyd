@@ -100,7 +100,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
 | CI | 7 workflows (2026-11-26): `code` (fmt/clippy/unitários em matriz + cobertura informativa + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
-| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `verificar.py` e `verificar-contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
+| Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `gate/checks/links.py` e `gate/checks/contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos e 567 MB em `wyd-client/files/`, ignorado; `WYD.exe` com hash medido | `wyd-client/registro-do-cliente.md`, 2026-11-22 |
 
 ### 1.5 Cobertura funcional da `1.0.0`
@@ -699,7 +699,7 @@ Isto não é previsão de entrega; é leitura de estado.
 | `admin` ↔ `db` | 14 rotas de C4, 15 `RF-ADM`, zero lacuna aberta | `server` para o elo de controle |
 | `portal` ↔ `db` | 33 `RF-POR`, leitura por view, zero lacuna aberta | nada de decisão; falta código |
 | `admin` → `server` (controle) | forma e autenticação decididas em 2026-11-22 | o endpoint no `server`, que não existe |
-| `docs` ↔ todos | 13 sistemas publicados; build, `verificar.py` e contagens verdes na mesma montagem (2026-11-22) | nada de decisão; falta o conteúdo de cada sistema |
+| `docs` ↔ todos | 13 sistemas publicados; build, `gate/checks/links.py` e contagens verdes na mesma montagem (2026-11-22) | nada de decisão; falta o conteúdo de cada sistema |
 | `docs` ↔ `ops` (imagem) | Dockerfile, Compose e workflow escritos nesta entrega | primeira execução do workflow no GitHub |
 | `client` (registro) | árvore medida com hash; localização e escopo estreito da ferramenta aprovados (`LCLI-04`) | D3–D6 decididos; `ECAP` especificado; peer de A1 pela opção A (C reprovada); falta implementar o `ECAP` e a CLI |
 | `bots` ↔ `server` (E2E de fio) | código real (B1), ambiente (`B2`) e conta/personagem (`B3`) decididos em 2026-11-23; `Q-BOT-3` fixou a política de carga | o `server`, o cenário, o `seeds/dev.sql` e a primeira medição que fecha `LBOT-03`; roda na onda E |
@@ -762,7 +762,7 @@ arquivo.
 | `wyd-launcher` | verificação de hash/assinatura e lista de canais | manifesto assinado + lista contra fixture | patch aplicado em árvore de teste | nativo, script de fumaça | 0 testes; formato, assinatura, fonte da lista e distribuição decididos (`LLCH-01`–`LLCH-04`), não implementados |
 | `wyd-client` | parsing do registro medido | captura aceita contra ficha | — | Playwright no site que publica o registro | 0 testes |
 | `wyd-bots` | gerador de cenário e perfil | codec real em modo cliente | — | **é o próprio E2E** | 0 cenários; ambiente, conta e política de limiar decididos (`LBOT-01`/`LBOT-02`/`Q-BOT-3` = A), mas `LBOT-03` segue medição e o job/`seeds/dev.sql` não existem |
-| `wyd-docs` | — | — | — | build + `verificar.py` + contagens | gate ativo (é o teste do sistema) |
+| `wyd-docs` | — | — | — | build + `gate/checks/links.py` + contagens | gate ativo (é o teste do sistema) |
 | `wyd-ops` | validação de workflow e compose | build de imagem no CI | `compose up` do site | deploy publicado | pipeline escrito, 0 execução |
 
 **Gate de teste do projeto:** nenhuma frente fecha issue sem o alvo da sua linha existindo e verde; o
@@ -874,14 +874,14 @@ em HTTP 200 e `down` sai 0. Decisão do dono em 2026-11-23: **produção não ro
 desenvolvimento**.
 
 **Gate de documentação pelo Compose (`V`, 2026-11-23):** o override acrescenta o serviço `gate`, sob
-perfil `gate`, que roda `preparar.py`, `mkdocs build` e `verificar.py` em um comando:
+perfil `gate`, que roda `preparar.py`, `mkdocs build` e `gate/checks/links.py` em um comando:
 
 ```bash
 docker compose --profile gate run --rm gate
 ```
 
 Ele usa o estágio `gate` do Dockerfile — onde vivem pip, `planejamento-1.0.0/`, `wyd-docs/` e
-`verificar.py`; o runtime só tem `site/` — com tag `:gate` e `pull_policy: build`, então valida a
+`gate/checks/links.py`; o runtime só tem `site/` — com tag `:gate` e `pull_policy: build`, então valida a
 árvore de trabalho. Não publica porta nem reinicia. O perfil é o que mantém o `up` normal sem ele, e
 `docker compose config` sem `--profile gate` não o lista. Medido em 2026-11-23: exit 0,
 `verificação: 269 páginas, links, âncoras, navegação e sintaxe ok (267 fontes verificadas)` (dono do
@@ -934,7 +934,7 @@ módulos, não implementação. A regra de §8.1 vale por conteúdo, não por no
   planejamento novo. O Dockerfile do projeto mora no `wyd-ops/`; a pasta `docker/` foi removida em
   2026-11-22 depois de a imagem ter sido construída nela por engano.
 - **Pasta top-level `tools/`.** Foi citada por versão anterior de AGENTS.md, nunca existiu e não é
-  necessária: ferramenta nasce na pasta do sistema dono (`wyd-docs/verificar.py` é o exemplo).
+  necessária: ferramenta nasce na pasta do sistema dono (`wyd-docs/gate/checks/links.py` é o exemplo).
   `wyd-client/tools/` é um caminho específico aprovado em LCLI-04 e listado em §8.2/§8.4; isso não
   autoriza criar uma pasta compartilhada na raiz.
 - **`crates/wyd-{client,docs,ops,portal}`.** Ver §8.2: esses sistemas não são crate.

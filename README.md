@@ -83,7 +83,8 @@ visual da raiz.
 
 O site é gerado de `planejamento-1.0.0/*/docs/` e roda em **MkDocs 2.0** com **Python 3.15**.
 O MkDocs 2.0 é pré-release (`2.0.dev6`), sem `mkdocs.yml`, plugin, tema embutido nem modo estrito —
-por isso o projeto tem tema próprio, montagem em `preparar.py` e gate em `verificar.py`.
+por isso o projeto tem tema próprio, montagem em `preparar.py` e gate no pacote `gate/`
+(`python -m gate`, com resumo curto e `--json`; contrato no ADR-OPS-0010).
 
 Nada é montado à mão: a imagem é construída e publicada pelo CI
 (`.github/workflows/docs-image.yml`) e o `docker compose` a consome.
@@ -92,6 +93,7 @@ Nada é montado à mão: a imagem é construída e publicada pelo CI
 docker compose pull docs                     # baixa a imagem publicada
 docker compose up -d docs                    # serve o site em http://127.0.0.1:8000
 docker compose --profile gate run --rm gate  # monta, builda e roda a cadeia de verificação
+make gate-fast                               # ciclo curto nativo (sem Docker/MkDocs)
 ```
 
 Para construir da árvore de trabalho, sem tocar na imagem publicada:

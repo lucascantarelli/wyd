@@ -51,7 +51,7 @@ A direção está decidida (`LAC-POR-01`, 2026-11-20); a **forma** do contrato �
 ```bash
 grep -rL '^> Pergunta:' planejamento-1.0.0/wyd-admin/docs --include='*.md'   # vazio
 find planejamento-1.0.0/wyd-admin -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts' \)  # vazio
-cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output site && python verificar.py site
+cd wyd-docs && python preparar.py && mkdocs build --dir .build/docs --output site && python -m gate check links
 ```
 
 O gate do site inclui o `wyd-admin` no `SISTEMAS`; link relativo quebrado reprova.

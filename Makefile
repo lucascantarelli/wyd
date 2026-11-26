@@ -8,14 +8,24 @@ CRATES := wyd-db wyd-ops-signer
 ifeq ($(OS),Windows_NT)
 CRATES += wyd-launcher
 LAUNCHER_TEST := cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked
+PYTHON ?= py -3
 else
 LAUNCHER_TEST :=
+PYTHON ?= python
 endif
 
-.PHONY: gate fmt lint test docs docs-up docs-down db-up db-down rollback
+.PHONY: gate gate-fast test-gate fmt lint test docs docs-up docs-down db-up db-down rollback
 
 gate:
 	docker compose --profile gate run --rm gate
+
+# Checks nativos: não precisa de Docker nem de MkDocs; o build e os links ficam
+# no `make gate`/CI. Use no ciclo curto do agente.
+gate-fast:
+	cd wyd-docs && $(PYTHON) -m gate fast --root ..
+
+test-gate:
+	cd wyd-docs && $(PYTHON) -m unittest discover -s tests -v
 
 fmt:
 	@for c in $(CRATES); do \

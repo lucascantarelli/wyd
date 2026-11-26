@@ -48,7 +48,7 @@ o que §4.2 proíbe.
 
 | Action | Inputs | O que faz | Entra quando |
 |---|---|---|---|
-| `docs-check` **(existe)** | `python` | instala `wyd-docs/requirements.txt`, roda `preparar.py`, `mkdocs build`, `verificar.py`, `verificar-contagens.py` e `verificar-censos.py` | já em uso |
+| `docs-check` **(existe)** | `python` | instala `wyd-docs/requirements.txt`, roda `preparar.py`, `mkdocs build`, `gate/checks/links.py`, `gate/checks/contagens.py` e `gate/checks/censos.py` | já em uso |
 | `setup-rust` | `toolchain` (`file` ou versão) | instala o toolchain de `rust-toolchain.toml`, cache de `~/.cargo` e `target/` com chave por `Cargo.lock` | quando houver `Cargo.toml` |
 | `setup-node` | `node-version` | instala Node, cache de npm com chave por `package-lock.json` | quando houver `package.json` |
 | `coverage-gate` | `path`, `minimum` (padrão 85) | lê o relatório e falha abaixo do mínimo | junto de `_rust.yml` |
@@ -236,7 +236,7 @@ seus artefatos.
 
 | Onde | O que diz | O que é medido |
 |---|---|---|
-| `wyd-ops` §4.1 | `docs-check/action.yml # mkdocs build --strict + links` | a 2.0 **não tem** `--strict` (§2.2 do plano do site); a action real roda `preparar.py`, `mkdocs build` e `verificar.py` |
+| `wyd-ops` §4.1 | `docs-check/action.yml # mkdocs build --strict + links` | a 2.0 **não tem** `--strict` (§2.2 do plano do site); a action real roda `preparar.py`, `mkdocs build` e `gate/checks/links.py` |
 | `full-workflow.yml:37` | `actions/checkout@v7` | **corrigido em 2026-11-24:** `actions/checkout` passou a SHA fixo, como `docs.yml` e `code.yml` |
 | `docs.yml` — filtros | `push` inclui `planejamento-1.0.0/wyd-1.0.0.md`; `pull_request` **não** | PR que altera só o panorama não roda o gate de docs, mas o merge publica — assimetria a resolver no passo 1 |
 

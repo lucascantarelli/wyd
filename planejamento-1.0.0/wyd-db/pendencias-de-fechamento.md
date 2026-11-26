@@ -2782,8 +2782,8 @@ PostgreSQL 17 em 2026-11-24 (§6.6.30) e as provas de `psql` de cada página nã
 
 | Medida | Antes | Depois | Fonte |
 |---|---:|---:|---|
-| atos pendentes, antes → depois | **168** | **141** (141 `docs/` + 0 nas outras três pastas) | `verificar-censos.py` |
-| páginas `aceito` no `wyd-db` | **52** | **79** (2 `docs/` + 28 `migrations/` + 37 `src/` + 12 `tests/`) | `verificar-censos.py` |
+| atos pendentes, antes → depois | **168** | **141** (141 `docs/` + 0 nas outras três pastas) | `gate/checks/censos.py` |
+| páginas `aceito` no `wyd-db` | **52** | **79** (2 `docs/` + 28 `migrations/` + 37 `src/` + 12 `tests/`) | `gate/checks/censos.py` |
 | `Q-BLK` abertas | **2** (`20`, `22`) | **0** | §6.6.22.5 e §6.6.23 |
 | capacidade sem ambiente | **1** (`CAP-08`) | **1**, agora **declarada não executável na `1.0.0`** | `tests/specs/capacidades.md` §9 |
 
