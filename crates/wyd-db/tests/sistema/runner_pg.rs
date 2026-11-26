@@ -55,6 +55,35 @@ fn config(nome: &str) -> MigrateConfig {
     MigrateConfig::new(url().parse().expect("DSN de teste"), fixture(nome))
 }
 
+fn config_em(dir: &Path) -> MigrateConfig {
+    MigrateConfig::new(url().parse().expect("DSN de teste"), dir.to_path_buf())
+}
+
+/// Copia a fixture contígua para um diretório descartável, para poder alterá-la.
+fn copiar_fixture(destino: &Path) {
+    for entrada in std::fs::read_dir(fixture("fixture")).expect("fixture") {
+        let caminho = entrada.expect("entrada").path();
+        let nome = caminho.file_name().expect("nome do arquivo");
+        std::fs::copy(&caminho, destino.join(nome)).expect("cópia da fixture");
+    }
+}
+
+/// Troca **um** byte do arquivo e confere que só um mudou.
+fn alterar_um_byte(caminho: &Path) {
+    let original = std::fs::read_to_string(caminho).expect("leitura do arquivo");
+    let alterado = original.replacen("total", "totaL", 1);
+    assert_ne!(original, alterado, "o arquivo precisa conter `total`");
+    assert_eq!(alterado.len(), original.len(), "o tamanho não muda");
+    let diferentes = original
+        .as_bytes()
+        .iter()
+        .zip(alterado.as_bytes())
+        .filter(|(antes, depois)| antes != depois)
+        .count();
+    assert_eq!(diferentes, 1, "exatamente um byte diferente");
+    std::fs::write(caminho, alterado).expect("gravação do arquivo alterado");
+}
+
 async fn apagar() {
     let pool = pool().await;
     sqlx::raw_sql(
@@ -192,6 +221,45 @@ async fn drift_de_checksum_reprova_status_e_apply() {
 }
 
 #[tokio::test]
+async fn drift_de_um_byte_no_arquivo_reprova_com_codigo_4() {
+    let _serial = SERIAL.lock().await;
+    apagar().await;
+
+    let serie = tempfile::tempdir().expect("diretório descartável da série");
+    copiar_fixture(serie.path());
+    let cfg = config_em(serie.path());
+    assert_eq!(aplicar(&cfg).await.expect("apply inicial").applied.len(), 4);
+
+    alterar_um_byte(&serie.path().join("0003_fixture_view.sql"));
+
+    let adapter = PgAdapter::from_config(&cfg).await.expect("adapter");
+    let fonte = FsSource::new(cfg.dir().to_path_buf());
+    let erro = wyd_db::migrate::run(Command::Status { check: true }, &adapter, &fonte)
+        .await
+        .expect_err("um byte a mais no arquivo aplicado precisa reprovar o status");
+    match &erro {
+        MigrateError::Drift(achados) => {
+            assert_eq!(achados.len(), 1, "só a versão 3 mudou");
+            assert_eq!(achados[0].version.get(), 3);
+            assert_eq!(achados[0].kind, DriftKind::Checksum);
+        }
+        outro => panic!("esperava Drift; veio: {outro}"),
+    }
+    assert_eq!(erro.exit_code(), 4);
+
+    let erro = wyd_db::migrate::run(Command::Apply { dry_run: false }, &adapter, &fonte)
+        .await
+        .expect_err("apply com drift não pode escrever");
+    assert!(matches!(erro, MigrateError::Drift(_)));
+    adapter.close().await;
+    assert_eq!(
+        contar_ledger().await,
+        4,
+        "o apply recusado não alterou o ledger"
+    );
+}
+
+#[tokio::test]
 async fn down_ate_vazio_esquece_o_ledger() {
     let _serial = SERIAL.lock().await;
     apagar().await;
@@ -217,6 +285,38 @@ async fn down_ate_vazio_esquece_o_ledger() {
     );
     assert!(!existe("fixture.item").await, "a tabela sumiu");
     assert!(!existe("fixture.item_contagem").await, "a view sumiu");
+    assert!(
+        !existe("fixture.ix_fixture_item_nome").await,
+        "o índice sumiu"
+    );
+
+    let reaplicado = aplicar(&cfg).await.expect("apply seguinte ao reset");
+    assert_eq!(
+        reaplicado.applied.len(),
+        4,
+        "o apply seguinte reaplica tudo"
+    );
+    assert_eq!(
+        contar_ledger().await,
+        4,
+        "o ledger volta a ter quatro linhas"
+    );
+    assert!(existe("fixture.item").await, "a tabela voltou");
+    assert!(existe("fixture.item_contagem").await, "a view voltou");
+    assert!(
+        existe("fixture.ix_fixture_item_nome").await,
+        "o índice voltou"
+    );
+    let itens: i64 = {
+        let pool = pool().await;
+        let total = sqlx::query_scalar("SELECT count(*) FROM fixture.item")
+            .fetch_one(&pool)
+            .await
+            .expect("contagem de itens");
+        pool.close().await;
+        total
+    };
+    assert_eq!(itens, 2, "o seed da fixture roda de novo, uma vez só");
 }
 
 #[tokio::test]
@@ -263,4 +363,92 @@ async fn cap37_segunda_execucao_espera_no_advisory_lock() {
         .expect("liberado o lock, a execução concorrente aplica");
     espera.close().await;
     assert_eq!(relatorio.applied.len(), 4);
+}
+
+/// Nome do teste que reexecuta a si mesmo como segundo processo.
+const DOIS_PROCESSOS: &str = "dois_processos_o_segundo_espera_no_lock_e_termina_sem_aplicar";
+
+/// Marca o processo filho: quem a lê executa o `apply` e termina.
+const FILHO: &str = "WYD_RUNNER_PG_FILHO";
+
+/// Espera do filho: curta de propósito, para o alvo não pagar os 10 s padrão.
+const ESPERA_FILHO: Duration = Duration::from_secs(2);
+
+/// Executa o próprio binário de teste como **outro processo**, com `--exact`.
+fn executar_em_outro_processo() -> std::process::Output {
+    std::process::Command::new(std::env::current_exe().expect("binário de teste"))
+        .args(["--exact", DOIS_PROCESSOS, "--nocapture", "--test-threads=1"])
+        .env(FILHO, "1")
+        .output()
+        .expect("segundo processo")
+}
+
+fn saida(output: &std::process::Output) -> String {
+    format!(
+        "código={:?}\nstdout:\n{}\nstderr:\n{}",
+        output.status.code(),
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    )
+}
+
+/// DoD da `WYDDB-030`: com o advisory lock tomado por um processo, o outro espera o tempo
+/// configurado, devolve código 3 e **não** aplica; depois, o mesmo processo termina sem aplicar.
+#[tokio::test]
+async fn dois_processos_o_segundo_espera_no_lock_e_termina_sem_aplicar() {
+    if std::env::var_os(FILHO).is_some() {
+        let cfg = config("fixture")
+            .with_lock_timeout(ESPERA_FILHO)
+            .expect("timeout do filho dentro da faixa");
+        let codigo = match aplicar(&cfg).await {
+            Ok(relatorio) => {
+                println!("aplicadas={}", relatorio.applied.len());
+                0
+            }
+            Err(erro) => {
+                println!("erro={erro}");
+                i32::from(erro.exit_code())
+            }
+        };
+        std::process::exit(codigo);
+    }
+
+    let _serial = SERIAL.lock().await;
+    apagar().await;
+    let cfg = config("fixture");
+
+    // Processo 1: já está migrando, com o advisory lock tomado.
+    let dono = PgAdapter::from_config(&cfg).await.expect("adapter do dono");
+    dono.acquire(ESPERA_FILHO)
+        .await
+        .expect("lock do processo que aplica");
+
+    // Processo 2: espera e desiste sem aplicar.
+    let bloqueado = executar_em_outro_processo();
+    assert_eq!(bloqueado.status.code(), Some(3), "{}", saida(&bloqueado));
+    assert!(
+        !existe("public.schema_migrations").await,
+        "o processo que esperou não pode nem preparar o ledger"
+    );
+
+    // O processo 1 aplica; ao soltar o lock, o 2 volta e termina sem aplicar.
+    dono.close().await;
+    assert_eq!(
+        aplicar(&cfg)
+            .await
+            .expect("apply do processo 1")
+            .applied
+            .len(),
+        4
+    );
+    assert_eq!(contar_ledger().await, 4);
+
+    let depois = executar_em_outro_processo();
+    assert_eq!(depois.status.code(), Some(0), "{}", saida(&depois));
+    assert!(
+        String::from_utf8_lossy(&depois.stdout).contains("aplicadas=0"),
+        "o segundo processo não pode reaplicar: {}",
+        saida(&depois)
+    );
+    assert_eq!(contar_ledger().await, 4, "o ledger não ganhou linha nova");
 }

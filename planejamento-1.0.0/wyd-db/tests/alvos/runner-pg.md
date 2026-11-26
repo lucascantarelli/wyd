@@ -2,10 +2,16 @@
 > Público: QA / testador e revisor de CI
 > Dono: equipe do `wyd-db`
 > Base: `../specs/capacidades.md` §5; `../../src/migrate/spec.md` §13; `../../proposta-alvo-pgadapter.md`; `.github/workflows/code.yml` job `runner`
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-25) — alvo escrito e executado contra PostgreSQL 17: **5/5** casos verdes
-(log local `/tmp/wyd-runner-pg.log`; 23,81 s). Fecha `CAP-37` e a metade runner de `CAP-01`–`CAP-07`.
+**Estado:** aceito (2026-11-25) — alvo escrito e executado contra PostgreSQL 17: **7/7** casos verdes
+(V, 2026-11-26: `crates/wyd-db/tests/sistema/runner_pg.rs`, log `/tmp/wyd-runner-pg-wyddb030.log`,
+33,43 s; os 5 primeiros já tinham passado em 2026-11-25). Fecha `CAP-37` e a metade runner de
+`CAP-01`–`CAP-07`.
+
+**Provas do DoD da `WYDDB-030` acrescentadas em 2026-11-26:** drift de **um byte** no arquivo (não no
+ledger), ciclo `down` até vazio seguido de `apply` e concorrência entre **dois processos** de verdade —
+o segundo reexecuta o binário de teste com `--exact` em vez de abrir outra conexão no mesmo processo.
 
 **Reorganização (2026-11-26):** o arquivo passou a `crates/wyd-db/tests/sistema/runner_pg.rs`;
 `cargo test --no-run` recompilou o alvo, mas a execução não foi repetida localmente (sem PG17 e
@@ -41,8 +47,10 @@ binário, não porta de migration.
 | `apply_grava_ledger_real_e_e_idempotente` | fixture contígua de 4 arquivos; `apply`; depois `apply` de novo | 4 versões aplicadas; ledger com 4 linhas, checksum de 64 hex e slug correto; segunda execução não escreve |
 | `arquivo_que_falha_nao_commita_parcial` | fixture em que o arquivo 2 cria tabela e divide por zero | erro `Sql` na versão 2, código de saída 5; ledger com 1 linha; a tabela do arquivo 2 não existe |
 | `drift_de_checksum_reprova_status_e_apply` | ledger com checksum adulterado na versão 2 | `Status { check: true }` devolve `Drift(Checksum)` na versão 2, código 4; `apply` recusa sem escrever |
-| `down_ate_vazio_esquece_o_ledger` | `Down { to: Empty }` depois do apply | 4 versões desfeitas; ledger vazio; tabela e view ausentes |
+| `down_ate_vazio_esquece_o_ledger` | `Down { to: Empty }` depois do apply, seguido de `apply` | 4 versões desfeitas; ledger vazio; tabela, view e índice ausentes; o `apply` seguinte reaplica as 4, o ledger volta a 4 linhas e o seed roda uma vez |
+| `drift_de_um_byte_no_arquivo_reprova_com_codigo_4` | cópia descartável da fixture; `apply`; **um byte** trocado em `0003_fixture_view.sql` | `Drift(Checksum)` na versão 3, código de saída 4; `apply` recusa sem escrever e o ledger segue com 4 |
 | `cap37_segunda_execucao_espera_no_advisory_lock` | processo A com o advisory lock tomado; processo B executa `apply` | B devolve `LockBusy { waited: 10 s }`, código de saída 3, sem preparar o ledger; liberado o lock, B aplica as 4 versões |
+| `dois_processos_o_segundo_espera_no_lock_e_termina_sem_aplicar` | processo 1 com o lock; processo 2 reexecuta o binário de teste (`--exact`, espera de 2 s); depois o processo 1 aplica e o 2 volta | o processo 2 sai com código 3 e não prepara o ledger; o 1 aplica as 4; o 2 volta, sai com 0 e **não** reaplica |
 
 **Por que a fixture é contígua e sintética (`Q-ALVO-2` = B1):** `MigrationSet::build` recusa série com
 furo, e a série real ainda tem seis versões ausentes (`0016`, `0017`, `0018`, `0020`, `0023`, `0027`). O
@@ -79,7 +87,10 @@ roda o alvo como bloqueante.
 
 ## 5. O que este alvo não prova
 
-- **A série materializada e os checksums reais:** isso é `reversibilidade_pg` e o alvo de contrato.
+- **A série materializada e os checksums reais:** continua fora deste alvo, porque
+  `MigrationSet::build` recusa série com furo e a série tem seis versões ausentes (V, 2026-11-26:
+  `crates/wyd-db/migrations/` numera 28 arquivos e falta `0016`, `0017`, `0018`, `0020`, `0023` e
+  `0027`). Fechar o furo é curadoria de seed, não teste.
 - **A contiguidade da série real:** depende das seis versões de seed.
 - **`CAP-38` e `CAP-39`:** consulta de personagem e boot têm alvos próprios, ainda sem código.
 
@@ -88,3 +99,8 @@ roda o alvo como bloqueante.
 | Dúvida | O que a resolve | Dono |
 |---|---|---|
 | quando o alvo passa a aplicar a série real? | fechar as seis versões ausentes e trocar a fixture por `migrations/` (`Q-ALVO-2` = B2) | curadoria de seed + `wyd-db` |
+
+**Medição de 2026-11-26:** enquanto o furo existir, rodar o runner sobre `migrations/` devolve
+`SetInvalid(NotContiguous { expected: 16, found: 19 })` — a série para em `0015` e a próxima existente é
+`0019`. Isso é comportamento provado do `MigrationSet`, não falha do alvo (`V`:
+`crates/wyd-db/src/migrate/migration/set.rs`, teste `rejects_gap`).
