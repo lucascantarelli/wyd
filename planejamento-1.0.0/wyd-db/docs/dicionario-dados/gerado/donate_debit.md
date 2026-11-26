@@ -62,4 +62,4 @@ Sem `updated_at` nem trigger: o carimbo é só `created_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0011-game-economy.md` — arquivo `0011_game_economy.sql`.
+Forma (dona): `migrations/0011_game_economy.md` — arquivo `0011_game_economy.sql`.

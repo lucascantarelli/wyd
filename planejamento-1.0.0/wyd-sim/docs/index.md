@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, QA e produto
 > Dono: equipe do wyd-sim
 > Base: `wyd-ops/proposta-versoes-e-cobertura-funcional.md` §7.2; `wyd-protocol-1.0.0.md` §1.2
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -50,3 +50,25 @@ Nenhuma: `LSIM-01`–`LSIM-04` foram decididas pelo dono em 2026-11-23, com o re
 [Decisões do `wyd-sim`](proposta-decisoes-sim.md), e não são reabertas. A decisão de `LSIM-03` não
 significa que fixtures já existam, e `LSIM-02` não escreve fórmula. O estado de cada lacuna continua em
 `lacunas.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [adr/index](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

@@ -220,7 +220,8 @@ sem `END` é incompleto.
 
 ### 4.4 Local restrito
 
-O padrão é `%LOCALAPPDATA%\WYD\capture\<session_id>\capture.wydcap`, com `ficha.md` e
+O padrão é `%LOCALAPPDATA%\WYD\capture\<session_id>\capture.wydcap`, com o arquivo da sessão
+`ficha.md` e
 `capture.sha256` na mesma pasta. `--capture-root` pode apontar para outro diretório, mas a CLI recusa
 qualquer caminho que resolva para dentro do repositório Git. O diretório é criado com permissão do
 usuário; o bruto não é copiado para `planejamento-1.0.0/`, `tests/` ou qualquer pasta versionada.
@@ -290,8 +291,10 @@ apontar o cliente para o ECAP. O build-alvo deixou de ser bloqueio em 2026-11-23
 fechada; o adaptador é trabalho de `LCLI-04`. A captura A1 não começa antes de o adaptador existir.
 
 ### 6.3 Saída da CLI
+**Sem arquivo no repositório:** `ficha.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
-A CLI produz, no diretório da sessão: `capture.wydcap`, `capture.sha256` e `ficha.md` (campos de
+A CLI produz, no diretório da sessão (fora do repositório): `capture.wydcap`, `capture.sha256` e
+`ficha.md` (campos de
 `como-capturar.md` §7). Para o repositório, só pode seguir o frame anonimizado e a ficha resumida,
 conforme D5 e §6 do procedimento; esta spec não versiona bruto.
 
@@ -333,6 +336,7 @@ nome do QA continua em `LCLI-03`. Só depois da segunda leitura o frame anonimiz
 `wyd-db/docs/roadmap/WYDDB-*.md` e não foi criada no GitHub.
 
 ### Issue proposta — "ECAP e CLI de captura A1"
+**Sem arquivo no repositório:** `ficha.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Fase:** 0 — fio e captura. **Prioridade:** P0, porque A1 destrava `LPRT-03` e a `0.1.0`.
 **Contexto:** o endpoint de captura só existe como decisão de princípio; sem ele não há bruto, ficha,

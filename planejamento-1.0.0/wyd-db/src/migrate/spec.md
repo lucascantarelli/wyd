@@ -2,7 +2,7 @@
 > Público: Desenvolvedor do `wyd-db` que vai implementar o runner
 > Dono: equipe do `wyd-db`
 > Base: `plano-migrations.md` §2 e §7, `padrao-banco.md` §11, `src/provision/spec.md`
-> Revisado em: 2026-11-18
+> Revisado em: 2026-11-25
 
 **Estado:** aceito (2026-11-24) — aguardando aceite do dono
 
@@ -155,9 +155,14 @@ pub trait Ledger: Send + Sync {
 /// Unidade de trabalho: o adapter abre a transação, fixa `search_path` e a fecha.
 /// Desfazer não tem método: `commit` consome a transação (`self`, não `Box<Self>`) e o `Drop` do
 /// adapter faz ROLLBACK — receber o `Txn` por valor de `begin` já torna o caminho único.
+/// `record` recebe o checksum calculado pelo `MigrationSet`: `RawMigration` não o carrega.
 pub trait MigrationTxn: Send {
     async fn run(&mut self, sql: &Sql) -> Result<(), SqlError>;
-    async fn record(&mut self, m: &RawMigration) -> Result<(), SqlError>;
+    async fn record(
+        &mut self,
+        m: &RawMigration,
+        checksum: Checksum,
+    ) -> Result<(), SqlError>;
     async fn forget(&mut self, version: Version) -> Result<(), SqlError>;
     async fn commit(self) -> Result<(), SqlError>;
 }
@@ -362,7 +367,7 @@ troca de série, por dois motivos independentes:
   não como baseline.
 - **`CASCADE` anula o gate.** O `down` do `0001` derruba os quatro schemas **sem** `CASCADE`, de
   propósito: se outro arquivo esqueceu um objeto, o `down` estoura com "other objects depend on it" e
-  aponta o culpado (`planejamento-1.0.0/wyd-db/migrations/0001-bootstrap.md` §8). Com `CASCADE`, o
+  aponta o culpado (`planejamento-1.0.0/wyd-db/migrations/0001_bootstrap.md` §8). Com `CASCADE`, o
   mesmo defeito passa verde e a sobra desaparece sem ninguém saber.
 
 O reset passa a ser **um alvo do `down`**: `Command::Down { to: DownTo::Empty }`, exposto na CLI como
@@ -423,15 +428,18 @@ pub struct MigrateConfig {
     dsn: Dsn,                     // de `crate::dsn`; a redação do Debug é de lá (`src/dsn.md`)
     dir: PathBuf,
     lock_timeout: Duration,       // padrão 10 s
+    allow_superuser: bool,         // padrão false; o binário liga pelo opt-out
 }
 
 impl MigrateConfig {
     pub fn new(dsn: Dsn, dir: PathBuf) -> Self;
     /// Fora de 1 s..=10 min é erro do chamador, não valor a corrigir em silêncio.
     pub fn with_lock_timeout(self, d: Duration) -> Result<Self, ConfigError>;
+    pub fn with_allow_superuser(self, allow: bool) -> Self;
     pub fn dsn(&self) -> &Dsn;
     pub fn dir(&self) -> &Path;
     pub fn lock_timeout(&self) -> Duration;
+    pub fn allow_superuser(&self) -> bool;
 }
 ```
 
@@ -439,9 +447,9 @@ impl MigrateConfig {
 invariante e `Debug` redigido moram lá, e aqui só se recebe o valor pronto. O preflight compara
 `current_user`, não lê a DSN.
 
-Três campos não pedem builder: `new` cobre o caso obrigatório e `with_lock_timeout` é o único ajuste.
+Os campos obrigatórios cabem em `new`; `with_lock_timeout` e `with_allow_superuser` são os únicos ajustes.
 Não existe `from_env`: ler variável é do binário (§10.1), e `config.rs` não importa `std::env`. O que
-sobra de configurável é tempo, não regra.
+sobra de configurável é tempo e o opt-out logado, não regra de papel/versão.
 
 ## 10. Arquitetura do módulo
 
@@ -528,7 +536,7 @@ Um único lugar monta as peças: o binário. A biblioteca nunca constrói adapte
 `mod.rs` continua sem I/O.
 
 ```rust
-// crates/wyd-db/src/bin/wyd-db.rs — único ponto que lê ambiente
+// crates/wyd-db/src/bin/wyd-db.rs (a escrever) — único ponto que lê ambiente
 let cfg = MigrateConfig::new(dsn_from_env()?, dir_from_env()?);  // env só aqui, no bin
 let pg  = adapter::pg::from_config(&cfg).await?;   // pool + Ledger + Executor + Lock
 let src = adapter::fs::FsSource::new(cfg.dir.clone());
@@ -630,3 +638,29 @@ como em §6; (4) advisory lock de sessão, chave constante e espera limitada (§
 `MigrationTxn` (§8 e §6); (6) três comandos, nada automático no boot, códigos de saída fixos (§8 e
 §11), com o reset servido pelo `down` até vazio (§8.1). Este documento é a fonte da implementação, e os dois passam a mudar juntos — mexer nesses pontos
 é revisão de ADR, não de implementação.
+
+## 15. Estado da implementação (2026-11-25)
+
+**Ato 3 concluído no escopo de biblioteca e portas falsas.** O módulo `crates/wyd-db/src/migrate/`
+existe com parser, `MigrationSet`, `plan`, portas, adapter PostgreSQL, `FsSource` e runner. O registro
+de fechamento da nota transversal é `../../migrations/serie-e-regras.md` §8; esta seção guarda a mesma
+evidência no documento de contrato que a nota cita como `Base:`.
+
+| Comando | Resultado observado |
+|---|---|
+| `cargo test --manifest-path crates/wyd-db/Cargo.toml --lib` | **63 passed; 0 failed; 0 ignored** (exit 0) |
+| `cargo check --manifest-path crates/wyd-db/Cargo.toml --all-targets` | concluído sem erro (exit 0) |
+| `cargo clippy --manifest-path crates/wyd-db/Cargo.toml --all-targets -- -D warnings` | concluído sem aviso (exit 0) |
+| `cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check` | concluído sem diferença (exit 0) |
+
+**Cobertura do ato 3:** a evidência tabulada acima é de **lib/fakes**. Depois dela, `sistema_pg` rodou
+contra PG17 migrado (13/13; log `/tmp/wyd-ci-schema.log`), `reversibilidade_pg` contra PG17 vazio (3/3;
+log `/tmp/wyd-reversibilidade.log`) e `runner_pg` contra PG17 em loopback (5/5; log
+`/tmp/wyd-runner-pg.log`). Os dois primeiros usam `psql`; `runner_pg` exercita `PgAdapter`, ledger,
+transação por arquivo e `pg_advisory_lock`, e é ele que fecha `CAP-37` (`Q-ALVO-1` = A1,
+`Q-ALVO-2` = B1, `Q-ALVO-3` = papel de teste). A decisão `Q-SERIE-1 = B` está implementada em §9.2 e
+`Q-SEP-1` = A′ foi aplicada: os 28 nomes usam `_` e parseiam. A série real ainda não é contígua —
+faltam `0016`, `0017`, `0018`, `0020`, `0023` e `0027` —, por isso o alvo aplica fixture própria.
+
+A próxima frente canônica continua **A — D-01/`wyd-db`**, com o **ato 4** reduzido a `CAP-38` e
+`CAP-39` (2 células) e depois o **ato 5** (40 issues + 141 atos).

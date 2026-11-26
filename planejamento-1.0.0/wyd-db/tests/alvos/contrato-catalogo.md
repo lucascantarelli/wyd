@@ -29,10 +29,11 @@ mesmas 2 views, todas com schema. É o único alvo de contrato que compara dois 
 | `CAP-08` | catálogo e série descrevem as mesmas 109 tabelas e 2 views, com schema | `catalogo_igual_a_serie` |
 
 ## 2. Cenário
+**Sem arquivo no repositório:** `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Passo | Entrada | Resultado esperado |
 |---|---|---|
-| 1 | documento de catálogo (`docs/dicionario-dados/banco-catalogo.md`) | lido como texto, sem conexão |
+| 1 | documento de catálogo (`docs/dicionario-dados/banco-catalogo.md`, **não existe** — `Q-BLK-20` = A, pós-`1.0.0`) | lido como texto, sem conexão |
 | 2 | série viva, por `serie.rs` | lista de `CREATE TABLE`/`CREATE VIEW` por arquivo |
 | 3 | comparação | mesmos nomes, mesmo schema, mesma quantidade: **109** tabelas e **2** views |
 | 4 | diferença | falha nomeando o que só existe de um lado, com arquivo ou seção |

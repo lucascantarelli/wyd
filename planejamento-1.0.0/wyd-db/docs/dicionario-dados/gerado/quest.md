@@ -44,7 +44,7 @@ Sem carimbos e sem coluna de origem: a proveniência do dataset é `content.cont
 - **Entrada, `RESTRICT` (1 FK):** `fk_character_quest_quest` (`0028`) — apagar definição com progresso
   registrado falha alto, em vez de levar o progresso junto.
 - **Sem FK em `requires`:** array de texto não referencia tabela; a integridade da cadeia é do seed
-  (§10 de `migrations/0026-content-quests-events.md`).
+  (§10 de `migrations/0026_content_quests_events.md`).
 
 ## Unicidade
 
@@ -83,9 +83,9 @@ silêncio, e detectar isso é trabalho do seed, não do banco. `cooldown_seconds
 - **Escreve:** `wyd_migrator`, no seed de quests (`0027`, `bloqueada`, `migrations-checklist.md` §2);
   nenhum `GRANT` de escrita em runtime.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0026-content-quests-events.md` — arquivo `0026_content_quests_events.sql`.
+Forma (dona): `migrations/0026_content_quests_events.md` — arquivo `0026_content_quests_events.sql`.

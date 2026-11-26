@@ -4,7 +4,7 @@
 > Público: QA, arquitetura e operação
 > Dono: equipe do wyd-bots
 > Base: `wyd-protocol-1.0.0.md` §1.4; `AGENTS.md` §8
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -26,7 +26,7 @@ contrato.
 ## O que falta
 
 A política do limiar de carga (`Q-BOT-3` = A) foi decidida em 2026-11-23, mas a lacuna `LBOT-03`
-continua **aberta como medição**, porque ainda não há número, conexão nem latência medidos. O ambiente alvo
+continua **bloqueada como medição**, porque ainda não há número, conexão nem latência medidos. O ambiente alvo
 (`LBOT-01`) fechou em 2026-11-23 pela resposta do dono (`Q-BOT-1` = A): CI efêmero em runner hospedado,
 com servidor descartável por execução. A conta e o personagem sintéticos (`LBOT-02`) fecharam na mesma
 data (`Q-BOT-2` = A): seed declarativo em `crates/wyd-db/seeds/dev.sql`, aplicado no banco recriado por
@@ -42,5 +42,32 @@ medida: esta página não afirma conexões simultâneas, latência nem taxa de s
 
 As quatro perguntas do sistema foram respondidas ou derivadas: `Q-BOT-1` e `Q-BOT-2` = A, `Q-BOT-3` =
 A (política de medição) e `Q-BOT-4` por regra vigente. `LBOT-01`, `LBOT-02` e `LBOT-04` fecharam;
-`LBOT-03` **continua aberta como medição**, sem número inventado. O estado de cada lacuna está em
+`LBOT-03` **continua bloqueada como medição**, sem número inventado. O estado de cada lacuna está em
 `lacunas.md`; o briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Módulos do `wyd-bots` — detalhamento](modulos.md)
+- [Decisões do `wyd-bots` — ambiente, dado, limiar e artefato](proposta-decisoes-bots.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [adr/index](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

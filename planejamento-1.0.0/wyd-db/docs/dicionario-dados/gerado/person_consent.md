@@ -58,4 +58,4 @@ as linhas revogadas não bloqueiam.
 
 ## Migration
 
-Forma (dona): `migrations/0003-portal-person.md` — arquivo `0003_portal_person.sql`.
+Forma (dona): `migrations/0003_portal_person.md` — arquivo `0003_portal_person.sql`.

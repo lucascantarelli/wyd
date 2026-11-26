@@ -1,7 +1,7 @@
 > Pergunta: "que estados um exemplar de item tem, como o refino e a gema são limitados e o que continua sendo regra de jogo?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0009-game-inventory.md` §4 e §6–§10; `migrations/0021-content-rules.md` §4 e §6–§10; `migrations/0022-content-overrides.md` §4 e §6–§10; `docs/dicionario-dados/dominio-inventario.md`; `docs/dicionario-dados/dominio-refino.md`; `docs/glossario.md` (refino, gema, Anct, SANC); `docs/specs/requisitos-funcionais.md` `RF-DB-004`
+> Base: `migrations/0009_game_inventory.md` §4 e §6–§10; `migrations/0021_content_rules.md` §4 e §6–§10; `migrations/0022_content_overrides.md` §4 e §6–§10; `docs/dicionario-dados/dominio-inventario.md`; `docs/dicionario-dados/dominio-refino.md`; `docs/glossario.md` (refino, gema, Anct, SANC); `docs/specs/requisitos-funcionais.md` `RF-DB-004`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)
@@ -143,7 +143,7 @@ seed-only, sem edição de staff.
 | regra de refino | regra | seleção de `kind`/`step`, custo e efeito de falha | `wyd-sim` + `wyd-core` |
 | piedade | regra | quando sobe, quando zera e o que acontece na troca de item | `wyd-core` |
 | catálogo de item | conteúdo | `item_index` sem FK; nome, preço e efeito dependem de `0014` e do seed | curadoria |
-| custódia de mercado | schema | o item sai da mochila por `DELETE` e nasce em `game.market_escrow` (`0034`) | [`../dicionario-dados/dominio-economia.md`](../../dicionario-dados/dominio-economia.md) |
+| custódia de mercado | schema | o item sai da mochila por `DELETE` e nasce em `game.market_escrow` (`0034`) | [`dominio-economia.md`](../../dicionario-dados/dominio-economia.md) |
 
 ## Rastreabilidade
 

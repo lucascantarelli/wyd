@@ -3,10 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3, §4 e §6
 > Revisado em: 2026-11-18
+**Sem arquivo no repositório:** `src/provision/port/script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/provision/port/script.rs` — execução do script
+**Sem arquivo no repositório:** `src/provision/port/script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ## 1. Responsabilidade
 
@@ -14,6 +16,7 @@ Executar **um** texto SQL multi-instrução numa sessão, sem transação explí
 que `apply` usa; `render --check` não passa por aqui (compara arquivo).
 
 ## 2. API pública
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ```rust
 pub trait Script: Send + Sync {

@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, arquitetura e operação
 > Dono: equipe do wyd-server
 > Base: `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3; `LAC-POR-06`; `docs/specs/endpoint-de-captura.md`
-> Revisado em: 2026-11-23
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -60,3 +60,29 @@ As cinco lacunas fecharam em 2026-11-23: `LSRV-01` e `LSRV-02` (composição e c
 `LSRV-05` (peer de A1: C com quarentena, condição reprovada em 2026-11-23; A1 depende de A e foi
 autorizada na mesma data). O registro está em
 [Decisões do `wyd-server`](proposta-decisoes-server.md); o estado de cada lacuna continua em `lacunas.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+
+### arquitetura/adr
+
+- [ADR-SRV-0001 — Captura S7 (peer de A1)](arquitetura/adr/adr-srv-0001-captura-s7.md)
+- [ADRs — `wyd-server`](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

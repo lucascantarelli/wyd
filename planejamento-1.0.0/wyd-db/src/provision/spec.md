@@ -3,6 +3,7 @@
 > Dono: equipe do `wyd-db`
 > Base: `ADR-DB-0001` (Contexto e Decisão), `padrao-banco.md` §8, `src/migrate/spec.md` §3
 > Revisado em: 2026-11-18
+**Sem arquivo no repositório:** `crates/wyd-db/src/provision/domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24) — nada disto existe no repositório: nem `crates/wyd-db/src/provision/`,
 nem `db/roles.sql`. A página é a especificação a implementar, não a descrição de código vigente.
@@ -14,6 +15,7 @@ implementar só precisa daqui — o estado desejado, o texto gerado byte a byte,
 O que é vizinho aparece com a assinatura exata, sem "veja o módulo ao lado".
 
 ## 1. Responsabilidade e anti-objetivos
+**Sem arquivo no repositório:** `db/roles.sql`, `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Responsabilidade:** fixar em código, de forma verificável pelo compilador, **quais papéis de cluster
 existem e como cada um se associa**, mais o **estado do schema `public`** que o ledger do runner
@@ -25,7 +27,7 @@ código é a fonte para os papéis; o bloco de `public` é constante do gerador;
 - administração de credencial: nenhuma senha, `PASSWORD` ou rotação (§7);
 - alteração de papel existente: `apply` só adiciona (`ADR-DB-0001`, Decisão item 3);
 - concessão de privilégio nos quatro schemas da série (`content`, `game`, `portal`, `ops`) ou default
-  privileges (é `0001-bootstrap.md` §7, `P-18`); `public` é a exceção declarada em §4, porque existe
+  privileges (é `0001_bootstrap.md` §7, `P-18`); `public` é a exceção declarada em §4, porque existe
   antes da série e é onde o ledger mora;
 - remoção de papel: ato manual auditado, fora desta página;
 - escritor de arquivo: quem escreve `db/roles.sql` é o subcomando `render` da CLI.
@@ -35,6 +37,7 @@ código é a fonte para os papéis; o bloco de `public` é constante do gerador;
 existe só em `adapter/pg.rs` (§5).
 
 ## 2. Estado desejado
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Papel | `login` | `member_of` | Por que existe |
 |---|---|---|---|
@@ -93,9 +96,10 @@ o golden quebra a compilação antes de qualquer teste rodar.
 (§4): o `CREATE` é revogado de `PUBLIC` e `USAGE` e `CREATE` são concedidos a `MIGRATOR`. Ele é
 constante do gerador, não dado de `RoleSpec`, porque não descreve papel nenhum; `plan`/`check` continuam
 olhando só `pg_roles`/`pg_auth_members`, e a conferência desse bloco é pelas provas de
-`migrations/0001-bootstrap.md` §9 — `check` não lê ACL de schema.
+`migrations/0001_bootstrap.md` §9 — `check` não lê ACL de schema.
 
 ## 3. DSN por papel (`M24`, decidido em 2026-11-18)
+**Sem arquivo no repositório:** `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 `domain/spec.rs` define **papéis**; quem conecta é o binário, e cada conexão tem a sua variável. Uma DSN por
 papel, prefixo `WYD_DB_URL_`, **nenhuma com default**, nenhuma lida por este módulo:
@@ -136,6 +140,7 @@ que não seja `wyd_migrator` — só em desenvolvimento e sempre logado (`ADR-DB
 de `current_user` e o motivo de ela ser estrita estão em `src/migrate/spec.md` §7.
 
 ## 4. Arquivo gerado (conteúdo exato)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Este bloco é o conteúdo de `db/roles.sql` e, literalmente, o golden dos testes de §8. Sem linha em branco no fim
 além da última `\n`; sem `\r`; UTF-8; indentação de dois espaços dentro do `BEGIN`/`END`.
@@ -186,6 +191,7 @@ Regras de emissão, todas verificadas em teste:
 | ordem = ordem de `ROLES`, depois memberships | golden estável, diff de PR legível |
 
 ## 5. Arquitetura do módulo
+**Sem arquivo no repositório:** `observed.rs`, `spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Treze arquivos em quatro pastas (contando os `mod.rs`), com o mesmo desenho do runner
 (`src/migrate/spec.md` §10): modelo puro, portas, orquestração e um adapter. O root fica com o que é
@@ -319,6 +325,7 @@ silenciado em `port/mod.rs` com `#![allow(async_fn_in_trait)]` e o motivo escrit
 então o atributo impediria a única forma de declarar o estado desejado.
 
 ## 6. Erros e códigos de saída
+**Sem arquivo no repositório:** `domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 `domain/spec.rs` **não devolve erro**: `render()` é infalível por construção — a entrada é uma constante
 compilada, e o golden prova a saída. Nenhum `Result` atravessa esta fronteira.
@@ -334,6 +341,7 @@ Código novo é decisão registrada, não `catch-all`. `domain/spec.rs` só part
 intermédio do subcomando — o módulo em si não formata saída.
 
 ## 7. Credenciais
+**Sem arquivo no repositório:** `domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 `domain/spec.rs` define **papéis**, não credenciais. Nenhuma senha entra em `ROLES`, no SQL gerado ou no
 golden: papel `LOGIN` sem senha só conecta se o `pg_hba.conf` do ambiente permitir, e quando houver
@@ -354,6 +362,7 @@ Não existe `down`: nada reverte papel junto com o banco, e `--reset` derruba sc
 papel (`ADR-DB-0001`).
 
 ## 8. Testes (Definition of Done do módulo)
+**Sem arquivo no repositório:** `tests/golden/roles.sql`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Invariante | Como é garantido |
 |---|---|
@@ -382,6 +391,6 @@ papel (`ADR-DB-0001`).
 | Por que papel fica fora da série versionada | `ADR-DB-0001` (Contexto e Alternativas) |
 | Senha, `pg_hba`, TLS, rotação | §7 desta página (regra) + ambiente (valor) |
 | Remoção de papel | ato manual auditado: `DROP OWNED BY` antes, `DROP ROLE` dos que têm `member_of` e `wyd_owner` por último (`2BP01` enquanto houver dependência) |
-| `GRANT` e default privileges nos quatro schemas da série | `migrations/0001-bootstrap.md` §7 (`P-18`) |
+| `GRANT` e default privileges nos quatro schemas da série | `migrations/0001_bootstrap.md` §7 (`P-18`) |
 | Estado do schema `public` (ACL do ledger) | §4 desta página; decisão em `ADR-DB-0001`, item 8 |
 | Quem conecta com cada papel em produção | `docs/planos/plano-de-implantacao.md` §1 (cada serviço sobe com a DSN do seu papel) |

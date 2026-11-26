@@ -94,11 +94,11 @@ o `CHECK` exige minúsculas. `min_version` nulo significa "sem piso declarado", 
 ## Papéis
 
 - **Escreve:** `wyd_portal` — `SELECT, INSERT, UPDATE, DELETE` herdados do default privilege de `portal`
-  (`0001-bootstrap.md` §7), pelo BFF que serve o launcher. Nenhum seed cria lançamento.
+  (`0001_bootstrap.md` §7), pelo BFF que serve o launcher. Nenhum seed cria lançamento.
 - **Não leem:** `wyd_read` tem `USAGE` em `portal` mas não recebe `SELECT` por default; `wyd_game` não
   alcança o schema; `wyd_admin` não recebe estas tabelas em `0032`.
 
 ## Migration
 
-Forma (dona): `migrations/0030-portal-content.md` — arquivo `0030_portal_content.sql`; DDL em
+Forma (dona): `migrations/0030_portal_content.md` — arquivo `0030_portal_content.sql`; DDL em
 `ddl-confirmado.md` §5.15.

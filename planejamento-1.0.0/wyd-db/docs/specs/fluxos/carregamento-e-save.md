@@ -1,7 +1,7 @@
 > Pergunta: "como o personagem selecionado chega ao core, o que é gravado e onde o save em lote ainda depende de decisão?"
 > Público: Desenvolvedor novo e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `guia-desenvolvedor/portas-e-contratos.md` §5; `migrations/0006-game-character.md` §4–§6; `migrations/0007-game-session.md` §6.2; `migrations/0009-game-inventory.md` §4; `docs/roadmap/WYDDB-017.md`; `../../arquitetura/fronteira-hot-cold.md` §3–§4
+> Base: `guia-desenvolvedor/portas-e-contratos.md` §5; `migrations/0006_game_character.md` §4–§6; `migrations/0007_game_session.md` §6.2; `migrations/0009_game_inventory.md` §4; `docs/roadmap/WYDDB-017.md`; `../../arquitetura/fronteira-hot-cold.md` §3–§4
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

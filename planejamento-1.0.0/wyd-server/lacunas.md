@@ -1,34 +1,35 @@
 # `wyd-server` — lacunas e decisões pendentes (registro único)
 
-> **Estado: registro vivo (2026-11-23).** Único lugar onde uma lacuna do `wyd-server` tem dono,
-> impacto e estado. Cada linha diz o estado; `LSRV-01`–`LSRV-05` fecharam em 2026-11-23 e nenhuma
-> lacuna deste sistema está aberta. `LSRV-05` fechou em C, mas a medição do peer reprovou a condição
-> da opção: A1 passa a depender de A (ver o parágrafo final da §2).
+> **Estado: registro vivo (2026-11-25).** Único lugar onde uma lacuna do `wyd-server` tem dono,
+> impacto e estado. `LSRV-01`–`LSRV-05` fecharam em 2026-11-23 e `LSRV-05` foi **formalizado em
+> `ADR-SRV-0001` em 2026-11-25** (aprovado pelo dono). A medição do peer reprovou a condição da
+> opção C: A1 passa a depender de A (ver o parágrafo final da §2).
 
 ## 0. Como ler
 
-Estados: **aberta**, **proposta**, **fechada** (com evidência). `arquitetura` propõe; o dono do
+Estados: **fechada** (com evidência citada) e **bloqueada** (falta decisão, execução ou evidência; a
+linha nomeia o desbloqueio — dono e documento). `arquitetura` propõe; o dono do
 sistema aprova.
 
 ## 1. Situação em uma linha
 
-| Grupo | Lacunas | Abertas | Propostas | Fechadas |
-|---|---:|---:|---:|---:|
-| Topologia | 2 | 0 | 0 | 2 |
-| Operação | 1 | 0 | 0 | 1 |
-| Ciclo de vida | 1 | 0 | 0 | 1 |
-| Captura | 1 | 0 | 0 | 1 |
-| **Total** | **5** | **0** | **0** | **5** |
+| Grupo | Lacunas | Bloqueadas | Fechadas |
+|---|---:|---:|---:|
+| Topologia | 2 | 0 | 2 |
+| Operação | 1 | 0 | 1 |
+| Ciclo de vida | 1 | 0 | 1 |
+| Captura | 1 | 0 | 1 |
+| **Total** | **5** | **0** | **5** |
 
 ## 2. Lacunas
 
 | ID | Pergunta | Por que importa | Dono | Estado |
 |---|---|---|---|---|
-| `LSRV-01` | Como o processo é composto (net + core + acesso a dados) e onde termina o `main`? | sem composição definida, cada crate vira um binário e a ordem de inicialização fica implícita | arquitetura | fechada (2026-11-23: um processo por canal; um binário; `net`, `core` e dados como bibliotecas; `main` só compõe) |
-| `LSRV-02` | Quantos canais a `1.0.0` abre e como o jogador escolhe? | a lista de canais aparece no launcher e no login; sem número, o teste de dois canais não existe | produto + `wyd-ops` | fechada (2026-11-23: 2 canais no total; 1 na primeira fatia; escolha por lista no launcher/login) |
-| `LSRV-03` | O que `ready` significa: socket aberto, banco alcançável ou tick rodando? | `wyd-ops` usa prontidão para liberar tráfego; prontidão errada derruba jogador em deploy | `wyd-ops` + arquitetura | fechada (2026-11-23: socket aceito + banco alcançável + tick rodando; senão 503) |
-| `LSRV-04` | O que acontece no encerramento: drena conexão, salva e sai, ou mata o processo? | o save em lote é de `wyd-db` (`WYDDB-017`, `WYDDB-021`); sem ordem, há perda de estado | `wyd-db` + arquitetura | fechada (2026-11-23: execução, não desenho; gate drena/persiste; `WYDDB-021` dona da sequência; sinal/graça/kill fora do escopo) |
-| `LSRV-05` | Quem completa o handshake CPSock em A1: servidor local novo, harness mínimo, legado de `deprecated/` ou modo de captura no `wyd-server`? | sem peer, o `ECAP` grava bytes mas A1 fica inconclusiva e `LPRT-03` e `LPRT-06` não fecham | arquitetura + `wyd-server`; `wyd-protocol` valida o peer | fechada (2026-11-23: **C, com quarentena**, mas a condição foi **reprovada na medição** — clone limpo não tem o peer, boot exige `MIGRATIONS_DIR` e o gate espera 12000; **A1 passa a depender de A**) |
+| `LSRV-01` | Como o processo é composto (net + core + acesso a dados) e onde termina o `main`? | sem composição definida, cada crate vira um binário e a ordem de inicialização fica implícita | arquitetura | fechada (2026-11-23: um processo por canal; um binário; `net`, `core` e dados como bibliotecas; `main` só compõe) Refletida em `planejamento-1.0.0/wyd-server/docs/proposta-decisoes-server.md`. |
+| `LSRV-02` | Quantos canais a `1.0.0` abre e como o jogador escolhe? | a lista de canais aparece no launcher e no login; sem número, o teste de dois canais não existe | produto + `wyd-ops` | fechada (2026-11-23: 2 canais no total; 1 na primeira fatia; escolha por lista no launcher/login) Refletida em `planejamento-1.0.0/wyd-server/docs/planos/esqueleto-de-ponta-a-ponta.md`. |
+| `LSRV-03` | O que `ready` significa: socket aberto, banco alcançável ou tick rodando? | `wyd-ops` usa prontidão para liberar tráfego; prontidão errada derruba jogador em deploy | `wyd-ops` + arquitetura | fechada (2026-11-23: socket aceito + banco alcançável + tick rodando; senão 503) Refletida em `planejamento-1.0.0/wyd-server/docs/proposta-decisoes-server.md`. |
+| `LSRV-04` | O que acontece no encerramento: drena conexão, salva e sai, ou mata o processo? | o save em lote é de `wyd-db` (`WYDDB-017`, `WYDDB-021`); sem ordem, há perda de estado | `wyd-db` + arquitetura | fechada (2026-11-23: execução, não desenho; gate drena/persiste; `WYDDB-021` dona da sequência; sinal/graça/kill fora do escopo) Refletida em `planejamento-1.0.0/wyd-server/docs/proposta-decisoes-server.md`. |
+| `LSRV-05` | Quem completa o handshake CPSock em A1: servidor local novo, harness mínimo, legado de `deprecated/` ou modo de captura no `wyd-server`? | sem peer, o `ECAP` grava bytes mas A1 fica inconclusiva e `LPRT-03` e `LPRT-06` não fecham | arquitetura + `wyd-server`; `wyd-protocol` valida o peer | fechada (2026-11-23: **C, com quarentena**, condição reprovada na medição; **A1 passa a depender de A**. Formalizada em `ADR-SRV-0001` em 2026-11-25, aprovada pelo dono) Refletida em `planejamento-1.0.0/wyd-server/docs/proposta-decisoes-server.md`. |
 
 **`LSRV-01` — decisão de 2026-11-23.** O `wyd-server` é **um processo por canal**, em **um binário**;
 `net`, `core` e o acesso a dados entram como bibliotecas, e o `main` só compõe, lê configuração e
@@ -49,7 +50,7 @@ Entra em loopback, fora de produção, com **versão e hash** na ficha, sem cóp
 do peer marcados como `H`; não se conclui comportamento do servidor novo a partir dele.
 
 **A1 autorizada em 2026-11-23 (resposta A).** Não é nova lacuna: o dono autorizou implementar o peer da
-opção A com handshake mínimo local, o `ECAP` e a CLI, e executar a captura A1. `LPRT-03` continua aberta
+opção A com handshake mínimo local, o `ECAP` e a CLI, e executar a captura A1. `LPRT-03` continua bloqueada
 até a captura completa e a segunda leitura; `LPRT-06` continua dependente das capturas B/C e do seed
 sintético. A contagem do sistema permanece **5 = 0/0/5**.
 

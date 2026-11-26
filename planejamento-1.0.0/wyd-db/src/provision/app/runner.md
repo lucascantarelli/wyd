@@ -3,10 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3, §5 e §6; `ADR-DB-0001` item 3
 > Revisado em: 2026-11-18
+**Sem arquivo no repositório:** `src/provision/app/runner.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/provision/app/runner.rs` — o fluxo
+**Sem arquivo no repositório:** `src/provision/app/runner.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ## 1. Responsabilidade
 

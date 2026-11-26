@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Bloco numérico do `gameconfig.txt` na ordem do arquivo: uma linha por posição `(seção, bloco, linha)`, sem
 nome de coluna para cada número.
@@ -62,4 +63,4 @@ tabela de import puro.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

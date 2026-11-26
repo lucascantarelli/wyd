@@ -22,6 +22,7 @@ fixa o que **a suíte** não pode violar, e cada regra diz como a violação apa
 (`CAP-08`), os dois sem banco ([../index.md](../index.md) §2).
 
 ## 1. As regras
+**Sem arquivo no repositório:** `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | # | Regra | Violação aparece como |
 |---|---|---|

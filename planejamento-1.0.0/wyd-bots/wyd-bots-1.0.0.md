@@ -41,6 +41,8 @@ Ele não substitui teste de unidade nem de contrato: é o nível mais alto da pi
 | B4 | limiar de carga e o que reprova | bots → QA | perfil, duração e limiar medido/congelado; ao atingir, parar, drenar e reportar | número medido, não prometido | **política decidida** `Q-BOT-3` = A (2026-11-23); **`LBOT-03` aberta como medição** |
 | B5 | isolamento entre execuções | bots garante | ambiente descartável por execução | sem estado global entre cenários | **decidido** `LBOT-02` (`Q-BOT-2` = A, 2026-11-23): banco recriado por execução, seed reaplicado |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-BOT` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (6 `RF-BOT` + 5 `RNF-BOT`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LBOT-01`/`LBOT-02`/`LBOT-04` fechadas; `LBOT-03` aberta como medição.
+
 ## 4. Estado medido (`V`, 2026-11-22)
 
 | Medida | Valor | Comando |
@@ -73,6 +75,5 @@ artefato) fechou em 2026-11-23 por **regra vigente**: o item 4 do gate (§6) já
 5. Nenhum segredo de jogador em configuração de bot.
 
 ## 7. Próximas páginas
-
 `docs/arquitetura/fronteira.md`, `docs/specs/cenarios.md`, `docs/planos/plano-de-testes.md` e
 `docs/roadmap/`.

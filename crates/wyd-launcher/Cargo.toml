@@ -1,0 +1,29 @@
+# Primeiro módulo do launcher: verificação do manifesto do patch.
+# Escopo de `LCLI-02` (decidida em conteúdo em 2026-11-25, opção A) e do ADR-LCH-0001.
+# Canonização RFC 8785 (`LLCH-01`) em `src/canon.rs` (vetor do RFC em `tests/rfc8785.rs`) e
+# verificação Ed25519 destacada (`LLCH-03`) em `src/signature.rs` (fixture em
+# `tests/fixtures/assinatura/`). Assinar e publicar segue sendo do `wyd-ops`.
+[package]
+name = "wyd-launcher"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[dependencies]
+ed25519-dalek = "2.2.0"
+serde = { version = "1.0.229", features = ["derive"] }
+# `float_roundtrip`: sem ele o `serde_json` devolve f64 com 1 ulp de erro em entradas como
+# `333333333.33333329`, e a canonização RFC 8785 sairia diferente do vetor do RFC.
+serde_json = { version = "1.0.154", features = ["float_roundtrip"] }
+sha2 = "0.10.9"
+thiserror = "2.0.21"
+
+[dev-dependencies]
+# Validação do schema publicado e ciclo completo de assinatura.
+regex = "1.13.1"
+wyd-ops-signer = { path = "../wyd-ops-signer" }
+tempfile = "3.27.0"
+
+[lints.rust]
+unsafe_code = "forbid"

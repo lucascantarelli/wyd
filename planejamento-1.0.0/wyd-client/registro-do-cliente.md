@@ -75,6 +75,43 @@ Comando:
 find wyd-client/files -type f | awk -F. '{n=NF>1?tolower($NF):"(sem)"; c[n]++} END{for(k in c) print c[k], k}' | sort -rn
 ```
 
+## 5.1 Lista fechada do patch da 1.0.0 (`LCLI-02`, 2026-11-25)
+
+`LCLI-02` fechou em 2026-11-25 pela opção A do bloco de decisão: **dados + launcher próprio**, sem
+binário de terceiro. A tabela abaixo é a entrada do manifesto do patch
+(`planejamento-1.0.0/wyd-launcher/docs/specs/patch-1.0.0.json`, formato do `ADR-LCH-0001`); cada linha
+foi medida nesta máquina em 2026-11-25 com `sha256sum`. A tabela é declarada **antes** do bloco de
+comando de §5 porque é ela que fixa o conteúdo do patch; o comando de §5 continua sendo o da
+distribuição por extensão.
+
+| # | Caminho no cliente | Papel | Origem | Bytes | `sha256` medido |
+|---|---|---|---|---:|---|
+| 1 | `client/UI/strdef.bin` | tabela de strings binária | terceiro (base medida) | 255.992 | `26a6140b9a31258b018e17c53ca47df17c532e3ae362d73ba6c764d38686a81f` |
+| 2 | `client/UI/strdef.txt` | tabela de strings legível | terceiro (base medida) | 56.792 | `295cab75ab23f371d28d1bd2a2a462098d1cc8244e819b4e3f8fd684b31ba347` |
+| 3 | `client/UI/UI_strdef.bin` | tabela de strings da UI | terceiro (base medida) | 56.324 | `af5f22b80ee4333dd52b603eb48cf84477e7e830b1a790727709e4e8fcdbdb89` |
+
+**O que o patch entrega.** Os três arquivos byte a byte: o patch da `1.0.0` fixa a base de tabelas
+contra a qual o servidor foi construído, e não uma tabela modificada. Tabela modificada — nome novo de
+item, skill ou mob — só existe quando houver conteúdo novo na área de conteúdo (`M21`) e passa pela
+mesma verificação antes de entrar. Nenhum executável de terceiro entra no pacote; o launcher é peça
+própria.
+
+**Versionamento.** `version` é a versão do patch (`1.0.0`), `min_version` é `1.0.0`, `channel` é
+`stable` e `client_build` é o `sha256` do `WYD.exe` alvo (`Q-PRT-1`/`LPRT-09`): patch aplicado sobre
+outro build é recusado pelo manifesto. O campo `url` fica ausente enquanto não houver host de release
+(`OPS-04`) e o manifesto não é assinado até `LLCH-03`; nem um nem outro impedem a verificação de
+integridade da lista.
+
+**Verificação.** `crates/wyd-launcher` lê o manifesto (`src/manifest.rs`) e compara tamanho e `sha256`
+de cada arquivo (`src/verify.rs`); qualquer divergência recusa o patch inteiro e o relatório diz qual
+arquivo e por quê. Os testes estão em `tests/manifesto.rs` (fixtures centralizados em `tests/fixtures/`,
+com hash divergente, tamanho divergente e arquivo ausente) e `tests/patch_1_0_0.rs`, que verifica este
+manifesto contra a árvore local quando ela existe.
+
+**O que isso não libera.** A lista é metadado; a distribuição segue congelada por `LCLI-05`, que espera
+a evidência do titular para `Q-IP-1`/`Q-IP-2`. Fechar `LCLI-02` decide **o que** o patch entrega e como
+verifica; não autoriza publicá-lo.
+
 ## 6. O que esta medição prova — e o que não prova
 
 | Prova | Não prova |

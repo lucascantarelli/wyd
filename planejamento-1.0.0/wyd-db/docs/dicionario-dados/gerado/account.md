@@ -85,4 +85,4 @@ Trigger `trg_account_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0005-game-account.md` — arquivo `0005_game_account.sql`.
+Forma (dona): `migrations/0005_game_account.md` — arquivo `0005_game_account.sql`.

@@ -50,15 +50,15 @@ que tem o privilégio, e ele existe em `sistema_pg` (`CAP-09`).
 | banco | PostgreSQL 17 descartável, provisionado e com a série aplicada |
 | papéis | os **seis** de `../../docs/arquitetura/seguranca.md` §"Papéis do banco" — `wyd_owner`, `wyd_migrator`, `wyd_game`, `wyd_portal`, `wyd_admin`, `wyd_read` — existem; `provision apply` os cria ou ajusta (`../../docs/arquitetura/implantacao.md` §1, passo 2). Sem eles o cenário falha dizendo qual falta |
 | DSN | a do **papel testado** em cada passo — usar `WYD_DB_URL_TEST` aqui esconde a fronteira |
-| view | a de leitura cruzada existe em `0029-views.md`, aplicada sem `GRANT` novo |
-| auditoria | `ops.audit_log` de `0002-ops-audit.md` com os privilégios do provisionamento e de `0032-admin-grants.md` |
+| view | a de leitura cruzada existe em `0029_views.md`, aplicada sem `GRANT` novo |
+| auditoria | `ops.audit_log` de `0002_ops_audit.md` com os privilégios do provisionamento e de `0032_admin_grants.md` |
 
 ## 4. Como interpretar a falha
 
 - **`permission denied` onde se esperava sucesso:** `GRANT` faltando — defeito do provisionamento ou de
-  `0032-admin-grants.md`.
+  `0032_admin_grants.md`.
 - **Sucesso onde se esperava recusa:** privilégio a mais; é falha de segurança, não de teste.
-- **View inexistente:** `0029-views.md` não aplicada, ou o nome mudou sem atualizar a página da view.
+- **View inexistente:** `0029_views.md` não aplicada, ou o nome mudou sem atualizar a página da view.
 - **`UPDATE` na auditoria aceito:** privilégio de escrita sobrando — o cenário falha mesmo que o banco
   "esteja funcionando".
 
@@ -70,8 +70,8 @@ que tem o privilégio, e ele existe em `sistema_pg` (`CAP-09`).
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|
-| quem concede o privilégio de auditoria: o provisionamento ou `0032-admin-grants.md`? | o cenário precisa saber qual concessão revogar para provar a recusa; a página lista os dois | autor do alvo |
-| qual coluna a view de leitura cruzada expõe? | `0029-views.md` fixa a view; a lista de colunas não está copiada aqui | `0029-views.md` |
+| quem concede o privilégio de auditoria: o provisionamento ou `0032_admin_grants.md`? | o cenário precisa saber qual concessão revogar para provar a recusa; a página lista os dois | autor do alvo |
+| qual coluna a view de leitura cruzada expõe? | `0029_views.md` fixa a view; a lista de colunas não está copiada aqui | `0029_views.md` |
 
 ## 7. O que este alvo não prova
 

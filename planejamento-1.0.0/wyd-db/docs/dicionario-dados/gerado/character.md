@@ -97,4 +97,4 @@ Trigger `trg_character_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0006-game-character.md` — arquivo `0006_game_character.sql`.
+Forma (dona): `migrations/0006_game_character.md` — arquivo `0006_game_character.sql`.

@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-21) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `gameconfig.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Parâmetro do `gameconfig.txt` por seção e chave — o valor base que o servidor lê no boot.
 
@@ -31,7 +32,7 @@ Parâmetro do `gameconfig.txt` por seção e chave — o valor base que o servid
 - **Saída:** nenhuma.
 - **Entrada por texto, sem FK:** `ops.config_change` (`0002`) descreve o alvo da edição como
   `target_schema` + `target_table` + `target_key`; não existe FK de `ops` para `content`, e a conferência
-  de que o valor aplicado é o registrado é de código (`migrations/0002-ops-audit.md` §7).
+  de que o valor aplicado é o registrado é de código (`migrations/0002_ops_audit.md` §7).
 
 ## Unicidade
 
@@ -62,4 +63,4 @@ Nenhum além da PK. Trigger `trg_game_setting_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

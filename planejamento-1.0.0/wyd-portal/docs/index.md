@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo, produto, QA e operação
 > Dono: arquitetura
 > Base: `wyd-portal-1.0.0.md`; `lacunas.md`; `docs/arquitetura/`; `docs/specs/`; `docs/roadmap/`
-> Revisado em: 2026-11-20
+> Revisado em: 2026-11-25
 
 **Estado:** aceito (2026-11-20)
 
@@ -61,3 +61,33 @@ páginas abaixo respondem perguntas específicas.
 alerta. A comparação das alternativas e o comportamento em falha estão em
 [Cobertura do `wyd-portal`](proposta-decisoes-portal.md); o estado da lacuna continua em `lacunas.md`.
 O portal está em **0 abertas, 0 propostas e 9 fechadas**.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [consumo-do-banco](arquitetura/consumo-do-banco.md)
+- [fronteira](arquitetura/fronteira.md)
+- [monitoramento](arquitetura/monitoramento.md)
+- [rotas-e-permissoes](arquitetura/rotas-e-permissoes.md)
+
+### arquitetura/adr
+
+- [ADR-POR-0001 — Leilão: BFF fecha, wyd-ops agenda/alerta](arquitetura/adr/adr-por-0001-leilao-bff.md)
+- [ADRs — `wyd-portal`](arquitetura/adr/index.md)
+
+### planos
+
+- [unitário + contrato + integração](planos/plano-de-testes.md)
+
+### roadmap
+
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [analise-do-prompt](specs/analise-do-prompt.md)
+- [requisitos](specs/requisitos.md)

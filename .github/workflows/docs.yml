@@ -2,6 +2,8 @@ name: docs
 
 on:
   push:
+    # O job `publicar` só roda em push; fora de `develop`/`main` o ambiente `github-pages`
+    # recusa o deploy. PR de feature continua verificando pelo evento `pull_request`.
     branches: [develop, main]
     paths:
       # A árvore de planejamento inteira, não uma lista de arquivos: o gate monta páginas de

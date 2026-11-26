@@ -75,10 +75,10 @@ sem carimbo", porque nada no schema amarra os dois.
 ## Papéis
 
 - **Escreve:** `wyd_game` — `SELECT, INSERT, UPDATE, DELETE` herdados do default privilege de `game`
-  (`0001-bootstrap.md` §7). Nenhum seed cria progresso: a escrita é do servidor em runtime.
+  (`0001_bootstrap.md` §7). Nenhum seed cria progresso: a escrita é do servidor em runtime.
 - **Leem:** `wyd_game`; o portal não tem `USAGE` em `game` e depende da view de `0029` (sem permissão
   concedida, decisão de 2026-11-21). `wyd_admin` não recebe esta tabela em `0032`.
 
 ## Migration
 
-Forma (dona): `migrations/0028-game-quests-events.md` — arquivo `0028_game_quests_events.sql`.
+Forma (dona): `migrations/0028_game_quests_events.md` — arquivo `0028_game_quests_events.sql`.

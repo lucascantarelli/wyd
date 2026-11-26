@@ -53,4 +53,4 @@ Nenhum além da PK: a tabela tem uma linha e é lida pela chave.
 
 ## Migration
 
-Forma (dona): `migrations/0001-bootstrap.md` — arquivo `0001_bootstrap.sql`.
+Forma (dona): `migrations/0001_bootstrap.md` — arquivo `0001_bootstrap.sql`.

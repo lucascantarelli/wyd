@@ -71,4 +71,4 @@ seria mentira sobre o segundo ambiente.
 
 ## Migration
 
-Forma (dona): `migrations/0007-game-session.md` — arquivo `0007_game_session.sql`.
+Forma (dona): `migrations/0007_game_session.md` — arquivo `0007_game_session.sql`.

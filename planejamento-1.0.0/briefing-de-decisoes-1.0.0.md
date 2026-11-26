@@ -19,6 +19,11 @@ de **foco** (`Q-FOCO-3`, `Q-FOCO-4`) e as **2** `Q-BLK` do piloto estão na pág
 autorizada em 2026-11-23 e a implementação é a próxima ação. Nenhuma
 fixture, fórmula, coeficiente, número de balanceamento, dado de jogo ou conteúdo de cliente é criado aqui.
 
+> **Atualização de 2026-11-25:** o ponto de entrada único das decisões pendentes é a
+> [pauta de decisões](wyd-ops/docs/pauta-de-decisoes-pendentes.md). Este briefing descreve o estado de
+> 2026-11-23 e não é mais o índice das perguntas abertas; a frase que dizia que o `wyd-ops` não tem
+> `lacunas.md` está superada pelo registro de 2026-11-25 em [lacunas.md](wyd-ops/docs/lacunas.md).
+
 ## 0. Como ler
 
 - Marcas: `V` (verificado por arquivo ou comando, com data), `H` (hipótese, com a lacuna que a fecha),
@@ -48,7 +53,7 @@ A e `LAC-POR-09` = A:
 | Sistema | Lacunas | Abertas | Propostas | Fechadas | Externas | IDs não fechados |
 |---|---:|---:|---:|---:|---:|---|
 | `wyd-protocol` | 20 | 2 | 0 | 18 | 0 | `LPRT-03`, `LPRT-06` |
-| `wyd-client` | 5 | 2 | 1 | 2 | 0 | `LCLI-02`, `LCLI-03`, `LCLI-05` |
+| `wyd-client` | 5 | 2 | 0 | 3 | 0 | `LCLI-03`, `LCLI-05` |
 | `wyd-net` | 4 | 1 | 0 | 3 | 0 | `LNET-01` |
 | `wyd-core` | 4 | 0 | 0 | 4 | 0 | — |
 | `wyd-sim` | 4 | 0 | 0 | 4 | 0 | — |
@@ -59,12 +64,13 @@ A e `LAC-POR-09` = A:
 | `wyd-launcher` | 4 | 0 | 0 | 4 | 0 | — |
 | `wyd-bots` | 4 | 1 | 0 | 3 | 0 | `LBOT-03` |
 | `wyd-docs` | 14 | 0 | 0 | 14 | 0 | — |
-| **Total** | **118** | **6** | **1** | **108** | **3** | **7 não fechados** |
+| **Total** | **118** | **6** | **0** | **109** | **3** | **6 não fechados** |
 
-**Somas conferidas:** `118 = 6 + 1 + 108 + 3`; os **7 não fechados** são `6 abertos + 1 proposta`.
-Desses 7, **0 têm pergunta de desenho isolada aguardando resposta** — a de `LCLI-02` existe, com
-recomendação A, mas depende da liberação de direitos —, **2 são medições com política já
-decidida** (`LNET-01`, `Q-NET-1` = A; `LBOT-03`, `Q-BOT-3` = A) e **5 não são pergunta técnica**
+**Somas conferidas:** `118 = 6 + 0 + 109 + 3`; os **6 não fechados** são `6 abertos + 0 proposta`.
+Desses 6, **0 têm pergunta de desenho isolada aguardando resposta** — a de `LCLI-02` foi executada em
+2026-11-25 —, **2 são medições com política já
+decidida** (`LNET-01`, `Q-NET-1` = A; `LBOT-03`, `Q-BOT-3` = A) e **4 não são pergunta técnica**
+(`LPRT-03`, `LPRT-06`, `LCLI-03`, `LCLI-05`)
 (`LPRT-03`, `LPRT-06`, `LCLI-02`, `LCLI-03`, `LCLI-05`, explicados em §4). `wyd-ops` não tem `lacunas.md` e não entra na soma,
 como em `wyd-1.0.0.md` §6.1.
 
@@ -175,7 +181,7 @@ A resposta seguinte do `sim`, `Q-SIM-2`, foi registrada em §3.2.
 registrada junto do `content_version` usado no cálculo.
 
 **Motivo medido.** `game.character` já carrega `content_version SMALLINT NOT NULL` com FK para
-`content.content_version` (`wyd-db/migrations/0006-game-character.md` §6.1, linhas 70 e 77). O contrato
+`content.content_version` (`wyd-db/migrations/0006_game_character.md` §6.1, linhas 70 e 77). O contrato
 `X4` está decidido como função pura e determinística (`wyd-1.0.0.md` §7.3), e o fixture de `LSIM-03`
 precisa de um campo de versão (`wyd-sim/docs/proposta-decisoes-sim.md` §4, `Q-SIM-3`). Sem versão
 própria, mudar código sem mudar conteúdo fica invisível; sem nenhuma versão, o cálculo antigo não é
@@ -260,7 +266,7 @@ para ser auditável e assinável por inteiro.
 **Motivo medido.** O contrato L1 exige arquivo publicado com hash por arquivo
 (`wyd-launcher-1.0.0.md:33`) e `X11` estava em lacuna (`wyd-1.0.0.md:592`); o portal já publica
 `portal.launcher_release` com `channel`, `version`, `manifest_url`, `manifest_sha256` e `min_version`
-(`0030-portal-content.md:172–203`). O legado tem um manifesto de texto v1 com `build`, `protocol` e
+(`0030_portal_content.md:172–203`). O legado tem um manifesto de texto v1 com `build`, `protocol` e
 hash/tamanho/caminho por linha (`deprecated/crates/wyd-launcher/core/src/manifest.rs:16,28–31`), mas
 não tem canal, `min_version`, URL nem assinatura e não pode ser copiado (`AGENTS.md` §5, item 2).
 
@@ -312,7 +318,7 @@ launcher; a rota lê `game.server_channel` (capacidade, manutenção, papel, `st
 `game.v_live_session`; o launcher gera o `serverlist.bin` a partir da última lista boa.
 
 **Motivo medido.** O banco já tem a grade do cliente — `group_id` 0–9, `channel` 0–10, `status_url`,
-`host`, `maintenance`, `enabled` (`0007-game-session.md:50–74`) — e o portal planeja `/admin/canais`
+`host`, `maintenance`, `enabled` (`0007_game_session.md:50–74`) — e o portal planeja `/admin/canais`
 lendo/escrevendo `game.server_channel` com auditoria (`rotas-e-permissoes.md:76`; `RF-POR-010`).
 `LSRV-02` fixou 2 canais e escolha por lista no launcher (`wyd-server/lacunas.md:28`). O legado já gerava
 `serverlist.bin` no formato 10 × 11 × 64 B (`deprecated/crates/wyd-launcher/core/src/serverlist.rs:3–13`),
@@ -449,11 +455,11 @@ pergunta de desenho; o que falta é medição, execução ou direito.
 
 | ID | Por que não é pergunta técnica | O que falta | O que desbloqueia |
 |---|---|---|---|
-| `LPRT-03` | medição de fio: origem da `KeyWord` no handshake | captura A1 datada + segunda leitura | `header.md`, `enquadramento.md` e `keyword-e-checksum.md`; passo 1 do esqueleto |
+| `LPRT-03` | medição de fio: origem da `KeyWord` no handshake | captura A1 datada + segunda leitura | as páginas de fio `header.md`, `enquadramento.md` e `keyword-e-checksum.md` (ainda **não escritas**); passo 1 do esqueleto |
 | `LPRT-06` | medição de fio: encoding e terminador de texto | captura B/C com conta sintética (`seeds/dev.sql`) | nome de personagem e chat; passo 3 do esqueleto |
 | `LCLI-02` | depende da lista do patch e de `Q-IP-1`/`Q-IP-2` (direitos) | inventário do patch e liberação de direitos | entrada do manifesto (`LLCH-01`) e patch |
 | `LCLI-03` | é o **nome** do QA que assina a segunda leitura; D6 já decidiu o papel | primeira ficha assinada (QA: **Lucas Cantarelli**, dono do produto, que não é o operador; o nome do operador entra na ficha) | segunda leitura da captura |
-| `LCLI-05` | jurídico (`Q-IP-1`–`Q-IP-6`), sem recomendação técnica | responsável nominal (**Lucas Cantarelli**), distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas; `Q-IP-1`/`Q-IP-2` com pedido externo iniciado, inventário e pacote prontos, pedido não enviado e sem evidência; **segue proposta**; `LCLI-02` aberta | patch, release e publicação de conteúdo do cliente |
+| `LCLI-05` | jurídico (`Q-IP-1`–`Q-IP-6`), sem recomendação técnica | responsável nominal (**Lucas Cantarelli**), distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas; `Q-IP-1`/`Q-IP-2` com pedido externo iniciado, inventário e pacote prontos, pedido não enviado e sem evidência; **segue proposta**; `LCLI-02` fechada em 2026-11-25 | patch, release e publicação de conteúdo do cliente |
 
 `LPRT-03` fecha com a captura A1; `LPRT-06` depende das capturas B/C e do seed sintético. Até lá, as
 duas continuam `abertas` e sem valor suposto (`wyd-1.0.0.md` §6.4).
@@ -518,7 +524,7 @@ Critério: quantas lacunas fecham e quantas frentes/perguntas param de esperar p
 | concluída | `LAC-POR-09` = A | `LAC-POR-09` | F9 do portal | `wyd-ops` | resposta explícita do dono |
 | concluída | A1 = A | — (autorização; `LPRT-03` só fecha após captura e segunda leitura) | `LPRT-03`; prepara `LPRT-06`, `X12` e a onda C | implementação | resposta explícita do dono em 2026-11-23 |
 
-**Sequência de respostas pendentes:** **nenhuma resposta do dono**; A1 foi autorizada em 2026-11-23 e a
+**Sequência de respostas pendentes:** **dez recomendações aceitas em 2026-11-25** — `LPRT-03`, `LPRT-06`, `A11`, `A20`, `M21`, `LBOT-03`, `LNET-01`, `LCLI-02`, `LCLI-03` e `LCLI-05`, opção A de cada bloco, com o aceite nos `lacunas.md` donos; A1 foi autorizada em 2026-11-23 e a
 próxima ação é implementação, não pergunta. `Q-LCH-1` = A, `Q-LCH-2` = A, `Q-LCH-3` = A, `Q-LCH-4` = A,
 `Q-BOT-1` = A, `Q-BOT-2` = A, `Q-BOT-3` = A, `Q-NET-1` = A, `Q-SIM-2` = A, `Q-SIM-3` = A, `LAC-POR-09` = A
 e A1 = A já foram respondidas; `LBOT-03` e `LNET-01` seguem abertas como medição.
@@ -535,8 +541,9 @@ continua dependente das capturas B/C e do seed sintético; `LNET-01` e `LBOT-03`
 medição.
 
 **Estado após `LAC-POR-09` = A:** `118 = 6 abertas + 1 proposta + 108 fechadas + 3 externas`; os **7 não
-fechados** são `LNET-01`, `LBOT-03`, `LPRT-03`, `LPRT-06`, `LCLI-02`, `LCLI-03` e `LCLI-05` (6 abertas +
-1 proposta), além das 3 externas `A11`, `A20`, `M21`.
+fechados** eram `LNET-01`, `LBOT-03`, `LPRT-03`, `LPRT-06`, `LCLI-02`, `LCLI-03` e `LCLI-05` (6 abertas +
+1 proposta), além das 3 externas `A11`, `A20`, `M21`. **Depois da execução de `LCLI-02` (2026-11-25):**
+`118 = 6 abertas + 0 proposta + 109 fechadas + 3 externas`.
 
 ## 7. Contagens e registro
 
@@ -553,10 +560,11 @@ após Q-SIM-3 = A, `118 = 13 + 2 + 100 + 3`; após Q-SIM-2 = A, `118 = 12 + 2 + 
 `118 = 11 + 2 + 102 + 3`; após Q-BOT-2 = A, `118 = 10 + 2 + 103 + 3`; após Q-LCH-1 = A,
 `118 = 9 + 2 + 104 + 3`; após Q-LCH-3 = A, `118 = 8 + 2 + 105 + 3`; após Q-LCH-2 = A,
 `118 = 7 + 2 + 106 + 3`; após Q-LCH-4 = A, `118 = 6 + 2 + 107 + 3`; após `LAC-POR-09` = A,
-`118 = 6 + 1 + 108 + 3`. Os 7 não fechados são `6 abertas + 1 proposta`; `0 têm pergunta de desenho
-isolada pendente` (a de `LCLI-02` depende de direitos), `2 são medições com política decidida` e `5 não
-são pergunta técnica`. **`Q-NET-1` = A não alterou as
-contagens**; `LAC-POR-09` = A foi o único delta `0 / −1 / +1`.
+`118 = 6 + 1 + 108 + 3`; após a execução de `LCLI-02` (2026-11-25), `118 = 6 + 0 + 109 + 3`. Os 6 não
+fechados são `6 abertas + 0 proposta`; `0 têm pergunta de desenho isolada pendente` (a de `LCLI-02` foi
+executada), `2 são medições com política decidida` e `4 não são pergunta técnica`. **`Q-NET-1` = A não
+alterou as contagens**; `LAC-POR-09` = A foi o último delta de proposta e `LCLI-02` o de fechamento
+(`0 abertas / −1 proposta / +1 fechada`).
 
 **A1 = A em 2026-11-23** não alterou nenhuma contagem: é autorização de implementação, não fechamento de
 lacuna. `LPRT-03` só entra em fechadas depois da captura completa e da segunda leitura; `LPRT-06` continua
@@ -567,7 +575,7 @@ produto, que **não é o operador**; o operador entra na ficha) e a responsabili
 (`LCLI-05`), com distribuição congelada. Também decidiu as políticas de `Q-IP-3`–`Q-IP-6` e iniciou o
 pedido externo de `Q-IP-1`/`Q-IP-2`; o inventário item a item (`wyd-client/docs/specs/inventario-da-arvore.md`)
 e o pacote do pedido (`wyd-client/docs/specs/pedido-ao-titular.md`) existem, mas o pedido não foi enviado. Nenhuma dessas decisões altera as contagens: `LCLI-03` só fecha com a primeira ficha
-assinada e `LCLI-05` só fecha com evidência do titular; `LCLI-05` continua proposta e `LCLI-02` aberta.
+assinada e `LCLI-05` só fecha com evidência do titular; `LCLI-05` continua proposta e `LCLI-02` foi executada e fechada em 2026-11-25.
 
 **Onde cada fechamento foi registrado.**
 
@@ -608,7 +616,7 @@ do job de CI, do manifesto, da assinatura, da lista de canais, do instalador ou 
 | `LAC-POR-09` | A — BFF fecha; `wyd-ops` agenda e alerta; falha é reentrante | A, respondida pelo dono em 2026-11-23; `LAC-POR-09` fechada |
 | A1 | A — peer A com handshake mínimo local + `ECAP` + CLI + captura | A, respondida pelo dono em 2026-11-23; implementação e captura pendentes; `LPRT-03` e `LPRT-06` continuam abertas |
 | `Q-IP-3`–`Q-IP-6` | A — repo público só com hash/metadado/referência; registro por item; GPL v2 com ativos excluídos; nenhuma marca/screenshot até autorização | A, respondidas pelo dono em 2026-11-23; políticas registradas na página própria; `LCLI-05` segue proposta |
-| `Q-IP-1`/`Q-IP-2` | pedido de proveniência e autorização escrita ao titular **iniciado**; inventário item a item e pacote prontos, pedido **não enviado**; `Q-IP-2` = **B (árvore inteira)**, decidido em 2026-11-23 | não é resposta de evidência; sem titular, `LCLI-05` e `LCLI-02` continuam abertas/proposta |
+| `Q-IP-1`/`Q-IP-2` | pedido de proveniência e autorização escrita ao titular **iniciado**; inventário item a item e pacote prontos, pedido **não enviado**; `Q-IP-2` = **B (árvore inteira)**, decidido em 2026-11-23 | não é resposta de evidência; sem titular, `LCLI-05` continua proposta (a lista de `LCLI-02` foi entregue em 2026-11-25) |
 
 As duas linhas de `Q-IP` são registro da frente de direitos e **não alteram a contagem das 16 perguntas**
 acima; `Q-IP-1`/`Q-IP-2` seguem sem resposta do titular, com `Q-IP-2` no escopo B (árvore inteira).

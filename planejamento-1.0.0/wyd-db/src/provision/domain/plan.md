@@ -3,10 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3 e §5; `ADR-DB-0001` itens 3 e 4
 > Revisado em: 2026-11-18
+**Sem arquivo no repositório:** `src/provision/domain/plan.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
 
 # `src/provision/domain/plan.rs` — a decisão
+**Sem arquivo no repositório:** `src/provision/domain/plan.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 ## 1. Responsabilidade
 

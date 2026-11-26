@@ -71,4 +71,4 @@ Trigger `trg_personal_shop_set_updated_at`.
 
 ## Migration
 
-Forma (dona): `migrations/0011-game-economy.md` — arquivo `0011_game_economy.sql`.
+Forma (dona): `migrations/0011_game_economy.md` — arquivo `0011_game_economy.sql`.

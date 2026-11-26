@@ -1,7 +1,7 @@
 > Pergunta: "o que descreve o mundo — mapas, NPCs, regiões, spawns e rotas — e o que é import do legado?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.21, §5.24; `migrations-checklist.md` §2; `0019-content-world.md`, `0024-content-maps.md`
+> Base: `ddl-confirmado.md` §5.21, §5.24; `migrations-checklist.md` §2; `0019_content_world.md`, `0024_content_maps.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

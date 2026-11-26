@@ -85,10 +85,10 @@ decisão do lote: o catálogo é seed de `0014`.
 - **Escreve:** `wyd_admin` — `GRANT SELECT, INSERT, UPDATE` dado pelo próprio `0034`; **sem `DELETE`**. É a
   diferença declarada do lote: quem move item é o executor (`LAC-POR-01`), não o jogo.
 - **Não escreve:** `wyd_game` tem `INSERT`, `UPDATE` e `DELETE` **revogados** pelo `0034`; sobra o `SELECT`
-  herdado do default privilege de `game` (`0001-bootstrap.md` §7) — o jogo lê a custódia, não a move.
+  herdado do default privilege de `game` (`0001_bootstrap.md` §7) — o jogo lê a custódia, não a move.
 - **Lê:** `wyd_admin`, `wyd_game` e `wyd_read`.
 
 ## Migration
 
-Forma (dona): `migrations/0034-portal-market.md` — arquivo `0034_portal_market.sql`; DDL em
+Forma (dona): `migrations/0034_portal_market.md` — arquivo `0034_portal_market.sql`; DDL em
 `ddl-confirmado.md` §5.34.

@@ -82,6 +82,9 @@
 
 ## Árvore de código e de teste
 
+Nenhum arquivo desta árvore **não existe** hoje no repositório (`contrato.rs`, `acoes.rs`,
+`idempotencia.rs`, `papel.rs` entre outros): o crate do `wyd-admin` não foi criado.
+
 ```text
 src/
 ├── main.rs          # composition root: config, pool, router

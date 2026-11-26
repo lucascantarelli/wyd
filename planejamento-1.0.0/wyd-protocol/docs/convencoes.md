@@ -71,14 +71,14 @@ Número sem fonte e data é hipótese. Formato:
 Números do legado descrevem o que a reescrita substitui; não são meta da `1.0.0`. Os **198 são o
 baseline do legado**, piso de cobertura do catálogo novo — não o total alvo nem o total publicado. O
 escopo foi decidido em `LPRT-01` (cobertura integral do inventário, entregue em versões menores até a
-`1.0.0`); o total publicado é o que `docs/wire/tabela-de-opcodes.md` medir do catálogo gerado, com
-versão e data.
+`1.0.0`); o total publicado é o que `docs/wire/tabela-de-opcodes.md` (a escrever) medir do catálogo gerado, com
+versão e data — a página **ainda não existe** e é teto de `wyd-protocol-1.0.0.md` §4.
 
 ## Links e citações
 
 | Situação | Como aparece |
 |---|---|
-| outra página desta árvore | link relativo: `../wire/header.md` |
+| outra página desta árvore | link relativo: `goldens/como-capturar.md` |
 | código do crate | texto simples: `crates/wyd-protocol/src/wire/header.rs:18` |
 | página planejada | caminho em `code`, sem link: `wire/tabela-de-opcodes.md` |
 | golden | ID em `code` + página que o descreve |

@@ -81,6 +81,33 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: skill_principal
+    attributes:
+      label: Skill obrigatória para executar
+      description: Selecione a skill que o agente deve carregar antes de começar. A lista é fechada e conferida contra .agents/skills e as cloud skills do projeto.
+      options:
+        - auditar-planejamento
+        - documentation-writer
+        - finishing-a-development-branch
+        - frontend-design
+        - github-actions-docs
+        - planejar-sistema
+        - python-testing-patterns
+        - skill-creator
+        - writing-plans
+    validations:
+      required: true
+
+  - type: textarea
+    id: skills_complementares
+    attributes:
+      label: Skills complementares
+      description: Opcional. Liste outras skills da mesma lista fechada, uma por linha, e por que são necessárias.
+      placeholder: auditar-planejamento + documentation-writer
+    validations:
+      required: false
+
   - type: checkboxes
     id: confirmacoes
     attributes:

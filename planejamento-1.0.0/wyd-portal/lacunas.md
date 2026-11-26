@@ -5,7 +5,7 @@
 > Revisado em: 2026-11-23
 
 **Estado:** aceito (2026-11-20); armaria e mercado abriram `LAC-POR-07` a `LAC-POR-09` em 2026-11-22.
-As três fecharam; `LAC-POR-09` fechou em 2026-11-23 pela opção **A** — **0 abertas, 0 propostas, 9
+As três fecharam; `LAC-POR-09` fechou em 2026-11-23 pela opção **A** — **0 bloqueadas, 9
 fechadas**.
 
 Registro único de lacuna do `wyd-portal`. Lacuna sem dono não entra; lacuna fechada leva data e
@@ -18,11 +18,10 @@ redefinem.
 
 | Estado | Quantas | Quais |
 |---|---:|---|
-| Aberta | 0 | — |
-| Proposta | 0 | — |
+| Bloqueada | 0 | — |
 | Fechada | 9 | `LAC-POR-01` a `LAC-POR-09` |
 
-Todas as lacunas do portal estão fechadas. `P-POR-08` não é lacuna aberta: é o enriquecimento aditivo
+Todas as lacunas do portal estão fechadas. `P-POR-08` não é lacuna bloqueada: é o enriquecimento aditivo
 de dano/alcance, sem bloquear a F7.
 
 ## 2. Registro das lacunas
@@ -60,7 +59,7 @@ de dano/alcance, sem bloquear a F7.
   nunca autoatendimento do titular (`A20`).
 - **DDL fechado em 2026-11-20:** `A20` reservou nome, colunas conceituais e o `kind` inicial; o lote
   `0031` (`ddl-confirmado.md` §5.20) desenhou colunas, constraints, índices, permissão e revogação, e a
-  página `migrations/0031-portal-mfa.md` está `concluída`. O requisito `RF-POR-013` pode ser implementado
+  página `migrations/0031_portal_mfa.md` está `concluída`. O requisito `RF-POR-013` pode ser implementado
   quando a série for aplicada; a escolha de mecanismo e de dono não foi reaberta.
 - **Opções apresentadas:** (1) confirmar `A20` com autenticador separado em `portal` — **escolhida**;
   (2) reabrir `A20` e usar `game.account` — recusada.
@@ -196,7 +195,7 @@ de dano/alcance, sem bloquear a F7.
 | `LAC-POR-02` | CMS em `portal`, com **três** tabelas: `news`, `banner` e `guide`, com `slug`, estado de publicação e autor. | `docs/arquitetura/consumo-do-banco.md` §5 |
 | `LAC-POR-03` | Versão, notas e **URL do manifesto assinado** em tabela do `portal`; o binário e a assinatura ficam no `wyd-ops`. | `docs/arquitetura/consumo-do-banco.md` §5 |
 | `LAC-POR-04` | Rankings consultam `game` diretamente com `LIMIT` e cache de 60 s no BFF; nenhuma tabela/view materializada nova. | `docs/arquitetura/consumo-do-banco.md` §4 |
-| `LAC-POR-05` | MFA de staff: TOTP em `portal.person_authenticator`, ligado a `portal.person`, obrigatório para `admin`/`moderator`; `member` fora da `1.0.0`. | `docs/specs/requisitos.md` (`RF-POR-013`) |
+| `LAC-POR-05` | MFA de staff: TOTP em `portal.person_authenticator`, ligado a `portal.person`, obrigatório para `admin`/`moderator`; `member` fora da `1.0.0`. | `planejamento-1.0.0/wyd-portal/docs/specs/requisitos.md` §1 (`RF-POR-013`) |
 | `LAC-POR-06` | Telemetria de canal vem da fonte externa: `/metrics` Prometheus do `wyd-server`, coletado pela pilha do `wyd-ops`; o portal consulta a API do Prometheus e mostra “não medido” quando falha. Nenhuma tabela. | `docs/arquitetura/consumo-do-banco.md` §2 |
 | `LAC-POR-08` | Ficha sem número inventado: durabilidade não existe no cliente e não vira coluna; dano e alcance só entram com origem provada. Enquanto não houver captura, `stat_source = 'effect_names'` e a ficha declara a estatística como não medida. | `armaria-e-mercado.md` D1; `docs/specs/requisitos.md` `RF-POR-021`; `docs/roadmap/roadmap.md` F7; `0009` §10 e `ddl-confirmado.md` §5.12 |
 | `LAC-POR-09` | O BFF do portal fecha o leilão vencido, com `SKIP LOCKED`, uma transação por anúncio e `Idempotency-Key` no `wyd-admin`; o `wyd-ops` agenda e alerta. Falha deixa o anúncio `ativo` e reentrante, sem transação nem devolução até o sucesso. | `lacunas.md` §2; `docs/proposta-decisoes-portal.md` §4–§5; `armaria-e-mercado.md` D4; `docs/roadmap/roadmap.md` F9 |
@@ -210,7 +209,7 @@ rota pública nem permissão de banco: acrescentou seis rotas de staff (38–43)
 **Consequência declarada para o `wyd-db`:** as três de CMS mais a tabela de launcher são **4 tabelas
 novas** em `portal`, que não existem nas 92 de `plano-migrations.md` §3. O lote
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 — texto em
-`planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` e `ddl-confirmado.md` §5.15 —, e a série
+`planejamento-1.0.0/wyd-db/migrations/0030_portal_content.md` e `ddl-confirmado.md` §5.15 —, e a série
 passou a **31 arquivos / 97 tabelas** naquela data — hoje **34 arquivos / 109 tabelas**, com os lotes
 `0033` e `0034` de 2026-11-22 —, e as cinco tabelas dos dois adendos estão entre as de DDL fechado. As
 duas contagens citadas aqui concordam com as do `wyd-db`.
@@ -240,6 +239,6 @@ o lote `0034` (`M31`, que fechou `LAC-ADM-07`), e só as quatro views seguem em 
 1. Dono responde a pergunta com a opção escolhida e a data.
 2. A decisão vai para a página dona (`fronteira.md`, `consumo-do-banco.md` ou `rotas-e-permissoes.md`),
    não para este arquivo.
-3. Proposta técnica entra com opções e trade-off e fica `proposta` até o “sim” do dono; sem ele, não
+3. Proposta técnica entra com opções e trade-off e fica `bloqueada` até o “sim” do dono; sem ele, não
    vira `fechada`.
 4. Aqui, a linha muda para `fechada` com data e link da evidência.

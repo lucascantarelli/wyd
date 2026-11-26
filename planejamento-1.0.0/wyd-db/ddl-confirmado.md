@@ -88,26 +88,26 @@ o que ela decide é o **DDL**: qual seção o fecha e o que ainda falta para fec
 | 10 | `0010_game_guild.sql` | `concluída` | §5.13 | — (aprovado e página escrita em 2026-11-20; as quatro tabelas contam) |
 | 11 | `0011_game_economy.sql` | `concluída` | §5.14 | — (aprovado e página escrita em 2026-11-20; as dez tabelas contam) |
 | 12 | `0012_ops_delivery.sql` | `concluída` | §5.16 | — (aprovado e página escrita em 2026-11-20; `M25` fechada na mesma rodada) |
-| 13 | `0013_content_taxonomy.sql` | `concluída` | §5.17 | — (aprovado em 2026-11-20; página `0013-content-taxonomy.md` escrita e conferida) |
-| 14 | `0014_content_item.sql` | `concluída` | §5.18 | — (aprovado em 2026-11-20; página `0014-content-item.md` escrita e conferida) |
-| 15 | `0015_content_skill.sql` | `concluída` | §5.19 | — (aprovado em 2026-11-20; página `0015-content-skill.md` escrita e conferida) |
-| 16 | `0016_seed_taxonomy.sql` | `bloqueada` | — | o DDL de `0013` fechou; falta verificar os 20 sistemas, 6 classes, 13 linhagens e 16 categorias na fonte (`plano-migrations.md` §4) |
+| 13 | `0013_content_taxonomy.sql` | `concluída` | §5.17 | — (aprovado em 2026-11-20; página `0013_content_taxonomy.md` escrita e conferida) |
+| 14 | `0014_content_item.sql` | `concluída` | §5.18 | — (aprovado em 2026-11-20; página `0014_content_item.md` escrita e conferida) |
+| 15 | `0015_content_skill.sql` | `concluída` | §5.19 | — (aprovado em 2026-11-20; página `0015_content_skill.md` escrita e conferida) |
+| 16 | `0016-seed-taxonomy.sql` | `bloqueada` | — | o DDL de `0013` fechou; falta verificar os 20 sistemas, 6 classes, 13 linhagens e 16 categorias na fonte (`plano-migrations.md` §4) |
 | 17 | `0017_seed_item_catalog.sql` | `bloqueada` | — | o DDL de `0014` fechou; faltam as contagens de 2026-11-08/15 recontadas na fonte, antes de escrever as linhas |
-| 18 | `0018_seed_skill_catalog.sql` | `bloqueada` | — | o DDL de `0015` fechou; falta a curadoria de classe e linhagem das 154 skills, que é dado, não DDL |
-| 19 | `0019_content_world.sql` | `concluída` | §5.21 | — (aprovado em 2026-11-20; página `0019-content-world.md` escrita e conferida) |
-| 20 | `0020_seed_world.sql` | `bloqueada` | — | o DDL de `0019` fechou; faltam as contagens de templates, NPCs, lojas e regiões verificadas na fonte |
-| 21 | `0021_content_rules.sql` | `concluída` | §5.22 | — (aprovado em 2026-11-20; página `0021-content-rules.md` escrita e conferida) |
-| 22 | `0022_content_overrides.sql` | `concluída` | §5.23 | — (aprovado em 2026-11-21; página `0022-content-overrides.md` escrita e conferida) |
-| 23 | `0023_seed_rules.sql` | `bloqueada` | — | o DDL de `0021` e o de `0022` fecharam; faltam os valores de refino, gemas, SANC e composição verificados na fonte |
+| 18 | `0018-seed-skill-catalog.sql` | `bloqueada` | — | o DDL de `0015` fechou; falta a curadoria de classe e linhagem das 154 skills, que é dado, não DDL |
+| 19 | `0019_content_world.sql` | `concluída` | §5.21 | — (aprovado em 2026-11-20; página `0019_content_world.md` escrita e conferida) |
+| 20 | `0020-seed-world.sql` | `bloqueada` | — | o DDL de `0019` fechou; faltam as contagens de templates, NPCs, lojas e regiões verificadas na fonte |
+| 21 | `0021_content_rules.sql` | `concluída` | §5.22 | — (aprovado em 2026-11-20; página `0021_content_rules.md` escrita e conferida) |
+| 22 | `0022_content_overrides.sql` | `concluída` | §5.23 | — (aprovado em 2026-11-21; página `0022_content_overrides.md` escrita e conferida) |
+| 23 | `0023-seed-rules.sql` | `bloqueada` | — | o DDL de `0021` e o de `0022` fecharam; faltam os valores de refino, gemas, SANC e composição verificados na fonte |
 | 24 | `0024_content_maps.sql` | `concluída` | §5.24 | — (aprovado em 2026-11-21; página escrita e conferida) |
 | 25 | `0025_content_combat.sql` | `concluída` | §5.25 | — (aprovado em 2026-11-21, com `RESTRICT` no item e teto `1.000.000` em `rate_bps`; página escrita e conferida) |
 | 26 | `0026_content_quests_events.sql` | `concluída` | §5.26 | — (aprovado em 2026-11-21, com `start_minute` e `id` identity na recompensa; página escrita e conferida) |
-| 27 | `0027_seed_quests_events.sql` | `bloqueada` | — | o DDL de `0026` fechou; faltam a cadeia de quests do 7662 e o calendário de eventos verificados (`M19`, senha de dev, está fechada e não é o bloqueio) |
-| 28 | `0028_game_quests_events.sql` | `concluída` | §5.28 | — (aprovado em 2026-11-21; página `0028-game-quests-events.md` escrita e conferida) |
-| 29 | `0029_views.sql` | `concluída` | §5.29 | — (aprovado em 2026-11-21, sem `GRANT` novo; página `0029-views.md` escrita e conferida) |
-| 30 | `0030_portal_content.sql` (adendo) | `concluída` | §5.15 | — (aprovado em 2026-11-20; página `0030-portal-content.md` escrita e conferida) |
-| 31 | `0031_portal_mfa.sql` (adendo) | `concluída` | §5.20 | — (aprovado em 2026-11-20; página `0031-portal-mfa.md` escrita e conferida) |
-| 32 | `0032_admin_grants.sql` | `concluída` | §5.32 | — (decidido em 2026-11-21 em `M27`: só `GRANT`, sem tabela; página `0032-admin-grants.md` escrita e conferida; emendado em 2026-11-22 com os dois `GRANT` da custódia) |
+| 27 | `0027-seed-quests-events.sql` | `bloqueada` | — | o DDL de `0026` fechou; faltam a cadeia de quests do 7662 e o calendário de eventos verificados (`M19`, senha de dev, está fechada e não é o bloqueio) |
+| 28 | `0028_game_quests_events.sql` | `concluída` | §5.28 | — (aprovado em 2026-11-21; página `0028_game_quests_events.md` escrita e conferida) |
+| 29 | `0029_views.sql` | `concluída` | §5.29 | — (aprovado em 2026-11-21, sem `GRANT` novo; página `0029_views.md` escrita e conferida) |
+| 30 | `0030_portal_content.sql` (adendo) | `concluída` | §5.15 | — (aprovado em 2026-11-20; página `0030_portal_content.md` escrita e conferida) |
+| 31 | `0031_portal_mfa.sql` (adendo) | `concluída` | §5.20 | — (aprovado em 2026-11-20; página `0031_portal_mfa.md` escrita e conferida) |
+| 32 | `0032_admin_grants.sql` | `concluída` | §5.32 | — (decidido em 2026-11-21 em `M27`: só `GRANT`, sem tabela; página `0032_admin_grants.md` escrita e conferida; emendado em 2026-11-22 com os dois `GRANT` da custódia) |
 | 33 | `0033_ops_idempotency.sql` | `concluída` | §5.33 | — (decidido em 2026-11-22 em `M30`: uma tabela em `ops`, 7 dias de retenção) |
 | 34 | `0034_portal_market.sql` | `concluída` | §5.34 | — (decidido em 2026-11-22 em `M31`: dez tabelas em `portal` e uma em `game`) |
 
@@ -125,6 +125,7 @@ soma de §1 fica em **34 arquivos e 109 tabelas**.
 ---
 
 ## 3. `0001_bootstrap.sql` — DDL fechado
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Cria os 4 schemas, as permissões de schema, a função de `updated_at` e a linha de versão do
 conteúdo. **Nenhuma tabela de domínio nasce aqui** — é o único arquivo que pode rodar antes de tudo.
@@ -857,7 +858,8 @@ VALUES (1, 0, '127.0.0.1', 'http://127.0.0.1/serv00.htm', NULL,  NULL,  NULL),
 
 **Contrato do port de capacidade — mudou, e não é só de schema.** No legado, **ausência de linha**
 em `channel_capacity` significava permissivo (`ChannelCapacity::permissive()`, 1000 e sem
-manutenção — `docs/rust/03-portas-e-contratos.md`). Fundida a tabela, canal válido **sempre** tem
+manutenção — leitura do legado em
+`deprecated/.agents/prompts/análises/wyd-db/rust/03-portas-e-contratos.md`). Fundida a tabela, canal válido **sempre** tem
 linha (PK própria, mais a FK de `game.session`), e `NULL` só existe no `channel = 0`. O contrato
 passa a ser: (1) linha ausente = canal inexistente, **erro**, nunca permissivo; (2) `max_players`
 nulo = linha de status, que conexão de jogador não consulta; (3) a leitura por `(group_id, channel)`
@@ -962,6 +964,9 @@ Estas não mudam DDL, mas fecham lacunas e viram teste de comportamento:
 
 - **`A13`** — fechar pessoa com conta ativa fecha tudo na mesma transação; não há recusa.
 - **`A18`** — conta nasce só no portal; não existe rota de cadastro no cliente.
+- **`A21`** — a troca de e-mail entra na `1.0.0`: o titular pede autenticado, o token
+  `email_change` vai para o endereço novo, o antigo recebe aviso e a conclusão revoga as sessões do
+  portal como a troca de senha (`M4`); `ux_person_email` continua total.
 - **`B1`** — envio real de e-mail na `1.0.0`, provedor escolhido na onda 6, 3 reenvios/h, TTL e
   templates na mesma onda.
 - **`M19`** — seed de desenvolvimento usa senha fixa `dev-only`, documentada no próprio seed.
@@ -1527,13 +1532,15 @@ conferida contra este texto.
 
 ### 5.13 Lote `0010` — `guild`, `guild_member`, `guild_relation` e `guild_tower` (DDL confirmado em 2026-11-20)
 
+**Sem arquivo no repositório:** `0028-estado-de-jogo.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 !!! note "Aprovado em 2026-11-20"
     O dono aprovou o lote na rodada de perguntas de 2026-11-20, na opção **"Sim, aprovar como está"**,
     depois de escolher as quatro formas de §5.13. O texto abaixo é o DDL confirmado e as quatro tabelas
     entram na conta de §1.
 
 Origem de cada campo: `guilds`/`guild_members` do legado (`0004_guildas.sql`, `H`),
-`guild_relations`/`guild_tower` (`0028_estado_de_jogo.sql`, `H`), `STRUCT_MOB.Guild` e
+`guild_relations`/`guild_tower` (`0028-estado-de-jogo.sql`, `H`), `STRUCT_MOB.Guild` e
 `GuildLevel` e `STRUCT_GUILDINFO` do cliente 7662 (`H`). Não há FK para `content`: zona de guilda é
 `0019`.
 
@@ -1647,15 +1654,17 @@ já conferida contra este texto.
 
 ### 5.14 Lote `0011` — economia: `city`, `item_price`, `personal_shop`, `city_tax_ledger` e as seis de cash (DDL confirmado em 2026-11-20)
 
+**Sem arquivo no repositório:** `0010-economia.sql`, `0028-estado-de-jogo.sql`, `0042-credito-donate.sql`, `0045-donate-debito.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 !!! note "Aprovado em 2026-11-20"
     O dono aprovou o lote na rodada de perguntas de 2026-11-20, na opção **"Sim, aprovar como está"**,
     depois de escolher as quatro formas de §5.14. O texto abaixo é o DDL confirmado e as dez tabelas
     entram na conta de §1.
 
 Origem de cada campo: `city`, `item_price`, `personal_shop` e `city_tax_ledger` do legado
-(`0010_economia.sql`, `H`); `donate_shop_item` e `daily_reward_item` (`0010_economia.sql`, `H`);
-`kingdom_cape_price` e `daily_reward_claim` (`0028_estado_de_jogo.sql`, `H`); `donate_credit`
-(`0042_credito_donate.sql`, `H`) e `donate_debit` (`0045_donate_debito.sql`, `H`). `A19` mantém 6
+(`0010-economia.sql`, `H`); `donate_shop_item` e `daily_reward_item` (`0010-economia.sql`, `H`);
+`kingdom_cape_price` e `daily_reward_claim` (`0028-estado-de-jogo.sql`, `H`); `donate_credit`
+(`0042-credito-donate.sql`, `H`) e `donate_debit` (`0045-donate-debito.sql`, `H`). `A19` mantém 6
 tabelas em `portal` e 4 em `game`; `M17` exige chave de idempotência única.
 
 ```sql
@@ -1888,7 +1897,7 @@ conferida contra este texto.
 !!! note "Aprovado em 2026-11-20"
     O dono aprovou o desenho na rodada de perguntas de 2026-11-20, na opção **"Sim, aprovar o desenho
     como está"**. As quatro tabelas entram na conta de §1 (49 de 96 na época; hoje 109 de 109), a série passa a
-    `0030_portal_content.sql` como 30º arquivo e a página `migrations/0030-portal-content.md` está
+    `0030_portal_content.sql` como 30º arquivo e a página `migrations/0030_portal_content.md` está
     `concluída` no checklist.
 
 **Reafirmado em 2026-11-21:** o lote permanece como está e **não há lote novo** para estas quatro
@@ -2098,7 +2107,7 @@ mas não alcança estas quatro tabelas. Elas são escritas pelo **BFF do portal*
 não dá `USAGE` no schema a `wyd_portal`).
 
 **O que este lote não fecha:** histórico de revisão do texto e prazo de expurgo, listados em
-`migrations/0030-portal-content.md` §11.
+`migrations/0030_portal_content.md` §11.
 
 ### 5.16 Lote `0012` — `ops.delivery_queue` (DDL confirmado em 2026-11-20)
 
@@ -2265,7 +2274,7 @@ migration já conferida contra este texto.
     O dono aprovou as duas escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **chave natural `slug TEXT` como PK** nas quatro tabelas de look-up (`snake_case`,
     2–32 caracteres) e **`item_effect` como tabela de look-up**, com os 55 `EF_*` semeados em `0017`.
-    As cinco tabelas entram na conta de §1 (54 de 96 na época; hoje 55) e a página `migrations/0013-content-taxonomy.md`
+    As cinco tabelas entram na conta de §1 (54 de 96 na época; hoje 55) e a página `migrations/0013_content_taxonomy.md`
     fica `concluída` no checklist.
 
 As cinco tabelas de look-up que o resto do schema `content` referencia — `P-08`: conjunto editável pelo
@@ -2277,7 +2286,7 @@ Forma: chave natural **`slug`** em `snake_case` (2–32 caracteres) como PK — 
 consome já carrega o código: `lineage_code` e o futuro `item_catalog.kind_slug` não precisam de join
 para resolver o nome. Nenhuma tabela daqui tem FK de saída (`plano-migrations.md` §3.1, item 5).
 
-`game_class` é a única com coluna de regra: `mastery_cap`, porque `0008-game-skills.md` §10 manda ler o
+`game_class` é a única com coluna de regra: `mastery_cap`, porque `0008_game_skills.md` §10 manda ler o
 teto de maestria por classe em `content.game_class`. O default `320` é o teto global de
 `ck_character_skill_maestria` — não restringe, e a classe só pode reduzir.
 
@@ -2315,7 +2324,7 @@ CREATE TABLE content.game_system (
 CREATE TABLE content.game_class (
     slug        TEXT NOT NULL,
     name        TEXT NOT NULL,
-    -- Teto de maestria da classe: `0008` manda ler daqui (`0008-game-skills.md` §10). 320 é o teto
+    -- Teto de maestria da classe: `0008` manda ler daqui (`0008_game_skills.md` §10). 320 é o teto
     -- global de `ck_character_skill_maestria`; o default não restringe e a classe só pode reduzir.
     mastery_cap SMALLINT NOT NULL DEFAULT 320,
     enabled     BOOLEAN NOT NULL DEFAULT true,
@@ -2403,7 +2412,7 @@ look-up e `0017` para os 55 `EF_*`, ambos gerados), não de runtime — nenhum p
 
 **O que este lote não fecha:** o conteúdo das cinco tabelas, o vínculo item × efeito (`0014`,
 `effect_names`), o número de categoria no fio, se o cliente o tiver, e a evolução de classe. Lista
-completa em `migrations/0013-content-taxonomy.md` §10.
+completa em `migrations/0013_content_taxonomy.md` §10.
 
 ---
 
@@ -2413,7 +2422,7 @@ completa em `migrations/0013-content-taxonomy.md` §10.
     O dono aprovou as três escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **só as colunas com consumidor provado** (visual e `nUnique`/`nPos`/`Extra` ficam
     fora), **`kind_slug` anulável** (`NULL` = categoria não provada) e **`item_index INTEGER` como PK**.
-    A tabela entra na conta de §1 (55 de 96 na época; hoje 56) e a página `migrations/0014-content-item.md` fica
+    A tabela entra na conta de §1 (55 de 96 na época; hoje 56) e a página `migrations/0014_content_item.md` fica
     `concluída` no checklist.
 
 Uma tabela, 3.220 linhas no seed de `0017` (`plano-migrations.md` §3). É o alvo das FKs que `0009`,
@@ -2535,7 +2544,7 @@ DROP FUNCTION content.fn_item_catalog_effects();
     O dono aprovou as três escolhas de forma na rodada de perguntas de 2026-11-20, nas opções
     recomendadas: **`delay` e `affect_time` gravados brutos** (o runtime converte), **`class_slug` e
     `lineage_slug` anuláveis** com FK (`NULL` = vínculo não provado) e **`skill_index SMALLINT` como
-    PK** (0–247). A tabela entra na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0015-content-skill.md`
+    PK** (0–247). A tabela entra na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0015_content_skill.md`
     fica `concluída` no checklist.
 
 Uma tabela, 154 linhas no seed de `0018` — 151 do cliente e 3 da Kersef (`plano-migrations.md` §3).
@@ -2634,7 +2643,7 @@ DROP TABLE content.skill_catalog;
     recomendadas: **`id` identity com único parcial `(person_id, kind) WHERE revoked_at IS NULL`** e
     **revogação com `revoked_at` + `secret_encrypted = NULL`**. Também aprovou o desenho completo na
     opção "Sim, aprovar o desenho como está". A tabela entra na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página
-    `migrations/0031-portal-mfa.md` fica `concluída` no checklist.
+    `migrations/0031_portal_mfa.md` fica `concluída` no checklist.
 
 Uma tabela. Fecha a última peça de DDL que o `wyd-portal` pedia: a forma que `A20` reservou
 (`person_id, kind, secret_encrypted, confirmed_at, last_used_step`) deixa de ser nome e passa a ser
@@ -2751,13 +2760,15 @@ regra do padrão é decisão do dono do padrão.
 
 ### 5.21 Lote `0019` — mundo do conteúdo: 13 tabelas (DDL confirmado em 2026-11-20)
 
+**Sem arquivo no repositório:** `0008-conteudo-mundo.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 !!! note "Aprovado em 2026-11-20"
     O dono respondeu as seis decisões de forma em 2026-11-20, nas opções recomendadas (chave natural
     onde o insumo tem código, blob do NPC fora, array para bloco numérico, `guild_zone` só com
     definição, FK de item em duas das três tabelas e `map_id` em `world_item_seed`) e **revisou as
     colunas `H` antes de aprovar**: `merchant`, `eff1..eff3`/`effv1..effv3`, os cinco blocos crus,
     `rotate` e o grupo de gerador do NPC foram mantidos. As 13 tabelas entram na conta de §1
-    (75 na época, com alvo de 97; hoje 109) e a página `migrations/0019-content-world.md` fica `concluída` no checklist.
+    (75 na época, com alvo de 97; hoje 109) e a página `migrations/0019_content_world.md` fica `concluída` no checklist.
 
 As 13 tabelas de `plano-migrations.md` §3: `content_source`, `npc_template`, `npc_definition`,
 `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`,
@@ -2767,11 +2778,11 @@ de `content` sem consumidor no jogo já fechado.
 **O que a fonte oferece, e o que é hipótese.** A lista de tabelas é `P` (`plano-migrations.md` §3,
 linha 19). A **forma** não tem documento de coluna no planejamento novo: vem das fichas do legado em
 `deprecated/.agents/prompts/análises/wyd-db/database/tabelas/` (geradas do
-`0008_conteudo_mundo.sql`, nível 4), lidas em 2026-11-20 como **hipótese de conteúdo** e nunca como
+`0008-conteudo-mundo.sql`, nível 4), lidas em 2026-11-20 como **hipótese de conteúdo** e nunca como
 verdade. Duas exceções: `content_source`, cujas colunas estão em `plano-migrations.md` §4
-(`path`, `sha256`, tamanho, linhas), e `guild_zone`, citada por `0010` (`0010-game-guild.md` §11).
+(`path`, `sha256`, tamanho, linhas), e `guild_zone`, citada por `0010` (`0010_game_guild.md` §11).
 Por isso **toda coluna nova deste lote é `H`** — o cabeçalho de cada tabela diz de qual arquivo do
-legado ela veio, e a página `0019-content-world.md` marca linha a linha. O que está provado é a
+legado ela veio, e a página `0019_content_world.md` marca linha a linha. O que está provado é a
 existência, o schema e a ordem; o nome de cada campo é proposta.
 
 **Seis decisões de forma (respondidas em 2026-11-20).**
@@ -2812,7 +2823,7 @@ aposentados ou editados sem `DELETE`; as tabelas de import puro não têm carimb
 -- 0019_content_world: mundo do cliente — proveniência, NPC/gerador, loja de NPC, item de nível,
 -- guarda, mercador, configuração/matriz do gameconfig, região, item de chão e zona de guilda.
 -- As 13 tabelas são as de `plano-migrations.md` §3; a forma vem das fichas de tabela do legado
--- (`deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`, geradas do `0008_conteudo_mundo.sql`)
+-- (`deprecated/.agents/prompts/análises/wyd-db/database/tabelas/`, geradas do `0008-conteudo-mundo.sql`)
 -- e é hipótese `H` até a aprovação do dono — exceto `content_source`, cujas colunas estão em
 -- `plano-migrations.md` §4, e `guild_zone`, citada por `0010`.
 -- FK só para tabela já fechada (`content.npc_template`, `content.npc_definition`, `content.item_catalog`);
@@ -3153,7 +3164,7 @@ normalização de `mob_merc.items` em tabela filha é lote futuro, não este; o 
 
 !!! note "Aprovado em 2026-11-20"
     O dono respondeu as decisões de forma e deu o "sim" ao conjunto em 2026-11-20. As cinco tabelas
-    entram na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0021-content-rules.md` fica `concluída` no
+    entram na conta de §1 (75 na época, com alvo de 97; hoje 109) e a página `migrations/0021_content_rules.md` fica `concluída` no
     checklist. As colunas seguem `H` até trace do servidor: aprovar o desenho não as promove a `P`.
 
 O escopo (cinco nomes e ordem) é `plano-migrations.md` §3, linha 21: `refine_rate`,
@@ -3306,7 +3317,7 @@ qualquer política de acessório diferente do Bahamut (sem prova no cliente 7662
 ### 5.23 Lote `0022` — overrides de refino, SANC e composição (DDL confirmado em 2026-11-21)
 
 **Aprovado em 2026-11-21.** O dono aprovou o conjunto como apresentado ("Sim, aprovar como está"),
-sobre as seis decisões de forma registradas na página `migrations/0022-content-overrides.md` §8. As
+sobre as seis decisões de forma registradas na página `migrations/0022_content_overrides.md` §8. As
 três tabelas contam em §1, o lote está `concluída` em `migrations-checklist.md` §2 e a página já
 estava escrita e conferida.
 
@@ -3578,7 +3589,7 @@ verificação do dado de origem.
 **Aprovado em 2026-11-21**, com as duas escolhas abertas respondidas pelo dono: `RESTRICT` na FK do
 item em `drop_rate_override` e teto `1.000.000` em `content_rate_override.rate_bps`. As quatro tabelas
 contam em §1, o lote está `concluída` em `migrations-checklist.md` §2 e a página
-`migrations/0025-content-combat.md` já estava escrita e conferida.
+`migrations/0025_content_combat.md` já estava escrita e conferida.
 
 O escopo — quatro nomes e a ordem — é `plano-migrations.md` §3, linha 25: `mob_template_stat`,
 `mob_template_equip`, `drop_rate_override` e `content_rate_override`. As fichas vêm de
@@ -3709,7 +3720,7 @@ taxa fora das quatro conhecidas é impossível.
 
 **Registro da aprovação.** O dono aprovou o conjunto em 2026-11-21, sem alterar coluna, constraint ou
 índice depois da proposta. As quatro tabelas passam a contar em §1 e o `0025` fica `concluída`; a página
-`migrations/0025-content-combat.md` já estava escrita e conferida contra este texto.
+`migrations/0025_content_combat.md` já estava escrita e conferida contra este texto.
 
 **O que este lote não decide:** os valores de stat, drop e multiplicador (seed de `0020`/`0023`,
 bloqueados pela verificação do dado de origem); a ordem do roll e o empate de peso no runtime
@@ -3721,13 +3732,15 @@ do `STRUCT_MOB`, que a ficha declara não feita (`H`); e se `content_rate_overri
 
 ### 5.26 Lote `0026` — quests, eventos e arena: seis tabelas de conteúdo (DDL confirmado em 2026-11-21)
 
+**Sem arquivo no repositório:** `0013-quests.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 **Aprovado em 2026-11-21**, com as duas escolhas abertas respondidas pelo dono: `start_minute SMALLINT`
 em `event_schedule` e `id` identity com `UNIQUE NULLS NOT DISTINCT` em `quest_reward`. As seis tabelas
 contam em §1, o lote está `concluída` em `migrations-checklist.md` §2 e a página
-`migrations/0026-content-quests-events.md` já estava escrita e conferida.
+`migrations/0026_content_quests_events.md` já estava escrita e conferida.
 
 O escopo — seis nomes e a ordem — é `plano-migrations.md` §3, linha 26: `quest`, `quest_step`,
-`quest_reward`, `world_event`, `event_schedule` e `arena`. As fichas vêm de `0013_quests.sql`,
+`quest_reward`, `world_event`, `event_schedule` e `arena`. As fichas vêm de `0013-quests.sql`,
 `0014_eventos.sql` e `0015_arena.sql` do legado (nível 4).
 
 **Chaves naturais.** `quest`, `world_event` e `arena` têm `code` legível e estável como PK, sem
@@ -3940,7 +3953,7 @@ impossível (único); recompensa de item sem item é impossível, e recompensa d
 
 **Registro da aprovação.** O dono aprovou o conjunto em 2026-11-21, sem alterar coluna, constraint ou
 índice depois da proposta. As seis tabelas passam a contar em §1 e o `0026` fica `concluída`; a página
-`migrations/0026-content-quests-events.md` já estava escrita e conferida contra este texto.
+`migrations/0026_content_quests_events.md` já estava escrita e conferida contra este texto.
 
 **O que este lote não decide:** a cadeia de quests do 7662 (a ficha a declara não fechada; seed seria
 invenção); a integridade referencial de `quest.requires`, que é lista e não FK (validação do seed); o
@@ -3952,14 +3965,16 @@ execução de evento, que é
 
 ### 5.28 Lote `0028` — progresso de quest, eventos e arena no jogo (DDL confirmado em 2026-11-21)
 
+**Sem arquivo no repositório:** `0013-quests.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 **Aprovado em 2026-11-21.** As quatro escolhas de forma já eram decididas pelo canônico e o dono
 aprovou o conjunto sem alterá-las. As sete tabelas contam em §1, o lote está `concluída` em
-`migrations-checklist.md` §2 e a página `migrations/0028-game-quests-events.md` já estava escrita e
+`migrations-checklist.md` §2 e a página `migrations/0028_game_quests_events.md` já estava escrita e
 conferida.
 
 O escopo — sete nomes e a ordem — é `plano-migrations.md` §3, linha 28: `character_quest`,
 `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round` e `arena_score`.
-As fichas vêm de `0013_quests.sql`, `0014_eventos.sql` e `0015_arena.sql` do legado (nível 4), e são o
+As fichas vêm de `0013-quests.sql`, `0014_eventos.sql` e `0015_arena.sql` do legado (nível 4), e são o
 único bloco de `game` que referencia `content` — por isso fecha depois de `0026`.
 
 **Estado de jogador, não conteúdo.** Aqui a linha é escrita pelo servidor enquanto o jogo roda:
@@ -4171,7 +4186,7 @@ apagar quest/evento/arena com estado dependente falha alto.
 
 **Registro da aprovação.** O dono aprovou o conjunto em 2026-11-21, sem alterar nenhuma das quatro
 decisões acima. As sete tabelas passam a contar em §1 e o `0028` fica `concluída`; a página
-`migrations/0028-game-quests-events.md` já estava escrita e conferida contra este texto.
+`migrations/0028_game_quests_events.md` já estava escrita e conferida contra este texto.
 
 **O que este lote não decide:** as regras de progresso, recompensa e placar (`wyd-server`); se o estado
 de Kefra é por canal ou por instalação (a ficha tem uma linha só; multi-canal exigiria outra chave);
@@ -4255,13 +4270,14 @@ exista (as duas views são do último arquivo da série).
 
 **Registro da aprovação.** O dono aprovou o conjunto em 2026-11-21 com a opção "sem permissão por
 enquanto". As duas views passam a existir e ficam ilegíveis para o outro domínio; o `0029` fica
-`concluída` e a página `migrations/0029-views.md` já estava escrita e conferida contra este texto.
+`concluída` e a página `migrations/0029_views.md` já estava escrita e conferida contra este texto.
 
 **O que este lote não decide:** a política de retenção da sessão (`M22`); o formato do painel de
 monitoramento (`wyd-portal`, `LAC-POR-06`); se a view ganha `security_invoker` (depende da permissão
 acima); e a criação de view materializada, que `P-17` proíbe até haver medição.
 
 ### 5.32 Lote `0032` — `GRANT`s do papel `wyd_admin` (DDL confirmado em 2026-11-21)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Decidido em 2026-11-21 (`M27`, opção A + S1 + C1 + D1).** O papel nasce fora da série, em
 `db/roles.sql` (`src/provision/spec.md` §2 e §4); este arquivo só concede. **Sem tabela, sem índice e
@@ -4322,7 +4338,7 @@ não concede privilégio de schema da série (`src/provision/spec.md` §1). O `0
 `ALTER DEFAULT PRIVILEGES` aqui (decisão `M29`, 2026-11-22; regra em `docs/arquitetura/seguranca.md`).
 
 **Fechado fora deste lote:** `M28` — decidida em 2026-11-21 na redação B: a "API interna" de §5.15 e de
-`migrations/0030-portal-content.md` §8 é o serviço `wyd-admin`; as quatro tabelas de `portal` ficam com
+`migrations/0030_portal_content.md` §8 é o serviço `wyd-admin`; as quatro tabelas de `portal` ficam com
 o BFF do portal. A correção é só de prosa, sem `GRANT` nem DDL.
 
 ### 5.33 Lote `0033` — `ops.idempotency_record` (DDL confirmado em 2026-11-22)
@@ -4404,7 +4420,7 @@ operação (`DELETE … WHERE created_at < now() - interval '7 days'`). O piso �
 do chamador é de 24 h (`M17`) e apagar antes disso permitiria o mesmo `Idempotency-Key` executar duas
 vezes. O teto é o custo: são ações de staff, de volume baixo, e o registro guarda corpo de resposta —
 sete dias cobrem a investigação de um incidente que aparece no dia seguinte ou depois de um fim de
-semana. O número é **decisão**, não medição; `planos/retencao-e-capacidade.md` o registra quando existir.
+semana. O número é **decisão**, não medição; a página `docs/arquitetura/retencao-e-capacidade.md` registra o número.
 Depois do expurgo, `GET /actions/{key}` responde `404` e a mesma chave deixa de ser reconhecida.
 
 **Permissões.** `ops` já dá `USAGE` a `wyd_admin` (`0032`) e `SELECT` a `wyd_read` por default privilege

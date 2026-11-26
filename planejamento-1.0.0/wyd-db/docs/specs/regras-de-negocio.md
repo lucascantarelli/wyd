@@ -103,4 +103,4 @@ desta página vêm do bloco de identidade e são a primeira numeração `RN-DB` 
   canal derruba a sessão; o schema não tem gatilho para isso. A página não afirma o que não está
   decidido.
 - Limiar de idle da sessão do portal: o campo `last_seen_at` existe; o intervalo é política de código,
-  não número desta página (`migrations/0004-portal-access.md` §10).
+  não número desta página (`migrations/0004_portal_access.md` §10).

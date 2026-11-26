@@ -41,7 +41,7 @@ três, e falham em silêncio ou com erro obscuro.
 >
 > **Decisão de 2026-11-21 (dono): o lote `0030` permanece aprovado e não há lote novo.** As quatro
 > tabelas de conteúdo do portal (`portal.news`, `banner`, `guide` e `launcher_release`) ficam como
-> estão: o DDL é o de `ddl-confirmado.md` §5.15, a página é `migrations/0030-portal-content.md` e o
+> estão: o DDL é o de `ddl-confirmado.md` §5.15, a página é `migrations/0030_portal_content.md` e o
 > lote conta como `concluída` no checklist. Reabrir o desenho exigiria proposta de revisão própria com
 > o delta nomeado, que não foi pedida. Naquela data a série continuava em **31 arquivos e 97 tabelas**;
 > o `0032` nasceu depois, com a decisão `M27` (2026-11-21), e não cria tabela.
@@ -217,6 +217,10 @@ entrega.
 ---
 
 ## 3. A série (34 arquivos; 109 tabelas)
+**Sem arquivo no repositório:** `db/roles.sql`, `0016-seed-taxonomy.sql`, `0017-seed-item-catalog.sql`, `0018-seed-skill-catalog.sql`, `0020-seed-world.sql`, `0023-seed-rules.sql`, `0027-seed-quests-events.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
+A contagem desta seção é **medida** (`M20`, fechada em 2026-11-18): dono único do número, nunca
+estimativa, e é ela que `planos/metricas.md` cita.
 
 Antes do arquivo 1 existe a **etapa 0**, que não é migration: `db/roles.sql`, os papéis do cluster —
 artefato gerado por `wyd-db provision render`, especificado em `src/provision/spec.md`
@@ -243,18 +247,18 @@ pasta de planejamento — e não em `migrations/`, que guarda só página de mig
 | 13 | `0013_content_taxonomy.sql` | `content` | `game_system`, `game_class`, `skill_lineage`, `item_kind`, `item_effect`, `fn_fold` | 5 |
 | 14 | `0014_content_item.sql` | `content` | `item_catalog` (PK `item_index`; `name_fold` gerada; GIN em `effect_names`) | 1 |
 | 15 | `0015_content_skill.sql` | `content` | `skill_catalog` | 1 |
-| 16 | `0016_seed_taxonomy.sql` | `content` | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | — |
-| 17 | `0017_seed_item_catalog.sql` | `content` | 3.220 itens + 55 `EF_*` (gerado) | — |
-| 18 | `0018_seed_skill_catalog.sql` | `content` | 151 skills + 3 Kersef + linhagem curada (gerado) | — |
+| 16 | `0016-seed-taxonomy.sql` | `content` | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | — |
+| 17 | `0017-seed-item-catalog.sql` | `content` | 3.220 itens + 55 `EF_*` (gerado) | — |
+| 18 | `0018-seed-skill-catalog.sql` | `content` | 151 skills + 3 Kersef + linhagem curada (gerado) | — |
 | 19 | `0019_content_world.sql` | `content` | `content_source`, `npc_template`, `npc_definition`, `npc_shop_item`, `level_item`, `guard_spawn`, `guard_spawn_reward`, `mob_merc`, `game_setting`, `game_matrix`, `region`, `world_item_seed`, `guild_zone` | 13 |
-| 20 | `0020_seed_world.sql` | `content` | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão (gerado) | — |
+| 20 | `0020-seed-world.sql` | `content` | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão (gerado) | — |
 | 21 | `0021_content_rules.sql` | `content` | `refine_rate`, `refine_gem_effect`, `sanc_rate`, `combine_value`, `accessory_refine_rule` | 5 |
 | 22 | `0022_content_overrides.sql` | `content` | `refine_rate_override`, `sanc_rate_override`, `combine_value_override` | 3 |
-| 23 | `0023_seed_rules.sql` | `content` | 14 passos de refino, 4 gemas, `sanc_rate`, combine, acessório | — |
+| 23 | `0023-seed-rules.sql` | `content` | 14 passos de refino, 4 gemas, `sanc_rate`, combine, acessório | — |
 | 24 | `0024_content_maps.sql` | `content` | `map_definition`, `teleport_route` | 2 |
 | 25 | `0025_content_combat.sql` | `content` | `mob_template_stat`, `mob_template_equip`, `drop_rate_override`, `content_rate_override` | 4 |
 | 26 | `0026_content_quests_events.sql` | `content` | `quest`, `quest_step`, `quest_reward`, `world_event`, `event_schedule`, `arena` | 6 |
-| 27 | `0027_seed_quests_events.sql` | `content` | quests de campo, 3 `world_event` + agenda, 2 `arena` (gerado) | — |
+| 27 | `0027-seed-quests-events.sql` | `content` | quests de campo, 3 `world_event` + agenda, 2 `arena` (gerado) | — |
 | 28 | `0028_game_quests_events.sql` | `game` | `character_quest`, `event_participation`, `kefra_state`, `castle_state`, `arena_match`, `arena_round`, `arena_score` | 7 |
 | 29 | `0029_views.sql` | — | `game.v_live_session`, `portal.v_person_identity` | — |
 | 30 | `0030_portal_content.sql` | `portal` | `news`, `banner`, `guide`, `launcher_release` — CMS e launcher do `wyd-portal` (aprovado em 2026-11-20) | 4 |
@@ -465,6 +469,7 @@ troca não pode vir antes de `0001`–`0007` verdes: a série antiga intacta no 
 ---
 
 ## 9. Etapas de código (a execução da série)
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. **[adiado em 2026-11-17]** PR de ferramentas (`banco-parse`, `check-migrations`, `pg`, `catalogo.rs`,
    `src/migrate/`)

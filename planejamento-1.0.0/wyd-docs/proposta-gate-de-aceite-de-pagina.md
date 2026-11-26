@@ -129,7 +129,7 @@ arquivo: `wyd-protocol/docs/` tem só `index.md`, `convencoes.md`, `goldens/` e 
 |---|---|---|
 | `wire/` (6) | **reprova por ausência** | não há página para aceitar; escrever depende de `LPRT-03` e do golden do fio |
 | `goldens/como-capturar.md` (1) | **não muda**: pendência de fechamento | forma ok e estado com data; falta segunda leitura e o "sim" do dono (`revisao.md` §1, §4) |
-| `migrations/` escritas (28) | **27 reprovam**; 1 já era `aceito` | falta a linha de estado na página: pela regra de `convencoes.md` §Estados, "página sem essa linha é rascunho"; `0002-ops-audit.md` é `aceito` desde 2026-11-20 |
+| `migrations/` escritas (28) | **27 reprovam**; 1 já era `aceito` | falta a linha de estado na página: pela regra de `convencoes.md` §Estados, "página sem essa linha é rascunho"; `0002_ops_audit.md` é `aceito` desde 2026-11-20 |
 | `migrations/` seeds ausentes (6) | **reprova por ausência**, com bloqueio declarado | dado de origem não conferido (`migrations-checklist.md` §4) |
 | `migrations/index.md` e `serie-e-regras.md` (2) | **reprova por ausência** | seção não escrita |
 
@@ -148,7 +148,7 @@ este é o que não estava visível.
 | Medida | Resultado | Comando |
 |---|---|---|
 | cabeçalho de 5 linhas | **29 de 29** com `5/5` | probe de §2 |
-| linha `**Estado:**` | **2 de 29** — só `0002-ops-audit.md` e `goldens/como-capturar.md` | `grep -c '^\*\*Estado:\*\*'` |
+| linha `**Estado:**` | **2 de 29** — só `0002_ops_audit.md` e `goldens/como-capturar.md` | `grep -c '^\*\*Estado:\*\*'` |
 | placeholder real | **0** nas 29 | `grep -nE '\bTODO\b\|\bTBD\b\|em constru\|a preencher\|XXX'` |
 | sintaxe 1.x (`!!!`) | **28 de 29** | `grep -cE '^\s*!!!'` |
 | gate do site | **exit 0**, 269 páginas, 267 fontes | `docker compose --profile gate run --rm gate` |

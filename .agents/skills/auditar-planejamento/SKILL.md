@@ -41,9 +41,10 @@ grep -rhoE 'ADR-[A-Z]+-[0-9]{4}' planejamento-1.0.0 --include='*.md' | sort -u
 grep -rhoE '^\| \*\*[A-Z][0-9]+\*\*' planejamento-1.0.0/wyd-db/lacunas.md | sort -u
 ```
 
-Regra: ADR só existe se houver decisão tomada, com estado, data e “como verificar”. Hoje o esperado
-é **dois** ADRs (`ADR-DB-0001`, `ADR-DB-0002`). ADR a mais é achado **crítico** até prova em
-contrário; ADR citado e inexistente também.
+Regra: ADR só existe se houver decisão tomada, com estado, data e “como verificar”. A lista e a
+contagem vigentes são as do índice em
+`planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md` §2; esta skill não repete o número. ADR
+fora do índice é achado **crítico** até prova em contrário; ADR citado e inexistente também.
 
 ### 3. Conferir evidência
 
@@ -62,8 +63,10 @@ sem ID é omissão, não hipótese.
 grep -rnE '\b(34|109|144|53|87|40)\b' planejamento-1.0.0 --include='*.md' | grep -v 'plano-migrations.md'
 ```
 
-Número repetido em duas páginas sem citação do dono é achado. Os números da 1.0.0 são **34 migrations, 109 tabelas, 6 seeds**; os do legado são **53 migrations, 87 tabelas** e não podem ser
-apresentados como estado atual.
+Número repetido em duas páginas sem citação do dono é achado. As contagens planejadas da 1.0.0 e as
+medidas do legado têm dono em `planejamento-1.0.0/wyd-db/plano-migrations.md` §3 e no cabeçalho
+“Medido no dia” do mesmo arquivo; a skill não repete os valores, e contagem do legado nunca é
+apresentada como estado atual.
 
 ### 5. Procurar contaminação do legado
 
@@ -73,7 +76,7 @@ Sinais típicos:
 - `public` como schema de domínio;
 - `SERIAL`, `timestamp` sem fuso, `money`, `ENUM` nativo;
 - contagem de issues/crates do README antigo;
-- migration numerada fora da série de 29;
+- migration numerada fora da série do plano (`plano-migrations.md` §3, dono da série);
 - texto que descreve “como funciona hoje” sem `V` no código novo.
 
 ```bash
@@ -88,14 +91,14 @@ O achado não é a palavra: é a palavra usada como decisão da 1.0.0 sem decis�
 grep -rniE 'TODO|TBD|em constru|a preencher|robusto|escal[aá]vel|r[aá]pido' planejamento-1.0.0 --include='*.md'
 ```
 
-Também reprova: seção “Introdução” que repete o título, índice manual no topo, tabela de conteúdo
-escrita à mão, captura sem texto alternativo.
+A lista do que reprova uma página é de `planejamento-1.0.0/wyd-db/docs/convencoes.md` §O que reprova
+uma página; esta skill aponta, não recopia.
 
 ### 7. Conferir cabeçalho e link
 
-Toda página tem cinco linhas (`Pergunta`, `Público`, `Dono`, `Base`, `Revisado em`) e linha de estado
-com data. Link relativo para fora de `docs/` reprova; use caminho em `code` com a marca
-“planejamento”.
+O formato do cabeçalho, da linha de estado, dos links e das marcações de evidência é de
+`planejamento-1.0.0/wyd-db/docs/convencoes.md` §Cabeçalho de página e §Marcações de evidência; link
+relativo para fora de `docs/` reprova — use caminho em `code` com a marca “planejamento”.
 
 ## Como relatar
 
@@ -104,7 +107,7 @@ Uma linha por achado, ordenada por severidade:
 | Severidade | Arquivo:linha | O que está escrito | Evidência contrária | Ação |
 |---|---|---|---|---|
 | crítica | `…:12` | “ADR-DB-0005 decide…” | não há arquivo nem decisão | remover ou abrir decisão com o dono |
-| alta | `…:40` | “53 migrations” como estado atual | `plano-migrations.md` §3: 29 | citar o dono |
+| alta | `…:40` | contagem do legado como se fosse o estado atual | `plano-migrations.md` §3 | citar o dono |
 | média | `…:8` | afirmação sem marca | — | marcar `H` com ID |
 
 Termine com: **o que foi medido**, **o que não foi possível medir** e **quantos achados por

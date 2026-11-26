@@ -10,7 +10,7 @@
 
 Rota de teleporte como par de coordenadas explícitas origem→destino, com o NPC que a oferece
 (opcional), o preço em ouro do personagem e o requisito de nível ou de item. O destino é ponto, nunca
-"centro da região" (decisão 4 de `migrations/0024-content-maps.md` §8): a rota leva a uma coordenada, e
+"centro da região" (decisão 4 de `migrations/0024_content_maps.md` §8): a rota leva a uma coordenada, e
 quem chega não depende do retângulo da região.
 
 ## Colunas
@@ -76,7 +76,7 @@ de seed, read-only em runtime.
 ## Armadilha de leitura
 
 A coordenada aceita vai a 32767, não a 4095: o teto menor é regra do loader do cliente, não do banco
-(`migrations/0024-content-maps.md` §8), e uma rota com `x = 4000` é aceita. `coin` é ouro do
+(`migrations/0024_content_maps.md` §8), e uma rota com `x = 4000` é aceita. `coin` é ouro do
 **personagem** (`game.character.coin`), não a carteira da conta nem o cash do portal — o débito é do
 runtime, contra a linha do personagem, e o lote guarda só o preço. `req_level` não tem teto porque o
 legado não prova nenhum.
@@ -84,10 +84,10 @@ legado não prova nenhum.
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0024-content-maps.md` §7.
+  `migrations/0024_content_maps.md` §7.
 
 ## Migration
 
-Forma (dona): `migrations/0024-content-maps.md` — arquivo `0024_content_maps.sql`.
+Forma (dona): `migrations/0024_content_maps.md` — arquivo `0024_content_maps.sql`.

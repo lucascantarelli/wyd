@@ -37,7 +37,7 @@ onda); número ou fórmula de `metricas.md` (`M20`); retenção (`M22`), fila (`
 | páginas de migration planejadas | **34** | `plano-migrations.md` §3 |
 | escritas | **28** | `migrations-checklist.md` §4 |
 | sem linha `**Estado:**` | **0** (antes da aplicação: 27) | `grep -c` de `^\*\*Estado:\*\*` em `migrations/*.md` |
-| com linha | **28** — 27 `proposto (2026-11-23)` + `0002-ops-audit.md`, `aceito (2026-11-20)` | idem |
+| com linha | **28** — 27 `proposto (2026-11-23)` + `0002_ops_audit.md`, `aceito (2026-11-20)` | idem |
 | estados de página definidos | 4 (`proposto`, `aceito`, `substituído`, `retirado`); "página sem essa linha é rascunho" | `docs/convencoes.md` §Estados |
 | estados usados pelo checklist | 5 (`pronta`, `aguardando aprovação`, `bloqueada`, `parcial`, `concluída`); **nenhum é `aceito`** | `migrations-checklist.md` §1 |
 | itens que §10 exige para `aceito` | 11; o item 10 pede `index.md` da pasta, e a metade de `planos/metricas.md` está suspensa por `Q-M33-3` | `wyd-db-1.0.0.md` §10 |
@@ -68,7 +68,7 @@ a única data em jogo é a de atribuição do estado. `M20` proíbe número medi
 ### Q-M33-1 — `migrations/` segue a regra de estado de página ou é exceção?
 
 **Medido.** `convencoes.md` exige a linha em toda página e chama de rascunho a que não tem; em
-`migrations/`, **27 de 28** escritas estão sem ela, e a única com linha é `0002-ops-audit.md`. O
+`migrations/`, **27 de 28** escritas estão sem ela, e a única com linha é `0002_ops_audit.md`. O
 checklist tem 5 estados de **arquivo**, nenhum `aceito`. A regra geral já está decidida (seção 3); o
 que não está decidido é se `migrations/` fica fora dela.
 

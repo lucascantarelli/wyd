@@ -25,6 +25,7 @@ escreve e não pega lock. O boot trata `Drift` e `Sql` como “não servir”: s
 pior que ficar fora.
 
 ## 2. Códigos do provisionamento
+**Sem arquivo no repositório:** `db/roles.sql`, `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Código | Situação | Dono |
 |---:|---|---|

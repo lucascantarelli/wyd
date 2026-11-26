@@ -94,9 +94,9 @@ por `character_skill`, que não tem FK: aposentar skill não invalida progressã
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0018`), que está `bloqueada`.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7). Dono da permissão: `migrations/0015-content-skill.md` §8.
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7). Dono da permissão: `migrations/0015_content_skill.md` §8.
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0015-content-skill.md` — arquivo `0015_content_skill.sql`.
+Forma (dona): `migrations/0015_content_skill.md` — arquivo `0015_content_skill.sql`.

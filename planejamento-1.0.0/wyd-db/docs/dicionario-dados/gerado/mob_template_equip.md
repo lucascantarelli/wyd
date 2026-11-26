@@ -72,9 +72,9 @@ mob veste, e não existe foto do item nesta tabela. E o `RESTRICT` do item vale 
 - **Escreve:** `wyd_migrator`, na carga e no seed de origem (`0020`/`0023`, ambos `bloqueada`,
   `migrations-checklist.md` §2); nenhum `GRANT` de escrita em runtime.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0025-content-combat.md` — arquivo `0025_content_combat.sql`.
+Forma (dona): `migrations/0025_content_combat.md` — arquivo `0025_content_combat.sql`.

@@ -84,11 +84,11 @@ até alguém desligar; a limpeza é do `wyd-ops`.
 ## Papéis
 
 - **Escreve:** `wyd_portal` — `SELECT, INSERT, UPDATE, DELETE` herdados do default privilege de `portal`
-  (`0001-bootstrap.md` §7), pelo BFF do CMS. Nenhum seed cria banner.
+  (`0001_bootstrap.md` §7), pelo BFF do CMS. Nenhum seed cria banner.
 - **Não leem:** `wyd_read` tem `USAGE` em `portal` mas não recebe `SELECT` por default; `wyd_game` não
   alcança o schema; `wyd_admin` não recebe estas tabelas em `0032`.
 
 ## Migration
 
-Forma (dona): `migrations/0030-portal-content.md` — arquivo `0030_portal_content.sql`; DDL em
+Forma (dona): `migrations/0030_portal_content.md` — arquivo `0030_portal_content.sql`; DDL em
 `ddl-confirmado.md` §5.15.

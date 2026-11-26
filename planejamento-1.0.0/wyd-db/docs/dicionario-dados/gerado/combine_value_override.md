@@ -66,9 +66,9 @@ enums: a lista de famílias é `H` e não existe tabela de família nesta série
 - **Escreve:** `wyd_portal`, com `SELECT, INSERT, UPDATE, DELETE` concedidos por `0022` (`M21`);
   `DELETE` é o reset para a base.
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7); o `GRANT` de `0022` cobre `wyd_portal`.
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7); o `GRANT` de `0022` cobre `wyd_portal`.
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0022-content-overrides.md` — arquivo `0022_content_overrides.sql`.
+Forma (dona): `migrations/0022_content_overrides.md` — arquivo `0022_content_overrides.sql`.

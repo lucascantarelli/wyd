@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, produto e operação
 > Dono: equipe do wyd-launcher
 > Base: `wyd-portal/docs/arquitetura/fronteira.md` §2; `AGENTS.md` §6
-> Revisado em: 2026-11-22
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -38,3 +38,26 @@ publicada nem artefato implementado.
 ## Decisões registradas
 
 As quatro decisões — `LLCH-01`–`LLCH-04` — estão em [Decisões do `wyd-launcher`](proposta-decisoes-launcher.md); todas fecharam por resposta do dono (`Q-LCH-1`–`Q-LCH-4` = A) e o estado de cada lacuna continua em `lacunas.md`.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [adr/index](arquitetura/adr/index.md)
+
+### planos
+
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [manifesto-e-patch](specs/manifesto-e-patch.md)
+- [requisitos](specs/requisitos.md)

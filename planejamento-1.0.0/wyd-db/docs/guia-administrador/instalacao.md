@@ -22,6 +22,7 @@ decididos e não são inventados aqui.
 | cliente 7662 (opcional) | só para o corte vertical, não para instalar | o corte fica pendente, não vira “verde” |
 
 ## 2. Ordem
+**Sem arquivo no repositório:** `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. **Renderizar os papéis.** `provision render` gera o texto de `db/roles.sql`; `render --check`
    compara com o arquivo versionado. O render é determinístico e não lê ambiente.

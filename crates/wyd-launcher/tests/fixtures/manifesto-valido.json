@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "channel": "stable",
+  "version": "1.0.0",
+  "client_build": "04c9d2a1235cba57f7b588347fae935a2466824ddf9d7d92e541e0cc8a27ddf8",
+  "min_version": "1.0.0",
+  "files": [
+    {
+      "path": "client/UI/tabela.bin",
+      "size": 64,
+      "sha256": "c1d8bb944d06dd641f1c13d75e1d4d0bbca3bf906a15264eeb0119c9ab8c810e"
+    }
+  ]
+}

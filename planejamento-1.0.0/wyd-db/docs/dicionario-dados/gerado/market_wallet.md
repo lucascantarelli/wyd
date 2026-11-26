@@ -62,10 +62,10 @@ o extrato sem sentido.
 ## Papéis
 
 - **Escreve:** `wyd_portal` — `SELECT, INSERT, UPDATE, DELETE` herdados do default privilege de `portal`
-  (`0001-bootstrap.md` §7), pelo BFF.
+  (`0001_bootstrap.md` §7), pelo BFF.
 - **Lê:** `wyd_portal` e `wyd_read` (herdado); `wyd_game` não alcança `portal`.
 
 ## Migration
 
-Forma (dona): `migrations/0034-portal-market.md` — arquivo `0034_portal_market.sql`; DDL em
+Forma (dona): `migrations/0034_portal_market.md` — arquivo `0034_portal_market.sql`; DDL em
 `ddl-confirmado.md` §5.34.

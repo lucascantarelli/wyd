@@ -8,18 +8,19 @@
 
 ## 0. Como ler
 
-Estados: **aberta**, **proposta**, **fechada** (com evidência). `arquitetura` propõe; produto aprova
+Estados: **fechada** (com evidência citada) e **bloqueada** (falta decisão, execução ou evidência; a
+linha nomeia o desbloqueio — dono e documento). `arquitetura` propõe; produto aprova
 o que é balanceamento.
 
 ## 1. Situação em uma linha
 
-| Grupo | Lacunas | Abertas | Propostas | Fechadas |
-|---|---:|---:|---:|---:|
-| Catálogo de fórmulas | 1 | 0 | 0 | 1 |
-| Rastreabilidade | 1 | 0 | 0 | 1 |
-| Prova | 1 | 0 | 0 | 1 |
-| Aritmética | 1 | 0 | 0 | 1 |
-| **Total** | **4** | **0** | **0** | **4** |
+| Grupo | Lacunas | Bloqueadas | Fechadas |
+|---|---:|---:|---:|
+| Catálogo de fórmulas | 1 | 0 | 1 |
+| Rastreabilidade | 1 | 0 | 1 |
+| Prova | 1 | 0 | 1 |
+| Aritmética | 1 | 0 | 1 |
+| **Total** | **4** | **0** | **4** |
 
 ## 2. Lacunas
 

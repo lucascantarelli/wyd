@@ -84,7 +84,7 @@ classificação falha fechada como **durável crítico**. Todo estado novo entra
 aparecer em código; a classificação não é inferida pela tabela do banco.
 
 **Posição hoje.** `game.character` não tem coluna de coordenada atual — só `recall_x`/`recall_y`
-(`wyd-db/migrations/0006-game-character.md` §6.1, `V` 2026-11-22). A posição é **durável eventual**,
+(`wyd-db/migrations/0006_game_character.md` §6.1, `V` 2026-11-22). A posição é **durável eventual**,
 mas a primeira fatia não prova save e esta decisão **não cria coluna**. O checkpoint de posição no
 release depende de schema futuro; não se inventa DDL aqui.
 
@@ -161,6 +161,8 @@ devolve linha crua e não expõe SQLSTATE ao core.
 **O que esta seção não decide.** Schema, coluna de posição, DDL, isolation level, timeout, pool,
 política de retry do adapter e tabelas de outros domínios. A classificação de estado é C6; a porta é
 C4; ambas foram decididas em 2026-11-23.
+
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-CORE`/`RNF-CORE` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (8 `RF-CORE` + 6 `RNF-CORE`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LCORE-01`–`LCORE-04` já fechadas; implementação pendente.
 
 ## 4. Estado medido (`V`, 2026-11-22)
 

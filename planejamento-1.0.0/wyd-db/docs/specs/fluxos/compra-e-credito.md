@@ -1,7 +1,7 @@
 > Pergunta: "como o cash entra, como é gasto e por que o schema não garante saldo, entrega nem reconciliação?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0011-game-economy.md` §4 e §6–§10; `migrations/0005-game-account.md` §4 e §6.2; `migrations/0012-ops-delivery.md` §2–§4; `docs/dicionario-dados/dominio-economia.md`; `docs/specs/requisitos-funcionais.md` `RF-DB-003`, `RF-DB-005`, `RF-DB-008`; `docs/roadmap/WYDDB-020.md`; `lacunas.md` `A19`, `M16`, `M17`
+> Base: `migrations/0011_game_economy.md` §4 e §6–§10; `migrations/0005_game_account.md` §4 e §6.2; `migrations/0012_ops_delivery.md` §2–§4; `docs/dicionario-dados/dominio-economia.md`; `docs/specs/requisitos-funcionais.md` `RF-DB-003`, `RF-DB-005`, `RF-DB-008`; `docs/roadmap/WYDDB-020.md`; `lacunas.md` `A19`, `M16`, `M17`
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

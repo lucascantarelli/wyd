@@ -115,8 +115,8 @@ auxiliar das 109 páginas por tabela, fora desta contagem, e não entra nas 132.
 | §4 tipos por intenção | `arquitetura/padroes-postgres.md` §2 recebe o **critério** de escolha; a **lista fechada** continua aqui (§4), que é a dona do valor |
 | §5 integridade (7 regras) | `arquitetura/integridade-e-constraints.md` |
 | §6 índices | `arquitetura/padroes-postgres.md` §5 recebe o **critério** (invariante × desempenho); as regras fechadas continuam aqui (§6) |
-| §7 triggers, funções e views | `padroes-postgres.md` + `migrations/0001-bootstrap.md` (a função) |
-| §8 papéis e permissões | a **tabela de quem pode o quê** é de `seguranca.md` (escrita); §8 fica com o **modelo de permissão** que ela não explica (`USAGE` × *default privileges*, leitura só por view, append-only por permissão, exceção de `public`, RLS fora); efeito por papel em `migrations/0001-bootstrap.md`, com o DDL gerado de `src/provision/spec.md` (não copiado) |
+| §7 triggers, funções e views | `padroes-postgres.md` + `migrations/0001_bootstrap.md` (a função) |
+| §8 papéis e permissões | a **tabela de quem pode o quê** é de `seguranca.md` (escrita); §8 fica com o **modelo de permissão** que ela não explica (`USAGE` × *default privileges*, leitura só por view, append-only por permissão, exceção de `public`, RLS fora); efeito por papel em `migrations/0001_bootstrap.md`, com o DDL gerado de `src/provision/spec.md` (não copiado) |
 | §9 migrations | **já é ponteiro, não fonte**: as regras da série são de `plano-migrations.md` §2 (→ `migrations/serie-e-regras.md`, quando existir) e o porquê, de `arquitetura/migracoes.md` §2 (escrito). A linha de `expand`/`contract` — operação futura — fica em §9 até `serie-e-regras` nascer |
 | §10 testes e gates | `planos/plano-de-qualidade-e-gates.md` + `guia-teste/testes-de-contrato.md` |
 | §11 antipadrões | `arquitetura/padroes-postgres.md` §7 agrupa em quatro **famílias de defeito**; a lista nominal continua aqui (§11) — lista única, as outras páginas citam |
@@ -134,8 +134,8 @@ declarando o dono; `falta` — há página escrita enunciando o conteúdo e a se
 |---|---|---|
 | §1 critério e contagem de DDL fechado | `migrations/index.md` (o que tem DDL fechado) | — |
 | §2 veredito por arquivo | `migrations/index.md` (coluna de estado; valor derivado de `migrations-checklist.md` §1.2) | — |
-| §3 `0001` | `migrations/0001-bootstrap.md` (escrita; cita esta seção) | — |
-| §4 `0004` | `migrations/0004-portal-access.md` (escrita; cita esta seção) | — |
+| §3 `0001` | `migrations/0001_bootstrap.md` (escrita; cita esta seção) | — |
+| §4 `0004` | `migrations/0004_portal_access.md` (escrita; cita esta seção) | — |
 | §5.1–§5.7 DDL | `migrations/0003`, `0004`, `0005`, `0002`, `0007` (o `up`/`down` e a tabela de colunas) | — |
 | §5.1–§5.7 significado | `dicionario-dados/dominio-acesso.md` §Tabela de tabelas, §Ciclo de vida do dado e §Regras e armadilhas (escrita) | **existe** (nota em §5, cobre as seis) |
 | §5.3, §5.4 e o canal de §5.5 | `dominio-auditoria.md` e `dominio-canal.md` — escritas em 2026-11-21 | — |

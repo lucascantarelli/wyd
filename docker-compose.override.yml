@@ -26,10 +26,17 @@ services:
       dockerfile: wyd-ops/wyd-docs.Dockerfile
       target: gate
     working_dir: /app/wyd-docs
+    # A imagem copia só `planejamento-1.0.0/` e `wyd-docs/`. A guarda de lacunas confere
+    # evidência citada na árvore inteira (crates, deprecated, .github), então lê a raiz
+    # montada somente-leitura; nada é escrito nela.
+    volumes:
+      - .:/repo:ro
     command:
       - sh
       - -c
       - |
+        python verificar-skills.py --root /repo &&
+        python verificar-lacunas.py --root /repo &&
         python preparar.py &&
         mkdocs build --dir .build/docs --output site &&
         python verificar.py site &&

@@ -22,6 +22,7 @@ marca `■` da árvore de `../../wyd-db-1.0.0.md` §6.17 vale para os três iten
 hoje: ele depende do documento de catálogo, não de fixture.
 
 ## 1. O que existe
+**Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Caminho | O que é | Consumidor | Precisa de banco |
 |---|---|---|---|
@@ -30,6 +31,7 @@ hoje: ele depende do documento de catálogo, não de fixture.
 | `serie/invalida/<defeito>/` | uma série por defeito, cada uma violando **um** invariante | `contrato_migrations` | não |
 
 ## 2. `accounts.json`
+**Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Array JSON, um objeto por conta, com os campos abaixo e nada além:
 
@@ -66,6 +68,7 @@ Cada fixture tem **um** defeito só: série com dois defeitos prova que o teste 
 invariante ele confere. O alvo aponta para a fixture por `--dir` (`../../docs/guia-teste/testes-de-contrato.md` §1).
 
 ## 4. A regra do dado fictício
+**Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 1. **Nada de valor real:** nome de pessoa, e-mail, telefone, senha ou token de qualquer ambiente.
 2. **Nada de dado do cliente:** contagem, preço ou nome de item do 7662 é conteúdo de seed, não recurso
@@ -76,6 +79,7 @@ invariante ele confere. O alvo aponta para a fixture por `--dir` (`../../docs/gu
    teste e aparece no PR.
 
 ## 5. Dúvidas abertas
+**Sem arquivo no repositório:** `accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|

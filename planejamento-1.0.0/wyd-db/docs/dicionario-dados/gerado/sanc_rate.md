@@ -22,7 +22,7 @@ operação muda o valor por `content.sanc_rate_override` (`0022`), não por `UPD
 | `rate_bps` | `INTEGER` | não | — | chance em pontos-base, 0–10000 |
 
 Sem `created_at`/`updated_at` e sem trigger: base de seed, sem escrita do staff em runtime
-(`migrations/0021-content-rules.md` §7).
+(`migrations/0021_content_rules.md` §7).
 
 ## Chave primária
 
@@ -64,11 +64,11 @@ E o override de `0022` tem precedência: ler só esta tabela ignora a operação
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, no seed (`0023`), que está `bloqueada`; nenhum `GRANT` de escrita em
-  runtime (`migrations/0021-content-rules.md` §7).
+  runtime (`migrations/0021_content_rules.md` §7).
 - **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` — `SELECT` herdado do default privilege de `content`
-  (`0001-bootstrap.md` §7).
-- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032-admin-grants.md` §5).
+  (`0001_bootstrap.md` §7).
+- **Não lê:** `wyd_admin` — `0032` não concede `content` (`migrations/0032_admin_grants.md` §5).
 
 ## Migration
 
-Forma (dona): `migrations/0021-content-rules.md` — arquivo `0021_content_rules.sql`.
+Forma (dona): `migrations/0021_content_rules.md` — arquivo `0021_content_rules.sql`.

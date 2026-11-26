@@ -1,34 +1,35 @@
 # `wyd-client` — lacunas e decisões pendentes (registro único)
 
-> **Estado: registro vivo (2026-11-23).** Único lugar onde uma lacuna do `wyd-client` tem dono,
+> **Estado: registro vivo (2026-11-25).** Único lugar onde uma lacuna do `wyd-client` tem dono,
 > impacto e estado. `LCLI-04` foi decidida pelo dono em 2026-11-23 e `LCLI-01` fechou com `LPRT-09`
 > (`Q-PRT-1`) na mesma data. Em 2026-11-23 o dono assumiu a segunda leitura (`LCLI-03`) e a
-> responsabilidade nominal por direitos (`LCLI-05`), com distribuição congelada; as duas seguem como
-> aberta e proposta até a ficha e a evidência.
+> responsabilidade nominal por direitos (`LCLI-05`), com distribuição congelada. `LCLI-02`, `LCLI-03` e
+> `LCLI-05` foram **aprovados em 2026-11-25** (decididos, opção A de cada bloco); execução/evidência seguem pendentes.
 
 ## 0. Como ler
 
-Estados: **aberta**, **proposta**, **fechada** (com evidência). `arquitetura` propõe; o dono do
+Estados: **fechada** (com evidência citada) e **bloqueada** (falta decisão, execução ou evidência; a
+linha nomeia o desbloqueio — dono e documento). `arquitetura` propõe; o dono do
 sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de origem.
 
 ## 1. Situação em uma linha
 
-| Grupo | Lacunas | Abertas | Propostas | Fechadas |
-|---|---:|---:|---:|---:|
-| Medição do cliente | 2 | 1 | 0 | 1 |
-| Distribuição | 2 | 1 | 1 | 0 |
-| Processo | 1 | 0 | 0 | 1 |
-| **Total** | **5** | **2** | **1** | **2** |
+| Grupo | Lacunas | Bloqueadas | Fechadas |
+|---|---:|---:|---:|
+| Medição do cliente | 2 | 1 | 1 |
+| Distribuição | 2 | 0 | 2 |
+| Processo | 1 | 1 | 0 |
+| **Total** | **5** | **2** | **3** |
 
 ## 2. Lacunas
 
 | ID | Pergunta | Por que importa | Dono | Estado |
 |---|---|---|---|---|
 | `LCLI-01` | Qual build do cliente é o alvo, e qual é a identidade verificável dele (versão declarada e hash do binário)? | é `LPRT-09` vista do lado do cliente: sem build-alvo, offset e opcode ficam ambíguos | frente `wyd-client` + pesquisa | fechada (2026-11-23: `Q-PRT-1`/`LPRT-09` fixou o cliente 7662 com versão e SHA-256 completos; identidade em `registro-do-cliente.md` §4) |
-| `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | aberta |
-| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | aberta (2026-11-23: **Lucas Cantarelli**, dono do produto, assina a segunda leitura e **não é o operador**; o nome do operador entra na ficha; nunca quem capturou; a lacuna fecha com a primeira ficha assinada) |
+| `LCLI-02` | O que exatamente o patch entrega (`strdef.bin`, assets, executável) e com que versionamento? | é a entrada do manifesto do `wyd-launcher`; sem lista, o patch vira cópia da árvore inteira | `wyd-client` + `wyd-launcher` | **fechada** (2026-11-25: opção A executada — três arquivos de tabela com hash medido em `registro-do-cliente.md` §5.1, entrada em `planejamento-1.0.0/wyd-launcher/docs/specs/patch-1.0.0.json` e verificador com testes em `crates/wyd-launcher/tests/manifesto.rs`; distribuição continua congelada por `LCLI-05`) |
+| `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | **bloqueada como evidência** (2026-11-25, decisão aprovada pelo dono: Lucas Cantarelli assina a segunda leitura e não é o operador; o nome do operador entra na ficha; falta a primeira ficha assinada) |
 | `LCLI-04` | Qual ferramenta faz a captura, onde ela mora, quem responde por ela e como impede gravar dado de jogador? | captura sem ferramenta e fronteira aprovadas vira script solto ou grava dado pessoal; `AGENTS.md` §5, item 6 proíbe executável em `planejamento-1.0.0/` | dono de `wyd-client`; `wyd-protocol` valida o golden; QA revisa | fechada (opção A em 2026-11-23; D3–D6 decididos; implementação pendente) |
-| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **proposta** (2026-11-23: responsável nominal; **distribuição congelada**; `Q-IP-3`–`Q-IP-6` decididas, `Q-IP-1`/`Q-IP-2` com pedido externo iniciado (Q-IP-2 no escopo B, árvore inteira), inventário e pacote do pedido prontos, canal de suporte decidido, envio pelo dono ainda não realizado, sem evidência; `LCLI-02` aberta; nenhuma resposta fechou a lacuna) |
+| `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **bloqueada como evidência** (2026-11-25, decisão aprovada pelo dono: responsável nominal; distribuição congelada; `Q-IP-1`/`Q-IP-2` aprovados; falta a evidência do titular e a execução de `LCLI-02`) |
 
 ### 2.1 `LCLI-04` — decisão da ferramenta e pendências de execução (2026-11-23)
 
@@ -60,7 +61,7 @@ segue `LPRT-10` e nunca grava bruto com dados de jogador no repositório.
 
 **A1 autorizada em 2026-11-23 (resposta A).** O dono autorizou implementar o peer da opção A com handshake
 mínimo local, o `ECAP` e a CLI, e executar a captura A1. A CLI ainda não existe; a captura não foi
-executada. `LPRT-03` continua aberta até a segunda leitura; `LPRT-06` continua dependente das capturas
+executada. `LPRT-03` continua bloqueada até a segunda leitura; `LPRT-06` continua dependente das capturas
 B/C e do seed sintético. Nenhuma lacuna deste sistema fecha com a autorização.
 
 **O desenho técnico do ECAP e o peer de A1 estão fora de D3–D6.** D3 continua sendo a decisão de
@@ -74,7 +75,7 @@ A localização e o dono de `wyd-client/tools/` estão decididos; D3–D6 també
 próximo trabalho é implementar o `ECAP` operado por `wyd-server` e a CLI Rust em
 `wyd-client/tools/`; depois, executar a captura A1. Em 2026-11-23 o dono escolheu que **QA designado**
 assina a segunda leitura e assumiu ele próprio a função: **Lucas Cantarelli** (dono do produto); o dono do
-`wyd-protocol` é suplente. `LCLI-03` continua aberta porque o nome só entra na primeira ficha assinada;
+`wyd-protocol` é suplente. `LCLI-03` continua bloqueada porque o nome só entra na primeira ficha assinada;
 `wyd-protocol` valida a conformidade do frame com `LPRT-10`, e uma pessoa diferente de quem capturou faz
 a segunda leitura.
 
@@ -113,9 +114,61 @@ ou autoriza distribuição.
 
 | ID de origem | O que falta medir | Estado lá |
 |---|---|---|
-| `LPRT-03` | origem da `KeyWord` no handshake | aberta (`wyd-protocol/lacunas.md`) |
-| `LPRT-06` | encoding e terminador de string | aberta (idem) |
-| `LPRT-09` | build-alvo e compatibilidade | fechada em 2026-11-23 (`Q-PRT-1`: 7662 + SHA-256); a comparação entre builds segue não medida |
+| `LPRT-03` | origem da `KeyWord` no handshake | bloqueada (`wyd-protocol/lacunas.md`) |
+| `LPRT-06` | encoding e terminador de string | bloqueada (idem) |
+| `LPRT-09` | build-alvo e compatibilidade | fechada em 2026-11-23 (`Q-PRT-1`: 7662 + SHA-256); a comparação entre builds segue não medida Refletida em `planejamento-1.0.0/wyd-client/registro-do-cliente.md`. |
 
 `LPRT-03` e `LPRT-06` fecham no `wyd-protocol`, com a captura que o `wyd-client` fornece; `LPRT-09` fechou
 por decisão de alvo. Duplicar o registro aqui criaria dois donos para a mesma lacuna.
+---
+
+## 4. Bloco de decisão das lacunas bloqueadas
+
+As linhas `LCLI-02`, `LCLI-03` e `LCLI-05` em §2 não mudam de estado até o artefato de fechamento
+existir; o que segue é a proposta da arquitetura, **aceita pelo dono em 2026-11-25 na opção A de cada bloco** (`AGENTS.md` §5, item 8).
+
+**LCLI-02 — o que o patch entrega.**
+- **Dono da decisão:** `wyd-client` + `wyd-launcher`; o formato do pacote é do ADR
+  `planejamento-1.0.0/wyd-launcher/docs/arquitetura/adr/adr-lch-0001-manifesto-canonico-assinado.md`.
+- **Pergunta fechada:** quais arquivos o patch do 1.0.0 entrega — `strdef.bin`, assets de dados e/ou
+  executável — e como cada um é versionado e verificado?
+- **Opções:** (A) **dados + launcher próprio** — `strdef.bin` e assets com SHA-256 no manifesto
+  assinado, versão semântica do patch, nenhum binário de terceiro no pacote; custo: o jogador precisa
+  da instalação base; (B) **substituir a árvore inteira do cliente** — inclui o executável original;
+  custo: pacote grande e redistribuição de binário de terceiro, contra o que `LCLI-05` discute.
+- **Recomendação:** A, porque o ADR do manifesto canônico já exige hash por arquivo e o mínimo
+  distribuível é o que a distribuição congelada permite.
+- **Aceite do dono (2026-11-25):** opção **A** aprovada — dados + launcher próprio, nenhum binário de terceiro no pacote.
+- **Executado em 2026-11-25:** lista fechada de três arquivos com hash medido em `registro-do-cliente.md` §5.1, manifesto `patch-1.0.0.json` e verificador em `crates/wyd-launcher` com testes de hash divergente; a linha passou a `fechada`.
+- **O que fechou:** lista fechada de arquivos com hash em
+  `planejamento-1.0.0/wyd-client/registro-do-cliente.md` §3 e §5, entrada correspondente no manifesto e
+  teste do launcher que recusa hash divergente; a linha `LCLI-02` cita os três.
+
+**LCLI-03 — onde mora a ficha de captura.**
+- **Dono da decisão:** QA designado + dono do produto; o plano de captura é
+  `planejamento-1.0.0/wyd-client/registro-do-cliente.md` §7.
+- **Pergunta fechada:** onde a ficha de captura fica registrada, quem assina a segunda leitura e com
+  que data e identificador?
+- **Opções:** (A) **ficha datada como seção do registro do cliente**, com operador, revisor nominal,
+  hash do artefato e link para o golden; custo: o registro cresce a cada captura; (B) **ficha solta em
+  cada golden**, sem registro central; custo: perde a trilha única e a segunda leitura não é
+  verificável em um lugar.
+- **Recomendação:** A, porque §7 já fixa o plano e centralizar mantém a trilha auditável no arquivo que
+  já é dono do estado do cliente.
+- **Aceite do dono (2026-11-25):** opção **A** aprovada — ficha datada como seção do registro do cliente.
+- **Artefato que falta (o que fecha):** a primeira ficha datada, com operador e revisor nomeados e o hash do artefato; a linha
+  `LCLI-03` passa a citar a ficha.
+
+**LCLI-05 — o que pode ser distribuído.**
+- **Dono da decisão:** dono do produto (direito e licença) + arquitetura.
+- **Pergunta fechada:** o 1.0.0 pode distribuir o binário do cliente, ou só dados e peças próprias, com
+  as marcas removidas e qual evidência autoriza cada uso?
+- **Opções:** (A) **só dados e peças próprias** — `strdef.bin` e assets derivados, launcher próprio,
+  nenhum binário de terceiro e nenhuma marca; custo: o usuário aplica sobre a instalação que já possui;
+  (B) **distribuir o binário original com o patch**; custo: redistribuição sem licença registrada e
+  exposição do projeto público.
+- **Recomendação:** A, porque é a única forma que não depende de licença de terceiro (`H` com `LCLI-05`) e mantém
+  `wyd-client/files/` fora do git.
+- **Aceite do dono (2026-11-25):** opção **A** aprovada — só dados e peças próprias, distribuição congelada, pedido `Q-IP-1`/`Q-IP-2` aprovado para envio.
+- **Artefato que falta (o que fecha):** parecer datado em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` §6, lista de
+  arquivos permitidos e pacote sem marca; a linha `LCLI-05` cita o parecer.

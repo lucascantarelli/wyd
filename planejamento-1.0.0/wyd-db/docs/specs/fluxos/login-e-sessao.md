@@ -128,14 +128,14 @@ outro — a leitura de identidade pelo jogo é por view (`0029`).
 
 | Tabela | Operação | Migration dona |
 |---|---|---|
-| `portal.person` | `SELECT`, `UPDATE` de contador e `last_login_at` | `migrations/0003-portal-person.md` |
-| `portal.person_session` | `INSERT`, `UPDATE` de `last_seen_at`/`revoked_at` | `migrations/0004-portal-access.md` |
-| `game.account` | `SELECT`, `UPDATE` de contador de PIN e senha | `migrations/0005-game-account.md` |
-| `game.account_moderation` | `SELECT` | `migrations/0005-game-account.md` |
-| `game.server_channel` | `SELECT` | `migrations/0007-game-session.md` |
-| `game.session` | `INSERT`, `UPDATE` de renovação e liberação | `migrations/0007-game-session.md` |
-| `ops.login_attempt` | `INSERT` | `migrations/0002-ops-audit.md` |
-| `ops.audit_log` | `INSERT` | `migrations/0002-ops-audit.md` |
+| `portal.person` | `SELECT`, `UPDATE` de contador e `last_login_at` | `migrations/0003_portal_person.md` |
+| `portal.person_session` | `INSERT`, `UPDATE` de `last_seen_at`/`revoked_at` | `migrations/0004_portal_access.md` |
+| `game.account` | `SELECT`, `UPDATE` de contador de PIN e senha | `migrations/0005_game_account.md` |
+| `game.account_moderation` | `SELECT` | `migrations/0005_game_account.md` |
+| `game.server_channel` | `SELECT` | `migrations/0007_game_session.md` |
+| `game.session` | `INSERT`, `UPDATE` de renovação e liberação | `migrations/0007_game_session.md` |
+| `ops.login_attempt` | `INSERT` | `migrations/0002_ops_audit.md` |
+| `ops.audit_log` | `INSERT` | `migrations/0002_ops_audit.md` |
 
 ## O que este fluxo não cobre
 

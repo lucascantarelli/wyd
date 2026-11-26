@@ -95,7 +95,7 @@ Ajuste manual de saldo (`account_wallet.coin`) **não** é escrita direta de tel
 (`launcher_release`) com versão, notas e URL do manifesto assinado — o binário e a assinatura ficam no
 `wyd-ops`. Essas **4 tabelas não existem nas 92 originais** de `plano-migrations.md` §3: o lote
 `0030_portal_content.sql` foi desenhado e aprovado em 2026-11-20 e está em
-`planejamento-1.0.0/wyd-db/migrations/0030-portal-content.md` (texto DDL em `ddl-confirmado.md` §5.15),
+`planejamento-1.0.0/wyd-db/migrations/0030_portal_content.md` (texto DDL em `ddl-confirmado.md` §5.15),
 com colunas, `PK`/`FK`, `DEFAULT`, índices e constraints. Com a aprovação, a série ficou em **30
 arquivos / 96 tabelas** naquela data; com os lotes `0031` a `0034`, são **34 arquivos / 109 tabelas**, e as cinco tabelas dos dois adendos têm DDL fechado. É o número que este planejamento cita.
 

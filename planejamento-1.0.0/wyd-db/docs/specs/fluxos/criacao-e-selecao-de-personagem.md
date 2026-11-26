@@ -1,7 +1,7 @@
 > Pergunta: "como um personagem nasce, como nome e vaga são reservados e como a sessão passa a apontar para ele?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0006-game-character.md` §3–§7; `migrations/0007-game-session.md` §6.2 e §7; `migrations/0009-game-inventory.md` §4; `guia-desenvolvedor/portas-e-contratos.md` §5; `lacunas.md` `A14`; `pendencias-de-fechamento.md` §4.2
+> Base: `migrations/0006_game_character.md` §3–§7; `migrations/0007_game_session.md` §6.2 e §7; `migrations/0009_game_inventory.md` §4; `guia-desenvolvedor/portas-e-contratos.md` §5; `lacunas.md` `A14`; `pendencias-de-fechamento.md` §4.2
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)
@@ -158,8 +158,8 @@ levantados como `R` (`requisitos-funcionais.md` §“O que este recorte não cob
 
 | Fonte | O que ela sustenta |
 |---|---|
-| `0006-game-character.md` §4–§7 | colunas, defaults, `CHECK`s, índices e FKs da criação e do soft-delete |
-| `0007-game-session.md` §6.2 e §7 | `character_id` anulável e unicidade da sessão viva por personagem |
+| `0006_game_character.md` §4–§7 | colunas, defaults, `CHECK`s, índices e FKs da criação e do soft-delete |
+| `0007_game_session.md` §6.2 e §7 | `character_id` anulável e unicidade da sessão viva por personagem |
 | `portas-e-contratos.md` §5 / `LCORE-04` | `SelectCharacter`, `load_character` e a fronteira de transação |
 | `lacunas.md` `A14` | soft-delete derruba a sessão e registra `character_deleted` |
 | `RN-DB-002` | uma sessão viva por conta e por personagem, garantida por índice |

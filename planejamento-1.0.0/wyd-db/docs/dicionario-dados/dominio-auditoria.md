@@ -1,7 +1,7 @@
 > Pergunta: "o que o banco registra sobre o que aconteceu — ação de staff e tentativa de login — e o que ele não registra?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.3, §5.4, §5.8, §5.33; `migrations-checklist.md` §2; `0002-ops-audit.md`
+> Base: `ddl-confirmado.md` §5.3, §5.4, §5.8, §5.33; `migrations-checklist.md` §2; `0002_ops_audit.md`
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-22) — DDL fechado, série não aplicada.

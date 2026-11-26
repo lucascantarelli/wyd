@@ -47,7 +47,7 @@ que ele está, não o efeito: a concessão é do `wyd-server`/`wyd-admin`.
   não é apagada.
 - **Entrada:** nenhuma.
 - **Sem FK para `content.item_catalog`:** o catálogo é `0014`, posterior na série, e a FK seria migração
-  aditiva (`0014-content-item.md` §10). O `item_index` fica solto e quem o valida é o dreno.
+  aditiva (`0014_content_item.md` §10). O `item_index` fica solto e quem o valida é o dreno.
 
 ## Unicidade
 
@@ -95,10 +95,10 @@ Esta é a única tabela do dicionário com `GRANT` explícito de escrita para pa
 
 - **Enfileira:** `wyd_portal` (`SELECT, INSERT`) — o jogo não enfileira.
 - **Drena:** `wyd_game` (`SELECT, UPDATE`) — marca `claimed`, `applied` ou `failed`.
-- **Lê:** `wyd_read` (`SELECT` por default privilege de `ops`, `0001-bootstrap.md` §7).
+- **Lê:** `wyd_read` (`SELECT` por default privilege de `ops`, `0001_bootstrap.md` §7).
 - **Não escreve:** `wyd_admin`; `0032` concede `INSERT` e `SELECT (id)` só em `ops.audit_log`. Dono da
-  permissão: `migrations/0012-ops-delivery.md` §8.
+  permissão: `migrations/0012_ops_delivery.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0012-ops-delivery.md` — arquivo `0012_ops_delivery.sql`.
+Forma (dona): `migrations/0012_ops_delivery.md` — arquivo `0012_ops_delivery.sql`.

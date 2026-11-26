@@ -81,11 +81,11 @@ rota-modelo com parâmetro literal: a URL concreta não entra na chave.
 
 - **Escreve:** `wyd_admin` — `SELECT, INSERT, UPDATE` concedidos pelo próprio `0033`; `DELETE` **não** é
   de runtime, e o expurgo é rotina de operação com papel de manutenção (`M25` é o precedente).
-- **Lê:** `wyd_read` — `SELECT` herdado do default privilege de `ops` (`0001-bootstrap.md` §7).
+- **Lê:** `wyd_read` — `SELECT` herdado do default privilege de `ops` (`0001_bootstrap.md` §7).
 - **Não escrevem:** `wyd_game` e `wyd_portal` têm `USAGE` em `ops` mas nenhum privilégio de tabela aqui
   (`42501`).
 
 ## Migration
 
-Forma (dona): `migrations/0033-ops-idempotency.md` — arquivo `0033_ops_idempotency.sql`; DDL em
+Forma (dona): `migrations/0033_ops_idempotency.md` — arquivo `0033_ops_idempotency.sql`; DDL em
 `ddl-confirmado.md` §5.33.

@@ -75,6 +75,7 @@ aqui fica só o efeito para a captura.
 | `LPRT-09` | alvo decidido em 2026-11-23; a leitura acompanha todas as capturas | toda captura é amarrada a uma build; sem build identificada, o byte não é atribuível ao alvo fixado |
 
 ## 3. `LPRT-03` — handshake e origem da `KeyWord`
+**Sem arquivo no repositório:** `keyword-e-checksum.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Cenário A1 — handshake.** Abrir o cliente contra o `ECAP` e capturar do primeiro byte até o fim do
 handshake, sem outra ação; registrar a build usada. O peer de A1 foi decidido em `Q-SRV-5` (C, com
@@ -95,14 +96,15 @@ bloco; e o instante em que a tela muda de estado (conexão aceita, lista de pers
 - qual seria o offset do campo dentro do frame, **derivado da fronteira do frame**, não do pacote.
 
 **Fecha quando.** A ficha datada identifica o candidato, o ponto do handshake, o offset derivado e a
-origem da afirmação, a segunda leitura confere no bruto e `keyword-e-checksum.md` passa a citar o
-golden — é esta captura, junto dos goldens do fio, que destrava a `0.1.0` (§9.1). Enquanto isso, a
+origem da afirmação, a segunda leitura confere no bruto e `keyword-e-checksum.md` (ainda **a escrever**)
+passa a citar o golden — é esta captura, junto dos goldens do fio, que destrava a `0.1.0` (§9.1). Enquanto isso, a
 origem da semente continua `H`.
 
 **Inconclusiva se.** O fluxo não foi capturado desde o primeiro byte, veio só um sentido, ou a build
 não está identificada — mesmo que o valor "pareça" reconhecível.
 
 ## 4. `LPRT-06` — texto acentuado
+**Sem arquivo no repositório:** `payloads/tipos-e-encoding.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Cenário.** Com um personagem de teste criado para a captura, enviar texto conhecido: um nome com
 acentuação, uma linha de chat com acentuação e uma linha que preencha o campo até o limite aceito pelo
@@ -121,7 +123,7 @@ a ficha; a captura de tela do mesmo instante em que o texto aparece; e a build u
 - o que o cliente faz quando o texto excede o campo: recusa, corta ou envia assim mesmo.
 
 **Fecha quando.** Bytes e texto visível estão no mesmo registro datado, a segunda leitura reproduz a
-transcrição e `payloads/tipos-e-encoding.md` cita o golden. Isso acontece **antes** de a família
+transcrição e `payloads/tipos-e-encoding.md` (ainda **a escrever**) cita o golden. Isso acontece **antes** de a família
 `personagem` entrar (`0.2.0`), porque o nome já atravessa o fio como string. Até lá, encoding e
 terminador seguem `H`.
 
@@ -129,6 +131,7 @@ terminador seguem `H`.
 mesmo instante, ou o frame não pôde ser isolado do resto do fluxo.
 
 ## 5. `LPRT-09` — build do cliente
+**Sem arquivo no repositório:** `versionamento-e-compatibilidade.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **Cenário.** Duas vias, e cada uma vale como registro próprio: (a) leitura do binário — nome do
 arquivo, data e hash, e o ponto onde a versão aparece; (b) captura do pacote de boas-vindas ou do
@@ -146,7 +149,7 @@ fluxo em que a versão aparece, se aparecer; e a build anterior, se houver, para
   sem completar por dedução.
 
 **Fecha quando.** Há registro datado que identifica a build e a fonte da leitura; a segunda leitura
-confere; e `versionamento-e-compatibilidade.md` e o catálogo citam o registro. O alvo está **decidido**
+confere; e `versionamento-e-compatibilidade.md` (ainda **a escrever**) e o catálogo citam o registro. O alvo está **decidido**
 desde 2026-11-23 (`Q-PRT-1`: 7662 + SHA-256); o que a leitura confirma é a versão declarada pelo binário.
 
 **Inconclusiva se.** A build não pôde ser identificada ou o trecho lido não declara versão alguma.
@@ -190,15 +193,16 @@ fora do repositório e uma cópia resumida acompanha o frame anonimizado.
 |---|---|---|
 | bruto e ficha completa | fora do repositório, caminho no campo 8 | frente `wyd-client` |
 | frame anonimizado e ficha resumida | `tests/golden/` (planejamento) | frente `wyd-client` |
-| entrada pública: ID, família, opcode, origem, data e o que prova | `goldens/catalogo.md` (planejamento) | equipe do wyd-protocol |
+| entrada pública: ID, família, opcode, origem, data e o que prova | [`catalogo.md`](catalogo.md) | equipe do wyd-protocol |
 | execução pendente e estado | ficha de captura e `lacunas.md` §1 | `lacunas.md` |
 
 **Retenção e segunda leitura (2026-11-23).** O bruto fica em acesso restrito, fora do repositório, e
 é descartado 30 dias após a segunda leitura (D5). A segunda leitura é feita por QA designado, com o
 dono do `wyd-protocol` como suplente, nunca por quem capturou (D6); o QA designado está nomeado em
-`LCLI-03`, e nome e data entram no campo 11 na primeira ficha. Enquanto
-`goldens/catalogo.md` não existir, nenhum ID é alocado: a captura fica identificada pela ficha e a
-lacuna continua `aberta`. O ID `G-<familia>-<nn>` nasce na aceitação, no catálogo.
+`LCLI-03`, e nome e data entram no campo 11 na primeira ficha. O catálogo
+existe e está vazio ([`catalogo.md`](catalogo.md)): nenhum ID é alocado antes da aceitação, a captura
+fica identificada pela ficha e a lacuna continua `aberta`. O ID `G-<familia>-<nn>` nasce na aceitação,
+no catálogo.
 
 ## 8. O que nunca capturar
 

@@ -2,7 +2,7 @@
 > Público: Desenvolvedor novo
 > Dono: equipe do wyd-docs
 > Base: —
-> Revisado em: 2026-11-19
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-19)
 
@@ -32,6 +32,7 @@ mapa do sistema (`roadmap-fase-3-para-4.md`); nenhum dos dois é publicado, e es
 eles sem repetir fase nem critério.
 
 ## O que o MkDocs 2.0 não tem
+**Sem arquivo no repositório:** `mkdocs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Medido em 2026-11-19 no `2.0.dev6`: sem `mkdocs.yml`, sem plugin, sem tema embutido, sem
 configuração de Markdown, sem modo estrito e sem suporte a Windows (`PosixPath`). Cada ausência tem
@@ -44,3 +45,40 @@ com origem e destino de cada pasta, é a de `wyd-docs-1.0.0.md` §3.
 
 O teto de páginas e o gate são do plano diretor (`wyd-docs-1.0.0.md`); as decisões pendentes têm
 dono e estado em `lacunas.md` §1.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [wyd-docs — convenções editoriais](convencoes.md)
+- [Módulos do `wyd-docs` — detalhamento](modulos.md)
+- [wyd-docs — critério de revisão](revisao.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+
+### arquitetura/adr
+
+- [ADR-DOC-0001 — Publicação é ato à parte](arquitetura/adr/adr-doc-0001-publicacao-ato-a-parte.md)
+- [ADRs — `wyd-docs`](arquitetura/adr/index.md)
+
+### guia-autor
+
+- [wyd-docs — guia do autor](guia-autor/index.md)
+
+### planos
+
+- [wyd-docs — métrica do site](planos/metricas.md)
+- [plano-de-testes](planos/plano-de-testes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

@@ -7,6 +7,7 @@
 **Estado:** proposto (2026-11-22) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Exigência do guarda por slot de 0 a 7, com oito números posicionais. A tabela não nomeia as oito
 posições: o bloco do `Guard.txt` não tem semântica provada, e inventar nome seria promover hipótese a
@@ -55,15 +56,15 @@ O tamanho fixo de oito **não** é garantido para o array vazio. A expressão é
 armadilha registrada em `game_matrix`: array sem nenhum elemento passa.
 
 Os oito números são posicionais: o significado de cada posição é `H`, declarado em
-`migrations/0019-content-world.md` §9.
+`migrations/0019_content_world.md` §9.
 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

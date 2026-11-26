@@ -63,16 +63,16 @@ Nenhum além da PK. Sem carimbos e sem trigger: import puro.
 ## Armadilha de leitura
 
 `source_size` aceita 756 e 920 além de 816 porque **222 linhas do legado declaram tamanho errado**
-(`H`, `migrations/0019-content-world.md` §6.2). O `CHECK` registra o defeito em vez de escondê-lo: o
+(`H`, `migrations/0019_content_world.md` §6.2). O `CHECK` registra o defeito em vez de escondê-lo: o
 tamanho aqui é o declarado na origem, não o medido no arquivo.
 
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

@@ -10,7 +10,9 @@
 > `wyd-core` não têm contrato sem o fio. O molde é o de `planejamento-1.0.0/wyd-db/` — estrutura,
 > não texto.
 >
-> Baseline de referência, medido em **2026-11-19** em `deprecated/crates/wyd-protocol/`: **26
+> **Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-PRT`/`RNF-PRT` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md` e `docs/specs/requisitos.md` (6 `RF-PRT` + 6 `RNF-PRT`). Os 2 lacunas de captura (`LPRT-03`, `LPRT-06`) permanecem abertas e não bloqueiam o checklist de organização.
+
+Baseline de referência, medido em **2026-11-19** em `deprecated/crates/wyd-protocol/`: **26
 > arquivos `.rs`**, **198 variantes de `Opcode`**, **7 flags de direção**, **`HEADER_SIZE = 12`**,
 > **`MAX_MESSAGE_SIZE = 8192`**, **14 testes** (10 em `tests/golden/pacotes.rs`, 4 em
 > `tests/integracao/roundtrip.rs`). Esses números descrevem o que a reescrita **substitui**.
@@ -96,6 +98,7 @@ consumidor precisa de offset, o contrato está incompleto.
 ---
 
 ## 2. Público e perguntas
+**Sem arquivo no repositório:** `arquitetura/camadas-de-codec.md`, `arquitetura/seguranca-do-fio.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Público | Pergunta que ele faz | Onde a resposta mora |
 |---|---|---|
@@ -107,6 +110,12 @@ consumidor precisa de offset, o contrato está incompleto.
 | **Arquiteto** | \"por que o codec é assim e onde estão as fronteiras?\" | `arquitetura/` + `arquitetura/adr/` |
 | **Segurança** | \"a ofuscação protege o quê e o que entra em log?\" | `arquitetura/seguranca-do-fio.md` |
 | **Agente de IA** | \"qual o procedimento exato para esta tarefa?\" | `prompts/` + `skills/` |
+
+**Medido em 2026-11-25:** das páginas citadas nesta tabela, existem `goldens/como-capturar.md` e
+`goldens/catalogo.md`; `arquitetura/camadas-de-codec.md`, `arquitetura/seguranca-do-fio.md`,
+`guia-desenvolvedor/como-adicionar-opcode.md` e as de `payloads/`, `guia-teste/` **não foram escritas**
+— são teto de §4, não página publicada.
+
 
 Nenhuma página existe sem um público e uma pergunta desta tabela.
 
@@ -293,6 +302,10 @@ prova (`LPRT-03`, `LPRT-06` e os goldens por família). Ver §9.
 
 ## 5. Papel de cada pasta
 
+**Medido em 2026-11-25:** os nomes de página citados em §5.2–§5.5 dizem onde o conteúdo **deve** morar;
+das páginas de `arquitetura/`, `wire/`, `payloads/` e `specs/`, só `goldens/como-capturar.md` e
+`goldens/catalogo.md` existem — as demais ainda **não foram escritas**.
+
 ### 5.1 `docs/` raiz
 
 | Arquivo | Responde | Conteúdo obrigatório |
@@ -302,11 +315,12 @@ prova (`LPRT-03`, `LPRT-06` e os goldens por família). Ver §9.
 | `glossario.md` | \"o que significa este termo?\" | CPSock, `HEADER`, `Size`, `KeyWord`, `CheckSum`, `Type`, `ID`, `ClientTick`, opcode, flag de direção, `FLAG_NEW`, golden, frame, payload, ofuscação, enquadramento |
 
 ### 5.2 `docs/arquitetura/`
+**Sem arquivo no repositório:** `fronteira-protocolo-rede.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Pergunta:** \"por que o codec é assim, onde termina o protocolo e começa a rede?\"
 - **Fronteira:** desenho e decisão. Regra de campo fica em `payloads/`; reação a pacote inválido
-  fica em `fronteira-protocolo-rede.md`, que enuncia a política **do crate** e aponta a decisão de
-  `wyd-net`.
+  fica em `fronteira-protocolo-rede.md` (ainda **a escrever**), que enuncia a política **do crate** e
+  aponta a decisão de `wyd-net`.
 - **Regra:** toda página tem pelo menos um diagrama Mermaid e uma seção \"o que quebra se mudar\".
 
 ### 5.3 `docs/specs/`
@@ -322,8 +336,8 @@ prova (`LPRT-03`, `LPRT-06` e os goldens por família). Ver §9.
 - **Pergunta:** \"como um byte vira frame e um frame vira mensagem?\"
 - **Fronteira:** forma do fio. Valor de enum de jogo não entra: `RemoveMob` descreve a mensagem, não
   a regra de morte.
-- **Regra:** `header.md` é dono dos offsets do `HEADER`; `tabela-de-opcodes.md` é dono do total de
-  opcodes — medido do gerador na versão, nunca herdado do legado — e da origem da tabela;
+- **Regra:** `header.md` (a escrever) é dono dos offsets do `HEADER`; `tabela-de-opcodes.md` (a
+escrever) é dono do total de opcodes (as duas páginas ainda **não foram escritas**) — medido do gerador na versão, nunca herdado do legado — e da origem da tabela;
   `opcodes/*` só classifica por família e aponta para o payload.
 
 ### 5.5 `docs/payloads/`
@@ -370,6 +384,11 @@ prova (`LPRT-03`, `LPRT-06` e os goldens por família). Ver §9.
 
 Formato: **pergunta** + **seções obrigatórias**. Seções a mais são permitidas; faltar uma reprova.
 
+**Medido em 2026-11-25:** das páginas especificadas em §6.2–§6.8, existem `docs/goldens/como-capturar.md`
+e `docs/goldens/catalogo.md`, além de `docs/index.md`, `docs/convencoes.md`, `docs/roadmap/index.md` e
+`docs/roadmap/fases.md`. **As demais não foram escritas** — a tabela de cada seção é o molde da página
+futura, não a página.
+
 ### 6.1 Cabeçalho e estado (todas as páginas)
 
 Cinco linhas, iguais às do projeto (`wyd-db/docs/convencoes.md`, seção *Cabeçalho de página*):
@@ -385,6 +404,7 @@ Cinco linhas, iguais às do projeto (`wyd-db/docs/convencoes.md`, seção *Cabe�
 Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalho não é `aceito`.
 
 ### 6.2 `docs/arquitetura/*.md`
+**Sem arquivo no repositório:** `camadas-de-codec.md`, `fronteira-protocolo-rede.md`, `fluxo-de-um-pacote.md`, `versionamento-e-compatibilidade.md`, `erros-e-politicas.md`, `seguranca-do-fio.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
@@ -404,6 +424,7 @@ Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalh
 `ADR-PRT-0001`. Registrar decisão futura é proibido (`AGENTS.md` §5, item 3).
 
 ### 6.3 `docs/wire/*.md`
+**Sem arquivo no repositório:** `header.md`, `enquadramento.md`, `keyword-e-checksum.md`, `tabela-de-opcodes.md`, `flags-de-direcao.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Arquivo | Pergunta | Seções obrigatórias |
 |---|---|---|
@@ -417,6 +438,7 @@ Seguida de `**Estado:** proposto (AAAA-MM-DD)`. Página do `docs/` sem cabeçalh
 | `opcodes/*.md` | \"quais mensagens existem nesta família?\" | tabela `opcode | direção | payload | golden | estado`; agrupamento por fluxo; o que a família não cobre |
 
 ### 6.4 `docs/payloads/*.md`
+**Sem arquivo no repositório:** `tipos-e-encoding.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 **`index.md`** — mapa das famílias, total de payloads documentados com fonte, estado por família.
 
@@ -425,6 +447,7 @@ faixa; o que fazer quando golden e página divergem (**prevalece o golden**; a p
 
 **`tipos-e-encoding.md`** — largura e sinal de cada tipo; ordem de bytes; string de tamanho fixo,
 terminador e encoding; campo opcional; alinhamento e padding; como o crate lê sem `unsafe`.
+A página **ainda não existe**: é teto de §4.
 
 **Uma página por família** (`autenticacao`, `personagem`, `cena`, `movimento`, `combate`,
 `inventario`, `comercio`, `quest`, `ui`) com, nesta ordem:
@@ -462,6 +485,9 @@ estado | efeito no buffer/conexão`, estados proibidos.
 | `como-capturar.md` | \"como produzo um golden novo?\" | ferramenta e ambiente; o que capturar; como anonimizar dado de jogador; onde salvar; como registrar origem; o que nunca capturar |
 | `catalogo.md` | \"o que cada golden prova?\" | tabela `ID | família | opcode | origem | data | o que prova` — **dono único** do total |
 | `como-adicionar.md` | \"como um golden entra na suíte?\" | nome, pasta, teste que consome, revisão exigida, o que reprova |
+
+**Medido em 2026-11-25:** `como-capturar.md` e `catalogo.md` existem (0 goldens aceitos); `index.md` e
+`como-adicionar.md` são teto e ainda **não foram escritas**.
 
 ### 6.8 `docs/planos/*.md`, `docs/roadmap/*.md`, guias e `tests/`
 

@@ -1,7 +1,7 @@
 > Pergunta: "o que o portal publica — notícia, banner, guia, versão do launcher — e como o segundo fator do staff é guardado?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.15, §5.20; `migrations-checklist.md` §2; `0030-portal-content.md`, `0031-portal-mfa.md`
+> Base: `ddl-confirmado.md` §5.15, §5.20; `migrations-checklist.md` §2; `0030_portal_content.md`, `0031_portal_mfa.md`
 > Revisado em: 2026-11-21
 
 **Estado:** proposto (2026-11-21) — DDL fechado, série não aplicada.

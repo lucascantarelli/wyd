@@ -79,6 +79,8 @@ visual da raiz.
 
 ## Documentação
 
+**Sem arquivo no repositório:** `mkdocs.yml` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+
 O site é gerado de `planejamento-1.0.0/*/docs/` e roda em **MkDocs 2.0** com **Python 3.15**.
 O MkDocs 2.0 é pré-release (`2.0.dev6`), sem `mkdocs.yml`, plugin, tema embutido nem modo estrito —
 por isso o projeto tem tema próprio, montagem em `preparar.py` e gate em `verificar.py`.

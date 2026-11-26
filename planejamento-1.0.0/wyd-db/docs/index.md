@@ -2,7 +2,9 @@
 > Público: todos os públicos de §2 do plano diretor — é a porta de entrada
 > Dono: equipe do `wyd-db`
 > Base: —
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
+
+**Estado:** proposto (2026-11-25)
 
 # wyd-db — documentação oficial
 
@@ -212,8 +214,8 @@ apontavam `RNF` alheio: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` (§6.6.26 daque
 revisão de `Q-BLK-21` está na raiz do sistema (`revisao-de-q-blk-21.md`, arquivo não publicado): o dono
 aprovou **A**, as correções de redação foram aplicadas e as **12** páginas de `tests/` estão `aceito
 (2026-11-24)`. O aceite não cobre capacidade por si — mas em 2026-11-24 a leva de `migrations/` aplicou os
-**28** `.sql` do zero e 13 cenários de `sistema_pg` rodaram verdes: a matriz está **13 de 39** — e o código
-dos 5 alvos já tem permissão: `Q-BLK-18` = A.
+**28** `.sql` do zero, 13 cenários de `sistema_pg` e 5 casos de `runner_pg` rodaram verdes: a matriz está **14 de 39** — e o código
+dos 6 alvos já tem permissão: `Q-BLK-18` = A.
 
 **A medição do foco do sistema é `foco-e-sequencia.md`**, na raiz deste sistema — arquivo de raiz não é
 publicado no site, e por isso é citado aqui como código: ele mantém as seis frentes, a cadeia de
@@ -249,3 +251,71 @@ para a medição do sistema.
 >
 > As regras de escrita, marcação e publicação estão no
 > [✍️ guia de documentação](guia-documentacao/index.md).
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Módulos do `wyd-db` — detalhamento](modulos.md)
+
+### roadmap
+
+- [WYDDB-001 — fixar lint e documentação pública do crate](roadmap/WYDDB-001.md)
+- [WYDDB-002 — congelar contrato público de migrate](roadmap/WYDDB-002.md)
+- [WYDDB-003 — congelar contrato público de provision](roadmap/WYDDB-003.md)
+- [WYDDB-004 — documentar invariantes dos modelos de identidade](roadmap/WYDDB-004.md)
+- [WYDDB-005 — implementar Dsn com Debug redigido](roadmap/WYDDB-005.md)
+- [WYDDB-006 — fechar Command e Report do runner](roadmap/WYDDB-006.md)
+- [WYDDB-007 — fechar Command e Report do provisionamento](roadmap/WYDDB-007.md)
+- [WYDDB-008 — mapear MigrateError para códigos de saída](roadmap/WYDDB-008.md)
+- [WYDDB-009 — mapear ProvisionError para códigos de saída](roadmap/WYDDB-009.md)
+- [WYDDB-010 — provar cadeia de erro sem segredo](roadmap/WYDDB-010.md)
+- [WYDDB-011 — implementar Source e FsSource](roadmap/WYDDB-011.md)
+- [WYDDB-012 — implementar Ledger e MigrationExecutor](roadmap/WYDDB-012.md)
+- [WYDDB-013 — implementar AdvisoryLock e timeout](roadmap/WYDDB-013.md)
+- [WYDDB-014 — ordenar preflight, lock e apply no runner](roadmap/WYDDB-014.md)
+- [WYDDB-015 — separar Catalog e Script no provisionamento](roadmap/WYDDB-015.md)
+- [WYDDB-016 — concentrar SQL de repositório em repo/pg.rs](roadmap/WYDDB-016.md)
+- [WYDDB-017 — implementar save em lote do personagem](roadmap/WYDDB-017.md)
+- [WYDDB-018 — drenar ops.delivery_queue com idempotência](roadmap/WYDDB-018.md)
+- [WYDDB-019 — aplicar grants de portal sem duplicar](roadmap/WYDDB-019.md)
+- [WYDDB-020 — registrar crédito e débito idempotentes](roadmap/WYDDB-020.md)
+- [WYDDB-022 — instrumentar spans e resumo do runner](roadmap/WYDDB-022.md)
+- [WYDDB-023 — emitir relatório do provisionamento sem segredo](roadmap/WYDDB-023.md)
+- [WYDDB-024 — correlacionar erro por versão e arquivo](roadmap/WYDDB-024.md)
+- [WYDDB-025 — expor sinais de lock e drift](roadmap/WYDDB-025.md)
+- [WYDDB-026 — documentar diagnóstico de lock e ledger](roadmap/WYDDB-026.md)
+- [WYDDB-027 — testar tipos puros de migration](roadmap/WYDDB-027.md)
+- [WYDDB-028 — testar contrato da série](roadmap/WYDDB-028.md)
+- [WYDDB-029 — testar contrato catálogo ↔ série](roadmap/WYDDB-029.md)
+- [WYDDB-030 — testar sistema PostgreSQL e ciclo](roadmap/WYDDB-030.md)
+- [WYDDB-031 — testar fronteira de papéis e views](roadmap/WYDDB-031.md)
+- [WYDDB-032 — testar stack de capacidades](roadmap/WYDDB-032.md)
+- [WYDDB-033 — criar fixtures e factories isoladas](roadmap/WYDDB-033.md)
+- [WYDDB-034 — fechar gate anti-skip e matriz CAP](roadmap/WYDDB-034.md)
+- [WYDDB-035 — escrever 0001_bootstrap.sql](roadmap/WYDDB-035.md)
+- [WYDDB-036 — escrever 0002_ops_audit.sql](roadmap/WYDDB-036.md)
+- [WYDDB-037 — escrever 0003 a 0007 do corte vertical](roadmap/WYDDB-037.md)
+- [WYDDB-038 — escrever 0008 a 0012 do estado de jogo](roadmap/WYDDB-038.md)
+- [WYDDB-039 — escrever 0013 a 0029 de conteúdo e views](roadmap/WYDDB-039.md)
+
+### specs
+
+- [visao-e-escolpo](specs/visao-e-escolpo.md)
+
+### specs/estados
+
+- [grant](specs/estados/grant.md)
+- [item-e-refino](specs/estados/item-e-refino.md)
+- [personagem](specs/estados/personagem.md)
+- [sessao](specs/estados/sessao.md)
+
+### specs/fluxos
+
+- [carga-de-conteudo](specs/fluxos/carga-de-conteudo.md)
+- [carregamento-e-save](specs/fluxos/carregamento-e-save.md)
+- [compra-e-credito](specs/fluxos/compra-e-credito.md)
+- [concessao-de-grant](specs/fluxos/concessao-de-grant.md)
+- [criacao-e-selecao-de-personagem](specs/fluxos/criacao-e-selecao-de-personagem.md)

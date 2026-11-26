@@ -51,6 +51,7 @@ que a suíte faz em cada caso, e o que acontece quando alguém desvia.
 | 14 | espera por **estado**, nunca `sleep` | teste lento e instável que esconde corrida |
 
 ## 4. Dado
+**Sem arquivo no repositório:** `resources/accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | # | Regra | Violação aparece como |
 |---|---|---|
@@ -69,6 +70,7 @@ que a suíte faz em cada caso, e o que acontece quando alguém desvia.
 - **Testar regra de jogo:** `RF-DB-015`/`RF-DB-016` são de `wyd-server`.
 
 ## 6. Dúvidas abertas
+**Sem arquivo no repositório:** `db.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|

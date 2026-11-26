@@ -10,8 +10,9 @@ o arquivo é só seed) e se há bloqueio para escrevê-la. O plano (`plano-migra
 **ordem e do escopo**; o texto DDL fechado é dono de `ddl-confirmado.md`; a **decisão** de cada
 bloqueio é dona de `lacunas.md`. Aqui não se decide nada: aqui se acompanha.
 
-Este arquivo fica na **raiz** de `planejamento-1.0.0/wyd-db/`, fora de `migrations/`: a pasta guarda só
-página de migration, uma por arquivo `.sql` da série.
+Este arquivo fica na **raiz** de `planejamento-1.0.0/wyd-db/`, fora de `migrations/`: a pasta guarda as
+páginas de migration, uma por arquivo `.sql` da série, e a nota transversal `serie-e-regras.md`, que
+não é página numerada nem entra nas contagens.
 
 ## 1. Como ler este checklist
 
@@ -39,12 +40,15 @@ A estrutura do diretório vem do radical do arquivo `.sql`: a página troca **ca
 (`kebab-case`, sem acento), e nenhum underscore do arquivo sobrevive no nome — o par arquivo/página
 fica inequívoco:
 
-`0004_portal_access.sql` → `0004-portal-access.md`
+`0004_portal_access.sql` → `0004_portal_access.md`
 
-Nos 26 arquivos que criam tabela em um schema, o radical é `[numero]_[schema]_[nome]`, e a página sai
-`[numero]-[schema]-[nome].md`. Dois casos não seguem essa forma: os 6 arquivos de seed, cujo segmento
-do meio é `seed` e não schema (`0016_seed_taxonomy.sql` → `0016-seed-taxonomy.md`, que semeia
-`content`); e `0001` e `0029`, que não têm schema próprio — `0001` cria os quatro schemas e `0029`
+Nos 26 arquivos que criam tabela em um schema, o radical é `[numero]-[schema]-[nome]`, igual para o
+`.sql` e para a página: `0005_game_account.sql` → `0005_game_account.md`. A série **versionada** em
+`crates/wyd-db/migrations/` já usa essa forma com hífen; a grafia com underscore (`0005_game_account.sql`)
+que circulou nos rascunhos do plano não corresponde a nenhum arquivo do repositório e foi corrigida em
+todas as páginas em 2026-11-25. Dois casos não seguem essa forma: os 6 arquivos de seed, cujo segmento
+do meio é `seed` e não schema (`0016-seed-taxonomy.sql` → `0016-seed-taxonomy.md`, página planejada que
+semeia `content` e cujo estado de escrita fica em §2); e `0001` e `0029`, que não têm schema próprio — `0001` cria os quatro schemas e `0029`
 cria views de dois deles —, e por isso caem em `[numero]-[nome].md`. A exceção de `0001`/`0029` está
 dita no topo da própria página.
 
@@ -96,40 +100,40 @@ item por item e com o formato da medição — está em `pedido-de-curadoria-dos
 
 | # | Página | Tab. | Estado | Bloqueio |
 |---|---|---:|---|---|
-| 1 | `0001-bootstrap.md` | 1 | `concluída` | — |
-| 2 | `0002-ops-audit.md` | 4 | `concluída` | — (DDL de §5.9 aprovado em 2026-11-20; página escrita e conferida) |
-| 3 | `0003-portal-person.md` | 3 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.1/§5.6/§5.7) |
-| 4 | `0004-portal-access.md` | 2 | `concluída` | — |
-| 5 | `0005-game-account.md` | 5 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.2, com o ledger de `M16`) |
-| 6 | `0006-game-character.md` | 5 | `concluída` | — (DDL de §5.10 aprovado em 2026-11-20; página escrita em 2026-11-20) |
-| 7 | `0007-game-session.md` | 2 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.5) |
-| 8 | `0008-game-skills.md` | 5 | `concluída` | — (DDL de §5.11 aprovado em 2026-11-20; página escrita e conferida em 2026-11-20) |
-| 9 | `0009-game-inventory.md` | 3 | `concluída` | — (DDL de §5.12 aprovado em 2026-11-20; página escrita e conferida) |
-| 10 | `0010-game-guild.md` | 4 | `concluída` | — (DDL de §5.13 aprovado em 2026-11-20; página escrita e conferida) |
-| 11 | `0011-game-economy.md` | 10 | `concluída` | — (DDL de §5.14 aprovado em 2026-11-20; página escrita e conferida) |
-| 12 | `0012-ops-delivery.md` | 1 | `concluída` | — (DDL de §5.16 aprovado em 2026-11-20, com `M25`: dreno por `SKIP LOCKED` e expurgo de 30 dias; página escrita e conferida) |
-| 13 | `0013-content-taxonomy.md` | 5 | `concluída` | — (DDL de §5.17 aprovado em 2026-11-20: `slug` como PK e `item_effect` como look-up; página escrita e conferida) |
-| 14 | `0014-content-item.md` | 1 | `concluída` | — (DDL de §5.18 aprovado em 2026-11-20: colunas com consumidor provado, `kind_slug` anulável e PK `item_index`; página escrita e conferida) |
-| 15 | `0015-content-skill.md` | 1 | `concluída` | — (DDL de §5.19 aprovado em 2026-11-20: tempos brutos, vínculos anuláveis e PK `skill_index`; página escrita e conferida) |
+| 1 | `0001_bootstrap.md` | 1 | `concluída` | — |
+| 2 | `0002_ops_audit.md` | 4 | `concluída` | — (DDL de §5.9 aprovado em 2026-11-20; página escrita e conferida) |
+| 3 | `0003_portal_person.md` | 3 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.1/§5.6/§5.7) |
+| 4 | `0004_portal_access.md` | 2 | `concluída` | — |
+| 5 | `0005_game_account.md` | 5 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.2, com o ledger de `M16`) |
+| 6 | `0006_game_character.md` | 5 | `concluída` | — (DDL de §5.10 aprovado em 2026-11-20; página escrita em 2026-11-20) |
+| 7 | `0007_game_session.md` | 2 | `concluída` | — (página escrita em 2026-11-20 contra `ddl-confirmado.md` §5.5) |
+| 8 | `0008_game_skills.md` | 5 | `concluída` | — (DDL de §5.11 aprovado em 2026-11-20; página escrita e conferida em 2026-11-20) |
+| 9 | `0009_game_inventory.md` | 3 | `concluída` | — (DDL de §5.12 aprovado em 2026-11-20; página escrita e conferida) |
+| 10 | `0010_game_guild.md` | 4 | `concluída` | — (DDL de §5.13 aprovado em 2026-11-20; página escrita e conferida) |
+| 11 | `0011_game_economy.md` | 10 | `concluída` | — (DDL de §5.14 aprovado em 2026-11-20; página escrita e conferida) |
+| 12 | `0012_ops_delivery.md` | 1 | `concluída` | — (DDL de §5.16 aprovado em 2026-11-20, com `M25`: dreno por `SKIP LOCKED` e expurgo de 30 dias; página escrita e conferida) |
+| 13 | `0013_content_taxonomy.md` | 5 | `concluída` | — (DDL de §5.17 aprovado em 2026-11-20: `slug` como PK e `item_effect` como look-up; página escrita e conferida) |
+| 14 | `0014_content_item.md` | 1 | `concluída` | — (DDL de §5.18 aprovado em 2026-11-20: colunas com consumidor provado, `kind_slug` anulável e PK `item_index`; página escrita e conferida) |
+| 15 | `0015_content_skill.md` | 1 | `concluída` | — (DDL de §5.19 aprovado em 2026-11-20: tempos brutos, vínculos anuláveis e PK `skill_index`; página escrita e conferida) |
 | 16 | `0016-seed-taxonomy.md` | — | `bloqueada` | O DDL de `0013` fechou em 2026-11-20; falta reconferir na fonte as contagens de taxonomia listadas em `plano-migrations.md` §4. |
 | 17 | `0017-seed-item-catalog.md` | — | `bloqueada` | O DDL de `0014` fechou em 2026-11-20; as contagens são de 2026-11-08/15 e faltam ser recontadas na fonte (`plano-migrations.md` §4). |
 | 18 | `0018-seed-skill-catalog.md` | — | `bloqueada` | O DDL de `0015` fechou em 2026-11-20; falta a curadoria de classe e linhagem das skills, que é dado e não DDL (`plano-migrations.md` §4). |
-| 19 | `0019-content-world.md` | 13 | `concluída` | — (DDL de §5.21 aprovado em 2026-11-20; página escrita e conferida) |
+| 19 | `0019_content_world.md` | 13 | `concluída` | — (DDL de §5.21 aprovado em 2026-11-20; página escrita e conferida) |
 | 20 | `0020-seed-world.md` | — | `bloqueada` | O DDL de `0019` fechou em 2026-11-20; faltam as contagens de templates, NPCs, lojas, níveis e regiões verificadas na fonte (`plano-migrations.md` §4). |
-| 21 | `0021-content-rules.md` | 5 | `concluída` | — (DDL de §5.22 aprovado em 2026-11-20; página escrita e conferida) |
-| 22 | `0022-content-overrides.md` | 3 | `concluída` | — (DDL de §5.23 aprovado em 2026-11-21; página escrita e conferida) |
+| 21 | `0021_content_rules.md` | 5 | `concluída` | — (DDL de §5.22 aprovado em 2026-11-20; página escrita e conferida) |
+| 22 | `0022_content_overrides.md` | 3 | `concluída` | — (DDL de §5.23 aprovado em 2026-11-21; página escrita e conferida) |
 | 23 | `0023-seed-rules.md` | — | `bloqueada` | O DDL de `0021` e o de `0022` fecharam (2026-11-20 e 2026-11-21); faltam os valores de refino, gemas, SANC e composição verificados na fonte (`plano-migrations.md` §4). |
-| 24 | `0024-content-maps.md` | 2 | `concluída` | — (DDL de §5.24 aprovado em 2026-11-21; página escrita e conferida) |
-| 25 | `0025-content-combat.md` | 4 | `concluída` | — (DDL de §5.25 aprovado em 2026-11-21, com `RESTRICT` no item e teto `1.000.000` em `rate_bps`; página escrita e conferida) |
-| 26 | `0026-content-quests-events.md` | 6 | `concluída` | — (DDL de §5.26 aprovado em 2026-11-21, com `start_minute` e `id` identity na recompensa; página escrita e conferida) |
+| 24 | `0024_content_maps.md` | 2 | `concluída` | — (DDL de §5.24 aprovado em 2026-11-21; página escrita e conferida) |
+| 25 | `0025_content_combat.md` | 4 | `concluída` | — (DDL de §5.25 aprovado em 2026-11-21, com `RESTRICT` no item e teto `1.000.000` em `rate_bps`; página escrita e conferida) |
+| 26 | `0026_content_quests_events.md` | 6 | `concluída` | — (DDL de §5.26 aprovado em 2026-11-21, com `start_minute` e `id` identity na recompensa; página escrita e conferida) |
 | 27 | `0027-seed-quests-events.md` | — | `bloqueada` | O DDL de `0026` fechou em 2026-11-21; faltam a cadeia de quests do 7662 e o calendário de eventos verificados na fonte (`plano-migrations.md` §4). `M19` fechou em 2026-11-19. |
-| 28 | `0028-game-quests-events.md` | 7 | `concluída` | — (DDL de §5.28 aprovado em 2026-11-21; página escrita e conferida) |
-| 29 | `0029-views.md` | — | `concluída` | — (DDL de §5.29 aprovado em 2026-11-21, sem `GRANT` novo; página escrita e conferida) |
-| 30 | `0030-portal-content.md` | 4 | `concluída` | — (DDL de §5.15 aprovado em 2026-11-20; página escrita e conferida) |
-| 31 | `0031-portal-mfa.md` | 1 | `concluída` | — (DDL de §5.20 aprovado em 2026-11-20; página escrita e conferida) |
-| 32 | `0032-admin-grants.md` | — | `concluída` | — (`M27` decidida em 2026-11-21: `GRANT`s de §5.32 ao papel `wyd_admin`, sem tabela; página escrita e conferida; emendada em 2026-11-22 com os `GRANT` da custódia) |
-| 33 | `0033-ops-idempotency.md` | 1 | `concluída` | — (`M30` decidida em 2026-11-22: `ops.idempotency_record`, 7 dias de retenção; DDL de §5.33; página escrita e conferida) |
-| 34 | `0034-portal-market.md` | 11 | `concluída` | — (`M31` decidida em 2026-11-22: dez tabelas em `portal` e `game.market_escrow`; DDL de §5.34; página escrita e conferida) |
+| 28 | `0028_game_quests_events.md` | 7 | `concluída` | — (DDL de §5.28 aprovado em 2026-11-21; página escrita e conferida) |
+| 29 | `0029_views.md` | — | `concluída` | — (DDL de §5.29 aprovado em 2026-11-21, sem `GRANT` novo; página escrita e conferida) |
+| 30 | `0030_portal_content.md` | 4 | `concluída` | — (DDL de §5.15 aprovado em 2026-11-20; página escrita e conferida) |
+| 31 | `0031_portal_mfa.md` | 1 | `concluída` | — (DDL de §5.20 aprovado em 2026-11-20; página escrita e conferida) |
+| 32 | `0032_admin_grants.md` | — | `concluída` | — (`M27` decidida em 2026-11-21: `GRANT`s de §5.32 ao papel `wyd_admin`, sem tabela; página escrita e conferida; emendada em 2026-11-22 com os `GRANT` da custódia) |
+| 33 | `0033_ops_idempotency.md` | 1 | `concluída` | — (`M30` decidida em 2026-11-22: `ops.idempotency_record`, 7 dias de retenção; DDL de §5.33; página escrita e conferida) |
+| 34 | `0034_portal_market.md` | 11 | `concluída` | — (`M31` decidida em 2026-11-22: dez tabelas em `portal` e `game.market_escrow`; DDL de §5.34; página escrita e conferida) |
 
 ## 3. Bloqueios agrupados
 

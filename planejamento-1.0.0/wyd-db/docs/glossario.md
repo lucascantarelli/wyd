@@ -4,10 +4,13 @@
 > Base: —
 > Revisado em: 2026-11-18
 
+**Estado:** proposto (2026-11-25)
+
 Um verbete por termo, com definição de uma a duas linhas e o dono da página que aprofunda. Termo
 que aparece em duas páginas com sentidos diferentes é defeito: o dono é único e os outros apontam.
 
 ## Domínio
+**Sem arquivo no repositório:** `SancRate.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Termo | Definição | Dono |
 |---|---|---|

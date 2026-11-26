@@ -262,6 +262,9 @@ runs:
 
 Exemplo de workflow reutilizável:
 
+O arquivo citado no exemplo (`.github/workflows/_docs.yml`) **não existe** no repositório: é a forma
+proposta, não implementada.
+
 ```yaml
 # .github/workflows/_docs.yml
 on:

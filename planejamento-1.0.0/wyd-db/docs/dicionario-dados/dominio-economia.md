@@ -1,7 +1,7 @@
 > Pergunta: "onde mora o dinheiro — cidade, preço, loja, imposto, cash e ledger — e como o saldo é provado?"
 > Público: Arquiteto de schema e desenvolvedor do `wyd-db`
 > Dono: equipe do wyd-db
-> Base: `ddl-confirmado.md` §5.2, §5.14, §5.34; `migrations-checklist.md` §2; `0011-game-economy.md`
+> Base: `ddl-confirmado.md` §5.2, §5.14, §5.34; `migrations-checklist.md` §2; `0011_game_economy.md`
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-22) — DDL fechado, série não aplicada.

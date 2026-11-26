@@ -4,7 +4,7 @@
 > Público: Desenvolvedor novo, arquitetura e quem opera
 > Dono: frente `wyd-ops`
 > Base: `wyd-ops/plano-ci-real.md`; `wyd-ops/proposta-versoes-e-cobertura-funcional.md`; `AGENTS.md` §4
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
 
@@ -49,8 +49,10 @@ as lacunas abertas — e a trajetória recomendada estão em [Prioridade do proj
 
 ## O que falta
 
-O `wyd-ops` tem propostas, não plano diretor: ainda não há `RF-OPS`, roadmap com DoD por issue nem
-plano de teste de infraestrutura. Esta página abre a porta; não fecha a lacuna.
+O planejamento de organização está fechado: dashboard (`wyd-ops-1.0.0.md`), `RF-OPS`/`RNF-OPS`, plano de
+teste e roadmap com DoD existem. O que falta é aprovação de fronteira/contratos O1–O5, implementação de
+CI/imagem/ambiente/monitoramento/segredos/deploy e aplicação de `Q-OPS-2`. O registro único é
+[lacunas.md](lacunas.md).
 
 ## Limite desta documentação
 
@@ -62,3 +64,49 @@ A hospedagem de produção — `Q-OPS-2` — foi respondida em **A** em 2026-11-
 persistente e Compose. Contrato, VPS, backup e operação continuam **não executados**. O registro e a
 divergência de §3.2 estão em [Decisões do `wyd-ops`](proposta-decisoes-ops.md); §8 registra a ação 2
 dos tipos/campos como executada em 2026-11-19.
+
+## Mapa de páginas
+
+Este mapa garante que toda página de `docs/` seja alcançável a partir deste índice; a pasta dona continua sendo a fonte do conteúdo.
+
+### raiz
+
+- [Estrutura de pastas e mapa de documentação por módulo](estrutura-de-pastas-e-modulos.md)
+- [Mapeamento GitHub — labels, nomes e convenções](github-mapping.md)
+- [Lacunas e decisões pendentes — registro único](lacunas.md)
+- [Módulos do `wyd-ops` — detalhamento](modulos.md)
+- [Pacote de aprovação — contratos O1–O5](pacote-aprovacao-o1-o5.md)
+- [Pacote de aprovação — decisões fora dos contratos O1–O5](pacote-aprovacao-decisoes-fora-o1-o5.md)
+- [Pauta de decisões pendentes — o que falta aprovar para fechar o planejamento](pauta-de-decisoes-pendentes.md)
+
+### arquitetura
+
+- [componentes](arquitetura/componentes.md)
+- [Decisões registradas — projeto WYD 1.0.0](arquitetura/decisoes-registradas.md)
+- [IA, skills e integrações — organização](arquitetura/ia-e-skills.md)
+
+### arquitetura/adr
+
+- [ADR-OPS-0001 — Workspace Cargo único, toolchain e versões](arquitetura/adr/adr-ops-0001-workspace-cargo-unico.md)
+- [ADR-OPS-0002 — Hospedagem de produção em VPS paga com Compose](arquitetura/adr/adr-ops-0002-hospedagem-producao.md)
+- [Candidatos a ADR — backlog de decisões](arquitetura/adr/candidatos.md)
+- [Índice de ADRs — projeto WYD 1.0.0](arquitetura/adr/index.md)
+- [ADR-<SISTEMA>-NNNN — <título curto>](arquitetura/adr/template.md)
+
+### planos
+
+- [Baseline de segurança, monitoramento e deploy — planejamento](planos/baseline-seguranca-monitoramento-deploy.md)
+- [Estratégia de testes — planejamento transversal](planos/estrategia-de-testes.md)
+- [Tarefa de medição — `LNET-01` e `LBOT-03`](planos/medicoes-lnet-01-lbot-03.md)
+- [Pipeline de CI/CD — planejamento](planos/pipeline-ci-cd.md)
+- [plano-de-testes](planos/plano-de-testes.md)
+- [Verificação de skills e integrações — planejamento](planos/verificacao-de-skills-e-integracoes.md)
+
+### roadmap
+
+- [index](roadmap/index.md)
+- [roadmap](roadmap/roadmap.md)
+
+### specs
+
+- [requisitos](specs/requisitos.md)

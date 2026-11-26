@@ -50,6 +50,8 @@ O que ele **não** é: fonte de verdade. O `deprecated/` e a árvore local do cl
 | K4 | conteúdo do patch e `strdef.bin` | cliente → `wyd-launcher` | artefato versionado | patch descreve exatamente os arquivos | **lacuna** `LCLI-02` |
 | K5 | anonimização de dado de jogador | cliente garante | conta, nome, IP e chat removidos antes de gravar | nenhum dado pessoal em artefato versionado | **decidido** (`LPRT-10`), operação pendente |
 
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: árvore de `src/`/`tests/` ausente, `RF-CLI` não numerados, plano de teste próprio ausente, roadmap parcial. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-CLI` + 5 `RNF-CLI`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). `LCLI-01` fechado; `LCLI-02`/`LCLI-03`/`LCLI-05` abertas/propostas; A1 autorizada.
+
 ## 4. Estado medido (`V`, 2026-11-22; páginas recontadas em 2026-11-23)
 
 | Medida | Valor | Fonte |
@@ -66,7 +68,7 @@ repete (um fato, um dono).
 
 ## 5. O que falta
 
-`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`; aberta), `LCLI-03` (QA definido: **Lucas
+`lacunas.md`: `LCLI-02` (conteúdo do patch e `strdef.bin`; **fechada em 2026-11-25** com lista medida, manifesto e verificador), `LCLI-03` (QA definido: **Lucas
 Cantarelli**, dono do produto, que não é o operador; falta a primeira ficha assinada com o nome do
 operador; registro fixado em `tests/golden/` por `LPRT-10`), `LCLI-05` (**proposta**; responsável nominal
 e distribuição congelada; `Q-IP-3`–`Q-IP-6` decididas e `Q-IP-1`/`Q-IP-2` com pedido externo iniciado,
@@ -98,7 +100,6 @@ só fecha após a segunda leitura, e `LPRT-06` continua nas capturas B/C.
 5. Anonimização conferida antes de qualquer captura ser aceita.
 
 ## 7. Próximas páginas
-
 `docs/arquitetura/fronteira.md`, `docs/specs/captura-e-registro.md`,
 `docs/planos/plano-de-testes.md` (E2E do cliente é Playwright, `AGENTS.md` §8) e `docs/roadmap/`.
 `docs/specs/propriedade-intelectual-e-distribuicao.md` já existe como proposta (`LCLI-05`).

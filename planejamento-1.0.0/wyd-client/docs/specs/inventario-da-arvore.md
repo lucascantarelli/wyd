@@ -8,7 +8,8 @@
 
 **Estado:** proposto (2026-11-23) — inventário medido (`V`, 2026-11-23). Só metadados: caminho relativo, tamanho e `sha256`. Nenhum
 conteúdo, screenshot, logo ou binário do cliente é copiado, embutido ou publicado. A distribuição segue
-**congelada**; `LCLI-05` continua `proposta` e `LCLI-02` continua aberta até a evidência do titular.
+**congelada**; `LCLI-05` continua `proposta` e `LCLI-02` fechou em 2026-11-25 como decisão de conteúdo,
+sem liberar distribuição até a evidência do titular.
 
 ## 1. Totais
 
@@ -97,8 +98,9 @@ extraída; ambos são itens do escopo, não uma duplicação a ser distribuída.
 | que o pacote `client.zip` e sua extração estão no escopo | que `client.zip` e a extração são idênticos |
 
 A presença local não é evidência de direito. A classificação de uso e distribuição continua em
-`docs/specs/propriedade-intelectual-e-distribuicao.md` (`LCLI-05`, `proposta`). A lista candidata do
-patch é outro artefato: ela será montada item a item e não pode ser inferida deste inventário.
+`docs/specs/propriedade-intelectual-e-distribuicao.md` (`LCLI-05`, `proposta`). A lista do patch é outro
+artefato: ela foi montada item a item e medida em `registro-do-cliente.md` §5.1 (2026-11-25) e não é
+inferida deste inventário.
 
 ## 5. Como reproduzir e conferir
 
@@ -124,5 +126,6 @@ naquele pacote. A resposta será registrada por item, com origem, autorização,
 destino, e passará pelo gate de release (`Q-IP-6`).
 
 Até a resposta e o registro, **nada** deste inventário autoriza patch, release, captura, publicação ou
-evidência de direitos. `LCLI-05` continua `proposta`; `LCLI-02` continua aberta. Nenhuma linha deste
-inventário altera as contagens de lacunas.
+evidência de direitos. `LCLI-05` continua `proposta`; `LCLI-02` fechou em 2026-11-25 como decisão de
+conteúdo (`registro-do-cliente.md` §5.1), sem liberar distribuição. Nenhuma linha deste inventário
+altera as contagens de lacunas.

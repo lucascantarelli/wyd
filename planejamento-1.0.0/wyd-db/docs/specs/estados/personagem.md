@@ -1,7 +1,7 @@
 > Pergunta: "que estados um personagem pode ter, o que o banco guarda e o que ainda não é uma transição decidida?"
 > Público: Produto / gestão e arquitetura
 > Dono: equipe do `wyd-db`
-> Base: `migrations/0006-game-character.md` §4–§7; `migrations/0007-game-session.md` §6.2 e §7; `lacunas.md` `A14`; `guia-desenvolvedor/portas-e-contratos.md` §5; `../../dicionario-dados/dominio-personagem.md` §Ciclo de vida
+> Base: `migrations/0006_game_character.md` §4–§7; `migrations/0007_game_session.md` §6.2 e §7; `lacunas.md` `A14`; `guia-desenvolvedor/portas-e-contratos.md` §5; `../../dicionario-dados/dominio-personagem.md` §Ciclo de vida
 > Revisado em: 2026-11-24
 
 **Estado:** proposto (2026-11-24)

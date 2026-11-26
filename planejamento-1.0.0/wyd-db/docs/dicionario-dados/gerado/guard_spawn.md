@@ -7,11 +7,13 @@
 **Estado:** proposto (2026-11-22) — DDL confirmado, série não aplicada.
 
 ## Papel
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 Guarda por índice do `Guard.txt`, ligado ao NPC que o representa. Guarda só a cabeça do registro: a
 exigência de itens é linha filha, em `guard_spawn_reward`.
 
 ## Colunas
+**Sem arquivo no repositório:** `Guard.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Coluna | Tipo | Nulo | Default | Observação |
 |---|---|---|---|---|
@@ -53,10 +55,10 @@ Sem carimbos e sem trigger: import puro.
 ## Papéis
 
 - **Escreve:** `wyd_migrator`, na carga e no seed (`0020`); nenhum `GRANT` de escrita em runtime.
-- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001-bootstrap.md` §7).
+- **Leem:** `wyd_game`, `wyd_portal` e `wyd_read` (default privilege de `content`, `0001_bootstrap.md` §7).
 - **Não lê:** `wyd_admin` (`0032` não concede `content`). Dono da permissão:
-  `migrations/0019-content-world.md` §8.
+  `migrations/0019_content_world.md` §8.
 
 ## Migration
 
-Forma (dona): `migrations/0019-content-world.md` — arquivo `0019_content_world.sql`.
+Forma (dona): `migrations/0019_content_world.md` — arquivo `0019_content_world.sql`.

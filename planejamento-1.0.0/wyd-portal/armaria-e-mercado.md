@@ -273,7 +273,7 @@ assíncrona devolveria "aceito" sem garantia de custódia, que é exatamente o f
 | `wyd-admin` | contrato de custódia e entrega de item | **proposto em 2026-11-22**: C4 §4.9–§4.13, `acoes.md` §8, `ADM-10`; lote `0034` aprovado (`LAC-ADM-07` fechada) |
 | `wyd-server` | aplicar custódia/entrega na transação; expor o dado de §5 | a planejar; captura de dano/alcance em `P-POR-08` |
 | `wyd-ops` | job de fechamento e expiração, métricas do mercado | `LAC-POR-09` fechada em 2026-11-23: agenda e alerta o fechamento; implementação pendente |
-| `wyd-docs` | publicar as páginas novas e realinhar contagens | lote `0034` já tem página (`0034-portal-market.md`); realinhar contagens |
+| `wyd-docs` | publicar as páginas novas e realinhar contagens | lote `0034` já tem página (`0034_portal_market.md`); realinhar contagens |
 
 ## 10. Lacunas
 

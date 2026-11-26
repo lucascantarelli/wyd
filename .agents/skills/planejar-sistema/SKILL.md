@@ -48,28 +48,10 @@ Contrato sem dono é o defeito que produz duas implementações incompatíveis.
 
 ### 3. Criar a árvore mínima
 
-Espelhe o molde aprovado, sem copiar texto:
-
-```text
-planejamento-1.0.0/<sistema>/
-├── <sistema>-1.0.0.md      # dashboard: escopo, estado, métricas, checklists
-├── docs/
-│   ├── index.md            # porta de entrada
-│   ├── convencoes.md       # só se o sistema tiver regra própria; senão cita wyd-db
-│   ├── arquitetura/
-│   ├── specs/
-│   ├── planos/
-│   ├── roadmap/
-│   ├── guia-desenvolvedor/
-│   ├── guia-teste/
-│   └── guia-administrador/ # só se o sistema for operado
-├── src/                    # por unidade de responsabilidade
-├── tests/                  # por alvo de teste
-├── prompts/
-└── skills/
-```
-
-Pasta que não tem pergunta própria não é criada. Estrutura vazia por simetria é enfeite.
+A árvore reservada de cada pasta — quais diretórios existem, com `.gitkeep`, e o que cada um
+guarda — tem dono em `planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §2; esta
+skill não recria a árvore. Espelhe o molde aprovado sem copiar texto: pasta que não tem pergunta
+própria não é criada — estrutura vazia por simetria é enfeite.
 
 ### 4. Escrever requisitos com ID
 
@@ -77,8 +59,9 @@ Um bloco por requisito, com: enunciado, entrada, saída, critério de aceitaçã
 envolvido e issue que entrega. Regra de cálculo leva exemplo numérico. Sem critério de aceitação não
 é requisito, é intenção.
 
-Prefixos: use o do sistema (`RF-<SYS>-nnn`, `RN-<SYS>-nnn`, `RNF-<SYS>-nnn`). Não renumere o que já
-existe.
+Os prefixos de requisito e a numeração são convenção do sistema dono, registrada em
+`planejamento-1.0.0/<sistema>/docs/convencoes.md` (molde: `planejamento-1.0.0/wyd-db/docs/convencoes.md`
+§Coluna de dono). Não renumere o que já existe.
 
 ### 5. Planejar arquitetura e código
 
@@ -90,15 +73,16 @@ existe.
 
 ### 6. Planejar teste
 
-Defina alvos, o que cada um prova, dado necessário, isolamento e comando. Pirâmide: unitário →
-contrato → sistema → E2E. E2E de `portal`/`client` é Playwright; o resto é Rust. Cobertura mínima 85%.
-Nenhum `SKIP` silencioso.
+Defina alvos, o que cada um prova, dado necessário, isolamento e comando. A pirâmide, o limiar de
+cobertura, o alvo E2E por sistema e os anti-padrões proibidos têm dono em
+`planejamento-1.0.0/wyd-ops/docs/planos/estrategia-de-testes.md` §2, §6 e §8; esta skill cita, não
+recria o critério.
 
 ### 7. Fatiar o roadmap
 
-Uma página por issue, com: título, fase, prioridade, contexto, entregável, DoD verificável (comando
-ou arquivo), fora de escopo, risco, dependência e evidência ao fechar. Issue sem DoD executável não
-entra.
+Uma página por issue, com os campos e o critério de aceite do molde do projeto: modelo de página em
+`planejamento-1.0.0/wyd-db/docs/roadmap/` e campos obrigatórios em `.github/ISSUE_TEMPLATE/` (dono do
+padrão). Issue sem DoD verificável — comando ou arquivo — não entra.
 
 ### 8. Fechar o dashboard
 

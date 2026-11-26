@@ -31,12 +31,12 @@ mão, como qualquer outra migration, quando a fonte estiver conferida (`plano-mi
 
 | # | Arquivo | Dataset | Contagem a preservar | Estado |
 |---:|---|---|---|---|
-| 16 | `0016_seed_taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | `bloqueada` |
-| 17 | `0017_seed_item_catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` | `bloqueada` |
-| 18 | `0018_seed_skill_catalog.sql` | catálogo de skill | 151 skills + 3 Kersef + linhagem curada | `bloqueada` |
-| 20 | `0020_seed_world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão | `bloqueada` |
-| 23 | `0023_seed_rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório | `bloqueada` |
-| 27 | `0027_seed_quests_events.sql` | quests e eventos | quests de campo, 3 `world_event` + agenda, 2 arenas | `bloqueada` |
+| 16 | `0016-seed-taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | `bloqueada` |
+| 17 | `0017-seed-item-catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` | `bloqueada` |
+| 18 | `0018-seed-skill-catalog.sql` | catálogo de skill | 151 skills + 3 Kersef + linhagem curada | `bloqueada` |
+| 20 | `0020-seed-world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 lojas, 161 `level_item`, 52 regiões, 49 itens de chão | `bloqueada` |
+| 23 | `0023-seed-rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório | `bloqueada` |
+| 27 | `0027-seed-quests-events.sql` | quests e eventos | quests de campo, 3 `world_event` + agenda, 2 arenas | `bloqueada` |
 
 As contagens foram medidas em **2026-11-08/15** e são as que o seed tem de reproduzir
 (`plano-migrations.md` §4). A origem de cada uma é o **dataset legado** — o arquivo de conteúdo que
@@ -96,6 +96,7 @@ O `down` de seed é de **desenvolvimento**; em produção o plano A é restore, 
 ([`plano-de-implantacao.md`](plano-de-implantacao.md) §Rollback).
 
 ## 7. O que nunca entra em produção
+**Sem arquivo no repositório:** `resources/accounts.json` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 - **Dado de jogador real**, conta, personagem ou saldo — o seed é conteúdo, não carga de base.
 - **Senha ou segredo real**: a única senha de seed é `dev-only`, e só em desenvolvimento.
