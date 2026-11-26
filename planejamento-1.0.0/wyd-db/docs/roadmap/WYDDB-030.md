@@ -37,9 +37,17 @@ ausentes, dona da `WYDDB-031`, e não é pré-requisito desta fatia.
 
 ## Evidência de fechamento (2026-11-26)
 
-`V`: `cargo test --manifest-path crates/wyd-db/Cargo.toml --test runner_pg -- --test-threads=1` com
-`WYD_DB_TEST_URL` do papel `wyd_migrator` em `postgres:17` descartável, TCP em `127.0.0.1`: **7 passed;
-0 failed; 0 ignored** (33,43 s; log local `/tmp/wyd-runner-pg-wyddb030.log`).
+`V` **(execução no CI, prova que fecha a fatia):** workflow `ci-db`, execução nº 29 (`45911198818`),
+https://github.com/lucascantarelli/wyd/actions/runs/45911198818, commit
+`e671cb78d558fa21fe78c973239616c2932db3dd` (PR #222). Os três modos da matriz `pg` passaram —
+`pg / schema`, `pg / reversibility` e `pg / runner` — e o alvo `runner_pg` terminou **7 passed;
+0 failed; 0 ignored** em 21,86 s contra o service container `postgres:17` (job `140219739708`).
+`gate-db`, `gate-code` e `gate-docs` fecharam verdes no mesmo commit.
+
+`V` **(execução local, mesmo dia):** mesmo comando com `WYD_DB_TEST_URL` do papel `wyd_migrator` em
+`postgres:17` descartável, TCP em `127.0.0.1`: **7 passed; 0 failed; 0 ignored** (33,43 s; log
+`/tmp/wyd-runner-pg-wyddb030.log`). O local e o CI usam a mesma DSN e o mesmo papel; o CI é a prova
+registrada na issue.
 
 | Critério | Cenário que prova | Resultado medido |
 |---|---|---|
