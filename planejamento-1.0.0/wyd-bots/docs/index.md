@@ -43,7 +43,7 @@ medida: esta página não afirma conexões simultâneas, latência nem taxa de s
 As quatro perguntas do sistema foram respondidas ou derivadas: `Q-BOT-1` e `Q-BOT-2` = A, `Q-BOT-3` =
 A (política de medição) e `Q-BOT-4` por regra vigente. `LBOT-01`, `LBOT-02` e `LBOT-04` fecharam;
 `LBOT-03` **continua bloqueada como medição**, sem número inventado. O estado de cada lacuna está em
-`lacunas.md`; o briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.
+`lacunas.md`; a pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` reúne a ordem das respostas.
 
 ## Mapa de páginas
 

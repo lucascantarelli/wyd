@@ -23,19 +23,19 @@ O alvo é a **`1.0.0`**: um servidor de WYD2 com o protocolo CPSock do cliente o
 Rust, persistência em PostgreSQL 17, portal em Next.js, launcher Tauri e documentação publicada.
 
 O repositório está em **planejamento**, com o primeiro slice do `wyd-db` já em código. Não há
-workspace Rust na raiz, runner de migrations nem serviço no ar: o que existe é o plano de cada
+workspace Cargo (`Cargo.toml` na raiz), runner de migrations nem serviço no ar: o que existe é o plano de cada
 sistema, medido e com dono, e o código que nasceu sob páginas `aceitas`. Essa é a decisão do projeto —
 planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 
 | Existe | Não existe ainda |
 |---|---|
-| `planejamento-1.0.0/` com o panorama e os sistemas já abertos | workspace Rust na raiz (`Cargo.toml`, `rust-toolchain.toml`, `Makefile`) |
+| `planejamento-1.0.0/` com o panorama e os sistemas já abertos | workspace Cargo (`Cargo.toml` na raiz); existem `rust-toolchain.toml` e `Makefile` |
 | site MkDocs 2.0 montado em `wyd-docs/` | runner de migrations e serviço no ar |
 | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; testes unitários e de schema (contagem no panorama §1) | código de produção fora do slice `dsn`/schema |
 | série de `.sql` em `crates/wyd-db/migrations/`, aplicada do zero num PG17 em 2026-11-24 (contagem no panorama §1) | os seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
-| workflow `docs.yml` faz build/verificação e publica Pages; `code.yml` roda fmt, clippy, testes, cobertura informativa e audit/deny bloqueantes | gate de cobertura de 85% |
+| `docs.yml` faz build/verificação e publica Pages em `develop`; `code.yml` roda fmt, clippy, testes e cobertura informativa; `security.yml` roda audit/deny, dependency-review e actionlint; `code-stable.yml` é sinal diário não bloqueante | gate de cobertura de 85% |
 
 Números medidos em **2026-11-24** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.
@@ -91,7 +91,7 @@ Nada é montado à mão: a imagem é construída e publicada pelo CI
 
 ```bash
 docker compose pull docs                     # baixa a imagem publicada
-docker compose up -d docs                    # serve o site em http://127.0.0.1:8000
+docker compose up -d --no-build docs         # serve a imagem em http://127.0.0.1:8000
 docker compose --profile gate run --rm gate  # monta, builda e roda a cadeia de verificação
 make gate-fast                               # ciclo curto nativo (sem Docker/MkDocs)
 ```
@@ -100,6 +100,7 @@ Para construir da árvore de trabalho, sem tocar na imagem publicada:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build
+make rollback TAG=<sha>   # puxa a tag publicada e sobe com --no-build
 ```
 
 > No Windows o build do `mkdocs 2.0.dev6` no host falha (`PosixPath`): use o container, como o CI.

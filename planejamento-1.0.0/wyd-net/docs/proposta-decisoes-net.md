@@ -147,8 +147,8 @@ já decidiu que a telemetria vem de fonte externa e o portal mostra “não medi
 duas primeiras; log de payload contradiz a terceira. O transporte expõe **conexões, erros por tipo,
 bytes e latência** e registra **só metadados** (evento, sessão, tamanhos, caminho); nome, rótulo e
 unidade das métricas são implementação, não decisão pendente. A lacuna `LNET-04` fechou por essa regra;
-`LNET-01` não fecha, porque o valor do limite é medição (§4 `Q-NET-1`). O briefing das respostas é
-`../../briefing-de-decisoes-1.0.0.md` §2.1.
+`LNET-01` não fecha, porque o valor do limite é medição (§4 `Q-NET-1`). A pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` e `../../lacunas.md`
+registram as respostas.
 
 ## 5. Cobertura das lacunas
 

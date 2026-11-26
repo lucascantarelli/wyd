@@ -21,4 +21,10 @@ else
 fi
 
 cd "$AQUI"
-exec python -m gate full --root "$ROOT" "$@"
+PYTHON="${PYTHON:-python}"
+
+# Os testes dos verificadores fazem parte do gate, não de um comando manual. O
+# runner padrão do unittest escreve em stderr, então `--json` continua com stdout limpo.
+"$PYTHON" -m unittest discover -s tests >&2
+
+exec "$PYTHON" -m gate full --root "$ROOT" "$@"

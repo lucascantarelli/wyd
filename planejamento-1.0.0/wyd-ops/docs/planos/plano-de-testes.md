@@ -41,7 +41,7 @@ docker compose --profile gate run --rm gate
 
 ## CI, cobertura e monitoramento
 
-- **CI:** `.github/workflows/code.yml` valida Compose e o job de documentação roda o gate; o deploy continua manual e fora do CI até a aprovação de O1–O5.
+- **CI:** `.github/workflows/code.yml` valida Compose e o job de documentação roda o gate; o deploy continua manual e fora do CI até a implementação de F3/F4 e a aplicação de `OPS-04`.
 - **Cobertura:** A cobertura é de gate e de artefato: pipeline, imagem, ambiente, monitoramento, segredo e rollback precisam de execução registrada; não há percentual de linha sem crate.
 - **Monitoramento:** Status do gate, build da imagem, deploy, `ready` do servidor, Prometheus/Loki e alertas do baseline. A página `baseline-seguranca-monitoramento-deploy.md` é o dono dos limiares e do que ainda não foi executado.
 - **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.

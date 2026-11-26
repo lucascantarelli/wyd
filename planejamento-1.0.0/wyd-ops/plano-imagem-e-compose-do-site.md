@@ -3,11 +3,12 @@
 > Pergunta: "quem constrói a imagem do site, quem a publica e como o Compose a consome?"
 > Público: quem opera, arquitetura e quem edita o site
 > Dono: frente `wyd-ops`
-> Base: `plano-ci-real.md` §3 (runtime é Compose) e §4.1 (só `run:` e action própria); `wyd-docs-1.0.0.md` §9.1
-> Revisado em: 2026-11-23
+> Base: `docs/arquitetura/adr/adr-ops-0002-hospedagem-producao.md` (runtime é Compose); `docs/arquitetura/adr/adr-ops-0003-arquitetura-hibrida-de-workflows.md` (só `run:` e action própria); `wyd-docs-1.0.0.md` §9.1
+> Revisado em: 2026-11-26
 
 **Estado:** decidido pelo dono em **2026-11-22** (pedido de parar de reconstruir o MkDocs à mão e ter
-o Compose consumindo a imagem), revisto em **2026-11-23** no ponto 6. A implementação acompanha esta
+o Compose consumindo a imagem), revisto em **2026-11-23** no ponto 6 e em **2026-11-26** para
+Buildx/cache/atestados e para remover o `build:` do Compose base. A implementação acompanha esta
 página: `wyd-ops/wyd-docs.Dockerfile`, `docker-compose.yml`, `docker-compose.override.yml`,
 `docker-compose.dev.yml`, `.dockerignore` e `.github/workflows/docs-image.yml`.
 
@@ -21,25 +22,23 @@ reproduzível — `docker compose up` não subia nada.
 
 1. **O CI constrói a imagem, não a estação.** Um workflow dedicado (`docs-image`) roda o mesmo build
    do gate e publica a imagem.
-2. **O registro é o GHCR**, imagem `ghcr.io/lucascantarelli/wyd-docs`, com duas marcas: `latest` e o
-   SHA do commit.
-3. **O Compose consome a imagem publicada.** O serviço `docs` referencia a imagem e mantém `build:`
-   como fallback local — quem não tem a imagem constrói, quem tem faz `pull`.
-4. **Sem action de terceiro.** Login e push usam `docker login` e `docker push` em `run:` com
-   `GITHUB_TOKEN`, conforme `plano-ci-real.md` §4.1. Só `actions/checkout` entra, fixado por SHA.
+2. **O registro é o GHCR**, imagem `ghcr.io/lucascantarelli/wyd-docs`, com `SHA` sempre, `develop` em
+   `develop` e `latest` em `develop`; no release 1.0.0 a política migra para `main`.
+3. **O Compose consome a imagem publicada.** O serviço `docs` no arquivo base não tem `build:`; o
+   build da árvore é explícito em `docker-compose.dev.yml`.
+4. **Buildx oficial.** Login e cache usam `docker/setup-buildx-action` e `docker/build-push-action`,
+   oficiais e pinados por commit, com cache `type=gha` e atestados de provenance/SBOM no push; login
+   usa `GITHUB_TOKEN` em `run:`.
 5. **O servidor é o do Python**, `http.server`, sem nginx: o site é estático e não precisa de mais
    uma peça para manter.
 6. **O caminho padrão consome a imagem publicada; o build da árvore é explícito.** O Compose base
-   referencia `${WYD_DOCS_TAG:-latest}` — a tag que o CI empurra — e mantém `build:` apenas como
-   fallback de quem não tem a imagem. O build da árvore de trabalho tem camada própria,
-   `docker-compose.dev.yml`, carregada só por `-f`: usa a tag `:dev`, constrói no `up`
-   (`pull_policy: build`) e não reinicia sozinho (`restart: "no"`), então **não sobrescreve** a
-   imagem publicada. Decisão do dono em 2026-11-23, revista na mesma data: a versão anterior punha
-   esses ajustes no override automático, e o resultado medido foi `docker compose pull docs` mirando
-   `:dev` — tag que o CI nunca publica — e `up` sempre construindo, ou seja, a imagem publicada nunca
-   era consumida. Produção não roda na máquina de desenvolvimento; `:latest` é consumida onde o site
-   é servido. Estado do CI: o workflow existe desde `8b23cc2`, mas não há execução nem imagem
-   publicada confirmada (2026-11-23) — a medição está em §5.1.
+   referencia `${WYD_DOCS_TAG:-latest}` — a tag que o CI empurra — e **não** tem `build:`. O build da
+   árvore de trabalho tem camada própria, `docker-compose.dev.yml`, carregada só por `-f`: usa a tag
+   `:dev`, constrói no `up` (`pull_policy: build`) e não reinicia sozinho (`restart: "no"`), então
+   **não sobrescreve** a imagem publicada. `make docs-up` faz `pull` e `up --no-build`; `make rollback`
+   faz o mesmo com a tag indicada, para nunca construir a árvore sob uma tag antiga. Produção não roda
+   na máquina de desenvolvimento; `:latest` é consumida onde o site é servido. O workflow
+   `docs-image` publica somente em `develop` enquanto `main` estiver arquivada (ADR-OPS-0012).
 7. **O gate de documentação roda pelo Compose, atrás de perfil e sem montar o site durante o build
    da imagem gate.** O override acrescenta `gate` (perfil `gate`), que executa `preparar.py`,
    `mkdocs build`, `gate/checks/links.py`, `gate/checks/contagens.py` e `gate/checks/censos.py` em um comando. Seu alvo Dockerfile `gate`
@@ -54,7 +53,7 @@ reproduzível — `docker compose up` não subia nada.
 
 | Fora | Dono |
 |---|---|
-| publicar o site em host de produção | deploy real é decisão separada (`pg-lake`, `plano-ci-real.md` §3) |
+| publicar o site em host de produção | deploy real é decisão separada (`ADR-OPS-0002` e `ADR-OPS-0007`) |
 | servir o portal Next.js pelo Compose | `wyd-portal` |
 | publicar o site no GitHub Pages | `docs.yml`, inalterado por esta entrega |
 | fixar `latest` por digest no Compose | fica `WYD_DOCS_TAG` como override; digest é próximo passo se houver necessidade |
@@ -64,11 +63,11 @@ reproduzível — `docker compose up` não subia nada.
 | Arquivo | Responsabilidade |
 |---|---|
 | `wyd-ops/wyd-docs.Dockerfile` | estágio `gate` instala dependências e copia fontes; `build` deriva de `gate` e executa `preparar.py` + `mkdocs build`; runtime só com `site/` e `python -m http.server` |
-| `docker-compose.yml` | serviço `docs`: porta `${WYD_DOCS_PORT:-8000}`, imagem `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, `build:` só como fallback de quem não tem a imagem |
-| `docker-compose.override.yml` | carregado automaticamente; traz **só** o `gate` sob perfil `gate`, que roda os três passos uma vez no estágio `gate` do Dockerfile. Não toca `docs`, para o caminho padrão continuar consumindo a imagem publicada |
-| `docker-compose.dev.yml` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"`; porta, `build:`, `container_name` e contexto vêm do base |
+| `docker-compose.yml` | serviço `docs`: porta `${WYD_DOCS_PORT:-8000}`, imagem `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, sem `build:`; porta só em loopback |
+| `docker-compose.override.yml` | carregado automaticamente; traz **só** o `gate` sob perfil `gate`, que roda os três passos uma vez no estágio `gate` do Dockerfile, e o `db` de teste com `postgres:17` por digest. Não toca `docs` |
+| `docker-compose.dev.yml` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build`, `build:` com contexto/Dockerfile e `restart: "no"`; a porta vem do base |
 | `.dockerignore` | mantém fora do contexto `.git`, `deprecated/`, `wyd-client/` (567 MB), `**/site`, `**/.build`, `.venv`, `.env` |
-| `.github/workflows/docs-image.yml` | build, fumaça HTTP 200 e push no GHCR (push só fora de PR) |
+| `.github/workflows/docs-image.yml` | Buildx com cache GHA, fumaça HTTP 200, push no GHCR (só `develop`) e provenance/SBOM no push |
 
 O **dono do layout** é `planejamento-1.0.0/wyd-1.0.0.md` §8: ele diz, para cada tipo de artefato,
 onde mora, qual sistema responde e por que esses arquivos ficam na raiz (Compose, override,
@@ -79,10 +78,11 @@ deles pode ser copiado para `planejamento-1.0.0/wyd-ops/`: aquela árvore é doc
 ## 5. Como verificar (DoD)
 
 ```bash
-# 1. build igual ao do CI, com as mesmas tags (SHA do commit e latest)
+# 1. build local equivalente ao do CI, com as mesmas tags (SHA, develop e latest)
 SHA=$(git rev-parse HEAD)
-MSYS_NO_PATHCONV=1 docker build -f wyd-ops/wyd-docs.Dockerfile \
+MSYS_NO_PATHCONV=1 docker buildx build --load -f wyd-ops/wyd-docs.Dockerfile \
   -t ghcr.io/lucascantarelli/wyd-docs:$SHA \
+  -t ghcr.io/lucascantarelli/wyd-docs:develop \
   -t ghcr.io/lucascantarelli/wyd-docs:latest .
 
 # 2. o Compose padrão sobe a partir dessa imagem, sem construir
@@ -104,7 +104,7 @@ comando executado, não a expectativa.
 
 | Passo | Resultado medido |
 |---|---|
-| build com as duas tags (passo 1) | exit **0**, **17 s**, imagem `sha256:f3b15499d90f…`, **194 329 433 bytes**; `:latest` e `:<sha>` apontam para o mesmo id |
+| build com as três tags (passo 1) | exit **0**, **17 s**, imagem `sha256:f3b15499d90f…`, **194 329 433 bytes**; `:latest`, `:develop` e `:<sha>` apontam para o mesmo id |
 | fumaça do workflow, passo por passo: `docker run -d --name docs-smoke -p 8123:8000`, laço de `curl` e `docker rm -f` | `run` exit 0; **HTTP 200 na 2ª tentativa** de 30 — a 1ª devolveu `Empty reply from server` porque o servidor ainda subia, que é justamente o que o laço do job cobre; `rm` exit 0 |
 | páginas servidas pelo container | `find /site -name '*.html' \| wc -l` = **269**, igual ao "269 páginas" do gate |
 | `docker compose config --services` sem perfil | `docs` — o `gate` não vaza para o `up` |
@@ -116,15 +116,15 @@ comando executado, não a expectativa.
 **DoD do workflow, ainda não cumprido:** a primeira execução em `develop` termina verde, empurra
 `:<sha>` e `:latest`, e `docker compose pull docs` baixa a imagem sem construir. Hoje o build, a
 fumaça e o consumo da imagem local estão provados; o `pull` reprova porque não há pacote publicado —
-causa e o que falta em `wyd-1.0.0.md` §8.3. O job não tem passo manual: build, fumaça e push são
-`run:` com `docker` e `curl`.
+causa e o que falta em `wyd-1.0.0.md` §8.3. O job não tem passo manual: Buildx constrói/publica,
+o smoke usa `docker run` e `curl` e a política de push é decidida pela branch.
 
 ## 6. Risco
 
 | Risco | Efeito | Mitigação |
 |---|---|---|
 | imagem grande por copiar o repositório no estágio de build | pull lento | estágio de runtime recebe só `site/`; `.dockerignore` corta cliente e legado |
-| `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG:<sha>` no ambiente que precisa de reprodutibilidade; em desenvolvimento, `docker-compose.dev.yml` usa `:dev` com `pull_policy: build` |
+| `latest` mudando sozinho | site servido diverge do commit | `WYD_DOCS_TAG=<sha>` no ambiente que precisa de reprodutibilidade; em desenvolvimento, `docker-compose.dev.yml` usa `:dev` com `pull_policy: build` |
 | build local gravar `:latest` | a imagem baixada é substituída pela da árvore | o build de dev usa `docker-compose.dev.yml` (`:dev`); quem roda `docker compose up --build docs` sem ele aceita a tag da árvore local |
 | pacote GHCR privado | `pull` sem `docker login` falha | imagem de documentação pública; se virar privada, o host precisa de credencial |
 | workflow duplicar o gate | dois builds do mesmo commit | o gate continua em `docs.yml`; a imagem não reexecuta `gate/checks/links.py` |

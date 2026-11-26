@@ -10,7 +10,7 @@
 
 ## Contexto
 
-O repositório tem **9** diretórios em `crates/`, mas só **1** `Cargo.toml` real (`crates/wyd-db`) e **8** diretórios com `.gitkeep`. Não há `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml` ou `Makefile` na raiz. O `code.yml` usa **6** comandos `--manifest-path crates/wyd-db/Cargo.toml`, e o job `security` escolhe o primeiro manifesto/lock com `find ... -print -quit`. Duas imagens externas (`python:3.15-slim`, `postgres:17`) e três tags GHCR não estão fixadas por digest.
+Quando esta decisão foi tomada, o repositório tinha **9** diretórios em `crates/`, mas só **1** `Cargo.toml` real (`crates/wyd-db`) e **8** diretórios com `.gitkeep`. Não havia `Cargo.toml` de workspace nem `Cargo.lock` na raiz; `rust-toolchain.toml` e `Makefile` foram criados depois como fachada de toolchain/comandos, sem workspace Cargo. O `code.yml` usa **6** comandos `--manifest-path crates/wyd-db/Cargo.toml`, e o job `security` escolhe o primeiro manifesto/lock com `find ... -print -quit`. Duas imagens externas (`python:3.15-slim`, `postgres:17`) e três tags GHCR não estão fixadas por digest.
 
 Sem workspace, o segundo crate repetiria lock, toolchain e configuração; com vários locks, o `security` poderia auditar apenas o primeiro. A decisão foi tomada com a árvore nesse estado (`V`, 2026-11-25).
 

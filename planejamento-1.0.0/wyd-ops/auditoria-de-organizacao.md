@@ -4,9 +4,9 @@
 > Público: dono do produto, arquitetura, `wyd-ops` e equipes dos 13 sistemas
 > Dono: `wyd-ops` (auditoria); a decisão D-04 é do dono do produto
 > Base: `wyd-1.0.0.md` §8.7; `prioridade-do-projeto.md` §0.1; `AGENTS.md` §5
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **Revisão 2026-11-25 (segunda passada):** os 11 sistemas pendentes receberam a árvore `src/`/`tests/` (`.gitkeep`), `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (RF/RNF numerados) e roadmap com DoD; **13 de 13** passam no checklist, com `wyd-ops` mantendo fronteira/contratos parciais pendentes de aprovação de arquitetura. **Terceira passada (2026-11-25):** as pastas vazias `wyd-db/prompts/` e `wyd-db/skills/` receberam `.gitkeep`, cada `docs/index.md` passou a alcançar todas as páginas da pasta (0 órfãos medidos), os quatro templates de issue exigem `skill_principal` em lista fechada de nove skills, os índices locais de ADR passaram a `aceito` e os 13 planos de teste declaram CI, cobertura e monitoramento. Nenhum código, issue, commit ou deploy foi criado por esta auditoria.
+**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **Revisão 2026-11-25 (segunda passada):** os 11 sistemas pendentes receberam a árvore `src/`/`tests/` (`.gitkeep`), `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (RF/RNF numerados) e roadmap com DoD; **13 de 13** passam no checklist, com `wyd-ops` ainda com fronteira/contratos pendentes (fechado na quarta passada). **Terceira passada (2026-11-25):** as pastas vazias `wyd-db/prompts/` e `wyd-db/skills/` receberam `.gitkeep`, cada `docs/index.md` passou a alcançar todas as páginas da pasta (0 órfãos medidos), os quatro templates de issue exigem `skill_principal` em lista fechada de nove skills, os índices locais de ADR passaram a `aceito` e os 13 planos de teste declaram CI, cobertura e monitoramento. **Quarta passada (2026-11-26):** `OPS-03.4`/`OPS-03.5` foram formalizados em `ADR-OPS-0011` e no `ADR-OPS-0007` revisado; `OPS-03` fechou e restam `OPS-04`/`OPS-05`. Nenhum código, issue, commit ou deploy foi criado por esta auditoria.
 
 ---
 
@@ -44,10 +44,10 @@ pode ter código vazio, e um sistema implementado (`wyd-docs`) ainda pode reprov
 | `wyd-client` | sim | sim | sim | sim (7/5) | sim | sim | sim | sim | **organizado** |
 | `wyd-bots` | sim | sim | sim | sim (6/5) | sim | sim | sim | sim | **organizado** |
 | `wyd-docs` | sim | sim | sim (site implementado) | sim (7/5) | sim | sim | sim | sim | **organizado** |
-| `wyd-ops` | parcial | parcial | sim | sim (8/7) | sim | sim | parcial | sim | **organizado (fronteira/contratos parciais, pendente aprovação de arquitetura)** |
+| `wyd-ops` | sim | sim | sim | sim (8/7) | sim | sim | parcial | sim | **organizado (gate parcial; implementação pendente)** |
 
-**Somas:** 13 organizados (12 plenos + `wyd-ops` com fronteira/contratos parciais pendentes de
-aprovação de arquitetura). `wyd-db` e `wyd-admin` seguem como referência do checklist.
+**Somas:** 13 organizados (12 plenos + `wyd-ops` com gate parcial e implementação pendente; os
+contratos O1–O5 estão aprovados). `wyd-db` e `wyd-admin` seguem como referência do checklist.
 
 ## 3. O que falta em cada sistema (fora da organização)
 
@@ -64,10 +64,10 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 | `wyd-server` | fronteira, 7 contratos, 4 páginas, spec do ECAP, gate, `RF-SRV`/`RNF-SRV`, árvore, teste e roadmap na segunda passada | A1 e o peer continuam implementação pendente. |
 | `wyd-sim` | fronteira, 4 contratos, 3 páginas, gate, `RF-SIM`/`RNF-SIM`, árvore, teste e roadmap na segunda passada | Fórmulas e fixtures determinísticas não escritas. |
 | `wyd-launcher` | fronteira, 6 contratos (4 decididos), 3 páginas, gate, `RF-LCH`/`RNF-LCH`, árvore, teste e roadmap na segunda passada | Artefato de release (instalador/updater) não produzido. |
-| `wyd-client` | fronteira, 5 contratos, 5 páginas, inventário e registro medidos, gate, `RF-CLI`/`RNF-CLI`, árvore, teste e roadmap na segunda passada | `LCLI-02`/`LCLI-05` e a segunda leitura seguem abertas; distribuição congelada. |
+| `wyd-client` | fronteira, 5 contratos, 5 páginas, inventário e registro medidos, gate, `RF-CLI`/`RNF-CLI`, árvore, teste e roadmap na segunda passada | `LCLI-03`/`LCLI-05` e a segunda leitura seguem abertas; `LCLI-02` fechou em 2026-11-25; distribuição congelada. |
 | `wyd-bots` | fronteira, 5 contratos (B1–B5), 3 páginas, gate, `RF-BOT`/`RNF-BOT`, árvore, teste e roadmap na segunda passada | `LBOT-03` continua medição; tarefa em `docs/planos/medicoes-lnet-01-lbot-03.md`. |
 | `wyd-docs` | site implementado, contratos, gate de build/publicação, 5 páginas de `docs/`, `RF-DOC`/`RNF-DOC`, teste e roadmap na segunda passada | Aceite editorial e publicação contínua; nenhum deploy novo. |
-| `wyd-ops` | dashboard, `RF-OPS`/`RNF-OPS`, plano de teste, roadmap, árvore e gate na segunda passada | Fronteira/contratos O1–O5 pendentes de aprovação; CI, imagem, ambiente, monitoramento, segredo e deploy não implementados; `Q-OPS-2` não aplicado. Ver `docs/lacunas.md`. |
+| `wyd-ops` | dashboard, `RF-OPS`/`RNF-OPS`, plano de teste, roadmap, árvore e gate na segunda passada | Contratos O1–O5 aprovados (O4 em `ADR-OPS-0011`, O5 no `ADR-OPS-0007` revisado); CI, imagem, ambiente, monitoramento, segredo e deploy não implementados; `Q-OPS-2` não aplicado e board pendente. Ver `docs/lacunas.md`. |
 
 ## 4. O que a aprovação de D-04 = A muda
 
@@ -80,7 +80,8 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
   outros sistemas devem cumprir quando forem trabalhados; não abre 11 frentes em paralelo.
 - **Não muda D-02:** cobertura informativa no `code.yml` e segurança bloqueante continuam como estão.
 - **Dá destino ao que estava aberto:** os **11** sistemas agora têm uma lista explícita do que falta;
-  a próxima decisão é de prioridade (qual sistema auditar primeiro), não de critério.
+  a próxima decisão é de prioridade (qual sistema auditar primeiro), não de critério. Os contratos
+  O1–O5 do `wyd-ops` estão aprovados; o que resta é implementação e `OPS-04`/`OPS-05`.
 
 ## 5. Próximos passos por sistema (depois da organização)
 
@@ -91,7 +92,7 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 | 3 | `wyd-net`/`wyd-bots` | executar `docs/planos/medicoes-lnet-01-lbot-03.md` e congelar os valores | as políticas estão decididas; falta medição |
 | 4 | `wyd-core`/`wyd-sim` | escrever o catálogo do primeiro domínio e as fórmulas/fixtures | a onda jogável depende das regras |
 | 5 | `wyd-portal`/`wyd-admin`/`wyd-launcher`/`wyd-client` | implementar BFF, canal de controle, release e respeitar direitos | são frentes de produto e distribuição |
-| 6 | `wyd-docs`/`wyd-ops` | aceite editorial, aprovação de O1–O5 e aplicação de `Q-OPS-2` | são processos; não bloqueiam a onda jogável, mas fecham operação e publicação |
+| 6 | `wyd-docs`/`wyd-ops` | aceite editorial, aplicação de `OPS-04` e board (`OPS-05`) — O1–O5 já aprovados | são processos; não bloqueiam a onda jogável, mas fecham operação e publicação |
 
 ## 6. Como reproduzir a medição
 
@@ -115,19 +116,19 @@ docker compose --profile gate run --rm gate
 ## 7. O que esta auditoria não decide
 
 - Não aceita página, não abre issue e não cria código.
-- Não escolhe qual frente vem primeiro; isso é prioridade do dono (D-01 continua `wyd-db` e D-06 está aberta).
-- Não fecha `LPRT-03`, `LPRT-06`, `LCLI-02`, `LCLI-05`, `LNET-01` ou `LBOT-03`.
+- Não escolhe qual frente vem primeiro; isso é prioridade do dono (D-01 continua `wyd-db`; D-06 = A foi decidida em 2026-11-25, com a frente `wyd-db`).
+- Não fecha `LPRT-03`, `LPRT-06`, `LCLI-03`, `LCLI-05`, `LNET-01`, `LBOT-03`, `A11`, `A20` ou `M21`.
 - Não substitui o checklist de `wyd-1.0.0.md` §8.7 nem a decisão D-04 em
   `prioridade-do-projeto.md` §0.1.
 
-## 8. O que resta nas dez linhas bloqueadas (2026-11-25)
+## 8. O que resta nas nove pendências bloqueadas (2026-11-25)
 
 Esta seção foi reformulada contra os ledgers e o briefing: **não há aqui aprovação a repetir**. A1 foi
-autorizada em 2026-11-23 e as políticas das dez linhas foram aceitas em 2026-11-25, na opção A de cada
-bloco; `LCLI-02` tinha decisão de conteúdo (`Q-CLI-2`) e `LCLI-05` tem decisão de escopo, com o pedido
-de direitos aprovado para envio. Em 2026-11-25 a execução avançou o que não dependia de terceiro: uma
-linha fechou (§8.1) e duas foram provadas bloqueadas por artefato inexistente (§8.2). O que resta é
-execução pendente (§8.3), ato do dono que não é pergunta de desenho (§8.4), dependência de terceiro
+autorizada em 2026-11-23 e as políticas das dez linhas originais foram aceitas em 2026-11-25, na opção A
+de cada bloco; `LCLI-02` tinha decisão de conteúdo (`Q-CLI-2`) e `LCLI-05` tem decisão de escopo, com o
+pedido de direitos aprovado para envio. Em 2026-11-25 a execução avançou o que não dependia de terceiro:
+uma linha fechou (§8.1) e duas foram provadas bloqueadas por artefato inexistente (§8.2). Restam nove
+pendências: execução (§8.3), ato do dono que não é pergunta de desenho (§8.4), dependência de terceiro
 (§8.5) e a única escolha real desta auditoria (§8.6).
 
 ### 8.1 Fechado em 2026-11-25 — `LCLI-02`
@@ -169,9 +170,9 @@ leitura.
 | `A20` | MFA obrigatório para staff antes de publicar (2026-11-18, reafirmado em 2026-11-25); segue `externa` | ADR de segurança do portal, fluxo de inscrição/recuperação e teste que recusa staff sem segundo fator | `wyd-portal` |
 | `M21` | fechar por fatia, rota a rota (2026-11-25); segue `externa` | telas das fatias `WYDPOR-F0`–`F11` com E2E verde e relatório de execução | `wyd-portal` |
 
-Duas dessas execuções não podem começar hoje: `LNET-01`/`LBOT-03` esperam o ambiente efêmero de
-`OPS-03.1`, que é escolha real do dono e está na [pauta](docs/pauta-de-decisoes-pendentes.md). As outras
-não esperam aprovação nenhuma.
+Duas dessas execuções não podem começar hoje: `LNET-01`/`LBOT-03` esperam a implementação do ambiente
+efêmero de `OPS-03.1`, cujo contrato já foi aprovado e está na
+pauta em `docs/pauta-de-decisoes-pendentes.md`. As outras não esperam aprovação nenhuma.
 
 ### 8.4 Ato do dono — não é pergunta de desenho
 
@@ -193,9 +194,9 @@ não esperam aprovação nenhuma.
    as capturas de §8.2, que destravam mais sistemas por esforço. Impacto: define a ordem das ondas; não
    fecha lacuna por si.
 
-As demais decisões de dono do projeto (`OPS-03.1`–`OPS-03.5`, `OPS-04`, `OPS-05`, `D-06` e a
-`Q-SEP-1`) não pertencem a esta auditoria; seu estado está na
-[pauta](docs/pauta-de-decisoes-pendentes.md). `Q-SERIE-1` = B foi implementada e provada como ciclo SQL
+As demais decisões de dono do projeto (`OPS-04`, `OPS-05`, `D-06` e a `Q-SEP-1`) não pertencem a
+esta auditoria; seu estado está na
+pauta em `docs/pauta-de-decisoes-pendentes.md`. `Q-SERIE-1` = B foi implementada e provada como ciclo SQL
 em PG17, `Q-SEP-1` = A′ renomeou os 28 nomes e `CAP-37` foi fechada por `runner_pg` no mesmo dia.
 
 ---

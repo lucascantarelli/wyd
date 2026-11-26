@@ -53,7 +53,8 @@ alerta, falha deixa o anúncio reentrante. B exigiria worker com escrita em `por
 ## 5. Registro da decisão
 
 **Aprovada pelo dono de operação em 2026-11-23.** `LAC-POR-09` está `fechada`; nada foi aplicado. A
-ordem das respostas e o custo da alternativa estão no `../../briefing-de-decisoes-1.0.0.md` §3.11 e §6;
+ordem das respostas e o custo da alternativa estão na pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md`
+§2 e nos documentos donos;
 esta página continua dona da comparação.
 
 | Lacuna | Aprovação | Resposta |

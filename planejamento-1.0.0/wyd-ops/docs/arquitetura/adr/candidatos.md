@@ -14,12 +14,14 @@ ADR só existe quando uma decisão foi **tomada e aprovada pelo dono** (AGENTS.m
 
 ## 2. Candidatos futuros
 
+`OPS-03.4` e `OPS-03.5` foram aprovados em 2026-11-25 e formalizados em 2026-11-26 em `ADR-OPS-0011`
+e no `ADR-OPS-0007` revisado; não são mais candidatos. A lista vigente de aceitos é a do
+`adr/index.md` §2.
+
 | Gatilho | Sistema | Decisão candidata | Quando vira ADR | Evidência mínima |
 |---|---|---|---|---|
 | primeira execução real de carga | `wyd-bots` | limites medidos (`LBOT-03`) | após medição real | `p95` e taxa de erro registrados |
 | primeira captura do cliente 7662 | `wyd-client`/`wyd-protocol` | protocolo e árvore do cliente | após captura validada | golden e inventário conferidos |
-| `OPS-03.4` aprovado | `wyd-ops` | inventário, armazenamento e rotação de segredos | após o dono aprovar O4 | inventário fechado; rotação e consumo provados |
-| `OPS-03.5` aprovado | `wyd-ops` + produto | contrato de deploy/rollback de servidor e launcher | após o dono aprovar O5 | staging, gatilho, aprovação e rollback ensaiado |
 | primeiro deploy real | `wyd-ops` | política de deploy/rollback | após staging verde | rollback validado |
 | primeiro sistema com gate fechado | sistema dono | cobertura bloqueante por sistema | após declaração do gate | evidência de cobertura e capacidade |
 | mudança de fronteira entre sistemas | sistema afetado + arquitetura | contrato ou fronteira | após aprovação do dono | ADR com contexto, decisão, consequências, alternativas e como verificar |
@@ -45,7 +47,7 @@ ADR só existe quando uma decisão foi **tomada e aprovada pelo dono** (AGENTS.m
 
 | Referência | Relação |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` mantém fronteira/contratos parciais; este backlog não fecha organização por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` tem os contratos O1–O5 aprovados; este backlog não fecha organização por si só |
 | `wyd-ops/docs/arquitetura/adr/index.md` | índice e regra de ouro dos ADRs |
 | `wyd-ops/docs/arquitetura/adr/template.md` | molde para futuros ADRs |
 | `wyd-ops/docs/arquitetura/decisoes-registradas.md` | registro consolidado de decisões |

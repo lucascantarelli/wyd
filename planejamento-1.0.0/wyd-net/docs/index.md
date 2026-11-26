@@ -51,8 +51,8 @@ aberta não tem número: esta página não afirma limite nem timeout.
 
 As quatro perguntas do sistema foram respondidas ou derivadas: `Q-NET-1`, `Q-NET-2` e `Q-NET-4` = A, e
 `LNET-03` pela regra de sessão por conta. `LNET-01` **continua bloqueada como medição**, sem número
-inventado; `LNET-02`, `LNET-03` e `LNET-04` fecharam. O estado de cada lacuna está em `lacunas.md`; o
-briefing com a ordem das respostas é `../../briefing-de-decisoes-1.0.0.md`.
+inventado; `LNET-02`, `LNET-03` e `LNET-04` fecharam. O estado de cada lacuna está em `lacunas.md`; a
+pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` reúne a ordem das respostas.
 
 ## Mapa de páginas
 

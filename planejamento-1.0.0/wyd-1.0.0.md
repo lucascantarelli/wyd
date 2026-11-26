@@ -404,8 +404,8 @@ evidência, distribuição congelada). Das 16 perguntas originalmente registrada
 (`LBOT-01`), `Q-BOT-2` = A (`LBOT-02`), `Q-BOT-3` = A (política de `LBOT-03`), `Q-NET-1` = A (política de
 `LNET-01`), `Q-LCH-1` = A (`LLCH-01`), `Q-LCH-2` = A (`LLCH-02`), `Q-LCH-3` = A (`LLCH-03`), `Q-LCH-4` =
 A (`LLCH-04`) e `LAC-POR-09` = A — e **duas foram derivadas das regras vigentes**: `Q-NET-4` = A
-(`LNET-04`) e `Q-BOT-4` = A (`LBOT-04`); não resta pergunta sem resposta. O briefing
-atualizado e a autorização da captura (A1 = A, 2026-11-23) estão em [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md).
+(`LNET-04`) e `Q-BOT-4` = A (`LBOT-04`); não resta pergunta sem resposta. A autorização da captura (A1 = A, 2026-11-23) e o estado das respostas estão na
+[`pauta`](wyd-ops/docs/pauta-de-decisoes-pendentes.md) e em `wyd-ops/docs/lacunas.md`.
 
 **Fora da soma.** `wyd-ops` não tem `lacunas.md`; sua pergunta de hospedagem (`Q-OPS-2`,
 `wyd-ops/docs/proposta-decisoes-ops.md` §4) foi **respondida em A em 2026-11-24** — VPS paga com
@@ -471,8 +471,8 @@ BFF fecha o leilão vencido, `wyd-ops` agenda e alerta, e falha é reentrante. A
 fonte de cada resposta estão nas páginas donas (`wyd-sim/docs/proposta-decisoes-sim.md`,
 `wyd-launcher/docs/proposta-decisoes-launcher.md`, `wyd-bots/docs/proposta-decisoes-bots.md`,
 `wyd-net/docs/proposta-decisoes-net.md` e `wyd-portal/docs/proposta-decisoes-portal.md`). A captura A1
-foi autorizada em 2026-11-23; é autorização de implementação, não pergunta de desenho. A ordem e o custo
-estão no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md) §6.
+foi autorizada em 2026-11-23; é autorização de implementação, não pergunta de desenho. A ordem e o custo estão na pauta em `wyd-ops/docs/pauta-de-decisoes-pendentes.md` §2 e nos
+documentos donos.
 
 Fora do quadro de lacunas, o `wyd-db` **não mantém decisão de retenção aberta** registrada em
 [`pendencias-de-fechamento.md`](wyd-db/pendencias-de-fechamento.md) §3: `Q-RET-3` foi respondida em A
@@ -576,8 +576,8 @@ técnica a fecha. `LCLI-02` fechou em 2026-11-25 como decisão de conteúdo e ve
 
 ### 6.5 Depois da rodada
 
-A rodada de respostas terminou. A captura A1 foi **autorizada em 2026-11-23 (resposta A)**, com motivo
-medido e custo da alternativa no [`briefing-de-decisoes-1.0.0.md`](briefing-de-decisoes-1.0.0.md);
+A rodada de respostas terminou. A captura A1 foi **autorizada em 2026-11-23 (resposta A)**, com motivo medido e custo da alternativa na pauta em `wyd-ops/docs/pauta-de-decisoes-pendentes.md` e
+nos documentos donos;
 `Q-LCH-1` = A, `Q-LCH-2` = A, `Q-LCH-3` = A, `Q-LCH-4` = A, `Q-BOT-1` = A, `Q-BOT-2` = A, `Q-BOT-3` = A,
 `Q-NET-1` = A, `Q-SIM-2` = A, `Q-SIM-3` = A e `LAC-POR-09` = A já foram registradas. Os passos abaixo
 são a consequência da rodada, não a fila de perguntas.

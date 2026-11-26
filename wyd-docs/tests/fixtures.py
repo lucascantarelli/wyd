@@ -34,13 +34,47 @@ SKILLS_OK = {
 """,
     "planejamento-1.0.0/wyd-teste/docs/roadmap/WYDX-F1.md": """# WYDX-F1 — fatia de teste
 
+> Pergunta: "a fatia de teste entrega o contrato mínimo?"
+> Público: Desenvolvimento e agentes
+> Dono: `wyd-teste`
+> Base: fixture do gate
+> Revisado em: 2026-01-01
+
+**Estado:** proposto
+**Fase:** F1
+**Gate de verificação:** `python -m gate fast --root ..`
+
+## Contexto
+
+Fixture mínima para a regra de skills.
+
+## Entregável
+
+Uma página de issue no padrão único.
+
+## DoD
+
+- [ ] o gate `skills` passa.
+
+## Fora de escopo
+
+Implementação de produção.
+
+## Depende de
+
+Nada.
+
 ## Skills
 
 | campo | valor |
 |---|---|
-| `skill_principal` | `teste` |
+| `skill_principal` | `planejar-sistema` |
 
 **Dono do valor:** equipe de teste
+
+## Evidência ao fechar
+
+Saída verde do gate `skills`.
 """,
 }
 
@@ -119,3 +153,69 @@ SITE_QUEBRADO = {
     "index.html": """<html><body><aside class="barra"></aside><h1>Home</h1>
 <a href="falta.html">quebrado</a></body></html>""",
 }
+
+# Link para diretório resolve `index.html`, como o site publicado.
+SITE_DIRETORIO = {
+    "index.html": """<html><body><aside class="barra"></aside><h1>Home</h1>
+<a href="pasta/">pasta</a></body></html>""",
+    "pasta/index.html": """<html><body><aside class="barra"></aside><h1>Pasta</h1></body></html>""",
+}
+
+# Link relativo com `..` é normalizado antes de existir.
+SITE_RELATIVO = {
+    "index.html": """<html><body><aside class="barra"></aside><h1>Home</h1>
+<a href="sub/pagina.html">sub</a></body></html>""",
+    "alvo.html": """<html><body><aside class="barra"></aside><h1>Alvo</h1></body></html>""",
+    "sub/pagina.html": """<html><body><aside class="barra"></aside><h1>Sub</h1>
+<a href="../alvo.html">alvo</a></body></html>""",
+}
+
+# Sintaxe 1.x citada em code span não é uso; fora dele reprova.
+SINTAXE_1X_CITADA = {
+    "planejamento-1.0.0/wyd-teste/docs/pagina.md": """# Página
+
+O bloco `!!! nota` é citado como exemplo.
+""",
+}
+
+SINTAXE_1X_USADA = {
+    "planejamento-1.0.0/wyd-teste/docs/pagina.md": """# Página
+
+!!! nota
+
+Conteúdo.
+""",
+}
+
+
+def site_repetido(paginas: int) -> dict[str, str]:
+    """Site válido com N páginas e link cruzado; volume força o parse em processos."""
+    return {
+        f"p{indice:02d}.html": (
+            '<html><body><aside class="barra"></aside>'
+            f"<h1>Página {indice}</h1>"
+            f'<a href="p{(indice + 1) % paginas:02d}.html">próxima</a>'
+            "</body></html>"
+        )
+        for indice in range(paginas)
+    }
+
+
+def site_com_falhas(paginas: int) -> dict[str, str]:
+    """Site com N páginas, cada uma com link quebrado e duas âncoras inexistentes.
+
+    O volume (`>= 32`) força o caminho paralelo quando há `fork`; o link remoto aponta
+    para uma página que também está no lote, então o alvo já foi analisado e a ordem dos
+    problemas não depende de análise sob demanda.
+    """
+    return {
+        f"p{indice:02d}.html": (
+            '<html><body><aside class="barra"></aside>'
+            f"<h1>Página {indice}</h1>"
+            f'<a href="falta-{indice:02d}.html">quebrado</a>'
+            '<a href="#nao-existe">âncora local</a>'
+            f'<a href="p{(indice + 1) % paginas:02d}.html#sumiu">âncora remota</a>'
+            "</body></html>"
+        )
+        for indice in range(paginas)
+    }

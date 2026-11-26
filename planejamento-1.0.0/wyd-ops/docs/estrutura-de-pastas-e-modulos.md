@@ -88,7 +88,7 @@ Sistema puro (`wyd-protocol`, `wyd-sim`) não cria `adapter/` vazio. `wyd-client
 |---|---|---|---|
 | Todos | fronteira e componentes | `docs/arquitetura/componentes.md` | auditoria §2: 13 organizados |
 | `wyd-db` | provisionamento, repositórios, filas, observabilidade, segurança, baseline | `docs/modulos.md` + `docs/arquitetura/*` | 18 RF + 14 RNF; 12 testes |
-| `wyd-ops` | ci, imagem, ambiente, monitoramento, segredos, deploy, gate, dashboard | `docs/modulos.md` | 8 RF + 7 RNF; fronteira/contratos parciais |
+| `wyd-ops` | ci, imagem, ambiente, monitoramento, segredos, deploy, gate, dashboard | `docs/modulos.md` | 8 RF + 7 RNF; contratos O1–O5 aprovados |
 | `wyd-core` | tick, ECS, combate, cena, IA | `docs/modulos.md` | 8 RF + 6 RNF |
 | `wyd-client` | captura, direitos, inventário, patch | `docs/modulos.md` | 7 RF + 5 RNF |
 | `wyd-bots` | bots de QA, carga e convivência | `docs/modulos.md` | 6 RF + 5 RNF |
@@ -173,12 +173,12 @@ de ondas (coluna **Arquivos**, declarada composição planejada) ficam fora.
 
 | Achado da auditoria | Onde está | Efeito no layout |
 |---|---|---|
-| 13 sistemas organizados (12 plenos + `wyd-ops` parcial) | `auditoria-de-organizacao.md` §2 | §2.2 e §3 refletem esse veredito |
-| `wyd-ops` tem fronteira/contratos parciais | `auditoria-de-organizacao.md` §2-§3 | não declarar `wyd-ops` pleno; lacunas de fronteira permanecem |
+| 13 sistemas organizados (12 plenos + `wyd-ops` com gate parcial) | `auditoria-de-organizacao.md` §2 | §2.2 e §3 refletem esse veredito |
+| `wyd-ops` tem contratos aprovados e gate parcial | `auditoria-de-organizacao.md` §2-§3 | não declarar `wyd-ops` pleno; a implementação permanece |
 | 11 sistemas não tinham RF/RNF antes da segunda passada | `auditoria-de-organizacao.md` §3 | §3 lista RF/RNF medidos por sistema |
 | `wyd-db` e `wyd-admin` são a referência | `auditoria-de-organizacao.md` §2 | usar como molde, não como cópia |
 | 10 sistemas não têm RF numerado (estado histórico) | `auditoria-de-organizacao.md` §3 | resolvido na segunda passada; manter medição |
-| `wyd-ops` abriu dashboard, requisitos, teste e roadmap em 2026-11-25 | `wyd-ops-1.0.0.md`; `docs/lacunas.md` | fronteira/contratos O1–O5 e aplicação de `Q-OPS-2` continuam pendentes |
+| `wyd-ops` abriu dashboard, requisitos, teste e roadmap em 2026-11-25 | `wyd-ops-1.0.0.md`; `docs/lacunas.md` | contratos O1–O5 aprovados; aplicação de `Q-OPS-2` continua pendente |
 
 ## 5. Cruzamento com a especificação
 
@@ -219,8 +219,8 @@ docker compose --profile gate run --rm gate
 
 ## 7. Decisões e perguntas abertas
 
-- `wyd-ops` continua com fronteira/contratos parciais; aprovação de arquitetura é necessária antes de
-  declará-lo pleno.
+- `wyd-ops` tem os contratos O1–O5 aprovados; a implementação e o gate continuam pendentes, então ele
+  não é declarado pleno.
 - Criar issue, milestone, board, commit, push ou deploy continua sendo ato explícito do usuário.
 - Nenhum número de censo ou contagem foi alterado por esta página.
 - A implementação da árvore de `src/`/`tests/` continua subordinada à página `aceita` e ao gate do

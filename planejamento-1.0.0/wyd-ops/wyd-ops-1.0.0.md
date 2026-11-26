@@ -9,7 +9,7 @@
 **Estado:** proposto (2026-11-25). Abertura inicial: fronteira, contratos e lacunas nomeadas.
 **Nenhum código próprio**; requisitos, plano de teste e roadmap foram abertos em 2026-11-25 e o registro de lacunas vive em `docs/lacunas.md`.
 
-**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: sem dashboard próprio, sem `RF-OPS`, sem plano de teste e roadmap com DoD, fronteira/contratos parciais. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-OPS` + 5 `RNF-OPS`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). Fronteira e contratos permanecem parciais: a implementação de CI/imagem/ambiente/deploy segue pendente.
+**Organização (D-04 = A): fechada em 2026-11-25.** A auditoria (`wyd-ops/auditoria-de-organizacao.md`) listava para este sistema: sem dashboard próprio, sem `RF-OPS`, sem plano de teste e roadmap com DoD, fronteira/contratos parciais. Fechado em 2026-11-25 com `src/.gitkeep` + `tests/.gitkeep`, `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (7 `RF-OPS` + 5 `RNF-OPS`) e `docs/roadmap/` (index.md + roadmap.md com DoD por fatia). A fronteira e os contratos O1–O5 estão aprovados (O4/O5 formalizados em 2026-11-26); a implementação de CI/imagem/ambiente/deploy segue pendente.
 
 ## 1. O que ele faz
 
@@ -30,11 +30,11 @@ o gate que falha de verdade.
 
 | # | Contrato | Direção | Forma | Garantia | Dono | Estado |
 |---|---|---|---|---|---|---|
-| O1 | ambiente efêmero | ops → `wyd-bots` | Postgres + servidor descartáveis por execução | sem estado global entre cenários | `wyd-ops` | **decidido na origem** (`LBOT-01`, `LBOT-02`); contrato pendente de aprovação |
-| O2 | métricas e logs | ops ← `wyd-server` | `/metrics` Prometheus + logs de metadados | sem payload/PII | `wyd-ops` | **decidido na origem** (`LNET-04`, `LAC-POR-06`); forma pendente de aprovação |
-| O3 | publicação do site | ops → Pages | workflow + artefato estático | rollback validado | `wyd-ops` | **decidido na origem** (`LPDOC-01`); contrato operacional pendente |
-| O4 | segredos | ops emite | secret store; nunca em código | rotação documentada | `wyd-ops` | **parcial** (`LAC-ADM-03` §3.3 cobre o token de controle, não o inventário/rotação de todos os segredos) |
-| O5 | deploy de servidor e launcher | ops → host/release | workflow + imagem + artefato | rollback validado e aprovação | `wyd-ops` | **aberto** — contrato não definido; candidato a ADR |
+| O1 | ambiente efêmero | ops → `wyd-bots` | Postgres + servidor descartáveis por execução | sem estado global entre cenários | `wyd-ops` | **aprovado em 2026-11-25**; contrato nesta seção; execução em F0/F1 e `LBOT-03` |
+| O2 | métricas e logs | ops ← `wyd-server` | `/metrics` Prometheus + logs de metadados | sem payload/PII | `wyd-ops` | **aprovado em 2026-11-25**; `RF-OPS-004` implementável na F3 |
+| O3 | publicação do site | ops → Pages | workflow + artefato estático | rollback validado | `wyd-ops` | **aprovado em 2026-11-25**; rollback ensaiado exigido antes de publicar |
+| O4 | segredos | ops emite | secret store; nunca em código | rotação documentada | `wyd-ops` | **aprovado em 2026-11-25**; inventário e rotação em `ADR-OPS-0011`; aplicação depende de `OPS-04` |
+| O5 | deploy de servidor e launcher | ops → host/release | workflow + imagem + artefato | rollback validado e aprovação | `wyd-ops` | **aprovado em 2026-11-25**; contrato no `ADR-OPS-0007` revisado; implementação em F4/`OPS-04` |
 
 ## 4. Estado medido (`V`, 2026-11-25)
 
@@ -47,11 +47,11 @@ o gate que falha de verdade.
 
 ## 5. O que falta
 
-Implementação de CI, imagem, ambiente, monitoramento, segredos e deploy; aprovação de fronteira/contratos
-O1–O5 pela arquitetura e pelos donos consumidores; definição do inventário/rotação de segredos (O4) e
-do deploy/rollback de servidor e launcher (O5); aplicação de `Q-OPS-2` (provedor, VPS, contrato,
-backup). O planejamento de organização está fechado: dashboard, `RF-OPS`, plano de teste e roadmap
-existem. O registro vive em `docs/lacunas.md` §4.
+Implementação de CI, imagem, ambiente, monitoramento, segredos e deploy; aplicação de `Q-OPS-2`
+(provedor, VPS, contrato, backup) e do inventário de segredos no ambiente de produção. Os contratos
+O1–O5 estão aprovados e formalizados (`ADR-OPS-0011` e `ADR-OPS-0007` revisado); o que falta é
+execução, não aprovação. O planejamento de organização está fechado: dashboard, `RF-OPS`, plano de
+teste e roadmap existem. O registro vive em `docs/lacunas.md` §4.
 
 ## 6. Gate para sair do papel
 
@@ -59,11 +59,12 @@ existem. O registro vive em `docs/lacunas.md` §4.
 2. Árvore de `src/` e `tests/` planejada (feito).
 3. Plano de teste com alvos, dado, isolamento e comando (feito).
 4. Gate verde: `docker compose --profile gate run --rm gate`.
-5. Fronteira e contratos O1–O5 aprovados por arquitetura e pelos donos consumidores.
+5. Fronteira e contratos O1–O5 aprovados (feito em 2026-11-25; O4/O5 formalizados em 2026-11-26);
+   falta a implementação de F3/F4, dependente de `OPS-04`.
 
 ## 7. Próximas páginas
 
-A próxima lacuna é `OPS-03` (aprovação de O1–O5), com cinco decisões em `docs/lacunas.md` §4:
-O1 ambiente, O2 observabilidade, O3 publicação, O4 segredos e O5 deploy/rollback. `OPS-04` (aplicação de
-`Q-OPS-2`) e `OPS-05` (board/novas issues) continuam na mesma lista. Não há página de organização
-pendente.
+`OPS-03` fechou em 2026-11-26: O1–O5 estão aprovados, e O4/O5 foram formalizados em `ADR-OPS-0011` e
+no `ADR-OPS-0007` revisado. As lacunas abertas são `OPS-04` (aplicação de `Q-OPS-2`, adiada pelo dono)
+e `OPS-05` (board pendente; issues e labels executados). O registro é `docs/lacunas.md` §4. Não há
+página de organização pendente.

@@ -146,7 +146,7 @@ A tarefa só é aceita quando todos os itens forem verdadeiros:
 - Implementar o job, o servidor, o bot, o seed ou os contadores nesta tarefa.
 - Definir limite de produção antes da medição.
 - Medir produção, homologação compartilhada ou máquina local como gate.
-- Fechar `LPRT-03`, `LPRT-06`, `LCLI-02` ou qualquer lacuna fora de `LNET-01`/`LBOT-03`.
+- Fechar `LPRT-03`, `LPRT-06` ou qualquer lacuna fora de `LNET-01`/`LBOT-03`; `LCLI-02` fechou em 2026-11-25.
 - Criar ADR: o congelamento é decisão do dono e pode virar ADR se mudar fronteira ou operação.
 
 ## 8. Riscos e mitigação
@@ -163,7 +163,7 @@ A tarefa só é aceita quando todos os itens forem verdadeiros:
 
 | Referência | Relação |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | `wyd-net` e `wyd-bots` organizados; `wyd-ops` mantém fronteira/contratos parciais; esta tarefa não fecha organização por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | `wyd-net` e `wyd-bots` organizados; `wyd-ops` tem os contratos O1–O5 aprovados; esta tarefa não fecha organização por si só |
 | `wyd-net/lacunas.md` §2 | `LNET-01` aberta como medição |
 | `wyd-bots/lacunas.md` §2 | `LBOT-03` aberta como medição |
 | `wyd-net/docs/proposta-decisoes-net.md` §4 | política de `Q-NET-1` = A |

@@ -140,6 +140,6 @@ alvos continuam fora do `Cargo.toml`.
 - **Não decide a estratégia de teste:** ela é de `../docs/planos/plano-de-testes.md` e
   `../docs/guia-teste/`.
 - **Não cria comando novo de CI:** não existe página de CI em `docs/planos/` do `wyd-db`; o plano do
-  projeto é `../../wyd-ops/plano-ci-real.md` (`proposta`, 2026-11-19), e
+  projeto é `../../wyd-ops/docs/devops/index.md` (`aceito`, 2026-11-26), e
   `docs/planos/plano-de-testes.md` §81 anuncia a página local para depois do primeiro código. Aqui só o
   comando local por alvo.

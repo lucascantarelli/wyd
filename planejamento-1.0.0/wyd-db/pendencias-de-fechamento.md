@@ -2213,23 +2213,24 @@ critérios fechavam nas 12, **5** não. As correções de §6.6.25.4 e a assinat
 3. `tests/fixtures-e-factories.md` §1 — `../../src/migrate/spec.md`; a partir de `tests/` o caminho é
    `../src/migrate/spec.md` (linha 31).
 4. `tests/index.md` §6, `tests/specs/sistema.md` §7 e `tests/alvos/sistema-stack-caps.md` §8 — citam
-   `docs/planos/plano-ci-real.md`, que **não existe**; o único arquivo que o menciona como futuro é
-   `docs/planos/plano-de-testes.md` §81. É referência a dono não escrito, não material externo.
+   `../../../wyd-ops/docs/devops/index.md`, que existe e é o dono atual do CI; o único arquivo local que
+   menciona a página de CI é `docs/planos/plano-de-testes.md` §81. É referência a dono externo ao
+   `wyd-db`, não material externo.
 
 #### 6.6.25.2 Página por página, no pré-aceite
 **Sem arquivo no repositório:** `../plano-migrations.md`, `../../src/migrate/spec.md` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | Página | Critérios que faltavam | O que faltava, em concreto |
 |---|---|---|
-| `tests/index.md` | 1, 3, 4, 9, 11 | `Público:` fora de §2; data para **12**/**23**/**0** (§2.1 e §4); legenda de níveis; revisor; `plano-ci-real.md` inexistente (§6) |
+| `tests/index.md` | 1, 3, 4, 9, 11 | `Público:` fora de §2; data para **12**/**23**/**0** (§2.1 e §4); legenda de níveis; revisor; referência ao dono do CI (§6) |
 | `tests/specs/capacidades.md` | 1, 3, 4, 9, 11 | `Público:` fora de §2; data para **23**/**0**/**12**/**11**/**5** (§7); legenda; revisor; `../plano-migrations.md` → `../../` (4, 21, 121) |
 | `tests/specs/contrato.md` | 1, 4, 9 | `Público:` fora de §2; legenda; revisor. Sem defeito de caminho |
-| `tests/specs/sistema.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; `plano-ci-real.md` (§7) |
+| `tests/specs/sistema.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; referência ao dono do CI (§7) |
 | `tests/alvos/contrato-migrations.md` | 1, 4, 9 | `Público:` fora de §2; legenda; revisor |
 | `tests/alvos/contrato-catalogo.md` | 1, 4, 9 | `Público:` fora de §2; legenda; revisor |
 | `tests/alvos/sistema-pg.md` | 1, 4, 9 | `Público:` fora de §2; legenda; revisor |
 | `tests/alvos/sistema-sessoes.md` | 1, 3, 4, 9 | `Público:` fora de §2; “os **seis** papéis do provisionamento” sem arquivo ou § de fonte; legenda; revisor |
-| `tests/alvos/sistema-stack-caps.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; `plano-ci-real.md` (§8) |
+| `tests/alvos/sistema-stack-caps.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; referência ao dono do CI (§8) |
 | `tests/fixtures-e-factories.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; `../../src/migrate/spec.md` → `../src/` (31) |
 | `tests/dados-de-teste.md` | 1, 4, 9, 11 | `Público:` fora de §2; legenda; revisor; `Base:` cita `resources/accounts.json` inexistente |
 | `tests/resources/README.md` | 1, 4, 9 | `Público:` fora de §2; legenda; revisor. Sem defeito de caminho |
@@ -2242,8 +2243,8 @@ critérios fechavam nas 12, **5** não. As correções de §6.6.25.4 e a assinat
    como fazem as 88 páginas de `docs/`.
 3. **Data nos números que nascem aqui — 2 páginas:** `tests/specs/capacidades.md` §7 e `tests/index.md`
    §2.1 e §4, medidos em 2026-11-24.
-4. **Caminhos — 4 defeitos:** os dois `Base:` e os dois trechos citados em §6.6.25.1; a referência a
-   `plano-ci-real.md` fica como pendência até a página existir.
+4. **Caminhos — 4 defeitos:** os dois `Base:` e os dois trechos citados em §6.6.25.1; a referência ao
+   dono do CI foi corrigida para `../../../wyd-ops/docs/devops/index.md`.
 5. **Revisão de quem não escreveu — `Q-BLK-21`.** É o único critério que nenhuma edição de página resolve:
    com **A**, o dono revisa e assina; foi a última coisa antes de `**Estado:** aceito`, e está feita
    (§6.6.23).
@@ -2265,7 +2266,7 @@ Os itens 1–4 de §6.6.25.3 foram aplicados nas **12** páginas, que então seg
 | caminho `Base:` | `tests/specs/capacidades.md` linhas 4, 30 e 132 | `../plano-migrations.md` → `../../plano-migrations.md` |
 | caminho `Base:` | `tests/dados-de-teste.md` | `resources/accounts.json` (inexistente) → `resources/README.md` |
 | caminho `src/` | `tests/fixtures-e-factories.md` §1 | `../../src/migrate/spec.md` → `../src/migrate/spec.md` |
-| `plano-ci-real.md` | `tests/index.md` §6, `tests/specs/sistema.md` §7, `tests/alvos/sistema-stack-caps.md` §8 | declarada **planejada e não escrita**, com a menção de `docs/planos/plano-de-testes.md` §81 |
+| dono do CI | `tests/index.md` §6, `tests/specs/sistema.md` §7, `tests/alvos/sistema-stack-caps.md` §8 | referência corrigida para `../../../wyd-ops/docs/devops/index.md`; página externa ao `wyd-db` |
 
 **O que ficou para o passo seguinte:** o critério **3** em `tests/alvos/sistema-sessoes.md` §3 (“os **seis**
 papéis do provimento”) — número sem arquivo ou § de fonte, fora da lista mecânica — e o critério **9** nas
@@ -2310,7 +2311,7 @@ dentro de `docs/specs/`.
 | 8 | placeholder | **ok** | 0 `TODO`/“em construção”/seção vazia |
 | 9 | revisão de quem não escreveu | **ok** | `Q-BLK-21` = A: o dono revisou e assinou as 12 em 2026-11-24; folha e registro em `revisao-de-q-blk-21.md` §5 |
 | 10 | índice da pasta | **ok** | 11 links em `tests/index.md` §2.1 |
-| 11 | `Base:` e material externo | **ok** | `Base:` em 12/12; 4 caminhos corrigidos em §6.6.25.4; `plano-ci-real.md` declarada planejada |
+| 11 | `Base:` e material externo | **ok** | `Base:` em 12/12; 4 caminhos corrigidos em §6.6.25.4; referência ao dono do CI corrigida |
 
 **Estado das 12 páginas:** `**Estado:** aceito (2026-11-24)` em todas, **0** `proposto`. Os 11 critérios
 fecham — o 9 foi o último, com a assinatura do dono em §6.6.23.
@@ -2492,7 +2493,7 @@ são baratas: cada dossiê custa **0,5 a 1 sessão** (quadro-resumo de §6.6).
 | **1** | **Finalizar o `wyd-db`** | **21**: as **4** decisões de §6.6 + as **17** linhas de §4 (1 aceite com 34 páginas, 6 seeds, 7 execuções, 3 externas) | 4 páginas agora; depois `M33` → série → `M20` → a 144ª página | do dono (4 decisões; 34 atos de aceite), da curadoria com o cliente 7662 (6 seeds) e de `wyd-ops` (retenção) | **pré-requisito**: é o portão do código (item 1 do §5 de `AGENTS.md`) |
 | **2** | **Definir regras e padrões** | **0** no `wyd-db` (`lacunas.md` §1: 0 abertas, 0 propostas) | nada novo: as regras que as outras frentes citam já estão decididas — `M33`/`Q-M33-6`, a forma de citação (`convencoes.md` §Coluna de dono) e os dois ADRs | ninguém | **cumprida** — o que resta é **aplicar** `M33`, já contado na frente 1 |
 | **3** | **Expandir propostas dos outros sistemas** | **12** sistemas fora do `wyd-db` (§1.1): **1** sem plano diretor (`wyd-ops`), **6** "abertos" sem requisito numerado (`wyd-net`, `wyd-core`, `wyd-server`, `wyd-sim`, `wyd-launcher`, `wyd-bots`) e `wyd-protocol` com **5 de 131** páginas do teto | nada no `wyd-db`: contrato C4, DDL e papéis já fechados | de cada dono de sistema; do `wyd-db`, só leitura | **paralela** — não trava nem é travada |
-| **4** | **Fechar lacunas abertas** | **5** no projeto: `wyd-protocol` **2** (`LPRT-03`, `LPRT-06`), `wyd-net` **1**, `wyd-bots` **1** e `wyd-client` **1** (`LCLI-02`) — §1.1 e `AGENTS.md` §6 | cinco lacunas de **medição/captura**, não de decisão | da captura A1 (frente `wyd-client`) e da primeira execução | **paralela**, com prazo de terceiro |
+| **4** | **Fechar lacunas abertas** | **4** no projeto: `wyd-protocol` **2** (`LPRT-03`, `LPRT-06`), `wyd-net` **1** e `wyd-bots` **1** — §1.1 e `AGENTS.md` §6; `LCLI-02` fechou em 2026-11-25 | quatro lacunas de **medição/captura**, não de decisão | da captura A1 (frente `wyd-client`) e da primeira execução | **paralela**, com prazo de terceiro |
 
 **O que isso quer dizer na prática:** só a frente 1 é pré-requisito de alguma coisa. A frente 2 já foi
 cumprida e não precisa de sessão. As frentes 3 e 4 andam em paralelo sem destravar nada do `wyd-db` — e,

@@ -29,7 +29,8 @@
 
 ## Isolamento
 
-- Testes Python com `unittest` (`make test-gate`); container Linux por build.
+- Testes Python com `unittest`; `make gate`/`gate.sh` os executa antes do `gate full`, e `make test-gate` é o atalho isolado. Container Linux por build.
+- O teste paralelo-vs-sequencial exige `fork`; é executado no Linux e no macOS, e o skip é apenas do Windows (sem `fork`).
 - Fixtures por montagem real; nenhum número inventado.
 - Proibido `sleep` como sincronização.
 - Cobertura mínima de 85% por capacidade (onde aplicável).
@@ -38,14 +39,14 @@
 
 ```bash
 make gate-fast                 # ciclo curto: skills, lacunas, contagens, censos
-make gate                      # build, links e todos os domínios
-make test-gate                 # testes de fixture dos verificadores
+make gate                      # testes dos verificadores + build, links e todos os domínios
+make test-gate                 # atalho isolado para os testes de fixture
 cd wyd-docs && python -m gate fast --json
 ```
 
 ## CI, cobertura e monitoramento
 
-- **CI:** `make gate` e o job de documentação de `.github/workflows/docs.yml` rodam build, links, âncoras, contagem e censo; falha em qualquer um reprova o PR. O job também roda `make test-gate`.
+- **CI:** `make gate` e o job de documentação de `.github/workflows/docs.yml` rodam os testes dos verificadores, build, links, âncoras, contagem e censo; falha em qualquer um reprova o PR. O job chama `wyd-docs/gate.sh`, que é o mesmo ponto do container.
 - **Cobertura:** A cobertura é de página, link, âncora e censo; o total e o censo vigentes são os de `wyd-docs-1.0.0.md` §9.1, não repetidos aqui. Não há percentual de linha para o site.
 - **Monitoramento:** Duração do build, páginas publicadas, fontes fora do censo, link quebrado e status da publicação. O gate já falha em link, âncora, contagem e censo; não há SLO de disponibilidade antes de existir deploy.
 - **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.

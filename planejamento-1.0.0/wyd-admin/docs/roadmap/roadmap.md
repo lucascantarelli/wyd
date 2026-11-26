@@ -1,26 +1,45 @@
 > Pergunta: "em que ordem o `wyd-admin` é construído e como sei que cada fatia fechou?"
 > Público: Produto, arquitetura e desenvolvedor
 > Dono: equipe do wyd-admin
-> Base: [requisitos](../specs/requisitos.md); [contrato C4](../arquitetura/contrato-c4.md); `AGENTS.md` §7
-> Revisado em: 2026-11-21
+> Base: [requisitos](../specs/requisitos.md); [contrato C4](../arquitetura/contrato-c4.md); `AGENTS.md` §7; `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md`
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-21). **Nenhuma issue foi criada e o board não foi tocado**; estas são
-fatias de planejamento, não itens de GitHub.
+**Estado:** proposto (2026-11-21; páginas por issue em 2026-11-26). **Nenhuma issue foi criada e o
+board não foi tocado**; estas são fatias de planejamento, não itens de GitHub.
 
-| ID | Fase | Pri. | Entregável | DoD verificável | Depende de |
-|---|---|---|---|---|---|
-| `ADM-01` | P0 | alta | Esqueleto HTTP, config, `/health` e `/ready` | `cargo test -p wyd-admin contrato::saude` verde; `/ready` com banco parado devolve `503 ADM_DB_UNAVAILABLE` | — |
-| `ADM-02` | P0 | alta | Autenticação de serviço, papel mínimo e `trace_id` | testes `401` sem token, `403` para `member`, `400` sem `X-Trace-Id`; rotação com dois tokens aceitos durante a janela | — (decisão de 2026-11-22) |
-| `ADM-03` | P0 | alta | Registro de idempotência, replay e `GET /actions/{key}` | duas chamadas com a mesma chave = **1** linha em `account_ledger`; corpo diferente = `409`; consulta devolve o corpo gravado | schema pronto (`0033`); nada bloqueia |
-| `ADM-04` | P1 | alta | `POST /accounts/{id}/moderation` | teste de integração bloqueia/desbloqueia e confere `blocked_at`, `blocked_by` e `audit_log` | `ADM-03`, `LAC-ADM-01` |
-| `ADM-05` | P1 | alta | `POST /accounts/{id}/wallet-adjustments` | saldo + ledger coerentes; `expected_coin` divergente = `409` sem escrita; rollback sem linha | `ADM-03`, `LAC-ADM-01` |
-| `ADM-06` | P1 | média | `PUT /channels/{g}/{c}` | canal 0 = `422`; atualização grava e audita; nenhum `INSERT` | `ADM-03`, `LAC-ADM-01` |
-| `ADM-07` | P2 | média | `PUT /cities/{code}/tax` e `PUT /items/{item_index}/prices/{npc_id}` | faixa e concorrência otimista provadas; `404` para alvo ausente | `ADM-03`, `LAC-ADM-01` |
-| `ADM-08` | P2 | média | `POST /sessions/{id}/kick` e `POST /broadcasts` | teste com dublê: sem ack não há escrita; `200` do controle grava `released_at` e audita; processo parado devolve `503` sem escrita | `ADM-03`; endpoint do `wyd-server` é obrigação do plano dele (decisão de 2026-11-22) |
-| `ADM-09` | P2 | alta | Auditoria, log estruturado e gate de 85% | toda ação tem `audit_id`; log sem PII; `cargo llvm-cov … --fail-under-lines 85` exit 0 | `ADM-04`–`ADM-07` |
-| `ADM-10` | P1 | alta | Custódia de item do mercado: `POST /characters/{id}/escrow`, `POST /escrows/{id}/deliver`, `/return`, `/cancel` | duas chamadas com a mesma chave = **1** linha em `market_escrow`; o item nunca está em `character_item` e `market_escrow` ao mesmo tempo; entrega com mochila cheia = `409` sem perda e custódia continua `retido`; as quatro ações gravam `audit_log` | `ADM-03` e `LAC-ADM-01`; schema pronto (`0034` + emenda do `0032`) |
+## 1. Regras do fatiamento
 
-## Fora de escopo da `1.0.0`
+1. Uma issue, uma página; a página é dona de fase, prioridade, entregável, DoD, fora de escopo,
+   dependência, skills e evidência.
+2. Fatia só entra se o DoD tiver comando, arquivo, status HTTP ou teste observável.
+3. O que depende de schema, lacuna ou decisão fica em `## Depende de` da página; o roadmap não repete.
+4. O número da issue nasce na criação; a chave local `ADM-nn` não antecipa número do GitHub.
+
+## 2. Fatias
+
+A ordem abaixo é a do roadmap. A prova de término é o `## DoD` da página citada; o roadmap não repete
+fase, prioridade, entregável, dependência, DoD nem fora de escopo.
+
+| Ordem | Issue | Página (detalhe e §Skills) |
+|---:|---|---|
+| 1 | `ADM-01` — esqueleto HTTP, config e saúde | [`ADM-01`](WYDADM-01.md) §Skills |
+| 2 | `ADM-02` — autenticação de serviço e trace_id | [`ADM-02`](WYDADM-02.md) §Skills |
+| 3 | `ADM-03` — idempotência, replay e consulta de ação | [`ADM-03`](WYDADM-03.md) §Skills |
+| 4 | `ADM-04` — moderação de conta | [`ADM-04`](WYDADM-04.md) §Skills |
+| 5 | `ADM-05` — ajuste de carteira | [`ADM-05`](WYDADM-05.md) §Skills |
+| 6 | `ADM-06` — configuração de canal | [`ADM-06`](WYDADM-06.md) §Skills |
+| 7 | `ADM-07` — imposto e preço | [`ADM-07`](WYDADM-07.md) §Skills |
+| 8 | `ADM-08` — kick e broadcast | [`ADM-08`](WYDADM-08.md) §Skills |
+| 9 | `ADM-09` — auditoria, log e cobertura | [`ADM-09`](WYDADM-09.md) §Skills |
+| 10 | `ADM-10` — custódia de item do mercado | [`ADM-10`](WYDADM-10.md) §Skills |
+
+## 3. Ordem e dependências
+
+A sequência de execução é a da tabela de §2. O que cada issue exige antes de começar — outra issue,
+lacuna, schema ou decisão — é o campo `## Depende de` da página dela; esta página não repete aresta
+nem grafo.
+
+## 4. Fora de escopo da `1.0.0`
 
 - Tela ou HTML: a administração visual é do `wyd-portal`.
 - Fila durável, retry agendado ou “ação para depois”.
@@ -28,7 +47,7 @@ fatias de planejamento, não itens de GitHub.
 - Regra de jogo: dano, drop, progressão e economia são de `wyd-sim`/`wyd-core`.
 - Autenticação de pessoa e segundo fator: `wyd-portal` (`LAC-POR-05`).
 
-## Riscos
+## 5. Riscos
 
 | Risco | Efeito | Mitigação |
 |---|---|---|
@@ -38,3 +57,9 @@ fatias de planejamento, não itens de GitHub.
 | Escrita duplicada de `account_moderation` | duas implementações para a mesma escrita | mitigado: `LAC-ADM-05` fechada em 2026-11-21 e doc do portal corrigido; resta impedir SQL direto em revisão |
 | Item em dois lugares na custódia | duplicação de item real e mercado sem lastro | as duas escritas na mesma transação (`RN-ADM-008`); mochila cheia devolve `409` e mantém `retido` |
 | Schema de custódia ausente | `ADM-10` não implementa | **encerrado em 2026-11-22:** `game.market_escrow` no lote `0034` (`LAC-ADM-07`); nenhuma tabela improvisada no admin |
+
+## 6. O que este roadmap não faz
+
+- Não estima prazo em dias.
+- Não cria issue, milestone ou board.
+- Não repete o detalhe da fatia; a página da issue é dona.

@@ -12,7 +12,7 @@
 #   - `pull_policy: build`: `up` constrói da árvore em vez de puxar imagem antiga
 #   - `restart: "no"`: o site de dev não reinicia sozinho depois de `down` ou de falha
 #
-# Porta, `container_name`, `build:` (contexto e Dockerfile) continuam vindo do base.
+# A porta vem do base; o `build:` fica aqui porque o base só consome a imagem publicada.
 #
 # Dono: `wyd-ops` (imagem e Compose); decisão em
 # `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §2.6.
@@ -21,4 +21,7 @@ services:
   docs:
     image: ghcr.io/lucascantarelli/wyd-docs:dev
     pull_policy: build
+    build:
+      context: .
+      dockerfile: wyd-ops/wyd-docs.Dockerfile
     restart: "no"

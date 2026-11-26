@@ -109,7 +109,7 @@ Nenhuma hipótese vira regra sem reverificação na fonte nova.
 
 | Referência | Relação |
 |---|---|
-| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` mantém fronteira/contratos parciais; este mapa não fecha organização por si só |
+| `wyd-ops/auditoria-de-organizacao.md` §2–§3 | 13 sistemas organizados; `wyd-ops` tem os contratos O1–O5 aprovados; este mapa não fecha organização por si só |
 | `wyd-core/docs/specs/catalogo-funcional.md` | mapa de fronteira dos sistemas de jogo |
 | `wyd-db/docs/dicionario-dados/dominio-catalogo.md` | catálogo de item e skill |
 | `wyd-db/docs/dicionario-dados/dominio-combate.md` | stats, equipamento e drop |

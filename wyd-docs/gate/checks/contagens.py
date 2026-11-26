@@ -12,8 +12,8 @@ Medidas (fontes independentes):
    publica (`planejamento-1.0.0/<sistema>/docs/**/*.md`), com o total de fontes censadas.
 6. **páginas de issue** — arquivos `WYD*.md` de cada `docs/roadmap/`, sem `roadmap.md`, `fases.md`
    nem `index.md`; `status-planejamento.md` cita o total, um dashboard cita o do próprio sistema.
-7. **fatias** — no dashboard, as páginas de issue do sistema; o `wyd-admin` não tem página por fatia e
-   a medida é o número de IDs `ADM-nn` do `roadmap.md` dele (exceção declarada em `FATIAS_ESPECIAIS`).
+7. **fatias** — no dashboard, as páginas de issue do sistema, inclusive `ADM-nn` no `wyd-admin`
+   (`WYDADM-nn.md`); não há exceção de tabela.
 8. **páginas escritas** e **páginas no `wyd-db`** — páginas `.md` de `<sistema>/docs/`; a frase nomeia
    o sistema em `código` e a medida é a daquele sistema.
 9. **fontes** — o total do censo, conferido na citação (`N páginas / N fontes`).
@@ -137,10 +137,6 @@ HISTORICO_RE = re.compile(
     re.IGNORECASE,
 )
 HISTORICO_DATA_RE = re.compile(r"\(20\d\d-\d\d-\d\d\)")
-# Sistemas cujo roadmap não tem página por fatia: a medida é outra e a exceção imprime o motivo.
-FATIAS_ESPECIAIS = {
-    "wyd-admin": "roadmap.md lista `ADM-nn` em tabela; não há página de fatia",
-}
 
 # Grandezas do censo de §9.1 e como cada uma é declarada na seção. O nome é a chave de `medido`.
 CENSO_ESTADOS = (
@@ -290,11 +286,6 @@ def medir_planos_com_ci(raiz: Path) -> int:
 
 
 def medir_fatias(raiz: Path, sistema: str) -> int:
-    if sistema in FATIAS_ESPECIAIS:
-        roadmap = raiz / SISTEMAS / sistema / "docs/roadmap/roadmap.md"
-        if not _ws().exists(roadmap) or not roadmap.is_file():
-            raise Erro(f"roadmap ausente: {roadmap}")
-        return len(set(re.findall(r"`(?:ADM)-[0-9]{2}`", _ws().read(roadmap))))
     return _paginas_issue(raiz / SISTEMAS / sistema / "docs/roadmap")
 
 

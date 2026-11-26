@@ -1,12 +1,15 @@
 name: docs-image
 
 # Constrói a imagem do site e a publica no GHCR. O `docker compose` do repositório consome
-# essa imagem. Login e push usam `run:` com GITHUB_TOKEN: nenhuma action de terceiro
-# (plano-ci-real.md §4.1). O gate editorial continua em `docs.yml`.
+# essa imagem. Login e push usam GITHUB_TOKEN: nenhuma action de terceiro além das oficiais
+# `docker/*`, auditadas e pinadas por commit. O gate editorial continua em `docs.yml`.
+#
+# `develop` é a única branch que publica enquanto `main` permanece arquivada (ADR-OPS-0012).
+# A tag `latest` acompanha `develop`; no release 1.0.0 a política migra para `main`.
 
 on:
   push:
-    branches: [develop, main]
+    branches: [develop]
     paths:
       - "planejamento-1.0.0/**"
       - "wyd-docs/**"
@@ -26,7 +29,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 concurrency:
   group: docs-image-${{ github.ref }}
@@ -34,27 +36,55 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/${{ github.repository_owner }}/wyd-docs
+  PUBLISH_IMAGE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/develop' }}
 
 jobs:
   imagem:
     name: construir e publicar
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - name: Construir imagem
+      - name: Preparar Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Login no GHCR
+        if: env.PUBLISH_IMAGE == 'true'
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
-          docker build \
-            --file wyd-ops/wyd-docs.Dockerfile \
-            --tag "$IMAGE:${GITHUB_SHA}" \
-            --tag "$IMAGE:latest" \
-            .
+          echo "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Construir imagem
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: wyd-ops/wyd-docs.Dockerfile
+          push: ${{ env.PUBLISH_IMAGE == 'true' }}
+          load: ${{ env.PUBLISH_IMAGE != 'true' }}
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:develop
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha,scope=docs-image
+          cache-to: ${{ env.PUBLISH_IMAGE == 'true' && 'type=gha,mode=max,scope=docs-image' || '' }}
+          provenance: ${{ env.PUBLISH_IMAGE == 'true' }}
+          sbom: ${{ env.PUBLISH_IMAGE == 'true' }}
 
       - name: Fumaça — o site responde 200
         run: |
           set -eu
+          if [ "$PUBLISH_IMAGE" = "true" ]; then
+            docker pull "$IMAGE:${GITHUB_SHA}"
+          fi
           docker run --detach --name docs-smoke --publish 8123:8000 "$IMAGE:${GITHUB_SHA}"
           codigo=0
           for _ in $(seq 1 30); do
@@ -70,12 +100,3 @@ jobs:
             echo "o site não respondeu 200 em 30 s" >&2
             exit 1
           fi
-
-      - name: Publicar no GHCR
-        if: github.event_name != 'pull_request'
-        run: |
-          set -eu
-          echo "${{ secrets.GITHUB_TOKEN }}" \
-            | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
-          docker push "$IMAGE:${GITHUB_SHA}"
-          docker push "$IMAGE:latest"

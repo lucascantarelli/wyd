@@ -4,9 +4,9 @@
 > Público: Arquitetura, desenvolvimento e revisores
 > Dono: arquitetura (com o dono do sistema afetado)
 > Base: `AGENTS.md` §3, §5 (invariante 3); `planejamento-1.0.0/wyd-db/docs/arquitetura/adr/index.md`; `planejamento-1.0.0/wyd-ops/auditoria-de-organizacao.md`; `planejamento-1.0.0/wyd-1.0.0.md` §8
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25; ADRs de DevOps acrescentados em 2026-11-26). **23 ADRs aceitos** hoje; o restante das decisões vive em
+**Estado:** proposto (2026-11-25; ADRs de DevOps acrescentados em 2026-11-26). **25 ADRs aceitos** hoje; o restante das decisões vive em
 `lacunas.md`/`docs/` do sistema dono e em `decisoes-registradas.md`.
 
 ## 1. Regra de ouro (AGENTS.md §5, item 3)
@@ -34,10 +34,12 @@ Numeração segue o sistema dono: `ADR-<SISTEMA>-NNNN` (ex.: `ADR-DB-0001`).
 | `ADR-OPS-0004` | Cache, retenção e registry no plano gratuito | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0004-cache-retencao-e-registry.md` |
 | `ADR-OPS-0005` | Compose para docs/gate; runner para Rust | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0005-containers-e-ci.md` |
 | `ADR-OPS-0006` | Gate de documentação com fonte única | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0006-gate-unico-de-documentacao.md` |
-| `ADR-OPS-0007` | Deploy sobre Compose, provedor de VPS a definir | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0007-deploy-sobre-compose-com-provedor-a-definir.md` |
+| `ADR-OPS-0007` | Deploy sobre Compose e contrato O5 (provedor a definir) | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0007-deploy-sobre-compose-com-provedor-a-definir.md` |
 | `ADR-OPS-0008` | Política de actions de terceiros | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0008-politica-de-actions-de-terceiros.md` |
 | `ADR-OPS-0009` | Transição automática de estado de issue | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0009-transicao-automatica-de-issues.md` |
 | `ADR-OPS-0010` | Camada única de gate: pacote Python, contrato de saída e papéis das linguagens | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0010-camada-unica-de-gate.md` |
+| `ADR-OPS-0011` | Inventário e ciclo de vida de segredos (O4) | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0011-inventario-e-ciclo-de-vida-de-segredos.md` |
+| `ADR-OPS-0012` | Governança de checks, branches, Pages e imagens | `wyd-ops` | aceito (2026-11-26) | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0012-governanca-de-checks-branches-e-imagens.md` |
 | `ADR-LCH-0001` | Manifesto canônico com assinatura Ed25519 destacada (`Q-LCH-1` + `Q-LCH-3` = A) | `wyd-launcher` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-launcher/docs/arquitetura/adr/adr-lch-0001-manifesto-canonico-assinado.md` |
 | `ADR-SIM-0001` | Aritmética inteira em bps, arredondamento único (`Q-SIM-4` = A) | `wyd-sim` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-sim/docs/arquitetura/adr/adr-sim-0001-aritmetica-inteira-em-bps.md` |
 | `ADR-PRT-0001` | Build-alvo é o cliente 7662 (`Q-PRT-1` = A) | `wyd-protocol` | aceito (2026-11-23) | `planejamento-1.0.0/wyd-protocol/docs/arquitetura/adr/adr-prt-0001-build-alvo-7662.md` |
@@ -85,8 +87,8 @@ pendente.
 | `ADR-DOC-0001` | `wyd-docs` tem site implementado e gate de publicação | `wyd-1.0.0.md` §8.7; `wyd-docs/lacunas.md` | publicação é ato à parte |
 | `ADR-CLI-0001` | `wyd-client` tem fronteira e contratos fechados; direitos parciais | `wyd-1.0.0.md` §8.7; `wyd-client/docs/specs/*` | uso e distribuição registrados |
 
-A auditoria (`auditoria-de-organizacao.md` §2) declara 13 sistemas organizados, com `wyd-ops` mantendo
-fronteira/contratos parciais. Nenhum ADR fecha por si só uma lacuna de implementação: a lacuna continua
+A auditoria (`auditoria-de-organizacao.md` §2) declara 13 sistemas organizados, com `wyd-ops` tendo os
+contratos O1–O5 aprovados e a implementação pendente. Nenhum ADR fecha por si só uma lacuna de implementação: a lacuna continua
 registrada em `lacunas.md` do sistema até a evidência existir.
 
 ## 7. O que esta página não cobre

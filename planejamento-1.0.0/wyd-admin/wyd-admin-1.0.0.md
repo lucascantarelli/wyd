@@ -22,13 +22,13 @@ A direção está decidida (`LAC-POR-01`, 2026-11-20); a **forma** do contrato �
 
 | Medida | Valor | Fonte (`V`, 2026-11-21) |
 |---|---:|---|
-| Páginas em `docs/` | 9 | `find docs -name '*.md'` (`V`, 2026-11-22) |
-| Páginas com cabeçalho de 5 campos | 9 | `grep -rl '^> Pergunta:' docs` (`V`, 2026-11-22) |
+| Páginas em `docs/` | 20 | `find docs -name '*.md'` (`V`, 2026-11-26) |
+| Páginas com cabeçalho de 5 campos | 20 | `grep -rl '^> Pergunta:' docs` (`V`, 2026-11-26) |
 | Requisitos funcionais | 15 | `docs/specs/requisitos.md` (11 de 2026-11-21 + 4 de custódia) |
 | Regras de negócio | 8 | idem |
 | Requisitos não funcionais | 5 | idem |
 | Rotas no contrato | 14 | 7 de ação de staff + 4 de custódia + `health`, `ready`, `actions/{key}` |
-| Fatias de roadmap | 10 | `docs/roadmap/roadmap.md` |
+| Fatias de roadmap | 10 | `docs/roadmap/roadmap.md` e as 10 páginas `WYDADM-nn` |
 | Lacunas abertas | 0 | `lacunas.md` §Fechadas: as sete fecharam (`01` e `05` em 2026-11-21; `02`, `03`, `04`, `06` e `07` em 2026-11-22) |
 | Arquivos de código | 0 | `find src tests -type f` (só `.gitkeep`) |
 | Issues criadas | 0 | nenhuma ação no GitHub |
@@ -44,7 +44,7 @@ A direção está decidida (`LAC-POR-01`, 2026-11-20); a **forma** do contrato �
 | [Componentes](docs/arquitetura/componentes.md) | unidades, invariantes, árvore de `src/` e `tests/` |
 | [Autenticação e controle](docs/arquitetura/autenticacao-e-controle.md) | as duas decisões de transporte de 2026-11-22: token de serviço portal → admin e canal de controle com o `wyd-server` |
 | [Plano de testes](docs/planos/plano-de-testes.md) | alvos, isolamento, comandos, 85% |
-| [Roadmap](docs/roadmap/roadmap.md) | 10 fatias com DoD executável |
+| [Roadmap](docs/roadmap/roadmap.md) e [índice](docs/roadmap/index.md) | 10 fatias com DoD executável, uma página por issue |
 
 ## 4. Gates
 

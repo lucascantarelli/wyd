@@ -8,11 +8,11 @@
 
 **Estado:** proposto (2026-11-25)
 
+**Gate de verificação:** comandos do `## DoD` desta página + `make gate` na raiz; o PR só fecha com os dois verdes.
+
 **Fatia:** F1 — Conta e personagens
 **Fase:** 2
 
-**Dono do valor:** fase, requisitos, dependência, entregável, DoD e fora de
-escopo são desta página; o roadmap cita o link e não repete.
 
 ## Contexto
 
@@ -44,12 +44,8 @@ F0; `0005`/`0006` aplicadas; view de `0029`
 | `skill_principal` | `planejar-sistema` |
 | `skills_complementares` | `writing-plans`, `auditar-planejamento` |
 
-A skill principal é a que o agente carrega antes de começar. A lista é a fechada de nove skills de
-`.github/ISSUE_TEMPLATE/*` (`planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §3.1).
-Duas existem **em disco** em `.agents/skills/`: `planejar-sistema` e `auditar-planejamento`. As demais
-(`documentation-writer`, `finishing-a-development-branch`, `frontend-design`, `github-actions-docs`,
-`python-testing-patterns`, `skill-creator`, `writing-plans`) são **cloud skills do projeto**: não têm
-`SKILL.md` no repositório e são carregadas pelo ambiente do agente.
+A lista fechada e a distinção entre skill em disco e cloud estão em
+`planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md` §3.
 
 **Dono do valor:** esta página. O roadmap cita o link para este bloco e não repete o nome da skill.
 

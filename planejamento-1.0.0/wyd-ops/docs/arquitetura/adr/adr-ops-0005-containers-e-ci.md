@@ -15,7 +15,7 @@ O Compose serve o site e o gate local; o CI de Rust roda direto no runner. Criar
 ## Decisão
 
 - **Não** criar Dockerfile de CI para Rust. Consistência vem de `rust-toolchain.toml`, lockfiles e actions pinadas.
-- Manter o Compose para docs e gate; adicionar perfil `db` com `postgres:17` e `tmpfs`; publicar portas apenas em `127.0.0.1`.
+- Manter o Compose para docs e gate; adicionar perfil `db` com `postgres:17` fixado por digest e `tmpfs`; publicar portas apenas em `127.0.0.1`. O Compose base consome a imagem publicada, sem `build:`; o build da árvore fica só em `docker-compose.dev.yml`.
 - Serviços de banco no CI usam **service containers**, não `docker run` manual.
 - A imagem do site continua em `wyd-ops/wyd-docs.Dockerfile`; runtime nginx unprivileged fica na F2.
 
@@ -35,7 +35,7 @@ O Compose serve o site e o gate local; o CI de Rust roda direto no runner. Criar
 
 ## Como verificar
 
-`docker compose config` não contém `0.0.0.0`; `docker compose --profile db config` mostra `postgres:17`; `grep -R WYD_DB_TEST_URL crates/wyd-db/tests`; jobs `ci-db` usam `services:`.
+`docker compose config` não contém `0.0.0.0` nem `build` em `docs`; `docker compose --profile db config` mostra `postgres:17@sha256:...`; `grep -R WYD_DB_TEST_URL crates/wyd-db/tests`; jobs `ci-db` usam `services:`.
 
 ## Referências
 

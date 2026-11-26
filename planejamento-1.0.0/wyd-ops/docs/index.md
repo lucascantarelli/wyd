@@ -3,7 +3,7 @@
 > Pergunta: "o que o `wyd-ops` entrega, o que ele já decidiu e por onde começo a ler?"
 > Público: Desenvolvedor novo, arquitetura e quem opera
 > Dono: frente `wyd-ops`
-> Base: `wyd-ops/plano-ci-real.md`; `wyd-ops/proposta-versoes-e-cobertura-funcional.md`; `AGENTS.md` §4
+> Base: `docs/devops/index.md`; `proposta-versoes-e-cobertura-funcional.md`; `AGENTS.md` §4
 > Revisado em: 2026-11-25
 
 **Estado:** proposto (2026-11-22)
@@ -16,8 +16,8 @@ ele garante que o que existe seja construível, publicável, observável e repro
 
 | Decisão | Data | Onde |
 |---|---|---|
-| CI usa apenas `run:` e action própria; nenhuma action de terceiro sem SHA | 2026-11-19 | `plano-ci-real.md` |
-| deploy é `docker compose` em host com systemd; runtime é Compose, não Kubernetes | 2026-11-19 | `plano-ci-real.md` §3 |
+| CI usa apenas `run:` e action própria; nenhuma action de terceiro sem SHA | 2026-11-19 | `docs/devops/index.md` |
+| deploy é `docker compose` em host com systemd; runtime é Compose, não Kubernetes | 2026-11-19 | `arquitetura/adr/adr-ops-0002-hospedagem-producao.md` |
 | versões por linha de release e a cobertura funcional por versão | 2026-11-20 | `proposta-versoes-e-cobertura-funcional.md` §7 |
 | elo de controle admin → servidor com segredo próprio e ack antes de escrita | 2026-11-22 | `wyd-admin/docs/arquitetura/autenticacao-e-controle.md` §3 |
 | imagem do site é construída pelo CI e consumida pelo Compose | 2026-11-22 | `plano-imagem-e-compose-do-site.md` |
@@ -55,8 +55,9 @@ as lacunas abertas — e a trajetória recomendada estão em [Prioridade do proj
 O planejamento de organização está fechado: dashboard (`wyd-ops-1.0.0.md`), `RF-OPS`/`RNF-OPS`, plano de
 teste e roadmap com DoD existem. O CI, o gate único, o cache e a matriz PostgreSQL foram implementados
 em F0+F1 (2026-11-26); o estado real e o que falta (imagem, deploy, observabilidade e governança) estão
-em [DevOps](devops/index.md). Continuam pendentes a aprovação de fronteira/contratos O1–O5 e a escolha
-do fornecedor de VPS. O registro único é [lacunas.md](lacunas.md).
+em [DevOps](devops/index.md). Os contratos O1–O5 estão aprovados (O4 em `ADR-OPS-0011`, O5 no
+`ADR-OPS-0007` revisado); restam a aplicação de `OPS-04` e a escolha do fornecedor de VPS. O registro
+único é [lacunas.md](lacunas.md).
 
 ## Limite desta documentação
 
@@ -81,7 +82,7 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 - [Módulos do `wyd-ops` — detalhamento](modulos.md)
 - [Pacote de aprovação — contratos O1–O5](pacote-aprovacao-o1-o5.md)
 - [Pacote de aprovação — decisões fora dos contratos O1–O5](pacote-aprovacao-decisoes-fora-o1-o5.md)
-- [Pauta de decisões pendentes — o que falta aprovar para fechar o planejamento](pauta-de-decisoes-pendentes.md)
+- [Pauta de decisões pendentes — registro canônico das 11 pendências](pauta-de-decisoes-pendentes.md)
 
 ### arquitetura
 
@@ -104,6 +105,7 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 - [Tarefa de medição — `LNET-01` e `LBOT-03`](planos/medicoes-lnet-01-lbot-03.md)
 - [Pipeline de CI/CD — planejamento](planos/pipeline-ci-cd.md)
 - [plano-de-testes](planos/plano-de-testes.md)
+- [Template de issue/fatia — padrão único](planos/template-de-issue.md)
 - [Verificação de skills e integrações — planejamento](planos/verificacao-de-skills-e-integracoes.md)
 
 ### roadmap

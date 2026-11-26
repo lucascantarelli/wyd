@@ -78,8 +78,8 @@ plano **não** mede é cobertura por linha, tempo de execução ou custo por alv
 
 - **Teste de carga, stress e capacidade:** não há volume nem limiar aprovado.
 - **Teste de interface e E2E:** pertencem aos sistemas consumidores, não ao crate.
-- **CI real:** é de `plano-ci-real.md` e será aplicado depois do primeiro código; o gate local de
-  docs não substitui teste do crate.
+- **CI real:** é de `../../../wyd-ops/docs/devops/index.md`, implementado em F0+F1 (2026-11-26); o
+  gate local de docs não substitui teste do crate.
 - **Cobertura percentual:** a regra é por capacidade, não por linha; não há número de cobertura.
 
 ## CI, cobertura e monitoramento

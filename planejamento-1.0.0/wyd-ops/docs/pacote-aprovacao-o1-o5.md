@@ -57,7 +57,7 @@ Cada seção tem uma pergunta fechada e um conjunto de donos. **Sim** aprova o c
 Textos curtos derivados de §2–§6 e de `docs/lacunas.md` §4, para copiar e enviar ao dono indicado.
 Cada item é o desbloqueio citado em `docs/lacunas.md` §4: o registro aponta `§7.1`–`§7.7` e não
 repete a pergunta. A visão consolidada de todas as decisões pendentes do projeto é a
-[pauta de decisões](pauta-de-decisoes-pendentes.md); ela aponta de volta para cada item desta seção.
+pauta de decisões em `pauta-de-decisoes-pendentes.md`; ela aponta de volta para cada item desta seção.
 **Nenhuma foi enviada**: não houve issue, e-mail, Slack ou qualquer outro canal. A repetição da pergunta
 e do impacto é intencional: a mensagem precisa se sustentar sozinha fora deste repositório, e o registro
 continua sendo `docs/lacunas.md` §4. Um "sim" dito na conversa só vale depois de registrado lá.

@@ -26,7 +26,8 @@ audita e responde.
 5. [Requisitos](specs/requisitos.md) — `RF-ADM`/`RN-ADM`/`RNF-ADM` com critério de aceitação.
 6. [Componentes](arquitetura/componentes.md) — unidades de código, invariantes e testes.
 7. [Plano de testes](planos/plano-de-testes.md) — alvos, isolamento e comando.
-8. [Roadmap](roadmap/roadmap.md) — fatias com DoD verificável.
+8. [Roadmap](roadmap/roadmap.md) e [índice do roadmap](roadmap/index.md) — ordem das fatias e uma
+   página por issue com DoD verificável e bloco de skills.
 
 ## O que já está decidido e o que não está
 
@@ -49,3 +50,8 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 
 - [ADR-ADM-0001 — Canal de controle HTTP síncrono com ack](arquitetura/adr/adr-adm-0001-canal-controle.md)
 - [ADRs — `wyd-admin`](arquitetura/adr/index.md)
+
+### roadmap
+
+- [Roadmap — ordem, riscos e páginas](roadmap/roadmap.md)
+- [Roadmap — índice das 10 issues](roadmap/index.md)

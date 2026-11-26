@@ -11,21 +11,17 @@
 #
 #   docker compose pull docs              # baixa a imagem publicada
 #   docker compose up -d docs             # sobe o site a partir dela
-#   WYD_DOCS_TAG:<sha> docker compose up -d docs   # fixa a imagem no commit
+#   WYD_DOCS_TAG=<sha> docker compose up -d docs  # fixa a imagem no commit
 #   docker compose down                   # para
 #
-# `build:` existe só como fallback de quem não tem a imagem (clone novo, GHCR fora do ar):
-# não é o caminho normal e não roda quando a imagem já está local. O build da árvore de
-# trabalho, com tag própria e sem se confundir com a publicada, é o arquivo opt-in
-# `docker-compose.dev.yml` — ver o comentário dele.
+# O caminho padrão consome somente a imagem publicada: não há `build:` aqui. O build da
+# árvore de trabalho, com tag própria e sem se confundir com a publicada, é o arquivo
+# opt-in `docker-compose.dev.yml` — ver o comentário dele.
 
 services:
   docs:
     image: ghcr.io/lucascantarelli/wyd-docs:${WYD_DOCS_TAG:-latest}
-    build:
-      context: .
-      dockerfile: wyd-ops/wyd-docs.Dockerfile
-    container_name: wyd-docs
+    pull_policy: missing
     ports:
       # Loopback apenas: o site de planejamento não precisa ficar exposto na
       # rede local (e não deve, por padrão).

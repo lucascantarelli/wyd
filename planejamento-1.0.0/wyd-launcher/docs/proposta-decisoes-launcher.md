@@ -244,9 +244,8 @@ Authenticode, `RF-LCH`, a árvore de `src/` e qualquer `LPRT-*`.
 
 ## 6. Registro da decisão
 
-**`Q-LCH-1`–`Q-LCH-4` foram respondidas; nenhuma lacuna continua aberta e nada foi aplicado.** O
-briefing das respostas (`../../briefing-de-decisoes-1.0.0.md` §6) registra a ordem formato → assinatura
-→ pacote, que era dependente nessa sequência; a recomendação não muda.
+**`Q-LCH-1`–`Q-LCH-4` foram respondidas; nenhuma lacuna continua aberta e nada foi aplicado.** A pauta em `../../wyd-ops/docs/pauta-de-decisoes-pendentes.md` registra a ordem formato → assinatura →
+pacote, que era dependente nessa sequência; a recomendação não muda.
 
 | Pergunta | Lacuna | Resposta |
 |---|---|---|

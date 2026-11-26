@@ -65,7 +65,7 @@ redação (`2`, `7`, `9`) e **2** não assináveis hoje (`3`, `8`).
 
 | Achado | Onde | Correção proposta |
 |---|---|---|
-| o plano do CI **existe** no projeto e três páginas dizem que não | `index.md` §6, `specs/sistema.md` §7 e `alvos/sistema-stack-caps.md` §8 dizem "a página `plano-ci-real.md` está planejada e ainda não foi escrita"; `../wyd-ops/plano-ci-real.md` existe (`proposta`, `P`, 2026-11-19) | trocar por: "não existe página de CI em `docs/planos/` do `wyd-db`; o plano do projeto é `../wyd-ops/plano-ci-real.md`" |
+| o plano do CI **existe** no projeto e três páginas dizem que não | `index.md` §6, `specs/sistema.md` §7 e `alvos/sistema-stack-caps.md` §8 dizem que não há página de CI no `wyd-db`; `../wyd-ops/docs/devops/index.md` existe e é o dono atual | trocar por: "não existe página de CI em `docs/planos/` do `wyd-db`; o dono do projeto é `../wyd-ops/docs/devops/index.md`" |
 | contagem afirmada como conferida contra artefato que não existe | `alvos/contrato-migrations.md` §1 | "é conferida" → "será conferida"; a série e a fixture nascem na leva de `migrations/` |
 | valor "escrito" em arquivo ausente | `dados-de-teste.md` §4; `resources/README.md` §4, item 3 | "declarada/escrita" → "será declarada/escrita em `accounts.json`" |
 | duas leituras do mesmo cenário | `dados-de-teste.md` §2: prosa e tabela divergem sobre a 6ª conta | o DDL recusa `slot` fora de 1–5 (`ck_account_slot_range`); alinhar a prosa à tabela |
@@ -86,7 +86,7 @@ levantada em §6.6.26 fica fechada por leitura: não há o que corrigir.
 As cinco correções aplicadas, nenhuma delas mudando requisito, capacidade, limiar, cenário ou DDL:
 
 1. `index.md` §6, `specs/sistema.md` §7 e `alvos/sistema-stack-caps.md` §8 passaram a citar o plano de CI
-   que existe (`../wyd-ops/plano-ci-real.md`, `proposta`) em vez de dizer que ele não foi escrito;
+   que existe (`../wyd-ops/docs/devops/index.md`) em vez de dizer que ele não foi escrito;
 2. `alvos/contrato-migrations.md` §1: "é conferida" → "**será** conferida … quando as duas existirem";
 3. `fixtures-e-factories.md`: "inventário real" → "**inventário planejado**";
 4. `resources/README.md` §4 e `dados-de-teste.md` §4: senha "escrita/declarada" → "**será** escrita/declarada

@@ -4,9 +4,9 @@
 > Público: Arquitetura, desenvolvimento e QA
 > Dono: arquitetura
 > Base: `AGENTS.md` §3, §5; `lacunas.md` de cada sistema; `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md`
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-25). Registro consolidado; não substitui `lacunas.md` do sistema dono.
+**Estado:** proposto (2026-11-26). Registro consolidado; não substitui `lacunas.md` do sistema dono.
 
 ## 1. Regra
 
@@ -29,6 +29,7 @@ quando aprovada (ver `adr/index.md`).
 | `ADR-CLI-0001` | wyd-client | uso e distribuição (Q-IP-3..Q-IP-6) | aceito (2026-11-25) | wyd-client | adr/ |
 | `ADR-OPS-0001` | wyd-ops | workspace Cargo único, toolchain e versões (D-05 = A) | aceito (2026-11-25) | wyd-ops | adr/ |
 | `ADR-OPS-0002` | wyd-ops | hospedagem de produção em VPS paga com Compose (Q-OPS-2 = A) | aceito (2026-11-25) | wyd-ops | adr/ |
+| `ADR-OPS-0012` | wyd-ops | checks obrigatórios, `main` arquivada/Pages em `develop`, política de `pull_request_target`, buildx/atestados e Compose sem build local | aceito (2026-11-26) | wyd-ops | adr/ |
 | `ADR-LCH-0001` | wyd-launcher | manifesto canônico + assinatura Ed25519 | aceito (2026-11-23) | wyd-launcher | adr/ |
 | `ADR-SIM-0001` | wyd-sim | aritmética inteira em bps, `f64` só em exibição | aceito (2026-11-23) | wyd-sim | adr/ |
 | `ADR-PRT-0001` | wyd-protocol | build-alvo 7662 | aceito (2026-11-23) | wyd-protocol | adr/ |
@@ -57,7 +58,8 @@ quando aprovada (ver `adr/index.md`).
 | `Q-SEP-1` = A′ | wyd-db | 28 arquivos renomeados para `NNNN_slug_com_underscores.sql`; todos parseiam | decidida e aplicada 2026-11-25 | arquitetura + wyd-db | `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9.1 |
 | `Q-ALVO-1`–`Q-ALVO-3` | wyd-db | porta em `127.0.0.1`, fixture contígua e `wyd_migrator` de teste; `CAP-37` fechada | decididas e implementadas 2026-11-25 | wyd-db + arquitetura | `planejamento-1.0.0/wyd-db/tests/alvos/runner-pg.md` |
 | `OPS-03.1`–`OPS-03.3` | wyd-ops | contratos O1–O3 aprovados na forma | aprovadas 2026-11-25 | arquitetura + `wyd-ops` | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
-| `OPS-03.4`, `OPS-03.5` | wyd-ops | O4 e O5 aprovados na forma, com ADR antes de implementar | aprovadas 2026-11-25 | arquitetura + `wyd-ops` + produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
+| `OPS-03.4`, `OPS-03.5` | wyd-ops | O4 em `ADR-OPS-0011` e O5 no `ADR-OPS-0007` (contrato ampliado); implementação pendente | formalizadas 2026-11-26 | arquitetura + `wyd-ops` + produto | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md` §2 |
+| `OPS-03` | wyd-ops | contratos O1–O5 aprovados; O4/O5 formalizados | fechada 2026-11-26 | arquitetura + `wyd-ops` + consumidores | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
 | `OPS-04` | wyd-ops | hospedagem adiada para depois do primeiro deploy interno | adiada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
 | `OPS-05` | wyd-ops | board e 61 fatias autorizados, não executados | autorizada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
 
@@ -66,14 +68,15 @@ quando aprovada (ver `adr/index.md`).
 As respostas às decisões registradas em 2026-11-25 ficam indexadas na §2. `Q-SERIE-1` = B foi
 implementada e provada como ciclo SQL em PG17; `Q-SEP-1` = A′ foi aplicada (28 nomes com `_`) e
 `Q-ALVO-1`–`03` fecharam `CAP-37` com o alvo `runner_pg`. O restante é execução (`OPS-05`,
-`LNET-01`/`LBOT-03`), ADR (`OPS-03.4`/`OPS-03.5`), terceiro (`LCLI-05`) ou adiamento declarado (`OPS-04`).
-Índice e estado canônico: `pauta-de-decisoes-pendentes.md` §2 e `lacunas.md` §4. Esta página não duplica a
-lista.
+`LNET-01`/`LBOT-03`), terceiro (`LCLI-05`) ou adiamento declarado (`OPS-04`); O4/O5 foram formalizados
+em `ADR-OPS-0011` e no `ADR-OPS-0007` revisado.
+Pauta canônica: `pauta-de-decisoes-pendentes.md`; estado e dono: `lacunas.md` §4. Esta página não
+duplica a lista.
 
 ## 4. O que esta página não cobre
 
 - **Texto integral da decisão**: mora no documento dono (citado acima).
-- **ADR formal**: 15 existem; candidatos listados em `adr/index.md` §4.
+- **ADR formal**: lista e contagem no índice `adr/index.md` §2; candidatos futuros em `adr/candidatos.md`.
 
 ## 5. Páginas de issue
 
