@@ -12,7 +12,7 @@
 
 **Foco aprovado em 2026-11-24 (D-01 = A): frente A — finalizar o `wyd-db`. A leva `migrations/` executou 28 `.sql` do zero, 13 cenários verdes e teve as 27 páginas aceitas (D-03 = A).**
 
-O `wyd-db` tem **64** células pendentes (24 `Teste` + 40 `Issue`) em `rastreabilidade.md` §1, **26** das **39**
+O `wyd-db` tem **24** células pendentes (todas `Teste`; as 40 `Issue` estão vinculadas) em `rastreabilidade.md` §1, **26** das **39**
 capacidades sem execução (`capacidades.md` §7) e **142** atos de aceite, todos em `docs/` (`pendencias` §1):
 as **27** páginas de `migrations/` foram aceitas em 2026-11-24, e a pasta está com **28 de 28**. Já rodaram
 **14** capacidades (`CAP-24`–`CAP-37`, `sistema_pg` §1.1 + `runner_pg`) e a matriz está **14 de 39**.
@@ -23,12 +23,12 @@ Por que A: os **141** atos não esperam terceiro — são revisão e aceite; os 
 células e **0** das **9** linhas sem página; D fecha **1** página e **1** harness, ambos dentro do caminho de A
 (§3). A pergunta de foco está em §0.1 (D-01).
 
-**Recomendação única: manter A.** É a única frente que fecha item do piloto sem terceiro: **64** células
-e **141** atos, com **40** issues a autorizar. O **ato 2** (`migrations/serie-e-regras.md`) e o **ato 3**
+**Recomendação única: manter A.** É a única frente que fecha item do piloto sem terceiro: **24** células pendentes
+e **141** atos, com **40** issues vinculadas. O **ato 2** (`migrations/serie-e-regras.md`) e o **ato 3**
 (runner `src/migrate` + `MigrateConfig`, com **D-02** respondida em B) foram **concluídos em 2026-11-25**
 no escopo de lib/fakes; a próxima fatia é o **ato 4** (`CAP-38`–`CAP-39`, cobertura **14 → 16 de 39**),
 depois o **ato 5** (**40** issues + **141** atos de `docs/`); o **ato 6** (seeds/captura) espera terceiro.
-`Q-SERIE-1` = B está implementada: 28 `down` provados como SQL em PG17 via `psql` (`wyd-db/migrations/serie-e-regras.md` §9.2). `Q-SEP-1` = A′ também foi aplicada — os 28 nomes agora usam `_` e parseiam — e `CAP-37` foi fechada por `runner_pg` (5/5 em PG17). O que ainda impede o runner de aplicar a série real são as seis versões ausentes. `CAP-38`/`CAP-39` seguem abertas. B não fecha item do piloto, C fecha **3 de 64** células e D já foi absorvida pelo ato 2 concluído (§3–§5).
+`Q-SERIE-1` = B está implementada: 28 `down` provados como SQL em PG17 via `psql` (`wyd-db/migrations/serie-e-regras.md` §9.2). `Q-SEP-1` = A′ também foi aplicada — os 28 nomes agora usam `_` e parseiam — e `CAP-37` foi fechada por `runner_pg` (5/5 em PG17). O que ainda impede o runner de aplicar a série real são as seis versões ausentes. `CAP-38`/`CAP-39` seguem abertas. B não fecha item do piloto, C fecha **3 de 24** células e D já foi absorvida pelo ato 2 concluído (§3–§5).
 
 Esta página é o **único lugar publicado** que ranqueia as frentes do projeto. Ela não substitui o plano
 de fases (`wyd-1.0.0.md` §6), nem o registro de pendências (`pendencias-de-fechamento.md` §6.6), nem a
@@ -57,26 +57,26 @@ em `../auditoria-de-organizacao.md`. **D-06 está ABERTA — aguardando decisão
 
 **Aprovada em 2026-11-24 (A):** o foco é finalizar o `wyd-db`; a ordem dos atos está em §0.2.
 
-**Bloqueado hoje:** **142** atos de aceite, **64** células (**24** `teste` + **40** `issue`), **40** issues
-abertas (#82–#121) e **0** vinculadas às linhas e **25** capacidades sem execução (**14 de 39**); as **2**
+**Bloqueado hoje:** **142** atos de aceite, **24** células `teste` pendentes (as **40** `issue` estão vinculadas), **40** issues
+abertas (#82–#121) e **25** capacidades sem execução (**14 de 39**); as **2**
 `Q-BLK` (`20`, `22`) foram respondidas em A em 2026-11-24. A alternativa B tem **48** `RF` (15 `admin` + 33 `portal`), **10** sistemas sem
 `RF`, **12** planos e **1** plano diretor ausente (`wyd-ops`); a C tem **3** células `teste`, **9** linhas
 sem página e **4** sem `CAP-nn`.
 
 | Opção | O que fecha/entrega | O que adia | Custo | Disponível hoje |
 |---|---|---|---|---|
-| **A — finalizar o `wyd-db`** | **64** células + **141** atos + **40** issues + **26** capacidades; **0** `Q-BLK` | as **48** `RF`, **12** planos e **1** diretor de B; as **3** células de C | 27 aceites (feitos) + `serie-e-regras` + runner + 3 cenários + 141 atos + 40 issues | **sim**: 0 item de A espera terceiro |
-| **B — expandir os outros sistemas** | **48** `RF`, **12** planos e **1** plano diretor (`wyd-ops`); **0** bloqueio do piloto | **64** células, **26** capacidades e **40** issues de A; as **3** células de C | 10 sistemas a numerar + 12 planos + 1 diretor | parcial: 10 sistemas andam sem terceiro; `protocol` e `client` não |
-| **C — fechar lacunas transversais** (rastreabilidade + regras) | **3** células `teste` (`RF-DB-003`, `006`, `014`) + 1 gate de cobertura; **1** página + **1** harness | **61** células, **26** capacidades e **40** issues de A; **48** `RF` e **12** planos de B | 3 `CAP` + 1 gate + 1 página + `tests/common/` | **sim**, mas o retorno é **3 de 64** células; **0** das 9 linhas sem página |
+| **A — finalizar o `wyd-db`** | **24** células + **141** atos + **40** issues vinculadas + **26** capacidades; **0** `Q-BLK` | as **48** `RF`, **12** planos e **1** diretor de B; as **3** células de C | 27 aceites (feitos) + `serie-e-regras` + runner + 3 cenários + 141 atos + 40 issues | **sim**: 0 item de A espera terceiro |
+| **B — expandir os outros sistemas** | **48** `RF`, **12** planos e **1** plano diretor (`wyd-ops`); **0** bloqueio do piloto | **24** células, **26** capacidades e **40** issues de A; as **3** células de C | 10 sistemas a numerar + 12 planos + 1 diretor | parcial: 10 sistemas andam sem terceiro; `protocol` e `client` não |
+| **C — fechar lacunas transversais** (rastreabilidade + regras) | **3** células `teste` (`RF-DB-003`, `006`, `014`) + 1 gate de cobertura; **1** página + **1** harness | **21** células, **26** capacidades e **40** issues de A; **48** `RF` e **12** planos de B | 3 `CAP` + 1 gate + 1 página + `tests/common/` | **sim**, mas o retorno é **3 de 24** células; **0** das 9 linhas sem página |
 
 **Recomendação: A.** É a única frente cujos fechamentos estão disponíveis hoje e cujo produto é
-verificável (schema, teste, DDL). B não fecha bloqueio do piloto e C fecha **3 de 64** células; as **9**
+verificável (schema, teste, DDL). B não fecha bloqueio do piloto e C fecha **3 de 24** células; as **9**
 linhas sem página não são fecháveis por cenário (2 de outro sistema, 1 gate de CI e 6 gate de série).
 Regras e padrões (**D** na leitura antiga) não são uma quarta opção: são o passo 2 de A.
 
-**Se B for escolhida:** as **64** células, **26** capacidades e **40** issues de A ficam paradas; o DDL
+**Se B for escolhida:** as **24** células, **26** capacidades e **40** issues de A ficam paradas; o DDL
 de `portal`/`admin` segue proposta e a implementação deles continua esperando A. **Se C for escolhida:**
-A fica com **61** células e **26** capacidades sem execução, e B continua sem o DDL aceito. **Se A:**
+A fica com **21** células e **26** capacidades sem execução, e B continua sem o DDL aceito. **Se A:**
 B pode numerar os **48** `RF` em paralelo, mas a implementação de `portal`/`admin` espera o DDL de A.
 
 ### D-02 — Política do gate de código: cobertura e segurança
@@ -84,7 +84,7 @@ B pode numerar os **48** `RF` em paralelo, mas a implementação de `portal`/`ad
 **Aprovada em 2026-11-24 (B).**
 
 **Bloqueado hoje:** o `code.yml` tem **19** testes (**6** unitários + **13** de schema) e **0** medição de
-cobertura; não há `cargo audit` nem `cargo deny`. A matriz tem **24** das **64** células (tipo `teste`) pendentes e **26**
+cobertura; não há `cargo audit` nem `cargo deny`. A matriz tem **24** células (tipo `teste`) pendentes e **26**
 capacidades sem execução. O `AGENTS.md` §8 exige **85%** por sistema, medido no gate; o `full-workflow.yml`
 segue stub e não mede nada.
 
@@ -98,7 +98,7 @@ dependência. O **ato 2** (`serie-e-regras`) nunca dependeu dela.
 | **C — tudo informativo até a 1.0.0** | sem bloqueio até a release | sem bloqueio até a release | adia a dívida e deixa vulnerabilidade entrar; não recomendado |
 
 **Recomendação: B.** O invariante é **85% por sistema no gate**, não “85% de qualquer linha no PR”;
-os **19** testes atuais não cobrem **24** das **64** células pendentes, então um bloqueio agora mediria o `dsn`,
+os **19** testes atuais não cobrem as **24** células pendentes, então um bloqueio agora mediria o `dsn`,
 não a capacidade. `cargo audit`/`deny` são baratos hoje (o crate não tem dependência) e devem ser
 obrigatórios; a dependência Python do site (`mkdocs==2.0.dev6`) fica fora do `cargo audit` e exige
 `pip-audit`/hash em item separado.
@@ -322,13 +322,13 @@ frente que deixa de esperar. Cada número cita a fonte; nenhum é estimado.
 
 | Frente | Bloqueios destravados | Lacunas fechadas | Planejamentos liberados | Disponível hoje | Custo | Fonte |
 |---|---|---|---|---|---|---|
-| **A — Finalizar o `wyd-db`** | **25** capacidades sem execução (**14 de 39** cobertas) + **40** issues abertas (#82–#121) e **0** vinculadas às linhas + **0** `Q-BLK` abertas | **64** células (24 `Teste` + 40 `Issue`) e **141** atos (141 `docs/`); **0** lacuna aberta no sistema | o DDL deixa de ser proposta para `portal`/`admin`/`server` (contrato C4); as **40** issues viram trabalho autorizado; **12** planos de B passam a citar tabela aceita | **sim** — os 141 atos não esperam terceiro | 27 aceites (feitos) + runner + 3 cenários + 40 issues + 141 atos | `rastreabilidade.md` §1; `capacidades.md` §7; `sistema-pg.md` §1.1; `pendencias` §1 e §6.6.31 |
+| **A — Finalizar o `wyd-db`** | **25** capacidades sem execução (**14 de 39** cobertas) + **40** issues abertas (#82–#121), todas vinculadas + **0** `Q-BLK` abertas | **24** células `Teste` (40 `Issue` vinculadas) e **141** atos (141 `docs/`); **0** lacuna aberta no sistema | o DDL deixa de ser proposta para `portal`/`admin`/`server` (contrato C4); as **40** issues viram trabalho autorizado; **12** planos de B passam a citar tabela aceita | **sim** — os 141 atos não esperam terceiro | 27 aceites (feitos) + runner + 3 cenários + 40 issues + 141 atos | `rastreabilidade.md` §1; `capacidades.md` §7; `sistema-pg.md` §1.1; `pendencias` §1 e §6.6.31 |
 | **B — Expandir os outros sistemas** | **0** do piloto; **48** `RF` a numerar (`admin` 15 + `portal` 33) e **10** dos 12 sistemas sem `RF` | **0** do piloto — as **7** lacunas do projeto são de captura, não de redação | **12** planos, **1** plano diretor (`wyd-ops`) e **51** páginas publicadas de base | **parcial**: 10 sistemas andam sem terceiro; `protocol` e `client` não | 51 páginas + 10 sistemas + 1 plano diretor | §3 desta página; `grep -rhoE 'RF-[A-Z]+-[0-9]{3}'` por sistema; `lacunas.md` de cada sistema |
-| **C — Fechar a rastreabilidade** (as **4** linhas sem `CAP-nn` e as **9** sem página) | **3** células `Teste` (`RF-DB-003`, `006` e `014`, as três com página e sem `CAP-nn`); `RNF-DB-001` depende do gate de cobertura, não de cenário | **3 de 64** células; **0 das 9** linhas sem página (**2** são de `wyd-server`, **1** é gate de CI e **6** são gate de série) e **3** células `—` são regra | **0** — nenhum outro sistema depende de `CAP-nn` do banco | **sim** — 3 cenários; as páginas de `tests/` ficam fora do teto de 144 | 3 `CAP` + 3 cenários + 1 gate de cobertura | `rastreabilidade.md` §1 e §3.4; `capacidades.md` §7.1; `tests/index.md` |
+| **C — Fechar a rastreabilidade** (as **4** linhas sem `CAP-nn` e as **9** sem página) | **3** células `Teste` (`RF-DB-003`, `006` e `014`, as três com página e sem `CAP-nn`); `RNF-DB-001` depende do gate de cobertura, não de cenário | **3 de 24** células; **0 das 9** linhas sem página (**2** são de `wyd-server`, **1** é gate de CI e **6** são gate de série) e **3** células `—` são regra | **0** — nenhum outro sistema depende de `CAP-nn` do banco | **sim** — 3 cenários; as páginas de `tests/` ficam fora do teto de 144 | 3 `CAP` + 3 cenários + 1 gate de cobertura | `rastreabilidade.md` §1 e §3.4; `capacidades.md` §7.1; `tests/index.md` |
 | **D — Definir regras e padrões pendentes** | **1** página (`migrations/serie-e-regras.md`, pré-requisito do ledger do runner) + **1** harness (`tests/common/`) para os **4** alvos restantes | **1** página; `planos/metricas.md` **não** fecha (bloqueada pela série) e os **3** `RNF` seguem sem limiar por decisão (`Q-BLK-24` = A), então **0** limiar novo | **0** fora do `wyd-db`; dentro, é a etapa 0 do runner de A | **sim** — 1 página + 1 harness | 1 página + `tests/common/` | `pendencias` §1 (seções de `migrations/` e `metricas`); `tests/index.md`; §6.6.29 (`M20`) |
 
 **O que o quadro diz:** A é a única frente que fecha mais de uma dezena de itens por ato e não espera
-terceiro. **C** parece a mais barata, mas fecha **3 de 64** células e **0** das **9** páginas — as 9 não são
+terceiro. **C** parece a mais barata, mas fecha **3 de 24** células e **0** das **9** páginas — as 9 não são
 fecháveis por cenário: 2 são de outro sistema, 1 é gate e 6 são gate de série. **D** não é frente paralela:
 1 página e 1 harness, ambos dentro do caminho de A; sozinha, não move capacidade nem libera outro sistema.
 
@@ -376,16 +376,16 @@ hoje”.
 
 | Pos. | Frente | Itens fechados | Desbloqueio | Ganho por ato | Por que nesta posição |
 |---:|---|---:|---|---:|---|
-| **1** | **A — Finalizar o `wyd-db`** | **64** células (24 `teste` + 40 `issue`) + **141** atos | série, `metricas`, crate, 40 issues | **1** aceite por ato; **1 de 5** alvos já executado | é a única frente cujos fechamentos estão **disponíveis hoje**, e a única que libera artefato executável (teste e migration são código, e código espera página `aceita`) |
+| **1** | **A — Finalizar o `wyd-db`** | **24** células `teste` (40 `issue` vinculadas) + **141** atos | série, `metricas`, crate, 40 issues | **1** aceite por ato; **1 de 5** alvos já executado | é a única frente cujos fechamentos estão **disponíveis hoje**, e a única que libera artefato executável (teste e migration são código, e código espera página `aceita`) |
 | **2** | **B — Expandir os outros sistemas** | **0** do piloto; **48** `RF` e **12** planos | 48 `RF`, 12 planos, 1 plano diretor | ~0 por ato do piloto (51 páginas de base) | não fecha bloqueio nenhum e não é pré-requisito de nada do piloto; anda em paralelo, não antes |
-| **3** | **C — Fechar a rastreabilidade** | **3 de 64** células | 0 outra frente | 1 célula por `CAP` + cenário | fecha pouco e não toca as **9** linhas sem página; o resto depende de gate ou de outro dono |
+| **3** | **C — Fechar a rastreabilidade** | **3 de 24** células | 0 outra frente | 1 célula por `CAP` + cenário | fecha pouco e não toca as **9** linhas sem página; o resto depende de gate ou de outro dono |
 | **4** | **D — Definir regras e padrões** | **1** página + **1** harness | 0 outra frente | 1 página + harness | é etapa 0 de A: executada sozinha, deixa A parado no mesmo lugar |
 
-**A composição do item 1, sem dupla contagem:** **64** = **24** células `teste` (as que seguem em `P`) +
-**40** células `issue`; o censo tem dono em `rastreabilidade.md` §1. As 37 células `teste` da matriz não
+**A composição do item 1, sem dupla contagem:** **24** = **24** células `teste` (as que seguem em `P`) +
+**0** células `issue`; o censo tem dono em `rastreabilidade.md` §1. As **37** células `teste` da matriz não
 entram inteiras porque **13** já estão em `V` — executadas em 2026-11-24 —, e `V` não é pendência. As **40**
-issues do roadmap não entram como item à parte: é na
-célula `issue` que a alocação delas se registra, e nenhuma das 40 tem número (`rastreabilidade.md` §3.3). Os **142**
+issues do roadmap estão vinculadas (#82–#121): a alocação delas se registra na
+célula `issue` de cada linha (`rastreabilidade.md` §3.3). Os **142**
 atos de aceite são contados em `pendencias-de-fechamento.md` §6.6.22.1 e não entram nas células.
 
 **A leitura em uma frase:** A ganha por ser o único caminho que converte trabalho em artefato verificável
@@ -440,7 +440,7 @@ está `aceito` e o runner passou 63 testes de lib/fakes; a verificação PG17 ai
 **ato 5** depende dos atos 1 e 4.
 
 **O que fica postergado, e por quê:** **B** (48 `RF` + 12 planos) espera A porque a implementação de
-`portal`/`admin` cita o DDL que A aceita; **C** (3 células) espera A porque o ganho é 3 de 64 e não move
+`portal`/`admin` cita o DDL que A aceita; **C** (3 células) espera A porque o ganho é 3 de 24 e não move
 nenhuma outra frente; **D** não é postergado — o ato 2 de A já foi concluído e restam os contratos/testes de D; as **6** seeds e a captura `A1` esperam
 terceiro/dado e não entram na fila.
 

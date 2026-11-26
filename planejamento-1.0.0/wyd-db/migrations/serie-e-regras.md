@@ -487,8 +487,8 @@ a série real só não roda no runner enquanto faltarem as seis versões (§7/§
 ## 10. Próxima frente recomendada
 
 O quadro canônico de foco é `../../wyd-ops/docs/prioridade-do-projeto.md` §0.1 (D-06). A recomendação
-única continua **A — D-01/`wyd-db`**: é a frente que fecha **64 células** e **141 atos** e autoriza
-**40 issues**, sem depender de terceiro; B, C e D fecham **0 atos/issues** no curto prazo. Dentro dela,
+única continua **A — D-01/`wyd-db`**: é a frente que fecha **24 células** e **141 atos** e autoriza
+**40 issues vinculadas**, sem depender de terceiro; B, C e D fecham **0 atos/issues** no curto prazo. Dentro dela,
 a próxima fatia executável é o **ato 4**, agora reduzido a **`CAP-38` e `CAP-39`** (**2 células
 `teste`**, **14 → 16 de 39**), seguida do **ato 5** (**40 issues + 141 atos**). `CAP-37` está fechada por
 `runner_pg` (5/5 em PG17, §9.2), e os nomes parseiam desde a renomeação de A′ (§9.1). O que resta para a
