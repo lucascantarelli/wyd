@@ -255,6 +255,7 @@ O PR foi integrado em `develop`; a publicação e o rollback acima usam o commit
 | `ADM-01`–`ADM-10` | páginas locais convertidas em issues #208–#217, com `area/wyd-admin`, `estado/proposta`, fase e corpo da página dona |
 | Título e estado | as 40 `WYDDB` receberam o prefixo `[tarefa] wyd-db:` e a label `estado/proposta`; a varredura final encontrou **0** títulos fora do formato e **0** issues sem label de estado |
 | Skills | `make test-gate`: 23 testes, 22 OK + 1 skip Windows; `test_skill_contract` 5/5: lista do gate = template, 4 formulários com as 9 skills, 2 skills locais com frontmatter e PR template com registro da skill |
+| Entrega versionada | branch `docs/wyd-ops-mapeamento-github`, commit inicial `2a4da47`, PR [#218](https://github.com/lucascantarelli/wyd/pull/218) contra `develop`; o status é parte do próprio PR |
 
 A importação usou as labels `area/*` como fonte de `Sistema`, `estado/bloqueada` e
 `estado/aguardando-decisao` como `Bloqueado`, e os marcos por sistema (`wyd-db` M2, `wyd-ops` M5, os
