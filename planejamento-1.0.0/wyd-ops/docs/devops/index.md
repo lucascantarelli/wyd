@@ -51,7 +51,7 @@ make db-down     # para e descarta o banco local
 make rollback TAG=<sha>   # volta a imagem do site para o SHA indicado
 ```
 
-O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois.
+O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois. A imagem copia a árvore de evidência no build e roda `/app` **sem bind mount**: em 2026-11-26, o mesmo gate levava 2m20s com o bind mount do Docker Desktop e passou a cerca de 1m20 (duas medições: 59s e 1m25s) com a cópia e o cache de resolução de links. Cliente e legado continuam fora do contexto por `.dockerignore`.
 
 ### Testes PostgreSQL locais
 
@@ -61,6 +61,23 @@ O harness aceita dois modos:
 - `WYD_DB_TEST_CONTAINER=<nome>` — usado no desenvolvimento; o `psql` roda via `docker exec`.
 
 No CI, `scripts/ci/db-prepare.sh` cria os papéis e `scripts/ci/apply-series.sh` aplica só os blocos `up`. O container é descartável; nenhuma senha é de produção.
+
+### Mapa dos scripts
+
+| Arquivo | Linguagem | Papel | Entrada / saída |
+|---|---|---|---|
+| `wyd-docs/gate.sh` | bash | entrada única do gate de documentação | raiz opcional; exit 0/1/2 |
+| `wyd-docs/preparar.py` | Python | monta `.build/docs` e a navegação | árvore do repositório |
+| `wyd-docs/verificar.py` | Python | links, âncoras, navegação e sintaxe 1.x | `site/`; exit 0/1/2 |
+| `wyd-docs/verificar-lacunas.py` | Python | evidência de lacuna e placar | raiz; exit 0/1 |
+| `wyd-docs/verificar-contagens.py` | Python | contagens publicadas | raiz; exit 0/1 |
+| `wyd-docs/verificar-censos.py` | Python | censo de fontes e atos | raiz; exit 0/1 |
+| `wyd-docs/verificar-skills.py` | Python | skills e páginas de issue | raiz; exit 0/1 |
+| `scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
+| `scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
+| `.github/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
+
+Os composites de `.github/actions/` só instalam ferramentas e chamam esses arquivos; não duplicam regra. Um script novo fora deste mapa precisa de issue e dono.
 
 ## 4. Cache, artefatos e limites do plano gratuito
 

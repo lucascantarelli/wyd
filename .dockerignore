@@ -1,25 +1,25 @@
-# Contexto de build da imagem do site: só `planejamento-1.0.0/**/docs`, `wyd-docs` e scripts.
-# Cliente, legado e saídas de build ficam fora — o cliente sozinho tem 567 MB.
+# Contexto de build da imagem do site/gate. A imagem `:gate` precisa da árvore de
+# evidência (planejamento, docs, crates, .github, .agents e arquivos da raiz) para
+# conferir citações sem bind mount. Cliente e legado ficam fora — o cliente sozinho
+# tem 567 MB.
 
 .git
-.github
-.agents
 .freebuff
 
 .env
 .env.*
 
 deprecated
-crates
 wyd-client
 wyd-portal
 
 **/node_modules
 **/.venv
+**/.tmp
+**/target
 **/site
 **/.build
 **/__pycache__
 **/*.pyc
 
-docker-compose.yml
 *.log
