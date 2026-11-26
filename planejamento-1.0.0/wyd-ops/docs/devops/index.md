@@ -12,7 +12,7 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (matriz 3), `unit` (matriz 3 crates × Ubuntu/Windows), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
+| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (db/signer em Ubuntu; launcher em Windows), `unit` (db e signer em Ubuntu/Windows; launcher só em Windows), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
 | `ci-db.yml` | todo push/PR | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` como service), `gate-db`, `notificar falha` | `gate-db` |
 | `docs.yml` | todo push/PR | `gate-docs`, `publicar` (Pages, só push), `notificar falha` | `gate-docs` |
 | `docs-image.yml` | caminhos de docs/imagem | build, smoke HTTP 200, push GHCR (só push) | não (F2 torna obrigatório) |
@@ -28,7 +28,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 ## 2. O que cada gate prova
 
-- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates; cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
+- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates; `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
 - **`gate-docs`**: `wyd-docs/gate.sh` — skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos.
 - **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`.
@@ -40,7 +40,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 make gate        # mesmo gate do CI, dentro da imagem :gate
 make fmt         # cargo fmt --check nos três crates
 make lint        # cargo clippy -D warnings nos três crates
-make test        # testes unitários (wyd-db --lib; signer/launcher --offline)
+make test        # testes unitários (wyd-db --lib; signer --locked; launcher só no Windows)
 
 make docs-up     # puxa a imagem publicada e sobe em 127.0.0.1:8000
 make docs        # constrói da árvore de trabalho (dev, tag :dev)
