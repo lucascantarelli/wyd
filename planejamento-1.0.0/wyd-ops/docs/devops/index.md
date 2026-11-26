@@ -6,7 +6,7 @@
 > Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0012`
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-26) — F0 + F1 implementados; F2 parcialmente implementado (Buildx/cache/atestados e bases por digest; runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
+**Estado:** aceito (2026-11-26) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
 
 ## 1. O que está no ar
 
@@ -22,6 +22,14 @@
 | `release.yml` | tag `v*` | assina e publica manifesto | não |
 
 `full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
+
+### Prova real do pacote 1A–11A (2026-11-26)
+
+- PR [#205](https://github.com/lucascantarelli/wyd/pull/205), squash em `0c4a612`: `gate-code`, `gate-db`, `gate-docs` e `gate-security` concluíram **success** na execução real do PR; CodeQL, GitGuardian e `docs-image` de PR também passaram.
+- `docs-image` em `develop`: run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`, **success** em 50 s; `:SHA`, `:develop` e `:latest` apontam para `sha256:462029e…`; o manifesto de atestação contém SPDX/SBOM e provenance SLSA v1; o smoke respondeu HTTP 200.
+- `code-stable`: run [`45828077654`](https://github.com/lucascantarelli/wyd/actions/runs/45828077654) (dispatch em `develop`), **success**; `wyd-db` e `wyd-ops-signer` concluíram com Rust `stable`.
+- Rollback real: `make rollback TAG=f271caab…` e `TAG=0c4a612a…` puxaram imagens publicadas e responderam HTTP 200, sem build da árvore; digests `sha256:f789081…` e `sha256:462029e…`.
+- Os logs dos runs recentes de `code`, `docs`, `docs-image`, `security`, `ci-db` e `code-stable` não contêm o aviso de Node 20 nem a SHA `ea165f8…`.
 
 ### Por que os workflows obrigatórios não têm filtro de caminho
 
@@ -163,7 +171,7 @@ eventos, as regras de não regressão e o que fazer sem o PAT estão em `github-
 
 | Fase | Escopo | Critério de saída |
 |---|---|---|
-| **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM e tags por branch **feitos**; runtime nginx unprivileged e rollback ensaiado pendentes | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
+| **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM, tags por branch e rollback por SHA **feitos**; runtime nginx unprivileged pendente | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
 | **F3 — deploy** | contrato sobre Compose; workflow manual com `environment`; OIDC; smoke e rollback; **provedor de VPS a definir** | nenhum segredo de longa duração; deploy não roda sem alvo |
 | **F4 — observabilidade** | métricas de duração/fila/falha; relatório semanal; sentinelas de advisory e imagem | falha notifica em menos de 1 min; relatório semanal publicado |
 | **F5 — governança** | ruleset, allowlist e ADR-OPS-0012 **feitos**; CODEOWNERS, onboarding e revisão de ADRs pendentes | PR vermelho não mergeia; action fora da allowlist falha |

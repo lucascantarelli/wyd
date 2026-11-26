@@ -113,11 +113,28 @@ comando executado, não a expectativa.
 | `docker compose pull docs` | exit **1**: `Image ghcr.io/lucascantarelli/wyd-docs:latest error from registry: denied` — o pacote não existe; só fica verde depois da primeira publicação |
 | `docker compose --profile gate run --rm -T gate` | exit **0**: `verificação: 269 páginas, links, âncoras, navegação e sintaxe ok (267 fontes verificadas)` |
 
-**DoD do workflow, ainda não cumprido:** a primeira execução em `develop` termina verde, empurra
-`:<sha>` e `:latest`, e `docker compose pull docs` baixa a imagem sem construir. Hoje o build, a
-fumaça e o consumo da imagem local estão provados; o `pull` reprova porque não há pacote publicado —
-causa e o que falta em `wyd-1.0.0.md` §8.3. O job não tem passo manual: Buildx constrói/publica,
-o smoke usa `docker run` e `curl` e a política de push é decidida pela branch.
+**DoD do workflow, cumprido em 2026-11-26:** a primeira execução em `develop` terminou verde,
+empurrou `:<sha>`, `:develop` e `:latest` e `docker compose pull docs` baixou a imagem sem construir.
+A tabela acima é a medição histórica de 2026-11-23; a prova de produção está em §5.2. O job não tem
+passo manual: Buildx constrói/publica, o smoke usa `docker run` e `curl` e a política de push é
+decidida pela branch.
+
+### 5.2 Primeira publicação e rollback (`V`, 2026-11-26)
+
+O PR [#205](https://github.com/lucascantarelli/wyd/pull/205) foi integrado em `develop` (`0c4a612`).
+A execução real do `docs-image` foi o run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542),
+com os quatro checks obrigatórios verdes no PR.
+
+| Passo | Resultado medido |
+|---|---|
+| `docs-image` em `develop` | exit **0** em 50 s; `:0c4a612…`, `:develop` e `:latest` no GHCR |
+| `docker compose pull docs` | exit **0**; imagem `ghcr.io/lucascantarelli/wyd-docs:0c4a612…` baixada do registry |
+| Atestados | manifesto de atestação com **SBOM SPDX** e **provenance SLSA v1**; digest atual `sha256:462029e…` |
+| `make rollback TAG=f271caab…` | pull + `up --no-build` exit **0**; HTTP **200**; digest `sha256:f789081…` |
+| `make rollback TAG=0c4a612a…` | pull + `up --no-build` exit **0**; HTTP **200**; digest `sha256:462029e…` |
+
+O rollback usou duas imagens já publicadas no GHCR, sem construir a árvore local. O runtime nginx
+definitivo e o deploy de produção continuam fora desta prova.
 
 ## 6. Risco
 

@@ -4,7 +4,7 @@ Instruções para agentes de IA e para quem entra no repositório sem contexto. 
 todo o repositório. Ele **não** repete regra de sistema: aponta o dono.
 
 **Estado:** planejamento da `1.0.0`, sem código de produção. Medido em **2026-11-19**; estado dos
-sistemas e dos ADRs de §4–§5 recontado em **2026-11-25**.
+sistemas e dos ADRs de §4–§5 recontado em **2026-11-25**; CI e imagem comprovados em **2026-11-26**.
 
 ---
 
@@ -47,7 +47,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 
 ---
 
-## 4. Estado medido (2026-11-19)
+## 4. Estado medido (2026-11-19; CI/imagem 2026-11-26)
 
 | Fato | Medição |
 |---|---|
@@ -60,8 +60,8 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Código Rust | primeiro slice em `crates/wyd-db/`: `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (19 testes locais); os outros 8 `crates/*` só têm `.gitkeep`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml` de workspace; `rust-toolchain.toml` (1.100.0) e `Makefile` existem; cada crate tem `Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; issues e milestones em `planejamento-1.0.0/wyd-1.0.0.md` §1.4; projeto `WYD 1.0.0` com os campos, as views e as dependências `blocked by` medidos em `planejamento-1.0.0/wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
-| CI | `.github/workflows/docs.yml` (gate `gate-docs`), `code.yml` (fmt, clippy, unitários em matriz por crate, cobertura informativa e `gate-code`; `wyd-db` e `wyd-ops-signer` são portáveis, `wyd-launcher` é Windows-only), `ci-db.yml` (matriz PG17 e `gate-db`) e `security.yml` (audit/deny e `gate-security`); `issue-status.yml` mantém labels e Project. `full-workflow.yml` foi removido em 2026-11-26. O estado real e o que falta estão em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`; as contagens de teste e o limiar de cobertura têm dono em `estrategia-de-testes.md` §6–§7 |
-| Imagem e Compose | `.github/workflows/docs-image.yml` está versionado mas **nunca rodou e nunca publicou** (2026-11-23): o arquivo não está no remoto e o pacote no GHCR não existe. `docker compose pull docs` / `up -d docs` consomem a imagem publicada (`:latest`, com `build:` de fallback); `docker-compose.override.yml` (automático) traz só o serviço `gate` sob perfil e `docker-compose.dev.yml` (opt-in, `-f`) constrói a árvore com `:dev`. Build, fumaça e contagem provados localmente; `pull` reprova com exit 1 enquanto não houver pacote. Estado medido e o que falta para publicar em `planejamento-1.0.0/wyd-1.0.0.md` §8; decisão, DoD e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
+| CI | `.github/workflows/docs.yml` (gate `gate-docs` e Pages em `develop`), `code.yml` (fmt, clippy, unitários em matriz por crate, cobertura informativa e `gate-code`; `wyd-db` e `wyd-ops-signer` são portáveis, `wyd-launcher` é Windows-only), `ci-db.yml` (matriz PG17 e `gate-db`), `security.yml` (audit/deny, dependency-review, actionlint e `gate-security`), `docs-image.yml` (Buildx/GHCR em `develop`) e `code-stable.yml` (sinal diário com Rust `stable`); `issue-status.yml` mantém labels e Project. `full-workflow.yml` foi removido em 2026-11-26. O estado real e o que falta estão em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`; as contagens de teste e o limiar de cobertura têm dono em `estrategia-de-testes.md` §6–§7 |
+| Imagem e Compose | Primeira publicação real em **2026-11-26** pelo run `45827609542` (commit `0c4a612`): GHCR público `ghcr.io/lucascantarelli/wyd-docs` com `:SHA`, `:develop` e `:latest`, provenance SLSA v1 e SBOM SPDX; smoke HTTP 200 no CI. O Compose base **não** tem `build:`; `docker-compose.override.yml` traz `gate`/`db` e `docker-compose.dev.yml` é opt-in com `:dev`. `make rollback TAG=<sha>` foi exercitado contra `f271caa` e `0c4a612`, servindo HTTP 200 sem build. Runtime nginx definitivo e produção continuam pendentes; decisão e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
 Números vivem em `planejamento-1.0.0/wyd-1.0.0.md` §1, com comando e data. Não replique contagem em

@@ -814,15 +814,15 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 
 ### 8.2 Artefato, lugar e dono
 
-| Artefato | Onde mora | Dono | Estado (2026-11-22; Compose em 2026-11-23) |
+| Artefato | Onde mora | Dono | Estado (2026-11-22; Compose/CI em 2026-11-26) |
 |---|---|---|---|
 | plano do sistema: dashboard, `lacunas.md`, `docs/` | `planejamento-1.0.0/<sistema>/` | o próprio sistema | 13 pastas, todas abertas; nenhuma `aceita` |
-| Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; build medido em 2026-11-23 (exit 0, 17 s, imagem de 194 329 433 bytes) |
-| `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`) consumindo `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, com `build:` de fallback (2026-11-23) |
-| `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente (2026-11-23): traz **só** o `gate` sob perfil; não toca `docs` |
+| Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; build medido em 2026-11-23; publicado no GHCR em 2026-11-26 (run `45827609542`) |
+| `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`) consumindo `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, **sem `build:`** |
+| `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente: traz `gate` e `db` sob perfis; não toca `docs` |
 | `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
 | `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
-| workflow de CI | `.github/workflows/` | `wyd-ops` | 7: `code.yml`, `ci-db.yml`, `docs.yml`, `docs-image.yml`, `security.yml`, `issue-status.yml` e `release.yml` (2026-11-26) |
+| workflow de CI | `.github/workflows/` | `wyd-ops` | 8: `code.yml`, `ci-db.yml`, `docs.yml`, `docs-image.yml`, `security.yml`, `code-stable.yml`, `issue-status.yml` e `release.yml` (2026-11-26) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 3: `docs-check`, `setup-rust`, `notify-failure` |
 | crate Rust | `crates/<sistema>/` | o sistema | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários); os outros 8 só `.gitkeep` |
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
@@ -853,13 +853,13 @@ Next.js e o `wyd-ops` é Dockerfile, Compose e CI.
 ferramenta local — o `gate` — e não transfere a responsabilidade do Compose base. `wyd-ops/` continua sendo a pasta de implementação do sistema, enquanto estes caminhos
 de raiz são exceções por exigência ou convenção de descoberta da ferramenta.
 
-**Caminho padrão e caminho de desenvolvimento (`V`, 2026-11-23):** o Compose base consome a imagem
-publicada — `docker compose pull docs` e `up -d docs` — e `build:` ali é fallback. O build da árvore
+**Caminho padrão e caminho de desenvolvimento (`V`, 2026-11-26):** o Compose base consome a imagem
+publicada — `docker compose pull docs` e `up -d docs` — e **não tem `build:`**. O build da árvore
 de trabalho mora em `docker-compose.dev.yml`, **versionado mas opt-in**: não é mesclado
 automaticamente, então quem edita página invoca `docker compose -f docker-compose.yml -f
-docker-compose.dev.yml up -d docs --build`. O override automático ficou só com o `gate`. Antes, ele
-trocava a imagem para `:dev` em todo comando, e o resultado medido foi `docker compose pull docs`
-mirando uma tag que o CI nunca publica (exit 1, `error from registry: denied`).
+docker-compose.dev.yml up -d docs --build`. O override automático traz `gate` e `db`, sem tocar
+`docs`. O `pull` real foi provado em 2026-11-26 com as tags `f271caa` e `0c4a612`; o histórico de
+medição local está em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5.1.
 
 | Ajuste do dev file | Efeito |
 |---|---|
@@ -888,30 +888,14 @@ Ele usa o estágio `gate` do Dockerfile — onde vivem pip, `planejamento-1.0.0/
 número: `wyd-docs-1.0.0.md` §9.1). DoD e custo por execução ficam em
 `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5 e §6.
 
-**Estado real do CI (`V`, 2026-11-23):** `.github/workflows/docs-image.yml` está versionado (commit
-`8b23cc2`) mas **nunca rodou** — o arquivo não existe no remoto (`origin/develop` está em `486d718`;
-os três commits locais estão sem push), e a lista de workflows do repositório traz só `docs`,
-`Full Workflow`, CodeQL e Dependabot. Consequência: **não há imagem publicada**. O pacote
-`wyd-docs` responde `404 Package not found` na API e a leitura anônima do manifesto `:latest`
-responde `denied`. A página não trata `:latest` como disponível.
-
-O que falta para a primeira publicação: (1) o commit que contém o workflow chegar a `develop` por
-PR — o ruleset `develop — PR obrigatório` recusa push direto e não exige status check; (2) o PR
-roda o workflow em build e fumaça, sem push, porque a etapa de publicação tem `if:
-github.event_name != 'pull_request'`; (3) o merge em `develop` publica `:<sha>` e `:latest`, ou,
-depois do merge, `gh workflow run docs-image --ref develop`. Quando o primeiro push acontecer, o
-GHCR cria o pacote como **privado**: para o Compose puxar sem `docker login`, a visibilidade do
-pacote precisa ser mudada para pública nas configurações do pacote (política documentada em
-<https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry>).
-
-**Ensaio local do job (`V`, 2026-11-23):** os passos do workflow foram executados à mão, com as
-mesmas tags e comandos: build com `:<sha>` e `:latest` (exit 0, 17 s, imagem de 194 329 433 bytes),
-`docker run` dessa imagem do SHA (exit 0), laço de `curl` (HTTP 200 na 2ª tentativa) e
-`find /site -name '*.html'` = **269**, igual à contagem do gate. O Compose padrão subiu a partir
-dessa imagem sem construir (exit 0, HTTP 200, `<title>` do site). O que não é provável localmente é o
-push: `docker compose pull docs` sai 1 com `error from registry: denied` enquanto o pacote não
-existir, e só fica verde depois da primeira execução. Comando por comando em
-`planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5.1.
+**Estado real do CI (`V`, 2026-11-26):** o `docs-image` foi integrado em `develop` pelo PR
+[#205](https://github.com/lucascantarelli/wyd/pull/205) (squash `0c4a612`) e a execução
+[`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542) publicou no GHCR
+`:0c4a612…`, `:develop` e `:latest`, com SBOM SPDX, provenance SLSA v1 e smoke HTTP 200. O Compose
+puxa a imagem sem construir. O rollback foi exercitado com as tags publicadas `f271caa` e
+`0c4a612`, ambas servindo HTTP 200 sem build local. O histórico de ensaio local de 2026-11-23
+permanece em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` §5.1; a prova de
+publicação e rollback está em §5.2.
 
 ### 8.4 O que existe só como lugar reservado
 

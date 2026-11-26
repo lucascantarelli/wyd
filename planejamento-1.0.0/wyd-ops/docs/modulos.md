@@ -28,7 +28,7 @@
 - **Testes:** build reproduzível; smoke test.
 - **Segurança:** sem segredo na imagem.
 - **Monitoramento:** tamanho/camadas.
-- **DoD:** `pull` funciona (hoje não publicado).
+- **DoD:** `pull` funciona; imagem `:SHA`/`:develop`/`:latest` publicada em `develop` (2026-11-26, run `45827609542`) e smoke 200.
 
 ### ambiente
 - **Objetivo:** ambientes dev/homologação/produção e provisionamento.
