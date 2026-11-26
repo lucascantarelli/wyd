@@ -1,0 +1,11 @@
+# Scripts executados por bash, make e containers não podem ter CRLF: o `\r`
+# vira parte do comando (`set: pipefail\r: invalid option name`). O checkout do
+# Windows com core.autocrlf=true converte para CRLF sem esta regra.
+*.sh text eol=lf
+*.py text eol=lf
+*.mjs text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Makefile text eol=lf
+*.Dockerfile text eol=lf
+Dockerfile text eol=lf

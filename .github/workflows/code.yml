@@ -2,6 +2,8 @@ name: code
 
 # Um workflow por domínio. Este cobre fmt, clippy, testes e cobertura dos três
 # crates; os alvos PostgreSQL ficam em `ci-db.yml` e a segurança em `security.yml`.
+# `wyd-db` e `wyd-ops-signer` rodam em Linux/Windows; `wyd-launcher` é um produto
+# Windows (EXE + Tauri/NSIS) e não tem alvo Linux.
 # O check obrigatório é `gate-code`, não cada job da matriz: assim a matriz pode
 # crescer sem mudar a regra de branch.
 
@@ -42,13 +44,21 @@ jobs:
         run: cargo fmt --manifest-path crates/${{ matrix.crate }}/Cargo.toml -- --check
 
   clippy:
-    name: clippy / ${{ matrix.crate }}
-    runs-on: ubuntu-latest
+    name: clippy / ${{ matrix.crate }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        crate: [wyd-db, wyd-ops-signer, wyd-launcher]
+        include:
+          - crate: wyd-db
+            os: ubuntu-latest
+          - crate: wyd-ops-signer
+            os: ubuntu-latest
+          # O launcher é um produto Windows (EXE + Tauri/NSIS). Lint e teste
+          # nativos só fazem sentido no runner Windows.
+          - crate: wyd-launcher
+            os: windows-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -72,16 +82,13 @@ jobs:
             args: --lib
           - crate: wyd-ops-signer
             os: ubuntu-latest
-            args: --offline
+            args: --locked
           - crate: wyd-ops-signer
             os: windows-latest
-            args: --offline
-          - crate: wyd-launcher
-            os: ubuntu-latest
-            args: --offline
+            args: --locked
           - crate: wyd-launcher
             os: windows-latest
-            args: --offline
+            args: --locked
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

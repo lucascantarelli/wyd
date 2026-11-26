@@ -26,9 +26,11 @@ allow = [
 ]
 confidence-threshold = 0.8
 
-# O crate do projeto é GPL-2.0; a exceção vale só para ele, não para dependências.
+# Os crates do projeto são GPL-2.0; a exceção vale só para eles, não para dependências.
 exceptions = [
     { allow = ["GPL-2.0-only"], crate = "wyd-db" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-ops-signer" },
+    { allow = ["GPL-2.0-only"], crate = "wyd-launcher" },
 ]
 
 [licenses.private]

@@ -37,14 +37,15 @@
 ## Comandos
 
 ```bash
-cargo test -p wyd-launcher --all-targets
-cargo llvm-cov -p wyd-launcher --fail-under-lines 85
+cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked --all-targets
+# Cobertura do launcher ainda não roda no CI; o job atual cobre wyd-db.
+cargo llvm-cov --manifest-path crates/wyd-launcher/Cargo.toml --fail-under-lines 85
 ```
 
 ## CI, cobertura e monitoramento
 
-- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-launcher --all-targets -- -D warnings`, `cargo test -p wyd-launcher --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
-- **Cobertura:** `cargo llvm-cov -p wyd-launcher --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --manifest-path crates/wyd-launcher/Cargo.toml -- --check`, `cargo clippy --manifest-path crates/wyd-launcher/Cargo.toml --all-targets -- -D warnings` e `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked --all-targets` em `windows-latest`; `cargo deny` cobre o crate em `security.yml`. O launcher não é executado em Linux porque o produto é Windows-only (EXE + Tauri/NSIS); o PR para `develop` e `main` só passa com os checks verdes.
+- **Cobertura:** `cargo llvm-cov --fail-under-lines 85` é o piso planejado; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo. O job de cobertura atual mede apenas `wyd-db`.
 - **Monitoramento:** Resultado da verificação de manifesto, hash divergente, falha de assinatura e update aplicado. Log local sem token nem conteúdo do jogador; não há telemetria remota por desenho.
 - **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
 

@@ -2,7 +2,15 @@
 # `wyd-docs/gate.sh`, os scripts de CI são `scripts/ci/*.sh` e o Compose é a
 # definição do ambiente. `make` só evita decorar caminhos.
 
-CRATES := wyd-db wyd-ops-signer wyd-launcher
+# `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS); os demais crates são
+# portáveis. O `make` não tenta compilar o launcher em Linux/macOS.
+CRATES := wyd-db wyd-ops-signer
+ifeq ($(OS),Windows_NT)
+CRATES += wyd-launcher
+LAUNCHER_TEST := cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked
+else
+LAUNCHER_TEST :=
+endif
 
 .PHONY: gate fmt lint test docs docs-up docs-down db-up db-down rollback
 
@@ -21,8 +29,8 @@ lint:
 
 test:
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
-	cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --offline
-	cargo test --manifest-path crates/wyd-launcher/Cargo.toml --offline
+	cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --locked
+	$(LAUNCHER_TEST)
 
 docs:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build
