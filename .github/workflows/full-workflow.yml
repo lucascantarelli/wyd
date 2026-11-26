@@ -2,9 +2,20 @@ name: Full Workflow
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
+      - 'release/*'
+      - 'hotfix/*'
+    tags:
+      - 'v*.*.*'
   pull_request:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
+      - 'release/*'
+      - 'hotfix/*'
+
   # Sentinela semanal: advisory/cobertura envelhecem sem commit nenhum (DEVOPS-08).
   schedule:
     - cron: "0 6 * * 1"

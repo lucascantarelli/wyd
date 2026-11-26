@@ -2,7 +2,6 @@ name: docs
 
 on:
   push:
-    branches: [develop, main]
     paths:
       # A árvore de planejamento inteira, não uma lista de arquivos: o gate monta páginas de
       # `*/docs/`, censa estado e confere citações em dashboards, `lacunas.md` e `migrations/`.
