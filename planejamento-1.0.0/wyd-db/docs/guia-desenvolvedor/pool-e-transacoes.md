@@ -103,7 +103,7 @@ de quem escreve a consulta — não desta página.
 
 ## 7. Teste que cobre
 
-**Nenhum teste desta seção existe hoje** — o crate tem `Cargo.toml`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários de schema, nenhum de pool), então tudo nesta seção é `P`. O alvo já está
+**Nenhum teste desta seção existe hoje** — o crate tem `Cargo.toml`, `src/dsn.rs` e `tests/sistema/sistema_pg.rs` (13 cenários de schema, nenhum de pool), então tudo nesta seção é `P`. O alvo já está
 nomeado pelo guia de teste: concorrência, lock e isolamento são provados pelo **teste de contrato** com
 `sistema_pg` e o teste de sessão ([`testes-de-contrato.md`](../guia-teste/testes-de-contrato.md)).
 

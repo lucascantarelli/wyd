@@ -13,6 +13,7 @@
 //! 28 `down` em ordem decrescente; confere que os quatro schemas sumiram; reaplica os 28 `up` e
 //! compara o inventário de objetos com o do primeiro `up`, que tem de ser idêntico.
 
+#[path = "../comum/mod.rs"]
 mod comum;
 
 use std::path::{Path, PathBuf};

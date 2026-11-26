@@ -7,6 +7,10 @@
 **Estado:** aceito (2026-11-25) — alvo escrito e executado contra PostgreSQL 17: **5/5** casos verdes
 (log local `/tmp/wyd-runner-pg.log`; 23,81 s). Fecha `CAP-37` e a metade runner de `CAP-01`–`CAP-07`.
 
+**Reorganização (2026-11-26):** o arquivo passou a `crates/wyd-db/tests/sistema/runner_pg.rs`;
+`cargo test --no-run` recompilou o alvo, mas a execução não foi repetida localmente (sem PG17 e
+`WYD_DB_URL_TEST`) e segue pendente no job `pg` (`runner`) de `ci-db.yml`.
+
 **Quatro níveis de afirmação convivem aqui:**
 
 - **`P`** — o alvo está em `crates/wyd-db/Cargo.toml` (`runner_pg`) e a fixture em

@@ -7,7 +7,7 @@
 //! A série real ainda não é contígua (faltam `0016`, `0017`, `0018`, `0020`, `0023` e `0027`), então o
 //! alvo aplica uma **fixture contígua** de quatro arquivos. O que ele prova não depende de qual série
 //! roda: ledger real, transação por arquivo, `search_path = ''`, drift e o advisory lock em duas
-//! sessões. A série materializada continua provada por `reversibilidade_pg`.
+//! sessões. A série materializada continua provada por `tests/sistema/reversibilidade_pg.rs`.
 //!
 //! O banco vem de `WYD_DB_TEST_URL`, com TCP em loopback e o papel `wyd_migrator` com `LOGIN` — o
 //! preflight do runner recusa outro papel. Sem a variável o alvo **falha**, não se ignora.

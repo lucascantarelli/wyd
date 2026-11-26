@@ -31,7 +31,7 @@ planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 |---|---|
 | `planejamento-1.0.0/` com o panorama e os sistemas já abertos | workspace Cargo (`Cargo.toml` na raiz); existem `rust-toolchain.toml` e `Makefile` |
 | site MkDocs 2.0 montado em `wyd-docs/` | runner de migrations e serviço no ar |
-| `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs`; testes unitários e de schema (contagem no panorama §1) | código de produção fora do slice `dsn`/schema |
+| `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema/sistema_pg.rs`; testes unitários e de schema (contagem no panorama §1) | código de produção fora do slice `dsn`/schema |
 | série de `.sql` em `crates/wyd-db/migrations/`, aplicada do zero num PG17 em 2026-11-24 (contagem no panorama §1) | os seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |

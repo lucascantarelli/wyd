@@ -367,7 +367,7 @@ autoriza alterar o desenho para "facilitar" o teste.
 
 **Concluído no escopo de biblioteca e portas falsas.** O ato 3 entregou o runner de `src/migrate/`,
 o parser, o ledger, o plano, os adapters e os testes de unidade/contrato. Ele **não** é a conclusão do
-ato de sistema contra PostgreSQL 17: nenhum teste de `tests/sistema_pg.rs` foi executado nesta rodada,
+ato de sistema contra PostgreSQL 17: nenhum teste de `tests/sistema/sistema_pg.rs` foi executado nesta rodada,
 porque `WYD_DB_TEST_CONTAINER` não está definido e não há container PG17 migrado disponível.
 
 | Comando executado | Resultado observado |

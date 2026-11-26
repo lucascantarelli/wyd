@@ -3,10 +3,11 @@
 > Dono: equipe do `wyd-db`
 > Base: `ADR-DB-0001` (Contexto e Decisão), `padrao-banco.md` §8, `src/migrate/spec.md` §3
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `crates/wyd-db/src/provision/domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `crates/wyd-db/src/provision/domain/spec.rs` (`WYDDB-003`); `db/roles.sql` continua artefato gerado, não versionado (`WYDDB-015`).
 
-**Estado:** aceito (2026-11-24) — nada disto existe no repositório: nem `crates/wyd-db/src/provision/`,
-nem `db/roles.sql`. A página é a especificação a implementar, não a descrição de código vigente.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`) no que a fachada cobre:
+`domain/`, `port/`, `error.rs`, `app/runner.rs` e `mod.rs`. O adapter, o golden de `db/roles.sql` e o CLI
+continuam pendentes (`WYDDB-015`).
 
 # Estado desejado dos papéis e de `public` — desenho
 
@@ -15,7 +16,7 @@ implementar só precisa daqui — o estado desejado, o texto gerado byte a byte,
 O que é vizinho aparece com a assinatura exata, sem "veja o módulo ao lado".
 
 ## 1. Responsabilidade e anti-objetivos
-**Sem arquivo no repositório:** `db/roles.sql`, `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Sem arquivo no repositório:** `db/roles.sql` — artefato gerado por `render`; o golden e o arquivo entram em `WYDDB-015`.
 
 **Responsabilidade:** fixar em código, de forma verificável pelo compilador, **quais papéis de cluster
 existem e como cada um se associa**, mais o **estado do schema `public`** que o ledger do runner
@@ -99,7 +100,7 @@ olhando só `pg_roles`/`pg_auth_members`, e a conferência desse bloco é pelas 
 `migrations/0001_bootstrap.md` §9 — `check` não lê ACL de schema.
 
 ## 3. DSN por papel (`M24`, decidido em 2026-11-18)
-**Sem arquivo no repositório:** `domain/spec.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `domain/spec.rs` (`WYDDB-003`).
 
 `domain/spec.rs` define **papéis**; quem conecta é o binário, e cada conexão tem a sua variável. Uma DSN por
 papel, prefixo `WYD_DB_URL_`, **nenhuma com default**, nenhuma lida por este módulo:
@@ -191,7 +192,7 @@ Regras de emissão, todas verificadas em teste:
 | ordem = ordem de `ROLES`, depois memberships | golden estável, diff de PR legível |
 
 ## 5. Arquitetura do módulo
-**Sem arquivo no repositório:** `observed.rs`, `spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `observed.rs`, `spec.rs` (`WYDDB-003`); `db/roles.sql` continua artefato gerado (`WYDDB-015`).
 
 Treze arquivos em quatro pastas (contando os `mod.rs`), com o mesmo desenho do runner
 (`src/migrate/spec.md` §10): modelo puro, portas, orquestração e um adapter. O root fica com o que é
@@ -296,6 +297,10 @@ where
     B: Catalog + Script;   // `Send + Sync` são supertraits das portas
 ```
 
+O detalhe de `Plan`/`Drift` é da página `domain/plan.md`: `Plan { steps, drifts }`, com
+`plan(desired, observed)`. A sequência de `check`/`apply` — drift bloqueia e plano vazio não chama
+`Script` — é de `app/runner.md`; o esboço acima é resumo, não a forma implementada.
+
 - `plan` compara `domain::spec::ROLES`/`memberships()` com o que o `Catalog` leu; **não** parseia
   texto SQL e não abre conexão.
 - `apply` chama `domain::spec::render()` e entrega o texto ao `Script`, que abre a sessão e envia o
@@ -325,7 +330,7 @@ silenciado em `port/mod.rs` com `#![allow(async_fn_in_trait)]` e o motivo escrit
 então o atributo impediria a única forma de declarar o estado desejado.
 
 ## 6. Erros e códigos de saída
-**Sem arquivo no repositório:** `domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `domain/spec.rs` (`WYDDB-003`); `db/roles.sql` continua artefato gerado (`WYDDB-015`).
 
 `domain/spec.rs` **não devolve erro**: `render()` é infalível por construção — a entrada é uma constante
 compilada, e o golden prova a saída. Nenhum `Result` atravessa esta fronteira.
@@ -341,7 +346,7 @@ Código novo é decisão registrada, não `catch-all`. `domain/spec.rs` só part
 intermédio do subcomando — o módulo em si não formata saída.
 
 ## 7. Credenciais
-**Sem arquivo no repositório:** `domain/spec.rs`, `db/roles.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `domain/spec.rs` (`WYDDB-003`); `db/roles.sql` continua artefato gerado (`WYDDB-015`).
 
 `domain/spec.rs` define **papéis**, não credenciais. Nenhuma senha entra em `ROLES`, no SQL gerado ou no
 golden: papel `LOGIN` sem senha só conecta se o `pg_hba.conf` do ambiente permitir, e quando houver

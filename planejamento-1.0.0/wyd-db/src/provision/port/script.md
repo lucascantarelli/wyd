@@ -3,12 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3, §4 e §6
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/port/script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/port/script.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/port/script.rs` — execução do script
-**Sem arquivo no repositório:** `src/provision/port/script.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/port/script.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 

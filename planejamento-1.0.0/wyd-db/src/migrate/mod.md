@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §1, §8, §10 e §10.1
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24); implementado em 2026-11-26, com o contrato público congelado por `tests/contrato_api_migrate.rs` (`WYDDB-002`).
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26, com o contrato público congelado por `tests/contrato/contrato_api_migrate.rs` (`WYDDB-002`).
 
 # `src/migrate/mod.rs` — fachada do runner
 
@@ -70,7 +70,7 @@ pub struct Report {
 
 O corpo é **uma linha**: `app::runner::run(command, backend, source).await`. A fachada existe para que o
 binário não dependa de `app::runner`, que é detalhe de orquestração. A assinatura acima é a vigente em
-`crates/wyd-db/src/migrate/mod.rs` e é congelada por `tests/contrato_api_migrate.rs`; a mesma assinatura
+`crates/wyd-db/src/migrate/mod.rs` e é congelada por `tests/contrato/contrato_api_migrate.rs`; a mesma assinatura
 aparece em `app/mod.md` §2.
 
 ## 4. Reexports
@@ -101,7 +101,7 @@ duplicaria contexto e quebraria o `match` do binário por variante.
 
 | Teste | O que prova |
 |---|---|
-| `contrato_publico_de_migrate_compila` (`tests/contrato_api_migrate.rs`) | compila os três comandos, as duas formas de `DownTo`, os campos de `Report` e `run` com portas falsas, sem PostgreSQL |
+| `contrato_publico_de_migrate_compila` (`tests/contrato/contrato_api_migrate.rs`) | compila os três comandos, as duas formas de `DownTo`, os campos de `Report` e `run` com portas falsas, sem PostgreSQL |
 | `reexports_are_reachable` (planejado) | os caminhos de §4 compilam a partir de `crate::migrate::…`; ainda não há teste próprio |
 
 ## 8. Pronto quando

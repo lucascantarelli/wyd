@@ -77,7 +77,7 @@ $ cargo test --lib
 test result: ok. 63 passed; 0 failed
 ```
 
-Alvo novo: `crates/wyd-db/tests/contrato_api_migrate.rs`, registrado em `crates/wyd-db/Cargo.toml`. Ele compila as três variantes de `Command` e seus campos, as duas formas de `DownTo`, os quatro campos públicos de `Report` e `run::<FakeBackend, FakeSource>`, sem PostgreSQL. As páginas `src/migrate/mod.md` §3 e `src/migrate/app/mod.md` §2 citam a mesma assinatura. `Report` é congelado por acesso tipado aos quatro campos (não há construtor público); não há `Display` nem string formatada no teste.
+Alvo novo: `crates/wyd-db/tests/contrato/contrato_api_migrate.rs`, registrado em `crates/wyd-db/Cargo.toml`. Ele compila as três variantes de `Command` e seus campos, as duas formas de `DownTo`, os quatro campos públicos de `Report` e `run::<FakeBackend, FakeSource>`, sem PostgreSQL. As páginas `src/migrate/mod.md` §3 e `src/migrate/app/mod.md` §2 citam a mesma assinatura. `Report` é congelado por acesso tipado aos quatro campos (não há construtor público); não há `Display` nem string formatada no teste.
 
 O alvo entrou no `make test` (linha `cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_migrate --locked`) e na matriz `unit` de `.github/workflows/code.yml` (`args: --lib --test contrato_api_migrate`), espelhada no `code-stable.yml`; não depende de `WYD_DB_TEST_URL` nem do serviço PostgreSQL. A rodada da raiz confirmou a entrada e o gate:
 

@@ -5,9 +5,9 @@
 # `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS); os demais crates são
 # portáveis. O `make` não tenta compilar o launcher em Linux/macOS.
 CRATES := wyd-db wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
-# Crates com teste que entram no `make test`; o `wyd-db` roda a `lib` e o contrato
-# `contrato_api_migrate` (os alvos PostgreSQL têm `ci-db.yml`) e o launcher é
-# Windows-only.
+# Crates com teste que entram no `make test`; o `wyd-db` roda a `lib` e os
+# contratos `contrato_api_migrate`/`contrato_api_provision` (os alvos PostgreSQL
+# têm `ci-db.yml`) e o launcher é Windows-only.
 TEST_CRATES := wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
 ifeq ($(OS),Windows_NT)
 CRATES += wyd-launcher
@@ -54,6 +54,7 @@ lint:
 test:
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_migrate --locked
+	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_provision --locked
 	@for c in $(TEST_CRATES); do \
 		cargo test --manifest-path crates/$$c/Cargo.toml --locked || exit 1; \
 	done

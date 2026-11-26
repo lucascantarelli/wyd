@@ -26,8 +26,8 @@ continua na página dona, e a coluna, o tipo e o `CHECK` continuam no dicionári
 | `Issue` | número da issue remota que materializa a linha; `—` com motivo quando a regra não é do `wyd-db` | `../roadmap/` e GitHub (#82–#121) |
 
 **14 das 37 células de `Teste` têm teste executado** desde 2026-11-25: as 13 capacidades `CAP-24`–`CAP-36`
-rodaram em `crates/wyd-db/tests/sistema_pg.rs` (13 verdes, §3.1) e `CAP-37` rodou em
-`crates/wyd-db/tests/runner_pg.rs` (5/5). As outras **20** seguem em `P`; as **3** restantes são `—` por
+rodaram em `crates/wyd-db/tests/sistema/sistema_pg.rs` (13 verdes, §3.1) e `CAP-37` rodou em
+`crates/wyd-db/tests/sistema/runner_pg.rs` (5/5). As outras **20** seguem em `P`; as **3** restantes são `—` por
 regra, porque não são teste do banco (`RF-DB-015` e `RF-DB-016`, frente `wyd-server`, e `RN-DB-003`, regra de
 cultura). Das 20 com `P`, **16** têm `CAP-nn` escrita na matriz (`CAP-01`–`CAP-23`, `CAP-38`–`CAP-39`) e **4**
 não (`RF-DB-003`, `RF-DB-006`, `RF-DB-014` e `RNF-DB-001`, que é gate de CI). As seis linhas de gate de série (`RNF-DB-008`–`RNF-DB-013`) seguem medidas em
@@ -70,7 +70,7 @@ contrato: as duas provam a **forma** da série, não um requisito nomeado.
 
 **O que falta para `P` virar nome de teste:** o código dos outros quatro alvos. O aceite das 12 páginas de
 `tests/` existe desde 2026-11-24 (`Q-BLK-21` = A); em 2026-11-24 `sistema_pg` nasceu e as 13 linhas de
-`CAP-24`–`CAP-36` viraram `V`. `crates/wyd-db/` tem `Cargo.toml`, `src/dsn.rs` e `tests/sistema_pg.rs`; os
+`CAP-24`–`CAP-36` viraram `V`. `crates/wyd-db/` tem `Cargo.toml`, `src/dsn.rs` e `tests/sistema/sistema_pg.rs`; os
 outros quatro alvos e `tests/common/` seguem vazios. Até o código nascer, a promessa é a página que **nomeia**
 a linha em uma `CAP-nn`; onde não há, a coluna diz `—` e o caso está em §3.4.
 
@@ -142,7 +142,7 @@ a linha em uma `CAP-nn`; onde não há, a coluna diz `—` e o caso está em §3
 
 **13 das 40 linhas** têm teste executado, e **0 de 40** issues do roadmap existem: `RF-DB-001`, `002`, `004`,
 `007`, `008`, `010`, `012`, `013`; `RN-DB-006`, `007`; `UC-DB-001`, `002`, `003` — todos por
-`CAP-24`–`CAP-36` em `crates/wyd-db/tests/sistema_pg.rs`, 13 verdes em 2026-11-24 contra a base migrada. As
+`CAP-24`–`CAP-36` em `crates/wyd-db/tests/sistema/sistema_pg.rs`, 13 verdes em 2026-11-24 contra a base migrada. As
 outras **24** seguem em `P`: **20** com cenário escrito e **4** sem `CAP-nn` (`RF-DB-003`, `RF-DB-006`,
 `RF-DB-014` e `RNF-DB-001`); as **3** restantes são `—` e estão em §3.4.
 

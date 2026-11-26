@@ -3,12 +3,12 @@
 > Dono: equipe do `wyd-db`
 > Base: `src/provision/spec.md` §3, §5 e §6; `ADR-DB-0001` item 3
 > Revisado em: 2026-11-18
-**Sem arquivo no repositório:** `src/provision/app/runner.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/app/runner.rs` (`WYDDB-003`).
 
-**Estado:** aceito (2026-11-24) — arquivo inexistente; especificação a implementar.
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26 (`WYDDB-003`).
 
 # `src/provision/app/runner.rs` — o fluxo
-**Sem arquivo no repositório:** `src/provision/app/runner.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
+**Arquivo implementado:** `src/provision/app/runner.rs` (`WYDDB-003`).
 
 ## 1. Responsabilidade
 
@@ -77,6 +77,9 @@ código de saída vem de `exit_code()` no binário.
 | `apply_sends_render_output` | SQL recebido == `render()` |
 | `apply_counts_steps` | cluster vazio → `steps == 6` |
 | `catalog_error_propagates` | `Connect` → `ProvisionError::Catalog` |
+
+Nesta entrega (`WYDDB-003`) o alvo cobre `render`, `plan`, `check` e `apply` com cluster vazio; os
+cenários de drift e de erro de porta entram com `WYDDB-007`/`WYDDB-009`.
 
 ## 7. Pronto quando
 

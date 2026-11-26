@@ -4,7 +4,7 @@
 > Base: `src/migrate/spec.md` §8 e §10
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24); implementado em 2026-11-26, com a assinatura congelada por `tests/contrato_api_migrate.rs` (`WYDDB-002`).
+**Estado:** aceito (2026-11-24); implementado em 2026-11-26, com a assinatura congelada por `tests/contrato/contrato_api_migrate.rs` (`WYDDB-002`).
 
 # `src/migrate/app/mod.rs` — orquestração
 
@@ -48,4 +48,4 @@ Permitido: `migration`, `port`, `error`. Proibido: `adapter`, `sqlx`, `std::fs`,
 - `grep -n "sqlx" src/migrate/app/` vazio;
 - `cargo tree -p wyd-db -e features` não mostra `sqlx` puxado por `app`;
 - nenhum `#[cfg(test)]` neste diretório: o fluxo é provado pelos testes de contrato de `runner` com
-  portas falsas; o alvo externo `tests/contrato_api_migrate.rs` congela a assinatura pública.
+  portas falsas; o alvo externo `tests/contrato/contrato_api_migrate.rs` congela a assinatura pública.

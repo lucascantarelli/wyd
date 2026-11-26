@@ -2,7 +2,7 @@
 > Público: QA / testador
 > Dono: equipe do `wyd-db`
 > Base: `../wyd-db-1.0.0.md` §6.17; `../docs/planos/plano-de-testes.md` §2–§4; `../docs/guia-teste/piramide-e-alvos.md`
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-26
 
 **Estado:** aceito (2026-11-24) — página escrita; 3 dos 7 alvos implementados e 14 dos 39 cenários
 executados (2026-11-25). `reversibilidade_pg` e `runner_pg` entraram depois do aceite original.
@@ -26,13 +26,15 @@ o que cada alvo prova.
 
 ```text
 crates/wyd-db/tests/
-├── contrato_catalogo.rs      # alvo de contrato: catálogo × série
-├── contrato_migrations.rs    # alvo de contrato: forma da série
-├── sistema_pg.rs             # alvo de sistema: comportamento no PG17
-├── reversibilidade_pg.rs     # alvo de sistema: ciclo up → down → up por psql
-├── runner_pg.rs              # alvo de sistema: porta PgAdapter, ledger e lock
-├── sistema_sessoes.rs        # alvo de sistema: papel, fronteira e view
-├── sistema_stack_caps.rs     # meta-alvo: a matriz e o anti-skip
+├── contrato/
+│   ├── contrato_catalogo.rs  # alvo de contrato: catálogo × série
+│   └── contrato_migrations.rs # alvo de contrato: forma da série
+├── sistema/
+│   ├── sistema_pg.rs         # alvo de sistema: comportamento no PG17
+│   ├── reversibilidade_pg.rs # alvo de sistema: ciclo up → down → up por psql
+│   ├── runner_pg.rs          # alvo de sistema: porta PgAdapter, ledger e lock
+│   ├── sistema_sessoes.rs    # alvo de sistema: papel, fronteira e view
+│   └── sistema_stack_caps.rs # meta-alvo: a matriz e o anti-skip
 ├── common/
 │   ├── mod.rs                # reexport dos três auxiliares
 │   ├── db.rs                 # provisiona, conecta, derruba
@@ -48,18 +50,27 @@ crates/wyd-db/tests/
 `common/` é o único lugar com helper compartilhado; arquivo dentro de `tests/` que não é alvo nem
 recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](fixtures-e-factories.md).
 
+**Reorganização (2026-11-26):** os alvos de contrato ficam em `contrato/` e os de sistema em
+`sistema/`; o harness atual continua em `comum/mod.rs` e o nome do alvo no `Cargo.toml` não mudou
+(`--test sistema_pg`, `--test runner_pg`, `--test reversibilidade_pg`).
+
+A movimentação não altera o comportamento: `cargo test --no-run` compilou os três alvos em 2026-11-26,
+mas a execução contra PostgreSQL 17 **não foi repetida** localmente nessa data (sem
+`WYD_DB_URL_TEST`/container) e segue pendente no job `pg` de `ci-db.yml` (matriz `schema`,
+`reversibilidade` e `runner`).
+
 ## 2. Alvo → arquivo → tipo → precisa de banco
-**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema_pg.rs`, `reversibilidade_pg.rs` e `runner_pg.rs` estão versionados.
+**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs` e `sistema/runner_pg.rs` estão versionados.
 
 | Alvo (`Cargo.toml`) | Arquivo | Tipo | Precisa de banco | Capacidades |
 |---|---|---|---|---|
-| `contrato_migrations` | `contrato_migrations.rs` | contrato | **não** | `CAP-01`–`CAP-07` |
-| `contrato_catalogo` | `contrato_catalogo.rs` | contrato | **não** | `CAP-08` |
-| `sistema_pg` | `sistema_pg.rs` | sistema | **sim** | `CAP-09`–`CAP-19` e `CAP-24`–`CAP-36`, `CAP-38`–`CAP-39` |
-| `reversibilidade_pg` | `reversibilidade_pg.rs` | sistema | **sim** | `CAP-02` (ciclo SQL da série) |
-| `runner_pg` | `runner_pg.rs` | sistema | **sim** | `CAP-01`–`CAP-07` (metade runner) e `CAP-37` |
-| `sistema_sessoes` | `sistema_sessoes.rs` | sistema | **sim** | `CAP-20`–`CAP-21` |
-| `sistema_stack_caps` | `sistema_stack_caps.rs` | meta | **sim** | `CAP-22`–`CAP-23` |
+| `contrato_migrations` | `contrato/contrato_migrations.rs` | contrato | **não** | `CAP-01`–`CAP-07` |
+| `contrato_catalogo` | `contrato/contrato_catalogo.rs` | contrato | **não** | `CAP-08` |
+| `sistema_pg` | `sistema/sistema_pg.rs` | sistema | **sim** | `CAP-09`–`CAP-19` e `CAP-24`–`CAP-36`, `CAP-38`–`CAP-39` |
+| `reversibilidade_pg` | `sistema/reversibilidade_pg.rs` | sistema | **sim** | `CAP-02` (ciclo SQL da série) |
+| `runner_pg` | `sistema/runner_pg.rs` | sistema | **sim** | `CAP-01`–`CAP-07` (metade runner) e `CAP-37` |
+| `sistema_sessoes` | `sistema/sistema_sessoes.rs` | sistema | **sim** | `CAP-20`–`CAP-21` |
+| `sistema_stack_caps` | `sistema/sistema_stack_caps.rs` | meta | **sim** | `CAP-22`–`CAP-23` |
 
 Um alvo por arquivo, como manda `../wyd-db-1.0.0.md` §5.13. Tipo e fronteira de cada camada estão em
 `../docs/guia-teste/piramide-e-alvos.md`; o que cada um **não** prova está na seção 4 de cada página de

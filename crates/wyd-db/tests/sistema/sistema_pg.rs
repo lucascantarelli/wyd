@@ -8,10 +8,11 @@
 //!
 //! **Fora deste alvo:** `CAP-38` (`RNF-DB-004`, exige a consulta da porta C4) e `CAP-39`
 //! (`RNF-DB-005`, exige o boot do binário) dependem de código que não existe e ficam declarados em
-//! `tests/specs/capacidades.md`. `CAP-37` é provada por `tests/runner_pg.rs`, que exercita o
+//! `tests/specs/capacidades.md`. `CAP-37` é provada por `tests/sistema/runner_pg.rs`, que exercita o
 //! `PgAdapter` e o advisory lock; o ciclo `up → down → up` da série tem alvo próprio:
-//! `tests/reversibilidade_pg.rs`.
+//! `tests/sistema/reversibilidade_pg.rs`.
 
+#[path = "../comum/mod.rs"]
 mod comum;
 
 use comum::psql;

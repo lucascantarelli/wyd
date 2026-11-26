@@ -6,6 +6,10 @@
 
 **Estado:** aceito (2026-11-24) — alvo executado inicialmente em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). Reexecutado contra PG17 em 2026-11-25: **13/13** dos cenários implementados passaram (log `/tmp/wyd-ci-schema.log`). `CAP-37` saiu deste alvo e está verde em `runner_pg`; `CAP-38` e `CAP-39` continuam sem implementação.
 
+**Reorganização (2026-11-26):** o arquivo passou a `crates/wyd-db/tests/sistema/sistema_pg.rs`;
+`cargo test --no-run` recompilou o alvo, mas a execução não foi repetida localmente (sem PG17 e
+`WYD_DB_URL_TEST`) e segue pendente no job `pg` (`schema`) de `ci-db.yml`.
+
 **Quatro níveis de afirmação convivem aqui:**
 
 - **`P`** — tudo o que a página diz sobre o alvo: `sistema_pg` está em `Cargo.toml` e em `tests/` desde
@@ -15,7 +19,7 @@
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
   (`../../padrao-banco.md` §13).
 
-**Alvo escrito e executado:** `sistema_pg` — arquivo `crates/wyd-db/tests/sistema_pg.rs`, declarado no
+**Alvo escrito e executado:** `sistema_pg` — arquivo `crates/wyd-db/tests/sistema/sistema_pg.rs`, declarado no
 `Cargo.toml` do crate em 2026-11-24; 13 cenários passaram novamente em 2026-11-25 (log
 `/tmp/wyd-ci-schema.log`). O nome do alvo é o de [../index.md](../index.md) §2.
 

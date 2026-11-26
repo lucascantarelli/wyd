@@ -19,7 +19,7 @@
 
 | # | Item da missão | Estado | Evidência |
 |---|---|---|---|
-| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 497 páginas / 495 fontes / 52 aceito / 442 proposto / 0 sem linha |
+| 1 | Análise dos achados da revisão anterior | Feito | gate verde (`censos: medidas e citações coincidem`); contagens 497 páginas / 495 fontes / 54 aceito / 440 proposto / 0 sem linha |
 | 2 | Planejar todos os gaps | Feito | `lacunas.md` por sistema; `wyd-ops/auditoria-de-organizacao.md` |
 | 3 | Estrutura de pastas com `.gitkeep` (todo o projeto) | Feito | `planejamento-1.0.0/*/src/.gitkeep`, `*/tests/.gitkeep` (12 sistemas); `crates/*/` (`.gitkeep`); `wyd-client/files/.gitkeep`; `wyd-db/prompts/.gitkeep` e `wyd-db/skills/.gitkeep`; mapa em `wyd-ops/docs/estrutura-de-pastas-e-modulos.md` |
 | 4 | Documentação detalhada por módulo | Feito | `docs/arquitetura/componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) + `docs/modulos.md` em 6 sistemas; os 7 restantes usam `componentes.md` como documento de módulo, sem duplicar `modulos.md` |
@@ -29,7 +29,7 @@
 | 8 | Uso das skills pelo agente | Feito (processo) | `.agents/skills/` (2) + cloud skills; `ia-e-skills.md` documenta quando carregar |
 | 9 | Planejar skills/docs/testes/código/integração/deploy/monitoramento/segurança | Feito | `plano-de-testes.md` nos 13 sistemas e `componentes.md` em 12 (o `wyd-db` usa `componentes-c4.md`); todos os 13 planos declaram CI, cobertura e monitoramento; `wyd-ops` cobre deploy/segurança; `ia-e-skills.md` |
 | 10 | Padrões de qualidade de código/testes/boas práticas/docs/segurança/monitoramento/deploy | Feito | documentado em `plano-de-testes.md` de 13 sistemas e `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`); código só em `wyd-db` |
-| 11 | Todos os testes implementados, documentados e funcionando | Parcial | `wyd-db`: 19 testes locais (medido em 2026-11-25 no crate: 13 em `tests/sistema_pg.rs` + 6 em `src/dsn.rs`; contagem de código, fora do gate de docs); demais: 0 (planejados) |
+| 11 | Todos os testes implementados, documentados e funcionando | Parcial | `wyd-db`: 19 testes locais (medido em 2026-11-25 no crate: 13 em `tests/sistema/sistema_pg.rs` + 6 em `src/dsn.rs`; contagem de código, fora do gate de docs); demais: 0 (planejados) |
 | 12 | SOLID, design patterns, clean code, arquitetura | Parcial | documentado (componentes, contratos); sem código para validar |
 | 13 | Padrões de testes, fixtures, mocks, stubs, CI, cobertura | Parcial (F0+F1) | `plano-de-testes.md` de 13 sistemas; CI de código, banco e docs implementado em F0+F1 (2026-11-26), cobertura informativa com retenção de 7 dias; E2E e observabilidade na F4 |
 | 14 | Boas práticas GitHub Actions, pipelines/workflows complexos, CI/CD, monitoramento | Parcial (F0+F1) | `code.yml` (matriz), `ci-db.yml` (service containers), `docs.yml`, `docs-image.yml` (Buildx/GHCR publicado), `security.yml` (actionlint), `code-stable.yml` (executado), `release.yml`; prova real no PR #205 e runs de 2026-11-26; Slack e métricas na F4; deploy na F3 |
@@ -43,7 +43,7 @@
 | 22 | Decisões documentadas, justificadas e aprovadas | Feito | 12 decisões respondidas em 2026-11-25; O4/O5 formalizadas em `ADR-OPS-0011`, `ADR-OPS-0007` revisado e `ADR-OPS-0012` criada em 2026-11-26 |
 | 23 | Funcionalidades do cliente mapeadas e documentadas | Feito | `wyd-client/docs/specs/mapa-de-funcionalidades.md` + inventário |
 | 24 | Sistemas de jogo funcionando (guerras, mobs, …) | N/A (planejamento) | `wyd-core/docs/specs/catalogo-funcional.md` (mapa de fronteira) |
-| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 497 páginas / 495 fontes / 52 aceito / 442 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
+| 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 497 páginas / 495 fontes / 54 aceito / 440 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
 | 26 | Skills do agente funcionando, documentadas, testadas, aprovadas | Feito | documentadas em `ia-e-skills.md` e no inventário; `wyd-docs/tests/test_skill_contract.py` compara a lista do gate, o template, os quatro formulários e as duas skills em disco; 4/4 verdes em 2026-11-26 (§14) |
 | 27 | Documentação atualizada, coerente, sem duplicidade/redundância/erros | Feito (gate) | gate de links/âncoras/censos verde; `componentes.md` é o documento de módulo dos sistemas sem `modulos.md`, sem página duplicada |
 | 28 | Documentação rigorosamente padronizada | Feito (gate) | cabeçalho de 5 linhas, `Estado` com data, links relativos e ADR local `aceito`; gate reprova link, âncora, navegação e sintaxe |
