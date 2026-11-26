@@ -1,6 +1,6 @@
 # Pauta de decisões pendentes — registro canônico
 
-> Pergunta: "quais são as 11 pendências que ainda exigem decisão ou evidência externa, o que cada uma bloqueia, quais opções existem e o que a aprovação libera?"
+> Pergunta: "quais são as 10 pendências abertas que ainda exigem decisão ou evidência externa, o que cada uma bloqueia, quais opções existem e o que a aprovação libera?"
 > Público: dono do produto, arquitetura, `wyd-ops`, QA, `wyd-db`, `wyd-client`, `wyd-protocol`, `wyd-net`, `wyd-bots`, `wyd-portal`, revisão jurídica e agentes
 > Dono: equipe do `wyd-ops` (consolidação); cada decisão pertence ao dono listado no item
 > Base: `docs/lacunas.md` §4; `docs/pacote-aprovacao-o1-o5.md` §7; `docs/pacote-aprovacao-decisoes-fora-o1-o5.md` §7; ledgers `lacunas.md` dos sistemas; `docs/github-mapping.md` §7; `docs/arquitetura/adr/index.md` §2
@@ -8,7 +8,7 @@
 
 **Estado:** proposto (2026-11-26). Esta é a **página canônica** das decisões e pendências abertas. Ela não decide, não aprova e não envia mensagem: reúne o que falta, as opções e o critério de pronto, e aponta para o ledger e o documento dono de cada item. O estado de cada lacuna continua em `docs/lacunas.md` §4 e nos `lacunas.md` dos sistemas; os pacotes O1–O5 guardam os textos de origem. Não existe uma segunda pauta.
 
-**Escopo:** 11 itens abertos. Decisões já respondidas e formalizadas — `OPS-03.1`–`OPS-03.5`, `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LCLI-02` — não são reabertas aqui; o histórico está em `docs/lacunas.md` §4 e nos pacotes.
+**Escopo:** 10 itens abertos. `OPS-05` fechou em 2026-11-26 (121 issues e board de 121 itens) e fica nesta página apenas como histórico. Decisões já respondidas e formalizadas — `OPS-03.1`–`OPS-03.5`, `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `LCLI-02` — não são reabertas aqui; o histórico está em `docs/lacunas.md` §4 e nos pacotes.
 
 ## 1. Como usar
 
@@ -26,7 +26,7 @@ Status possíveis: **bloqueada** (sem decisão, evidência ou execução externa
 | # | Item | Pergunta curta | Responde | Estado |
 |---:|---|---|---|---|
 | 1 | [`OPS-04`](#ops-04) | Provedor, VPS, backup e RPO/RTO | infra/owner | bloqueada |
-| 2 | [`OPS-05`](#ops-05) | Board do GitHub Project | infra/owner | bloqueada |
+| 2 | [`OPS-05`](#ops-05) | Board do GitHub Project | infra/owner | fechada (2026-11-26) |
 | 3 | [`LPRT-03`](#lprt-03) | Origem da `KeyWord` e prova da captura A1 | runtime | bloqueada como prova |
 | 4 | [`LPRT-06`](#lprt-06) | Encoding, tamanho e terminador de string | runtime | bloqueada como prova |
 | 5 | [`LCLI-03`](#lcli-03) | Operador e primeira ficha de captura | infra/owner | bloqueada como evidência |
@@ -63,23 +63,13 @@ Status possíveis: **bloqueada** (sem decisão, evidência ou execução externa
 
 ### OPS-05
 
-**O que é.** Montagem do board do GitHub Project para as 111 páginas/issues planejadas. As 61 fatias (#129–#189) e 10 lacunas (#190–#199) já foram criadas com labels `area/*`; o board não existe.
+**O que é.** Montagem do board do GitHub Project para as páginas/issues planejadas. As 61 fatias (#129–#189), 10 lacunas (#190–#199) e 10 `ADM` (#208–#217) já existem com labels `area/*`.
 
-**Por que está bloqueado e por quem.** O dono do produto autorizou as issues, mas a criação do board é ato de gestão no GitHub e continua pendente. Depende do produto; não é arquitetura.
+**Estado.** **fechada em 2026-11-26.** O board `WYD 1.0.0` nº 10 tem **121 itens** — todas as 121 issues —, 5 views (`Fila`, `Por sistema`, `Bloqueados`, `Minhas issues`, `Roadmap`) e os campos `Sistema`, `Status`, `Fase`, `Prioridade` e `Marco` preenchidos em 121/121. O estado medido é de `docs/github-mapping.md` §7; não há nova pergunta ao dono.
 
-**Evidência/artefato que falta.** Projeto `WYD 1.0.0` criado, campos e views de `wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3, dependências `blocked by` e as 111 issues importadas.
+**Evidência.** 96 itens em Backlog, 24 em Bloqueado e 1 em Pronto; 0 itens sem `Sistema`. A importação foi feita a partir das labels e do sistema dono; nenhum segredo foi usado.
 
-**Opções.**
-
-| Opção | O que é | Custo/risco/esforço | Recomendação |
-|---|---|---|---|
-| **A** | Criar um Project com os campos/views já propostos e importar as 111 issues, mantendo labels e milestones como estão | custo zero; risco baixo de duplicidade se o import for conferido; esforço baixo | **recomendada** |
-| B | Adiar o board e operar só por labels/milestones | custo zero; perde views, dependências e leitura de portfólio; esforço zero | aceitável temporariamente |
-| C | Criar vários boards por sistema | custo de manutenção; fragmenta a visão e duplica configuração; esforço médio | não recomendada |
-
-**Por que A.** O inventário e os campos já estão definidos; um único board preserva a dependência entre sistemas e evita uma segunda fonte de status. B não quebra o repositório, mas não cumpre o mapeamento pedido.
-
-**Pronto quando.** O board existir com os campos/views acordados, as 111 issues estiverem associadas e as dependências registradas; `docs/github-mapping.md` §7 apontar para ele.
+**Histórico.** A opção A foi a escolhida: um único Project, labels e milestones preservados. A criação de novas issues, labels ou views continua ato separado.
 
 **Origem.** [`docs/lacunas.md` §4](lacunas.md); [`github-mapping.md` §5 e §7](github-mapping.md).
 
@@ -283,12 +273,12 @@ Status possíveis: **bloqueada** (sem decisão, evidência ou execução externa
 
 ## 4. Perguntas numeradas por respondedor
 
-As perguntas abaixo são a forma curta de responder. Cada uma aponta para o item detalhado acima e para o ledger; a resposta só vale depois de registrada. São **11 itens**; o item `LCLI-05` tem **duas respostas separadas** porque a autorização de envio e a evidência do titular pertencem a pessoas diferentes: **6a** (dono) e **6b** (titular).
+As perguntas abaixo são a forma curta de responder. Cada uma aponta para o item detalhado acima e para o ledger; a resposta só vale depois de registrada. São **10 itens abertos**; `OPS-05` já foi respondida e executada, e o item `LCLI-05` tem **duas respostas separadas** porque a autorização de envio e a evidência do titular pertencem a pessoas diferentes: **6a** (dono) e **6b** (titular).
 
 ### Infra/owner
 
 1. **`OPS-04`** — Você aprova medir 2–3 alternativas de VPS com cotação, backup e RPO/RTO antes de provisionar, em vez de escolher provedor sem esses dados? **Default recomendado: A (medir e decidir com dados; produção desligada até a aprovação).**
-2. **`OPS-05`** — Você autoriza criar o board único do Project com os campos/views propostos e importar as 111 issues? **Default: A (criar agora).**
+2. **`OPS-05`** — **já respondida em 2026-11-26:** o board único tem 121 itens e 5 views; não requer nova resposta.
 3. **`LCLI-03`** — Você nomeia um operador distinto do QA para a primeira captura e assina a segunda leitura? **Default: A (nomear operador e assinar a ficha).**
 4. **`A20`** — Você confirma o MFA de staff como condição para o portal público e autoriza implementá-lo em `WYDPOR-F0`/`F4`/`F5`? **Default: A (implementar antes de abrir).**
 5. **`M21`** — Você mantém o escopo completo das telas/rotas do portal e autoriza executar `WYDPOR-F0`–`F11`? **Default: A (executar o escopo planejado).**

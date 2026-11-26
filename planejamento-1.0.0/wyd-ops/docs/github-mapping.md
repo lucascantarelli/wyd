@@ -4,21 +4,24 @@
 > Público: Desenvolvimento, operação e agentes
 > Dono: `wyd-ops`
 > Base: `.github/ISSUE_TEMPLATE/*`; `proposta-gestao-github-e-ambientes.md`; `AGENTS.md` §7, §9
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-26
 
 **Estado:** aceito (2026-11-26). Convenção de nomes; a transição automática de estado está em
-§2.2. Criação de issues/milestones/boards continua ato explícito e não é feita por esta página.
+§2.2. O board e as 121 issues foram medidos em 2026-11-26; novas issues, labels ou views continuam
+ato explícito e não são criadas por esta página.
 
-## 0. Estado medido do repositório (2026-11-25)
+## 0. Estado medido do repositório (2026-11-26)
 
 Leitura somente de `lucascantarelli/wyd` pela integração GitHub: branch padrão `develop`, `has_issues`
 verdadeiro, as **40 issues** `WYDDB-001`–`040` e milestones existentes, incluindo `F7 — migrations e
 evolução` (milestone 13). O repositório é público e tem `develop` como base de merge.
 
-**Atualização de 2026-11-26 — `OPS-05` executada:** o repositório tem **111 issues abertas** — as 40
-`WYDDB`, as **61 fatias** (#129–#189) e **10 lacunas** (#190–#199) —, e as labels `estado/proposta`,
-`estado/aceita` e `fase/1`–`fase/6` foram criadas. A publicação saiu no PR
-[#128](https://github.com/lucascantarelli/wyd/pull/128), sem merge. O board do Project segue não montado.
+**Atualização de 2026-11-26 — `OPS-05` fechada:** o repositório tem **121 issues abertas** — as 40
+`WYDDB`, as **61 fatias** (#129–#189), **10 lacunas** (#190–#199) e as **10 `ADM`** (#208–#217) —, e as
+labels `estado/proposta`, `estado/aceita` e `fase/1`–`fase/6` estão em uso. O board `WYD 1.0.0` nº 10
+tem os **121 itens**, 5 views e os campos `Sistema`, `Status`, `Fase`, `Prioridade` e `Marco`
+preenchidos; a publicação original saiu no PR [#128](https://github.com/lucascantarelli/wyd/pull/128),
+sem merge, e a consolidação documental foi integrada em `develop` pelos PRs #205–#207.
 
 ## 1. Título de issue
 
@@ -85,8 +88,9 @@ board fica manual e o log avisa. A decisão está em `ADR-OPS-0009`.
 ## 5. Milestones e Projects
 
 - Milestones por marco (`M0`–`M5`), nomeados `M<n> — <nome>`.
-- Project `WYD 1.0.0` (40 itens, 5 views, dependências `blocked by`) conforme
-  `proposta-gestao-github-e-ambientes.md` §10.3. **Criação é ato separado (requer aprovação).**
+- Project `WYD 1.0.0` nº 10 (121 itens, 5 views, dependências `blocked by`) conforme
+  `proposta-gestao-github-e-ambientes.md` §10.3. O board foi montado em 2026-11-26; a criação de
+  novas issues, labels ou views continua ato separado e exige aprovação.
 
 ## 6. O que esta página não cobre
 
@@ -95,10 +99,11 @@ board fica manual e o log avisa. A decisão está em `ADR-OPS-0009`.
 
 ## 7. Inventário de issues planejadas (medido em 2026-11-26)
 
-O repositório tem **111 páginas de issue** planejadas: as **40** `WYDDB-nnn` do `wyd-db`, as
-**61** por fatia dos 11 sistemas abaixo e as **10** `ADM-nn` do `wyd-admin`, cada uma com estado,
-dependência, DoD observável e bloco de skills (`skill_principal` + `skills_complementares`) na lista
-fechada do `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md` §3.
+O repositório tem **111 páginas de issue** planejadas e **121 issues** no GitHub: as **40**
+`WYDDB-nnn` do `wyd-db`, as **61** por fatia dos 11 sistemas abaixo, as **10** `ADM-nn` do `wyd-admin`
+e as **10** de lacuna (#190–#199), cada uma com estado, dependência, DoD observável e bloco de skills
+(`skill_principal` + `skills_complementares`) na lista fechada do
+`planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md` §3.
 
 | Sistema | Chave | Páginas |
 |---|---:|---:|
@@ -118,8 +123,26 @@ fechada do `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md` §3.
 | **Total** | — | **111** |
 
 A chave por fatia (`WYDBOT-F0`, `WYDPRT-0.1.0`) não antecipa número: `WYDDB-nnn` já é sequencial e
-criado; os demais recebem o número na criação da issue. Das **111** páginas planejadas, **101** já
-foram criadas no GitHub (as **40** `WYDDB` e as **61** fatias #129–#189); as **10** `ADM-nn` ainda não
-foram criadas. Além delas, **10** issues de lacuna (#190–#199) existem e não fazem parte do inventário
-de fatias. Cada issue criada nasceu com `area/<sistema>`, `estado/proposta` e `fase/<n>` (quando a
-página tem fase), documento de origem com link, DoD observável e a seção "Skills a carregar".
+criado; os demais recebem o número na criação da issue. Das **111** páginas planejadas, **111** estão
+no GitHub: as **40** `WYDDB`, as **61** fatias #129–#189 e as **10** `ADM-nn` #208–#217. Além delas,
+**10** issues de lacuna (#190–#199) existem e não fazem parte do inventário de fatias. Cada issue
+criada nasceu com `area/<sistema>`, `estado/proposta` e `fase/<n>` (quando a página tem fase),
+documento de origem com link para `develop`, `**Gate de verificação:**`, DoD observável e o bloco `## Skills`. O board
+nº 10 tem os 121 itens, com `Sistema`, `Status`, `Fase`, `Prioridade` e `Marco` preenchidos.
+
+## 8. Mapeamento determinístico issue → board (2026-11-26)
+
+A importação usou somente labels, título e o sistema dono. Não há campo digitado à mão no board:
+
+| Campo do board | Fonte | Regra aplicada |
+|---|---|---|
+| `Sistema` | label `area/<sistema>` | o valor depois de `area/`; 0 itens sem valor |
+| `Status` | labels `estado/*` | `estado/bloqueada` ou `estado/aguardando-decisao` → `Bloqueado`; demais → `Backlog`; `Done` quando a issue fechar |
+| `Fase` | sistema/issue | `OPS-04` (#198) → `5 — Operação`; as demais → `4 — Implementação`, inclusive as fatias de planejamento |
+| `Prioridade` | bloqueio | bloqueada/aguardando decisão → `P1`; demais → `P2` |
+| `Marco` | sistema | `wyd-db` → `M2`; `wyd-ops` → `M5`; os outros → `M3` |
+
+O campo `Milestone` continua sendo o milestone de fase do GitHub, não o `Marco` do Project. A
+prioridade P1/P2 acima é uma classificação operacional inicial, não uma promessa de prazo; o dono pode
+ajustá-la sem mudar a página da fatia. O board é espelho: a página/issue continua dona do DoD e da
+evidência.

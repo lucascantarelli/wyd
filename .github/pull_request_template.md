@@ -20,6 +20,12 @@ Closes #
 - [ ] Correção de bug ou regressão
 - [ ] Refatoração sem mudança de comportamento
 
+## Skills carregadas
+
+- **Skill obrigatória da issue:** <!-- copie o skill_principal da página/issue -->
+- **Complementares usadas:** <!-- ou "nenhuma" -->
+- **Como foi verificado:** <!-- ex.: cloud_read_skill antes do primeiro edit; SKILL.md relido -->
+
 ## Como foi provado
 
 <!-- Comando e saída real. "Testei localmente" não é prova. -->

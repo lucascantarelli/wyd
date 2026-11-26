@@ -61,15 +61,16 @@ quando aprovada (ver `adr/index.md`).
 | `OPS-03.4`, `OPS-03.5` | wyd-ops | O4 em `ADR-OPS-0011` e O5 no `ADR-OPS-0007` (contrato ampliado); implementação pendente | formalizadas 2026-11-26 | arquitetura + `wyd-ops` + produto | `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/index.md` §2 |
 | `OPS-03` | wyd-ops | contratos O1–O5 aprovados; O4/O5 formalizados | fechada 2026-11-26 | arquitetura + `wyd-ops` + consumidores | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
 | `OPS-04` | wyd-ops | hospedagem adiada para depois do primeiro deploy interno | adiada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
-| `OPS-05` | wyd-ops | board e 61 fatias autorizados, não executados | autorizada 2026-11-25 | produto | `planejamento-1.0.0/wyd-ops/docs/lacunas.md` §4 |
+| `OPS-05` | wyd-ops | 121 issues e board de 121 itens, 5 views e campos preenchidos | executada 2026-11-26 | produto | `planejamento-1.0.0/wyd-ops/docs/github-mapping.md` §7 |
 
 ## 3. Decisões abertas/propostas (não bloqueiam organização)
 
 As respostas às decisões registradas em 2026-11-25 ficam indexadas na §2. `Q-SERIE-1` = B foi
 implementada e provada como ciclo SQL em PG17; `Q-SEP-1` = A′ foi aplicada (28 nomes com `_`) e
-`Q-ALVO-1`–`03` fecharam `CAP-37` com o alvo `runner_pg`. O restante é execução (`OPS-05`,
-`LNET-01`/`LBOT-03`), terceiro (`LCLI-05`) ou adiamento declarado (`OPS-04`); O4/O5 foram formalizados
-em `ADR-OPS-0011` e no `ADR-OPS-0007` revisado.
+`Q-ALVO-1`–`03` fecharam `CAP-37` com o alvo `runner_pg`; `OPS-05` foi executada em 2026-11-26
+(121 issues e board de 121 itens). O restante é execução (`LNET-01`/`LBOT-03`), terceiro (`LCLI-05`)
+ou adiamento declarado (`OPS-04`); O4/O5 foram formalizados em `ADR-OPS-0011` e no `ADR-OPS-0007`
+revisado.
 Pauta canônica: `pauta-de-decisoes-pendentes.md`; estado e dono: `lacunas.md` §4. Esta página não
 duplica a lista.
 

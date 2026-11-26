@@ -94,11 +94,11 @@ registro continua sendo `docs/lacunas.md` §4 e um "sim" dito na conversa só va
 > namespace de label (`area/*` existente × `sistema/*` do mapping). **D-06** está **decidida em A** desde
 > 2026-11-25 (frente `wyd-db`) e não pede nova resposta.
 >
-> **OPS-05 executada em 2026-11-26:** labels e 71 issues no repositório, com PR #128. Resta o board.
+> **OPS-05 executada em 2026-11-26:** labels e 71 issues no repositório, com PR #128; o board foi
+> montado depois, com 121 itens em 2026-11-26. **OPS-05 está fechada.**
 >
-> Se ficar aberto: sem `OPS-04` a produção continua inexistente, sem backup nem RPO/RTO; sem `OPS-05`
-> o board não existe e as fatias restantes não têm onde morar. Pode responder por item — um "sim" parcial
-> também serve.
+> Se ficar aberto: sem `OPS-04` a produção continua inexistente, sem backup nem RPO/RTO. O texto
+> abaixo é histórico da autorização; o estado vigente é o da pauta canônica.
 
 ### 7.2 Arquitetura e wyd-db — Q-SERIE-1 e Q-SEP-1
 

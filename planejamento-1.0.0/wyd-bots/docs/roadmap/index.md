@@ -4,7 +4,7 @@
 > Base: `wyd-bots-1.0.0.md`; `docs/specs/requisitos.md`; `docs/planos/plano-de-testes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada.
+**Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; as 4 fatias foram publicadas como issues e estão no board (inventário em `wyd-ops/docs/github-mapping.md` §7).
 
 As lacunas `LBOT-01`, `LBOT-02` e `LBOT-04` fecharam em 2026-11-23; `LBOT-03` tem política
 decidida (`Q-BOT-3` = A) e só fecha com a primeira execução. A fila tem **4 fatias**, uma por página citada abaixo; cada página traz entregável, DoD

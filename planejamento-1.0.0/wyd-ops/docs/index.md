@@ -82,7 +82,7 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 - [Módulos do `wyd-ops` — detalhamento](modulos.md)
 - [Pacote de aprovação — contratos O1–O5](pacote-aprovacao-o1-o5.md)
 - [Pacote de aprovação — decisões fora dos contratos O1–O5](pacote-aprovacao-decisoes-fora-o1-o5.md)
-- [Pauta de decisões pendentes — registro canônico das 11 pendências](pauta-de-decisoes-pendentes.md)
+- [Pauta de decisões pendentes — registro canônico das 10 pendências abertas](pauta-de-decisoes-pendentes.md)
 
 ### arquitetura
 

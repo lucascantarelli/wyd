@@ -6,7 +6,7 @@
 > Base: missão "Fechar todo o planejamento do projeto"; `AGENTS.md`; `planejamento-1.0.0/wyd-ops/auditoria-de-organizacao.md`
 > Revisado em: 2026-11-26
 
-**Estado:** **parcial** (2026-11-26). Relatório consolidado do planejamento; não substitui os documentos donos. O planejamento **não está fechado**: seis itens da §2 seguem `Parcial` e um segue `Contínuo`. As 12 decisões de dono passaram a ter resposta em 2026-11-25 e O4/O5 foram formalizados em 2026-11-26 (§11), então o que falta deixou de ser pergunta: é execução, implementação ou terceiro. A lista está na §9.
+**Estado:** **parcial** (2026-11-26). Relatório consolidado do planejamento; não substitui os documentos donos. O planejamento **não está fechado**: quatro itens da §2 seguem `Parcial`, um segue `Contínuo` e dois são `N/A`; o mapeamento do GitHub e a verificação automatizada de skills fecharam em 2026-11-26 (§14). O que falta deixou de ser pergunta de desenho: é execução, implementação ou terceiro. A lista está na §9.
 
 ## 1. Legenda
 
@@ -24,7 +24,7 @@
 | 3 | Estrutura de pastas com `.gitkeep` (todo o projeto) | Feito | `planejamento-1.0.0/*/src/.gitkeep`, `*/tests/.gitkeep` (12 sistemas); `crates/*/` (`.gitkeep`); `wyd-client/files/.gitkeep`; `wyd-db/prompts/.gitkeep` e `wyd-db/skills/.gitkeep`; mapa em `wyd-ops/docs/estrutura-de-pastas-e-modulos.md` |
 | 4 | Documentação detalhada por módulo | Feito | `docs/arquitetura/componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) + `docs/modulos.md` em 6 sistemas; os 7 restantes usam `componentes.md` como documento de módulo, sem duplicar `modulos.md` |
 | 5 | Docs organizados, limpos, padronizados, sem redundância | Feito | gate valida links/âncoras/censos; o gate de links (`wyd-docs/gate/checks/links.py`) confere link, âncora e navegação lateral das **494 páginas montadas**; não publica razão de alcançáveis, então esta célula não afirma percentual; índice local de ADR alinhado ao estado `aceito` |
-| 6 | Projeto organizado e mapeado no GitHub | Parcial | `.github/ISSUE_TEMPLATE/*`, `pull_request_template.md`, workflows; **40 páginas `WYDDB-nnn`** e milestones locais; em 2026-11-26 foram criadas as 61 fatias (#129–#189) e 10 lacunas (#190–#199); o board do Project continua pendente e **não é medido localmente** |
+| 6 | Projeto organizado e mapeado no GitHub | Feito | `.github/ISSUE_TEMPLATE/*`, `pull_request_template.md`, workflows; **121 issues** no repositório (40 `WYDDB`, 61 fatias, 10 lacunas e 10 `ADM` #208–#217) e **121 itens** no board `WYD 1.0.0` nº 10, com 5 views e todos os campos `Sistema`/`Status`/`Fase`/`Prioridade`/`Marco`; prova na §14 |
 | 7 | Padronização de issues (incl. skills a carregar) | Feito | `skill_principal` obrigatória em lista fechada de 9 skills nos 4 templates; `skills_complementares` opcional na mesma lista; conferido contra `.agents/skills` e cloud skills |
 | 8 | Uso das skills pelo agente | Feito (processo) | `.agents/skills/` (2) + cloud skills; `ia-e-skills.md` documenta quando carregar |
 | 9 | Planejar skills/docs/testes/código/integração/deploy/monitoramento/segurança | Feito | `plano-de-testes.md` nos 13 sistemas e `componentes.md` em 12 (o `wyd-db` usa `componentes-c4.md`); todos os 13 planos declaram CI, cobertura e monitoramento; `wyd-ops` cobre deploy/segurança; `ia-e-skills.md` |
@@ -44,7 +44,7 @@
 | 23 | Funcionalidades do cliente mapeadas e documentadas | Feito | `wyd-client/docs/specs/mapa-de-funcionalidades.md` + inventário |
 | 24 | Sistemas de jogo funcionando (guerras, mobs, …) | N/A (planejamento) | `wyd-core/docs/specs/catalogo-funcional.md` (mapa de fronteira) |
 | 25 | Documentação de planejamento organizada, números reais, indexada | Feito | gate verde; 494 páginas / 492 fontes / 48 aceito / 443 proposto / 0 sem linha de estado; link, âncora e navegação conferidos em todas as páginas montadas |
-| 26 | Skills do agente funcionando, documentadas, testadas, aprovadas | Parcial | documentadas em `ia-e-skills.md`; sem testes automatizados de skill |
+| 26 | Skills do agente funcionando, documentadas, testadas, aprovadas | Feito | documentadas em `ia-e-skills.md` e no inventário; `wyd-docs/tests/test_skill_contract.py` compara a lista do gate, o template, os quatro formulários e as duas skills em disco; 4/4 verdes em 2026-11-26 (§14) |
 | 27 | Documentação atualizada, coerente, sem duplicidade/redundância/erros | Feito (gate) | gate de links/âncoras/censos verde; `componentes.md` é o documento de módulo dos sistemas sem `modulos.md`, sem página duplicada |
 | 28 | Documentação rigorosamente padronizada | Feito (gate) | cabeçalho de 5 linhas, `Estado` com data, links relativos e ADR local `aceito`; gate reprova link, âncora, navegação e sintaxe |
 | 29 | Remover arquivos obsoletos/revisões | Feito | `briefing-de-decisoes-1.0.0.md` removido e suas respostas apontadas para a pauta/lacunas; `wyd-ops/plano-ci-real.md` absorvido por `wyd-ops/docs/devops/index.md` e removido; `deprecated/` e `wyd-docs/.build/` seguem fora do versionamento; links e índices revisados |
@@ -107,11 +107,9 @@ Skill a carregar em cada item (AGENTS.md §5): `planejar-sistema` (abrir/fechar 
 2026-11-25 mediu 0 manifestos em net/server/bots e 0 listeners), `LCLI-02`/`LCLI-05` (direitos) e as
 perguntas consolidadas em `docs/lacunas.md` §4.
 
-1. **Organizar o board e as issues restantes no GitHub** — o repositório tem as **40 páginas `WYDDB-nnn`**
-   medidas pelo gate; o estado do board é do GitHub, **não medido localmente** (leitura de
-   2026-11-25), e a convenção está em `github-mapping.md`. Recomendação: montar o
-   board e criar as fatias F0 dos demais sistemas com as labels da §2 do mapping. Skill:
-   `planejar-sistema`. **Nada foi criado nesta rodada** (sem autorização).
+1. **Executar as fatias do GitHub** — o mapeamento está fechado: 121 issues e 121 itens no board
+   `WYD 1.0.0`, com as 10 `ADM` criadas em 2026-11-26. O que resta é executar as fatias na ordem
+   de D-06, não criar mais estrutura. Skill: `planejar-sistema`; `writing-plans` antes de tocar código.
 2. **Segredos e deploy** — valores de DSN/tokens só via secret do GitHub ou `.env` local; nunca em
    chat. Deploy/release/push exigem pedido explícito. Skill: `planejar-sistema`.
 3. **Imagem do site** — `docs-image` publicou em `develop` em 2026-11-26 (run `45827609542`), com `:SHA`/`:develop`/`:latest`, provenance/SBOM e smoke 200; `make rollback` foi provado com duas tags publicadas. Restam runtime nginx e produção (ver `wyd-ops/plano-imagem-e-compose-do-site.md`). Skill: `planejar-sistema`.
@@ -133,11 +131,11 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 - Rodar `auditar-planejamento` em cada sistema antes de aceitar (skill disponível).
 - Padronizar a fronteira/contratos do `wyd-client`, que ainda tem direitos parciais.
 
-## 7. Verificação final
+## 7. Verificação da terceira passada (2026-11-25)
 
 - `docker compose --profile gate run --rm gate` → `censos: medidas e citações coincidem`.
-- Contagens: 494 páginas / 492 fontes / 443 proposto / 48 aceito / 0 sem linha de estado.
-- Nenhum commit/push/PR/issue/deploy realizado nesta rodada.
+- Contagens naquela passada: 494 páginas / 492 fontes / 443 proposto / 48 aceito / 0 sem linha de estado.
+- Naquela rodada não houve commit, push, PR, issue ou deploy; a rodada de 2026-11-26 está nas §12–§14.
 
 ## 8. Fechamentos da terceira passada (2026-11-25)
 
@@ -152,7 +150,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 
 **Placar do ledger, medido:** lacunas medidas: 118 = 109 fechadas + 9 bloqueadas — a conta é a das tabelas de `lacunas.md`, deduplicada por id e conferida por `wyd-docs/gate/checks/lacunas.py` no gate; `LCLI-02` fechou em 2026-11-25 com lista medida, manifesto e verificador, e as 9 bloqueadas são `LPRT-03`, `LPRT-06`, `LCLI-03`, `LCLI-05`, `LNET-01`, `LBOT-03`, `A11`, `A20` e `M21` (registro em `wyd-db/lacunas.md` e `wyd-db/pendencias-de-fechamento.md`).
 
-**O que continua aberto:** `LPRT-03`/`LPRT-06` **bloqueadas por artefato inexistente** (sem `ECAP`/`PEER-A1`), `LNET-01`/`LBOT-03` autorizados com execução pendente, `LCLI-05` aguardando o titular, `LCLI-03` aguardando o operador e as capturas, `A11` na mesma janela de captura e `A20`/`M21` externas — o mapa está em `wyd-ops/auditoria-de-organizacao.md` §8; `LCLI-02` fechou em 2026-11-25 com lista, manifesto e verificador. As decisões de dono têm resposta: `OPS-03.1`–`OPS-03.5` aprovadas e formalizadas (`ADR-OPS-0011` e `ADR-OPS-0007` revisado), `D-06` = A, `Q-SERIE-1` = B implementada, `OPS-05` com issues e labels **executados em 2026-11-26** (board pendente) e `OPS-04` adiada. `Q-SEP-1` = A′ foi decidida e aplicada; não resta escolha de desenho em aberto. A pauta canônica é `wyd-ops/docs/pauta-de-decisoes-pendentes.md`; o estado fica em `wyd-ops/docs/lacunas.md` §4.
+**O que continua aberto:** `LPRT-03`/`LPRT-06` **bloqueadas por artefato inexistente** (sem `ECAP`/`PEER-A1`), `LNET-01`/`LBOT-03` autorizados com execução pendente, `LCLI-05` aguardando o titular, `LCLI-03` aguardando o operador e as capturas, `A11` na mesma janela de captura e `A20`/`M21` externas — o mapa está em `wyd-ops/auditoria-de-organizacao.md` §8; `LCLI-02` fechou em 2026-11-25 com lista, manifesto e verificador. As decisões de dono têm resposta: `OPS-03.1`–`OPS-03.5` aprovadas e formalizadas (`ADR-OPS-0011` e `ADR-OPS-0007` revisado), `D-06` = A, `Q-SERIE-1` = B implementada, `OPS-05` **fechada em 2026-11-26** (121 issues e board de 121 itens) e `OPS-04` adiada. `Q-SEP-1` = A′ foi decidida e aplicada; não resta escolha de desenho em aberto. A pauta canônica é `wyd-ops/docs/pauta-de-decisoes-pendentes.md`; o estado fica em `wyd-ops/docs/lacunas.md` §4.
 
 ## Issues padronizadas por página (2026-11-25; padrão único em 2026-11-26)
 
@@ -162,20 +160,19 @@ páginas `ADM-nn` no `wyd-admin` —, cada uma com cabeçalho de 5 linhas, `**Es
 (`skill_principal` + `skills_complementares`) na lista fechada de nove skills do
 `template-de-issue.md` §3. O inventário por sistema e a regra de numeração estão em
 `wyd-ops/docs/github-mapping.md` §7; os índices locais são o `docs/roadmap/index.md` de cada sistema
-(no `wyd-portal`, o `roadmap.md`). No GitHub existem **111** issues: as **40** `WYDDB-nnn`, as **61**
-fatias (#129–#189) e **10** de lacuna (#190–#199). As 10 páginas `ADM-nn` são planejamento local e
-ainda não foram criadas; nenhuma aguarda `OPS-05`.
+(no `wyd-portal`, o `roadmap.md`). No GitHub existem **121** issues: as **40** `WYDDB-nnn`, as **61**
+fatias (#129–#189), **10** de lacuna (#190–#199) e as **10** `ADM-nn` (#208–#217). O board tem os
+**121** itens; a prova está na §14.
 
 ## 9. Por que o planejamento ainda não está fechado (2026-11-26)
 
-O carimbo `fechado` no topo desta página seria falso: seis itens da §2 seguem `Parcial` e um segue
-`Contínuo`. O que falta é execução, artefato de terceiro ou um “sim” do dono — **nenhum item se resolve
-escrevendo outra página**.
+O carimbo `fechado` no topo desta página seria falso: quatro itens da §2 seguem `Parcial`, um segue
+`Contínuo` e dois são `N/A`. O que falta é execução, artefato de terceiro ou um “sim” do dono — **nenhum
+item se resolve escrevendo outra página**.
 
 | Bloqueio | O que falta | Dono | Registro |
 |---|---|---|---|
 | `OPS-04` | aplicar `Q-OPS-2`: provedor, VPS, backup e RPO/RTO — adiada para depois do primeiro deploy interno | produto + `wyd-ops` | `wyd-ops/docs/arquitetura/adr/adr-ops-0002-hospedagem-producao.md` |
-| `OPS-05` | issues e labels executados em 2026-11-26 (#129–#199, `area/*`); o board do projeto segue não montado | produto | `wyd-ops/docs/github-mapping.md` §7 |
 | `D-06` | já decidida em A (frente `wyd-db`); falta executar o ato 4 | produto | `wyd-ops/docs/prioridade-do-projeto.md` §0.1 |
 | `CAP-38`/`CAP-39` | p95 da leitura de personagem e boot medidos; falta código | `wyd-db` | `wyd-db/tests/specs/capacidades.md` §7 |
 | `LPRT-03`, `LPRT-06`, `A11` | captura do cliente 7662 sobre `ECAP` | `wyd-server` + `wyd-client` | `wyd-protocol/lacunas.md` §1 |
@@ -189,8 +186,8 @@ escrevendo outra página**.
 `OPS-05` têm resposta do dono registrada (§11); O4/O5 foram formalizados em `ADR-OPS-0011` e no
 `ADR-OPS-0007` revisado; `Q-SERIE-1` foi implementada e provada como ciclo SQL,
 `Q-SEP-1` = A′ renomeou os 28 arquivos para `_`, **`CAP-37` foi fechada por `runner_pg` (5/5 em PG17)** e
-`OPS-05` publicou labels e as 71 issues novas. Das linhas acima, o que resta é execução
-(`LNET-01`/`LBOT-03`, board), `CAP-38`/`CAP-39`, terceiro (`LCLI-05`) ou
+`OPS-05` publicou labels, as 71 issues novas e o board de 121 itens. Das linhas acima, o que resta é
+execução (`LNET-01`/`LBOT-03`), `CAP-38`/`CAP-39`, terceiro (`LCLI-05`) ou
 adiamento (`OPS-04`).
 
 ## 10. Correções desta revisão (2026-11-25)
@@ -212,7 +209,7 @@ adiamento (`OPS-04`).
 | `Q-ALVO-1`–`03` | A1 (porta em `127.0.0.1`), B1 (fixture contígua) e papel de teste; `runner_pg` verde 5/5 | `wyd-db/tests/alvos/runner-pg.md` |
 | `OPS-03.1`–`OPS-03.3` | aprovados na forma | `wyd-ops/docs/lacunas.md` §4 e §5 |
 | `OPS-03.4`, `OPS-03.5` | aprovados e formalizados em `ADR-OPS-0011` e `ADR-OPS-0007` revisado | `wyd-ops/docs/lacunas.md` §4 |
-| `OPS-05` | fatias, lacunas e labels publicados em 2026-11-26 (#129–#199); board pendente | `wyd-ops/docs/github-mapping.md` §7 |
+| `OPS-05` | fatias, lacunas, labels, 10 `ADM` e board de 121 itens publicados em 2026-11-26 (#129–#217) | `wyd-ops/docs/github-mapping.md` §7 |
 | `OPS-04` | adiada para depois do primeiro deploy interno | `wyd-ops/docs/lacunas.md` §4 |
 
 ## 12. Publicação no GitHub (2026-11-26)
@@ -227,11 +224,11 @@ label ficou em `area/*` (decisão de 2026-11-25), e `OPS-05` criou:
 | Labels novas | `estado/proposta`, `estado/aceita`, `fase/1`–`fase/6`, além das `area/*` e `estado/bloqueada` existentes |
 | 61 fatias | [#129](https://github.com/lucascantarelli/wyd/issues/129)–[#189](https://github.com/lucascantarelli/wyd/issues/189), uma por página de `docs/roadmap/` |
 | 10 lacunas | [#190](https://github.com/lucascantarelli/wyd/issues/190)–[#199](https://github.com/lucascantarelli/wyd/issues/199): `CAP-38`, `CAP-39`, os seis seeds `0016`/`0017`/`0018`/`0020`/`0023`/`0027`, `OPS-04` e `LCLI-05` |
-| Board do Project | não montado nesta rodada |
+| Board do Project | 121 itens em 2026-11-26, após a importação das 81 pendências; prova na §14 |
 
-Cada issue nova tem documento de origem com link, critérios de aceite observáveis e a seção
-"Skills a carregar" com `skill_principal` e complementares. A criação foi idempotente: o script consulta os
-títulos existentes antes de criar e a reexecução não duplica issue.
+Cada issue nova tem documento de origem com link para `develop`, `**Gate de verificação:**`, critérios de
+aceite observáveis e o bloco `## Skills` com `skill_principal` e complementares. A criação foi
+idempotente: o script consulta os títulos existentes antes de criar e a reexecução não duplica issue.
 
 ## 13. Prova real do DevOps 1A–11A (2026-11-26)
 
@@ -242,7 +239,25 @@ títulos existentes antes de criar e a reexecução não duplica issue.
 | Sinal stable | run [`45828077654`](https://github.com/lucascantarelli/wyd/actions/runs/45828077654); `wyd-db` e `wyd-ops-signer` concluíram com Rust `stable` | comprovado |
 | Rollback | `make rollback TAG=f271caab…` e `TAG=0c4a612a…` puxaram as imagens do GHCR e responderam HTTP 200 sem build local | comprovado |
 | Node 20 | logs recentes de `code`, `docs`, `docs-image`, `security`, `ci-db` e `code-stable` sem o aviso nem a SHA `ea165f8…` | comprovado |
-| Produção, `OPS-04`/`OPS-05`, `PROJECT_TOKEN` | provedor/VPS, backup, RPO/RTO e PAT continuam fora deste pacote; nenhum deploy de produção foi feito | pendente do dono |
+| Produção, `OPS-04`, `PROJECT_TOKEN` | provedor/VPS, backup, RPO/RTO e PAT continuam fora deste pacote; nenhum deploy de produção foi feito. `OPS-05` fechou em separado (§14) | pendente do dono |
 | Runtime nginx | F2 ainda usa o servidor Python atual; migração não foi decidida nem executada | pendente de decisão |
 
 O PR foi integrado em `develop`; a publicação e o rollback acima usam o commit integrado, não uma árvore local.
+
+## 14. Fechamento do mapeamento GitHub e das skills (2026-11-26)
+
+| Prova | Medição |
+|---|---|
+| Issues no repositório | **121** issues abertas: 40 `WYDDB`, 61 fatias, 10 lacunas e 10 `ADM` (#208–#217) |
+| Board `WYD 1.0.0` nº 10 | **121 itens**, 5 views (`Fila`, `Por sistema`, `Bloqueados`, `Minhas issues`, `Roadmap`) e todos os campos preenchidos |
+| Campos do board | `Sistema` em 121/121; `Status` em 121/121 (96 Backlog, 24 Bloqueado, 1 Pronto); `Fase`, `Prioridade` e `Marco` em 121/121 |
+| Links e corpo das issues | 111 corpos que apontavam para a branch morta `docs/fechar-planejamento-1.0.0` foram corrigidos para `develop`; os mesmos 111 receberam `**Gate de verificação:**` e o bloco `## Skills`; a varredura final encontrou **0** links antigos, **0** headings antigos e **0** corpos sem gate |
+| `ADM-01`–`ADM-10` | páginas locais convertidas em issues #208–#217, com `area/wyd-admin`, `estado/proposta`, fase e corpo da página dona |
+| Título e estado | as 40 `WYDDB` receberam o prefixo `[tarefa] wyd-db:` e a label `estado/proposta`; a varredura final encontrou **0** títulos fora do formato e **0** issues sem label de estado |
+| Skills | `make test-gate`: 23 testes, 22 OK + 1 skip Windows; `test_skill_contract` 5/5: lista do gate = template, 4 formulários com as 9 skills, 2 skills locais com frontmatter e PR template com registro da skill |
+| Entrega versionada | branch `docs/wyd-ops-mapeamento-github`, commit inicial `2a4da47`, PR [#218](https://github.com/lucascantarelli/wyd/pull/218) contra `develop`; o status é parte do próprio PR |
+
+A importação usou as labels `area/*` como fonte de `Sistema`, `estado/bloqueada` e
+`estado/aguardando-decisao` como `Bloqueado`, e os marcos por sistema (`wyd-db` M2, `wyd-ops` M5, os
+demais M3). Nenhum segredo foi impresso. O board não substitui as páginas donas: ele é o espelho de
+estado; a página da fatia continua dona do DoD e da evidência.

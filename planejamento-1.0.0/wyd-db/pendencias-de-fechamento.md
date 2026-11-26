@@ -28,7 +28,7 @@ lacuna, não renumera ID e não altera as contagens de `lacunas.md`.
 | decisões de retenção | **7 propostas, 7 resolvidas**, **0 abertas** (`Q-RET-5` por evidência; `Q-RET-1`, `Q-RET-2` e `Q-RET-4` pelo dono em 2026-11-23; `Q-RET-6` e `Q-RET-7` pelo dono em 2026-11-24; `Q-RET-3` pelo dono em 2026-11-24, opção A) | `proposta-retencao-pendente.md` §4 e §9 |
 | decisões de capacidade | **0 abertas**; `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` decididas em 2026-11-23; a matriz de `Q-CAP-2` está aplicada na página | `proposta-decisoes-capacidade.md` §4 e §9 |
 | páginas de migration bloqueadas por dado | **6**: `0016`–`0018`, `0020`, `0023`, `0027` | `migrations-checklist.md` §3 |
-| issues do roadmap | **40** com DoD, **0** criadas no GitHub; board com 40 itens | `docs/planos/riscos.md` `R-5`; §6.6.20 |
+| issues do roadmap | **40** com DoD, **40** criadas no GitHub (#82–#121); board `WYD 1.0.0` com 121 itens | `docs/planos/riscos.md` `R-5`; `wyd-ops/docs/github-mapping.md` §7 |
 | páginas de `tests/` | **13 de 13** escritas e **13** `aceito` (12 em 2026-11-24 e a do `runner_pg` em 2026-11-25); matriz `CAP-nn` com **39** capacidades e **14** cobertas por teste executado | §6.6.21, §6.6.23 e §6.6.30; `plano-de-testes.md` §5 |
 | arquivos `.sql` da série | **28**, aplicados do zero como `wyd_migrator` em `postgres:17`; 13 cenários `sistema_pg` verdes | §6.6.30; `ls migrations/0*.sql` |
 
@@ -1946,9 +1946,9 @@ comando naquele turno.
 
 **Atualização de 2026-11-26:** o estado local foi publicado no branch
 `docs/fechar-planejamento-1.0.0` com PR [#128](https://github.com/lucascantarelli/wyd/pull/128) (sem
-merge), e `OPS-05` criou as **61 fatias** (#129–#189) e **10 lacunas** (#190–#199) com labels `area/*`,
-`estado/*` e `fase/*`. As 40 linhas `WYDDB` continuam sem vínculo de issue — as fatias novas são dos
-outros sistemas e não preenchem a coluna `Issue` desta matriz.
+merge), e `OPS-05` criou as **61 fatias** (#129–#189), **10 lacunas** (#190–#199) e, na rodada seguinte,
+as **10 `ADM`** (#208–#217). O board `WYD 1.0.0` tem **121 itens**, incluindo as 40 linhas `WYDDB`
+(#82–#121); o estado medido é o de `wyd-ops/docs/github-mapping.md` §7.
 
 #### 6.6.22.2 Tabela de bloqueio
 

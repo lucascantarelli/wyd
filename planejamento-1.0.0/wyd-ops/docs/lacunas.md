@@ -23,10 +23,10 @@ Dono: `arquitetura` propõe; o dono do sistema aprova. Fechar lacuna sem o dono 
 |---|---:|---:|---:|
 | Organização e registro | 2 | 2 | 0 |
 | Fronteira e contratos (`OPS-03`, 5 decisões) | 1 | 1 | 0 |
-| Aplicação e operação | 2 | 0 | 2 |
-| **Total** | **5** | **3** | **2** |
+| Aplicação e operação | 2 | 1 | 1 |
+| **Total** | **5** | **4** | **1** |
 
-As cinco fecham assim: três com evidência em §5 e duas bloqueadas com o desbloqueio nomeado em §4 — nenhuma fica sem status. Em 2026-11-25 o dono respondeu as cinco decisões de `OPS-03` e as duas de aplicação (`OPS-04`, `OPS-05`): `OPS-03.1`–`OPS-03.5` fecharam, `OPS-04` ficou adiada e `OPS-05` teve as issues e labels executados em 2026-11-26, com o board pendente.
+As cinco fecham assim: quatro com evidência em §5 e uma bloqueada com o desbloqueio nomeado em §4 — nenhuma fica sem status. Em 2026-11-25 o dono respondeu as cinco decisões de `OPS-03` e as duas de aplicação (`OPS-04`, `OPS-05`): `OPS-03.1`–`OPS-03.5` fecharam, `OPS-04` ficou adiada e `OPS-05` foi executada em 2026-11-26 (121 issues e board de 121 itens).
 
 ## 2. Lacunas
 
@@ -36,7 +36,7 @@ As cinco fecham assim: três com evidência em §5 e duas bloqueadas com o desbl
 | `OPS-02` | O sistema tem registro único de lacuna e documentos sem afirmações obsoletas sobre artefatos ausentes? | sem registro, lacuna não tem dono; texto que diz "não existe" quando existe induz o agente ao erro | `wyd-ops` | fechada (2026-11-25: este `lacunas.md` criado; `wyd-ops-1.0.0.md` §4–§7, `docs/index.md` §"O que falta", `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/proposta-decisoes-ops.md` §2 e `docs/estrutura-de-pastas-e-modulos.md` alinhados; gate verde) |
 | `OPS-03` | A fronteira e os contratos O1–O5 estão aprovados pelos donos e pelos consumidores? | contrato sem aprovação produz duas implementações incompatíveis; O4 e O5 ainda não tinham ADR | arquitetura + `wyd-ops` + donos consumidores | fechada (2026-11-26: `OPS-03.1`–`OPS-03.3` fechadas em 2026-11-25; `OPS-03.4` formalizada em `ADR-OPS-0011` e `OPS-03.5` no `ADR-OPS-0007` revisado; implementação continua em F4/OPS-04) |
 | `OPS-04` | A hospedagem de produção (`Q-OPS-2` = A) foi aplicada com provedor, contrato, VPS e backup? | a decisão escolheu VPS paga, mas nada foi provisionado; produção não existe | dono do produto + `wyd-ops` | bloqueada (2026-11-25: decisão registrada em `docs/proposta-decisoes-ops.md` §4/§6 e formalizada em `ADR-OPS-0002`; **em 2026-11-25 o dono adiou** provedor, região, backup e RPO/RTO para depois do primeiro deploy interno e informou que não há valores definidos; nada provisionado) |
-| `OPS-05` | A criação do board e das novas issues no GitHub foi autorizada? | o repositório já tem issues e milestones, mas criar board ou novas fatias é ato explícito | dono do produto | **bloqueada** — autorizada em 2026-11-25 e executada em 2026-11-26 para as 61 fatias (#129–#189) e 10 lacunas (#190–#199), com labels `area/*`; falta o board do Project |
+| `OPS-05` | A criação do board e das novas issues no GitHub foi autorizada? | o repositório já tem issues e milestones, mas criar board ou novas fatias é ato explícito | dono do produto | fechada (2026-11-26: 121 issues e 121 itens no board `WYD 1.0.0`, com 5 views e campos preenchidos; 10 `ADM` novas em #208–#217) |
 
 ## 3. O que não é lacuna deste sistema
 
@@ -48,7 +48,7 @@ As cinco fecham assim: três com evidência em §5 e duas bloqueadas com o desbl
 
 ## 4. Perguntas e recomendações consolidadas
 
-Esta seção é o **ledger de estado** dos itens que exigem decisão humana, aprovação ou credencial externa. Eles **não** são fechados por documentação. A coluna **Status** é a definitiva: `bloqueada` com o item do §7 do [pacote O1–O5](pacote-aprovacao-o1-o5.md) ou do [pacote fora de O1–O5](pacote-aprovacao-decisoes-fora-o1-o5.md) que a desbloqueia — toda entrada bloqueada tem a sua mensagem. Neste sistema, restam duas bloqueadas (`OPS-04` e `OPS-05`); as cinco decisões de contrato fecharam. Os pacotes só organizam a leitura por dono e a [pauta canônica](pauta-de-decisoes-pendentes.md) reúne as **onze pendências abertas** com opções, recomendação e critério de pronto; esta seção registra o estado e não é um segundo registro de decisão.
+Esta seção é o **ledger de estado** dos itens que exigem decisão humana, aprovação ou credencial externa. Eles **não** são fechados por documentação. A coluna **Status** é a definitiva: `bloqueada` com o item do §7 do [pacote O1–O5](pacote-aprovacao-o1-o5.md) ou do [pacote fora de O1–O5](pacote-aprovacao-decisoes-fora-o1-o5.md) que a desbloqueia — toda entrada bloqueada tem a sua mensagem. Neste sistema, resta uma bloqueada (`OPS-04`); as cinco decisões de contrato e `OPS-05` fecharam. Os pacotes só organizam a leitura por dono e a [pauta canônica](pauta-de-decisoes-pendentes.md) reúne as **dez pendências abertas** com opções, recomendação e critério de pronto; esta seção registra o estado e não é um segundo registro de decisão.
 
 | # | Item | Pergunta | Dono | Recomendação | ADR? | Lacuna | Status |
 |---:|---|---|---|---|---|---|---|
@@ -58,7 +58,7 @@ Esta seção é o **ledger de estado** dos itens que exigem decisão humana, apr
 | `OPS-03.4` | Contrato O4 — segredos | Quais segredos existem, quem emite, quem consome, onde ficam e como rotacionam? | arquitetura + `wyd-ops` | Inventariar antes de qualquer deploy; separar segredo de controle, DSN, chave de assinatura e token de serviço | **Sim** — `LAC-ADM-03` §3.3 cobre só o token de controle; inventário, armazenamento e rotação são decisão estrutural de segurança | `OPS-03` | **fechada em 2026-11-26** — aprovada na forma em 2026-11-25 e formalizada em `ADR-OPS-0011`, com inventário por classe, armazenamento e gatilhos de rotação; nenhum valor ou provedor foi inventado |
 | `OPS-03.5` | Contrato O5 — deploy de servidor e launcher | Qual o contrato de staging, gatilho, aprovação, artefato e rollback do servidor e do launcher? | produto + arquitetura + `wyd-ops` | Definir o fluxo antes do primeiro deploy real; rollback precisa de comando e dono | **Sim** — operação e rollback de produção não estão cobertos por O1–O4 | `OPS-03` | **fechada em 2026-11-26** — aprovada na forma em 2026-11-25 e formalizada no `ADR-OPS-0007` revisado (artefato imutável, deploy manual com aprovação, rollback por digest/manifesto); staging, provedor e janela continuam em `OPS-04` |
 | `OPS-04` | Hospedagem `Q-OPS-2` | Qual provedor, contrato, região e rotina de backup serão usados? | produto + `wyd-ops` | Escolher um provedor de VPS com Compose e definir RPO/RTO antes do provisionamento | **Não** — `ADR-OPS-0002` já decidiu a forma; falta aplicação, custo e credencial | `OPS-04` | **adiada em 2026-11-25** pelo dono para depois do primeiro deploy interno; provedor, região, backup e RPO/RTO indefinidos (o dono informou não haver valores) |
-| `OPS-05` | GitHub | Autorizar a criação do board e das novas issues a partir de `github-mapping.md`? | produto | O repositório já tem 40 issues e milestones; montar o board e criar as fatias restantes só depois de autorização explícita | **Não** — convenção de gestão, não arquitetura | `OPS-05` | **bloqueada** — autorizada em 2026-11-25 e parcialmente executada em 2026-11-26: 61 fatias (#129–#189) e 10 lacunas (#190–#199) criadas com `area/*`; falta o board do Project |
+| `OPS-05` | GitHub | Autorizar a criação do board e das novas issues a partir de `github-mapping.md`? | produto | O repositório já tem 40 issues e milestones; o board e as fatias restantes foram autorizados e executados | **Não** — convenção de gestão, não arquitetura | `OPS-05` | **fechada em 2026-11-26** — 121 issues e 121 itens no board, com 10 `ADM` novas; labels e views preservadas |
 | `D-06` | Foco do projeto | Qual frente vem depois de `D-05`? | produto | Manter `wyd-db` até o gate e então `wyd-server`/`wyd-net` | **Não** — prioridade, não arquitetura | — | **decidida em 2026-11-25: A** — foco no `wyd-db` (142 atos, 64 células, 40 issues); D-05 executada depois |
 | `Q-SERIE-1` | Série de migrations | Qual política para arquivos sem `down`? Opções e recomendação em `planejamento-1.0.0/wyd-db/migrations/serie-e-regras.md` §9 | arquitetura + `wyd-db` | Ler a recomendação e responder sim ou apontar objeção | **Sim** — política estrutural | — | **B decidida, implementada e provada em PG17 via `psql` em 2026-11-25**; a porta foi provada depois por `runner_pg` e `CAP-37` fechou |
 | `Q-SEP-1` | Separador/slug de migration | A resposta original A foi incompatível: `Slug` rejeita hífen interno em 26/28 slugs; alternativas revisadas em `serie-e-regras.md` §9.1 | arquitetura + `wyd-db` | Decidir A′/B′/C′ antes de renomear arquivo ou alterar parser | **Não** — escolha de compatibilidade/nomenclatura | — | **A′ decidida e aplicada em 2026-11-25**: 28 arquivos renomeados para `_`; todos parseiam; parser intacto |
@@ -74,6 +74,7 @@ Esta seção é o **ledger de estado** dos itens que exigem decisão humana, apr
 | `OPS-03.1`–`OPS-03.3` | aprovação do dono registrada em §4 e contrato em `wyd-ops-1.0.0.md` §3; gate verde | 2026-11-25 |
 | `OPS-03.4` | `ADR-OPS-0011` aceito, com inventário por classe, armazenamento e gatilhos de rotação; referências conferidas nos workflows | 2026-11-26 |
 | `OPS-03.5` | `ADR-OPS-0007` revisado com o contrato O5 (artefato, aprovação, rollback); staging/provedor em `OPS-04` | 2026-11-26 |
+| `OPS-05` | 121 issues e 121 itens no board `WYD 1.0.0`; 5 views; `Sistema`, `Status`, `Fase`, `Prioridade` e `Marco` medidos em `github-mapping.md` §7 | 2026-11-26 |
 
 ## 6. O que esta página não cobre
 

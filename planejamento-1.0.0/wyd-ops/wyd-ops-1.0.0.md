@@ -36,14 +36,14 @@ o gate que falha de verdade.
 | O4 | segredos | ops emite | secret store; nunca em código | rotação documentada | `wyd-ops` | **aprovado em 2026-11-25**; inventário e rotação em `ADR-OPS-0011`; aplicação depende de `OPS-04` |
 | O5 | deploy de servidor e launcher | ops → host/release | workflow + imagem + artefato | rollback validado e aprovação | `wyd-ops` | **aprovado em 2026-11-25**; contrato no `ADR-OPS-0007` revisado; implementação em F4/`OPS-04` |
 
-## 4. Estado medido (`V`, 2026-11-25)
+## 4. Estado medido (`V`, 2026-11-26)
 
 | Medida | Valor | Comando |
 |---|---:|---|
 | Páginas de planejamento | 35 (2026-11-25) | `find planejamento-1.0.0/wyd-ops -name '*.md'` |
 | Arquivos de código | 0 | `find crates/wyd-ops -type f` (só `.gitkeep`) |
 | Requisitos com ID | 7 `RF-OPS` + 5 `RNF-OPS` | esta rodada |
-| Issues abertas no GitHub | 40 (`WYDDB-001`–`040`) | leitura de 2026-11-25; 0 criadas nesta rodada |
+| Issues abertas no GitHub | 121 no repositório; 7 do `wyd-ops` | leitura de 2026-11-26; board de 121 itens |
 
 ## 5. O que falta
 
@@ -66,5 +66,5 @@ teste e roadmap existem. O registro vive em `docs/lacunas.md` §4.
 
 `OPS-03` fechou em 2026-11-26: O1–O5 estão aprovados, e O4/O5 foram formalizados em `ADR-OPS-0011` e
 no `ADR-OPS-0007` revisado. As lacunas abertas são `OPS-04` (aplicação de `Q-OPS-2`, adiada pelo dono)
-e `OPS-05` (board pendente; issues e labels executados). O registro é `docs/lacunas.md` §4. Não há
+e `OPS-05` (fechada em 2026-11-26: 121 issues e board de 121 itens). O registro é `docs/lacunas.md` §4. Não há
 página de organização pendente.
