@@ -21,8 +21,8 @@ lint:
 
 test:
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
-	cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --offline
-	cargo test --manifest-path crates/wyd-launcher/Cargo.toml --offline
+	cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --locked
+	cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked
 
 docs:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build

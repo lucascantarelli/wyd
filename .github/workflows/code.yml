@@ -72,16 +72,16 @@ jobs:
             args: --lib
           - crate: wyd-ops-signer
             os: ubuntu-latest
-            args: --offline
+            args: --locked
           - crate: wyd-ops-signer
             os: windows-latest
-            args: --offline
+            args: --locked
           - crate: wyd-launcher
             os: ubuntu-latest
-            args: --offline
+            args: --locked
           - crate: wyd-launcher
             os: windows-latest
-            args: --offline
+            args: --locked
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
