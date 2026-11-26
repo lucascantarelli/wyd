@@ -26,7 +26,7 @@
 ### Prova real do pacote 1A–11A (2026-11-26)
 
 - PR [#205](https://github.com/lucascantarelli/wyd/pull/205), squash em `0c4a612`: `gate-code`, `gate-db`, `gate-docs` e `gate-security` concluíram **success** na execução real do PR; CodeQL, GitGuardian e `docs-image` de PR também passaram.
-- `docs-image` em `develop`: run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`, **success** em 50 s; `:SHA`, `:develop` e `:latest` apontam para `sha256:462029e…`; o manifesto de atestação contém SPDX/SBOM e provenance SLSA v1; o smoke respondeu HTTP 200.
+- `docs-image` em `develop`: run [`45827609542`](https://github.com/lucascantarelli/wyd/actions/runs/45827609542), commit `0c4a612`, **success** em 50 s; **naquela publicação**, `:SHA`, `:develop` e `:latest` apontaram para `sha256:462029e…`; o manifesto de atestação contém SPDX/SBOM e provenance SLSA v1; o smoke respondeu HTTP 200.
 - `code-stable`: run [`45828077654`](https://github.com/lucascantarelli/wyd/actions/runs/45828077654) (dispatch em `develop`), **success**; `wyd-db` e `wyd-ops-signer` concluíram com Rust `stable`.
 - Rollback real: `make rollback TAG=f271caab…` e `TAG=0c4a612a…` puxaram imagens publicadas e responderam HTTP 200, sem build da árvore; digests `sha256:f789081…` e `sha256:462029e…`.
 - Os logs dos runs recentes de `code`, `docs`, `docs-image`, `security`, `ci-db` e `code-stable` não contêm o aviso de Node 20 nem a SHA `ea165f8…`.
