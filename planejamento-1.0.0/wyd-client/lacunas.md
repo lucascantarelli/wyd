@@ -33,8 +33,9 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 
 ### 2.1 `LCLI-04` — decisão da ferramenta e pendências de execução (2026-11-23)
 
-**Decisão do dono: opção A — ferramenta específica do cliente em `wyd-client/tools/`.** A pasta ainda
-não existe; o caminho foi aprovado para planejamento e futura implementação, não foi criado código.
+**Decisão do dono: opção A — ferramenta específica do cliente em `wyd-client/tools/`.** A pasta existe
+reservada com `.gitkeep`; o caminho foi aprovado para planejamento e futura implementação, mas não foi
+criado código.
 A opção B (utilitário compartilhado em `wyd-ops/`) e a C (ferramenta externa sem código versionado)
 não foram escolhidas para esta ferramenta.
 

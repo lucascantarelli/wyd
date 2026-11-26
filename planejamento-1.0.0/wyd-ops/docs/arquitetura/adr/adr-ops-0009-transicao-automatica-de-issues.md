@@ -14,7 +14,7 @@ As issues usavam labels `estado/*` e o Project `WYD 1.0.0` tem um campo `Status`
 
 ## Decisão
 
-Um workflow (`issue-status.yml`) com um script único (`.github/scripts/sync-issue-status.mjs`) aplica esta sequência:
+Um workflow (`issue-status.yml`) com um script único (`wyd-ops/scripts/sync-issue-status.mjs`) aplica esta sequência:
 
 | Evento | Label | Status do Project |
 |---|---|---|
@@ -53,7 +53,7 @@ Regras:
 
 ## Como verificar
 
-Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --check .github/scripts/sync-issue-status.mjs` valida a sintaxe; `gh api repos/lucascantarelli/wyd/actions/policies` mostra a exceção escopada ao workflow.
+Abrir uma issue de teste, aceitar, abrir PR com `Closes #N`, marcar ready, mergear e conferir a label e o `Status`. Sem `PROJECT_TOKEN`, o log mostra o aviso e a label muda. `node --check wyd-ops/scripts/sync-issue-status.mjs` valida a sintaxe; `gh api repos/lucascantarelli/wyd/actions/policies` mostra a exceção escopada ao workflow.
 
 ## Referências
 

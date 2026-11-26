@@ -1,0 +1,1 @@
+//! QA de fio. Reserva do plano (`planejamento-1.0.0/wyd-bots/`); sem comportamento (2026-11-26).

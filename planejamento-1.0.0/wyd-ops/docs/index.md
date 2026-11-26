@@ -98,6 +98,11 @@ Este mapa garante que toda página de `docs/` seja alcançável a partir deste �
 - [Índice de ADRs — projeto WYD 1.0.0](arquitetura/adr/index.md)
 - [ADR-<SISTEMA>-NNNN — <título curto>](arquitetura/adr/template.md)
 
+### devops
+
+- [Depuração local — tarefas, LSP e banco](devops/depuracao-local.md)
+- [Evidências de depreciação — workspace, portal e scripts](devops/evidencias-de-depreciacao.md)
+
 ### planos
 
 - [Baseline de segurança, monitoramento e deploy — planejamento](planos/baseline-seguranca-monitoramento-deploy.md)

@@ -95,7 +95,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | Issues / milestones / Projects | 40 abertas (#82–#121) / 13 milestones (M0–M5 + F1–F7) / habilitado, project `WYD 1.0.0` nº 10 ligado ao repositório, 40 itens com `Sistema`, `Fase`, `Prioridade`, `Marco` e `Status` preenchidos e 63 vínculos `blocked by` | API do GitHub, 2026-11-22; detalhe em `wyd-ops` §10.3 |
 | Merge permitido | squash, branch apagada no merge | API do GitHub |
 | Secret scanning / Dependabot | ativos | API do GitHub |
-| `crates/*` | 9 pastas, só `.gitkeep` | `git ls-files` |
+| `crates/*` | 10 pastas; 3 com comportamento e 7 com esqueleto desde 2026-11-26, nenhuma só `.gitkeep` | `find crates` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
 | CI | 7 workflows (2026-11-26): `code` (fmt/clippy/unitários em matriz + cobertura informativa + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
@@ -809,8 +809,9 @@ planejamento de cada uma, e por isso o gate editorial (`AGENTS.md` §4) roda em 
 
 `planejamento-1.0.0/` é **só documentação** (`AGENTS.md` §5, item 6). Artefato executável mora na pasta real do
 projeto, na raiz: `crates/<sistema>/` para Rust, `wyd-portal/` para o Next.js, `wyd-docs/` para o
-site e `wyd-ops/` para imagem, Compose e CI. Três arquivos ficam na raiz porque a **ferramenta** os
-procura ali, não porque a raiz seja a casa natural deles (§8.3).
+site e `wyd-ops/` para imagem, Compose e CI. Os arquivos que ficam na raiz porque a **ferramenta** os
+procura ali estão em §8.3 e na página autoritativa (`wyd-ops/docs/estrutura-de-pastas-e-modulos.md`
+§2.4), não porque a raiz seja a casa natural deles.
 
 ### 8.2 Artefato, lugar e dono
 
@@ -819,14 +820,15 @@ procura ali, não porque a raiz seja a casa natural deles (§8.3).
 | plano do sistema: dashboard, `lacunas.md`, `docs/` | `planejamento-1.0.0/<sistema>/` | o próprio sistema | 13 pastas, todas abertas; nenhuma `aceita` |
 | Dockerfile da imagem do site | `wyd-ops/wyd-docs.Dockerfile` | `wyd-ops` | escrito; build medido em 2026-11-23; publicado no GHCR em 2026-11-26 (run `45827609542`) |
 | `docker-compose.yml` | raiz | `wyd-ops` | 1 serviço (`docs`) consumindo `${WYD_DOCS_TAG:-latest}` — o que o CI publica —, **sem `build:`** |
+| Dockerfiles dos serviços em esqueleto | `wyd-ops/wyd-server.Dockerfile`, `wyd-ops/wyd-admin.Dockerfile`, `wyd-ops/wyd-portal.Dockerfile` | `wyd-ops` | escritos em 2026-11-26; imagem do `server` construída e sondada em loopback |
 | `docker-compose.override.yml` | raiz | `wyd-ops` | carregado automaticamente: traz `gate` e `db` sob perfis; não toca `docs` |
-| `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"` — build da árvore de trabalho |
-| `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB) do contexto |
+| `docker-compose.dev.yml` | raiz | `wyd-ops` | **opt-in** (`-f`), não mesclado automaticamente: `docs` com tag `:dev`, `pull_policy: build` e `restart: "no"`; perfil `stack` com `server`, `admin` e `portal` em esqueleto (2026-11-26) |
+| `.dockerignore` | raiz | `wyd-ops` | escrito; tira `wyd-client/` (567 MB), `deprecated/` e artefatos de build (`target`, `.next` e `node_modules` do portal) do contexto |
 | workflow de CI | `.github/workflows/` | `wyd-ops` | 8: `code.yml`, `ci-db.yml`, `docs.yml`, `docs-image.yml`, `security.yml`, `code-stable.yml`, `issue-status.yml` e `release.yml` (2026-11-26) |
 | action composta | `.github/actions/<nome>/action.yml` | `wyd-ops` | 3: `docs-check`, `setup-rust`, `notify-failure` |
-| crate Rust | `crates/<sistema>/` | o sistema | `crates/wyd-db` com `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (13 cenários); os outros 8 só `.gitkeep` |
+| crate Rust | `crates/<sistema>/` | o sistema | `wyd-db`, `wyd-launcher` e `wyd-ops-signer` com comportamento; 7 esqueletos com `Cargo.toml` e módulos reservados (2026-11-26); sem workspace na raiz |
 | site MkDocs: montagem, tema, gate | `wyd-docs/` | `wyd-docs` | implementado, build e gate verdes |
-| portal Next.js | `wyd-portal/` | `wyd-portal` | só `.gitkeep` |
+| portal Next.js | `wyd-portal/` | `wyd-portal` | app Next.js 16 mínimo em `src/app`, imagem em `wyd-ops/wyd-portal.Dockerfile`; BFF, login e rotas não implementados (2026-11-26) |
 | binários do cliente real | `wyd-client/files/` | `wyd-client` | existem, ignorados pelo git; patch versionado ainda não existe |
 | ferramenta de captura do cliente (planejada) | `wyd-client/tools/` | `wyd-client` | opção A em `LCLI-04` (2026-11-23); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
 | peer de captura A1 | `docs/specs/endpoint-de-captura.md` | `wyd-server` + `wyd-protocol` | `Q-SRV-5`/`LSRV-05` decidida em C, com a condição reprovada em 2026-11-23 (§9.1); A1 depende de A |
@@ -901,10 +903,9 @@ publicação e rollback está em §5.2.
 
 | Pasta | Conteúdo | Significado |
 |---|---|---|
-| `crates/<9 sistemas>/` | `.gitkeep` | crate ainda não nasceu; reservado, não “livre para inventar” |
-| `wyd-portal/` | `.gitkeep` | portal ainda sem código |
+| `planejamento-1.0.0/<sistema>/{src,tests}/` | `.gitkeep` | árvore de código planejada; o código real mora em `crates/<sistema>/` ou na pasta do sistema (2026-11-26) |
 | `planejamento-1.0.0/wyd-admin/{src,tests}/` | `.gitkeep` | árvore de código planejada e vazia |
-| `wyd-client/tools/` | não existe | destino aprovado para a CLI Rust de captura (LCLI-04/D4); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
+| `wyd-client/tools/` | existe reservada com `.gitkeep` | destino aprovado para a CLI Rust de captura (LCLI-04/D4); D3–D6 decididos; `ECAP` especificado; falta implementar o `ECAP` e a CLI |
 | `planejamento-1.0.0/wyd-db/{tests,prompts,skills}/` | vazias no disco | reservadas; sem arquivo, não são versionadas |
 | 10 dos 13 sistemas | `docs/` + dashboard | `src/`, `tests/`, `prompts/` e `skills/` só são criadas onde o dono abriu uma pergunta própria |
 | `planejamento-1.0.0/wyd-ops/` | `docs/` + `plano-imagem-e-compose-do-site.md` | único sistema **sem** dashboard `<sistema>-1.0.0.md` e sem `lacunas.md`; o estado dele é o de propostas (AGENTS.md §6) |
@@ -928,13 +929,20 @@ Referências a `deprecated/docker/...` em páginas de planejamento são legítim
 
 ### 8.6 Como verificar
 
+> A verificação operacional é `make layout` (página autoritativa:
+> `wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §6). Ela confere a árvore inteira, não só os
+> exemplos abaixo.
+
 ```bash
 # 1. nenhum artefato executável dentro do planejamento (saída vazia)
 find planejamento-1.0.0 -type f \( -name '*.rs' -o -name '*.sql' -o -name '*.ts' \
   -o -name '*.py' -o -name '*.sh' \)
 
-# 2. o único Dockerfile do projeto novo é o do wyd-ops
+# 2. Dockerfiles do projeto novo: todos em wyd-ops/ (docs, server, admin e portal)
 find . -name '*Dockerfile*' -not -path './deprecated/*' -not -path './.git/*'
+
+# 3. layout completo, com a lista de desvios
+make layout
 
 # 3. nenhuma referência a pasta top-level docker/ (só deprecated/docker/ pode aparecer)
 grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \
@@ -947,8 +955,10 @@ grep -rn 'docker/' --include='*.md' --include='*.yml' --include='*.yaml' . \
 > organização para os 13 sistemas e o checklist de D-04 = A. Ela **não cria pasta, código ou teste**;
 > a árvore de cada sistema só nasce depois da página `aceita` e da aprovação do dono (`AGENTS.md` §5,
 > item 1). A auditoria por sistema está em `wyd-ops/auditoria-de-organizacao.md`: **2 de 13** passaram
-> (`wyd-db` e `wyd-admin`) e **11** ainda não. Medido em 2026-11-24: `crates/wyd-db` é o único crate
-> com código; os outros 8 `crates/*` têm só `.gitkeep`; `wyd-admin` tem `src/` e `tests/` reservados;
+> (`wyd-db` e `wyd-admin`) e **11** ainda não. Medição histórica de 2026-11-24: `crates/wyd-db` era o
+> único crate com código e os outros 8 `crates/*` tinham só `.gitkeep`; em 2026-11-26 os 10 crates já
+> têm esqueleto (`Cargo.toml`, `Cargo.lock`, `src/lib.rs` e módulos reservados), sem comportamento de
+> domínio. `wyd-admin` tem `src/` e `tests/` reservados;
 > **10** sistemas não têm `RF` numerado e `wyd-ops` não tem plano diretor (fonte:
 > `wyd-ops/docs/prioridade-do-projeto.md` §0.1, D-04). **D-05 = A foi aprovada em 2026-11-25**; o
 > plano de migração para o workspace, toolchain, Makefile e digests está em
@@ -1004,12 +1014,10 @@ crates/<sistema>/
 
 ```text
 wyd-portal/
-├── app/                       # rotas e Server Components; sem SQL direto na página
-├── components/                # UI reutilizável, sem regra de servidor
-├── lib/                       # validação, formatação e tipos puros
-├── server/                    # BFF: sessão, leitura do wyd-db, chamadas ao admin
-├── tests/unit/                # Vitest
-└── tests/e2e/                 # Playwright; fluxo de jogador, não teste de componente
+├── src/app/                   # rotas e Server Components; sem SQL direto na página
+├── src/<módulo>/              # auth, banco, bff, admin, cache, monitoramento, observabilidade
+├── tests/                     # contrato, integração, e2e e acessibilidade
+└── public/                    # assets estáticos
 ```
 
 O BFF é a única borda que fala com `wyd-db`/`wyd-admin`; a página não recebe DSN nem credencial. O
@@ -1020,7 +1028,7 @@ portal não importa crate Rust: consome contrato HTTP/JSON documentado no sistem
 | Sistema | Árvore alvo | Regra |
 |---|---|---|
 | `wyd-docs` | `preparar.py`, `verificar*.py`, `tema/`, `tests/` e o site gerado fora do git | script de documento mora no `wyd-docs`; nada de `.py` em `planejamento-1.0.0/` |
-| `wyd-ops` | `wyd-ops/wyd-docs.Dockerfile`, `scripts/`, `tests/smoke/`; workflows em `.github/` | um Dockerfile; Compose na raiz por descoberta da ferramenta (§8.3); imagem por digest (D-05 = A aprovada) |
+| `wyd-ops` | `wyd-ops/wyd-docs.Dockerfile`, `wyd-ops/wyd-server.Dockerfile`, `wyd-ops/wyd-admin.Dockerfile`, `wyd-ops/wyd-portal.Dockerfile`, `scripts/`, `tests/smoke/`; workflows em `.github/` | quatro Dockerfiles; Compose na raiz por descoberta da ferramenta (§8.3); imagem por digest (D-05 = A aprovada) |
 | `wyd-client` | `wyd-client/tools/` (CLI), `files/` ignorado, `tests/` da CLI | binário do cliente nunca é versionado; patch e manifesto têm hash |
 | `wyd-admin` | `crates/wyd-admin/` quando virar Rust; HTTP/JSON interno | mesma separação domínio/aplicação/adaptador; auditoria não mora no handler |
 | `wyd-launcher` | `crates/wyd-launcher/` (Tauri/Rust) + `tests/` | assinatura e updater testados antes de publicar |

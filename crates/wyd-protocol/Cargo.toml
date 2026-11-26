@@ -1,0 +1,12 @@
+# Estrutura inicial do `wyd-protocol` (2026-11-26): pacotes, opcodes e goldens do fio.
+# Módulos e critérios são do plano do sistema; nenhum comportamento de protocolo existe
+# ainda. Fronteira em `planejamento-1.0.0/wyd-protocol/` (AGENTS.md §5, item 1).
+[package]
+name = "wyd-protocol"
+version = "0.0.0"
+edition = "2021"
+license = "GPL-2.0-only"
+publish = false
+
+[lints.rust]
+unsafe_code = "forbid"

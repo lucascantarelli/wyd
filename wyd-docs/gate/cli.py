@@ -2,7 +2,7 @@
 
 Contrato:
 - `full` monta o site, verifica links e roda todos os domínios;
-- `fast` roda só os checks nativos (skills, lacunas, contagens, censos);
+- `fast` roda só os checks nativos (layout, skills, lacunas, contagens, censos);
 - `check` roda um ou mais domínios isolados.
 
 Sem `--json`, imprime uma linha por domínio com estado, tempo e resumo curto.
@@ -20,19 +20,21 @@ import sys
 import time
 from pathlib import Path
 
-from .checks import censos, contagens, lacunas, links, skills
+from .checks import censos, contagens, lacunas, layout, links, skills
 from .model import CheckResult
 from .workspace import Workspace
 
 DOCS = Path(__file__).resolve().parents[1]
 ROOT_PADRAO = DOCS.parent
-DOMINIOS = ("skills", "lacunas", "links", "contagens", "censos")
+DOMINIOS = ("layout", "skills", "lacunas", "links", "contagens", "censos")
 
 
 def _runner(nome: str, ws: Workspace, site: Path | None = None) -> CheckResult:
     inicio = time.perf_counter()
     try:
-        if nome == "skills":
+        if nome == "layout":
+            resultado = layout.run(ws)
+        elif nome == "skills":
             resultado = skills.run(ws)
         elif nome == "lacunas":
             resultado = lacunas.run(ws)
@@ -174,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "check":
         dominios = tuple(args.domains)
     elif args.command == "fast":
-        dominios = ("skills", "lacunas", "contagens", "censos")
+        dominios = ("layout", "skills", "lacunas", "contagens", "censos")
     else:
         dominios = DOMINIOS
     resultados = _executar(args.command, dominios, ws, getattr(args, "site", None))

@@ -1,0 +1,67 @@
+{
+  // O repositório NÃO tem `Cargo.toml` na raiz de propósito: cada crate é um
+  // workspace Cargo independente (ver AGENTS.md §4 e §8 do panorama). Sem esta
+  // lista o rust-analyzer não encontra projeto nenhum e, com ela, análise,
+  // `rust-analyzer.testExplorer` e as lentes Run/Debug enxergam os dez crates.
+  // Em 2026-11-26 todos os dez têm `Cargo.toml`; a lista é explícita para não
+  // depender de descoberta automática de workspace.
+  "rust-analyzer.linkedProjects": [
+    "crates/wyd-db/Cargo.toml",
+    "crates/wyd-ops-signer/Cargo.toml",
+    "crates/wyd-launcher/Cargo.toml",
+    "crates/wyd-protocol/Cargo.toml",
+    "crates/wyd-net/Cargo.toml",
+    "crates/wyd-core/Cargo.toml",
+    "crates/wyd-sim/Cargo.toml",
+    "crates/wyd-server/Cargo.toml",
+    "crates/wyd-admin/Cargo.toml",
+    "crates/wyd-bots/Cargo.toml"
+  ],
+
+  // Test Explorer nativo do rust-analyzer: descobre os testes por crate mesmo
+  // sem workspace na raiz. É o adapter que funciona aqui; o swellaby (Rust Test
+  // Explorer) exige `Cargo.toml` na pasta aberta e fica sem alvo.
+  // Medição: 10/10 crates aparecem (IDs `wyd_db`, `wyd_launcher`, ...). Com os
+  // 10 linkados, os 6 alvos de integração do launcher não entram no grafo (o
+  // signer é dev-dependency e também projeto linkado); causa e contagem em
+  // planejamento-1.0.0/wyd-ops/docs/devops/depuracao-local.md §5.2.
+  "rust-analyzer.testExplorer": true,
+
+  // Diagnóstico igual ao CI: clippy em todos os alvos (`make lint` usa
+  // `--all-targets`).
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.allTargets": true,
+  "rust-analyzer.cargo.allTargets": true,
+
+  // Pastas reservadas sem `Cargo.toml` não devem gerar aviso de "arquivo não
+  // vinculado a projeto".
+  "rust-analyzer.showUnlinkedFileNotification": false,
+
+  // Breakpoints em Rust exigem esta permissão; o Launch usa CodeLLDB (`lldb`).
+  "debug.allowBreakpointsEverywhere": true,
+  "lldb.launch.sourceLanguages": ["rust"],
+
+  // Formatação ao salvar só em Rust: `cargo fmt --check` roda no CI (`code.yml`).
+  "[rust]": {
+    "editor.formatOnSave": true
+  },
+
+  // Diretórios grandes ou gerados que não precisam de watcher. `deprecated/` e
+  // `wyd-client/files/` ficam fora do watcher apenas por tamanho; continuam
+  // pesquisáveis.
+  "files.watcherExclude": {
+    "**/target/**": true,
+    "**/site/**": true,
+    "**/.venv/**": true,
+    "**/.build/**": true,
+    "**/__pycache__/**": true,
+    "deprecated/**": true,
+    "wyd-client/files/**": true
+  },
+  "search.exclude": {
+    "**/target": true,
+    "**/site": true,
+    "**/.venv": true,
+    "**/__pycache__": true
+  }
+}

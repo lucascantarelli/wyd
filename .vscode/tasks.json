@@ -1,0 +1,167 @@
+{
+  "version": "2.0.0",
+  // Espelha o Makefile; nenhuma lógica nova mora aqui. Os alvos canônicos e o
+  // que cada um cobre estão em AGENTS.md §9.
+  //
+  // `crates/${input:crate}` vale para os 10 crates: nenhuma task aponta para um
+  // crate fixo. O mesmo `input` alimenta a config de debug em `launch.json`.
+  "inputs": [
+    {
+      "id": "crate",
+      "type": "pickString",
+      "description": "Crate do workspace (um manifesto por pasta; não há workspace na raiz)",
+      "options": [
+        "wyd-db",
+        "wyd-launcher",
+        "wyd-ops-signer",
+        "wyd-protocol",
+        "wyd-net",
+        "wyd-core",
+        "wyd-sim",
+        "wyd-server",
+        "wyd-admin",
+        "wyd-bots"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "label": "gate: fast (sem Docker)",
+      "detail": "make gate-fast — layout, skills, lacunas, contagens e censos",
+      "type": "shell",
+      "command": "make gate-fast",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "layout: verificar árvore",
+      "detail": "make layout — compara a árvore real com a página autoritativa e lista cada desvio",
+      "type": "shell",
+      "command": "make layout",
+      "problemMatcher": []
+    },
+    {
+      "label": "gate: completo (Docker)",
+      "detail": "make gate — build, links e todos os domínios",
+      "type": "shell",
+      "command": "make gate",
+      "problemMatcher": []
+    },
+    {
+      "label": "gate: testes do gate (Python)",
+      "detail": "make test-gate — unittest do wyd-docs",
+      "type": "shell",
+      "command": "make test-gate",
+      "problemMatcher": []
+    },
+    {
+      "label": "rust: check do crate (escolher)",
+      "detail": "cargo check no crate escolhido em `crates/<crate>`",
+      "type": "shell",
+      "command": "cargo check --manifest-path crates/${input:crate}/Cargo.toml --all-targets",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes do crate (escolher)",
+      "detail": "cargo test --lib --bins no crate escolhido; os alvos PostgreSQL do wyd-db e as integrações do launcher têm tasks próprias",
+      "type": "shell",
+      "command": "cargo test --manifest-path crates/${input:crate}/Cargo.toml --locked --lib --bins",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: check dos crates com comportamento",
+      "detail": "cargo check por crate (não há workspace na raiz); os 10 crates são cobertos pela task 'escolher'",
+      "dependsOrder": "sequence",
+      "dependsOn": ["rust: check wyd-db", "rust: check wyd-ops-signer", "rust: check wyd-launcher"],
+      "problemMatcher": []
+    },
+    {
+      "label": "rust: check wyd-db",
+      "type": "shell",
+      "command": "cargo check --manifest-path crates/wyd-db/Cargo.toml --all-targets",
+      "problemMatcher": ["$rustc"],
+      "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "rust: check wyd-ops-signer",
+      "type": "shell",
+      "command": "cargo check --manifest-path crates/wyd-ops-signer/Cargo.toml --all-targets",
+      "problemMatcher": ["$rustc"],
+      "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "rust: check wyd-launcher",
+      "type": "shell",
+      "command": "cargo check --manifest-path crates/wyd-launcher/Cargo.toml --all-targets",
+      "problemMatcher": ["$rustc"],
+      "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "rust: fmt (check)",
+      "detail": "make fmt — cargo fmt --check",
+      "type": "shell",
+      "command": "make fmt",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: clippy",
+      "detail": "make lint — clippy --all-targets -D warnings",
+      "type": "shell",
+      "command": "make lint",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes (todos)",
+      "detail": "make test — lib do wyd-db, todos os crates e testes do launcher",
+      "type": "shell",
+      "command": "make test",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes wyd-db (lib)",
+      "type": "shell",
+      "command": "cargo test --manifest-path crates/wyd-db/Cargo.toml --lib",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes wyd-db PostgreSQL (sistema_pg)",
+      "detail": "Prepara o banco sozinha (recria o container vazio, papéis `nologin` e série, como a matriz `schema` do ci-db.yml) e roda `sistema_pg` contra `wyd-db-1` via wyd-ops/scripts/ci/db-schema-local.sh.",
+      "type": "shell",
+      "command": "bash wyd-ops/scripts/ci/db-schema-local.sh",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes wyd-launcher",
+      "type": "shell",
+      "command": "cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: testes wyd-ops-signer",
+      "type": "shell",
+      "command": "cargo test --manifest-path crates/wyd-ops-signer/Cargo.toml --locked",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "db: subir",
+      "detail": "make db-up — PostgreSQL 17 descartável em 127.0.0.1:5432",
+      "type": "shell",
+      "command": "make db-up",
+      "problemMatcher": [],
+      "presentation": { "reveal": "silent" }
+    },
+    {
+      "label": "db: derrubar",
+      "detail": "make db-down — para o PostgreSQL de teste",
+      "type": "shell",
+      "command": "make db-down",
+      "problemMatcher": []
+    }
+  ]
+}

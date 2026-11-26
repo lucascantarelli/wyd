@@ -1,0 +1,15 @@
+{
+  // Extensões já usadas no projeto. Não instala nada sozinho: o VS Code só
+  // sugere esta lista em uma máquina nova.
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb",
+    "dustypomerleau.rust-syntax",
+    "tamasfe.even-better-toml",
+    "fill-labs.dependi",
+    "github.vscode-github-actions",
+    "ms-azuretools.vscode-containers",
+    "ms-vscode-remote.remote-containers",
+    "cweijan.vscode-postgresql-client2"
+  ]
+}

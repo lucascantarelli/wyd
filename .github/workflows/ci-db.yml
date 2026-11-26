@@ -85,13 +85,13 @@ jobs:
       - name: Criar papéis
         env:
           PGUSER: postgres
-        run: bash scripts/ci/db-prepare.sh "${{ matrix.roles }}"
+        run: bash wyd-ops/scripts/ci/db-prepare.sh "${{ matrix.roles }}"
 
       - name: Aplicar a série
         if: matrix.series
         env:
           PGUSER: postgres
-        run: bash scripts/ci/apply-series.sh "$GITHUB_WORKSPACE"
+        run: bash wyd-ops/scripts/ci/apply-series.sh "$GITHUB_WORKSPACE"
 
       - name: Executar o alvo
         env:

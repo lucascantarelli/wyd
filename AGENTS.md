@@ -57,7 +57,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | `wyd-protocol` | 2º piloto aberto; teto de páginas em `planejamento-1.0.0/wyd-protocol/wyd-protocol-1.0.0.md` §4, escritas e lacunas em `planejamento-1.0.0/wyd-1.0.0.md` §1 e `planejamento-1.0.0/wyd-protocol/lacunas.md` §1; nenhum ADR |
 | `wyd-docs` | site MkDocs 2.0 em `wyd-docs/`: páginas montadas e censo por estado em `wyd-docs-1.0.0.md` §9.1 (2026-11-22), build e verificação verdes; lacunas com estado e dono em `planejamento-1.0.0/wyd-docs/lacunas.md` §1 |
 | Lacunas do `wyd-db` | registradas por estado em `planejamento-1.0.0/wyd-db/lacunas.md` §1 |
-| Código Rust | primeiro slice em `crates/wyd-db/`: `Cargo.toml`, `src/lib.rs`, `src/dsn.rs` e `tests/sistema_pg.rs` (19 testes locais); os outros 8 `crates/*` só têm `.gitkeep`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
+| Código Rust | 10 crates com `Cargo.toml` (2026-11-26): `wyd-db` (lib + 3 alvos PostgreSQL), `wyd-launcher` e `wyd-ops-signer` com comportamento; `wyd-protocol`, `wyd-net`, `wyd-core`, `wyd-sim`, `wyd-server`, `wyd-admin` e `wyd-bots` como **esqueleto** — módulos reservados do plano, sem comportamento de domínio, com `wyd-server` e `wyd-admin` expondo só `/health` e `/ready`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml` de workspace; `rust-toolchain.toml` (1.100.0) e `Makefile` existem; cada crate tem `Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; o inventário de issues, o board `WYD 1.0.0`, as views e os campos medidos estão em `planejamento-1.0.0/wyd-ops/docs/github-mapping.md` §7 |
 | CI | `.github/workflows/docs.yml` (gate `gate-docs` e Pages em `develop`), `code.yml` (fmt, clippy, unitários em matriz por crate, cobertura informativa e `gate-code`; `wyd-db` e `wyd-ops-signer` são portáveis, `wyd-launcher` é Windows-only), `ci-db.yml` (matriz PG17 e `gate-db`), `security.yml` (audit/deny, dependency-review, actionlint e `gate-security`), `docs-image.yml` (Buildx/GHCR em `develop`) e `code-stable.yml` (sinal diário com Rust `stable`); `issue-status.yml` mantém labels e Project. `full-workflow.yml` foi removido em 2026-11-26. O estado real e o que falta estão em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`; as contagens de teste e o limiar de cobertura têm dono em `estrategia-de-testes.md` §6–§7 |
@@ -85,9 +85,10 @@ outro documento: cite a seção.
 5. **Um fato, um dono.** Número, regra e DDL moram em um arquivo; os demais citam. Se duas páginas
    podem divergir sobre o mesmo número, uma está errada por construção.
 6. **`planejamento-1.0.0/` é documentação.** Não crie `.sql`, `.rs`, `.ts`, `.py` nem script
-   executável dentro dela. Artefato executável nasce na pasta real do projeto, na raiz; qual pasta,
-   qual sistema é dono e quais arquivos ficam na raiz por exigência de ferramenta estão em
-   `planejamento-1.0.0/wyd-1.0.0.md` §8 — não repita a tabela aqui.
+   executável dentro dela. Artefato executável nasce na pasta real do projeto, na raiz; qual pasta, qual sistema é dono e quais arquivos ficam na raiz por exigência de ferramenta estão em
+`planejamento-1.0.0/wyd-1.0.0.md` §8 e na página autoritativa operacional
+`planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §2.4 — não repita a tabela aqui. A
+verificação é `make layout` (incluída em `make gate-fast` e `make gate`).
 7. **Segredo nunca aparece.** DSN, token, hash, senha e PIN são descritos por tipo e lugar. Não leia
    `.env`, não cole valor em documento, log, issue ou chat.
 8. **Não decida pelo time.** Melhoria, padrão novo, mudança de arquitetura, de escopo ou de
@@ -184,9 +185,9 @@ escopo.
 - **Público e gratuito.** Runners padrão do GitHub são gratuitos e ilimitados em repositório
   público; **não** use runner self-hosted em job que executa código de pull request — o próprio
   GitHub desaconselha em repositório público.
-- **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (skills, lacunas, contagens e
-  censos; não precisa de Docker/MkDocs) e `make gate` para o caminho completo do CI/container
-  (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato
+- **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (layout, skills, lacunas, contagens
+  e censos; não precisa de Docker/MkDocs), `make layout` para só a árvore e `make gate` para o
+  caminho completo do CI/container (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato
   legível por agente; `--details` abre os problemas. A decisão, os papéis de Python/Bash/Node e os
   caminhos locais vs CI estão em `planejamento-1.0.0/wyd-ops/docs/arquitetura/adr/adr-ops-0010-camada-unica-de-gate.md`.
 - CI é feito de workflows por domínio e actions compostas em `.github/actions/`, com permissões

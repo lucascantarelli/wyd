@@ -106,6 +106,38 @@ jobs:
       - name: Testes
         run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }}
 
+  # Esqueleto dos sistemas que ainda não têm comportamento: fmt, clippy e teste de
+  # cada crate criado em 2026-11-26. Um job em matriz mantém a cobertura sem uma
+  # entrada por crate nas matrizes de `fmt`/`clippy`/`unit`.
+  esqueleto:
+    name: esqueleto / ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        crate:
+          - wyd-protocol
+          - wyd-net
+          - wyd-core
+          - wyd-sim
+          - wyd-server
+          - wyd-admin
+          - wyd-bots
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+        with:
+          crate: ${{ matrix.crate }}
+      - name: Formatação
+        run: cargo fmt --manifest-path crates/${{ matrix.crate }}/Cargo.toml -- --check
+      - name: Lint
+        run: cargo clippy --manifest-path crates/${{ matrix.crate }}/Cargo.toml --all-targets -- -D warnings
+      - name: Testes
+        run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml --locked
+
   coverage:
     name: cobertura informativa (wyd-db)
     needs: unit
@@ -142,19 +174,20 @@ jobs:
   gate-code:
     name: gate-code
     if: always()
-    needs: [fmt, clippy, unit, coverage]
+    needs: [fmt, clippy, unit, esqueleto, coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       FMT: ${{ needs.fmt.result }}
       CLIPPY: ${{ needs.clippy.result }}
       UNIT: ${{ needs.unit.result }}
+      ESQUELETO: ${{ needs.esqueleto.result }}
       COVERAGE: ${{ needs.coverage.result }}
     steps:
       - name: Agregar os jobs
         run: |
           falhou=0
-          for resultado in "$FMT" "$CLIPPY" "$UNIT" "$COVERAGE"; do
+          for resultado in "$FMT" "$CLIPPY" "$UNIT" "$ESQUELETO" "$COVERAGE"; do
             if [ "$resultado" != "success" ]; then
               echo "::error::job com resultado '$resultado'"
               falhou=1

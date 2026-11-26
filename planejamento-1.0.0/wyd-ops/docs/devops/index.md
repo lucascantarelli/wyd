@@ -62,6 +62,10 @@ make db-down     # para e descarta o banco local
 make rollback TAG=<sha>   # puxa a tag e sobe com --no-build, sem construir a árvore
 ```
 
+Depuração por linha de comando (sem UI), com o mesmo alvo das configs de `.vscode/`:
+[`depuracao-local.md`](depuracao-local.md) — evidência executada em 2026-11-26, breakpoint atingido em
+`wyd-server` e `wyd-admin`.
+
 O gate local usa a imagem `:gate` construída da árvore (`pull_policy: build`); o CI usa `setup-python` + `wyd-docs/gate.sh`. A ordem dos verificadores é a mesma nos dois, e `gate.sh` roda os testes unitários antes do `gate full`. O teste paralelo-vs-sequencial é executado no Linux e no macOS, onde `fork` existe; o **skip é apenas do Windows**, porque não há `fork` lá. A imagem copia a árvore de evidência no build e roda `/app` **sem bind mount**, que é a condição da medição controlada abaixo; as duas últimas execuções após as edições de 2026-11-26 ficaram em **24,2–27,0s** (494 páginas); a medição controlada de 480 páginas permanece **20,5–21,5s**. Medições com bind mount pertencem a outra condição e não são repetidas aqui. Cliente e legado continuam fora do contexto por `.dockerignore`.
 
 ### Medição do gate completo e do check de links (2026-11-26)
@@ -95,7 +99,7 @@ O harness aceita dois modos:
 - `WYD_DB_TEST_URL=postgres://user:senha@127.0.0.1:porta/banco` — usado no CI com service container; o `psql` roda no runner.
 - `WYD_DB_TEST_CONTAINER=<nome>` — usado no desenvolvimento; o `psql` roda via `docker exec`.
 
-No CI, `scripts/ci/db-prepare.sh` cria os papéis e `scripts/ci/apply-series.sh` aplica só os blocos `up`. O container é descartável; nenhuma senha é de produção.
+No CI, `wyd-ops/scripts/ci/db-prepare.sh` cria os papéis e `wyd-ops/scripts/ci/apply-series.sh` aplica só os blocos `up`. O container é descartável; nenhuma senha é de produção.
 
 ### Mapa dos scripts
 
@@ -112,9 +116,9 @@ No CI, `scripts/ci/db-prepare.sh` cria os papéis e `scripts/ci/apply-series.sh`
 | `wyd-docs/tests/test_gate.py` | Python | testes de fixture das regras e do JSON | `python -m unittest discover -s tests` |
 | `wyd-docs/tests/fixtures.py` | Python | árvores mínimas de link, lacuna, contagem, censo e skills | importado pelos testes |
 | `wyd-docs/preparar.py` | Python | monta `.build/docs` e a navegação | árvore do repositório |
-| `scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
-| `scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
-| `.github/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
+| `wyd-ops/scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
+| `wyd-ops/scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
+| `wyd-ops/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
 
 Os composites de `.github/actions/` só instalam ferramentas e chamam esses arquivos; não duplicam regra. Um script novo fora deste mapa precisa de issue e dono.
 
@@ -184,7 +188,7 @@ F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do f
 |---|---|---|
 | check obrigatório em "Expected" | workflow com filtro de caminho | remover o filtro ou não exigir o check |
 | `psql: command not found` no CI | runner sem cliente | o step instala `postgresql-client`; verificar o log do job `Garantir o psql` |
-| `role "wyd_migrator" does not exist` | papéis não criados antes do alvo | rodar `scripts/ci/db-prepare.sh migrator` com `PGUSER=postgres` |
+| `role "wyd_migrator" does not exist` | papéis não criados antes do alvo | rodar `wyd-ops/scripts/ci/db-prepare.sh migrator` com `PGUSER=postgres` |
 | `WYD_DB_TEST_URL` ignorada | harness sem `psql` no PATH | instalar cliente ou usar `WYD_DB_TEST_CONTAINER` |
 | aviso de Node 20 | action antiga pinada | atualizar o SHA e rodar Dependabot; não usar `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION` |
 | site não responde no Compose | porta ocupada ou healthcheck falhando | `docker compose logs docs`; `docker compose up -d --wait docs` |

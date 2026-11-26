@@ -111,7 +111,7 @@ gate do sistema.
 **O que a aprovação em B vale a partir de agora:** a cobertura de **85%** continua **bloqueante no gate do
 sistema**, não no PR — no `code.yml` ela é **informativa** até o sistema declarar o gate fechado; `cargo audit`
 e `cargo deny` são **bloqueantes**. **Passo 8a executado em 2026-11-24:** o job `security` do `code.yml`
-roda os dois com `deny.toml`, o job `cargo` publica cobertura sem `--fail-under`, e a falha aparece como
+roda os dois com `wyd-ops/deny.toml`, o job `cargo` publica cobertura sem `--fail-under`, e a falha aparece como
 job vermelho (advisory: exit 1; licença: exit 4; `Cargo.toml` sem lock: `::error::`). O `pip-audit`/hash do
 site (`mkdocs==2.0.dev6`) continua item separado, e D-05 foi aprovada em A para toolchain e versões (dossiê em `../dossie-d-05.md`).
 
@@ -150,7 +150,7 @@ declarada não executável, sem esconder a lacuna.
 sistemas; **12** não têm código de produto (o `wyd-docs` tem implementação Python de documentação), **8**
 dos **9** diretórios de crate estão vazios, **10** sistemas não têm `RF` numerado e **1** (`wyd-ops`) não
 tem plano diretor. Só há **2** manifestos de dependência reais (`crates/wyd-db/Cargo.toml` e
-`wyd-docs/requirements.txt`; `deny.toml` é política).
+`wyd-docs/requirements.txt`; `wyd-ops/deny.toml` é política).
 
 **O que travava:** a declaração dos **12** sistemas, não a sequência de A (§0.2).
 

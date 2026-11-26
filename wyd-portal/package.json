@@ -1,0 +1,16 @@
+{
+  "name": "wyd-portal",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Portal do WYD 1.0.0 — estrutura inicial (BFF e páginas ainda não implementados).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  }
+}

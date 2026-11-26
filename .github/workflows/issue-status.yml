@@ -46,4 +46,4 @@ jobs:
           PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
           PROJECT_OWNER: ${{ github.repository_owner }}
           PROJECT_NUMBER: "10"
-        run: node .github/scripts/sync-issue-status.mjs
+        run: node wyd-ops/scripts/sync-issue-status.mjs

@@ -1,0 +1,153 @@
+{
+  "version": "0.2.0",
+  // CodeLLDB (`vadimcn.vscode-lldb`). Cada crate tem seu próprio `target/`, então
+  // `cargo.cwd` aponta para o crate: sem workspace na raiz, rodar Cargo na raiz
+  // falharia com "could not find Cargo.toml".
+  //
+  // A config "teste da lib (escolher)" usa `crates/${input:crate}` e serve aos 10
+  // crates; as demais são atalhos fixos para alvos de integração específicos.
+  //
+  // Os alvos PostgreSQL exigem um container já migrado (papéis + série, como em
+  // `.github/workflows/ci-db.yml`); `make db-up` sobe o banco vazio.
+  "inputs": [
+    {
+      "id": "crate",
+      "type": "pickString",
+      "description": "Crate do workspace (um manifesto por pasta; não há workspace na raiz)",
+      "options": [
+        "wyd-db",
+        "wyd-launcher",
+        "wyd-ops-signer",
+        "wyd-protocol",
+        "wyd-net",
+        "wyd-core",
+        "wyd-sim",
+        "wyd-server",
+        "wyd-admin",
+        "wyd-bots"
+      ]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Debug: teste da lib (escolher crate)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--lib", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/${input:crate}"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/${input:crate}",
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: wyd-ops-sign (bin)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin", "wyd-ops-sign"],
+        "cwd": "${workspaceFolder}/crates/wyd-ops-signer"
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}/crates/wyd-ops-signer",
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-db (lib)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--lib", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-db"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-db",
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-db sistema_pg",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--test", "sistema_pg", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-db"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-db",
+      "env": {
+        // Container do serviço `db` (`make db-up`); o alvo usa `docker exec psql`.
+        "WYD_DB_TEST_CONTAINER": "wyd-db-1"
+      },
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-db runner_pg",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--test", "runner_pg", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-db"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-db",
+      "env": {
+        // O alvo lê a DSN (sqlx); sem ela o teste falha com `panic!` antes do pool.
+        "WYD_DB_TEST_URL": "postgres://wyd_migrator:test@127.0.0.1:5432/wyd",
+        "WYD_DB_TEST_CONTAINER": "wyd-db-1",
+        "WYD_DB_TEST_USER": "wyd_migrator",
+        "WYD_DB_TEST_DB": "wyd"
+      },
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-db reversibilidade_pg",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--test", "reversibilidade_pg", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-db"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-db",
+      "env": {
+        // Container vazio, só com os papéis de `db/roles.sql`; o alvo recusa banco
+        // já migrado e fala por `psql` via `docker exec` (usuário/banco default).
+        "WYD_DB_TEST_CONTAINER": "wyd-db-1"
+      },
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-ops-signer (lib)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--lib", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-ops-signer"
+      },
+      "args": ["--test-threads=1", "--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-ops-signer",
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    },
+    {
+      "name": "Debug: teste wyd-launcher (assinatura)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["test", "--test", "assinatura", "--no-run"],
+        "cwd": "${workspaceFolder}/crates/wyd-launcher"
+      },
+      "args": ["--nocapture"],
+      "cwd": "${workspaceFolder}/crates/wyd-launcher",
+      "sourceLanguages": ["rust"],
+      "terminal": "integrated"
+    }
+  ]
+}
