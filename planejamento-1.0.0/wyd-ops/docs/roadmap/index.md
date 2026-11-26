@@ -4,7 +4,7 @@
 > Base: `wyd-ops/docs/index.md`; `docs/specs/requisitos.md`; `docs/planos/plano-de-testes.md`; `wyd-portal/docs/roadmap/roadmap.md` (molde, não conteúdo)
 > Revisado em: 2026-11-25
 
-**Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; nenhuma issue criada. `wyd-ops` não tinha
+**Estado:** proposto (2026-11-25). Nenhuma fatia iniciada; as 6 fatias foram publicadas como issues e estão no board (inventário em `wyd-ops/docs/github-mapping.md` §7). `wyd-ops` não tinha
 dashboard próprio até esta rodada.
 
 A fila tem **6 fatias**, uma por página citada abaixo; cada página traz entregável, DoD

@@ -21,7 +21,7 @@ liga uma issue `WYDPRT-nnn` à versão que ela serve.
 | estado de lacuna e de prova | `lacunas.md` e `goldens/catalogo.md` | não fecha lacuna |
 
 **Estado da série: `P`.** Nenhuma versão foi entregue, nenhum opcode foi gerado, nenhuma issue foi
-escrita e nenhuma issue foi criada no GitHub. Não há data em nenhuma fatia.
+escrita e as 10 fatias foram publicadas como issues no GitHub em 2026-11-26. Não há data em nenhuma fatia.
 
 ## 2. Regras do fatiamento
 

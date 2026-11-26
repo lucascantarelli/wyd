@@ -4,8 +4,8 @@
 > Base: [requisitos](../specs/requisitos.md); [contrato C4](../arquitetura/contrato-c4.md); `AGENTS.md` §7; `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md`
 > Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-21; páginas por issue em 2026-11-26). **Nenhuma issue foi criada e o
-board não foi tocado**; estas são fatias de planejamento, não itens de GitHub.
+**Estado:** proposto (2026-11-21; páginas por issue em 2026-11-26). As 10 fatias foram publicadas
+como issues #208–#217 em 2026-11-26 e estão no board `WYD 1.0.0`; nenhuma foi iniciada.
 
 ## 1. Regras do fatiamento
 

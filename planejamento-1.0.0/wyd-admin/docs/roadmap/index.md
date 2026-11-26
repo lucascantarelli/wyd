@@ -4,7 +4,7 @@
 > Base: `roadmap.md`; `../specs/requisitos.md`; `../arquitetura/contrato-c4.md`; `planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md`
 > Revisado em: 2026-11-26
 
-**Estado:** proposto (2026-11-26). Nenhuma fatia iniciada; nenhuma issue do GitHub criada.
+**Estado:** proposto (2026-11-26). Nenhuma fatia iniciada; as 10 fatias já existem como issues #208–#217 no board `WYD 1.0.0`.
 
 A fila tem **10 fatias**, uma por página citada abaixo. Cada página é dona do estado, fase,
 prioridade, entregável, DoD, fora de escopo, dependência, skills e evidência; este índice só cataloga

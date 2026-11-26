@@ -5,7 +5,7 @@
 > Revisado em: 2026-11-22
 
 **Estado:** proposto (2026-11-21); custódia de item do mercado acrescentada em 2026-11-22. Planejamento
-aberto, **nenhum código escrito**, nenhuma issue criada.
+aberto, **nenhum código escrito**; as 10 fatias foram publicadas como issues #208–#217 e estão no board `WYD 1.0.0`.
 
 ## 1. Escopo da `1.0.0`
 

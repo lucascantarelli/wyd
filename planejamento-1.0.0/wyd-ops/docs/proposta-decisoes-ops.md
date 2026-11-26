@@ -27,7 +27,7 @@ ainda diz "Proposta em aberto".
 
 | Fato | Medição | Fonte |
 |---|---|---|
-| lacunas formais | **5** — 3 fechadas, 2 bloqueadas (aplicação de `Q-OPS-2` e board do GitHub) | `docs/lacunas.md` §1 |
+| lacunas formais | **5** — 4 fechadas, 1 bloqueada (aplicação de `Q-OPS-2`); o board do GitHub fechou em 2026-11-26 | `docs/lacunas.md` §1 |
 | `RF-OPS`, roadmap e plano de teste | **existem** desde 2026-11-25 | `docs/specs/requisitos.md`; `docs/roadmap/`; `docs/planos/plano-de-testes.md` |
 | CI real | **implementado em F0+F1 (2026-11-26)**; seis workflows e quatro gates ativos | `AGENTS.md` §4/§9; `wyd-ops/docs/devops/index.md` |
 | produção | **nada publicado**; free tier não serve | `wyd-ops/proposta-gestao-github-e-ambientes.md` §7.3 |

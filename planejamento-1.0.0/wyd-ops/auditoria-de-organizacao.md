@@ -6,7 +6,7 @@
 > Base: `wyd-1.0.0.md` §8.7; `prioridade-do-projeto.md` §0.1; `AGENTS.md` §5
 > Revisado em: 2026-11-26
 
-**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **Revisão 2026-11-25 (segunda passada):** os 11 sistemas pendentes receberam a árvore `src/`/`tests/` (`.gitkeep`), `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (RF/RNF numerados) e roadmap com DoD; **13 de 13** passam no checklist, com `wyd-ops` ainda com fronteira/contratos pendentes (fechado na quarta passada). **Terceira passada (2026-11-25):** as pastas vazias `wyd-db/prompts/` e `wyd-db/skills/` receberam `.gitkeep`, cada `docs/index.md` passou a alcançar todas as páginas da pasta (0 órfãos medidos), os quatro templates de issue exigem `skill_principal` em lista fechada de nove skills, os índices locais de ADR passaram a `aceito` e os 13 planos de teste declaram CI, cobertura e monitoramento. **Quarta passada (2026-11-26):** `OPS-03.4`/`OPS-03.5` foram formalizados em `ADR-OPS-0011` e no `ADR-OPS-0007` revisado; `OPS-03` fechou e restam `OPS-04`/`OPS-05`. Nenhum código, issue, commit ou deploy foi criado por esta auditoria.
+**Estado:** auditoria executada em **2026-11-25**; D-04 = **A** aprovada. **Revisão 2026-11-25 (segunda passada):** os 11 sistemas pendentes receberam a árvore `src/`/`tests/` (`.gitkeep`), `docs/arquitetura/componentes.md`, `docs/planos/plano-de-testes.md`, `docs/specs/requisitos.md` (RF/RNF numerados) e roadmap com DoD; **13 de 13** passam no checklist, com `wyd-ops` ainda com fronteira/contratos pendentes (fechado na quarta passada). **Terceira passada (2026-11-25):** as pastas vazias `wyd-db/prompts/` e `wyd-db/skills/` receberam `.gitkeep`, cada `docs/index.md` passou a alcançar todas as páginas da pasta (0 órfãos medidos), os quatro templates de issue exigem `skill_principal` em lista fechada de nove skills, os índices locais de ADR passaram a `aceito` e os 13 planos de teste declaram CI, cobertura e monitoramento. **Quarta passada (2026-11-26):** `OPS-03.4`/`OPS-03.5` foram formalizados em `ADR-OPS-0011` e no `ADR-OPS-0007` revisado; `OPS-03` fechou. **Quinta passada (2026-11-26):** `OPS-05` fechou com 121 issues e board de 121 itens; resta `OPS-04`. Nenhum código, issue, commit ou deploy foi criado por esta auditoria.
 
 ---
 
@@ -67,7 +67,7 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 | `wyd-client` | fronteira, 5 contratos, 5 páginas, inventário e registro medidos, gate, `RF-CLI`/`RNF-CLI`, árvore, teste e roadmap na segunda passada | `LCLI-03`/`LCLI-05` e a segunda leitura seguem abertas; `LCLI-02` fechou em 2026-11-25; distribuição congelada. |
 | `wyd-bots` | fronteira, 5 contratos (B1–B5), 3 páginas, gate, `RF-BOT`/`RNF-BOT`, árvore, teste e roadmap na segunda passada | `LBOT-03` continua medição; tarefa em `docs/planos/medicoes-lnet-01-lbot-03.md`. |
 | `wyd-docs` | site implementado, contratos, gate de build/publicação, 5 páginas de `docs/`, `RF-DOC`/`RNF-DOC`, teste e roadmap na segunda passada | Aceite editorial e publicação contínua; nenhum deploy novo. |
-| `wyd-ops` | dashboard, `RF-OPS`/`RNF-OPS`, plano de teste, roadmap, árvore e gate na segunda passada | Contratos O1–O5 aprovados (O4 em `ADR-OPS-0011`, O5 no `ADR-OPS-0007` revisado); CI, imagem, ambiente, monitoramento, segredo e deploy não implementados; `Q-OPS-2` não aplicado e board pendente. Ver `docs/lacunas.md`. |
+| `wyd-ops` | dashboard, `RF-OPS`/`RNF-OPS`, plano de teste, roadmap, árvore e gate na segunda passada | Contratos O1–O5 aprovados (O4 em `ADR-OPS-0011`, O5 no `ADR-OPS-0007` revisado); CI, imagem, ambiente, monitoramento, segredo e deploy não implementados; `Q-OPS-2` não aplicado; `OPS-05` fechou com 121 itens no board. Ver `docs/lacunas.md`. |
 
 ## 4. O que a aprovação de D-04 = A muda
 
@@ -92,7 +92,7 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 | 3 | `wyd-net`/`wyd-bots` | executar `docs/planos/medicoes-lnet-01-lbot-03.md` e congelar os valores | as políticas estão decididas; falta medição |
 | 4 | `wyd-core`/`wyd-sim` | escrever o catálogo do primeiro domínio e as fórmulas/fixtures | a onda jogável depende das regras |
 | 5 | `wyd-portal`/`wyd-admin`/`wyd-launcher`/`wyd-client` | implementar BFF, canal de controle, release e respeitar direitos | são frentes de produto e distribuição |
-| 6 | `wyd-docs`/`wyd-ops` | aceite editorial, aplicação de `OPS-04` e board (`OPS-05`) — O1–O5 já aprovados | são processos; não bloqueiam a onda jogável, mas fecham operação e publicação |
+| 6 | `wyd-docs`/`wyd-ops` | aceite editorial, aplicação de `OPS-04` — O1–O5 e o board (`OPS-05`) já estão fechados | são processos; não bloqueiam a onda jogável, mas fecham operação e publicação |
 
 ## 6. Como reproduzir a medição
 
