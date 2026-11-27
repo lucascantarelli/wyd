@@ -755,7 +755,7 @@ arquivo.
 | `wyd-net` | buffer por conexão, classificação de erro e limites | codec falso + porta falsa | duas conexões sem vazamento de estado; flood contido | `bots` conectando | 0 testes; política de limites decidida (`Q-NET-1` = A), valores e código pendentes |
 | `wyd-core` | regra isolada com semente fixa | repositório falso, sem banco | tick completo determinístico | `bots` em fluxo | 0 testes |
 | `wyd-sim` | vetor de entrada e saída por fórmula | — | — | — | 0 vetores; versão decidida em `LSIM-02` e formato/local em `LSIM-03`, fixtures não implementadas |
-| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 18 testes de sistema verdes (13 `sistema_pg` + 5 `runner_pg`, 2026-11-25); `tests/` escrito (13 páginas, matriz `CAP-nn`), 14 de 39 capacidades cobertas |
+| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 20 testes de sistema verdes (13 `sistema_pg` + 7 `runner_pg`, 2026-11-27); `tests/` escrito (13 páginas, matriz `CAP-nn`), 14 de 39 capacidades cobertas |
 | `wyd-server` | configuração e ciclo de vida | HTTP do controle: `200` com ack, `503` sem escrita | dois canais isolados | `bots` por canal | 0 testes |
 | `wyd-admin` | regra de custódia e permissão | HTTP de C4, 14 rotas | fluxo de staff | Playwright (obrigatório, `AGENTS.md` §8) | 0 testes |
 | `wyd-portal` | cálculo de preço e filtro | HTTP e leitura por view | fluxo de armaria e mercado | Playwright (obrigatório) | 0 testes |

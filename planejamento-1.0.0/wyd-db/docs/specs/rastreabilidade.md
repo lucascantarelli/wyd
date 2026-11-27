@@ -27,7 +27,7 @@ continua na página dona, e a coluna, o tipo e o `CHECK` continuam no dicionári
 
 **14 das 37 células de `Teste` têm teste executado** desde 2026-11-25: as 13 capacidades `CAP-24`–`CAP-36`
 rodaram em `crates/wyd-db/tests/sistema/sistema_pg.rs` (13 verdes, §3.1) e `CAP-37` rodou em
-`crates/wyd-db/tests/sistema/runner_pg.rs` (5/5). As outras **20** seguem em `P`; as **3** restantes são `—` por
+`crates/wyd-db/tests/sistema/runner_pg.rs` (7/7). As outras **20** seguem em `P`; as **3** restantes são `—` por
 regra, porque não são teste do banco (`RF-DB-015` e `RF-DB-016`, frente `wyd-server`, e `RN-DB-003`, regra de
 cultura). Das 20 com `P`, **16** têm `CAP-nn` escrita na matriz (`CAP-01`–`CAP-23`, `CAP-38`–`CAP-39`) e **4**
 não (`RF-DB-003`, `RF-DB-006`, `RF-DB-014` e `RNF-DB-001`, que é gate de CI). As seis linhas de gate de série (`RNF-DB-008`–`RNF-DB-013`) seguem medidas em

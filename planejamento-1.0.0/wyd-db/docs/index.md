@@ -214,7 +214,7 @@ apontavam `RNF` alheio: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` (§6.6.26 daque
 revisão de `Q-BLK-21` está na raiz do sistema (`revisao-de-q-blk-21.md`, arquivo não publicado): o dono
 aprovou **A**, as correções de redação foram aplicadas e as **12** páginas de `tests/` estão `aceito
 (2026-11-24)`. O aceite não cobre capacidade por si — mas em 2026-11-24 a leva de `migrations/` aplicou os
-**28** `.sql` do zero, 13 cenários de `sistema_pg` e 5 casos de `runner_pg` rodaram verdes: a matriz está **14 de 39** — e o código
+**28** `.sql` do zero, 13 cenários de `sistema_pg` e 7 casos de `runner_pg` rodaram verdes: a matriz está **14 de 39** — e o código
 dos 6 alvos já tem permissão: `Q-BLK-18` = A.
 
 **A medição do foco do sistema é `foco-e-sequencia.md`**, na raiz deste sistema — arquivo de raiz não é

@@ -185,7 +185,7 @@ item se resolve escrevendo outra página**.
 **Atualização de 2026-11-26:** `D-06`, `Q-SERIE-1`, `Q-SEP-1`, `Q-ALVO-1`–`03`, `OPS-03.1`–`OPS-03.5` e
 `OPS-05` têm resposta do dono registrada (§11); O4/O5 foram formalizados em `ADR-OPS-0011` e no
 `ADR-OPS-0007` revisado; `Q-SERIE-1` foi implementada e provada como ciclo SQL,
-`Q-SEP-1` = A′ renomeou os 28 arquivos para `_`, **`CAP-37` foi fechada por `runner_pg` (5/5 em PG17)** e
+`Q-SEP-1` = A′ renomeou os 28 arquivos para `_`, **`CAP-37` foi fechada por `runner_pg` (7/7 em PG17, 2026-11-27)** e
 `OPS-05` publicou labels, as 71 issues novas e o board de 121 itens. Das linhas acima, o que resta é
 execução (`LNET-01`/`LBOT-03`), `CAP-38`/`CAP-39`, terceiro (`LCLI-05`) ou
 adiamento (`OPS-04`).
@@ -206,7 +206,7 @@ adiamento (`OPS-04`).
 | `D-06` | A — finalizar o `wyd-db` | `wyd-ops/docs/prioridade-do-projeto.md` §0.1 |
 | `Q-SERIE-1` | B implementada: 28 `down` e ciclo PG17 via `psql` passaram | `wyd-db/migrations/serie-e-regras.md` §9.2 |
 | `Q-SEP-1` | **A′ decidida e aplicada**: 28 arquivos renomeados para `_`; todos parseiam | `wyd-db/migrations/serie-e-regras.md` §9.1 |
-| `Q-ALVO-1`–`03` | A1 (porta em `127.0.0.1`), B1 (fixture contígua) e papel de teste; `runner_pg` verde 5/5 | `wyd-db/tests/alvos/runner-pg.md` |
+| `Q-ALVO-1`–`03` | A1 (porta em `127.0.0.1`), B1 (fixture contígua) e papel de teste; `runner_pg` verde 7/7 | `wyd-db/tests/alvos/runner-pg.md` |
 | `OPS-03.1`–`OPS-03.3` | aprovados na forma | `wyd-ops/docs/lacunas.md` §4 e §5 |
 | `OPS-03.4`, `OPS-03.5` | aprovados e formalizados em `ADR-OPS-0011` e `ADR-OPS-0007` revisado | `wyd-ops/docs/lacunas.md` §4 |
 | `OPS-05` | fatias, lacunas, labels, 10 `ADM` e board de 121 itens publicados em 2026-11-26 (#129–#217) | `wyd-ops/docs/github-mapping.md` §7 |

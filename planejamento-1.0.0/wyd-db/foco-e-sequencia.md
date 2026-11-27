@@ -15,7 +15,7 @@ página canônica.
 provados por ciclo PG17 via `psql`; o ato 3 (runner em lib/fakes, 63 testes) está concluído. `Q-SERIE-1`
 foi implementada e `Q-SEP-1` = A′ renomeou os 28 arquivos para `_`; a série real segue bloqueada só pelas
 seis versões ausentes. O ato 4 ficou reduzido a `CAP-38` e `CAP-39`: **`CAP-37` foi fechada por
-`runner_pg`** (5/5 em PG17). Ver `migrations/serie-e-regras.md` §7–§10.
+`runner_pg`** (7/7 em PG17, 2026-11-27). Ver `migrations/serie-e-regras.md` §7–§10.
 
 Este documento mede as frentes do `wyd-db` e preserva as perguntas de seed: enumera as frentes abertas
 com o número que cada uma tem no arquivo dono e registra o custo/dependência de cada uma. Ele não é

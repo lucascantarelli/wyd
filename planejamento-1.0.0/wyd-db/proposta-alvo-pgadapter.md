@@ -2,11 +2,11 @@
 > Público: Desenvolvedor do `wyd-db`, arquitetura e revisor de CI
 > Dono: equipe do `wyd-db`
 > Base: `src/migrate/spec.md` §13; `migrations/serie-e-regras.md` §6 e §9; `tests/specs/capacidades.md`; `.github/workflows/code.yml`
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-27
 
 **Estado:** decidido e implementado (2026-11-25) — `Q-ALVO-1` = A1, `Q-ALVO-2` = B1 e `Q-ALVO-3` =
-`wyd_migrator` com `LOGIN` só no teste. O alvo `runner_pg` existe, passou **5/5** em PG17 (log
-`/tmp/wyd-runner-pg.log`) e fechou `CAP-37`; a página fica como registro da comparação e das decisões.
+`wyd_migrator` com `LOGIN` só no teste. O alvo `runner_pg` existe, passou **5/5** em 2026-11-25 (log
+`/tmp/wyd-runner-pg.log`) e **7/7** em 2026-11-27, fechando `CAP-37`; a página fica como registro da comparação e das decisões.
 
 Esta página propõe **um alvo de teste novo** (`runner_pg`) que exercite o `PgAdapter` real com
 `apply`/`status`/`down` contra PostgreSQL 17, e compara as duas formas de o teste alcançar o banco.

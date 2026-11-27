@@ -18,7 +18,7 @@ cada alvo deve provar e proíbe chamar de verde o que não rodou.
 | `contrato_catalogo` | documento de catálogo e série descrevem as mesmas tabelas | não | planejado |
 | `contrato_migrations` | forma da série: contiguidade, `down`, FK, seed, constraint e tipo | não | planejado |
 | `sistema_pg` | aplicar schema e cenários `CAP-24`–`CAP-36` por `psql` | sim | executado 13/13 em PG17 (2026-11-25) |
-| `runner_pg` | porta `PgAdapter`: ledger, transação por arquivo, drift e advisory lock em duas sessões | sim | executado 5/5 em PG17 (2026-11-25); fecha `CAP-37` |
+| `runner_pg` | porta `PgAdapter`: ledger, transação por arquivo, drift e advisory lock em duas sessões | sim | executado 7/7 em PG17 (2026-11-27); fecha `CAP-37` |
 | `reversibilidade_pg` | ciclo SQL `up → down → up` por `psql`; não passa pelo runner | sim | 3/3 em 2026-11-25 (1 ciclo em PG17 + 2 conferências textuais) |
 | `sistema_sessoes` | privilégio por papel e leitura cruzada por view | sim | planejado |
 | `sistema_stack_caps` | matriz de capacidades `CAP-nn` | sim | planejado; a cobertura é medida por `tests/specs/capacidades.md` |

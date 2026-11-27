@@ -29,7 +29,7 @@ Regra: teste de linha não substitui capacidade provada. A matriz de rastreabili
 
 | Sistema | Plano de teste | Estado medido |
 |---|---|---|
-| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 18 testes de sistema (13 schema + 5 porta); 14 de 39 capacidades cobertas |
+| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 20 testes de sistema (13 schema + 7 porta); 14 de 39 capacidades cobertas |
 | `wyd-ops` | `wyd-ops/docs/planos/plano-de-testes.md` | planejado; nenhum teste escrito |
 | demais 11 sistemas | `docs/planos/plano-de-testes.md` por sistema | planejado; 0 testes implementados |
 
