@@ -90,11 +90,14 @@ body:
       options:
         - auditar-planejamento
         - documentation-writer
+        - escrever-migration
         - finishing-a-development-branch
         - frontend-design
         - github-actions-docs
+        - implementar-issue
         - planejar-sistema
         - python-testing-patterns
+        - revisar-documentacao
         - skill-creator
         - writing-plans
     validations:
