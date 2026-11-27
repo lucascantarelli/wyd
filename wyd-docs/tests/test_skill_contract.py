@@ -80,6 +80,48 @@ class ContratoDeSkillsTests(unittest.TestCase):
         skills.lista_fechada(Workspace(raiz), problemas)
         self.assertTrue(any("auditar-planejamento" in p and "não oferece" in p for p in problemas))
 
+    def test_formulario_sem_o_campo_skill_principal_reprova(self):
+        raiz = _arvore(
+            {
+                "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md": _template(
+                    "planejar-sistema"
+                ),
+                ".github/ISSUE_TEMPLATE/tarefa.yml": (
+                    "name: Tarefa\nbody:\n  - type: input\n    id: contexto\n"
+                    "    attributes:\n      label: Contexto\n"
+                ),
+            }
+        )
+        resultado = skills.run(Workspace(raiz))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any(
+                "tarefa.yml" in p and "sem o campo `skill_principal`" in p
+                for p in resultado.problems
+            ),
+            resultado.problems,
+        )
+
+    def test_secao_de_skills_vazia_reprova(self):
+        raiz = _arvore(
+            {
+                "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md": (
+                    "# Template\n\n## 3. Skills — lista fechada\n\n"
+                    "Nenhuma skill cadastrada ainda.\n\n## 4. Regras\n"
+                ),
+                ".github/ISSUE_TEMPLATE/tarefa.yml": _formulario("planejar-sistema"),
+            }
+        )
+        resultado = skills.run(Workspace(raiz))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any(
+                "template-de-issue.md" in p and "não lista nenhuma skill" in p
+                for p in resultado.problems
+            ),
+            resultado.problems,
+        )
+
     def test_todo_formulario_oferece_a_lista_fechada(self):
         nomes = skills.lista_fechada(Workspace(RAIZ), [])
         formularios = sorted(
