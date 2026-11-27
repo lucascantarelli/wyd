@@ -33,7 +33,7 @@ em lacuna própria, não em suposição.
 
 ## DoD
 
-- [ ] `InitItem.bin` com estrutura e semântica fechadas, ou semântica em `LCLI-07` com o que a fecha.
+- [ ] `InitItem.bin` com estrutura, codificação e correspondência fechadas; só o rótulo das colunas e do enum `0…3` em `LCLI-07`, com o que o fecha.
 - [ ] `SkillData.bin` (192 B + 4 B) com página dona e domínio de cada campo medido.
 - [ ] `Mixlist.bin` com layout e pares medidos, ou bloqueio declarado com o que falta.
 - [ ] `object.bin` (nomes de mapa) com codificação e charset provados.

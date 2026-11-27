@@ -248,3 +248,9 @@ as contagens, os domínios de valor, o charset e as 54 divergências entre os do
 
 O que continua sem prova é a **semântica** de enums do motor (ids de efeito, bits de `pos`, `unique
 id`, `extra`, `grade`) — `LCLI-06`.
+
+O `InitItem.bin` tem página própria — [`docs/specs/formato-inititem.md`](docs/specs/formato-inititem.md)
+— com a conta, a codificação e a medição contra os outros arquivos do cliente (2026-11-27). Este
+registro não repete número: a página mostra que o binário é **espelho de uma tabela do servidor**
+(`TMSRV/Run/InitItem.csv`, string medida no `WYD.exe` do build-alvo), que ele não é loja de NPC, mapa
+nem eixo de classe, e que resta só o rótulo das colunas e do enum de valor `0…3` — `LCLI-07` residual.
