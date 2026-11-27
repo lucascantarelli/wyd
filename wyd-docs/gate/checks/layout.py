@@ -70,6 +70,7 @@ RAIZ_ARQUIVOS = {
     ".env.example",
     ".gitattributes",
     ".gitignore",
+    ".pre-commit-config.yaml",
     "AGENTS.md",
     "LICENSE",
     "Makefile",

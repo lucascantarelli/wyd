@@ -2,19 +2,17 @@
 # `wyd-docs/gate.sh`, os scripts de CI são `wyd-ops/scripts/ci/*.sh` e o Compose é a
 # definição do ambiente. `make` só evita decorar caminhos.
 
-# `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS); os demais crates são
-# portáveis. O `make` não tenta compilar o launcher em Linux/macOS.
-CRATES := wyd-db wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
+# Todos os crates são Rust portátil, inclusive o núcleo do `wyd-launcher` (sem
+# Tauri nem `cfg(windows)`); o empacotamento NSIS, quando existir, é que exige
+# Windows e terá alvo próprio. Aqui o launcher entra como qualquer outro crate.
+CRATES := wyd-db wyd-ops-signer wyd-launcher wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
 # Crates com teste que entram no `make test`; o `wyd-db` roda a `lib` e os
-# contratos `contrato_api_migrate`/`contrato_api_provision` (os alvos PostgreSQL
-# têm `ci-db.yml`) e o launcher é Windows-only.
-TEST_CRATES := wyd-ops-signer wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
+# contratos `contrato_migrations`/`contrato_api_migrate`/`contrato_api_provision`
+# (os alvos PostgreSQL têm `ci-db.yml`).
+TEST_CRATES := wyd-ops-signer wyd-launcher wyd-protocol wyd-net wyd-core wyd-sim wyd-server wyd-admin wyd-bots
 ifeq ($(OS),Windows_NT)
-CRATES += wyd-launcher
-LAUNCHER_TEST := cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked
 PYTHON ?= py -3
 else
-LAUNCHER_TEST :=
 PYTHON ?= python
 endif
 
@@ -53,12 +51,12 @@ lint:
 
 test:
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --lib
+	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_migrations --locked
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_migrate --locked
 	cargo test --manifest-path crates/wyd-db/Cargo.toml --test contrato_api_provision --locked
 	@for c in $(TEST_CRATES); do \
 		cargo test --manifest-path crates/$$c/Cargo.toml --locked || exit 1; \
 	done
-	$(LAUNCHER_TEST)
 
 docs:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d docs --build

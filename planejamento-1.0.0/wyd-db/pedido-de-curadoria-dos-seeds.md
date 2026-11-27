@@ -2,14 +2,16 @@
 > Público: Curadoria de conteúdo, dono do cliente 7662 e equipe do `wyd-db`
 > Dono: equipe do `wyd-db` com a curadoria de conteúdo
 > Base: `plano-migrations.md` §4; `docs/planos/plano-de-dados-e-seeds.md` §2–§3; `migrations-checklist.md` §3; `ddl-confirmado.md` §5.17–§5.26; seções `H` de `docs/dicionario-dados/`
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-24; medição dos seeds legados em 2026-11-27
 
-**Estado:** proposto (2026-11-24)
+**Estado:** proposto (2026-11-24; §1 medido em 2026-11-27)
 
 Este documento é o **pedido de curadoria** dos seis seeds que seguem `bloqueada`: `0016`, `0017`,
 `0018`, `0020`, `0023` e `0027`. Ele diz, arquivo por arquivo, **o que reconferir** no cliente 7662,
-**em que unidade** e **em que formato a medição volta** — e não contém nenhuma linha de seed, nenhuma
-contagem nova e nenhum valor estimado. O que está escrito aqui é pedido, não resultado.
+**em que unidade** e **em que formato a medição volta** — e não contém nenhuma linha de seed nem
+nenhum valor estimado. Desde 2026-11-27 registra também, em §1, a **medição dos seeds legados**: ela é
+o ponto de partida do diff, não substitui a reconferência no cliente que este pedido exige. O que está
+escrito aqui é pedido, não resultado.
 
 ## 1. O que está bloqueado e por quê
 **Sem arquivo no repositório:** `0016-seed-taxonomy.sql`, `0017-seed-item-catalog.sql`, `0018-seed-skill-catalog.sql`, `0020-seed-world.sql`, `0023-seed-rules.sql`, `0027-seed-quests-events.sql` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
@@ -19,14 +21,18 @@ A fonte dos seis é o **cliente 7662 medido** (decisão do dono, 2026-11-23), e 
 o arquivo não é escrito: os seis estão fora da onda A por `Q-M33-6`, a série de 28 migrations anda sem
 eles, e o risco é `R-6` (`docs/planos/riscos.md`).
 
-| # | Arquivo | Dataset | Contagem declarada a reconferir |
-|---:|---|---|---|
-| 16 | `0016-seed-taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias |
-| 17 | `0017-seed-item-catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` |
-| 18 | `0018-seed-skill-catalog.sql` | catálogo de skill | 151 skills + 3 Kersef (154), 63 com linhagem |
-| 20 | `0020-seed-world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens de chão |
-| 23 | `0023-seed-rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório |
-| 27 | `0027-seed-quests-events.sql` | quests e eventos | cadeia de quests do 7662, 3 `world_event` + agenda, 2 arenas |
+| # | Arquivo | Dataset | Contagem declarada | Contagem medida (`V`, 2026-11-27) | Divergência |
+|---:|---|---|---:|---:|---|
+| 16 | `0016-seed-taxonomy.sql` | taxonomia | 20 sistemas, 6 classes, 13 linhagens, 16 categorias | 55 (20 + 6 + 13 + 16) | — |
+| 17 | `0017-seed-item-catalog.sql` | catálogo de item | 3.220 itens + 55 `EF_*` | 3.275 (3.220 + 55) | **3.216 de 3.220** com slot no `ItemList.bin`; 4 itens sem linha no cliente |
+| 18 | `0018-seed-skill-catalog.sql` | catálogo de skill | 151 skills + 3 Kersef (154), 63 com linhagem | 154 (151 + 3), 63 com linhagem | **124 de 151** não vazios no `SkillData.bin`; **63 × 69**: o cabeçalho do `0021_seed_skill_lineage` conta 69, mas 6 repetiam o seed e o arquivo tem 63 `UPDATE` distintos |
+| 20 | `0020-seed-world.sql` | mundo | 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens de chão | 15.142 + 12 de `content_source` | **+83** fora da conta: `guard_spawn` 5, `guard_spawn_reward` 27, `mob_merc` 1, `game_setting` 25, `game_matrix` 20, `guild_zone` 5 |
+| 23 | `0023-seed-rules.sql` | regras | 14 passos de refino, 4 gemas, SANC, combine, acessório | 158 (15 + 4 + 36 + 36 + 67) | **15 × 14 passos**: o passo 11 (+10→+11, Poeira de Lac) ficou fora da conta declarada; gemas **4 = 4**, sem divergência |
+| 27 | `0027-seed-quests-events.sql` | quests e eventos | "cadeia" de quests do 7662, 3 `world_event` + agenda, 2 arenas | 16 (1 quest + 4 passos + 3 recompensas + 3 eventos + 3 agendas + 2 arenas) | a cadeia medida é **1 quest**; as **4 cidades** não entram neste seed (destino em `proposta-decisoes-seeds.md` `Q-M34-3`) |
+
+A coluna **medida** vem dos seeds legados e do dataset do 7662, ambos em `deprecated/`, e tem a mesma
+data da revisão (`V`, 2026-11-27). Ela não fecha a lacuna: a reconferência no cliente continua sendo a
+entrega de §4, e a diferença que sobrar volta nomeada, não ajustada.
 
 **O que já está decidido e não se reabre aqui:** seed é conteúdo versionado, não estado de jogador; é
 escrito à mão, sem gerador; correção de dado acontece **na origem**, antes do seed, e não vira
@@ -122,12 +128,14 @@ aceita**. `H` marca semântica que o dicionário já declara não verificada —
 | **2** arenas | 1 linha por arena | `arena` (`code`, `name`, `kind`, `team_size`, `rounds`, `round_ms`, `respawns`, `min_level`, `no_drop`) | contagem fecha em 2; inteiros ≥ 0 |
 | semântica de `requires` e do reset diário | nota | — | formato do pré-requisito e regra de reset do dia, como o cliente aplica (`H` do domínio `quests`) |
 
-### 3.7 Uma contagem sem arquivo dono
+### 3.7 As 4 cidades — resolvidas em 2026-11-27
 
-As **4 cidades** aparecem na lista de contagens a preservar (`plano-migrations.md` §4) **sem arquivo
-atribuído**, e não existe seed de economia entre os seis. A curadoria deve dizer se o dado vem do 7662 e
-em qual dataset ele entra; até lá, a contagem fica declarada e sem dono — e não é escrita em seed
-nenhum.
+As **4 cidades** (Armia, Azran, Erion e Noatun, capital) não são dataset de conteúdo: a tabela é
+`game.city`, criada no `0011`, com FK de `game.personal_shop` e `game.city_tax_ledger`. Decisão do dono
+(A em `Q-M34-3`, 2026-11-27): as 4 linhas entram no `0020-seed-world.sql`, com `map_id` nulo (o 7662
+não publica o mapa) e sem `region_id` (o schema novo não modela o vínculo com região); o `0027` não as
+carrega. A contagem deixa de ser sem dono: dono `0020`, 4 linhas, e a origem fica na página do seed
+(`docs/wyd/economia.md` e `decisoes-servidor.md` §3), sem `sha256` de dataset.
 
 ## 4. Formato de entrega da medição
 **Sem arquivo no repositório:** `source.txt` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.

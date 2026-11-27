@@ -2,13 +2,13 @@
 > Público: Desenvolvedor, QA e revisor
 > Dono: equipe do `wyd-db`
 > Base: `wyd-db-1.0.0.md` §6.17; `plano-de-testes.md`; `tests/` planejado
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-27
 
 **Estado:** proposto (2026-11-22)
 
-O guia de teste lista os alvos do crate: três dos sete da tabela já estão declarados no `Cargo.toml`
-(`sistema_pg`, `reversibilidade_pg` e `runner_pg`), e os dois contratos de API também
-(`contrato_api_migrate` e `contrato_api_provision`); os quatro restantes seguem planejados. O comando
+O guia de teste lista os alvos do crate: quatro dos sete da tabela já estão declarados no `Cargo.toml`
+(`sistema_pg`, `reversibilidade_pg`, `runner_pg` e `contrato_migrations`), e os dois contratos de API também
+(`contrato_api_migrate` e `contrato_api_provision`); os três restantes seguem planejados. O comando
 único da suíte é `cargo test -p wyd-db` (§3), e a coluna “Estado” de §1 diz o que já rodou, com data;
 o guia proíbe chamar de verde o que não rodou.
 
@@ -17,7 +17,7 @@ o guia proíbe chamar de verde o que não rodou.
 | Alvo | Prova | Banco | Estado |
 |---|---|---|---|
 | `contrato_catalogo` | documento de catálogo e série descrevem as mesmas tabelas | não | planejado |
-| `contrato_migrations` | forma da série: contiguidade, `down`, FK, seed, constraint e tipo | não | planejado |
+| `contrato_migrations` | forma da série: contiguidade, `down`, FK, seed, constraint e tipo | não | 9 testes em 2026-11-27: `CAP-02`–`CAP-07` verdes na série viva; `CAP-01` vermelho (seis furos) |
 | `sistema_pg` | aplicar schema e cenários `CAP-09`–`CAP-19`, `CAP-24`–`CAP-36` e `CAP-38`–`CAP-39` por `psql` | sim | 13/13 dos cenários de `CAP-24`–`CAP-36` em PG17 (2026-11-25) |
 | `runner_pg` | porta `PgAdapter`: ledger, transação por arquivo, drift e advisory lock em duas sessões | sim | executado 7/7 em PG17 (2026-11-27); fecha `CAP-37` |
 | `reversibilidade_pg` | ciclo SQL `up → down → up` por `psql`; não passa pelo runner | sim | 3/3 em 2026-11-25 (1 ciclo em PG17 + 2 conferências textuais) |

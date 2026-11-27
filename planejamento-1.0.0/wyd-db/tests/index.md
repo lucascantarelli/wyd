@@ -4,51 +4,52 @@
 > Base: `../wyd-db-1.0.0.md` §6.17; `../docs/planos/plano-de-testes.md` §2–§4; `../docs/guia-teste/piramide-e-alvos.md`
 > Revisado em: 2026-11-26
 
-**Estado:** aceito (2026-11-24) — página escrita; 3 dos 7 alvos implementados e 14 dos 39 cenários
-executados (2026-11-25). `reversibilidade_pg` e `runner_pg` entraram depois do aceite original.
+**Estado:** aceito (2026-11-24) — página escrita; **4 dos 7** alvos implementados e **20 dos 39** capacidades
+com teste executado (2026-11-27). `reversibilidade_pg`, `runner_pg` e `contrato_migrations` entraram
+depois do aceite original.
 
 **Quatro níveis de afirmação convivem aqui:**
 
-- **`P`** — tudo o que a página diz sobre a suíte: `sistema_pg`, `reversibilidade_pg` e `runner_pg`
-  existem em `crates/wyd-db/Cargo.toml`; os outros quatro alvos e `resources/serie/` não têm arquivo
-  escrito. `common/` também não existe: os alvos com banco usam `tests/comum/mod.rs`.
+- **`P`** — tudo o que a página diz sobre a suíte: `sistema_pg`, `reversibilidade_pg`, `runner_pg`,
+  `contrato_migrations`, `contrato_api_migrate` e `contrato_api_provision` existem em
+  `crates/wyd-db/Cargo.toml`; os três alvos de §2 sem arquivo são os planejados. O harness é `tests/comum/mod.rs` — não existe `common/` —
+  e o dado de apoio está em `tests/resources/fixture/` e `tests/resources/fixture_falha/`.
 - **`H`** — dúvida aberta, dita e localizada em §5, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o § ao lado.
 - **sem marca** — regra de projeto (`../docs/convencoes.md`) e comportamento do PostgreSQL
   (`../padrao-banco.md` §13).
 
-Esta pasta é o **plano da suíte** do `crates/wyd-db`: sete alvos, o recurso compartilhado de
-`tests/common/`, o dado de apoio de `tests/resources/` e as regras que valem para toda a suíte, em `specs/`.
+Esta pasta é o **plano da suíte** do `crates/wyd-db`: sete alvos, o harness de `tests/comum/mod.rs`,
+o dado de apoio de `tests/resources/` e as regras que valem para toda a suíte, em `specs/`.
 A matriz de capacidades é [specs/capacidades.md](specs/capacidades.md) e é ela, não esta página, que diz
 o que cada alvo prova.
 
-## 1. Árvore planejada de `crates/wyd-db/tests/`
+## 1. Árvore de `crates/wyd-db/tests/` — o que existe e o que é planejado
 
 ```text
 crates/wyd-db/tests/
+├── comum/
+│   └── mod.rs                # harness: DSN de teste e psql           (existe)
 ├── contrato/
-│   ├── contrato_catalogo.rs  # alvo de contrato: catálogo × série
-│   └── contrato_migrations.rs # alvo de contrato: forma da série
-├── sistema/
-│   ├── sistema_pg.rs         # alvo de sistema: comportamento no PG17
-│   ├── reversibilidade_pg.rs # alvo de sistema: ciclo up → down → up por psql
-│   ├── runner_pg.rs          # alvo de sistema: porta PgAdapter, ledger e lock
-│   ├── sistema_sessoes.rs    # alvo de sistema: papel, fronteira e view
-│   └── sistema_stack_caps.rs # meta-alvo: a matriz e o anti-skip
-├── common/
-│   ├── mod.rs                # reexport dos três auxiliares
-│   ├── db.rs                 # provisiona, conecta, derruba
-│   ├── factory.rs            # cria dado com chave própria
-│   └── serie.rs              # lê a série como texto
-└── resources/
-    ├── accounts.json         # contas de teste por papel
-    └── serie/
-        ├── valida/           # série de fixture que passa
-        └── invalida/         # uma fixture por defeito do contrato
+│   ├── contrato_api_migrate.rs    # fachada pública de `migrate`     (existe)
+│   ├── contrato_api_provision.rs  # fachada pública de `provision`   (existe)
+│   ├── contrato_catalogo.rs       # catálogo × série                 (planejado)
+│   └── contrato_migrations.rs     # forma da série                   (planejado)
+├── resources/
+│   ├── fixture/              # série contígua de 4 arquivos          (existe)
+│   └── fixture_falha/        # falha no meio do arquivo              (existe)
+└── sistema/
+    ├── sistema_pg.rs         # comportamento no PG17 por psql        (existe)
+    ├── reversibilidade_pg.rs # ciclo up → down → up por psql         (existe)
+    ├── runner_pg.rs          # porta PgAdapter, ledger e lock        (existe)
+    ├── sistema_sessoes.rs    # papel, fronteira e view               (planejado)
+    └── sistema_stack_caps.rs # meta-alvo: a matriz e o anti-skip     (planejado)
 ```
 
-`common/` é o único lugar com helper compartilhado; arquivo dentro de `tests/` que não é alvo nem
-recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](fixtures-e-factories.md).
+`comum/` é o único lugar com helper compartilhado — hoje só `mod.rs`; `db.rs`, `factory.rs` e
+`serie.rs` continuam planejados e estão inventariados em
+[fixtures-e-factories.md](fixtures-e-factories.md). Arquivo dentro de `tests/` que não é alvo nem
+recurso vive ali.
 
 **Reorganização (2026-11-26):** os alvos de contrato ficam em `contrato/` e os de sistema em
 `sistema/`; o harness atual continua em `comum/mod.rs` e o nome do alvo no `Cargo.toml` não mudou
@@ -60,7 +61,7 @@ mas a execução contra PostgreSQL 17 **não foi repetida** localmente nessa dat
 `runner`) executou os três no PR #220 e passou.
 
 ## 2. Alvo → arquivo → tipo → precisa de banco
-**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs`, `sistema/runner_pg.rs` e os contratos de API
+**Sem arquivo no repositório:** `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs`, `sistema/runner_pg.rs`, `contrato/contrato_migrations.rs` (desde 2026-11-27) e os contratos de API
 `contrato/contrato_api_migrate.rs` e `contrato/contrato_api_provision.rs` estão versionados.
 
 | Alvo (`Cargo.toml`) | Arquivo | Tipo | Precisa de banco | Capacidades |
@@ -111,10 +112,10 @@ alvo da capacidade que interessa → a regra da camada ([specs/contrato.md](spec
 
 | O que | Comando | Observação |
 |---|---|---|
-| tudo do crate | `cargo test -p wyd-db` | os dois contratos rodam sem banco |
+| tudo do crate | `cargo test -p wyd-db` | os contratos rodam sem banco; os três alvos de sistema exigem `WYD_DB_TEST_URL` |
 | um alvo | `cargo test -p wyd-db --test <alvo>` | `<alvo>` é o nome da coluna 1 |
 | um cenário | `cargo test -p wyd-db --test <alvo> <cenário>` | o nome do cenário é o da matriz |
-| só o contrato | `cargo test -p wyd-db --test contrato_migrations --test contrato_catalogo` | não abre conexão |
+| só os contratos | `cargo test -p wyd-db --test contrato_migrations --test contrato_api_migrate --test contrato_api_provision` | não abre conexão |
 
 **Ambiente:** os alvos que exigem banco leem a DSN de teste do ambiente — `WYD_DB_TEST_URL`, ou
 `WYD_DB_TEST_CONTAINER` para o `psql` dentro do container (`../src/provision/spec.md` §3) — e falham
@@ -132,8 +133,9 @@ ambiente de teste: o banco nasce e morre com a execução.
 - **Não substitui o contrato de catálogo do repositório:** o leitor em uso ainda não enxerga
   `CREATE TABLE esquema.tabela` (`../docs/guia-teste/testes-de-contrato.md` §1).
 - **Não declara verde:** só o que rodou conta; a contagem de capacidades cobertas é de
-  [specs/capacidades.md](specs/capacidades.md) §7 — hoje **14 de 39**, 13 em `sistema_pg` e `CAP-37` em
-  `runner_pg` (V, 2026-11-27: log `/tmp/wyd-runner-pg-2026-11-27.log`).
+  [specs/capacidades.md](specs/capacidades.md) §7 — hoje **20 de 39**, 13 em `sistema_pg`, `CAP-37` em
+  `runner_pg` e `CAP-02`–`CAP-07` em `contrato_migrations` (V, 2026-11-27: 9 testes em 0,09 s, sem
+  banco; `CAP-01` segue fora porque a série viva tem seis furos).
 
 ## 5. Dúvidas do dono e o que elas decidiram
 
@@ -144,10 +146,10 @@ As duas perguntas do dono que decidiam o que esta pasta autoriza estão respondi
 | o aceite das 12 páginas libera o código dos cinco alvos, ou o código espera a issue no GitHub? | `Q-BLK-18` — **A** em 2026-11-24: o aceite libera e a issue registra o vínculo no lote da onda (`../pendencias-de-fechamento.md` §6.6.27) | dono do `wyd-db` |
 | a leva de aceite começa por `tests/` ou por `migrations/`? | `Q-BLK-17` — **fechada em A pela execução** (2026-11-24): a leva 1 começou por `tests/`, por razão itens/ato de 7,3 contra 1,1 | dono do `wyd-db` |
 
-Com as duas respondidas, o código foi liberado e **3 dos 5 alvos planejados** já estão em
-`crates/wyd-db/Cargo.toml` — `sistema_pg`, `reversibilidade_pg` e `runner_pg` —, ao lado dos contratos de
-API `contrato_api_migrate` e `contrato_api_provision`; `contrato_migrations`, `contrato_catalogo`,
-`sistema_sessoes` e `sistema_stack_caps` seguem sem arquivo escrito (§2).
+Com as duas respondidas, o código foi liberado e **4 dos 5 alvos planejados** já estão em
+`crates/wyd-db/Cargo.toml` — `sistema_pg`, `reversibilidade_pg`, `runner_pg` e, desde 2026-11-27,
+`contrato_migrations` —, ao lado dos contratos de API `contrato_api_migrate` e `contrato_api_provision`;
+`contrato_catalogo`, `sistema_sessoes` e `sistema_stack_caps` seguem sem arquivo escrito (§2).
 
 ## 6. O que esta página não decide
 

@@ -963,7 +963,7 @@ do módulo. Este bloco, `lacunas.md` e as ADRs apontam para a página, sem repet
 | construtor do adapter do provisionamento | `provision/adapter/pg.md` §2 |
 | execução do script de provisionamento | `provision/port/script.md` §3 |
 
-Serão 21 arquivos em `src/migrate/` e 13 em `src/provision/` (previstos; hoje o crate tem `lib.rs` e `dsn.rs`); o `Dsn` dos dois é o mesmo arquivo,
+Serão 21 arquivos em `src/migrate/` e 13 em `src/provision/` (previstos; em 2026-11-27 o crate tem `lib.rs`, `dsn.rs`, **21** em `src/migrate/` e **11** em `src/provision/`); o `Dsn` dos dois é o mesmo arquivo,
 `src/dsn.rs`, e por isso não conta em nenhum dos dois. **Regra de dependência:**
 `migration`/`domain` não importam `port`, `app` nem `adapter`; `app` não importa `adapter`; `sqlx` e
 `std::fs` só existem em `adapter/`. Cada página de `mod.md` declara a fachada (`run`, `Command`,

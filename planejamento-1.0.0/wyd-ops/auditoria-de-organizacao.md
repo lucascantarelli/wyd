@@ -87,7 +87,7 @@ A tabela abaixo não repete o checklist fechado em §2. Ela lista o que ainda fa
 
 | Ordem sugerida | Sistema | Ação | Por que primeiro |
 |---:|---|---|---|
-| 1 | `wyd-db` | fechar o aceite editorial dos 141 atos e revisar os seeds bloqueados | é o piloto e o foco D-01 |
+| 1 | `wyd-db` | fechar o aceite editorial dos 138 atos e revisar os seeds bloqueados | é o piloto e o foco D-01 |
 | 2 | `wyd-server`/`wyd-protocol` | concluir A1, captura e peer; fechar `LPRT-03`/`LPRT-06` | destrava o fio e o runtime |
 | 3 | `wyd-net`/`wyd-bots` | executar `docs/planos/medicoes-lnet-01-lbot-03.md` e congelar os valores | as políticas estão decididas; falta medição |
 | 4 | `wyd-core`/`wyd-sim` | escrever o catálogo do primeiro domínio e as fórmulas/fixtures | a onda jogável depende das regras |

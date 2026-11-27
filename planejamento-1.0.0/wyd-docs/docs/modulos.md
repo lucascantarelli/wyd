@@ -31,7 +31,7 @@
 - **DoD:** gate verde.
 
 ### checks
-- **Objetivo:** regras de links, lacunas, contagens, censos e skills.
+- **Objetivo:** regras de layout, links, alvos, lacunas, contagens, censos, capacidades, hoje e skills; `_texto.py` guarda a leitura comum (linha lógica, frase e isenção por data).
 - **Escopo:** `gate/checks/*.py`.
 - **Interfaces:** pass/fail.
 - **Dependências:** `Workspace` compartilhado.

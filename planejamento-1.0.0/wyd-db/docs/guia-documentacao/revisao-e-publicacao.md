@@ -43,7 +43,7 @@ flowchart LR
 ## 3. Gate local
 
 O gate é o de `wyd-docs`: `preparar.py`, `mkdocs build` e `gate/checks/links.py`, seguidos de
-`gate/checks/contagens.py` e `gate/checks/censos.py`. Ele verifica link, âncora, navegação, sintaxe 1.x,
+`gate/checks/contagens.py`, `gate/checks/censos.py` e `gate/checks/alvos.py`. Ele verifica link, âncora, navegação, sintaxe 1.x,
 censo por estado, contagens da série e os quatro censos citados entre páginas (atos de aceite,
 páginas aceitas, células pendentes e `Q-BLK` abertas). Um build que gera HTML sem os verificadores
 **não** é gate completo.

@@ -170,7 +170,8 @@ wyd-docs/
 ├── preparar.py                       ● monta .build/docs e a navegação
 ├── gate.sh                           ● entrada estável do gate
 ├── gate/                             ● pacote: cli, workspace e checks/
-│   └── checks/                       ● links, lacunas, contagens, censos, skills
+│   └── checks/                       ● layout, links, alvos, lacunas, contagens, censos,
+│                                       capacidades, hoje, skills, _texto.py (frase e data)
 ├── tests/                            ● fixtures e testes dos verificadores
 ├── redirects.tsv                     ● mapa origem → destino dos redirects
 ├── tema/

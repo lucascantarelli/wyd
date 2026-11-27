@@ -17,14 +17,16 @@ teste de sistema. A divisão das camadas é de `padrao-banco.md` §10.
 O alvo percorre o diretório da série **como texto**, sem abrir conexão: nome de quatro dígitos,
 `-- migrate:up` e `-- migrate:down` sozinhos na linha, `CREATE TABLE schema.tabela (` na linha e `);`
 sozinho no fim. A leitura é a mesma que o runner faz; o teste não inventa um segundo parser
-(`src/migrate/spec.md` §2). O diretório é o da série viva, e o alvo aceita `SERIE`/`--dir` para
-apontar uma fixture — o mesmo caminho que o PR de ferramentas usa para provar a fixture boa e a ruim
-(`plano-migrations.md` §1.3).
+(`src/migrate/spec.md` §2). O alvo lê dois caminhos **constantes**: `migrations/` (série viva) e
+`tests/resources/serie/` (fixtures), sem `SERIE` nem `--dir` — parâmetro por ambiente tornaria o
+resultado dependente de quem executa (`tests/specs/contrato.md` regra 7).
 
 **Limite atual, declarado:** o leitor de catálogo em uso (`banco-parse`) ancora `CREATE TABLE` em
 nome simples e **não enxerga** `CREATE TABLE game.account (`; por isso o contrato da série nova ainda
 não roda nesse leitor e é conferência manual até o PR de ferramentas
-(`plano-migrations.md` §1.1 e §1.3). O alvo `contrato_migrations` é desenho; não há verde a citar.
+(`plano-migrations.md` §1.1 e §1.3) — esse limite é do leitor de catálogo, que é `contrato_catalogo`.
+O alvo `contrato_migrations` roda desde 2026-11-27 e não usa esse leitor: nove testes em 0,09 s, sem
+banco (`tests/alvos/contrato-migrations.md` §1).
 
 ## 2. O que ele reprova
 
@@ -67,11 +69,12 @@ O contrato é a primeira barreira, não a prova final: um schema pode passar nel
 
 ## 5. Estado e o que não cobre
 
-- **Alvo:** `contrato_migrations` é `P`; o `Cargo.toml` existe desde 2026-11-24 e ainda não declara o alvo
-  (`wyd-db-1.0.0.md` §6.17).
+- **Alvo:** `contrato_migrations` está declarado no `Cargo.toml` desde 2026-11-27 e roda em
+  `tests/contrato/contrato_migrations.rs`; `CAP-02`–`CAP-07` passam na série viva, `CAP-01` não —
+  faltam `0016`, `0017`, `0018`, `0020`, `0023` e `0027` (`tests/alvos/contrato-migrations.md` §1).
 - **Leitor:** o parser atual não entende schema qualificado, view nem `INET`; até o PR de
   ferramentas, a conferência é manual (`plano-migrations.md` §1.3).
-- **Fixture:** a série de fixture e o caso ruim são critério de pronto do PR de ferramentas, não
-  deste alvo.
+- **Fixture:** `tests/resources/serie/valida/` tem **4** arquivos e cada uma das **7** pastas
+  `invalida/<defeito>/` tem a série que viola **um** invariante (`tests/resources/README.md` §3).
 - **Cobertura:** este teste não mede cobertura de capacidade; a matriz está em
   `tests/specs/capacidades.md`, e os contratos cobrem `CAP-01`–`CAP-08`.

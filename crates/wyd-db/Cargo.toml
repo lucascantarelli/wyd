@@ -21,6 +21,10 @@ name = "runner_pg"
 path = "tests/sistema/runner_pg.rs"
 
 [[test]]
+name = "contrato_migrations"
+path = "tests/contrato/contrato_migrations.rs"
+
+[[test]]
 name = "contrato_api_migrate"
 path = "tests/contrato/contrato_api_migrate.rs"
 

@@ -37,7 +37,7 @@ produto.
 | **4** | Makefile | Criar alvos `fmt`, `lint`, `test`, `audit`, `deny` e `gate`, todos com comandos de workspace e sem segredo. | `make fmt`, `make lint`, `make test`, `make audit`, `make deny` e `make gate` executam o mesmo comando documentado. |
 | **5** | CI | Atualizar `.github/workflows/code.yml`: incluir `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml` e `Makefile` em `paths`; trocar os **6** `--manifest-path crates/wyd-db/Cargo.toml` por comandos de workspace; fazer `security` usar o manifesto/lock da raiz, sem `find ... -print -quit`. | Workflow dispara por mudança de configuração da raiz; fmt, clippy, testes, cobertura, audit e deny rodam no workspace. |
 | **6** | Imagens por digest | Resolver os digests de `python:3.15-slim` e `postgres:17` no registro e fixá-los no Dockerfile/`code.yml`; para o GHCR do site, publicar o digest da imagem e usar digest no caminho de deploy, mantendo tags só como conveniência local. Não inventar digest. | Nenhum `FROM`/`image:` de runtime fica por tag; o digest usado está registrado no plano de execução e no comentário da imagem. |
-| **7** | Verificação | Rodar os comandos de §4 e o gate de documentação; comparar contagens com 309 páginas / 307 fontes / 141 atos / 79 aceitas / 64 células / 0 Q-BLK. | Todos os comandos verdes; contagens iguais às publicadas; `git diff --check` limpo. |
+| **7** | Verificação | Rodar os comandos de §4 e o gate de documentação; comparar contagens com 309 páginas / 307 fontes / 141 atos / 79 aceitas / 64 células / 0 Q-BLK (baseline de 2026-11-25). | Todos os comandos verdes; contagens iguais às publicadas; `git diff --check` limpo. |
 | **8** | Rollback | Se o workspace falhar, reverter o `Cargo.toml`/lock/toolchain/Makefile, restaurar o lock do crate e reverter o `code.yml`; nenhum dado é migrado. | `git status` limpo e `cargo test` do crate volta ao estado anterior. |
 
 ## 4. Comandos de verificação
@@ -70,8 +70,8 @@ git diff --check
 - `.github/workflows/code.yml` cobre fmt, clippy, testes, cobertura, audit e deny no workspace e
   dispara quando a configuração da raiz muda.
 - `python:3.15-slim` e `postgres:17` fixados por digest; GHCR com digest no caminho de deploy.
-- Gate de documentação continua em **309 páginas / 307 fontes / 141 atos / 79 aceitas / 64 células /
-  0 Q-BLK**.
+- Gate de documentação continua como na baseline de 2026-11-25: **309 páginas / 307 fontes / 141 atos /
+  79 aceitas / 64 células / 0 Q-BLK**.
 - Nenhum código de produto, issue, commit ou PR criado por este plano.
 
 ## 6. Riscos e mitigação

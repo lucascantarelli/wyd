@@ -14,12 +14,23 @@ Medidas (fontes independentes, cada uma com a regra ao lado):
    situação começa por `aberta` e cujo ID é `Q-BLK-nn`. Mede a lista, não a contagem citada; **zero
    aberta é medida válida** e imprime `nenhuma`.
 
-Regra das citações: todo `**N** atos de aceite`, `**N** páginas \`aceito\``, `**N** células
-pendentes` (ou `**N** células (X \`teste\` + Y \`issue\`)`), `**N** \`Q-BLK\` abertas` e
-`**N** células \`Teste\` seguem \`P\`` encontrado em `planejamento-1.0.0/**/*.md` é comparado com a
-medida. Citação de outro dono não existe aqui: os quatro números são do `wyd-db`. Linha com marca
-explícita de registro histórico (`na medição de então`, `naquele momento`, `naquele lote`, `na leva 1`,
-`seguiam abertas`) é impressa como `ignorado` e não reprova — é o dossiê que guarda a passada.
+Regra das citações: todo `N atos` — `**N** atos de aceite`, `**N** atos`, `**N atos**` ou texto
+corrido (`141 atos`) —, `**N** páginas \`aceito\``, `**N** células pendentes` (ou `**N** células
+(X \`teste\` + Y \`issue\`)`), `**N** \`Q-BLK\` abertas` e `**N** células \`Teste\` seguem
+\`P\`` encontrado em `planejamento-1.0.0/**/*.md` é comparado com a medida. O negrito não muda a
+regra: o que importa é a citação estar em texto corrente do planejamento. Citação colada a uma pasta
+(`141 atos de \`docs/\``, `src/`, `migrations/` ou `tests/`) é contagem daquela pasta, não do total,
+e fica fora; o mesmo parágrafo pode citar o total e a pasta, e cada citação é julgada sozinha. Só
+`12`, `27` e `37` — os tamanhos de leva conhecidos — ficam fora do censo, e só quando a `leva`
+**qualifica o próprio número**, colada a ele (`12 atos da leva`, `leva `tests/` — 12 atos`); `leva`
+em outra oração da mesma frase não isenta, e pelo valor sozinho eles são totais como qualquer outro. `34 atos` citado na linha que fala de `M33` é o aceite da série de
+migrations, dono próprio, e sai como `escopo \`M33\``. Não há corte relativo ao total: qualquer
+citação é conferida, inclusive valores menores que metade do censo. Citação de outro dono não existe
+aqui: os quatro números são do `wyd-db`. Linha com marca explícita de registro histórico (`na medição
+de então`, `naquele momento`, `naquele lote`, `na leva 1`, `seguiam abertas`) é impressa como
+`ignorado` e não reprova — é o dossiê que guarda a passada. Data anterior à medição na mesma frase da
+citação, ou na seção que a herda, também isenta a citação de `N atos`, com a data impressa no detalhe;
+baseline de dossiê/plano entra assim, datada.
 
 Falha (exit 1) em divergência; exit 2 quando não dá para medir (arquivo ou pasta ausente).
 Vive em `wyd-docs/` porque `planejamento-1.0.0/` é documentação e não aceita executável (AGENTS §5.6).
@@ -36,6 +47,7 @@ from typing import NamedTuple
 
 from ..model import CheckResult
 from ..workspace import Workspace
+from . import _texto
 
 _WS: Workspace | None = None
 
@@ -57,7 +69,22 @@ QBLK_RE = re.compile(r"`(Q-BLK-[0-9]+)`")
 ABERTA_RE = re.compile(r"^[ *]*aberta([^a-z]|$)", re.IGNORECASE)
 
 ATOS_RE = re.compile(r"\*\*(\d+)\*\*\s+atos de aceite")
+# Qualquer `N atos`, com ou sem negrito (`**141** atos`, `**141 atos**`, `141 atos`).
+ATOS_ANY_RE = re.compile(r"\*{0,2}\b(\d+)\*{0,2}\s+atos\b(?!\s*/\s*issues)")
 ATOS_TABELA_RE = re.compile(r"atos de aceite pendentes[^|]*\|\s*\*{0,2}(\d+)\*{0,2}")
+# Colado na própria citação (`141 atos de `docs/``), não na linha: o mesmo parágrafo costuma citar o total.
+ATOS_DE_PASTA_RE = re.compile(r"\s+de\s+`(?:docs|src|migrations|tests)/`")
+# Tamanhos de leva conhecidos. Só ficam fora do censo quando a frase que contém o número diz que ele é
+# de uma leva; pelo valor sozinho, `12`, `27` e `37` são totais como qualquer outro e reprovam se não
+# baterem com a medição. Totais de outro tamanho nunca usam esta isenção.
+ATOS_LEVAS = frozenset({12, 27, 37})
+LEVA_RE = re.compile(r"\blevas?\b", re.IGNORECASE)
+# A leva tem de qualificar o próprio número: entre ela e a citação só cabe conectivo, não outra oração.
+LEVA_JANELA = 40
+LEVA_PALAVRAS = 4
+LEVA_CORTE_RE = re.compile(r"[;.,|]")
+# `34 atos` é o aceite da série de migrations (`M33`), não o censo do sistema: um fato, um dono.
+ESCOPO_M33_RE = re.compile(r"\bM33\b")
 PAGINAS_RE = re.compile(r"\*\*(\d+)\*\*\s+páginas\s+`aceito`")
 PAGINAS_ALT_RE = re.compile(r"\*\*(\d+)\*\*\s+páginas aceitas")
 CELULAS_RE = re.compile(r"\*\*(\d+)\*\*\s+células pendentes(?!\s*\()")
@@ -92,6 +119,18 @@ class Citacao(NamedTuple):
 
 class Erro(Exception):
     """Falha de leitura que impede medir — não é divergência de censo."""
+
+
+class Medidas(NamedTuple):
+    """O que o censo mede hoje, pelo contrato público usado por quem compõe a medida."""
+
+    atos: dict[str, int]
+    aceitas: int
+    por_pasta: dict[str, int]
+    teste: int
+    issue: int
+    qblk: list[str]
+    corte: str | None
 
 
 def ler(raiz: Path, relativo: str) -> str:
@@ -186,10 +225,6 @@ def medir_qblk(raiz: Path) -> list[str]:
     return abertas
 
 
-def _extra_paginas(linha: str, achado: re.Match[str]) -> tuple[int, ...]:
-    return ()
-
-
 def _historico(linha: str) -> str | None:
     for marca in HISTORICO:
         if marca in linha:
@@ -197,7 +232,49 @@ def _historico(linha: str) -> str | None:
     return None
 
 
-def citacoes(raiz: Path) -> tuple[list[Citacao], list[tuple[Citacao, str]]]:
+def _leva_qualifica(linha: str, inicio: int, fim: int) -> bool:
+    """`leva` colada ao número: `12 atos da leva`, `leva `tests/` — 12 atos`, `leva 1 (12 atos)`."""
+    for achado in LEVA_RE.finditer(linha):
+        if achado.end() <= inicio:
+            trecho = linha[achado.end() : inicio]
+        elif achado.start() >= fim:
+            trecho = linha[fim : achado.start()]
+        else:
+            continue
+        if (
+            len(trecho) <= LEVA_JANELA
+            and len(trecho.split()) <= LEVA_PALAVRAS
+            and not LEVA_CORTE_RE.search(trecho)
+        ):
+            return True
+    return False
+
+
+def _motivo_atos(
+    linha: str, achado: re.Match[str], valor: int, data_secao: str | None, corte: str | None
+) -> str | None:
+    """Isenção de uma citação de `N atos`: pasta, leva, data na frase ou seção datada."""
+    if ATOS_DE_PASTA_RE.match(linha, achado.end()):
+        return "atos de uma pasta"
+    if ESCOPO_M33_RE.search(linha):
+        return "escopo `M33`"
+    if valor in ATOS_LEVAS and _leva_qualifica(linha, *achado.span()):
+        return "contagem de leva"
+    isento = _texto.isencao_por_data(linha, achado.start(), data_secao, corte)
+    if isento:
+        origem, data = isento
+        return f"data {data} na frase" if origem == "frase" else f"seção datada {data}"
+    return None
+
+
+def _corte(raiz: Path) -> str | None:
+    datas = _texto.DATA_RE.findall(ler(raiz, PENDENCIAS))
+    return max(datas) if datas else None
+
+
+def citacoes(
+    raiz: Path, corte: str | None
+) -> tuple[list[Citacao], list[tuple[Citacao, str]]]:
     """Citações dos quatro censos e as linhas declaradas históricas."""
     vigentes: list[Citacao] = []
     historicas: list[tuple[Citacao, str]] = []
@@ -206,57 +283,88 @@ def citacoes(raiz: Path) -> tuple[list[Citacao], list[tuple[Citacao, str]]]:
         raise Erro(f"pasta ausente: {base}")
     for pagina in _ws().files(base, "*.md"):
         relativo = pagina.relative_to(raiz).as_posix()
+        pilha: list[tuple[int, str | None]] = []
         for numero, linha in enumerate(_ws().read(pagina).splitlines(), start=1):
-            achados: list[Citacao] = []
-            for achado in ATOS_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "atos"))
-            for achado in ATOS_TABELA_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "atos"))
+            if linha.startswith("#"):
+                nivel = len(linha) - len(linha.lstrip("#"))
+                while pilha and pilha[-1][0] >= nivel:
+                    pilha.pop()
+                achado = _texto.DATA_RE.search(linha)
+                pilha.append((nivel, achado.group(1) if achado else None))
+                continue
+            data_secao = _texto.data_da_secao(pilha)
+            achados: list[tuple[Citacao, str | None]] = []
+            ocupados: list[tuple[int, int]] = []
+            for padrao in (ATOS_RE, ATOS_TABELA_RE):
+                for achado in padrao.finditer(linha):
+                    achados.append((Citacao(relativo, numero, int(achado.group(1)), "atos"), None))
+                    ocupados.append(achado.span())
+            for achado in ATOS_ANY_RE.finditer(linha):
+                if any(inicio <= achado.start() < fim for inicio, fim in ocupados):
+                    continue
+                valor = int(achado.group(1))
+                citacao = Citacao(relativo, numero, valor, "atos")
+                achados.append((citacao, _motivo_atos(linha, achado, valor, data_secao, corte)))
             for achado in PAGINAS_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "páginas"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "páginas"), None))
             for achado in PAGINAS_ALT_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "páginas"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "páginas"), None))
             for achado in CELULAS_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "células"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "células"), None))
             for achado in CELULAS_PARCIAL_RE.finditer(linha):
                 achados.append(
-                    Citacao(
-                        relativo,
-                        numero,
-                        int(achado.group(1)),
-                        "células",
-                        (int(achado.group(2)), int(achado.group(3))),
+                    (
+                        Citacao(
+                            relativo,
+                            numero,
+                            int(achado.group(1)),
+                            "células",
+                            (int(achado.group(2)), int(achado.group(3))),
+                        ),
+                        None,
                     )
                 )
             for achado in CELULAS_P_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "teste"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "teste"), None))
             for achado in QBLK_PRE_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "qblk"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "qblk"), None))
             for achado in QBLK_POS_RE.finditer(linha):
-                achados.append(Citacao(relativo, numero, int(achado.group(1)), "qblk"))
+                achados.append((Citacao(relativo, numero, int(achado.group(1)), "qblk"), None))
             if not achados:
                 continue
             marca = _historico(linha)
-            if marca:
-                historicas.extend((citacao, marca) for citacao in achados)
-            else:
-                vigentes.extend(achados)
+            for citacao, motivo_registro in achados:
+                motivo = marca or motivo_registro
+                if motivo:
+                    historicas.append((citacao, motivo))
+                else:
+                    vigentes.append(citacao)
     return vigentes, historicas
 
 
-def run(ws: Workspace) -> CheckResult:
+def medidas(ws: Workspace) -> Medidas:
+    """Mede os quatro censos: quem precisa comparar contra eles não toca em `_WS`."""
     global _WS
     _WS = ws
     raiz = ws.root
+    atos = medir_atos(raiz)
+    aceitas, por_pasta = medir_aceitas(raiz)
+    teste, issue = medir_celulas(raiz)
+    qblk = medir_qblk(raiz)
+    return Medidas(atos, aceitas, por_pasta, teste, issue, qblk, _corte(raiz))
 
+
+def run(ws: Workspace) -> CheckResult:
     try:
-        atos = medir_atos(raiz)
-        aceitas, aceitas_por_pasta = medir_aceitas(raiz)
-        teste, issue = medir_celulas(raiz)
-        qblk = medir_qblk(raiz)
-        vigentes, historicas = citacoes(raiz)
+        medida = medidas(ws)
+        vigentes, historicas = citacoes(ws.root, medida.corte)
     except Erro as erro:
         return CheckResult("censos", False, str(erro))
+    atos = medida.atos
+    aceitas = medida.aceitas
+    aceitas_por_pasta = medida.por_pasta
+    teste, issue = medida.teste, medida.issue
+    qblk = medida.qblk
 
     medido = {
         "atos": atos["total"],
@@ -292,8 +400,16 @@ def run(ws: Workspace) -> CheckResult:
         f"ignorado {c.arquivo}:{c.linha}: {c.valor} {c.unidade} ({marca})"
         for c, marca in historicas
     ]
+    falhas = {
+        (c.arquivo, c.linha, c.unidade, c.valor)
+        for c in vigentes
+        if c.valor != medido[c.unidade]
+        or (c.unidade == "células" and c.extra and c.extra != (teste, issue))
+    }
     detalhes += [
-        f"ok {c.arquivo}:{c.linha}: {c.valor} {c.unidade}" for c in vigentes
+        f"{'falha' if (c.arquivo, c.linha, c.unidade, c.valor) in falhas else 'ok'} "
+        f"{c.arquivo}:{c.linha}: {c.valor} {c.unidade}"
+        for c in vigentes
     ]
     if problemas:
         return CheckResult("censos", False, resumo, problems=problemas, details=detalhes)
