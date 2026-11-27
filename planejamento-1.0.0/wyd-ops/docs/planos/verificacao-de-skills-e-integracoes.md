@@ -61,6 +61,18 @@ Regra: o agente carrega a skill relevante **antes** de escrever, não depois. Is
 
 Regra: segredos só via secret do GitHub ou `.env` local ignorado. Nenhum token, DSN, hash, senha ou PIN aparece em documento, log, issue ou chat.
 
+### 4.1 Servidores MCP
+
+Servidor MCP não é integração: é ferramenta do agente, fora do repositório, e não entra no CI.
+
+| Servidor | Estado hoje | Uso planejado |
+|---|---|---|
+| `sequential-thinking` | disponível no cliente; nada configurado no repositório | decompor tarefa multi-etapa antes de decidir |
+| `server-memory` | disponível no cliente; grafo local do mantenedor | rascunho de contexto entre sessões, nunca fonte de verdade |
+
+Quem não tem esses servidores roda `make gate` do mesmo jeito: nada no projeto depende deles.
+Inventário e regra de uso em `ia-e-skills.md` §3.
+
 ## 5. Verificação mínima
 
 | Item | Como verificar | Dono |
@@ -71,6 +83,7 @@ Regra: segredos só via secret do GitHub ou `.env` local ignorado. Nenhum token,
 | integração registrada quando usada | `decisoes-registradas.md` | arquitetura |
 | segredo fora do repositório | varredura de segredo | `wyd-ops` |
 | cloud skill disponível | `cloud_read_skill` quando aplicável | agente |
+| servidor MCP disponível | `search_mcp_tools` antes de usar; inventário em `ia-e-skills.md` §3 | `wyd-ops` |
 
 ## 6. Anti-padrões proibidos
 
@@ -80,6 +93,7 @@ Regra: segredos só via secret do GitHub ou `.env` local ignorado. Nenhum token,
 - Colocar token, DSN, hash, senha ou PIN em documento, log, issue ou chat.
 - Usar skill cloud sem verificar disponibilidade.
 - Criar skill nova sem necessidade real do projeto.
+- Tratar saída de MCP como fonte de verdade sem documento dono.
 
 ## 7. Cruzamento com auditoria e especificação
 

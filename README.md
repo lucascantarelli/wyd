@@ -35,7 +35,7 @@ planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 | série de `.sql` em `crates/wyd-db/migrations/`, aplicada do zero num PG17 em 2026-11-24 (contagem no panorama §1) | os seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
-| `docs.yml` faz build/verificação e publica Pages em `develop`; `code.yml` roda fmt, clippy, testes e cobertura informativa; `security.yml` roda audit/deny, dependency-review e actionlint; `code-stable.yml` é sinal diário não bloqueante | gate de cobertura de 85% |
+| `docs.yml` faz build/verificação e publica Pages em `develop`; `code.yml` roda fmt, clippy, testes e cobertura (`wyd-launcher` bloqueante no piso de 85%, `wyd-db` informativa); `security.yml` roda audit/deny, dependency-review e actionlint; `code-stable.yml` é sinal diário não bloqueante | empacotamento NSIS do launcher |
 
 Números medidos em **2026-11-24** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.
@@ -65,7 +65,7 @@ wyd-portal/              # Next.js: app em src/app, módulos do plano, tests/ e 
 wyd-client/              # cliente real: files/ ignorado; tools/ reservado para a CLI (LCLI-04)
 wyd-ops/                 # 4 Dockerfiles, scripts/ (ci/) e deny.toml
 crates/wyd-db/           # crate com comportamento: Cargo.toml, src/, tests/ e 28 .sql
-crates/                  # 10 crates com esqueleto (Cargo.toml, lock e src/lib.rs); sem workspace
+crates/                  # 7 crates com esqueleto (Cargo.toml, lock e src/lib.rs); sem workspace
 .vscode/                 # settings, launch, tasks e extensions para a IDE
 docker-compose.yml       # serviço docs: consome a imagem publicada pelo CI
 docker-compose.override.yml  # carregado automaticamente: serviço gate (perfil)
@@ -131,9 +131,9 @@ Ordem de planejamento e gates conforme [`planejamento-1.0.0/wyd-1.0.0.md` §4](p
 1. **Concluir a Fase 2 (`wyd-db`):** fechar lacunas com seus donos e avançar o DDL e as páginas de migration sem antecipar implementação.
 2. **Avançar a Fase 3:** completar o planejamento do `wyd-protocol` como segundo piloto e, em seguida, planejar os demais sistemas com fronteiras e contratos explícitos.
 3. **Continuar o plano de `wyd-docs`:** a publicação no GitHub Pages e a validação pública do PR #44 já estão registradas no plano dono. Permanecem pendentes o padrão editorial (Fase 3) e a robustez (Fase 4); `LPDOC-01` continua aberta até aprovação explícita do dono.
-4. **Depois dos gates de planejamento:** iniciar implementação e substituir o workflow principal limitado por CI de código com build, testes e cobertura.
+4. **Depois dos gates de planejamento:** iniciar a implementação sob o CI de código que já existe — fmt, clippy, testes, cobertura e os três alvos PostgreSQL.
 
-**Ação operacional independente do Highlight.js:** revisar a configuração CodeQL Default setup e retirar Rust da análise enquanto não houver fonte Rust versionada para analisar. Isso elimina o job `Analyze (rust)` sem alterar o PR #44 nem desativar a análise das linguagens com código no repositório; reavaliar quando Rust entrar no Git.
+**CodeQL:** o Default setup analisa actions, JavaScript/TypeScript, Python e Rust. Com dez crates versionados desde 2026-11-26, o job `Analyze (rust)` analisa código real e não há mais motivo para retirá-lo da análise.
 
 `deprecated/` guarda a implementação anterior e **não é versionado**; a contagem está em
 [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1.4. Ele serve
