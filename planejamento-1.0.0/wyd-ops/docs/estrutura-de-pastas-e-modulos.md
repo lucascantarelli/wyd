@@ -17,7 +17,12 @@ do projeto, na raiz. A árvore de §2 é a **árvore medida** em 2026-11-26; a r
 está em §2.4 e o verificador em §6.
 
 - Pasta com `.gitkeep` é **reservada**, não implementada; `.gitkeep` só é aceito nas pastas de §2.4.
-- `src/`, `tests/`, `prompts/` e `skills/` só nascem onde o dono abriu uma pergunta própria.
+- `src/`, `tests/` e `prompts/` só nascem onde o dono abriu uma pergunta própria.
+- `skills/` existe em **todo** sistema desde 2026-11-27 (decisão do dono): cada pasta tem
+  `skills/README.md` como roteador e as skills daquele sistema, no molde de `wyd-db`
+  (`§5.14`/`§6.19` do plano diretor). Skill de sistema não é cloud skill por definição: ela é lida pelo
+  caminho e só entra na lista fechada de `skill_principal` quando também for registrada como cloud
+  skill.
 - Nenhum `.rs`, `.sql`, `.ts`, `.py`, `.sh` ou script executável entra em `planejamento-1.0.0/`.
 - Script de CI, imagem e política de dependência moram em `wyd-ops/`, não na raiz: `wyd-ops/scripts/`
   (incluindo `ci/`), `wyd-ops/*.Dockerfile` e `wyd-ops/deny.toml`.
@@ -71,7 +76,8 @@ planejamento-1.0.0/
 │   │   └── modulos.md             # índice de módulos (onde existe)
 │   ├── src/.gitkeep               # reservado; nasce com a página aceita
 │   ├── tests/.gitkeep             # reservado; nasce com o plano de teste
-│   └── prompts|skills/.gitkeep    # só wyd-db, onde a pergunta própria já foi aberta
+│   ├── prompts/.gitkeep           # só wyd-db, onde a pergunta própria já foi aberta
+│   └── skills/README.md           # roteador de skills do sistema (todo sistema, 2026-11-27)
 └── wyd-ops/
     ├── docs/                      # propostas, prioridade, imagem/Compose, ADR global e planos
     └── src/.gitkeep, tests/.gitkeep
