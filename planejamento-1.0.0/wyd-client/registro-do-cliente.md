@@ -4,7 +4,7 @@
 > Público: pesquisa (RE), arquitetura e QA
 > Dono: equipe do `wyd-client`
 > Base: `LPRT-10` (processo de captura), `goldens/como-capturar.md` (procedimento)
-> Revisado em: 2026-11-26
+> Revisado em: 2026-11-27
 
 **Estado:** registro medido (`V`), 2026-11-22. Substitui qualquer estimativa anterior de tamanho,
 contagem ou build. **Não** é captura de protocolo: não há um byte de tráfego aqui.
@@ -237,3 +237,55 @@ sha256sum wyd-client/files/client.zip wyd-client/files/client/WYD.exe
 
 Se qualquer número divergir do §3–§5, este registro está vencido: a atualização é de quem mediu, com
 data nova — não se corrige número sem rodar o comando.
+
+## 9. Layout de `ItemList.bin` e `Itemname.bin` (medido em 2026-11-27)
+
+Bloco medido por comando, em 2026-11-27, sobre `wyd-client/files/client/`. A hipótese de partida veio
+da análise do `deprecated` (`…/análises/wyd-db/database/05-conteudo-e-procedencia.md` §2–§3 e do
+script `verificar-itemname.mjs`); **o que está nesta seção é o que a medição confirmou**, não o que o
+documento antigo afirmava.
+
+### 9.1 `ItemList.bin` — 6.500 slots, registro de 140 B, XOR `0x5A`
+
+`910.004 = 0 + 6.500 × 140 + 4` (trailer `ef c7 81 03` no fim; **não há cabeçalho**). O arquivo é
+codificado por **XOR `0x5A` em cada byte**: é por isso que ele "abre com preenchimento `0x5A`" — o
+preenchimento é o zero codificado.
+
+| Offset | Bytes | Campo | Medição (`V`, 2026-11-27) |
+|---:|---:|---|---|
+| 0 | 64 | `name`, ASCII terminado em NUL | 3.216 slots com nome; maior nome 40 B; decodifica com `byte ^ 0x5A` |
+| 64 | 76 | carga restante do slot | depois de decodificar o nome, o resto do registro é zero em 6 de 6.500 slots — logo há dado aqui, não espaço morto |
+
+Contagens que fecham: **6.500 slots**, **3.216 com nome**, **3.284 vazios**, nome máximo de 40 B.
+A contagem de itens do catálogo é do `wyd-db` (`plano-migrations.md` §4); esta seção mede o arquivo.
+
+### 9.2 `Itemname.bin` — 3.163 registros de 68 B, máscara `byte − posição`
+
+`215.084 = 3.163 × 68`, sem cabeçalho. Registro: `u32 LE` (índice do item) + 62 B de nome + `u16`
+trailer (= 0). O nome **não** é texto direto: `plain[p] = (byte[4 + p] − p) & 0xFF`, terminado em NUL.
+É esse deslocamento por posição que produz a rampa crescente (`0x0B, 0x0C, … 0x3D`) depois do nome.
+
+### 9.3 O que os dois arquivos dizem um do outro
+
+| Medição | Valor |
+|---|---:|
+| registros de `Itemname.bin` | 3.163 |
+| nomes idênticos aos do `ItemList.bin` | **3.109** |
+| divergentes | **54** |
+
+Exemplos medidos de divergência: slot 473 (`Caixa_Misteriosa` no `Itemname`, `Presente_de_Natal` no
+`ItemList`); slot 1731 (`Carta_de_Duelo(A)` × `Carta_de_Duelo_(A)`); slots 649 e 650
+(`not_used` no `Itemname`, vazio no `ItemList`). Divergência é dado, não erro de leitura: a autoridade
+do nome é decisão de curadoria, e a lista completa das 54 é insumo dela.
+
+### 9.4 O que fica em `H`
+
+- Semântica de `IndexMesh`/`IndexTexture` (`@64`, `@66`) e a ordem dos 12 pares de efeito (`@80`):
+  os offsets estão no documento antigo, mas **não** foram reconferidos aqui.
+- Preço, `unique_id`, `pos`, `extra` e `grade` (`@128`…`@138`): também não reconferidos nesta rodada.
+
+### 9.5 O que isso destrava
+
+O nome e a contagem do catálogo deixam de ser bloqueio de dado para o seed `0017`: os 3.216 nomes são
+legíveis por esquema provado. O que continua faltando para o `0017` é a curadoria das colunas
+numéricas (`Req*`, preço, `grade`, efeitos), não a decodificação do arquivo.
