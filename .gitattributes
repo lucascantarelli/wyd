@@ -1,11 +1,11 @@
-# Scripts executados por bash, make e containers não podem ter CRLF: o `\r`
-# vira parte do comando (`set: pipefail\r: invalid option name`). O checkout do
-# Windows com core.autocrlf=true converte para CRLF sem esta regra.
-*.sh text eol=lf
-*.py text eol=lf
-*.mjs text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-Makefile text eol=lf
-*.Dockerfile text eol=lf
-Dockerfile text eol=lf
+# Todo arquivo de texto é guardado em LF e sai em LF, inclusive no checkout do
+# Windows. Sem `eol=lf`, um clone com `core.autocrlf=true` reescreve o arquivo
+# inteiro e o ruído de CRLF aparece em revisão, em `git diff` e no pre-commit.
+# O git detecta binário pelo NUL e não aplica a regra a ele.
+* text=auto eol=lf
+
+# Fixtures do launcher: hash de assinatura e de integridade são calculados
+# sobre os bytes do arquivo. Nenhuma conversão de fim de linha pode tocar nelas.
+# `dados/tabela.bin` não tem byte NUL, então sem esta linha o git a trataria
+# como texto e o `eol=lf` acima a reescreveria no checkout.
+crates/wyd-launcher/tests/fixtures/** -text

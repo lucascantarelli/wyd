@@ -97,6 +97,10 @@ docker compose --profile gate run --rm gate  # monta, builda e roda a cadeia de 
 make gate-fast                               # ciclo curto nativo (sem Docker/MkDocs)
 ```
 
+Hooks locais (uma vez por clone): `pip install pre-commit && pre-commit install`. Eles cobrem
+higiene de texto, `cargo fmt` dos crates alterados e `make gate-fast` no `pre-push`; clippy e testes
+continuam em `make lint`/`make test` e no CI. Config em `.pre-commit-config.yaml`.
+
 Para construir da árvore de trabalho, sem tocar na imagem publicada:
 
 ```bash

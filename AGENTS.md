@@ -185,6 +185,10 @@ escopo.
 - **Público e gratuito.** Runners padrão do GitHub são gratuitos e ilimitados em repositório
   público; **não** use runner self-hosted em job que executa código de pull request — o próprio
   GitHub desaconselha em repositório público.
+- **Hooks locais.** `.pre-commit-config.yaml` roda higiene de texto (espaço no fim, newline final,
+  YAML/JSON, marcador de conflito), `cargo fmt` só nos crates alterados e `make gate-fast` no
+  `pre-push`; clippy e testes ficam no `make lint`/`make test` e no CI. Instalação, uma vez por
+  clone: `pre-commit install`. Hook não substitui gate.
 - **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (layout, skills, lacunas, contagens
   e censos; não precisa de Docker/MkDocs), `make layout` para só a árvore e `make gate` para o
   caminho completo do CI/container (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato

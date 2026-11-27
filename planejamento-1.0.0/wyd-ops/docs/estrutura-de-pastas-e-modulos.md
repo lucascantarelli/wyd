@@ -44,7 +44,7 @@ está em §2.4 e o verificador em §6.
 ├── wyd-ops/                       # dono de imagem, scripts, política e smoke tests
 │   ├── *.Dockerfile               # wyd-docs, wyd-server, wyd-admin e wyd-portal
 │   ├── deny.toml                  # política do cargo-deny
-│   └── scripts/                   # ci/ (db-prepare, apply-series, db-schema-local) e sync-issue-status.mjs
+│   └── scripts/                   # ci/ (db-prepare, apply-series, db-schema-local), pre-commit/ e sync-issue-status.mjs
 ├── wyd-portal/                    # Next.js: src/app + módulos do plano; tests/ e public/
 ├── docker-compose.yml             # raiz por descoberta da ferramenta; sem build:
 ├── docker-compose.override.yml    # gate automático
@@ -52,7 +52,7 @@ está em §2.4 e o verificador em §6.
 ├── .dockerignore                  # raiz por contexto do Docker
 ├── Makefile                       # fachada de comandos (make gate, gate-fast, layout)
 ├── rust-toolchain.toml            # descoberta do cargo/rustc
-└── AGENTS.md, README.md, LICENSE, .env.example, .gitignore, .gitattributes
+└── AGENTS.md, README.md, LICENSE, .env.example, .gitignore, .gitattributes, .pre-commit-config.yaml
 ```
 
 A raiz **não** tem `scripts/`, `deny.toml` nem Dockerfile. `wyd-ops/tests/smoke/` é reservado e só
@@ -127,7 +127,8 @@ crate com um binário. Sistema puro (`wyd-protocol`, `wyd-sim`) não cria `adapt
 
 **Exceções de raiz** são só as que a ferramenta descobre: `.github/`, `.vscode/`, `.agents/`,
 `docker-compose*.yml`, `.dockerignore`, `Makefile`, `rust-toolchain.toml` e os arquivos de
-repositório (`README`, `AGENTS`, `LICENSE`, `.gitignore`, `.gitattributes`, `.env.example`).
+repositório (`README`, `AGENTS`, `LICENSE`, `.gitignore`, `.gitattributes`, `.env.example`,
+`.pre-commit-config.yaml`).
 
 ### 2.5 Portal: por que `src/app`
 
