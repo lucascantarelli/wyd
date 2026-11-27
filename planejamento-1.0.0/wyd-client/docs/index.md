@@ -71,6 +71,10 @@ Os dois catálogos binários de item estão decodificados campo a campo: `ItemLi
 anomalias em [`specs/formato-itemlist-e-itemname.md`](specs/formato-itemlist-e-itemname.md). O que
 segue sem prova ali é a semântica dos enums do motor — `LCLI-06`.
 
+O `InitItem.bin` (768 B, 96 unidades de 8 B, valores complementados) tem estrutura fechada e
+semântica em aberto em [`specs/formato-inititem.md`](specs/formato-inititem.md) — `LCLI-07`; a frente
+de decodificação é a fatia [`roadmap/WYDCLI-F3`](roadmap/WYDCLI-F3.md).
+
 ## Limite desta documentação
 
 - Não afirma comportamento do jogo nem layout do fio: isso vem de captura, não de leitura de pasta.

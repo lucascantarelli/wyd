@@ -24,6 +24,7 @@ de término é o `## DoD` da página citada.
 | 1 | F0 — Inventário e captura | [`WYDCLI-F0`](WYDCLI-F0.md) §Skills |
 | 2 | F1 — Patches e configuração do cliente | [`WYDCLI-F1`](WYDCLI-F1.md) §Skills |
 | 3 | F2 — Fechamento | [`WYDCLI-F2`](WYDCLI-F2.md) §Skills |
+| 4 | F3 — Decodificação dos binários | [`WYDCLI-F3`](WYDCLI-F3.md) §Skills |
 
 ## 3. Ordem e dependências
 
@@ -38,6 +39,7 @@ da página dela; esta página não repete aresta nem grafo.
 | F0 | pedido não respondido | escopo B; responsável nominal |
 | F1 | config quebra cliente | teste de regressão |
 | F2 | lacuna sem dono | `lacunas.md` com owner+prazo |
+| F3 | layout fechado por hipótese do legado | `decodificar-binario`: round-trip e domínio por campo, `H` com `LCLI-06`/`LCLI-07` |
 
 ## 5. O que este roadmap não faz
 
