@@ -176,7 +176,10 @@ própria que `componentes.md` não responda.
   `github-actions-docs`, `python-testing-patterns`, `skill-creator`, `writing-plans`), sem `SKILL.md` no
   repositório; e **três são skills de sistema do `wyd-db`** (`escrever-migration`, `implementar-issue`,
   `revisar-documentacao`), com `SKILL.md` em `planejamento-1.0.0/wyd-db/skills/` e cópia registrada como
-  cloud skill em 2026-11-27. Toda página de issue declara essa distinção no bloco de skills.
+  cloud skill em 2026-11-27. Toda página de issue declara essa distinção no bloco de skills. O gate
+  `skills` lê a lista da §3 do template e a compara com o campo `skill_principal` dos quatro
+  formulários nas duas direções; a mesma lista valida o bloco `## Skills` das páginas, então skill
+  válida no formulário não pode reprovar a página.
 - As outras cinco skills de `planejamento-1.0.0/wyd-db/skills/` (`levantar-requisito`, `planejar-onda`,
   `revisar-schema`, `provar-schema`, `provisionar-dados-de-teste`) são lidas pelo caminho, não entram na
   lista fechada: elas só valem dentro do `wyd-db`, e o roteador de `skills/README.md` diz quando usar

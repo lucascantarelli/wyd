@@ -25,7 +25,7 @@
 | 4 | Documentação detalhada por módulo | Feito | `docs/arquitetura/componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`) + `docs/modulos.md` em 6 sistemas; os 7 restantes usam `componentes.md` como documento de módulo, sem duplicar `modulos.md` |
 | 5 | Docs organizados, limpos, padronizados, sem redundância | Feito | gate valida links/âncoras/censos; o gate de links (`wyd-docs/gate/checks/links.py`) confere link, âncora e navegação lateral das **500 páginas montadas**; não publica razão de alcançáveis, então esta célula não afirma percentual; índice local de ADR alinhado ao estado `aceito` |
 | 6 | Projeto organizado e mapeado no GitHub | Feito | `.github/ISSUE_TEMPLATE/*`, `pull_request_template.md`, workflows; **121 issues** no repositório (40 `WYDDB`, 61 fatias, 10 lacunas e 10 `ADM` #208–#217) e **121 itens** no board `WYD 1.0.0` nº 10, com 5 views e todos os campos `Sistema`/`Status`/`Fase`/`Prioridade`/`Marco`; prova na §14 |
-| 7 | Padronização de issues (incl. skills a carregar) | Feito | `skill_principal` obrigatória em lista fechada de 9 skills nos 4 templates; `skills_complementares` opcional na mesma lista; conferido contra `.agents/skills` e cloud skills |
+| 7 | Padronização de issues (incl. skills a carregar) | Feito | `skill_principal` obrigatória em lista fechada de 12 skills nos 4 templates; `skills_complementares` opcional na mesma lista; a igualdade entre a §3 do template e os formulários é conferida pelo gate `skills` |
 | 8 | Uso das skills pelo agente | Feito (processo) | `.agents/skills/` (2) + cloud skills; `ia-e-skills.md` documenta quando carregar |
 | 9 | Planejar skills/docs/testes/código/integração/deploy/monitoramento/segurança | Feito | `plano-de-testes.md` nos 13 sistemas e `componentes.md` em 12 (o `wyd-db` usa `componentes-c4.md`); todos os 13 planos declaram CI, cobertura e monitoramento; `wyd-ops` cobre deploy/segurança; `ia-e-skills.md` |
 | 10 | Padrões de qualidade de código/testes/boas práticas/docs/segurança/monitoramento/deploy | Feito | documentado em `plano-de-testes.md` de 13 sistemas e `componentes.md` em 12 sistemas (o `wyd-db` usa `componentes-c4.md`); código só em `wyd-db` |
@@ -157,7 +157,7 @@ perguntas consolidadas em `docs/lacunas.md` §4.
 Medido no repositório: **111 páginas de issue** — 40 `WYDDB-nnn`, 61 fatias nos 11 sistemas e 10
 páginas `ADM-nn` no `wyd-admin` —, cada uma com cabeçalho de 5 linhas, `**Estado:**`, o campo
 `**Gate de verificação:**`, dependências, DoD observável, fora de escopo e bloco de skills
-(`skill_principal` + `skills_complementares`) na lista fechada de nove skills do
+(`skill_principal` + `skills_complementares`) na lista fechada de doze skills do
 `template-de-issue.md` §3. O inventário por sistema e a regra de numeração estão em
 `wyd-ops/docs/github-mapping.md` §7; os índices locais são o `docs/roadmap/index.md` de cada sistema
 (no `wyd-portal`, o `roadmap.md`). No GitHub existem **121** issues: as **40** `WYDDB-nnn`, as **61**
@@ -253,7 +253,7 @@ O PR foi integrado em `develop`; a publicação e o rollback acima usam o commit
 | Links e corpo das issues | 111 corpos que apontavam para uma branch não integrada foram corrigidos para `develop`; os mesmos 111 receberam `**Gate de verificação:**` e o bloco `## Skills`; a varredura final encontrou **0** links antigos, **0** headings antigos e **0** corpos sem gate |
 | `ADM-01`–`ADM-10` | páginas locais convertidas em issues #208–#217, com `area/wyd-admin`, `estado/proposta`, fase e corpo da página dona |
 | Título e estado | as 40 `WYDDB` receberam o prefixo `[tarefa] wyd-db:` e a label `estado/proposta`; a varredura final encontrou **0** títulos fora do formato e **0** issues sem label de estado |
-| Skills | `make test-gate`: 23 testes, 22 OK + 1 skip Windows; `test_skill_contract` 5/5: lista do gate = template, 4 formulários com as 9 skills, 2 skills locais com frontmatter e PR template com registro da skill |
+| Skills | `make test-gate`: 23 testes, 22 OK + 1 skip Windows; `test_skill_contract` 5/5: lista do gate = template, 4 formulários com as 9 skills de então (a lista tem doze desde 2026-11-27), 2 skills locais com frontmatter e PR template com registro da skill |
 | Entrega versionada | PR [#218](https://github.com/lucascantarelli/wyd/pull/218), squash [adcf018](https://github.com/lucascantarelli/wyd/commit/adcf01864d5b79a0d526adf41f319f48dc9ffed1) em `develop`; checks do PR e workflows pós-merge `code`, `ci-db`, `docs`, `docs-image` e `security` com conclusão **success** |
 
 A importação usou as labels `area/*` como fonte de `Sistema`, `estado/bloqueada` e

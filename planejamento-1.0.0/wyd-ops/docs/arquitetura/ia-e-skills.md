@@ -27,7 +27,7 @@
 | sete cloud skills do projeto | conforme o tipo de trabalho; carregar via `cloud_read_skill` quando aplicável | conta do usuário; a lista fechada e a matriz estão em `wyd-ops/docs/planos/template-de-issue.md` §3 |
 
 Regra: o agente deve carregar a skill relevante **antes** de escrever, não depois. A lista fechada
-(nove nomes) e o dono do valor são de `template-de-issue.md` §3; esta página só organiza as pastas e
+(doze nomes) e o dono do valor são de `template-de-issue.md` §3; esta página só organiza as pastas e
 não republica a lista. Issue templates têm campo "Skills que o agente deve carregar".
 
 ## 3. Integrações (Freebuff)

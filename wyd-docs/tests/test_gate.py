@@ -86,6 +86,12 @@ class SkillTests(unittest.TestCase):
         self.assertFalse(resultado.ok)
         self.assertTrue(any("Fase" in p for p in resultado.problems))
 
+    def test_formulario_fora_da_lista_fechada_falha(self):
+        resultado = skills.run(Workspace(_repo(fixtures.SKILLS_FORMULARIO_DIVERGENTE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(any("skill-inventada" in p for p in resultado.problems))
+        self.assertTrue(any("auditar-planejamento" in p for p in resultado.problems))
+
 
 class ContagemTests(unittest.TestCase):
     def test_medidas_da_serie_coincidem(self):
