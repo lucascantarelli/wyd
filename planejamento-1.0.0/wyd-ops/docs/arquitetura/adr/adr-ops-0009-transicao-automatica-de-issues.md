@@ -28,6 +28,7 @@ Um workflow (`issue-status.yml`) com um script único (`wyd-ops/scripts/sync-iss
 | `estado/bloqueada` ou `estado/aguardando-decisao` | a label lateral | Bloqueado |
 | remoção da última label de estado | `estado/proposta` | Backlog |
 | mudança de label feita pelo próprio script | não reprocessa | não mexe |
+| evento em issue fechada | não altera | Done |
 
 Regras:
 
@@ -40,6 +41,8 @@ Regras:
 7. **Eco do próprio script é ignorado.** A troca usa o `GITHUB_TOKEN`, então o GitHub a atribui a `github-actions[bot]`; evento de label com esse autor não é decisão de ninguém e não é reprocessado. Sem essa guarda, o `unlabeled` da label antiga chegava depois do `labeled` da nova e devolvia a issue entregue para `estado/proposta`.
 8. **Estado lido da API.** A decisão usa o estado corrente do `GET /issues/{n}`, nunca o payload do evento, que pode estar desatualizado quando a execução enfileirada começa.
 9. **`unlabeled` não regride com outra label presente.** Só a remoção da última label de estado devolve a issue à fila; havendo outra, ela é o estado vigente.
+10. **Issue entregue e fechada carrega o último estado da sequência.** Entrega que passa pelo fluxo termina em `estado/em-revisao` antes do merge e a label é preservada no fechamento; entrega fechada sem `Closes #N` recebe o mesmo estado, porque o trabalho está em `develop` e não volta à fila.
+11. **Issue fechada é terminal.** Qualquer evento de label posterior — inclusive a correção de uma label atrasada — preserva a label e mantém o `Status` em Done. Só reabrir retoma a sequência.
 
 ## Consequências
 
