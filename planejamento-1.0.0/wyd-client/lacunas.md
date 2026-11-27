@@ -16,10 +16,10 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 
 | Grupo | Lacunas | Bloqueadas | Fechadas |
 |---|---:|---:|---:|
-| Medição do cliente | 2 | 1 | 1 |
+| Medição do cliente | 3 | 2 | 1 |
 | Distribuição | 2 | 0 | 2 |
 | Processo | 1 | 1 | 0 |
-| **Total** | **5** | **2** | **3** |
+| **Total** | **6** | **3** | **3** |
 
 ## 2. Lacunas
 
@@ -30,6 +30,7 @@ sistema aprova. Lacuna de outro sistema que este consome é citada pelo ID de or
 | `LCLI-03` | Onde mora o registro de captura — ficha, data e quem aprova a segunda leitura? | o processo de `LPRT-10` e o QA já estão fixados; falta a primeira ficha assinada com o nome do operador | Lucas Cantarelli (dono do produto), QA designado; `wyd-protocol` suplente | **bloqueada como evidência** (2026-11-25, decisão aprovada pelo dono: Lucas Cantarelli assina a segunda leitura e não é o operador; o nome do operador entra na ficha; falta a primeira ficha assinada) |
 | `LCLI-04` | Qual ferramenta faz a captura, onde ela mora, quem responde por ela e como impede gravar dado de jogador? | captura sem ferramenta e fronteira aprovadas vira script solto ou grava dado pessoal; `AGENTS.md` §5, item 6 proíbe executável em `planejamento-1.0.0/` | dono de `wyd-client`; `wyd-protocol` valida o golden; QA revisa | fechada (opção A em 2026-11-23; D3–D6 decididos; implementação pendente) |
 | `LCLI-05` | Que conteúdo do cliente e marcas pode ser copiado, modificado, publicado ou redistribuído, e que evidência autoriza cada uso? | presença de arquivo local não comprova direito; sem escopo e autorização verificáveis, patch/release/site podem incluir material não liberado | Lucas Cantarelli (dono do produto), responsável nominal por direitos, com revisão jurídica; `wyd-client` inventaria; `wyd-launcher`/`wyd-ops` aplicam | **bloqueada como evidência** (2026-11-25, decisão aprovada pelo dono: responsável nominal; distribuição congelada; `Q-IP-1`/`Q-IP-2` aprovados; falta a evidência do titular e a execução de `LCLI-02`) |
+| `LCLI-06` | Qual é o significado dos enums do `ItemList` (id de efeito, bits de `pos`, `unique id`, `extra`, `grade`, ordem dos quatro requisitos) e qual nome vence quando `ItemList` e `Itemname` divergem? | o layout e os domínios estão provados, mas a curadoria do seed `0017` não pode nomear coluna nem escolher nome vencedor sem a semântica | frente `wyd-client` + curadoria do `wyd-db` | **bloqueada como evidência** (2026-11-27: falta o enum do motor/servidor; o cliente carrega valor, não significado — layout em `docs/specs/formato-itemlist-e-itemname.md` §4) |
 
 ### 2.1 `LCLI-04` — decisão da ferramenta e pendências de execução (2026-11-23)
 
