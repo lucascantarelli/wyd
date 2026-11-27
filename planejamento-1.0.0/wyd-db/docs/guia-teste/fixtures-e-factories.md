@@ -7,8 +7,9 @@
 **Estado:** proposto (2026-11-24)
 
 Factory é código de teste que cria o agregado inteiro e **devolve a chave**; fixture é o dado fixo que o
-teste não cria. A forma está definida aqui; nenhuma factory existe em `crates/`, porque a suíte ainda não tem
-alvo declarado no `Cargo.toml` (o arquivo existe desde 2026-11-24, com `src/dsn.rs`).
+teste não cria. A forma está definida aqui; nenhuma factory existe ainda, mas o `Cargo.toml` já declara
+`sistema_pg`, `reversibilidade_pg`, `runner_pg`, `contrato_api_migrate` e `contrato_api_provision`
+(2026-11-27), e o harness compartilhado está em `tests/comum/mod.rs`.
 
 ## 1. Factory por agregado
 
@@ -50,7 +51,7 @@ cria a factory junto com o primeiro teste que o exigir, não antes.
 - O teste guarda a **chave do agregado raiz** que criou e limpa a partir dela.
 - A ordem de exclusão é a inversa da FK; quando o teste é de contrato ou de sistema, a limpeza roda na
   mesma transação do cenário.
-- A limpeza usa `WYD_DB_URL_TEST` (`wyd_migrator`, banco descartável — [`testes-de-sistema.md`](testes-de-sistema.md), seção “DSN de teste”).
+- A limpeza usa `WYD_DB_TEST_URL` (`wyd_migrator`, banco descartável — [`testes-de-sistema.md`](testes-de-sistema.md), seção “DSN de teste”).
   Os papéis de runtime **não recebem `DELETE`**: `0032` nega ao `wyd_admin`, e `market_ledger` tem
   `UPDATE`/`DELETE` revogados. Limpar com DSN de runtime não funciona — e é bom que não funcione.
 - Limpeza que falha não vira “banco sujo”: o banco é descartável e recriado. Recriar é mais barato que

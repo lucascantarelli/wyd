@@ -17,7 +17,7 @@ executados (2026-11-25). `reversibilidade_pg` e `runner_pg` entraram depois do a
 - **sem marca** — regra de projeto (`../docs/convencoes.md`) e comportamento do PostgreSQL
   (`../padrao-banco.md` §13).
 
-Esta pasta é o **plano da suíte** do `crates/wyd-db`: cinco alvos, o recurso compartilhado de
+Esta pasta é o **plano da suíte** do `crates/wyd-db`: sete alvos, o recurso compartilhado de
 `tests/common/`, o dado de apoio de `tests/resources/` e as regras que valem para toda a suíte, em `specs/`.
 A matriz de capacidades é [specs/capacidades.md](specs/capacidades.md) e é ela, não esta página, que diz
 o que cada alvo prova.
@@ -56,11 +56,12 @@ recurso vive em `common/` e aparece no inventário de [fixtures-e-factories.md](
 
 A movimentação não altera o comportamento: `cargo test --no-run` compilou os três alvos em 2026-11-26,
 mas a execução contra PostgreSQL 17 **não foi repetida** localmente nessa data (sem
-`WYD_DB_URL_TEST`/container); o job `pg` de `ci-db.yml` (matriz `schema`, `reversibilidade` e
+`WYD_DB_TEST_URL`/container); o job `pg` de `ci-db.yml` (matriz `schema`, `reversibilidade` e
 `runner`) executou os três no PR #220 e passou.
 
 ## 2. Alvo → arquivo → tipo → precisa de banco
-**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs` e `sistema/runner_pg.rs` estão versionados.
+**Sem arquivo no repositório:** `contrato_migrations.rs`, `contrato_catalogo.rs`, `sistema_sessoes.rs`, `sistema_stack_caps.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje. `sistema/sistema_pg.rs`, `sistema/reversibilidade_pg.rs`, `sistema/runner_pg.rs` e os contratos de API
+`contrato/contrato_api_migrate.rs` e `contrato/contrato_api_provision.rs` estão versionados.
 
 | Alvo (`Cargo.toml`) | Arquivo | Tipo | Precisa de banco | Capacidades |
 |---|---|---|---|---|
@@ -115,9 +116,10 @@ alvo da capacidade que interessa → a regra da camada ([specs/contrato.md](spec
 | um cenário | `cargo test -p wyd-db --test <alvo> <cenário>` | o nome do cenário é o da matriz |
 | só o contrato | `cargo test -p wyd-db --test contrato_migrations --test contrato_catalogo` | não abre conexão |
 
-**Ambiente:** os três alvos que exigem banco leem **`WYD_DB_URL_TEST`** (DSN do `wyd_migrator` em banco
-descartável) e falham **nomeando a variável** quando ela falta — nunca pulam
-(`../docs/guia-teste/testes-de-sistema.md` §"DSN de teste"; `CAP-22`). Nenhum binário lê `DATABASE_URL`.
+**Ambiente:** os alvos que exigem banco leem a DSN de teste do ambiente — `WYD_DB_TEST_URL`, ou
+`WYD_DB_TEST_CONTAINER` para o `psql` dentro do container (`../src/provision/spec.md` §3) — e falham
+**nomeando a variável** quando ela falta, nunca pulam (`../docs/guia-teste/testes-de-sistema.md`); `CAP-22`. Nenhum
+binário lê `DATABASE_URL`.
 
 **Pré-requisito dos alvos de sistema:** banco vazio → provisionamento → série. Banco "já quente" não é
 ambiente de teste: o banco nasce e morre com a execução.
@@ -129,20 +131,23 @@ ambiente de teste: o banco nasce e morre com a execução.
   os dois últimos não têm volume nem limiar aprovado (`../docs/planos/plano-de-testes.md` §6).
 - **Não substitui o contrato de catálogo do repositório:** o leitor em uso ainda não enxerga
   `CREATE TABLE esquema.tabela` (`../docs/guia-teste/testes-de-contrato.md` §1).
-- **Não declara verde:** só o que rodou conta; a matriz registra 39 capacidades e **13** cobertas por
-  teste executado (V, 2026-11-24), todas em `sistema_pg`.
+- **Não declara verde:** só o que rodou conta; a contagem de capacidades cobertas é de
+  [specs/capacidades.md](specs/capacidades.md) §7 — hoje **14 de 39**, 13 em `sistema_pg` e `CAP-37` em
+  `runner_pg` (V, 2026-11-27: log `/tmp/wyd-runner-pg-2026-11-27.log`).
 
-## 5. Dúvidas abertas
+## 5. Dúvidas do dono e o que elas decidiram
 
-Duas perguntas do dono mudam o que esta pasta autoriza, e nenhuma está respondida:
+As duas perguntas do dono que decidiam o que esta pasta autoriza estão respondidas:
 
 | Dúvida | O que a resolve | Dono |
 |---|---|---|
-| o aceite das 12 páginas libera o código dos cinco alvos, ou o código espera a issue no GitHub? | `Q-BLK-18` — recomendação **A**: o aceite libera e a issue registra o vínculo no lote da onda (`../pendencias-de-fechamento.md` §6.6.22.5) | dono do `wyd-db` |
+| o aceite das 12 páginas libera o código dos cinco alvos, ou o código espera a issue no GitHub? | `Q-BLK-18` — **A** em 2026-11-24: o aceite libera e a issue registra o vínculo no lote da onda (`../pendencias-de-fechamento.md` §6.6.27) | dono do `wyd-db` |
 | a leva de aceite começa por `tests/` ou por `migrations/`? | `Q-BLK-17` — **fechada em A pela execução** (2026-11-24): a leva 1 começou por `tests/`, por razão itens/ato de 7,3 contra 1,1 | dono do `wyd-db` |
 
-Enquanto as duas estiverem abertas, esta pasta é **plano escrito**, não autorização de código: os cinco
-alvos continuam fora do `Cargo.toml`.
+Com as duas respondidas, o código foi liberado e **3 dos 5 alvos planejados** já estão em
+`crates/wyd-db/Cargo.toml` — `sistema_pg`, `reversibilidade_pg` e `runner_pg` —, ao lado dos contratos de
+API `contrato_api_migrate` e `contrato_api_provision`; `contrato_migrations`, `contrato_catalogo`,
+`sistema_sessoes` e `sistema_stack_caps` seguem sem arquivo escrito (§2).
 
 ## 6. O que esta página não decide
 

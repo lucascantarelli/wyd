@@ -18,9 +18,9 @@ Esta página é o **inventário planejado** de `tests/common/`; a regra de quand
 `../docs/guia-teste/fixtures-e-factories.md` e não se repete aqui. A diferença de dono é a mesma das
 outras duplas: o guia diz **como**, esta página diz **o que existe**.
 
-**Alvo escrito onde roda:** `sistema_pg`, `sistema_sessoes` e `sistema_stack_caps` — os três alvos que
-abrem conexão ([index.md](index.md) §2). Nenhum alvo de contrato usa `common/`: os dois leem texto e não
-podem depender de banco (`specs/contrato.md` regra 1).
+**Alvo escrito onde roda:** `sistema_pg`, `reversibilidade_pg`, `runner_pg`, `sistema_sessoes` e
+`sistema_stack_caps` — os cinco que abrem conexão ([index.md](index.md) §2). Nenhum alvo de contrato usa
+`common/`: os dois leem texto e não podem depender de banco (`specs/contrato.md` regra 1).
 
 ## 1. Inventário de `tests/common/`
 **Sem arquivo no repositório:** `db.rs`, `factory.rs`, `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.

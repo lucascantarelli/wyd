@@ -388,7 +388,7 @@ Consequências que o desenho aceita:
 - **Reset não substitui banco novo.** `down --to 0` devolve os quatro schemas e esvazia o ledger, mas
   não desfaz o que é de ambiente: o estado de `public` e os seis papéis continuam como o
   provisionamento os deixou (`src/provision/spec.md` §4; `ADR-DB-0001`, item 8). Em CI e teste, banco
-  descartável (`WYD_DB_URL_TEST`, `src/provision/spec.md` §3) continua sendo o caminho; `down --to 0` é
+  descartável (`WYD_DB_TEST_URL`, `src/provision/spec.md` §3) continua sendo o caminho; `down --to 0` é
   para o ambiente de desenvolvimento com banco vivo.
 - **A flag `--reset` vive no chamador.** Ela é composição de dois comandos da biblioteca — `down` até
   vazio e depois `apply` —, e o binário já é quem aplica a trava de `--force` (§8). Um `reset: bool` na
@@ -625,7 +625,7 @@ pub struct Report {
 |---|---|
 | unidade | `Version`/`Slug`/`Checksum`/`Sql` (tabela de válidos e inválidos, incluindo vazio e `COMMIT`); parser dos marcadores; `plan` para os três casos e cada `DriftKind`; normalização `CRLF`→`LF` |
 | contrato | `run` com `FakeSource`/`FakeLedger`/`FakeExecutor`/`FakeLock`: ordem de aplicação, para no primeiro erro, `down` em ordem inversa, `down` até `Empty` deixando zero versão aplicada, `status --check` saindo `4` em drift, `commit` chamado uma vez por arquivo, `LockBusy` saindo `3` com o lock tomado |
-| sistema | contra PG17 real via `WYD_DB_URL_TEST`: aplica a série, ledger com 34 linhas, reaplica e não muda nada, drift de um byte falha, ledger pré-existente com coluna a menos é recusado por `Shape`, `down --to 1` deixa só a versão 1, `down --to 0` deixa os quatro schemas ausentes e ledger vazio, e um `apply` seguinte reaplica as 34, dois processos concorrentes → um aplica e o outro espera e termina sem aplicar, `CREATE TABLE` sem schema falha com `search_path` vazio, `status` num banco sem ledger lista as 34 pendentes e não cria a tabela |
+| sistema | contra PG17 real via `WYD_DB_TEST_URL`: aplica a série, ledger com 34 linhas, reaplica e não muda nada, drift de um byte falha, ledger pré-existente com coluna a menos é recusado por `Shape`, `down --to 1` deixa só a versão 1, `down --to 0` deixa os quatro schemas ausentes e ledger vazio, e um `apply` seguinte reaplica as 34, dois processos concorrentes → um aplica e o outro espera e termina sem aplicar, `CREATE TABLE` sem schema falha com `search_path` vazio, `status` num banco sem ledger lista as 34 pendentes e não cria a tabela |
 | proibido | `sleep` para sincronizar; teste que depende de ordem de execução; `SKIP` por variável ausente (falha nomeando) |
 
 ## 14. O que a `ADR-DB-0002` congela

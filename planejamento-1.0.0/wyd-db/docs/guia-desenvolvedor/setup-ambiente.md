@@ -25,7 +25,7 @@ decisão de implantação, não deste guia.
 
 ## 2. Variáveis de ambiente
 
-Nenhuma tem default; ausência deve falhar **nomeando a variável**. A fonte é
+Nenhuma DSN tem default; ausência deve falhar **nomeando a variável**. A fonte é
 `src/provision/spec.md` §3; esta tabela só repete o nome e o leitor, não o valor.
 
 | Variável | Papel / uso | Quem lê |
@@ -35,7 +35,7 @@ Nenhuma tem default; ausência deve falhar **nomeando a variável**. A fonte é
 | `WYD_DB_URL_GAME` | `wyd_game`, estado quente | servidor de jogo |
 | `WYD_DB_URL_PORTAL` | `wyd_portal`, identidade e PII | portal/BFF |
 | `WYD_DB_URL_READ` | `wyd_read`, leitura de operação | BI/operação |
-| `WYD_DB_URL_TEST` | `wyd_migrator` em banco descartável | suíte de sistema |
+| `WYD_DB_TEST_URL` | `wyd_migrator` em banco descartável | suíte de sistema |
 | `WYD_MIGRATIONS_DIR` | diretório da série; único com default `/migrations` | binário e runner |
 | `WYD_MIGRATE_ALLOW_SUPERUSER` | opt-out do preflight, só desenvolvimento e logado | binário |
 
@@ -52,16 +52,16 @@ do container; isso satisfaz `CREATEROLE` e posse do banco, mas **não** é o pap
 
 ## 4. Como rodar a suíte
 
-Os comandos ainda não existem porque o crate e os alvos não existem. O desenho é:
+Os comandos existem; o `Cargo.toml` declara `sistema_pg`, `reversibilidade_pg`, `runner_pg`,
+`contrato_api_migrate` e `contrato_api_provision` (2026-11-27). O caminho é:
 
 ```text
 cargo test -p wyd-db                    # alvos unitários e de contrato
-WYD_DB_URL_TEST=... cargo test -p wyd-db --test sistema_pg
+WYD_DB_TEST_URL=... cargo test -p wyd-db --test sistema_pg
 ```
 
-A segunda linha exige um banco descartável e falha nomeando `WYD_DB_URL_TEST` quando ela falta; não
-há `SKIP` por ambiente ausente. O comando único da suíte é `P` e está registrado em
-[`../planos/plano-de-testes.md`](../planos/plano-de-testes.md) §2.
+A segunda linha exige um banco descartável e falha nomeando a variável quando ela falta; não há `SKIP`
+por ambiente ausente. O comando por alvo está em `tests/index.md` §3.
 
 ## 5. Erros comuns de setup
 
@@ -70,7 +70,7 @@ há `SKIP` por ambiente ausente. O comando único da suíte é `P` e está regis
 | erro nomeando `WYD_DB_URL_MIGRATOR` | variável ausente | definir a DSN do papel de migração; não usar `DATABASE_URL` |
 | `permission denied` ao criar schema | conexão com papel de runtime | usar a DSN de provisionamento/admin para o setup |
 | migration falha no preflight de servidor | PostgreSQL fora da versão 17 | usar o PG17 do contrato; não desligar a checagem |
-| teste de sistema não roda | `WYD_DB_URL_TEST` ausente | prover banco descartável; não marcar `#[ignore]` |
+| teste de sistema não roda | `WYD_DB_TEST_URL` ausente | prover banco descartável; não marcar `#[ignore]` |
 | `sqlx` não compila offline | cache de consulta não preparado | seguir o setup do adapter quando ele existir; não há receita aprovada hoje |
 
 ## 6. O que falta para esta página fechar

@@ -49,7 +49,7 @@ que tem o privilégio, e ele existe em `sistema_pg` (`CAP-09`).
 |---|---|
 | banco | PostgreSQL 17 descartável, provisionado e com a série aplicada |
 | papéis | os **seis** de `../../docs/arquitetura/seguranca.md` §"Papéis do banco" — `wyd_owner`, `wyd_migrator`, `wyd_game`, `wyd_portal`, `wyd_admin`, `wyd_read` — existem; `provision apply` os cria ou ajusta (`../../docs/arquitetura/implantacao.md` §1, passo 2). Sem eles o cenário falha dizendo qual falta |
-| DSN | a do **papel testado** em cada passo — usar `WYD_DB_URL_TEST` aqui esconde a fronteira |
+| DSN | a do **papel testado** em cada passo — usar `WYD_DB_TEST_URL` aqui esconde a fronteira |
 | view | a de leitura cruzada existe em `0029_views.md`, aplicada sem `GRANT` novo |
 | auditoria | `ops.audit_log` de `0002_ops_audit.md` com os privilégios do provisionamento e de `0032_admin_grants.md` |
 

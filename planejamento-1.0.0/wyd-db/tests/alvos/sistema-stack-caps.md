@@ -33,7 +33,7 @@ alvos e cenários.
 
 | Cenário | Entrada | Resultado esperado | Falha esperada |
 |---|---|---|---|
-| `dsn_nomeada` | alvo de sistema com o ambiente limpo | saída de erro citando `WYD_DB_URL_TEST`; código de saída diferente de zero | saída neutra, "skipped" ou exit 0 |
+| `dsn_nomeada` | alvo de sistema com o ambiente limpo | saída de erro citando `WYD_DB_TEST_URL`; código de saída diferente de zero | saída neutra, "skipped" ou exit 0 |
 | `anti_skip` | varredura do código de teste do caminho de aceite | zero `#[ignore]`, zero `SKIP`, zero filtro silencioso | ocorrência nomeada com arquivo e linha |
 | `env_sem_database_url` | varredura do crate e dos binários | nenhuma leitura de `DATABASE_URL` | leitura encontrada, com arquivo e linha |
 
@@ -56,7 +56,7 @@ conexão, e é o que impede a matriz de envelhecer calada.
 
 | Item | Regra |
 |---|---|
-| para `dsn_nomeada` | um alvo de sistema que falhe sem DSN; ambiente sem `WYD_DB_URL_TEST` |
+| para `dsn_nomeada` | um alvo de sistema que falhe sem DSN; ambiente sem `WYD_DB_TEST_URL` |
 | para `anti_skip` e `env_sem_database_url` | só o código de teste e o crate; sem banco |
 | para a conferência da matriz | as páginas de `../specs/` e `../alvos/` legíveis como texto |
 

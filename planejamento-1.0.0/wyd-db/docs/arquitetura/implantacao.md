@@ -67,7 +67,7 @@ têm medição que as sustente — o orçamento de conexões cabe em um host (§
 | portal/BFF | imagem do `wyd-portal` | — | — | `restart: unless-stopped` | `WYD_DB_URL_PORTAL` |
 | `wyd-admin` | imagem do `wyd-admin` | — | — | `restart: unless-stopped` | `WYD_DB_URL_ADMIN` |
 | leitura operacional | `psql` do host | — | — | nenhum (manual) | `WYD_DB_URL_READ` |
-| suíte de sistema | binário de teste | — | banco descartável | nenhum (CI) | `WYD_DB_URL_TEST` |
+| suíte de sistema | binário de teste | — | banco descartável | nenhum (CI) | `WYD_DB_TEST_URL` |
 
 **Supervisor:** o container do banco não tem supervisor próprio — quem o reergue é o Docker, pela política
 `restart: unless-stopped`, que o `docker-compose.yml` do repositório já usa no serviço `docs`. Não há

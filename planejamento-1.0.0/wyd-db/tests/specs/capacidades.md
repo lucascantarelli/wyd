@@ -8,9 +8,9 @@
 
 **Quatro níveis de afirmação convivem aqui:**
 
-- **`P`** — tudo o que a página diz sobre a suíte: os 39 `CAP` são matriz, cinco alvos estão declarados
-  em `crates/wyd-db/Cargo.toml` (`sistema_pg`, `reversibilidade_pg` e `runner_pg` entre eles) e 14 dos 39
-  cenários rodaram.
+- **`P`** — tudo o que a página diz sobre a suíte: os 39 `CAP` são matriz, os alvos de sistema
+  `sistema_pg`, `reversibilidade_pg` e `runner_pg` estão declarados em `crates/wyd-db/Cargo.toml` (ao lado
+  dos contratos de API `contrato_api_migrate` e `contrato_api_provision`) e 14 dos 39 cenários rodaram.
 - **`H`** — dúvida aberta, dita e localizada em §9, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com a fonte ao lado.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
@@ -127,7 +127,7 @@ e de boot não existe (`../../docs/specs/requisitos-nao-funcionais.md` §4–§5
 | Medida | Número | Fonte |
 |---|---:|---|
 | capacidades na matriz | **39** | §2–§6 |
-| cobertas por teste executado | **13** | `crates/wyd-db/tests/sistema/sistema_pg.rs`: 13 verdes em 2026-11-24 |
+| cobertas por teste executado | **14** | `crates/wyd-db/tests/sistema/sistema_pg.rs`: 13 verdes em 2026-11-24 + `CAP-37` em `runner_pg` (2026-11-27, log `/tmp/wyd-runner-pg-2026-11-27.log`) |
 | com requisito nomeado (`RF`/`RN`/`RNF`) | **39** | `CAP-01`–`CAP-39` |
 | governadas por gate solto | **0** | as 11 que citavam gate passaram a citar `RNF-DB-008`–`013` (`Q-BLK-19` = A) |
 | alvos | **5** | `../index.md` §2 |

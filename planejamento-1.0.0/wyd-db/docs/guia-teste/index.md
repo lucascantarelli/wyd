@@ -6,10 +6,11 @@
 
 **Estado:** proposto (2026-11-22)
 
-O guia de teste lista os alvos do crate: dois já estão declarados no `Cargo.toml` que existe (`sistema_pg` e
-`reversibilidade_pg`) e os demais seguem planejados. O comando único
-da suíte é `P`: não existe um script aprovado que rode tudo. Até a suíte existir, o guia define o que
-cada alvo deve provar e proíbe chamar de verde o que não rodou.
+O guia de teste lista os alvos do crate: três dos sete da tabela já estão declarados no `Cargo.toml`
+(`sistema_pg`, `reversibilidade_pg` e `runner_pg`), e os dois contratos de API também
+(`contrato_api_migrate` e `contrato_api_provision`); os quatro restantes seguem planejados. O comando
+único da suíte é `cargo test -p wyd-db` (§3), e a coluna “Estado” de §1 diz o que já rodou, com data;
+o guia proíbe chamar de verde o que não rodou.
 
 ## 1. Os alvos
 
@@ -17,7 +18,7 @@ cada alvo deve provar e proíbe chamar de verde o que não rodou.
 |---|---|---|---|
 | `contrato_catalogo` | documento de catálogo e série descrevem as mesmas tabelas | não | planejado |
 | `contrato_migrations` | forma da série: contiguidade, `down`, FK, seed, constraint e tipo | não | planejado |
-| `sistema_pg` | aplicar schema e cenários `CAP-24`–`CAP-36` por `psql` | sim | executado 13/13 em PG17 (2026-11-25) |
+| `sistema_pg` | aplicar schema e cenários `CAP-09`–`CAP-19`, `CAP-24`–`CAP-36` e `CAP-38`–`CAP-39` por `psql` | sim | 13/13 dos cenários de `CAP-24`–`CAP-36` em PG17 (2026-11-25) |
 | `runner_pg` | porta `PgAdapter`: ledger, transação por arquivo, drift e advisory lock em duas sessões | sim | executado 7/7 em PG17 (2026-11-27); fecha `CAP-37` |
 | `reversibilidade_pg` | ciclo SQL `up → down → up` por `psql`; não passa pelo runner | sim | 3/3 em 2026-11-25 (1 ciclo em PG17 + 2 conferências textuais) |
 | `sistema_sessoes` | privilégio por papel e leitura cruzada por view | sim | planejado |
@@ -41,9 +42,10 @@ porque `tests/` não é publicado. A página
 
 ## 3. Comando único
 
-O comando único da suíte ainda **não existe**. O desenho é `cargo test -p wyd-db` para os alvos sem
-banco e `WYD_DB_URL_TEST=... cargo test -p wyd-db --test sistema_pg` para o alvo real. Nenhuma linha
-deve ser copiada como “já funciona”: o crate e os alvos são `P`.
+O comando único da suíte é `cargo test -p wyd-db`: os contratos de API rodam sem banco e os alvos de
+sistema entram por `--test`, como em `tests/index.md` §3. `sistema_pg` (13/13) e `reversibilidade_pg`
+(3/3) rodaram em 2026-11-25, e o `runner_pg` (7/7) em 2026-11-27. A DSN de teste é lida do ambiente
+pelo harness e pelo alvo; os dois nomes estão em `src/provision/spec.md` §3.
 
 ## 4. Regras que valem para todos os alvos
 
@@ -71,6 +73,6 @@ Duas consequências que valem para quem escreve cenário:
 
 ## 6. O que esta página não cobre
 
-- **Cenários detalhados:** serão de `tests/alvos/`; não há arquivo ainda.
+- **Cenários detalhados:** são de `tests/alvos/`, com seis páginas de alvo desde 2026-11-27.
 - **Cobertura percentual e tempo:** não medidos; a regra é por capacidade.
 - **CI:** `.github/workflows/code.yml` declara os jobs de schema e reversibilidade em PG17; a execução local deles está registrada em `migrations/serie-e-regras.md` §9.2. Isso não substitui uma execução remota do GitHub Actions.

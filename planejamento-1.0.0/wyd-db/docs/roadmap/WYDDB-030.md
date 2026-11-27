@@ -88,5 +88,4 @@ A lista fechada e a distinção entre skill em disco e cloud estão em
 
 ## Evidência ao fechar
 
-Saída do alvo com `WYD_DB_TEST_URL` (o nome que o alvo lê; `WYD_DB_URL_TEST` é do harness `psql`, usado
-por `sistema_pg` e `reversibilidade_pg`) e banco descartável.
+Saída do alvo com `WYD_DB_TEST_URL` — o nome que o alvo lê — e banco descartável.

@@ -4,7 +4,9 @@
 > Base: `../../docs/guia-teste/testes-de-contrato.md`; `../specs/capacidades.md` §2–§3; `../../src/migrate/spec.md` §2
 > Revisado em: 2026-11-24
 
-**Estado:** aceito (2026-11-24) — regras escritas; nenhum alvo de contrato implementado.
+**Estado:** aceito (2026-11-24) — regras escritas; nenhum dos **dois alvos desta página** implementado
+(`contrato_migrations` e `contrato_catalogo`); os contratos de API `contrato_api_migrate` e
+`contrato_api_provision` estão em `crates/wyd-db/Cargo.toml` desde 2026-11-26.
 
 **Quatro níveis de afirmação convivem aqui:**
 

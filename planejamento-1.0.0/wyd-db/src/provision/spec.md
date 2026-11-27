@@ -103,7 +103,8 @@ olhando só `pg_roles`/`pg_auth_members`, e a conferência desse bloco é pelas 
 **Arquivo implementado:** `domain/spec.rs` (`WYDDB-003`).
 
 `domain/spec.rs` define **papéis**; quem conecta é o binário, e cada conexão tem a sua variável. Uma DSN por
-papel, prefixo `WYD_DB_URL_`, **nenhuma com default**, nenhuma lida por este módulo:
+papel, prefixo `WYD_DB_URL_`; a suíte é a exceção e usa `WYD_DB_TEST_*`. Nenhuma tem default e nenhuma é
+lida por este módulo:
 
 | Variável | Papel que conecta | Quem lê |
 |---|---|---|
@@ -112,7 +113,8 @@ papel, prefixo `WYD_DB_URL_`, **nenhuma com default**, nenhuma lida por este mó
 | `WYD_DB_URL_GAME` | `wyd_game` | servidor de jogo |
 | `WYD_DB_URL_PORTAL` | `wyd_portal` | portal/BFF |
 | `WYD_DB_URL_READ` | `wyd_read` | operação/BI |
-| `WYD_DB_URL_TEST` | `wyd_migrator` em banco descartável | suíte contra PG real |
+| `WYD_DB_TEST_URL` | `wyd_migrator` em banco descartável | suíte contra PG real |
+| `WYD_DB_TEST_CONTAINER` | — (o `psql` roda dentro do container) | suíte contra PG real, por `docker exec` |
 
 A posse do banco entra na exigência por causa do bloco de `public` (§4): no PG15+ o schema `public`
 pertence a `pg_database_owner`, e revogar `CREATE` de `PUBLIC` ou conceder a `wyd_migrator` exige ser o
@@ -133,7 +135,7 @@ binário, nunca por `domain/spec.rs` nem pela biblioteca. O par do legado, `DATA
 **Quem herda esta seção (e cita, não duplica):** `guia-desenvolvedor/como-adicionar-migration.md`
 (comandos e pré-requisitos), `planos/plano-de-implantacao.md` (ordem do ambiente),
 `arquitetura/seguranca.md` (tabela de segredos) e `guia-teste/testes-de-sistema.md` (só
-`WYD_DB_URL_TEST`). Nenhuma repete a tabela: cada uma diz **qual variável usa e para quê**, e aponta
+`WYD_DB_TEST_URL`). Nenhuma repete a tabela: cada uma diz **qual variável usa e para quê**, e aponta
 para cá.
 
 Uma exceção, e ela é **opt-out do preflight**, não DSN: `WYD_MIGRATE_ALLOW_SUPERUSER=1` libera conexão
@@ -384,7 +386,7 @@ papel (`ADR-DB-0001`).
 | Nível | O que prova |
 |---|---|
 | unidade | os seis testes acima, no `#[cfg(test)] mod tests` do próprio arquivo; golden em `tests/golden/roles.sql` via `include_str!` |
-| sistema | `render` → `db/roles.sql` → `git diff --exit-code` limpo; `plan`/`apply` contra PG17 com `WYD_DB_URL_TEST` aplicando duas vezes sem mudança |
+| sistema | `render` → `db/roles.sql` → `git diff --exit-code` limpo; `plan`/`apply` contra PG17 com `WYD_DB_TEST_URL` aplicando duas vezes sem mudança |
 | proibido | teste que lê ambiente; golden gerado na hora (`render()` contra si mesmo); `SKIP` por variável ausente (falha nomeando) |
 
 ## 9. O que esta página não decide
