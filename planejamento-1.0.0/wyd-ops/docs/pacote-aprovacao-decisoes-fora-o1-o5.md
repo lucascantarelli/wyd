@@ -37,7 +37,7 @@ uma cópia local já descreveu opção diferente da canônica.
 **`Q-SERIE-1` = B já está decidida e implementada:** os 28 `down` existem e o ciclo `up → down → up`
 passou em PG17 por `psql`; `ADR-DB-0002` fica como está. **`Q-SEP-1` = A′ foi decidida e aplicada:** os
 28 arquivos foram renomeados para `NNNN_slug_com_underscores.sql` e todos parseiam. **`CAP-37` também já
-fechou**, por `runner_pg` (5/5 em PG17, incluindo o advisory lock em duas sessões).
+fechou**, por `runner_pg` (7/7 em PG17 em 2026-11-27, incluindo o advisory lock em duas sessões).
 
 **O que resta na série:** as versões `0016`, `0017`, `0018`, `0020`, `0023` e `0027` dependem de curadoria
 de seed; sem elas o runner não aplica a série real, embora a porta já esteja provada. `Q-SEP-1` não gerou

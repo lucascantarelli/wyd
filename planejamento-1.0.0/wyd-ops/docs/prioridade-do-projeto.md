@@ -28,7 +28,7 @@ e **141** atos, com **40** issues vinculadas. O **ato 2** (`migrations/serie-e-r
 (runner `src/migrate` + `MigrateConfig`, com **D-02** respondida em B) foram **concluídos em 2026-11-25**
 no escopo de lib/fakes; a próxima fatia é o **ato 4** (`CAP-38`–`CAP-39`, cobertura **14 → 16 de 39**),
 depois o **ato 5** (**40** issues + **141** atos de `docs/`); o **ato 6** (seeds/captura) espera terceiro.
-`Q-SERIE-1` = B está implementada: 28 `down` provados como SQL em PG17 via `psql` (`wyd-db/migrations/serie-e-regras.md` §9.2). `Q-SEP-1` = A′ também foi aplicada — os 28 nomes agora usam `_` e parseiam — e `CAP-37` foi fechada por `runner_pg` (5/5 em PG17). O que ainda impede o runner de aplicar a série real são as seis versões ausentes. `CAP-38`/`CAP-39` seguem abertas. B não fecha item do piloto, C fecha **3 de 24** células e D já foi absorvida pelo ato 2 concluído (§3–§5).
+`Q-SERIE-1` = B está implementada: 28 `down` provados como SQL em PG17 via `psql` (`wyd-db/migrations/serie-e-regras.md` §9.2). `Q-SEP-1` = A′ também foi aplicada — os 28 nomes agora usam `_` e parseiam — e `CAP-37` foi fechada por `runner_pg` (7/7 em PG17, 2026-11-27). O que ainda impede o runner de aplicar a série real são as seis versões ausentes. `CAP-38`/`CAP-39` seguem abertas. B não fecha item do piloto, C fecha **3 de 24** células e D já foi absorvida pelo ato 2 concluído (§3–§5).
 
 Esta página é o **único lugar publicado** que ranqueia as frentes do projeto. Ela não substitui o plano
 de fases (`wyd-1.0.0.md` §6), nem o registro de pendências (`pendencias-de-fechamento.md` §6.6), nem a
@@ -217,7 +217,7 @@ efêmero.
    **concluído em lib/fakes** (63 testes; o PG17 de sistema ainda não rodou).
 3. **`Q-SERIE-1` = B implementada e `Q-SEP-1` = A′ aplicada:** 28 `down`, ciclo SQL PG17 e 28 nomes
    com `_` parseáveis; o `PgAdapter` ainda não carrega a série real só pelas seis versões ausentes.
-4. `CAP-38` e `CAP-39` verdes — **2 células `teste`**, de 14 para 16 de 39; `CAP-37` já fechou em `runner_pg` (5/5).
+4. `CAP-38` e `CAP-39` verdes — **2 células `teste`**, de 14 para 16 de 39; `CAP-37` já fechou em `runner_pg` (7/7).
 5. **40 issues** vinculadas e **141 atos** de `docs/` aceitos; gate do `wyd-db` verde. Os **6 seeds** e
    `CAP-08` continuam fora por dado/terceiro.
 
@@ -286,7 +286,7 @@ A ordem abaixo é a de **resposta do dono**, não a de execução; as opções e
 |---:|---|---|---|---|
 | **1** | **`D-06`** — frente depois de D-05 | **A** D-01/`wyd-db` | **141 atos**, **64 células** e **40 issues**; o DDL deixa de ser proposta para `portal`/`admin`/`server` | É a única opção que fecha itens já mapeados sem terceiro; B, C e D fecham **0 atos/issues** no curto prazo, então as demais decisões só fazem sentido depois desta. |
 | **2** | **`Q-SEP-1`** — nomes das migrations | **A′** renomear os 28 para `_`, **decidida e aplicada em 2026-11-25** | os nomes parseiam; ainda faltam seis versões para a contiguidade | nada pendente: nenhum ledger fora do teste foi observado |
-| **3** | **`CAP-37` pelo `PgAdapter`** — lock e espera real no runner | **implementada em 2026-11-25:** `runner_pg` com fixture contígua, porta em `127.0.0.1` e `wyd_migrator` de teste | `CAP-37` fechada (5/5 em PG17) | a série materializada segue bloqueada por seis versões ausentes; a fixture prova o runner, não os checksums reais |
+| **3** | **`CAP-37` pelo `PgAdapter`** — lock e espera real no runner | **implementada em 2026-11-25:** `runner_pg` com fixture contígua, porta em `127.0.0.1` e `wyd_migrator` de teste | `CAP-37` fechada (7/7 em PG17, 2026-11-27) | a série materializada segue bloqueada por seis versões ausentes; a fixture prova o runner, não os checksums reais |
 
 **Leitura:** `D-06 = A`, `Q-SERIE-1 = B`, `Q-SEP-1 = A′` e `Q-ALVO-1`–`03` estão decididas e aplicadas. Não
 há pergunta aberta na série; o que falta é a contiguidade das seis versões e `CAP-38`/`CAP-39`.

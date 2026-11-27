@@ -2,12 +2,16 @@
 > Público: QA / testador e revisor de CI
 > Dono: equipe do `wyd-db`
 > Base: `../specs/capacidades.md` §5; `../../src/migrate/spec.md` §13; `../../proposta-alvo-pgadapter.md`; `.github/workflows/code.yml` job `runner`
-> Revisado em: 2026-11-26
+> Revisado em: 2026-11-27
 
 **Estado:** aceito (2026-11-25) — alvo escrito e executado contra PostgreSQL 17: **7/7** casos verdes
 (V, 2026-11-26: `crates/wyd-db/tests/sistema/runner_pg.rs`, log `/tmp/wyd-runner-pg-wyddb030.log`,
 33,43 s; os 5 primeiros já tinham passado em 2026-11-25). Fecha `CAP-37` e a metade runner de
 `CAP-01`–`CAP-07`.
+
+**Reexecução de 2026-11-27:** mesma fixture, `WYD_DB_TEST_URL` com `wyd_migrator` em `127.0.0.1`,
+**7 passed; 0 failed; 0 ignored** em 31,24 s — é a medição vigente do alvo (a de 2026-11-25 tinha 5
+casos).
 
 **Provas do DoD da `WYDDB-030` acrescentadas em 2026-11-26:** drift de **um byte** no arquivo (não no
 ledger), ciclo `down` até vazio seguido de `apply` e concorrência entre **dois processos** de verdade —
@@ -21,7 +25,8 @@ o segundo reexecuta o binário de teste com `--exact` em vez de abrir outra cone
 
 - **`P`** — o alvo está em `crates/wyd-db/Cargo.toml` (`runner_pg`) e a fixture em
   `crates/wyd-db/tests/resources/`.
-- **`V`** — o que foi medido em 2026-11-25: 5 casos, 0 falhas, contra PG17 em `127.0.0.1`.
+- **`V`** — medido contra PG17 em `127.0.0.1`: 5 casos em 2026-11-25 e **7 casos, 0 falhas** em
+  2026-11-27.
 - **`H`** — dúvida aberta, em §6; hoje só a série real, que depende de contiguidade.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL.
 

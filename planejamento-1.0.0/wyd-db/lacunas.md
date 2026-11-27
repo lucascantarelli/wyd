@@ -510,8 +510,8 @@ em §2 não muda até o artefato de fechamento existir.
 ## 8. Alvo `runner_pg` — decidido, implementado e verde (2026-11-25)
 
 O alvo `runner_pg` (apply/status/down pelo `PgAdapter` real contra PG17) está declarado no
-`Cargo.toml`, escrito em `crates/wyd-db/tests/sistema/runner_pg.rs` e passou **5/5** em 2026-11-25 (log
-`/tmp/wyd-runner-pg.log`), fechando `CAP-37`.
+`Cargo.toml`, escrito em `crates/wyd-db/tests/sistema/runner_pg.rs` e passou **7/7** em 2026-11-27 (5/5
+em 2026-11-25, log `/tmp/wyd-runner-pg.log`), fechando `CAP-37`.
 
 - **Decisões (`2026-11-25`):** `Q-ALVO-1` = **A1** (porta em `127.0.0.1`); `Q-ALVO-2` = **B1** (fixture
   contígua agora); `Q-ALVO-3` = **`wyd_migrator` com `LOGIN` só no ambiente de teste**.
