@@ -12,6 +12,7 @@ import { test } from "node:test";
 import {
   canAdvance,
   currentState,
+  isClosedIssue,
   isSelfEvent,
   nextLabelSet,
   planUnlabeled,
@@ -69,6 +70,12 @@ test("unlabeled com outra label de estado presente não devolve para a fila", ()
 
 test("unlabeled da última label devolve para a fila", () => {
   assert.deepEqual(planUnlabeled(comLabel()), { desired: "estado/proposta", keep: null });
+});
+
+test("issue fechada é terminal: label e Status não são reescritos", () => {
+  assert.equal(isClosedIssue({ state: "closed" }), true);
+  assert.equal(isClosedIssue({ state: "open" }), false);
+  assert.equal(isClosedIssue({}), false);
 });
 
 test("a transição aceita sobrevive ao eco do unlabeled", () => {

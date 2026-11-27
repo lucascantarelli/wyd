@@ -73,6 +73,15 @@ export function currentState(issue) {
   return [...STATE_LABELS].find((label) => labels.includes(label)) || null;
 }
 
+/**
+ * Issue fechada é terminal: a label fica como está e o board permanece em Done.
+ * Sem isso, um evento de label posterior (inclusive a correção de uma label
+ * atrasada) reescrevia o Status de uma issue já entregue.
+ */
+export function isClosedIssue(issue) {
+  return issue?.state === "closed";
+}
+
 export function canAdvance(current, desired) {
   if (!current || !desired) return true;
   if (current === STATE.bloqueada || current === STATE.decisao) return true;
@@ -278,9 +287,13 @@ async function handleIssue(event) {
     return;
   }
 
-  if (action === "closed") {
+  // O estado corrente vem da API: o payload do evento pode estar velho.
+  const fresh = await getIssue(issue.number);
+
+  if (isClosedIssue(fresh)) {
     // A label fica como está; Done é o estado do Project e o fechamento é o fato.
-    await syncProject(issue, "Done");
+    console.log(`#${fresh.number}: fechada; label preservada e Project mantido em Done`);
+    await syncProject(fresh, "Done");
     return;
   }
 
@@ -291,7 +304,6 @@ async function handleIssue(event) {
 
   if (action === "reopened") {
     // A label não é removida no fechamento; reabrir retoma o último estado.
-    const fresh = await getIssue(issue.number);
     const current = currentState(fresh);
     const accepted = (fresh.labels || []).some((label) => label.name === STATE.aceita);
     const retomado = current && ![STATE.bloqueada, STATE.decisao].includes(current)
@@ -313,7 +325,6 @@ async function handleIssue(event) {
     if (!STATE_LABELS.has(event.label.name)) return;
     // Só a remoção da última label de estado devolve a issue para a fila; se
     // outra label de estado ainda está presente, ela é o estado vigente.
-    const fresh = await getIssue(issue.number);
     const { desired, keep } = planUnlabeled(fresh);
     if (!desired) {
       console.log(`#${fresh.number}: mantém ${keep} (outra label de estado presente)`);
@@ -353,6 +364,11 @@ async function handleDispatch(event) {
   const number = Number(event.inputs?.issue);
   if (!Number.isInteger(number) || number <= 0) throw new Error("input issue inválido");
   const issue = await getIssue(number);
+  if (isClosedIssue(issue)) {
+    console.log(`#${number}: fechada; label preservada e Project mantido em Done`);
+    await syncProject(issue, "Done");
+    return;
+  }
   const desired = currentState(issue) || STATE.proposta;
   await transition(issue, desired, { force: true });
 }

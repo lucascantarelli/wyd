@@ -67,12 +67,14 @@ eventos de issue e de PR. Labels são a fonte de verdade; o campo `Status` do Pr
 | `estado/bloqueada` / `estado/aguardando-decisao` | a label lateral | Bloqueado |
 | remoção da última label de estado | `estado/proposta` | Backlog |
 | mudança de label feita pelo próprio script | não reprocessa | não mexe |
+| evento em issue fechada | não altera | Done |
 
 Regras: no máximo uma label `estado/*`, aplicada em **uma** requisição `PUT /labels` (troca atômica);
 o script não reprocessa evento de label que ele mesmo gerou (`github-actions[bot]`), não regride
 `em-revisao` para `em-andamento` por evento repetido e decide sobre o estado lido da API, não sobre o
 payload do evento; `pull_request_target` não faz checkout do código do PR; sem `PROJECT_TOKEN`, o
-board fica manual e o log avisa. A decisão está em `ADR-OPS-0009`; a prova é
+board fica manual e o log avisa. Issue fechada é terminal: label preservada e `Status` em Done, mesmo
+que a entrega não tenha passado por `Closes #N`. A decisão está em `ADR-OPS-0009`; a prova é
 `node --test wyd-ops/tests/unitario/`.
 
 ## 3. Branch
