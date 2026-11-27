@@ -4,7 +4,7 @@
 > Público: arquitetura, `wyd-ops`, desenvolvimento, QA e agentes
 > Dono: `wyd-ops` (forma); cada sistema é dono do conteúdo da sua issue
 > Base: `.github/ISSUE_TEMPLATE/*`; `docs/github-mapping.md` §7; `docs/estrutura-de-pastas-e-modulos.md` §3.1; `AGENTS.md` §7
-> Revisado em: 2026-11-26
+> Revisado em: 2026-11-27
 
 **Estado:** proposto (2026-11-26). Este é o molde único das issues/fatias do projeto; a aprovação
 editorial é do `wyd-ops` e não muda o conteúdo de nenhuma fatia. As páginas derivadas citam este
@@ -66,7 +66,7 @@ Toda página de issue/fatia segue esta ordem. Campo opcional pode ser omitido; s
 
 | Campo | Valor |
 |---|---|
-| `skill_principal` | `<uma das nove skills da §3>` |
+| `skill_principal` | `<uma skill da lista fechada da §3>` |
 | `skills_complementares` | `<zero ou mais skills da §3>` |
 
 A lista fechada e a distinção entre skill em disco e cloud estão em
@@ -81,23 +81,32 @@ A lista fechada e a distinção entre skill em disco e cloud estão em
 
 ## 3. Skills — lista fechada
 
-A lista tem nove nomes. O agente carrega a `skill_principal` **antes** de começar e só usa uma
+A lista tem doze nomes. O agente carrega a `skill_principal` **antes** de começar e só usa uma
 complementar quando a página declarar que ela é necessária.
 
 | Skill | Onde existe | Quando usar |
 |---|---|---|
 | `auditar-planejamento` | `.agents/skills/` (disco) | revisar página, contagem, ADR ou afirmação sem evidência |
 | `documentation-writer` | cloud skill do projeto | escrever ou reescrever documentação |
+| `escrever-migration` | `wyd-db/skills/` (disco do sistema) + cloud skill | migration da série `0001`–`0034` e a página dela |
 | `finishing-a-development-branch` | cloud skill do projeto | fechar uma branch de implementação |
 | `frontend-design` | cloud skill do projeto | interface, tema ou experiência visual |
 | `github-actions-docs` | cloud skill do projeto | workflow, action, permissão, cache ou OIDC |
+| `implementar-issue` | `wyd-db/skills/` (disco do sistema) + cloud skill | executar uma issue de ponta a ponta |
 | `planejar-sistema` | `.agents/skills/` (disco) | abrir sistema, fronteira, requisitos ou fatia |
 | `python-testing-patterns` | cloud skill do projeto | teste Python, fixture ou mock |
+| `revisar-documentacao` | `wyd-db/skills/` (disco do sistema) + cloud skill | revisar página contra cabeçalho, marcação e o que reprova |
 | `skill-creator` | cloud skill do projeto | criar, revisar ou medir skill |
 | `writing-plans` | cloud skill do projeto | transformar decisão em plano executável |
 
-Duas skills existem em disco e sete são cloud skills do projeto; nenhuma página precisa repetir essa
-distinção. Skill fora desta lista reprova o gate.
+Duas skills existem em disco na raiz, três são skills de sistema do `wyd-db` (com `SKILL.md` em
+`planejamento-1.0.0/wyd-db/skills/` e cópia registrada como cloud skill) e sete são cloud skills do
+projeto; nenhuma página precisa repetir essa distinção. Skill fora desta lista reprova o gate.
+
+**Uma lista, duas fontes.** A dona do valor é esta tabela. O campo `skill_principal` dos quatro
+formulários de `.github/ISSUE_TEMPLATE/` oferece exatamente estes nomes, e o gate `skills` compara as
+duas fontes nas duas direções: nome que o formulário oferece e esta tabela não tem reprova, e nome
+desta tabela ausente de um formulário também. Alterar a lista é alterar as duas fontes no mesmo PR.
 
 ## 4. Regras de propriedade
 
@@ -113,7 +122,7 @@ distinção. Skill fora desta lista reprova o gate.
    usa `make gate-fast`.
 6. **Número não se antecipa.** Issue do GitHub recebe número na criação; a página usa a chave da
    fatia ou o ID já registrado (`WYDDB-nnn` ou `ADM-nn`).
-7. **Sem cópia do padrão.** A página cita este template; não replica a explicação das nove skills.
+7. **Sem cópia do padrão.** A página cita este template; não replica a explicação das skills.
 8. **Sem segredo ou dado de jogador.** A issue descreve tipo e lugar, nunca valor.
 
 ## 5. Gate de verificação
@@ -124,9 +133,10 @@ make gate-fast          # skills, lacunas, contagens e censos
 make gate               # build, links e todos os domínios (container)
 ```
 
-O gate `skills` confere o bloco `## Skills`, a linha `**Dono do valor:**`, a citação do roadmap e a
-lista fechada. O gate `links` confere a página publicada. Uma página de issue sem os campos da §2
-reprova; a correção é no arquivo, não no gate.
+O gate `skills` confere o bloco `## Skills`, a linha `**Dono do valor:**`, a citação do roadmap, a
+lista fechada e a igualdade entre a §3 e o campo `skill_principal` dos quatro formulários. O gate
+`links` confere a página publicada. Uma página de issue sem os campos da §2 reprova; a correção é no
+arquivo, não no gate.
 
 ## 6. O que esta página não cobre
 

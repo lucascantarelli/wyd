@@ -26,6 +26,30 @@ LACUNA_SEM_EVIDENCIA = {
 }
 
 SKILLS_OK = {
+    "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md": """# Template
+
+## 3. Skills — lista fechada
+
+| Skill | Onde existe |
+|---|---|
+| `planejar-sistema` | `.agents/skills/` |
+| `auditar-planejamento` | `.agents/skills/` |
+
+## 4. Regras
+
+Uma issue, uma página.
+""",
+    ".github/ISSUE_TEMPLATE/tarefa.yml": """name: Tarefa
+body:
+  - type: dropdown
+    id: skill_principal
+    attributes:
+      options:
+        - auditar-planejamento
+        - planejar-sistema
+    validations:
+      required: true
+""",
     "planejamento-1.0.0/wyd-teste/docs/roadmap/roadmap.md": """# Roadmap
 
 | Página |
@@ -87,6 +111,22 @@ SKILLS_REPETE_FASE = {
 | [`WYDX-F1`](WYDX-F1.md) §Skills |
 
 | Fase | F1 |
+""",
+}
+
+# O formulário oferece uma skill fora da §3 e omite a outra: as duas direções reprovam.
+SKILLS_FORMULARIO_DIVERGENTE = {
+    **SKILLS_OK,
+    ".github/ISSUE_TEMPLATE/tarefa.yml": """name: Tarefa
+body:
+  - type: dropdown
+    id: skill_principal
+    attributes:
+      options:
+        - planejar-sistema
+        - skill-inventada
+    validations:
+      required: true
 """,
 }
 

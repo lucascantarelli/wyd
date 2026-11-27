@@ -12,12 +12,16 @@ Medida (fonte: os arquivos de `planejamento-1.0.0/<sistema>/docs/roadmap/`, lido
 3. **página de issue segue o padrão único** — todo `WYD*.md` da pasta de roadmap tem o cabeçalho de
    cinco campos, `**Estado:**`, o campo `**Gate de verificação:**`, uma fase ou fatia, as sete seções
    do template, `## Skills` com skills da lista fechada e, depois dele, a linha `**Dono do valor:**`.
-   A explicação das nove skills não pode ser repetida na página; ela vive no template.
-4. **arquivo de IA cita o fato normativo, não o publica** — AGENTS.md e as skills não repetem o
+   A explicação das skills não pode ser repetida na página; ela vive no template.
+4. **lista fechada é uma só** — a §3 de `template-de-issue.md` é a dona da lista; o campo
+   `skill_principal` de cada formulário de `.github/ISSUE_TEMPLATE/` tem de oferecer exatamente os
+   mesmos nomes, nas duas direções. Skill válida no formulário e ausente do template reprova, e
+   vice-versa, para que o formulário não ofereça o que a página não pode declarar.
+5. **arquivo de IA cita o fato normativo, não o publica** — AGENTS.md e as skills não repetem o
    comando do gate, a lista/contagem de sistemas, contagem de ADR, de migration/tabela/seed, o
    limiar de cobertura nem o formato do cabeçalho: cada um tem dono em documento de planejamento e
    a linha que o republicar com valor reprova aqui.
-5. **roadmap não repete o detalhe da fatia** — fase, requisitos, dependência, entregável, DoD e
+6. **roadmap não repete o detalhe da fatia** — fase, requisitos, dependência, entregável, DoD e
    fora de escopo são da página da issue; nenhuma linha de `roadmap.md` ou `fases.md` pode ter a
    célula `Fase`, `Requisitos`, `Depende de`, `Entrega`, `DoD` ou `Fora` com valor ao lado. O
    `roadmap.md` cita a página de cada fatia na tabela de ordem, com `§Skills`, e toda página
@@ -70,6 +74,14 @@ ROTEIROS = {"roadmap.md", "fases.md"}
 # Arquivos de IA: instrução de operação do agente, não cópia do fato normativo.
 ARQUIVOS_DE_IA = ["AGENTS.md"]
 PASTA_SKILLS = ".agents/skills"
+# A lista fechada tem um dono: a §3 do template. Os formulários a oferecem e o gate confere a igualdade.
+TEMPLATE = "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md"
+PASTA_FORMULARIOS = ".github/ISSUE_TEMPLATE"
+SECAO_LISTA = "## 3. Skills"
+FIM_LISTA = "## 4."
+LINHA_LISTA = re.compile(r"^\|\s*`([^`]+)`\s*\|", re.M)
+CAMPO_SKILL = "id: skill_principal"
+OPCAO = re.compile(r"^\s*-\s+(\S+)\s*$", re.M)
 # Fato com dono: (padrão que republica o valor, dono, motivo curto).
 FATOS_COM_DONO = [
     (
@@ -128,22 +140,61 @@ SECOES = (
     SECAO_SKILLS,
     "## Evidência ao fechar",
 )
-SKILLS = {
-    "auditar-planejamento",
-    "documentation-writer",
-    "finishing-a-development-branch",
-    "frontend-design",
-    "github-actions-docs",
-    "planejar-sistema",
-    "python-testing-patterns",
-    "skill-creator",
-    "writing-plans",
-}
 EXPLICACAO_REPETIDA = "A skill principal é a que o agente carrega"
 
 
 def _linha(texto: str, posicao: int) -> int:
     return texto.count("\n", 0, posicao) + 1
+
+
+def lista_fechada(ws: Workspace, problemas: list[str]) -> set[str]:
+    """Mede a lista da §3 do template e confere a igualdade com cada formulário."""
+    caminho = ws.root / TEMPLATE
+    if not ws.exists(caminho) or not caminho.is_file():
+        problemas.append(
+            f"{TEMPLATE}:1: dono da lista fechada não existe; sem ele não há skill válida "
+            "para página de issue nem para formulário"
+        )
+        return set()
+    texto = ws.read(caminho)
+    if SECAO_LISTA not in texto:
+        problemas.append(f"{TEMPLATE}:1: template sem a seção `{SECAO_LISTA}` da lista fechada")
+        return set()
+    nomes = set(LINHA_LISTA.findall(texto.split(SECAO_LISTA, 1)[1].split(FIM_LISTA, 1)[0]))
+    if not nomes:
+        problemas.append(f"{TEMPLATE}:1: `{SECAO_LISTA}` não lista nenhuma skill")
+
+    pasta = ws.root / PASTA_FORMULARIOS
+    formularios = (
+        [a for a in ws.files(pasta, "*.yml") if a.name != "config.yml"]
+        if ws.is_dir(pasta)
+        else []
+    )
+    if not formularios:
+        problemas.append(
+            f"{PASTA_FORMULARIOS}:1: nenhum formulário para conferir a lista fechada da §3"
+        )
+    for formulario in formularios:
+        nome = ws.relative(formulario)
+        conteudo = ws.read(formulario)
+        if CAMPO_SKILL not in conteudo:
+            problemas.append(f"{nome}:1: formulário sem o campo `skill_principal`")
+            continue
+        bloco = conteudo.split(CAMPO_SKILL, 1)[1].split("validations:", 1)[0]
+        oferecidas = set(OPCAO.findall(bloco))
+        faltando = sorted(nomes - oferecidas)
+        sobrando = sorted(oferecidas - nomes)
+        if faltando:
+            problemas.append(
+                f"{nome}:1: `skill_principal` não oferece {', '.join(f'`{s}`' for s in faltando)}; "
+                f"a lista fechada é a da §3 de {TEMPLATE}"
+            )
+        if sobrando:
+            problemas.append(
+                f"{nome}:1: `skill_principal` oferece {', '.join(f'`{s}`' for s in sobrando)} "
+                f"fora da lista fechada da §3 de {TEMPLATE}"
+            )
+    return nomes
 
 
 def _checar_roadmap(
@@ -204,7 +255,9 @@ def _checar_roadmap(
     return citacoes
 
 
-def _checar_paginas(caminho: Path, nome: str, problemas: list[str]) -> int:
+def _checar_paginas(
+    caminho: Path, nome: str, problemas: list[str], nomes: set[str]
+) -> int:
     texto = _ws().read(caminho)
     for padrao in CABECALHO:
         if not re.search(padrao, texto, re.M):
@@ -234,7 +287,7 @@ def _checar_paginas(caminho: Path, nome: str, problemas: list[str]) -> int:
     principal = PRINCIPAL.search(texto)
     if not principal:
         problemas.append(f"{nome}:1: página de issue sem `skill_principal`")
-    elif principal.group(1) not in SKILLS:
+    elif nomes and principal.group(1) not in nomes:
         problemas.append(
             f"{nome}:{_linha(texto, principal.start())}: skill principal "
             f"`{principal.group(1)}` fora da lista fechada"
@@ -242,7 +295,7 @@ def _checar_paginas(caminho: Path, nome: str, problemas: list[str]) -> int:
     complementares = COMPLEMENTARES.search(texto)
     if complementares:
         for valor in CODIGO.findall(complementares.group(1)):
-            if valor not in SKILLS:
+            if nomes and valor not in nomes:
                 problemas.append(
                     f"{nome}:{_linha(texto, complementares.start())}: skill complementar "
                     f"`{valor}` fora da lista fechada"
@@ -281,6 +334,7 @@ def run(ws: Workspace) -> CheckResult:
 
     problemas: list[str] = []
     arquivos_ia = _checar_arquivos_de_ia(raiz, problemas)
+    nomes = lista_fechada(ws, problemas)
     roadmaps = 0
     citacoes = 0
     paginas = 0
@@ -291,7 +345,7 @@ def run(ws: Workspace) -> CheckResult:
         for arquivo in sorted(pasta.glob("*.md")):
             nome = f"{PLANEJAMENTO}/{sistema.name}/{PASTA_ROADMAP}/{arquivo.name}"
             if arquivo.name.startswith("WYD"):
-                paginas += _checar_paginas(arquivo, nome, problemas)
+                paginas += _checar_paginas(arquivo, nome, problemas, nomes)
             else:
                 roadmaps += 1
                 citacoes += _checar_roadmap(
@@ -310,7 +364,8 @@ def run(ws: Workspace) -> CheckResult:
 
     resumo = (
         f"{roadmaps} roadmap(s) e {paginas} página(s) de issue "
-        f"({citacoes} citações de §Skills; {arquivos_ia} arquivo(s) de IA)"
+        f"({citacoes} citações de §Skills; {len(nomes)} skill(s) na lista fechada; "
+        f"{arquivos_ia} arquivo(s) de IA)"
     )
     if problemas:
         return CheckResult("skills", False, resumo, problems=problemas)
