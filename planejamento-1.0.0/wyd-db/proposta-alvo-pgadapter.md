@@ -5,8 +5,8 @@
 > Revisado em: 2026-11-27
 
 **Estado:** decidido e implementado (2026-11-25) — `Q-ALVO-1` = A1, `Q-ALVO-2` = B1 e `Q-ALVO-3` =
-`wyd_migrator` com `LOGIN` só no teste. O alvo `runner_pg` existe, passou **5/5** em 2026-11-25 (log
-`/tmp/wyd-runner-pg.log`) e **7/7** em 2026-11-27, fechando `CAP-37`; a página fica como registro da comparação e das decisões.
+`wyd_migrator` com `LOGIN` só no teste. O alvo `runner_pg` existe, passou **5/5** em 2026-11-25 e
+**7/7** em 2026-11-27 (job `pg / runner` do run `45994297544`), fechando `CAP-37`; a página fica como registro da comparação e das decisões.
 
 Esta página propõe **um alvo de teste novo** (`runner_pg`) que exercite o `PgAdapter` real com
 `apply`/`status`/`down` contra PostgreSQL 17, e compara as duas formas de o teste alcançar o banco.
@@ -20,7 +20,7 @@ Hoje há duas provas parciais e nenhuma do meio:
 | Prova | Como | O que cobre | O que não cobre |
 |---|---|---|---|
 | `tests/sistema/sistema_pg.rs` | `psql` por `docker exec` (`V`, 2026-11-25) | contrato do schema: constraint, índice, privilégio, view, FK | a porta: ledger, checksum, transação por arquivo, lock |
-| `tests/sistema/reversibilidade_pg.rs` | `psql` por `docker exec` (executado contra PG17 em 2026-11-25; log `/tmp/wyd-reversibilidade.log`) | ciclo `up → down → up` da série materializada (`V`: 3/3) | `PgAdapter`, ledger e advisory lock |
+| `tests/sistema/reversibilidade_pg.rs` | `psql` por `docker exec` (executado contra PG17 em 2026-11-25; job `pg / reversibility` do run `45994297544`) | ciclo `up → down → up` da série materializada (`V`: 3/3) | `PgAdapter`, ledger e advisory lock |
 | `src/migrate/app/runner.rs` (`#[cfg(test)]`) | portas falsas (`V`, 63 testes em `--lib`) | ordem de preflight, plano, drift, `down`, falha no meio | o adapter real: `PgAdapter`, `PgTxn`, `pg_advisory_lock` |
 
 O elo que falta é entre o SQL provado pela série e a porta do runner: os `down` e o ciclo SQL passaram,

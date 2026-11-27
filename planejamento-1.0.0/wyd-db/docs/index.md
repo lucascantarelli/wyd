@@ -195,8 +195,9 @@ desde 2026-11-24 —, com
 as **5** perguntas (`Q-BLK-12` a `Q-BLK-16`) respondidas em **A**. O **lote H** (§6.6.21) executou a primeira
 metade: as **12** páginas de `tests/` estão escritas, com a matriz `CAP-nn` de **23** capacidades e **0**
 cobertas, e as **40** issues seguem sem artefato no GitHub. O **lote I** (§6.6.22) mediu tudo de novo e
-recomenda **aceitar as 12 páginas de `tests/` primeiro** — **12** atos que deixam **5** alvos prontos e,
-medido depois do lote I, alcançam **15 das 40** linhas da rastreabilidade —, com o aceite ainda pendente naquele momento (hoje **141**, §6.6.31) e **4** perguntas novas (`Q-BLK-17` a `Q-BLK-20`), todas respondidas em 2026-11-24 —
+recomenda **aceitar as 12 páginas de `tests/` primeiro** — **12** atos da leva de `tests/` que deixam **5**
+alvos prontos e, medido depois do lote I, alcançam **15 das 40** linhas da rastreabilidade —, com o aceite
+ainda pendente naquele momento (**141**; hoje **138**, §6.6.22.1) e **4** perguntas novas (`Q-BLK-17` a `Q-BLK-20`), todas respondidas em 2026-11-24 —
 a `17` pela própria execução (a leva 1 começou por `tests/`) e `18`, `19` e `20` em **A**. Com
 `Q-BLK-18` = **A**, a leva 2 foi executada na mesma data: as **37** páginas de `src/` foram revisadas e
 estão `aceito (2026-11-24)` (`pendencias` §6.6.27), o que deixou **168** atos de aceite naquele momento e o crate
@@ -214,8 +215,9 @@ apontavam `RNF` alheio: `RNF-DB-006`, `RNF-DB-007` e `RF-DB-017` (§6.6.26 daque
 revisão de `Q-BLK-21` está na raiz do sistema (`revisao-de-q-blk-21.md`, arquivo não publicado): o dono
 aprovou **A**, as correções de redação foram aplicadas e as **12** páginas de `tests/` estão `aceito
 (2026-11-24)`. O aceite não cobre capacidade por si — mas em 2026-11-24 a leva de `migrations/` aplicou os
-**28** `.sql` do zero, 13 cenários de `sistema_pg` e 7 casos de `runner_pg` rodaram verdes: a matriz está **14 de 39** — e o código
-dos 6 alvos já tem permissão: `Q-BLK-18` = A.
+**28** `.sql` do zero, 13 cenários de `sistema_pg` e 7 casos de `runner_pg` rodaram verdes; a cobertura
+daquele dia está registrada em `pendencias-de-fechamento.md` §6.6.30 e a de hoje, em
+`tests/specs/capacidades.md` §7 — e o código dos 6 alvos já tem permissão: `Q-BLK-18` = A.
 
 **A medição do foco do sistema é `foco-e-sequencia.md`**, na raiz deste sistema — arquivo de raiz não é
 publicado no site, e por isso é citado aqui como código: ele mantém as seis frentes, a cadeia de

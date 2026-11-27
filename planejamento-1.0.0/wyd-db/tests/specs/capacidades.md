@@ -2,15 +2,16 @@
 > Público: QA / testador
 > Dono: equipe do `wyd-db`
 > Base: `../../docs/planos/plano-de-testes.md` §2–§5; `../../plano-migrations.md` §7; `../../docs/specs/rastreabilidade.md`; `../../docs/guia-teste/gates-e-anti-skip.md` §3
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-27
 
-**Estado:** aceito (2026-11-24) — matriz escrita; **14 de 39** capacidades cobertas por teste executado (2026-11-25).
+**Estado:** aceito (2026-11-24) — matriz escrita; **20 de 39** capacidades cobertas por teste executado (2026-11-27).
 
 **Quatro níveis de afirmação convivem aqui:**
 
 - **`P`** — tudo o que a página diz sobre a suíte: os 39 `CAP` são matriz, os alvos de sistema
-  `sistema_pg`, `reversibilidade_pg` e `runner_pg` estão declarados em `crates/wyd-db/Cargo.toml` (ao lado
-  dos contratos de API `contrato_api_migrate` e `contrato_api_provision`) e 14 dos 39 cenários rodaram.
+  `sistema_pg`, `reversibilidade_pg`, `runner_pg` e `contrato_migrations` estão declarados em
+  `crates/wyd-db/Cargo.toml` (ao lado dos contratos de API `contrato_api_migrate` e
+  `contrato_api_provision`) e **20** dos 39 cenários têm teste executado (2026-11-27).
 - **`H`** — dúvida aberta, dita e localizada em §9, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com a fonte ao lado.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
@@ -39,8 +40,10 @@ executadas.
    aceite (`RNF-DB-003`).
 
 **O que "coberto" quer dizer:** capacidade com cenário **executado e verde**. Como `sistema_pg` rodou
-contra a base migrada e `runner_pg` rodou contra PG17 em 2026-11-25, esta página declara **14 de 39
-cobertas** — e as outras 25 seguem planejadas, sem trocar "planejado" por "coberto".
+contra a base migrada, `runner_pg` rodou contra PG17 em 2026-11-25 e `contrato_migrations` rodou sobre a
+série viva em 2026-11-27, esta página declara **20 de 39 cobertas** — e as outras 19 seguem planejadas,
+sem trocar "planejado" por "coberto". `CAP-01` está entre as 19 apesar de o cenário existir: a série viva
+reprova (§7).
 
 ## 2. Contrato — `contrato_migrations` (7)
 
@@ -122,15 +125,15 @@ e de boot não existe (`../../docs/specs/requisitos-nao-funcionais.md` §4–§5
 
 ## 7. Censo e dívida
 
-**Medido em 2026-11-24**, com a fonte de cada linha:
+**Medido em 2026-11-27**, com a fonte e a data de cada linha:
 
 | Medida | Número | Fonte |
 |---|---:|---|
 | capacidades na matriz | **39** | §2–§6 |
-| cobertas por teste executado | **14** | `crates/wyd-db/tests/sistema/sistema_pg.rs`: 13 verdes em 2026-11-24 + `CAP-37` em `runner_pg` (2026-11-27, log `/tmp/wyd-runner-pg-2026-11-27.log`) |
+| cobertas por teste executado | **20** | `crates/wyd-db/tests/sistema/sistema_pg.rs`: 13 verdes em 2026-11-24 + `CAP-37` em `runner_pg` (verde desde 2026-11-25, no caso `cap37_segunda_execucao_espera_no_advisory_lock`; remedido em 2026-11-27, job `pg / runner` do run `45994297544`) + `CAP-02`–`CAP-07` em `contrato_migrations` (forma aprovada na série viva de 28 arquivos, 9 testes verdes em 2026-11-27; `CAP-01` fica fora, ver abaixo) |
 | com requisito nomeado (`RF`/`RN`/`RNF`) | **39** | `CAP-01`–`CAP-39` |
 | governadas por gate solto | **0** | as 11 que citavam gate passaram a citar `RNF-DB-008`–`013` (`Q-BLK-19` = A) |
-| alvos | **5** | `../index.md` §2 |
+| alvos | **7** | `../index.md` §2 — quatro rodam (`sistema_pg`, `reversibilidade_pg`, `runner_pg`, `contrato_migrations`); a matriz cita 6 porque `reversibilidade_pg` não tem linha de `CAP` própria (o ciclo SQL dele é `CAP-02` em §2) |
 | domínio sem capacidade no banco | `RF-DB-015` e `RF-DB-016` | são regra de `wyd-server`, não do banco (`../../docs/specs/rastreabilidade.md` §2.1) |
 
 **A dívida de gate solto foi fechada em 2026-11-24** (`Q-BLK-19` = A): as 11 capacidades que provavam
@@ -139,7 +142,7 @@ Nenhuma capacidade ficou sem requisito, e nenhum limiar novo foi inventado — o
 
 ### 7.1 Capacidade com lugar escrito — e a que não tem ambiente
 
-**Medido em 2026-11-24.** Nenhuma das 39 ficou sem lugar: cada linha de §2–§6 nomeia a **página** que
+**Medido em 2026-11-27.** Nenhuma das 39 ficou sem lugar: cada linha de §2–§6 nomeia a **página** que
 descreve o cenário e o **alvo** que o executa. O que uma capacidade pode não ter é **ambiente para rodar**, e isso é declarado,
 não silenciado.
 
@@ -147,19 +150,25 @@ não silenciado.
 |---|---:|---|
 | com página e alvo escritos | **39** | todas: `CAP-01`–`CAP-07` em `alvos/contrato-migrations.md`; `CAP-08` em `alvos/contrato-catalogo.md`; `CAP-09`–`CAP-19` e `CAP-24`–`CAP-39` em `alvos/sistema-pg.md`; `CAP-20`–`CAP-21` em `alvos/sistema-sessoes.md`; `CAP-22`–`CAP-23` em `alvos/sistema-stack-caps.md` |
 | com alvo escrito e **sem ambiente hoje** | **1** | `CAP-08`: o documento `docs/dicionario-dados/banco-catalogo.md` não existe e o leitor atual não enxerga `CREATE TABLE esquema.tabela` (`../alvos/contrato-catalogo.md` §3); é **declarada não executável na `1.0.0`** por `Q-BLK-20` = A (2026-11-24) |
-| com cenário executado e verde | **14** | `CAP-24`–`CAP-36` em `sistema_pg` (13 verdes em 2026-11-24) e `CAP-37` em `runner_pg` (verde em 2026-11-25) |
+| com cenário executado e verde | **20** | `CAP-24`–`CAP-36` em `sistema_pg` (13 verdes em 2026-11-24), `CAP-37` em `runner_pg` (verde desde 2026-11-25; 7/7 em 2026-11-27) e `CAP-02`–`CAP-07` em `contrato_migrations` (verdes em 2026-11-27) |
 | com cenário escrito e **sem código que o execute** | **2** | `CAP-38` (`RNF-DB-004`, consulta da porta C4) e `CAP-39` (`RNF-DB-005`, boot do binário) |
 
-**O que isso não muda nas outras 25:** a cobertura é **14 de 39**. Página e alvo escritos são o
+**O que isso não muda nas outras 19:** a cobertura é **20 de 39**. Página e alvo escritos são o
 *onde*, não o *resultado*; declarar uma capacidade coberta sem cenário executado é o defeito que a regra 2
 de §1 existe para impedir. As 13 verdes de `sistema_pg` mediram o **schema** — o harness chama `psql` no
-container (`WYD_DB_TEST_CONTAINER`); `CAP-37` mediu a **porta** pelo `PgAdapter` real em `runner_pg`.
-`CAP-38` e `CAP-39` seguem sem código que as execute.
+container (`WYD_DB_TEST_CONTAINER`); `CAP-37` mediu a **porta** pelo `PgAdapter` real em `runner_pg`;
+`CAP-02`–`CAP-07` medem a **forma** da série como texto, sem banco.
+
+**`CAP-01` não entra nas 20, e isso é medido, não omissão:** o cenário `serie_contigua` roda e prova a
+regra nas fixtures, mas a série viva tem **28** arquivos e seis furos (`0016`, `0017`, `0018`, `0020`,
+`0023`, `0027`). O alvo declara o vermelho num teste próprio
+(`serie_viva_respeita_a_forma_com_contiguidade_pendente`, V 2026-11-27); a capacidade fica fora até a
+série fechar (`../alvos/contrato-migrations.md` §1). `CAP-38` e `CAP-39` seguem sem código que as execute.
 
 **O aceite é a outra metade:** as 12 páginas foram aceitas em 2026-11-24 (`Q-BLK-21` = A), e o código dos
 cinco alvos foi liberado por `Q-BLK-18` = A (2026-11-24); `crates/wyd-db/` tem `Cargo.toml`, `src/dsn.rs`,
-`tests/sistema/sistema_pg.rs`, `tests/sistema/reversibilidade_pg.rs` e `tests/sistema/runner_pg.rs` — **3 dos 7 alvos** declarados,
-e a matriz está **14 de 39** cobertas.
+`tests/sistema/sistema_pg.rs`, `tests/sistema/reversibilidade_pg.rs`, `tests/sistema/runner_pg.rs` e
+`tests/contrato/contrato_migrations.rs` — **4 dos 7 alvos** declarados, e a matriz está **20 de 39** cobertas.
 
 ## 8. Como uma capacidade entra ou muda
 

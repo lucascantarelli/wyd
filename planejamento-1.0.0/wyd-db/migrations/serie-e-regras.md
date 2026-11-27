@@ -346,7 +346,7 @@ autoriza alterar o desenho para "facilitar" o teste.
 ## 7. O que esta página não decide
 
 - **Não é a 35ª migration** e não entra em `migrations-checklist.md` §2, na contagem de 34 arquivos,
-  nos 109 tabelas ou nos 141 atos.
+  nos 109 tabelas ou nos 138 atos.
 - **Não é dona da ordem**: a lista canônica, a numeração e o escopo de cada arquivo são de
   `../plano-migrations.md` §3; aqui há uma leitura consolidada para o runner.
 - **Não é dona do contrato do runner**: assinaturas, variantes de erro, forma do ledger, checksum,
@@ -471,26 +471,26 @@ linha única de versão de conteúdo (`0001`).
 
 | Prova | Comando | Resultado observado |
 |---|---|---|
-| ciclo completo | `WYD_DB_TEST_CONTAINER=wyd-db-rev cargo test --manifest-path crates/wyd-db/Cargo.toml --test reversibilidade_pg -- --test-threads=1` | `test result: ok. 3 passed; 0 failed`; `ciclo_up_down_up_em_pg17 ... ok` (47,44 s; log local `/tmp/wyd-reversibilidade.log`) |
+| ciclo completo | `WYD_DB_TEST_CONTAINER=wyd-db-rev cargo test --manifest-path crates/wyd-db/Cargo.toml --test reversibilidade_pg -- --test-threads=1` | `test result: ok. 3 passed; 0 failed`; `ciclo_up_down_up_em_pg17 ... ok` (47,44 s na execução local; o job `pg / reversibility` do run `45994297544` repete os 3 em PG17) |
 | inverso exato por arquivo | script de revisão: inventário de objetos após cada `up` comparado ao estado após o `down` seguinte | `passos conferidos: 28; inexatos: 0` |
 | estado final | 28 `up` → 28 `down` → 28 `up` | 1103 objetos → `0` schemas → 1103 objetos, inventário idêntico |
 | dado presente | `portal.person` e `content.game_system` inseridos antes do `down` | o `down` executou com as linhas presentes |
 
 O alvo roda em container **vazio** com os papéis de teste e falha, não se ignora, quando
 `WYD_DB_TEST_CONTAINER` não está definida. A extração do bloco `up` no workflow foi executada com exit 0;
-`cargo test --test sistema_pg` passou **13/13** no container migrado (log local
-`/tmp/wyd-ci-schema.log`). O alvo `runner_pg` passou **7/7** contra PG17 em `127.0.0.1` em 2026-11-27 (5/5 em
-2026-11-25, log local `/tmp/wyd-runner-pg.log`), exercitando `PgAdapter`, ledger, transação por arquivo, drift e o advisory
+`cargo test --test sistema_pg` passou **13/13** no container migrado (job `pg / schema` do run
+`45994297544`). O alvo `runner_pg` passou **7/7** contra PG17 em `127.0.0.1` em 2026-11-27 e 5/5 em
+2026-11-25 (job `pg / runner` do mesmo run), exercitando `PgAdapter`, ledger, transação por arquivo, drift e o advisory
 lock em duas sessões: **`CAP-37` está fechada**. `CAP-38` (p95 da leitura de personagem) segue aberta;
 a série real só não roda no runner enquanto faltarem as seis versões (§7/§9.1.1).
 
 ## 10. Próxima frente recomendada
 
 O quadro canônico de foco é `../../wyd-ops/docs/prioridade-do-projeto.md` §0.1 (D-06). A recomendação
-única continua **A — D-01/`wyd-db`**: é a frente que fecha **24 células** e **141 atos** e autoriza
+única continua **A — D-01/`wyd-db`**: é a frente que fecha **24 células** e **138 atos** e autoriza
 **40 issues vinculadas**, sem depender de terceiro; B, C e D fecham **0 atos/issues** no curto prazo. Dentro dela,
 a próxima fatia executável é o **ato 4**, agora reduzido a **`CAP-38` e `CAP-39`** (**2 células
-`teste`**, **14 → 16 de 39**), seguida do **ato 5** (**40 issues + 141 atos**). `CAP-37` está fechada por
+`teste`**, **20 → 22 de 39**), seguida do **ato 5** (**40 issues + 138 atos**). `CAP-37` está fechada por
 `runner_pg` (7/7 em PG17, §9.2), e os nomes parseiam desde a renomeação de A′ (§9.1). O que resta para a
 série real rodar no runner é a **contiguidade** das seis versões (§9.1.1).
 

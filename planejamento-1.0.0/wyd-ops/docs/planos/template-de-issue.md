@@ -129,7 +129,7 @@ desta tabela ausente de um formulário também. Alterar a lista é alterar as du
 
 ```bash
 # a partir da raiz
-make gate-fast          # skills, lacunas, contagens e censos
+make gate-fast          # alvos, skills, lacunas, contagens e censos
 make gate               # build, links e todos os domínios (container)
 ```
 

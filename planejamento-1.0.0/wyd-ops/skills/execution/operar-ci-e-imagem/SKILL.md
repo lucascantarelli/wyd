@@ -32,7 +32,7 @@ description: Mexe em workflow, action composta, imagem GHCR ou rollback do WYD s
 ## Como verificar
 
 ```bash
-make gate-fast                                    # layout, skills, lacunas, contagens, censos — sem Docker
+make gate-fast                                    # layout, alvos, capacidades, skills, lacunas, contagens, censos, hoje — sem Docker
 gh run list --workflow=security.yml --limit 3     # actionlint roda aqui, no job `actionlint`
 gh run list --workflow=docs-image.yml --limit 3
 curl -sI http://127.0.0.1:8080/ | head -1         # após subir a tag

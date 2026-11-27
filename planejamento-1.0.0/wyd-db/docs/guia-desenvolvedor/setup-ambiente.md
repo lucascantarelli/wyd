@@ -56,12 +56,14 @@ Os comandos existem; o `Cargo.toml` declara `sistema_pg`, `reversibilidade_pg`, 
 `contrato_api_migrate` e `contrato_api_provision` (2026-11-27). O caminho é:
 
 ```text
-cargo test -p wyd-db                    # alvos unitários e de contrato
+cargo test -p wyd-db --lib --test contrato_api_migrate --test contrato_api_provision   # sem banco
 WYD_DB_TEST_URL=... cargo test -p wyd-db --test sistema_pg
 ```
 
 A segunda linha exige um banco descartável e falha nomeando a variável quando ela falta; não há `SKIP`
-por ambiente ausente. O comando por alvo está em `tests/index.md` §3.
+por ambiente ausente. `cargo test -p wyd-db` sem `--test` roda também os três alvos PostgreSQL e
+falha sem a DSN — é o que o `make test` evita ao listar a `lib` e os dois contratos. O comando por
+alvo está em `tests/index.md` §3.
 
 ## 5. Erros comuns de setup
 

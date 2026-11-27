@@ -44,9 +44,14 @@ um item, a linha fica `bloqueada` — não há “quase pronta”.
 | sistema | `migrate-cycle` up → down → up com contagens idênticas e 0 tabela; `verify-schema` por schema; cada `CHECK`/único violado com o erro esperado | `sistema_pg` | ciclo sujo, contagem diferente ou violação não reprovada |
 | fronteira e sessão | privilégio por papel e sessão única por conta | `sistema_sessoes` | escrita cruzada passa ou a segunda sessão é aceita |
 
-Os cinco alvos são os de `wyd-db-1.0.0.md` §6.17. **Nenhum deles existe hoje**: a suíte é `P` e o
-leitor atual do catálogo não entende `CREATE TABLE game.account (` — enquanto isso, o contrato da
-série nova é conferência manual (`plano-migrations.md` §1.3).
+Os alvos são os de `../index.md` §2 — **sete**. **Medido em 2026-11-27:** `crates/wyd-db/Cargo.toml`
+declara **seis** e todos rodam — `sistema_pg`, `reversibilidade_pg`, `runner_pg`, `contrato_migrations` e
+os contratos de API `contrato_api_migrate` e `contrato_api_provision`; dos sete da tabela, restam sem
+arquivo `contrato_catalogo`, `sistema_sessoes` e `sistema_stack_caps`. O alvo de contrato da série está verde em seis dos sete
+invariantes — `CAP-01` reprova na série viva, que tem seis furos
+(`../guia-teste/testes-de-contrato.md` §5). O leitor atual do catálogo não entende
+`CREATE TABLE game.account (`; por isso o contrato **de catálogo** segue em conferência manual
+(`plano-migrations.md` §1.3).
 
 ## 4. Documentação e PR
 
@@ -83,8 +88,8 @@ registro, o gate reprova.
 
 ## 7. O que esta página não cobre
 
-- **Cobertura funcional:** a matriz `CAP-nn` está em `tests/specs/capacidades.md` (**23** capacidades,
-  **0** cobertas); a estratégia é de `plano-de-testes.md`.
+- **Cobertura funcional:** a matriz `CAP-nn` está em `tests/specs/capacidades.md` (**39** capacidades,
+  **20** cobertas em 2026-11-27); a estratégia é de `plano-de-testes.md`.
 - **Desempenho e carga:** não há medição nem limiar decidido.
 - **Backup, restore e retenção executada:** são de
   [`plano-de-implantacao.md`](plano-de-implantacao.md) e da operação.

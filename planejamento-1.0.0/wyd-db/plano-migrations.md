@@ -166,7 +166,7 @@ continua 53 em `develop`.
    (nenhum), zero regressão.
 2. `node tools/content/check-migrations.mjs --dir crates/wyd-db/tests/contrato/fixtures/serie-schema`
    passa na fixture boa e **reprova** cada vício da fixture ruim com mensagem própria.
-3. `cargo test -p wyd-db` verde (os dois testes de contrato leem a série viva).
+3. `cargo test -p wyd-db --lib --test contrato_api_migrate --test contrato_api_provision` verde (os dois testes de contrato leem a série viva).
 4. `make migrations-apply` (up/down/up) verde com a série herdada **depois** das mudanças de `pg.mjs`
    — é o teste de que o reset multi-schema não quebrou o ciclo antigo.
 5. `make docs-check` verde.
@@ -353,7 +353,35 @@ A série herdada tem **26 arquivos de seed**, dos quais **7 são patch** (`seed_
 
 Contagens a preservar (medidas em 2026-11-08/15): 3.220 itens, 55 efeitos, 154 skills (63 com
 linhagem), 1.991 templates, 6.100 NPCs, 6.706 slots de loja, 161 `level_item`, 52 regiões, 49 itens
-de chão, 14 passos de refino, 4 gemas, 4 cidades, 2 arenas, 3 eventos, `content_version = 7`.
+de chão, 14 passos de refino, 4 gemas, 4 cidades (no `0020`, `Q-M34-3`), 2 arenas e 3 eventos (no
+`0027`), `content_version = 7`.
+
+**Medição dos seeds legados (2026-11-27).** As contagens acima são as **declaradas** em 2026-11-08/15;
+a medição abaixo é a que os arquivos de seed legados (`deprecated/crates/wyd-db/migrations/`) e o
+dataset do 7662 (`deprecated/.agents/prompts/análises/wyd-db/database/plan/dados/`) sustentam hoje
+(`V`, 2026-11-27). Onde as duas divergem, a diferença está nomeada; nenhuma contagem é ajustada por
+média.
+
+| Dataset | Declarada | Medida (`V`) | Divergência |
+|---|---:|---:|---|
+| taxonomia (`0016`) | 20+6+13+16 | 55 (20 sistemas, 6 classes, 13 linhagens, 16 categorias) | — |
+| catálogo de item (`0017`) | 3.220 itens + 55 efeitos | 3.275 (3.220 + 55) | **3.216 de 3.220** com slot no `ItemList.bin`; 4 itens do catálogo não têm linha no cliente (`resumo.json`, `divergencias.present = 3216`) |
+| catálogo de skill (`0018`) | 154 (151 + 3 Kersef), 63 com linhagem | 154 (151 + 3), 63 com linhagem | **124 de 151** registros não vazios no `SkillData.bin` (`skills.status = partial`); **63 × 69** com linhagem: o cabeçalho do `0021_seed_skill_lineage` conta 69, mas 6 repetiam o seed e o arquivo tem 63 `UPDATE` distintos |
+| mundo (`0020`) | 1.991 + 6.100 + 6.706 + 161 + 52 + 49 | 15.142 + 12 de `content_source` | **+83** fora da conta declarada: `guard_spawn` 5, `guard_spawn_reward` 27, `mob_merc` 1, `game_setting` 25, `game_matrix` 20, `guild_zone` 5 |
+| regras (`0023`) | 14 passos + 4 gemas (SANC, combine e acessório sem número) | 158 (15 + 4 + 36 + 36 + 67) | **15 × 14 passos**: o passo 11 (+10→+11, Poeira de Lac) ficou fora da conta declarada; gemas **4 = 4**, sem divergência; 36 SANC, 36 combine e 67 acessório medidos |
+| quests e eventos (`0027`) | "cadeia" (sem número) + 3 eventos + 2 arenas | 16 (1 quest + 4 passos + 3 recompensas + 3 eventos + 3 agendas + 2 arenas) | a cadeia medida é **1 quest**; as **4 cidades** não entram neste seed (destino em `proposta-decisoes-seeds.md` `Q-M34-3`) |
+
+**Total medido: 18.800 linhas** (55 + 3.275 + 154 + 15.142 + 158 + 16), das quais **18.417** nos dois
+seeds de volume (`0017` e `0020`) e **383** nos quatro curados.
+
+**Decisão de 2026-11-27 (dono) — `M34`.** Exceção pontual ao "sem gerador" para `0017` e `0020`
+(A em `Q-M34-1`), com script **descartável** (A em `Q-M34-2`): o script roda fora do repositório e o
+que fica versionado é o TSV, o seed e a linha de `content_source`. Valem as condições de
+`proposta-decisoes-seeds.md` §5 — só os dois arquivos; só linha medida; ausência em `ausentes.tsv`;
+diff contra o seed legado; nada de valor por default, média ou "parecido"; revisão do dono; a exceção
+expira quando os dois arquivos existirem. A regra continua valendo para `0016`, `0018`, `0023` e
+`0027`. As **4 cidades** entram em `game.city` pelo `0020` (A em `Q-M34-3`), com `map_id` nulo e sem
+`region_id`; o `0027` não as carrega.
 
 **O que falta em cada seed (2026-11-21)** — dado de origem, nunca ferramenta: `0016` reconferir as
 contagens de taxonomia; `0017` recontar itens e efeitos do catálogo; `0018` curadoria de classe e

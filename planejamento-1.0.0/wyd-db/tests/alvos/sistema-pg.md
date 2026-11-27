@@ -4,7 +4,7 @@
 > Base: `../specs/capacidades.md` §4; `../specs/sistema.md`; `../../docs/guia-teste/testes-de-sistema.md`
 > Revisado em: 2026-11-25
 
-**Estado:** aceito (2026-11-24) — alvo executado inicialmente em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). Reexecutado contra PG17 em 2026-11-25: **13/13** dos cenários implementados passaram (log `/tmp/wyd-ci-schema.log`). `CAP-37` saiu deste alvo e está verde em `runner_pg`; `CAP-38` e `CAP-39` continuam sem implementação.
+**Estado:** aceito (2026-11-24) — alvo executado inicialmente em 2026-11-24: **13 de 27** cenários verdes; 3 dependem de código de sistema que ainda não existe (§1.1). Reexecutado contra PG17 em 2026-11-25 e repetido no CI em 2026-11-27: **13/13** dos cenários implementados passaram (job `pg / schema` do run `45994297544`). `CAP-37` saiu deste alvo e está verde em `runner_pg`; `CAP-38` e `CAP-39` continuam sem implementação.
 
 **Reorganização (2026-11-26):** o arquivo passou a `crates/wyd-db/tests/sistema/sistema_pg.rs`;
 `cargo test --no-run` recompilou o alvo, mas a execução não foi repetida localmente (sem PG17 e
@@ -20,8 +20,8 @@
   (`../../padrao-banco.md` §13).
 
 **Alvo escrito e executado:** `sistema_pg` — arquivo `crates/wyd-db/tests/sistema/sistema_pg.rs`, declarado no
-`Cargo.toml` do crate em 2026-11-24; 13 cenários passaram novamente em 2026-11-25 (log
-`/tmp/wyd-ci-schema.log`). O nome do alvo é o de [../index.md](../index.md) §2.
+`Cargo.toml` do crate em 2026-11-24; 13 cenários passaram novamente em 2026-11-25 e no CI em 2026-11-27 (job `pg / schema` do run
+`45994297544`). O nome do alvo é o de [../index.md](../index.md) §2.
 
 O alvo de sistema: **27** capacidades que só existem contra PostgreSQL 17 real — transação, `CHECK`,
 índice único parcial, FK, concorrência, ledger, pool, a série e as três medições de `RNF-DB-002`, `004` e `005`. Sem banco, ele **falha** nomeando

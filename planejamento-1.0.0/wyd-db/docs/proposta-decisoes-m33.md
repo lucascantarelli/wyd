@@ -199,7 +199,7 @@ aceitar por lote esconde página não revisada dentro do agregado.
 | C | Aceitar por lote (bloco operacional, identidade, conteúdo...) | um lote aceito esconde página não revisada dentro dele |
 
 **Recomendação: A.** O critério de §5.1 é por página e a dependência real também: `0001` não precisa
-que `0027` esteja pronta. **Custo:** 34 atos de aceite, um a um, sem atalho; a série espera o aceite da
+que `0027` esteja pronta. **Custo:** os 34 atos de aceite de `M33`, um a um, sem atalho; a série espera o aceite da
 página que vai executar, não o das outras. **Fontes:** `AGENTS.md` §5, item 1; `plano-migrations.md` §3 (a
 ordem); `migrations-checklist.md` §4 (o painel, sem número novo). **Recusa B** porque transforma
 bloqueio de dado em bloqueio de schema; **C** porque troca critério verificável por agregado.

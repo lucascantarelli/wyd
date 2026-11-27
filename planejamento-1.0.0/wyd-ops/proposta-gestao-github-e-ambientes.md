@@ -485,4 +485,3 @@ Três limites de API, medidos e não contornados:
 
 O `Status` foi reescrito preservando o `id` de `Todo`, `In Progress` e `Done`; renomear com o mesmo
 `id` não perde valor de item. Nenhum item tinha valor antes, e a ordem das seis opções é a de §3.5.
-

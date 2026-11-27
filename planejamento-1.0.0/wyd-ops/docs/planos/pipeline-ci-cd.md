@@ -17,7 +17,7 @@ Este documento mantém o desenho e as decisões da esteira de CI/CD. O estado ap
 | Workflow | Gatilho medido | Status | O que prova hoje |
 |---|---|---|---|
 | `.github/workflows/docs.yml` | todo push/PR em `develop` | implementado | `gate-docs` (montagem, links, âncoras, navegação, sintaxe e censos) e Pages em push de `develop` |
-| `.github/workflows/code.yml` | todo push/PR em `develop`/`main` | implementado | `fmt`, `clippy` e `unit` em matriz de 3 crates (Windows para signer/launcher), cobertura informativa e `gate-code` |
+| `.github/workflows/code.yml` | todo push/PR em `develop`/`main` | implementado | `fmt` em matriz de 3 crates e `clippy`+`unit` no mesmo job por crate (Windows só para `wyd-ops-signer`), cobertura (`wyd-db` informativa, `wyd-launcher` com o piso do plano do crate) e `gate-code` |
 | `.github/workflows/ci-db.yml` | todo push/PR em `develop`/`main` | implementado | matriz `schema`/`reversibility`/`runner` com `postgres:17` por digest como service container e `gate-db` |
 | `.github/workflows/docs-image.yml` | PR/push quando toca docs/site/compose/Dockerfile | implementado | Buildx + cache GHA, fumaça HTTP 200, push no GHCR só em `develop` e provenance/SBOM |
 | `.github/workflows/security.yml` | todo push/PR + schedule semanal | implementado | `cargo audit`/`cargo deny` em cada crate, `dependency-review` em PR, `workflow-lint` com actionlint e `gate-security` |

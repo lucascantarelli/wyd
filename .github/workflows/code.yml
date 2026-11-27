@@ -1,9 +1,11 @@
 name: code
 
 # Um workflow por domínio. Este cobre fmt, clippy, testes e cobertura dos três
-# crates; os alvos PostgreSQL ficam em `ci-db.yml` e a segurança em `security.yml`.
-# `wyd-db` e `wyd-ops-signer` rodam em Linux/Windows; `wyd-launcher` é um produto
-# Windows (EXE + Tauri/NSIS) e não tem alvo Linux.
+# crates — lint e teste no mesmo job por crate, para reaproveitar o `target/`; os
+# alvos PostgreSQL ficam em `ci-db.yml` e a segurança em `security.yml`.
+# `wyd-db` e `wyd-ops-signer` rodam em Linux/Windows; o núcleo do `wyd-launcher` é
+# Rust puro (sem Tauri nem `cfg(windows)`) e roda em Linux. O empacotamento NSIS do
+# launcher, quando existir, é o único passo que exige Windows.
 # O check obrigatório é `gate-code`, não cada job da matriz: assim a matriz pode
 # crescer sem mudar a regra de branch.
 
@@ -37,9 +39,9 @@ jobs:
             os: ubuntu-latest
           - crate: wyd-ops-signer
             os: ubuntu-latest
-          # O launcher é Windows-only; até a formatação roda no alvo suportado.
+          # Núcleo portátil: formatação do launcher roda em Linux como os demais.
           - crate: wyd-launcher
-            os: windows-latest
+            os: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,22 +52,33 @@ jobs:
       - name: Formatação
         run: cargo fmt --manifest-path crates/${{ matrix.crate }}/Cargo.toml -- --check
 
-  clippy:
-    name: clippy / ${{ matrix.crate }} / ${{ matrix.os }}
+  # Lint e teste no mesmo job: o `target/` de um crate vale para os dois passos,
+  # então as dependências são compiladas uma vez (antes eram dois jobs e duas
+  # compilações do mesmo grafo).
+  verify:
+    name: clippy+unit / ${{ matrix.crate }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
         include:
           - crate: wyd-db
             os: ubuntu-latest
+            # A lib e os contratos públicos de `migrate`/`provision`; os alvos
+            # PostgreSQL ficam em `ci-db.yml` e não rodam aqui.
+            args: --lib --test contrato_migrations --test contrato_api_migrate --test contrato_api_provision
           - crate: wyd-ops-signer
             os: ubuntu-latest
-          # O launcher é um produto Windows (EXE + Tauri/NSIS). Lint e teste
-          # nativos só fazem sentido no runner Windows.
-          - crate: wyd-launcher
+            args: --locked
+          - crate: wyd-ops-signer
             os: windows-latest
+            args: --locked
+          # Núcleo portátil: lint e teste do launcher rodam em Linux. O bundle
+          # NSIS (Tauri) será job próprio em Windows, quando existir.
+          - crate: wyd-launcher
+            os: ubuntu-latest
+            args: --locked
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -75,42 +88,12 @@ jobs:
           crate: ${{ matrix.crate }}
       - name: Lint
         run: cargo clippy --manifest-path crates/${{ matrix.crate }}/Cargo.toml --all-targets -- -D warnings
-
-  unit:
-    name: unit / ${{ matrix.crate }} / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - crate: wyd-db
-            os: ubuntu-latest
-            # A lib e os contratos públicos de `migrate`/`provision`; os alvos
-            # PostgreSQL ficam em `ci-db.yml` e não rodam aqui.
-            args: --lib --test contrato_api_migrate --test contrato_api_provision
-          - crate: wyd-ops-signer
-            os: ubuntu-latest
-            args: --locked
-          - crate: wyd-ops-signer
-            os: windows-latest
-            args: --locked
-          - crate: wyd-launcher
-            os: windows-latest
-            args: --locked
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup-rust
-        with:
-          crate: ${{ matrix.crate }}
       - name: Testes
         run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }}
 
   # Esqueleto dos sistemas que ainda não têm comportamento: fmt, clippy e teste de
   # cada crate criado em 2026-11-26. Um job em matriz mantém a cobertura sem uma
-  # entrada por crate nas matrizes de `fmt`/`clippy`/`unit`.
+  # entrada por crate nas matrizes de `fmt` e `clippy+unit`.
   esqueleto:
     name: esqueleto / ${{ matrix.crate }}
     runs-on: ubuntu-latest
@@ -140,33 +123,47 @@ jobs:
       - name: Testes
         run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml --locked
 
+  # `wyd-db` continua informativo (decisão D-02 = B); o `wyd-launcher` aplica o piso
+  # de 85% de linha que o plano dele promete (wyd-launcher/docs/planos/plano-de-testes.md
+  # §Cobertura). O `--fail-under-lines` vale só no passo de resumo; o LCOV é sempre
+  # gerado para o artefato.
   coverage:
-    name: cobertura informativa (wyd-db)
-    needs: unit
-    if: needs.unit.result == 'success'
+    name: cobertura / ${{ matrix.crate }}
+    needs: verify
+    if: needs.verify.result == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - crate: wyd-db
+            args: --lib
+            piso: ""
+          - crate: wyd-launcher
+            args: ""
+            piso: --fail-under-lines 85
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup-rust
         with:
-          crate: wyd-db
+          crate: ${{ matrix.crate }}
       - name: Instalar cargo-llvm-cov
         uses: taiki-e/install-action@893d6ee8d714b6c7dfe2bcd94e5759e9a7958a7e # v2.90.10
         with:
           tool: cargo-llvm-cov
-      - name: Cobertura (sem --fail-under, decisão D-02 = B)
+      - name: Cobertura
         run: |
           set -o pipefail
           rustup component add llvm-tools-preview
-          cargo llvm-cov --manifest-path crates/wyd-db/Cargo.toml --lib --summary-only | tee coverage-summary.txt
-          cargo llvm-cov --manifest-path crates/wyd-db/Cargo.toml --lib --lcov --output-path lcov.info
+          cargo llvm-cov --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }} --summary-only ${{ matrix.piso }} | tee coverage-summary.txt
+          cargo llvm-cov --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }} --lcov --output-path lcov.info
       - name: Publicar resumo e LCOV
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: cobertura-wyd-db
+          name: cobertura-${{ matrix.crate }}
           path: |
             coverage-summary.txt
             lcov.info
@@ -176,20 +173,19 @@ jobs:
   gate-code:
     name: gate-code
     if: always()
-    needs: [fmt, clippy, unit, esqueleto, coverage]
+    needs: [fmt, verify, esqueleto, coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       FMT: ${{ needs.fmt.result }}
-      CLIPPY: ${{ needs.clippy.result }}
-      UNIT: ${{ needs.unit.result }}
+      VERIFY: ${{ needs.verify.result }}
       ESQUELETO: ${{ needs.esqueleto.result }}
       COVERAGE: ${{ needs.coverage.result }}
     steps:
       - name: Agregar os jobs
         run: |
           falhou=0
-          for resultado in "$FMT" "$CLIPPY" "$UNIT" "$ESQUELETO" "$COVERAGE"; do
+          for resultado in "$FMT" "$VERIFY" "$ESQUELETO" "$COVERAGE"; do
             if [ "$resultado" != "success" ]; then
               echo "::error::job com resultado '$resultado'"
               falhou=1

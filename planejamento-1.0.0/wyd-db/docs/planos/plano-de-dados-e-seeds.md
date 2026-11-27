@@ -43,8 +43,13 @@ As contagens foram medidas em **2026-11-08/15** e são as que o seed tem de repr
 já existe no repositório —, não uma estimativa desta página. O que falta, por arquivo, é a
 reconferência: `0016` taxonomia; `0017` itens e efeitos; `0018` classe e linhagem das skills; `0020`
 templates, NPCs, lojas, níveis, regiões e itens de chão; `0023` refino, gemas, SANC e composição;
-`0027` cadeia de quests do 7662 e calendário de eventos. **Enquanto a fonte não for conferida, o
-arquivo não é escrito** (`plano-migrations.md` §4; `migrations-checklist.md` §3).
+`0027` cadeia de quests do 7662 e calendário de eventos. **Enquanto a fonte não for conferida, o arquivo não é escrito** (`plano-migrations.md` §4; `migrations-checklist.md` §3).
+
+**Método (2026-11-27, `M34`).** `0017` e `0020` saem por script **descartável** sobre o dataset medido
+(A em `Q-M34-1` e `Q-M34-2`); os outros quatro seguem à mão. As **4 cidades** entram em `game.city`
+pelo `0020` (A em `Q-M34-3`), com `map_id` nulo e sem `region_id` — fora do dataset de mundo, na
+tabela que o `0011` criou. A exceção decide o método, não entrega a medição: o bloqueio por dado de §2
+continua.
 
 ## 3. Proveniência e versão
 

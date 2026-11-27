@@ -2,7 +2,7 @@
 > Público: QA e desenvolvedor do `wyd-launcher`
 > Dono: equipe do wyd-launcher
 > Base: `AGENTS.md` §8; `wyd-launcher-1.0.0.md` §6; `wyd-protocol/docs/planos/plano-de-testes.md` (molde, não conteúdo)
-> Revisado em: 2026-11-25
+> Revisado em: 2026-11-27
 
 **Estado:** proposto (2026-11-25). Nenhum teste escrito.
 
@@ -34,18 +34,38 @@
 - Proibido `sleep` como sincronização.
 - Cobertura mínima de 85% por capacidade.
 
+## Fixtures byte-exatas
+
+As fixtures vivem em `crates/wyd-launcher/tests/fixtures/` e são **byte-exatas**: o teste compara
+bytes, não texto. `assinatura/manifest.json.sig` é a assinatura Ed25519 em hexadecimal sobre a forma
+canônica RFC 8785 de `assinatura/manifest.json`, `chave-publica.hex` e `chave-errada.hex` são chaves
+em hexadecimal, e `dados/tabela.bin` é a tabela cujo hash e tamanho o manifesto declara. Um `\n` a
+mais no fim de qualquer uma delas muda o valor lido e reprova o teste sem que nenhuma linha de código
+mude.
+
+`dados/tabela.bin` não tem byte NUL, então o git não a reconhece como binária e `text=auto` a
+trataria como texto. Por isso a exclusão é explícita, em dois lugares, e as duas precisam continuar
+existindo:
+
+- `.gitattributes`: `crates/wyd-launcher/tests/fixtures/** -text` impede a conversão de fim de linha
+  no checkout.
+- `.pre-commit-config.yaml`: `trailing-whitespace` e `end-of-file-fixer` excluem o mesmo caminho.
+
+Não remova a exclusão nem “formate” a fixture: o valor esperado vem dos bytes. Fixture nova nasce da
+geração com a chave de teste e é conferida pelo hash, não de edição manual.
+
 ## Comandos
 
 ```bash
 cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked --all-targets
-# Cobertura do launcher ainda não roda no CI; o job atual cobre wyd-db.
+# Mesmo comando do job `coverage` do CI, que falha abaixo de 85% de linha.
 cargo llvm-cov --manifest-path crates/wyd-launcher/Cargo.toml --fail-under-lines 85
 ```
 
 ## CI, cobertura e monitoramento
 
-- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --manifest-path crates/wyd-launcher/Cargo.toml -- --check`, `cargo clippy --manifest-path crates/wyd-launcher/Cargo.toml --all-targets -- -D warnings` e `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked --all-targets` em `windows-latest`; `cargo deny` cobre o crate em `security.yml`. O launcher não é executado em Linux porque o produto é Windows-only (EXE + Tauri/NSIS); o PR para `develop` e `main` só passa com os checks verdes.
-- **Cobertura:** `cargo llvm-cov --fail-under-lines 85` é o piso planejado; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo. O job de cobertura atual mede apenas `wyd-db`.
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --manifest-path crates/wyd-launcher/Cargo.toml -- --check`, `cargo clippy --manifest-path crates/wyd-launcher/Cargo.toml --all-targets -- -D warnings` e `cargo test --manifest-path crates/wyd-launcher/Cargo.toml --locked --all-targets` em `ubuntu-latest`; `cargo deny` cobre o crate em `security.yml`. O núcleo é Rust puro (sem Tauri nem `cfg(windows)`), então fmt, clippy e teste rodam em Linux; só o empacotamento NSIS do instalador, quando existir, exige Windows. O PR para `develop` e `main` só passa com os checks verdes.
+- **Cobertura:** `cargo llvm-cov --fail-under-lines 85` é o piso, aplicado pelo job `coverage` do `code.yml` em `ubuntu-latest` desde 2026-11-27; medição de 2026-11-27: 92,48% de linha (545 linhas, 41 não cobertas). A cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo. `wyd-db` continua informativo (`D-02 = B`).
 - **Monitoramento:** Resultado da verificação de manifesto, hash divergente, falha de assinatura e update aplicado. Log local sem token nem conteúdo do jogador; não há telemetria remota por desenho.
 - **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.
 

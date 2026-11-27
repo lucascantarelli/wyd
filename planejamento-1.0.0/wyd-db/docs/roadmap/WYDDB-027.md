@@ -54,4 +54,4 @@ A lista fechada e a distinção entre skill em disco e cloud estão em
 
 ## Evidência ao fechar
 
-Saída de `cargo test -p wyd-db` e tabela de casos no PR.
+Saída de `cargo test -p wyd-db --lib` e tabela de casos no PR.

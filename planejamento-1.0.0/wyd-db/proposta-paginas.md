@@ -184,7 +184,7 @@ o ponteiro passa a `migrations/index.md`.
 |---|---|---|
 | §0 estados, marcos e donos | `specs/restricoes-e-premissas.md` (abertura) | — |
 | §1 decisões fechadas | a página dona de cada uma (coluna "Refletida em"), não uma lista nova | — |
-| §2.1–§2.3 as 38 lacunas | `restricoes-e-premissas.md` (as 3 externas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
+| §2.1–§2.3 as 39 lacunas | `restricoes-e-premissas.md` (as 3 externas) + `planos/riscos.md` (as que são risco) + a página dona de cada fechada | **existe** (nota ao fim de §2.4) |
 | §2.4 resumo por marco | `restricoes-e-premissas.md` (a tabela de marcos) | coberta pela mesma nota |
 | §3 `P1`–`P11` | `planos/riscos.md` (`P3` fechada; `P1` e `P5` também fechadas) | — |
 | §4 `D-A`, `D-B`, `D-C` | `planos/riscos.md` + `planos/plano-de-documentacao.md` (`D-A`) | — |

@@ -26,7 +26,7 @@
 
 ## `checks`
 
-- **Responsabilidade:** regras por domínio: `links`, `lacunas`, `contagens`, `censos` e `skills`.
+- **Responsabilidade:** regras por domínio: `links`, `alvos`, `lacunas`, `contagens`, `censos` e `skills`.
 - **API:** `python -m gate check <domínio>`; `fast` roda os quatro checks nativos.
 - **Invariantes:** as regras são as mesmas de antes; a consolidação é behavior-preserving.
 - **Depende de:** `Workspace` compartilhado.
@@ -76,7 +76,8 @@
 src/                      # planejamento; código real mora em wyd-docs/ (raiz)
 ├── preparar/             # montagem e navegação
 ├── gate/                 # CLI, Workspace e checks/
-├── checks/               # links, lacunas, contagens, censos, skills
+├── checks/               # layout, links, alvos, lacunas, contagens, censos, capacidades, hoje,
+│                         # skills; _texto.py (linha lógica, frase, isenção por data)
 ├── tema/                 # base.html, css, js, mermaid
 ├── publicacao/           # workflow, Pages
 ├── redirects/            # redirects.tsv

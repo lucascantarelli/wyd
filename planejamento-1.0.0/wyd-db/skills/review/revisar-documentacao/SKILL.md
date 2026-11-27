@@ -34,7 +34,7 @@ Não use para revisar SQL: isso é `review/revisar-schema`.
 ## Como verificar
 
 ```bash
-make gate-fast          # layout, skills, lacunas, contagens e censos
+make gate-fast          # layout, alvos, skills, lacunas, contagens e censos
 cd wyd-docs && py -3 -m gate fast --details
 ```
 

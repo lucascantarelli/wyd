@@ -69,8 +69,7 @@ de dano/alcance, sem bloquear a F7.
 - **Reconfirmada em 2026-11-20:** o dono manteve TOTP em credencial separada em `portal`, ligada a
   `portal.person`, e recusou segundo fator em `game.account` e o adiamento para a 1.1. O DDL de
   `portal.person_authenticator` está fechado no lote `0031` do `wyd-db` (`ddl-confirmado.md` §5.20,
-  aprovado em 2026-11-20); a tabela entrou na conta, que passou a 97 e hoje é **109**, com os lotes `0033`
-  e `0034`.
+  aprovado em 2026-11-20); a tabela entrou na conta, que passou a 97 e hoje é **109** tabelas (`migrations-checklist.md` §2), com os lotes `0033` e `0034`.
 
 ### LAC-POR-06 — Telemetria de canal (CPU, RAM, latência) (`fechada`)
 

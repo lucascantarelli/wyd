@@ -5,13 +5,14 @@
 > Revisado em: 2026-11-27
 
 **Estado:** aceito (2026-11-25) — alvo escrito e executado contra PostgreSQL 17: **7/7** casos verdes
-(V, 2026-11-26: `crates/wyd-db/tests/sistema/runner_pg.rs`, log `/tmp/wyd-runner-pg-wyddb030.log`,
-33,43 s; os 5 primeiros já tinham passado em 2026-11-25). Fecha `CAP-37` e a metade runner de
-`CAP-01`–`CAP-07`.
+(V, 2026-11-26: `crates/wyd-db/tests/sistema/runner_pg.rs`, 33,43 s na execução local; os 5
+primeiros já tinham passado em 2026-11-25 e o CI registrou os 7 no job `140219739708`, do PR #222).
+Fecha `CAP-37` e a metade runner de `CAP-01`–`CAP-07`.
 
 **Reexecução de 2026-11-27:** mesma fixture, `WYD_DB_TEST_URL` com `wyd_migrator` em `127.0.0.1` e
 `cargo test --manifest-path crates/wyd-db/Cargo.toml --test runner_pg -- --test-threads=1`,
-**7 passed; 0 failed; 0 ignored** em **38,60 s**, log `/tmp/wyd-runner-pg-2026-11-27.log` — é a
+**7 passed; 0 failed; 0 ignored** em **38,60 s** na execução local, repetidos contra o service
+container `postgres:17` no job `pg / runner` do run `45994297544` em `develop` (2026-11-27) — é a
 medição vigente do alvo (a de 2026-11-25 tinha 5 casos).
 
 **Provas do DoD da `WYDDB-030` acrescentadas em 2026-11-26:** drift de **um byte** no arquivo (não no
@@ -27,7 +28,7 @@ o segundo reexecuta o binário de teste com `--exact` em vez de abrir outra cone
 - **`P`** — o alvo está em `crates/wyd-db/Cargo.toml` (`runner_pg`) e a fixture em
   `crates/wyd-db/tests/resources/`.
 - **`V`** — medido contra PG17 em `127.0.0.1`: 5 casos em 2026-11-25 e **7 casos, 0 falhas** em
-  2026-11-27 (log `/tmp/wyd-runner-pg-2026-11-27.log`).
+  2026-11-27 (job `pg / runner` do run `45994297544`: 7 passed; 0 failed; 0 ignored).
 - **`H`** — dúvida aberta, em §6; hoje só a série real, que depende de contiguidade.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL.
 

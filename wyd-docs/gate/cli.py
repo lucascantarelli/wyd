@@ -2,7 +2,8 @@
 
 Contrato:
 - `full` monta o site, verifica links e roda todos os domínios;
-- `fast` roda só os checks nativos (layout, skills, lacunas, contagens, censos);
+- `fast` roda só os checks nativos (layout, alvos, skills, lacunas, contagens, censos,
+  capacidades, hoje);
 - `check` roda um ou mais domínios isolados.
 
 Sem `--json`, imprime uma linha por domínio com estado, tempo e resumo curto.
@@ -20,13 +21,23 @@ import sys
 import time
 from pathlib import Path
 
-from .checks import censos, contagens, lacunas, layout, links, skills
+from .checks import alvos, capacidades, censos, contagens, hoje, lacunas, layout, links, skills
 from .model import CheckResult
 from .workspace import Workspace
 
 DOCS = Path(__file__).resolve().parents[1]
 ROOT_PADRAO = DOCS.parent
-DOMINIOS = ("layout", "skills", "lacunas", "links", "contagens", "censos")
+DOMINIOS = (
+    "layout",
+    "alvos",
+    "skills",
+    "lacunas",
+    "links",
+    "contagens",
+    "censos",
+    "capacidades",
+    "hoje",
+)
 
 
 def _runner(nome: str, ws: Workspace, site: Path | None = None) -> CheckResult:
@@ -34,6 +45,8 @@ def _runner(nome: str, ws: Workspace, site: Path | None = None) -> CheckResult:
     try:
         if nome == "layout":
             resultado = layout.run(ws)
+        elif nome == "alvos":
+            resultado = alvos.run(ws)
         elif nome == "skills":
             resultado = skills.run(ws)
         elif nome == "lacunas":
@@ -44,6 +57,10 @@ def _runner(nome: str, ws: Workspace, site: Path | None = None) -> CheckResult:
             resultado = contagens.run(ws)
         elif nome == "censos":
             resultado = censos.run(ws)
+        elif nome == "capacidades":
+            resultado = capacidades.run(ws)
+        elif nome == "hoje":
+            resultado = hoje.run(ws)
         else:
             raise ValueError(f"domínio desconhecido: {nome}")
     except (SystemExit, Exception) as erro:  # o gate nunca esconde uma falha de leitura
@@ -176,7 +193,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "check":
         dominios = tuple(args.domains)
     elif args.command == "fast":
-        dominios = ("layout", "skills", "lacunas", "contagens", "censos")
+        dominios = (
+            "layout",
+            "alvos",
+            "skills",
+            "lacunas",
+            "contagens",
+            "censos",
+            "capacidades",
+            "hoje",
+        )
     else:
         dominios = DOMINIOS
     resultados = _executar(args.command, dominios, ws, getattr(args, "site", None))

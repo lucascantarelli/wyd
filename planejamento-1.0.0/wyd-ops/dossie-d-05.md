@@ -109,7 +109,7 @@ autoriza código. Ela apenas define a estrutura que o segundo crate e o gate vã
 | frentes liberadas | segundo crate e todos os crates Rust; `wyd-protocol` pode ser implementado depois do planejamento | cada crate isolado, sem padrão comum | liberação parcial, com dívida de versões |
 
 **Impacto no gate de documentação:** **nenhum**. O `gate` continua Python e as contagens publicadas
-seguem 309 páginas / 307 fontes / 141 atos / 79 aceitas / 64 células / 0 Q-BLK. A mudança de A é no
+seguem 309 páginas / 307 fontes / 141 atos / 79 aceitas / 64 células / 0 Q-BLK (medição de 2026-11-25). A mudança de A é no
 `code.yml` e na raiz, não no site.
 
 ## 6. O que esta decisão não resolve

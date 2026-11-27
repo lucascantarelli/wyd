@@ -654,9 +654,9 @@ evidência no documento de contrato que a nota cita como `Base:`.
 | `cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check` | concluído sem diferença (exit 0) |
 
 **Cobertura do ato 3:** a evidência tabulada acima é de **lib/fakes**. Depois dela, `sistema_pg` rodou
-contra PG17 migrado (13/13; log `/tmp/wyd-ci-schema.log`), `reversibilidade_pg` contra PG17 vazio (3/3;
-log `/tmp/wyd-reversibilidade.log`) e `runner_pg` contra PG17 em loopback (7/7 em 2026-11-27; 5/5 em 2026-11-25, log
-`/tmp/wyd-runner-pg.log`). Os dois primeiros usam `psql`; `runner_pg` exercita `PgAdapter`, ledger,
+contra PG17 migrado (13/13; job `pg / schema` do run `45994297544`), `reversibilidade_pg` contra PG17
+vazio (3/3; job `pg / reversibility` do mesmo run) e `runner_pg` contra PG17 em loopback (7/7 em
+2026-11-27, job `pg / runner`, e 5/5 em 2026-11-25). Os dois primeiros usam `psql`; `runner_pg` exercita `PgAdapter`, ledger,
 transação por arquivo e `pg_advisory_lock`, e é ele que fecha `CAP-37` (`Q-ALVO-1` = A1,
 `Q-ALVO-2` = B1, `Q-ALVO-3` = papel de teste). A decisão `Q-SERIE-1 = B` está implementada em §9.2 e
 `Q-SEP-1` = A′ foi aplicada: os 28 nomes usam `_` e parseiam. A série real ainda não é contígua —

@@ -24,6 +24,13 @@ briefing`) e as tabelas de lacunas — linha por sistema e linha `**Total**` —
 medição; divergência reprova. Nas tabelas, a coluna `Fechadas` é comparada com as fechadas medidas e
 `Abertas + Propostas + Externas` com as bloqueadas.
 
+4. **Citações do censo do `wyd-db`.** O §1 de `wyd-db/lacunas.md` declara o total, as fechadas e as
+externas (hoje **39 = 36 fechadas + 3 externas**). A prosa e o atalho são conferidos contra ele:
+`as N lacunas`, `N lacunas` em contexto de `wyd-db`, `N lacunas fechadas`/`externas`, `N fechadas` e
+`N externas` num placar (`0 abertas … externas`) e `0/0/F/E`. Data anterior à medição na mesma frase
+ou seção datada isenta; data em outra frase do bloco não isenta. Recorte que não é censo (sistemas
+vizinhos, lacunas de captura, contagem de issues) fica fora.
+
 Uso:
     python -m gate check lacunas --root ..   # a partir de wyd-docs/
 
@@ -35,9 +42,11 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import NamedTuple
 
 from ..model import CheckResult
 from ..workspace import Workspace
+from . import _texto
 
 PLANEJAMENTO = "planejamento-1.0.0"
 REGISTRO = "lacunas.md"
@@ -302,6 +311,164 @@ def _conta(por_sistema: dict[str, dict[str, int]], sistema: str, estado: str) ->
     linha[estado] = linha.get(estado, 0) + 1
 
 
+# Citações em prosa do censo do `wyd-db` (39 = 36 fechadas + 3 externas). A tabela `| wyd-db |`
+# e a fórmula `N = a + p + f + e` já são conferidas por `_confere_somas`; aqui entram a prosa, o
+# atalho `0/0/F/E` e o placar `N: 0 abertas, 0 propostas, F fechadas, E externas`.
+CENSO_WYD_DB = re.compile(r"^\|\s*Lacunas\s*\([^)]*\)\s*\|\s*(\d+)\s*\|\s*(\d+)[^|]*\|\s*(\d+)")
+TOTAL_AS = re.compile(r"\b(?:as|os)\s+(\d+)\*{0,2}\s+lacunas\b", re.IGNORECASE)
+TOTAL_BARE = re.compile(r"(\d+)\*{0,2}\s+lacunas\b", re.IGNORECASE)
+TOTAL_EQ = re.compile(r"(\d+)\*{0,2}\s*(?:=|:)\s*0\s+abertas?")
+FECHADAS_LACUNAS = re.compile(r"(\d+)\*{0,2}\s+lacunas\s+fechadas?", re.IGNORECASE)
+FECHADAS_BARE = re.compile(r"(?<!lacunas )(\d+)\*{0,2}\s+fechadas?\b", re.IGNORECASE)
+EXTERNAS_LACUNAS = re.compile(r"(\d+)\*{0,2}\s+lacunas\s+externas?", re.IGNORECASE)
+EXTERNAS_AS = re.compile(r"\b(?:as|os)\s+(\d+)\*{0,2}\s+externas?\b", re.IGNORECASE)
+EXTERNAS_BARE = re.compile(r"(\d+)\*{0,2}\s+externas?\b", re.IGNORECASE)
+SOMA_CURTA = re.compile(r"\b0\s*/\s*0\s*/\s*(\d+)\s*/\s*(\d+)\b")
+MARCADOR_HISTORICO = re.compile(
+    r"naquele|naquela|na medição|antes|após|continuaram|continuavam|seguiam|\bera\b",
+    re.IGNORECASE,
+)
+TRANSICAO = re.compile(
+    r"→|->|\bde\s+\d+\s+para\s+\d+|\b(?:passou|subiu|caiu|saiu)\s+de\b|\bvai de\b",
+    re.IGNORECASE,
+)
+
+
+class Medidas(NamedTuple):
+    """Censo do §1 do `lacunas.md` do `wyd-db`, pelo contrato público."""
+
+    total: int
+    fechadas: int
+    bloqueadas: int
+    corte: str | None
+
+
+def medidas(ws: Workspace) -> Medidas:
+    global _WS
+    _WS = ws
+    return Medidas(*_censo_wyd_db(ws.root))
+
+
+def _censo_wyd_db(root: Path) -> tuple[int, int, int, str | None]:
+    caminho = root / PLANEJAMENTO / "wyd-db" / REGISTRO
+    if not caminho.is_file():
+        return 0, 0, 0, None
+    texto = _ws().read(caminho)
+    for linha in texto.splitlines():
+        achado = CENSO_WYD_DB.match(linha)
+        if achado:
+            total, bloqueadas, fechadas = (int(g) for g in achado.groups())
+            datas = _texto.DATA_RE.findall(texto)
+            return total, fechadas, bloqueadas, max(datas) if datas else None
+    return 0, 0, 0, None
+
+
+def _motivos_historicos(
+    linha: str, inicio: int, data_secao: str | None, corte: str | None
+) -> list[str]:
+    """Explica por que uma citação divergente conta como registro, e não como erro."""
+    motivos: list[str] = []
+    frase = _texto.frase(linha, inicio)
+    transicao = TRANSICAO.search(frase)
+    if transicao:
+        motivos.append(f"transição (`{transicao.group(0).strip()}`)")
+    marca = MARCADOR_HISTORICO.search(frase)
+    if marca:
+        motivos.append(f"marca de registro (`{marca.group(0).strip()}`)")
+    if corte:
+        datas = _texto.datas_que_qualificam(linha, inicio)
+        if datas and min(datas) < corte:
+            motivos.append(f"data na frase ({min(datas)})")
+        if data_secao and data_secao < corte:
+            motivos.append(f"seção datada herdada ({data_secao})")
+    return motivos
+
+
+def _confere_citacoes_wyd_db(
+    root: Path, problemas: list[str]
+) -> tuple[int, int]:
+    total, fechadas, externas, corte = _censo_wyd_db(root)
+    if not total:
+        return 0, []
+    conferidas = 0
+    historicas: list[str] = []
+
+    def avaliar(
+        rel: str, numero: int, linha: str, inicio: int, valor: int, esperado: int, rotulo: str,
+        data_secao: str | None,
+    ) -> None:
+        nonlocal conferidas, historicas
+        conferidas += 1
+        if valor == esperado:
+            return
+        motivos = _motivos_historicos(linha, inicio, data_secao, corte)
+        if motivos:
+            historicas.append(
+                f"{rel}:{numero}: {valor} {rotulo} — isenta: {'; '.join(motivos)}"
+            )
+            return
+        problemas.append(
+            f"{rel}:{numero}: cita {valor} {rotulo}; lacunas.md §1 mede {esperado}"
+        )
+
+    for caminho in _ws().files(root / PLANEJAMENTO, "*.md"):
+        rel = caminho.relative_to(root).as_posix()
+        texto = _ws().read(caminho, errors="ignore")
+        pilha: list[tuple[int, str | None]] = []
+        for numero, linha in _texto.linhas_logicas(texto):
+            if linha.startswith("#"):
+                nivel = len(linha) - len(linha.lstrip("#"))
+                while pilha and pilha[-1][0] >= nivel:
+                    pilha.pop()
+                achado = _texto.DATA_RE.search(linha)
+                pilha.append((nivel, achado.group(1) if achado else None))
+                continue
+            if "/wyd-db/" not in rel and "wyd-db" not in linha:
+                continue
+            data_secao = _texto.data_da_secao(pilha)
+            for achado in TOTAL_AS.finditer(linha):
+                depois = linha[achado.end() : achado.end() + 14]
+                if re.match(r"\s*\*{0,2}\s*(?:fechad|extern|abert|somad)", depois):
+                    continue
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), total, "lacunas", data_secao)
+            for achado in TOTAL_BARE.finditer(linha):
+                if re.search(
+                    r"(?:as|os|das|dos)\s+\*{0,2}$", linha[max(0, achado.start() - 12) : achado.start()]
+                ):
+                    continue
+                if "wyd-db" not in _texto.frase(linha, achado.start()):
+                    continue
+                depois = linha[achado.end() : achado.end() + 18]
+                if re.match(
+                    r"\s*\*{0,2}\s*(?:fechad|extern|abert|somad|de\s+captura|\(#)", depois
+                ):
+                    continue
+                valor = int(achado.group(1))
+                if valor == 0:
+                    continue
+                avaliar(rel, numero, linha, achado.start(), valor, total, "lacunas", data_secao)
+            for achado in TOTAL_EQ.finditer(linha):
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), total, "lacunas", data_secao)
+            for achado in FECHADAS_LACUNAS.finditer(linha):
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), fechadas, "fechadas", data_secao)
+            for achado in SOMA_CURTA.finditer(linha):
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), fechadas, "fechadas", data_secao)
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(2)), externas, "externas", data_secao)
+            for achado in FECHADAS_BARE.finditer(linha):
+                contexto = _texto.frase(linha, achado.start())
+                if "abertas" in contexto and "externas" in contexto:
+                    avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), fechadas, "fechadas", data_secao)
+            for achado in EXTERNAS_AS.finditer(linha):
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), externas, "externas", data_secao)
+            for achado in EXTERNAS_LACUNAS.finditer(linha):
+                avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), externas, "externas", data_secao)
+            for achado in EXTERNAS_BARE.finditer(linha):
+                contexto = _texto.frase(linha, achado.start())
+                if "fechadas" in contexto and "abertas" in contexto:
+                    avaliar(rel, numero, linha, achado.start(), int(achado.group(1)), externas, "externas", data_secao)
+    return conferidas, historicas
+
+
 def _confere_somas(
     root: Path,
     fechadas: int,
@@ -363,7 +530,7 @@ def _confere_somas(
                     )
 
 
-def verificar(root: Path) -> tuple[int, int, int, list[str]]:
+def verificar(root: Path) -> tuple[int, int, int, list[str], int, list[str]]:
     base = root / PLANEJAMENTO
     registros = sorted(base.glob(f"*/{REGISTRO}"))
     if not registros:
@@ -465,15 +632,19 @@ def verificar(root: Path) -> tuple[int, int, int, list[str]]:
             if divergencia:
                 problemas.append(f"{nome}:{numero}: {divergencia}")
     _confere_somas(root, fechadas, bloqueadas, por_sistema, problemas)
+    citacoes, historicas = _confere_citacoes_wyd_db(root, problemas)
 
-    return len(vistas), fechadas, bloqueadas, problemas
+    return len(vistas), fechadas, bloqueadas, problemas, citacoes, historicas
 
 
 def run(ws: Workspace) -> CheckResult:
     global _WS
     _WS = ws
-    total, fechadas, bloqueadas, problemas = verificar(ws.root)
-    resumo = f"{total} medidas = {fechadas} fechadas + {bloqueadas} bloqueadas"
+    total, fechadas, bloqueadas, problemas, citacoes, historicas = verificar(ws.root)
+    resumo = (
+        f"{total} medidas = {fechadas} fechadas + {bloqueadas} bloqueadas; "
+        f"{citacoes} citação(ões) do censo do wyd-db conferida(s), {len(historicas)} histórica(s)"
+    )
     if problemas:
-        return CheckResult("lacunas", False, resumo, problems=problemas)
-    return CheckResult("lacunas", True, resumo)
+        return CheckResult("lacunas", False, resumo, problems=problemas, details=historicas)
+    return CheckResult("lacunas", True, resumo, details=historicas)

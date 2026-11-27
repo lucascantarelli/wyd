@@ -4,7 +4,7 @@
 > decisão pendente, bloqueio e prazo. Quando dois documentos divergirem, vale este registro, com a
 > evidência anexada na linha.
 >
-> **O que este arquivo cobre:** as **38 lacunas** registradas (5 bloqueantes `B`, 15 altas `A`, 18
+> **O que este arquivo cobre:** as **39 lacunas** registradas (5 bloqueantes `B`, 15 altas `A`, 19
 > médias `M`), as **11 divergências** internas do plano diretor (`P1`–`P11`) e os **3 achados
 > estruturais** desta rodada (`D-A`, `D-B`, `D-C`).
 >
@@ -35,6 +35,9 @@
 > Em **2026-11-23**, `M32` entrou como `proposta` e **fechou na mesma data**, com as oito perguntas
 > `Q-DP` respondidas pelo dono: a política de dados pessoais e retenção está em
 > `proposta-dados-pessoais-e-retencao.md` §4 e §9. Ela não reabre `P-22`, `M7` nem `M22`.
+> Em **2026-11-27**, `M34` entrou e fechou na mesma rodada: exceção pontual ao "sem gerador" em
+> `0017`/`0020`, com script descartável, e as 4 cidades em `game.city` pelo `0020`
+> (`proposta-decisoes-seeds.md` §9).
 
 ---
 
@@ -89,7 +92,7 @@ por decisão minha sozinha.
 
 | Grupo | Quantas | Bloqueadas | Fechadas |
 |---|---:|---:|---:|---:|
-| Lacunas (`B`/`A`/`M`) | 38 | 3 (`A11`, `A20`, `M21` — execução externa) | 35 (`B1`, `B2`, `B3`, `B4`, `B5`, `A7`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `A21`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`, `M25`, `M26`, `M27`, `M28`, `M29`, `M30`, `M31`, `M32`, `M33`) |
+| Lacunas (`B`/`A`/`M`) | 39 | 3 (`A11`, `A20`, `M21` — execução externa) | 36 (`B1`, `B2`, `B3`, `B4`, `B5`, `A7`, `A8`, `A9`, `A10`, `A12`, `A13`, `A14`, `A15`, `A16`, `A17`, `A18`, `A19`, `A21`, `M16`, `M17`, `M18`, `M19`, `M20`, `M22`, `M23`, `M24`, `M25`, `M26`, `M27`, `M28`, `M29`, `M30`, `M31`, `M32`, `M33`, `M34`) |
 | Divergências do plano diretor (`P`) | 11 | 0 (—) | 11 (`P1`, `P2`, `P3`, `P4`, `P5`, `P6`, `P7`, `P8`, `P9`, `P10`, `P11`) |
 | Achados estruturais (`D-A`, `D-B`, `D-C`) | 3 | 0 | 3 (`D-A`, `D-B`, `D-C`) |
 
@@ -152,7 +155,7 @@ fechadas em 2026-11-19.
 
 ---
 
-## 2. Lacunas (38)
+## 2. Lacunas (39)
 
 ### 2.1 Bloqueantes
 **Sem arquivo no repositório:** `src/security/policy.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
@@ -256,6 +259,7 @@ real, o endereço original fica livre para um cadastro novo, e o histórico anti
 | **M29** | `0032_admin_grants.sql` sem `ALTER DEFAULT PRIVILEGES`: tabela criada depois da troca nasce sem privilégio para `wyd_admin` | arquitetura | **decidida em 2026-11-22: opção A** — sem `ALTER DEFAULT PRIVILEGES`; a obrigação que ela cria e a medição em PG 17.11 estão em `docs/arquitetura/seguranca.md`. Recusadas a B (default `SELECT`/`INSERT`/`UPDATE` por schema, que concede a mais e não distingue `account_wallet` de `account_moderation`) e a C (default amplo + `REVOKE` por tabela: mesmo trabalho, com janela de excesso). O default por schema de `P-18` continua valendo para os runtimes; a exceção é o papel de staff | `docs/arquitetura/seguranca.md` (decisão, alternativas e medição em PG 17.11); `migrations/0032_admin_grants.md` §5 e `ddl-confirmado.md` §5.32 (escopo do arquivo); nenhum `GRANT` ou DDL mudou | **P3** | fechada |
 | **M32** | Dados pessoais e retenção: finalidades, hipótese legal, responsáveis, inventário de campos que identificam alguém (sessão, logs, auditoria, suporte, backup) e política das categorias fora de `M22` | produto + `wyd-db` | **decidida em 2026-11-23: B em `Q-DP-1`, A em `Q-DP-2`–`Q-DP-8`** — (1) responsáveis nomeados: o dono do projeto é responsável de produto e técnico, com revisão jurídica externa e contato do titular `pendente`; (2) inventário mínimo de finalidades publicado, hipótese legal `a validar` em todas, e `birth_date`/`country` fora de coleta por falta de consumidor; (3) `identifier_hash` classificado como identificador indireto reidentificável, com `M6` mantido; (4) `P-21` vira regra de aceite — tabela crescente sem prazo não vai a produção, e as 6 categorias sem prazo ficaram `pendente` com dono; em 2026-11-23, `Q-RET-1`, `Q-RET-2` e `Q-RET-4` foram decididas (30 dias cada), `Q-RET-5` confirmada por §5.9, `Q-RET-6` e `Q-RET-7` decididas em A em 2026-11-24 e `Q-RET-3` decidida em A em 2026-11-24, restando 0; (5) exclusão = fechamento com anonimização (`A12`), preservando auditoria e histórico de `game`; (6) log sem identificador em claro; (7) fixture, golden e captura só sintéticos; (8) nenhum fornecedor de PII autorizado. Recusadas: papéis sem nome, consentimento como base única, HMAC reabrindo `M6`, prazos por analogia, apagamento físico, identificador em claro, captura real higienizada e fornecedor aprovado por categoria | coleta real segue bloqueada por decisão própria — base legal a validar e contato `pendente` —, não por falta de política; planejamento e DDL com dado fictício continuam livres. Perguntas, opções e registro em `proposta-dados-pessoais-e-retencao.md` §4 e §9; regras em `docs/specs/restricoes-e-premissas.md` §2 | **P4** | fechada |
 | **M33** | Estado de uma página de `migrations/` e aceite da onda A: as 27 páginas escritas não tinham a linha `**Estado:**` que `docs/convencoes.md` §Estados exige, e `wyd-db-1.0.0.md` §10 (item 10) exige `planos/metricas.md`, que não existe | `wyd-db` + arquitetura | **decidida em 2026-11-23: A em `Q-M33-1`–`Q-M33-6`** — (1) a página de `migrations/` carrega linha de estado própria e o checklist segue dono do estado do arquivo; (2) as 27 recebem `**Estado:** proposto (2026-11-23)`; (3) suspender só a metade "contabilizada em `planos/metricas.md`" do item 10 de §10, com retomada; (4) criar `migrations/index.md` agora e deixar `serie-e-regras.md` na 5ª onda; (5) o checklist não espelha o estado da página; (6) o aceite é por página, na ordem da série. Recusadas: exceção para `migrations/`, linha só no aceite, manter o item 10 inteiro, adiar o índice, coluna de estado no checklist e aceite em bloco. Aplicado em `docs/convencoes.md`, `migrations-checklist.md`, `migrations/*.md`, `migrations/index.md`, `wyd-db-1.0.0.md` §10 e a própria página da M33; nenhum DDL, migration `.sql` ou julgamento de página foi alterado. | `docs/proposta-decisoes-m33.md` §9; `docs/convencoes.md` §Estados; `migrations-checklist.md` §1; `migrations/index.md`; `wyd-db-1.0.0.md` §10 item 10 | **P3** | fechada |
+| **M34** | Exceção ao "sem gerador" nos seeds `0017`/`0020` e destino das 4 cidades, que não tinham arquivo de seed | `wyd-db` + curadoria | **decidida em 2026-11-27: A em `Q-M34-1`–`Q-M34-3`** — (1) exceção pontual só para `0017`/`0020`, com script descartável e as condições de `proposta-decisoes-seeds.md` §5; (2) a exceção não vira ferramenta nem regra: os outros quatro seguem à mão; (3) as 4 cidades entram em `game.city` pelo `0020`, com `map_id` nulo e sem `region_id`, e o `0027` não as carrega | produção dos dois seeds, contagem "4 cidades" e páginas `0017`/`0020`/`0027` | **P4** | fechada |
 
 `M16` e `M17` ficam no marco `P3`, não no `P4`: as duas bloqueiam **schema** — `M16` o bloco `0005`
 (`ddl-confirmado.md` §5.2, uma das razões de o arquivo ser `parcial`) e `M17` os arquivos
@@ -320,7 +324,7 @@ não se encaixe em `person`/`account`/`system` volta aqui antes de virar `INSERT
 `EXT` não é estado: é o marco das três entradas `bloqueadas` cuja execução pertence a uma frente fora
 do `wyd-db` (o dono está na coluna **Dono** e a pendência, na coluna **O que falta**).
 
-A tabela é o **saldo**, não o histórico: as **35** lacunas fechadas saíram dos marcos e continuam em
+A tabela é o **saldo**, não o histórico: as **36** lacunas fechadas saíram dos marcos e continuam em
 §2.1–§2.3 com a data e a evidência. Restam **3 bloqueadas por execução externa** e **0 abertas**
 (`M33` fechou em 2026-11-23 com as seis `Q-M33`; `M32` fechou em 2026-11-23) — `A7` e `A21`
 fecharam em 2026-11-20, `M21` teve a decisão de escopo registrada na mesma data e continua bloqueada por execução externa
@@ -510,8 +514,8 @@ em §2 não muda até o artefato de fechamento existir.
 ## 8. Alvo `runner_pg` — decidido, implementado e verde (2026-11-25)
 
 O alvo `runner_pg` (apply/status/down pelo `PgAdapter` real contra PG17) está declarado no
-`Cargo.toml`, escrito em `crates/wyd-db/tests/sistema/runner_pg.rs` e passou **7/7** em 2026-11-27 (5/5
-em 2026-11-25, log `/tmp/wyd-runner-pg.log`), fechando `CAP-37`.
+`Cargo.toml`, escrito em `crates/wyd-db/tests/sistema/runner_pg.rs` e passou **7/7** em 2026-11-27 (job
+`pg / runner` do run `45994297544`; 5/5 em 2026-11-25), fechando `CAP-37`.
 
 - **Decisões (`2026-11-25`):** `Q-ALVO-1` = **A1** (porta em `127.0.0.1`); `Q-ALVO-2` = **B1** (fixture
   contígua agora); `Q-ALVO-3` = **`wyd_migrator` com `LOGIN` só no ambiente de teste**.

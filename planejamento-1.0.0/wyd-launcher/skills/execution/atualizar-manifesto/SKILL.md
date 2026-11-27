@@ -22,14 +22,15 @@ description: Atualiza o manifesto de patch do launcher WYD com caminho, papel, t
    documento dono.
 3. **Não versione binário**: o que entra no git é o manifesto e a medição, nunca o `.exe`/`.zip`.
 4. **Verifique pelo código**: o launcher compara tamanho e hash; teste com arquivo alterado deve falhar.
-5. **Build Windows-only**: `cargo test --manifest-path crates/wyd-launcher/Cargo.toml` — a matriz do CI
-   roda esse crate só em `windows-latest`, e `cargo test -p wyd-launcher` não resolve sem workspace.
+5. **Teste pelo manifesto do crate**: `cargo test --manifest-path crates/wyd-launcher/Cargo.toml` — o
+   núcleo é Rust puro e roda em Linux (matriz `ubuntu-latest`); só o empacotamento NSIS futuro exige
+   Windows. `cargo test -p wyd-launcher` não resolve sem workspace.
 
 ## Como verificar
 
 - `sha256sum` do arquivo igual ao manifesto.
 - Teste do verificador passa para arquivo íntegro e falha para arquivo adulterado.
-- CI `unit / wyd-launcher / windows-latest` verde.
+- CI `clippy+unit / wyd-launcher / ubuntu-latest` e `cobertura / wyd-launcher` verdes.
 
 ## Quando parar e perguntar
 

@@ -15,24 +15,24 @@ O registro fica na raiz de `planejamento-1.0.0/wyd-db/`, ao lado de `lacunas.md`
 `proposta-paginas.md`, e **não entra no censo de 144 páginas autorais de `docs/`**. Ele não cria
 lacuna, não renumera ID e não altera as contagens de `lacunas.md`.
 
-## 1. Onde a frente está (medido em 2026-11-24)
+## 1. Onde a frente está (medido em 2026-11-24; atos de aceite e cobertura de capacidade remedidos em 2026-11-27)
 
 | Medida | Hoje | Fonte |
 |---|---|---|
-| lacunas do `wyd-db` | **38**: 0 abertas, 0 propostas, 35 fechadas, 3 externas (`A11`, `A20`, `M21`) | `lacunas.md` §1 |
+| lacunas do `wyd-db` | **39**: 0 abertas, 0 propostas, 36 fechadas, 3 externas (`A11`, `A20`, `M21`) | `lacunas.md` §1 |
 | páginas autorais de `docs/` | **144**: 143 com corpo, 0 escrevíveis, 0 de recorte, **1 bloqueada** (`planos/metricas.md`) | `proposta-paginas.md` §2–§6; §6.6.19 |
-| migrations por arquivo | **34**: 28 com página, **6 seeds bloqueados** | `migrations-checklist.md` §2 e §4 |
+| migrations por arquivo | **34**: 28 com página conferida e 1 rascunho (`0020`), **6 seeds bloqueados** | `migrations-checklist.md` §2 e §4 |
 | páginas de seção de `migrations/` | `index.md` e `serie-e-regras.md` escritos; `serie-e-regras.md` `aceito` em 2026-11-25 | `migrations/index.md`; `migrations/serie-e-regras.md`; `wyd-db-1.0.0.md` §11 |
 | aceite de página de migration | **28 de 28 escritas** `aceito` (2026-11-24: 27 na leva `migrations/`, `0002` desde 2026-11-20); as 6 de seed seguem por escrever | `proposta-decisoes-m33.md` §2 e §4; §6.6.31 |
-| aceite pendente no sistema | **141 atos**: 141 em `docs/` + **0** em `src/` + **0** em `migrations/` + **0** em `tests/` (12 de `tests/`, 37 de `src/` e 27 de `migrations/` aceitas em 2026-11-24) | §6.6.22.1, §6.6.27 e §6.6.31 (remedido em 2026-11-24) |
+| aceite pendente no sistema | **138 atos**: **137** em `docs/` + **0** em `src/` + **1** em `migrations/` + **0** em `tests/` (12 de `tests/`, 37 de `src/` e 27 de `migrations/` aceitas em 2026-11-24; o `1` restante é o rascunho `0020-seed-world.md`) | §6.6.22.1, §6.6.27 e §6.6.31; censo do gate em 2026-11-27 |
 | decisões de retenção | **7 propostas, 7 resolvidas**, **0 abertas** (`Q-RET-5` por evidência; `Q-RET-1`, `Q-RET-2` e `Q-RET-4` pelo dono em 2026-11-23; `Q-RET-6` e `Q-RET-7` pelo dono em 2026-11-24; `Q-RET-3` pelo dono em 2026-11-24, opção A) | `proposta-retencao-pendente.md` §4 e §9 |
 | decisões de capacidade | **0 abertas**; `Q-CAP-1`, `Q-CAP-2` e `Q-CAP-3` decididas em 2026-11-23; a matriz de `Q-CAP-2` está aplicada na página | `proposta-decisoes-capacidade.md` §4 e §9 |
 | páginas de migration bloqueadas por dado | **6**: `0016`–`0018`, `0020`, `0023`, `0027` | `migrations-checklist.md` §3 |
 | issues do roadmap | **40** com DoD, **40** criadas no GitHub (#82–#121); board `WYD 1.0.0` com 121 itens | `docs/planos/riscos.md` `R-5`; `wyd-ops/docs/github-mapping.md` §7 |
-| páginas de `tests/` | **13 de 13** escritas e **13** `aceito` (12 em 2026-11-24 e a do `runner_pg` em 2026-11-25); matriz `CAP-nn` com **39** capacidades e **14** cobertas por teste executado | §6.6.21, §6.6.23 e §6.6.30; `plano-de-testes.md` §5 |
+| páginas de `tests/` | **13 de 13** escritas e **13** `aceito` (12 em 2026-11-24 e a do `runner_pg` em 2026-11-25); matriz `CAP-nn` com **39** capacidades e **20** cobertas por teste executado (2026-11-27; eram **14** em 2026-11-25) | §6.6.21, §6.6.23 e §6.6.30; `plano-de-testes.md` §5; `tests/specs/capacidades.md` §7 |
 | arquivos `.sql` da série | **28**, aplicados do zero como `wyd_migrator` em `postgres:17`; 13 cenários `sistema_pg` verdes | §6.6.30; `ls migrations/0*.sql` |
 
-**O que não mudou:** as 38 lacunas continuam 0/0/35/3; `M33` continua fechada como decisão e
+**O que não mudou:** as 39 lacunas continuam 0/0/36/3; `M33` continua fechada como decisão e
 `M32` continua fechada; `A11`, `A20` e `M21` continuam `externa`. Este registro não reabre nenhuma
 delas.
 
@@ -167,8 +167,8 @@ medidos**; nenhum nome, data ou parecer foi inventado.
 | **`Q-RET-6`** (b) | **respondida em 2026-11-24 (A)**: política das **11 tabelas** de mercado, com 1 índice e 1 job associados | **fecha a política**; não cria o índice, o `DELETE`/job, não mede volume e não substitui a preservação legal; `Q-RET-7` não é destravada; `Q-RET-3` já foi resolvida separadamente | preservação legal do mercado + execução por `wyd-ops` | 1 sessão + 2–4 h + 1 sessão de `wyd-ops`; volume e retenção legal não medidos | volume, custo de índice/job e exigência legal |
 | **`Q-RET-6/aplicação`** (b2) | **execução** da política já decidida: 1 índice por `read_at`, 1 `DELETE`/job e preservação legal | **0 decisões novas**; aplica 11 tabelas; não cria decisão de retenção | preservação legal do mercado e execução por `wyd-ops`; não há autorização de código nesta rodada | 2–4 h de índice/migration + 1 sessão de `wyd-ops` | volume, custo de índice/job e exigência legal |
 | **`Q-RET-7`** (c) | **respondida em 2026-11-24 (A)**: 30 dias de cópia diária, rotação, criptografia fora do host e restore trimestral | **fecha a política de 1 categoria**; nenhuma tabela ou índice; a rotina, o fornecedor, o contrato e o ensaio de restore continuam pendentes | política/fornecedor de backup de `wyd-ops` + jurídico | 1 sessão + 1–2 sessões de operação; RPO/RTO, tamanho e frequência não medidos | RPO/RTO, volume, fornecedor, região e custo |
-| **Lacunas externas `A11`, `A20`, `M21`** (d) | **0 decisões novas do `wyd-db`**; são 3 das 38 lacunas, já `externa` | `A11` depende da captura do cliente 7662; `A20` e `M21` dependem da execução/planejamento do `wyd-portal`; não há tabela ou regra local a fechar | cliente, portal e captura; o dono do `wyd-db` não as encerra sozinho | não medido nesta fonte para `A11`; `A20`/`M21` pertencem ao portal | custo e artefato de cada frente externa |
-| **`Q-OPS-2`** (e) | **respondida em 2026-11-24 (A)**: VPS paga com processo persistente e Compose; **1 decisão do `wyd-ops` fora das 38 lacunas**; **0 tabelas ou regras do `wyd-db`** | **não cria** VPS, contrato, backup, RPO/RTO, índice ou regra de schema; `backup-e-restore` continua bloqueada por fornecedor/RPO/RTO/ensaio | contrato/provisionamento + backup + operação; `wyd-ops` | 1 decisão de ops + contrato e operação; valor não medido | provedor, custo, capacidade e evidência operacional |
+| **Lacunas externas `A11`, `A20`, `M21`** (d) | **0 decisões novas do `wyd-db`**; são 3 das 39 lacunas, já `externa` | `A11` depende da captura do cliente 7662; `A20` e `M21` dependem da execução/planejamento do `wyd-portal`; não há tabela ou regra local a fechar | cliente, portal e captura; o dono do `wyd-db` não as encerra sozinho | não medido nesta fonte para `A11`; `A20`/`M21` pertencem ao portal | custo e artefato de cada frente externa |
+| **`Q-OPS-2`** (e) | **respondida em 2026-11-24 (A)**: VPS paga com processo persistente e Compose; **1 decisão do `wyd-ops` fora das 39 lacunas**; **0 tabelas ou regras do `wyd-db`** | **não cria** VPS, contrato, backup, RPO/RTO, índice ou regra de schema; `backup-e-restore` continua bloqueada por fornecedor/RPO/RTO/ensaio | contrato/provisionamento + backup + operação; `wyd-ops` | 1 decisão de ops + contrato e operação; valor não medido | provedor, custo, capacidade e evidência operacional |
 
 **Resposta do responsável (2026-11-24): `Q-RET-6` = A.** A opção separa o financeiro/custódia (sem
 expurgo por tempo) da notificação lida (90 dias após `read_at`; não lida, nunca) e recusa o expurgo de
@@ -190,7 +190,7 @@ bloqueadas por rotina/RPO/RTO/fornecedor, não apenas pelo host.
 
 **Resposta do responsável (2026-11-24): `Q-OPS-2` = A.** A produção será uma **VPS paga com processo
 persistente e deploy Compose**; a decisão escolhe o ambiente, mas **não aplica** contrato, VPS, backup,
-RPO/RTO nem página de operação. A resposta fecha **1 decisão do `wyd-ops` fora das 38 lacunas** e remove
+RPO/RTO nem página de operação. A resposta fecha **1 decisão do `wyd-ops` fora das 39 lacunas** e remove
 o bloqueio de escolha de host; não fecha `Q-RET-7`, `backup-e-restore` nem as três lacunas externas.
 
 **Fila depois da resposta.** As aplicações de `Q-RET-6` e `Q-RET-7` continuam sendo execução já decidida
@@ -357,7 +357,8 @@ pergunta: depende de `M20` executado.
 
 **A fila vigente é a do §6.6.22 (lote I, 2026-11-24):** (1) aceite das **12** páginas de `tests/` — **12**
 atos; (2) aceite da leva `migrations/` — **27**; (3) as **40** issues em 3 lotes por onda; (4) leva `src/` —
-**37**; (5) leva `docs/` — **141**. Em paralelo: `Q-BLK-19` (dívida das 11 capacidades) e o dicionário
+**37**; (5) leva `docs/` — **141** atos na medição de 2026-11-24 (**138** hoje no sistema: 137 em `docs/`
++ 1 em `migrations/`, §6.6.22.1). Em paralelo: `Q-BLK-19` (dívida das 11 capacidades) e o dicionário
 `banco-catalogo.md`, este quando o PR de ferramentas for autorizado. O pacote `Q-BLK` está respondido até
 `Q-BLK-16`; naquele momento as quatro do lote I (`Q-BLK-17` a `Q-BLK-20`) seguiam abertas e **nenhuma
 delas era pré-requisito da leva 1** — a `17` foi respondida pela própria execução da leva (§6.6.22.5).
@@ -423,8 +424,8 @@ fecha, o que apenas prepara e o que continua dependendo de terceiro.
 | **`Q-DP-2/validação` + canal do titular** | **0 lacunas**; **1 tabela** (`person_consent`) e **1 tela** do portal; não libera dado real | **0 das 19** | nenhuma página; apenas a restrição de produção com PII real | parecer jurídico externo e canal do titular; a dispensa de parecer **não** é validação | não medido; contratação/apoio indisponível | **Não recomendada como foco** |
 | **`Q-RET-6/aplicação`** | **0 decisões novas**; aplica **11 tabelas** de mercado, **1 índice** por `read_at` e **1 job**; **0 páginas** ficam escrevíveis só com isto | **0 das 19** | política de mercado deixa de estar “pendente”; a retenção passa a ter execução | preservação legal do mercado e `wyd-ops`; `Q-OPS-2 = A` só escolheu o host | 2–4 h de índice/migration + 1 sessão de `wyd-ops` | **Execução, não foco** |
 | **`Q-RET-7/aplicação`** | **0 decisões novas**; **0 tabelas**; **2 páginas** (`backup-e-restore`, `recuperacao-de-desastre`) saem do bloqueio de política, mas **0 ficam escrevíveis** sem provedor/RPO/RTO; **1 rotina** | **2 das 23, apenas parciais** | política de backup deixa de estar “não decidida” | fornecedor/contrato, RPO/RTO, criptografia, ensaio de restore, jurídico da cópia e `wyd-ops` | 1 sessão + 1–2 sessões de operação; RPO/RTO não medido | **Não fecha sozinha** |
-| **Fechar as páginas de `docs/` bloqueadas** | **19 páginas** restantes na decisão (23 antes do lote A; **11 hoje**) são o alvo, mas **0 formam uma frente executável isolada**: 2 dependem de `Q-RET-7`, 2 de limiar/medição, 1 de matriz de atores, 2 de suíte, 1 de pool, 4 de documentação e 7 de série/produto | **19** (alvo) | nenhuma dependência comum; cada grupo tem bloqueio próprio | série aplicada, `M20`, produto/arquitetura, operação e `wyd-docs`; não há um único terceiro | escrita de 19 páginas, depois dos bloqueios; não medido | **Não é um ato único** |
-| **6 seeds de `wyd-db`** | **6 páginas de migration + 6 seeds**; **0 decisões**; nenhum valor pode ser inventado | **6** (alvo; 0 hoje) | nada | cliente 7662 medido; 6–11 sessões + 2 h somadas de §4.2, sem fonte de dado | curadoria + escrita; não medido | **Incapaz sem terceiro** |
+| **Fechar as páginas de `docs/` bloqueadas** | **19 páginas** restantes na decisão (23 antes do lote A; **11** na medição de 2026-11-24 e **1** hoje — `planos/metricas.md`, `proposta-paginas.md` §6) são o alvo, mas **0 formam uma frente executável isolada**: 2 dependem de `Q-RET-7`, 2 de limiar/medição, 1 de matriz de atores, 2 de suíte, 1 de pool, 4 de documentação e 7 de série/produto | **19** (alvo) | nenhuma dependência comum; cada grupo tem bloqueio próprio | série aplicada, `M20`, produto/arquitetura, operação e `wyd-docs`; não há um único terceiro | escrita de 19 páginas, depois dos bloqueios; não medido | **Não é um ato único** |
+| **6 seeds de `wyd-db`** | **6 páginas de migration + 6 seeds**; **0 decisões**; nenhum valor pode ser inventado | **6** (alvo; **0 concluídas** e **1 rascunho** — `0020-seed-world.md`, 2026-11-27) | nada | cliente 7662 medido; 6–11 sessões + 2 h somadas de §4.2, sem fonte de dado | curadoria + escrita; não medido | **Incapaz sem terceiro** |
 | **`A11`, `A20`, `M21`** | **3 lacunas externas**: 1 captura do cliente, 1 implementação de MFA e 1 lista de telas; **0 páginas do `wyd-db`** | **0** | nenhuma dependência local | cliente 7662 e frente `wyd-portal`; o dono do banco não as fecha | não medido para `A11`; `A20`/`M21` são do portal | **Incapaz sem terceiro** |
 | **Aceite da série (`M33`) + `serie-e-regras`** | **1/28 páginas aceitas**; **34 atos** de aceite; **28 páginas de migration** já escritas; inicia `0001` e a onda A; **0 lacunas** | **0 das 19** | aceite e porta de entrada da série | nenhum terceiro; é ato do dono com revisão por par | 34 atos × 0,5–1 h = **17–34 h**, mais `serie-e-regras` | **Segunda opção** |
 | **Expandir propostas de outros sistemas** | **0–1 lacuna** alcançável (`LCLI-02`; `LCLI-03` é execução); **0 páginas do `wyd-db`** | **0** | nada além do próprio sistema | direitos do cliente (`LCLI-05`) e ficha assinada; não há pergunta de desenho isolada | baixo retorno; não medido | **Retorno marginal** |
@@ -1059,8 +1060,8 @@ falta?”**
 **(a) O que está em jogo:** o molde do `wyd-db` pede cinco colunas — `RF/RN/RNF/UC → tabela → porta →
 teste → issue` — e um dos critérios de conclusão da `1.0.0` depende desta página: “`RF`/`RN`/`RNF` cobrem
 todas as tabelas e a matriz de rastreabilidade não tem lacuna sem dono” (`wyd-db-1.0.0.md` §11). É o único
-critério que liga requisito a DDL; sem a matriz ele não é verificável, e hoje ninguém sabe quantas das 109
-tabelas estão sob algum requisito.
+critério que liga requisito a DDL; sem a matriz ele não é verificável, e em 2026-11-24 ninguém sabia
+quantas das 109 tabelas estavam sob algum requisito (hoje **16 de 109**, §6.6.22.1).
 
 **Os números e de onde vêm** (nada abaixo é estimativa):
 
@@ -1101,8 +1102,9 @@ tabelas estão sob algum requisito.
 **(c) Recomendação e razão:** A. Três das cinco colunas **já têm fonte parcial** e as outras duas são
 declaração honesta, não invenção: `P` com alvo nomeado para `teste` e “a alocar na onda *N*” para `issue` —
 nenhum teste é inventado e nenhum vínculo issue↔requisito é fabricado. A matriz também é a **única** forma de
-medir o critério de §11: hoje o número real é 7 de 109 tabelas sob requisito nomeado, e 0 de 31 linhas com
-issue — dois vazios que o dono não consegue ver sem esta página. E o molde pede `RNF` na matriz, o que só
+medir o critério de §11: em 2026-11-24 o número real era **7 de 109** tabelas sob requisito nomeado, e **0
+de 31** linhas com vínculo de issue — dois vazios que o dono não via sem esta página; o censo vigente é o de
+§6.6.22.1, **16 de 109** e **40** linhas. E o molde pede `RNF` na matriz, o que só
 passou a ser possível em 2026-11-24 (`Q-BLK-07` = A): sem `Q-BLK-08`, a série `RNF-DB` existe e não tem
 onde ser rastreada.
 
@@ -1231,7 +1233,7 @@ DDL.
 | valores de `person.role` | **3**: `member`, `moderator`, `admin`; é papel **do portal, não de jogo** | `docs/dicionario-dados/gerado/person.md` (`ck_person_role`); `migrations/0003_portal_person.md` | `V` |
 | papéis de cluster | **6** + `wyd_owner` `NOLOGIN` — não são atores de produto | `docs/arquitetura/seguranca.md`; `plano-de-implantacao.md` §Verificação | `V` |
 | requisitos com ID | **31** (16 `RF` + 7 `RN` + 3 `UC` + 5 `RNF`) | `docs/specs/index.md` | `V` |
-| atores nomeados hoje | **0** — `specs/stakeholders.md` não existe | `proposta-paginas.md` §6 | ausência |
+| atores nomeados em 2026-11-24 | **0** — `specs/stakeholders.md` ainda não existia | `proposta-paginas.md` §6 | ausência; a página existe com **5** atores desde §6.6.19 |
 
 **(b) Opções reais**
 
@@ -1256,7 +1258,7 @@ runner nem por provisionamento, e a matriz passaria a afirmar o contrário.
 
 **(e) O que andaria quando a resposta viesse:** `specs/stakeholders.md` escrita (1 página; a fila cairia de
 **5** para **4**); a matriz ganharia a coluna de ator que `Q-BLK-08` cita; e a Onda 3 fecharia a ponta “quem
-aprova mudança de requisito”, que hoje não tem dono por escrito.
+aprova mudança de requisito”, que em 2026-11-24 não tinha dono por escrito (hoje a página o nomeia, §6.6.19).
 
 **(f) Fonte fechada:** `docs/arquitetura/contexto-c4.md` §2 (as 6 credenciais e o que cada uma pode);
 `docs/dicionario-dados/gerado/person.md` (`role` = `member`/`moderator`/`admin`, papel do portal);
@@ -1279,7 +1281,7 @@ Onda 3 não tem quem aprova mudança por escrito. **Aprovar:** A / B / C.
 **Resposta do responsável (2026-11-24): A.** Aplicada em `docs/arquitetura/modelo-conceitual.md` (§6.6.19).
 
 **(a) O que está em jogo:** o ER conceitual cobre **109 tabelas** e precisa de um recorte que o leitor já
-conheça; hoje `modelo-conceitual` não tem nenhum.
+conheça; em 2026-11-24 `modelo-conceitual` não tinha nenhum.
 
 **Os números e de onde vêm** (nada abaixo é estimativa):
 
@@ -1291,7 +1293,7 @@ conheça; hoje `modelo-conceitual` não tem nenhum.
 | domínios com **3 ou menos** tabelas | **5** de 19 (canal, moderação e ponte com 1; auditoria e inventário com 3) | idem | `V` |
 | agregados que o molde nomeia | **5**: conta, personagem, clã, conteúdo, operação | `wyd-db-1.0.0.md` §6.3 (descrição literal de `modelo-conceitual.md`) | `V` |
 | dono da fronteira de escrita | `arquitetura/fronteira-hot-cold.md` | idem | `V` |
-| ER escrito hoje | **0** — `arquitetura/modelo-conceitual.md` não existe | `proposta-paginas.md` §6 | ausência |
+| ER escrito em 2026-11-24 | **0** — `arquitetura/modelo-conceitual.md` ainda não existia | `proposta-paginas.md` §6 | ausência; a página existe desde §6.6.19 |
 | páginas em `arquitetura/` | **15** | `proposta-paginas.md` §2 | `V` |
 
 **(b) Opções reais**
@@ -1712,8 +1714,8 @@ imagem nem recurso do host, não mediu carga e não mexeu no censo de citações
 
 > **Números deste lote são de antes do lote H e do lote I.** As medições abaixo (inclusive os **205** atos
 de aceite, sem as 12 páginas de `tests/`) registram o estado de 2026-11-24 **antes** da escrita da suíte;
-a medição vigente é a de §6.6.22.1 e o valor corrente do aceite é **141**, depois do aceite das 27 páginas
-de `migrations/` (§6.6.31). A contagem de células da matriz
+a medição daquele dia está registrada em §6.6.22.1, cuja recontagem de 2026-11-27 mede **138** atos; em
+2026-11-24 eram **141** atos, depois do aceite das 27 páginas de `migrations/` (§6.6.31). A contagem de células da matriz
 foi atualizada para a medição vigente — **77** = **37** `Teste` + **40** `Issue` (`docs/specs/rastreabilidade.md`
 §1, depois de `Q-BLK-19` = A) —, porque era o único número desta tabela que o dono pediu para recontar; o
 resto fica como registro da decisão, não como contador.
@@ -1731,13 +1733,13 @@ com a curadoria do 7662 incluída, está em `foco-e-sequencia.md`, na raiz do si
 | páginas autorais de `docs/` | **143**: 137 `proposto`, **2** `aceito`, 4 portas | §6.6.19; `grep` de `**Estado:**` |
 | páginas de `src/` | **37 de 59** escritas, **0** `aceito` | `find src -name '*.md'` |
 | páginas de migration | **28 de 34** escritas, **1** `aceito` (`0002`) | `migrations-checklist.md` §4 |
-| páginas de `tests/` | **0 de 12** (naquele momento; hoje **12 de 12**, §6.6.23) | `wyd-db-1.0.0.md` §6.17 |
+| páginas de `tests/` | **0 de 12** naquele momento; **12 de 12** ao fim do lote H (2026-11-24, §6.6.23) e **13 de 13** hoje (a 13ª, `runner_pg`, em 2026-11-25; censo na abertura deste arquivo) | `wyd-db-1.0.0.md` §6.17 |
 | páginas de `prompts/` e `skills/` | **0 de 18** (9 + 9) | §6.18 e §6.19 |
 | issues do roadmap | **40** com DoD, **0** criadas; board com 40 itens | `riscos.md` `R-5`; `../wyd-ops/proposta-gestao-github-e-ambientes.md` §10.3 |
-| linhas da matriz | **31** naquele momento (hoje **34**, §6.6.22.1); **0** com teste, **0** com issue; **15 de 109** tabelas nomeadas | `docs/specs/rastreabilidade.md` §2–§3 |
+| linhas da matriz | **31** naquele momento; **34** ao fim do lote I (2026-11-24, §6.6.22.1) e **40** hoje (§6.6.28; `rastreabilidade.md` §2); **0** com teste, **0** com issue; **15 de 109** tabelas nomeadas | `docs/specs/rastreabilidade.md` §2–§3 |
 | critérios de saída do teste | **6**; o item 6 exige a matriz `CAP-nn`, que **não existia** então | `docs/planos/plano-de-testes.md` §5 |
 | lacunas abertas no `wyd-db` | **0** (35 fechadas, 3 externas) | `lacunas.md` §1 |
-| aceite pendente | **205 atos** naquele momento: 141 em `docs/` + 37 em `src/` + 27 em `migrations/` (**168** depois de §6.6.27; hoje **141**, §6.6.31) | contagem acima; §10 tem 11 itens por página |
+| aceite pendente | **205 atos** naquele momento: 141 em `docs/` + 37 em `src/` + 27 em `migrations/` (**168** depois de §6.6.27; na medição de 2026-11-24, **141**, §6.6.31) | contagem acima; §10 tem 11 itens por página |
 
 #### 6.6.20.2 Ranking das frentes, pelo critério da missão
 
@@ -1754,11 +1756,11 @@ com a curadoria do 7662 incluída, está em `foco-e-sequencia.md`, na raiz do si
 **Vence a frente 1 — issues + suíte de testes — com o número 52:** são **52** artefatos (40 issues + 12
 páginas de `tests/`), e eles não fecham a matriz célula a célula. As **12** páginas fecham o **único** critério
 de saída do plano de testes sem artefato (o critério 6, matriz `CAP-nn`) e dão cenário às linhas que ela nomeia
-— **15** das 40 hoje, `docs/specs/rastreabilidade.md` §3.4 —; as **40** issues são a fila do roadmap, e a coluna
+— **15** das 40 em 2026-11-24; hoje **31** das 40 têm página, `docs/specs/rastreabilidade.md` §3.4 —; as **40** issues são a fila do roadmap, e a coluna
 `Issue` registra a onda de cada linha, não um número de issue; as células `Teste` seguem `P` até haver teste
 executado. O censo das células pendentes tem dono: `rastreabilidade.md` §1. Custo: **2–3 sessões**.
 
-**Por que não o aceite**, que liberava mais: porque libera por **205 atos** naquele momento (**168** depois de §6.6.27; hoje **141**, §6.6.31; 100–168 h), e o aceite não fica
+**Por que não o aceite**, que liberava mais: porque libera por **205 atos** naquele momento (**168** depois de §6.6.27; na medição de 2026-11-24, **141**, §6.6.31; 100–168 h), e o aceite não fica
 menos necessário por ser adiado — ele continua sendo o portão de §5.1. A frente 1 é a única que produz
 resultado **sem** depender do aceite, porque página de teste é planejamento, não código.
 
@@ -1773,10 +1775,10 @@ esperam captura (A1); abrir `wyd-protocol` antes disso repete o que já está bl
 **Q-BLK-12 — a frente vencedora começa pelos testes ou pelas issues?**
 
 - **Medido.** As duas metades custam quase o mesmo (12 páginas × 40 issues) e **29 das 40** issues citam
-teste no próprio `## DoD`; hoje nenhuma das duas colunas da matriz tem valor real.
+teste no próprio `## DoD`; em 2026-11-24 nenhuma das duas colunas da matriz tinha valor real, e o censo vigente é `rastreabilidade.md` §1.
 - **A)** as **12 páginas de `tests/`** primeiro (com `index`, `specs/capacidades.md` e os 5 alvos), e as
   issues em 3 lotes por onda depois. **Recomendada:** fecha o único critério de saída sem artefato e é o
-  que transforma `P` em alvo conferível nas 31 linhas de então (hoje **34**); sem a matriz `CAP-nn`, o DoD
+  que transforma `P` em alvo conferível nas 31 linhas de então (**34** ao fim do lote I, 2026-11-24; **40** hoje, §6.6.28); sem a matriz `CAP-nn`, o DoD
   de teste das 29 issues continuava sem onde apontar — a matriz veio no lote H.
 - **B)** as **40 issues** primeiro, de uma vez; testes depois.
 - **C)** as duas em paralelo, em duas sessões.
@@ -1828,7 +1830,7 @@ teste no próprio `## DoD`; hoje nenhuma das duas colunas da matriz tem valor re
 
 **Q-BLK-16 — depois da frente 1, o aceite do `wyd-db` ou outro sistema?**
 
-- **Medido.** O aceite são **205** atos naquele momento (**168** depois de §6.6.27; hoje **141**, §6.6.31) e é o único caminho para a série, `M20` e 144/144; fora do `wyd-db`,
+- **Medido.** O aceite são **205** atos naquele momento (**168** depois de §6.6.27; na medição de 2026-11-24, **141**, §6.6.31) e é o único caminho para a série, `M20` e 144/144; fora do `wyd-db`,
   as 5 lacunas abertas esperam captura A1.
 - **A)** **aceite do `wyd-db` em 3 levas** (`migrations/` → `src/` → `docs/`). **Recomendada:** é o portão
   de §5.1 e a única frente que destrava código e a 144ª página.
@@ -1852,8 +1854,9 @@ teste no próprio `## DoD`; hoje nenhuma das duas colunas da matriz tem valor re
 ### 6.6.21 Execução do lote H — as 12 páginas de `tests/` e a matriz `CAP-nn` (2026-11-24)
 
 > **Retrato de 2026-11-24, ao fim do lote H — antes do aceite das 12.** Números e estados desta seção
-> descrevem aquele dia; o valor vigente está em §6.6.23. Onde o texto disser “0 de 12” ou “página não
-> aceita”, leia-se o estado daquele momento, não o de hoje.
+> descrevem aquele dia; o valor vigente está em §6.6.23 (aceite das 12) e §6.6.30 (a 13ª página, `runner_pg`,
+> em 2026-11-25). Onde o texto disser “0 de 12” ou “página não aceita”, leia-se o estado daquele momento,
+> não o de 2026-11-27.
 **Sem arquivo no repositório:** `accounts.json`, `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 O responsável aprovou `Q-BLK-12`, `Q-BLK-13`, `Q-BLK-14`, `Q-BLK-15` e `Q-BLK-16` em **A**, e as **12**
@@ -1916,7 +1919,7 @@ na coluna de fonte) e escolhe o próximo passo pelo critério da missão — **m
 liberados por unidade de trabalho, com o caminho crítico na frente**. Nenhuma resposta de `Q-BLK` é dada
 aqui: as quatro perguntas de §6.6.22.5 são do dono.
 
-#### 6.6.22.1 O que está de fato aberto (remedido em 2026-11-24)
+#### 6.6.22.1 O que está de fato aberto (remedido em 2026-11-24; atos e lacunas recontados em 2026-11-27)
 
 | Medida | Valor medido agora | Como foi medido |
 |---|---:|---|
@@ -1924,17 +1927,21 @@ aqui: as quatro perguntas de §6.6.22.5 são do dono.
 | páginas de `tests/` | **12 de 12** com `Estado`; **12** `aceito` (2026-11-24) | `find tests -name '*.md'` + `grep -l '^\*\*Estado:\*\* aceito'` |
 | páginas de `src/` | **37** escritas; **37** `aceito` (2026-11-24) | `find src -name '*.md'` + `grep -l '^\*\*Estado:\*\* aceito'` |
 | arquivos de `migrations/` | **29**: 28 páginas + `index`; **28** `aceito` (2026-11-24, §6.6.31) | `find migrations -name '*.md'` |
-| **atos de aceite pendentes** | **137**: **137** em `docs/` + **0** em `src/` + **0** em `migrations/` + **0** em `tests/` | soma das quatro linhas acima; §10 tem 11 itens por página; migrations aceitas em §6.6.31 |
+| **atos de aceite pendentes** | **138**: **137** em `docs/` + **0** em `src/` + **1** em `migrations/` + **0** em `tests/` | soma das quatro linhas acima; §10 tem 11 itens por página; migrations aceitas em §6.6.31; o `1` é o rascunho `0020-seed-world.md` |
 | matriz `CAP-nn` | **39** capacidades; **13** cobertas por teste executado; **39** com requisito; **0** só com gate | `tests/specs/capacidades.md` §7; cobertura medida em §6.6.30 |
 | rastreabilidade | **40** linhas (17 `RF` + 7 `RN` + 13 `RNF` + 3 `UC`); **13** com teste executado, **24** em `P` e **3** `—`; **0** com issue | `docs/specs/rastreabilidade.md` §2; §6.6.30 |
 | tabelas com requisito nomeado | **16 de 109** → **93** sem | `grep -oh 'schema.tabela'` em `requisitos-funcionais.md` + `regras-de-negocio.md` |
 | roadmap | **40** páginas com `## DoD`; **29** citam teste | `ls docs/roadmap/WYDDB-*.md`; laço sobre o bloco `## DoD` |
 | issues no GitHub | **não remedido** — escrita exige pedido explícito (`AGENTS.md` §5, item 9) | — |
 | seeds bloqueadas | **6** de 34 migrations (28 `concluída`) | `migrations-checklist.md` §2 |
-| lacunas do sistema | **0** abertas (38: 0 abertas, 0 propostas, 35 fechadas, 3 `externa`) | `lacunas.md` §1 |
+| lacunas do sistema | **0** abertas (39: 0 abertas, 0 propostas, 36 fechadas, 3 `externa`) | `lacunas.md` §1 |
 | `docs/dicionario-dados/banco-catalogo.md` | **ausente**; o dicionário tem **109** páginas geradas + `index` | `ls`; `ls docs/dicionario-dados/gerado/*.md` |
 | `prompts/` + `skills/` | **0 de 18** | `find prompts skills -name '*.md'` |
 | `docs/planos/metricas.md` | **ausente** (1 página bloqueada por `M20`) | `ls` |
+
+> **Recontagem de 2026-11-27:** só as linhas **atos de aceite pendentes** (**138**: 137 em `docs/` + 1
+> em `migrations/`) e **lacunas do sistema** (**39** = 0/0/36/3) foram atualizadas; o resto da tabela é a
+> medição de 2026-11-24, mantida como registro daquele lote.
 
 **Dois números não remedidos, declarados em vez de estimados:** as **0 issues criadas** naquela medição
 (sem pedido para ler ou escrever o GitHub) e o **board de 40 itens**
@@ -1960,7 +1967,7 @@ as **10 `ADM`** (#208–#217). O board `WYD 1.0.0` tem **121 itens**, incluindo 
 | **1** | **Aceite das 12 de `tests/`** | código dos **5** alvos, **23** capacidades, **31** células `teste`, **29** DoDs de issue | **88** | **12** atos | **7,3** | **sim** — teste é código |
 | 2 | Aceite da leva `migrations/` | **28** `.sql` de DDL (34 − 6 seeds), série aplicada, `metricas.md` | 29 | 27 atos | 1,1 | **sim** — migration é código |
 | 3 | Aceite da leva `src/` | implementação do crate (**59** páginas planejadas, **22** a escrever) | 1 artefato | 37 atos | 0,03 | sim, depois das frentes 1–2 |
-| 4 | Aceite da leva `docs/` | fechamento editorial (144/144), **0** execução | 0 | 141 atos | 0,0 | não |
+| 4 | Aceite da leva `docs/` | fechamento editorial (144/144), **0** execução | 0 | 141 atos (2026-11-24; **138** hoje no sistema, §6.6.22.1) | 0,0 | não |
 | 5 | Abrir as **40** issues | **34** células `issue`, **29** DoDs verificáveis, vínculo PR ↔ issue | 60 | 3 sessões | 20,0 | **não** — é registro |
 | 6 | Executar as **23** capacidades | as 23 células da matriz | 23 | — | — | **bloqueada** pela frente 1 |
 | 7 | Dicionário `banco-catalogo.md` | `CAP-08` e o gate `catálogo` | 1 | 1 página + PR de ferramentas (externo) | 1,0 | não |
@@ -1981,7 +1988,7 @@ fixado por `Q-BLK-14 = A` (depois do aceite da 1ª leva).
 **Aceitar as 12 páginas de `tests/` como primeira leva** — **12** atos que liberam **88** itens medidos,
 e o único passo que transforma a matriz `CAP-nn` de planejamento em código autorizado. É também a leva
 mais barata em número absoluto: **12** atos contra **27** (`migrations/`), **37** (`src/`) e **141**
-(`docs/`).
+(`docs/`, na medição de 2026-11-24).
 
 **Ordem depois dela:**
 
@@ -1989,7 +1996,7 @@ mais barata em número absoluto: **12** atos contra **27** (`migrations/`), **37
 2. **aceite da leva `migrations/`** — 27 atos; libera os **28** `.sql` de DDL e a série aplicada;
 3. **as 40 issues em 3 lotes por onda** — é o gatilho de `Q-BLK-14 = A`, cumprido depois do passo 1;
 4. **aceite da leva `src/`** — 37 atos;
-5. **aceite da leva `docs/`** — 141 atos, o fechamento editorial.
+5. **aceite da leva `docs/`** — 141 atos na medição de 2026-11-24, o fechamento editorial.
 
 **Em paralelo, sem competir com a fila:** `Q-BLK-19` (a dívida das 11 capacidades, 6 a 11 blocos de
 requisito) e o dicionário `banco-catalogo.md` quando o PR de ferramentas for autorizado. A curadoria do
@@ -2022,7 +2029,7 @@ que responder.
 - **Medido.** `tests/`: **12** atos → **88** itens (**7,3**/ato). `migrations/`: **27** atos → **29** itens
   (**1,1**/ato). `Q-BLK-16 = A` fixou as três levas (`migrations/` → `src/` → `docs/`) **antes** de o
   `tests/` existir; as 12 páginas não estavam na conta.
-- **A)** `tests/` primeiro (**12 atos**), depois `migrations/` (**27**), `src/` (**37**) e `docs/` (**141**).
+- **A)** `tests/` primeiro (**12 atos**), depois `migrations/` (**27**), `src/` (**37**) e `docs/` (**141**, na medição de 2026-11-24).
   **Recomendada:** maior razão da tabela entre as frentes que destravam execução e leva mais barata em
   atos; libera os 5 alvos, as 23 capacidades, as 31 células `teste` e os 29 DoDs.
 - **B)** `migrations/` primeiro, como estava; `tests/` depois. Mantém a ordem de `Q-BLK-16` intacta, mas
@@ -2080,7 +2087,7 @@ que responder.
 #### 6.6.22.6 O que este lote não faz
 
 - **Não aceita página:** nenhuma página virou `aceito` neste turno; os atos de aceite do sistema seguiram todos pendentes.
-- **Não fecha lacuna:** as 38 do sistema continuam 0/0/35/3.
+- **Não fecha lacuna:** as 38 do sistema continuaram 0/0/35/3 naquele lote (hoje **39 = 0/0/36/3**).
 - **Não cria issue, commit nem push:** a escrita no GitHub segue sem pedido.
 - **Não enuncia requisito:** `Q-BLK-19` decide se e como os 6 `RNF` nascem.
 - **Não responde as perguntas:** `Q-BLK-17` a `Q-BLK-20` ficaram abertas para o dono naquele lote; a `17`
@@ -2110,7 +2117,7 @@ tratadas antes da assinatura — `dados-de-teste.md` teve a prosa de §2 alinhad
 `alvos/contrato-catalogo.md` recebeu a nota de que **`Q-BLK-20`** decide o destino de `CAP-08`, sem antecipar
 a decisão. Efeito: as **12** páginas estão `aceito (2026-11-24)`, `tests/` tem **0** `proposto`, e os atos de
 aceite pendentes caíram em **12** — as 12 páginas de `tests/` saíram da fila —, com o valor vigente em **205**
-naquele momento (**168** depois do aceite das 37 de `src/`; hoje **141**, §6.6.31).
+naquele momento (**168** depois do aceite das 37 de `src/`; na medição de 2026-11-24, **141**, §6.6.31).
 Nenhum `.rs` nasceu naquele ato e nenhuma capacidade foi coberta —
 `Q-BLK-18` (o aceite libera o código?) e `Q-BLK-20` seguiam abertas naquele lote; hoje as duas estão
 respondidas (§6.6.27 e §6.6.31).
@@ -2144,7 +2151,7 @@ linha contra as páginas: **15** das **31** linhas têm página que **nomeia** o
 **O que isso corrige no lote I.** O número “**88** itens (5 alvos, 23 capacidades, 31 células `teste`, 29
 DoDs)” de §6.6.22.3 media a leva como se ela alcançasse as 31 linhas. Não alcança: o aceite das 12 páginas
 cobre **15** linhas da matriz, e as **13** de requisito sem cenário seguem sem prova. O lote I fica como log
-do que foi escrito; esta linha é a fotografia de hoje.
+do que foi escrito; esta linha é a fotografia de 2026-11-24.
 
 > **Recontado em 2026-11-24, depois de `Q-BLK-24` = A (§6.6.26 (h)).** O censo do lote K envelheceu em uma
 > grandeza: a matriz tem **34** linhas, **15** com página e **19** sem — **16** sem cenário (as **13**
@@ -2344,7 +2351,7 @@ e o roteiro de §1.1 (`requisito → alvo → página`) passa a apontar para um 
 2. **Os três `RNF` não têm capacidade própria.** `RNF-DB-002` promete "o teste de concorrência com
    **dois** processos" (§2), `RNF-DB-004` promete p95 (§4) e `RNF-DB-005` promete tempo de boot (§5);
    nenhuma das 23 `CAP` mede essas três coisas. Se os `RNF` ficam como estão, os três ficam **sem teste** —
-   hoje eles apontam `sistema-pg`, que não mede nenhum dos três.
+   até 2026-11-24 eles apontavam `sistema-pg`, que não mede nenhum dos três (corrigido em (h)).
 3. **Nenhum requisito enuncia as três propriedades.** Os **28** blocos de `docs/specs/rastreabilidade.md`
    §2 (16 `RF` + 7 `RN` + 5 `RNF`) não dizem "sem deadlock", "espera finita do pool" nem "versão única".
    Elas estão escritas **fora** de `docs/specs/`: `guia-desenvolvedor/pool-e-transacoes.md` §3 ("a espera
@@ -2453,8 +2460,8 @@ o total de páginas não mudou, porque nenhuma página nasceu.
 
 > **Histórico, não contador.** As quatro perguntas desta seção foram aprovadas em **A** e as quatro páginas
 > existem (§6.6.19). Os números abaixo são os de antes daquela execução (139 páginas, 7 de 109 tabelas,
-> 34 atos) e **não** valem hoje: a medição vigente é a de **§6.6.22.1** — 143 páginas em `docs/`, **15** de
-> **109** tabelas com requisito e **137** atos de aceite; o censo de rastreabilidade vigente é **15 de 34**
+> 34 atos) e **não** valem hoje: a medição vigente é a de **§6.6.22.1** — 143 páginas em `docs/`, **16** de
+> **109** tabelas com requisito e **138** atos de aceite; o censo de rastreabilidade vigente é **15 de 34**
 > linhas com cenário (§6.6.24, recontado em §6.6.26 (h)). Onde este texto divergir, vale §6.6.22, §6.6.24 ou a página dona.
 
 **Pergunta:** "das frentes abertas do projeto, qual atacar agora, e o que cada uma espera de quem?" Esta
@@ -2508,7 +2515,7 @@ importante, **o `wyd-db` também não as trava**: o DDL de `ddl-confirmado.md`, 
 - **Recomendação do dossiê: A** (§6.6.8).
 - **Se A:** a matriz nasce com as **5** colunas do molde e **31** linhas (16 `RF` + 7 `RN` + 5 `RNF` + 3 `UC`);
   `teste` fica como alvo `P` (contrato × sistema) e `issue` como "a alocar na onda *N*"; a página expõe dois
-  vazios que hoje ninguém vê — **7 de 109** tabelas sob requisito nomeado e **0 de 40** issues com vínculo.
+  vazios que ninguém via em 2026-11-24 — **7 de 109** tabelas sob requisito nomeado e **0 de 40** issues com vínculo.
 - **Custo de B/C:** B espera a suíte das ondas 4–6 e **não** resolve a coluna `issue`, que não depende de
   teste nenhum; C cai de 5 para 2 colunas e deixa de atender ao molde e ao critério de §11 do plano.
 - **Depende de:** **só do dono** — é escolha de escopo, nada no repositório a deriva.
@@ -2529,8 +2536,8 @@ importante, **o `wyd-db` também não as trava**: o DDL de `ddl-confirmado.md`, 
 - **Recomendação do dossiê: A** (§6.6.9).
 - **Se A:** **1** host (VPS paga, `Q-OPS-2` = A), PostgreSQL 17 em **1** container com **1** volume nomeado,
   **5432** fora da rede interna não publicada, runner e `provision` como one-shot, supervisor = o
-  `restart: unless-stopped` que o Compose já usa, as **6** DSNs inalteradas; e o C4 ganha o nível 4, que hoje
-  não existe (o `contexto-c4.md` para no nível 2).
+  `restart: unless-stopped` que o Compose já usa, as **6** DSNs inalteradas; e o C4 ganha o nível 4, que
+  não existia em 2026-11-24 (hoje o nível 4 é `arquitetura/implantacao.md`, §6.6.19).
 - **Custo de B/C:** **B já está fora por decisão tomada** — DBaaS contraria `Q-OPS-2` = A e `Q-BLK-03`
   (backup no storage do mesmo provedor da VPS, 2026-11-24); C (vários hosts, um container por canal) não tem
   medição de carga: o orçamento de **53 de 97** conexões cabe em um host.
@@ -2574,7 +2581,7 @@ importante, **o `wyd-db` também não as trava**: o DDL de `ddl-confirmado.md`, 
 
 - Não responde decisão do dono em nome dele; registra as respostas reais.
 - Não aceita página, não escreve página bloqueada e não cria índice ou job.
-- Não altera as 38 lacunas, as 3 externas, a distribuição do `wyd-client` nem `LCLI-02`/`LCLI-05`.
+- Não altera as 39 lacunas, as 3 externas, a distribuição do `wyd-client` nem `LCLI-02`/`LCLI-05`.
 - Não usa o inventário da árvore do cliente como lista de patch.
 - Não trata as perguntas de §6.6 como respondidas, nem conta página retirada antes da decisão de teto.
 - Não trata o pedido ao titular como enviado.
@@ -2607,8 +2614,9 @@ passada de fechamento).
 `TODO` ou segredo; todas têm `Base:`, legenda e as 5 linhas de cabeçalho.
 
 **Efeito no censo:** as **37** estão `aceito (2026-11-24)` e `src/` tem **0** `proposto`. Os atos de aceite
-pendentes caíram de **205** para **168** (141 `docs/` + **0** `src/` + 27 `migrations/` + **0** `tests/`) e as
-páginas aceitas do sistema subiram de **15** para **52** (2 ADRs + `0002` + 12 `tests/` + 37 `src/`).
+pendentes caíram de **205** para **168** (141 `docs/` + **0** `src/` + 27 `migrations/` + **0** `tests/`, na
+medição de 2026-11-24) e as páginas aceitas do sistema subiram de **15** para **52** (2 ADRs + `0002` + 12
+`tests/` + 37 `src/`).
 
 **Primeiro código, na mesma data (o aceite é o que o libera):** `crates/wyd-db/Cargo.toml`
 (`name = "wyd-db"`, `version = "0.0.0"`, `edition = "2021"`, `publish = false`, sem dependências),
@@ -2757,8 +2765,8 @@ recusa `' Bob '` em `ck_account_login_forma` antes de qualquer fold, e o cenári
 pendentes da rastreabilidade **77 → 64** (**24** `Teste` em `P` + **40** `Issue`; **13** `Teste` em `V`, **3**
 `—`); linhas com página **31**, sem página **9**, sem cenário **0** (inalterados); alvos no `Cargo.toml`
 **0 → 1 de 5**; `.sql` da série **0 → 28**; `Q-BLK` abertas **0** (as duas foram respondidas em §6.6.31; naquela passada
-eram **2**); F6 = **4**; atos de aceite **141** (as 27 páginas de `migrations/` foram aceitas em
-2026-11-24, §6.6.31).
+eram **2**); F6 = **4**; atos de aceite **141** na medição de 2026-11-24 (as 27 páginas de `migrations/`
+foram aceitas naquele dia, §6.6.31).
 
 **O que este dossiê não faz:** não aceita página de `migrations/` (é ato do dono; as 27 seriam aceitas depois,
 §6.6.31), não
@@ -2783,7 +2791,7 @@ PostgreSQL 17 em 2026-11-24 (§6.6.30) e as provas de `psql` de cada página nã
 
 | Medida | Antes | Depois | Fonte |
 |---|---:|---:|---|
-| atos pendentes, antes → depois | **168** | **141** (141 `docs/` + 0 nas outras três pastas) | `gate/checks/censos.py` |
+| atos pendentes, antes → depois | **168** | **141** (141 `docs/` + 0 nas outras três pastas; **138** na recontagem de 2026-11-27, §6.6.22.1) | `gate/checks/censos.py` |
 | páginas `aceito` no `wyd-db` | **52** | **79** (2 `docs/` + 28 `migrations/` + 37 `src/` + 12 `tests/`) | `gate/checks/censos.py` |
 | `Q-BLK` abertas | **2** (`20`, `22`) | **0** | §6.6.22.5 e §6.6.23 |
 | capacidade sem ambiente | **1** (`CAP-08`) | **1**, agora **declarada não executável na `1.0.0`** | `tests/specs/capacidades.md` §9 |
@@ -2795,5 +2803,6 @@ no critério de release de **144**, que segue inalterado.
 
 **O que este lote não faz:** não escreve `migrations/serie-e-regras.md`, não implementa o runner
 (`RNF-DB-008`, `002`), o pool (`RNF-DB-007`), a porta C4 (`RNF-DB-004`) nem o boot (`RNF-DB-005`), não
-cria as **6** seeds bloqueadas, não abre as **40** issues e não aceita as **141** páginas de `docs/`.
+cria as **6** seeds bloqueadas, não abre as **40** issues e não aceita as **141** páginas de `docs/`
+(na medição de 2026-11-24; **138** atos em 2026-11-27, §6.6.22.1).
 Nenhum `.sql` novo nasceu: os **28** da série continuam os mesmos.

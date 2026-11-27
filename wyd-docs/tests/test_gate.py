@@ -11,7 +11,17 @@ import unittest
 from pathlib import Path, PurePosixPath
 from unittest import mock
 
-from gate.checks import censos, contagens, lacunas, layout, links, skills
+from gate.checks import (
+    alvos,
+    capacidades,
+    censos,
+    contagens,
+    hoje,
+    lacunas,
+    layout,
+    links,
+    skills,
+)
 from gate.workspace import Workspace
 from tests import fixtures
 
@@ -75,6 +85,40 @@ class LacunaTests(unittest.TestCase):
         self.assertFalse(resultado.ok)
         self.assertTrue(resultado.problems)
 
+    def test_citacao_de_lacunas_do_wyd_db_passa(self):
+        resultado = lacunas.run(Workspace(_repo(fixtures.LACUNA_CITACAO_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("3 citação(ões)", resultado.summary)
+
+    def test_citacao_de_lacunas_velha_reprova(self):
+        resultado = lacunas.run(Workspace(_repo(fixtures.LACUNA_CITACAO_VELHA)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 35 fechadas" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_citacao_de_lacunas_em_secao_datada_nao_reprova(self):
+        resultado = lacunas.run(Workspace(_repo(fixtures.LACUNA_CITACAO_HISTORICA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("2 histórica(s)", resultado.summary)
+        self.assertTrue(resultado.details)
+        for detalhe in resultado.details:
+            self.assertIn("seção datada herdada (2026-11-24)", detalhe)
+
+    def test_citacao_de_lacunas_explica_data_na_frase_e_transicao(self):
+        resultado = lacunas.run(Workspace(_repo(fixtures.LACUNA_CITACAO_MOTIVOS)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("2 histórica(s)", resultado.summary)
+        self.assertTrue(
+            any("data na frase (2026-11-24)" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+        self.assertTrue(
+            any("transição (`" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+
 
 class SkillTests(unittest.TestCase):
     def test_roadmap_cita_skills_sem_repetir_fase(self):
@@ -96,21 +140,207 @@ class SkillTests(unittest.TestCase):
 class ContagemTests(unittest.TestCase):
     def test_medidas_da_serie_coincidem(self):
         root = _repo(fixtures.CONTAGEM_OK)
-        contagens._WS = Workspace(root)
-        arquivos, tabelas = contagens.medir_checklist(root)
-        self.assertEqual((arquivos, tabelas), (1, 2))
+        medida = contagens.medidas(Workspace(root))
+        self.assertEqual((medida.arquivos, medida.tabelas), (1, 2))
         self.assertEqual(contagens.medir_ddl(root), 1)
         self.assertEqual(contagens.medir_plano(root), 1)
+
+
+class AlvoTests(unittest.TestCase):
+    def test_cargo_e_o_comando_concordam(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("2 `[[test]]`", resultado.summary)
+
+    def test_tabela_nao_reprova_mesmo_com_nome_desconhecido(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_TABELA_INEXISTENTE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(any("nota" in linha and "contrato_forma" in linha for linha in resultado.details))
+
+    def test_comando_com_alvo_inexistente_reprova(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_COMANDO_INEXISTENTE)))
+        self.assertFalse(resultado.ok)
+        self.assertEqual(len(resultado.problems), 2)
+        self.assertIn("contrato_forma", resultado.problems[0])
+        self.assertIn("alvo_fantasma", resultado.problems[1])
+        self.assertIn("docs/guia-teste/index.md §1", resultado.problems[0])
+
+    def test_prosa_com_lista_e_com_lixo_fora_do_nome_de_alvo(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_PROSA_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("3 token(s) descartado(s) em prosa", resultado.summary)
+        descartes = [linha for linha in resultado.details if linha.startswith("ignorado")]
+        self.assertEqual(len(descartes), 3)
+
+    def test_test_sem_cargo_test_aparece_em_details_sem_reprovar(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_TEST_SEM_COMANDO)))
+        baseline = alvos.run(Workspace(_repo(fixtures.ALVOS_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertEqual(
+            resultado.summary.split(" citação")[0], baseline.summary.split(" citação")[0]
+        )
+        self.assertIn("3 `--test` fora de comando de teste", resultado.summary)
+        descartes = [
+            linha for linha in resultado.details if "--test" in linha and "cargo test" in linha
+        ]
+        self.assertEqual(len(descartes), 3)
+        self.assertIn("pagina.md:3", descartes[0])
+        self.assertIn("alvo_fantasma", descartes[2])
+
+    def test_prosa_com_alvo_inexistente_vira_detalhe(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_PROSA_INEXISTENTE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(any("nota" in linha and "contrato_forma" in linha for linha in resultado.details))
+
+    def test_comando_de_alvo_planejado_em_dod_pendente_passa(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_COMANDO_PLANEJADO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("WYDDB-028.md:5" in linha and "planejado" in linha for linha in resultado.details)
+        )
+        self.assertTrue(
+            any("docs/guia-teste/index.md` §1" in linha for linha in resultado.details)
+        )
+
+    def test_comando_de_alvo_planejado_sem_marca_reprova(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_COMANDO_PLANEJADO_SEM_MARCA)))
+        self.assertFalse(resultado.ok)
+        self.assertIn("alvo planejado `contrato_catalogo`", resultado.problems[0])
+
+    def test_planejado_vem_da_tabela_e_deixa_de_valer_quando_ela_muda(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_PLANEJADO_JA_EXECUTADO)))
+        self.assertFalse(resultado.ok)
+        self.assertIn("contrato_catalogo", resultado.problems[0])
+        self.assertIn("nem está planejado", resultado.problems[0])
+
+    def test_comando_quebrado_com_manifest_path_reprova(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_MANIFESTO_QUEBRADO)))
+        self.assertFalse(resultado.ok)
+        self.assertIn("contrato_forma", resultado.problems[0])
+        self.assertIn("SKILL.md:4", resultado.problems[0])
+
+    def test_comando_de_outro_crate_fica_fora(self):
+        # `sistema_pg` é `[[test]]` do `wyd-db`: mesmo assim, `-p wyd-protocol` tira o comando do
+        # escopo e ele não pode sair como `ok` nem reprovar por nome.
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_OUTRO_CRATE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("fora do crate" in linha and "wyd-protocol" in linha for linha in resultado.details)
+        )
+        self.assertFalse(
+            any(
+                linha.startswith("ok ")
+                and "provar/SKILL.md" in linha
+                and "sistema_pg" in linha
+                for linha in resultado.details
+            )
+        )
+        self.assertIn("1 fora do crate", resultado.summary)
+
+    def test_guia_sem_tabela_de_alvos_acusa(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_GUIA_SEM_TABELA)))
+        self.assertFalse(resultado.ok)
+        self.assertIn("guia-teste/index.md", resultado.summary)
+
+    def test_tabela_sem_linha_planejada_e_estado_valido(self):
+        resultado = alvos.run(Workspace(_repo(fixtures.ALVOS_SEM_PLANEJADOS)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 em `docs/guia-teste/index.md` §1", resultado.summary)
 
 
 class CensoTests(unittest.TestCase):
     def test_mede_atos_celulas_e_qblk(self):
         root = _repo(fixtures.CENSO_OK)
-        censos._WS = Workspace(root)
-        atos = censos.medir_atos(root)
-        self.assertEqual(atos["total"], 2)
-        self.assertEqual(censos.medir_celulas(root), (1, 1))
-        self.assertEqual(censos.medir_qblk(root), ["Q-BLK-01"])
+        medida = censos.medidas(Workspace(root))
+        self.assertEqual(medida.atos["total"], 2)
+        self.assertEqual((medida.teste, medida.issue), (1, 1))
+        self.assertEqual(medida.qblk, ["Q-BLK-01"])
+
+    def test_atos_sem_de_aceite_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 3 atos" in problema for problema in resultado.problems), resultado.problems
+        )
+
+    def test_atos_sem_de_aceite_correto_passa(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_CORRETO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+
+    def test_citacao_velha_abaixo_da_metade_do_total_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_VELHO_ABAIXO_METADE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 2 atos, medido 5" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_contagem_de_leva_fica_fora_do_censo(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_LEVA_12)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any(
+                "12 atos" in detalhe and "contagem de leva" in detalhe
+                for detalhe in resultado.details
+            ),
+            resultado.details,
+        )
+
+    def test_texto_corrido_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_TEXTO_CORRIDO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 3 atos, medido 2" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_negrito_cobrindo_numero_e_palavra_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_NEGRITO_FRASE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 3 atos, medido 2" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_texto_corrido_datado_passa(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_TEXTO_CORRIDO_DATADO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("2026-11-24" in detalhe and "3 atos" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+
+    def test_leva_em_outra_oracao_nao_isenta_o_total(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_LEVA_DISTANTE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 12 atos, medido 2" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_citacao_total_de_12_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_TOTAL_DOZE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 12 atos, medido 2" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_atos_em_secao_datada_nao_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_DATADO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("seção datada 2026-11-24" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+
+    def test_atos_com_data_na_frase_nao_reprova(self):
+        resultado = censos.run(Workspace(_repo(fixtures.CENSO_ATOS_DATA_NA_FRASE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("data 2026-11-24 na frase" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
 
 
 class LinkTests(unittest.TestCase):
@@ -270,3 +500,200 @@ class CliTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CapacidadeTests(unittest.TestCase):
+    def test_citacao_de_acordo_com_o_censo(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("2 citação(ões)", resultado.summary)
+        self.assertIn("20 cobertas", resultado.summary)
+
+    def test_numero_velho_reprova_com_arquivo_e_linha(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("pagina.md:3" in problema and "cita 14" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_secao_datada_antes_da_medicao_fica_fora(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_HISTORICO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("1 histórica(s)/planejada(s)", resultado.summary)
+        self.assertIn("— isenta: seção datada herdada (2026-11-24)", resultado.details[0])
+        self.assertNotIn("registro histórico", resultado.details[0])
+
+    def test_meta_de_cobertura_fica_fora(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_PLANEJADO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("— isenta: transição/planejado (`vai de`)", resultado.details[0])
+        self.assertNotIn("data na frase", resultado.details[0])
+        self.assertIn("1 histórica(s)/planejada(s)", resultado.summary)
+
+    def test_le_o_censo_do_dono_em_vez_de_fixar_vinte(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_MEDIDA_NOVA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("21 cobertas", resultado.summary)
+
+    def test_dono_ausente_nao_inventa_medida(self):
+        with self.assertRaises(capacidades.Erro):
+            capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_SEM_DONO)))
+
+    def test_total_de_capacidades_sem_de_39(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_TOTAL_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("1 citação(ões)", resultado.summary)
+
+    def test_total_velho_de_capacidades_reprova(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_TOTAL_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 38" in problema and "mede 39" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_sem_execucao_fora_da_forma_longa_reprova(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_SEM_EXECUCAO_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("cita 18" in problema and "mede 19" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_recorte_de_cap_nn_nao_conta_como_censo(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_RECORTE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões)", resultado.summary)
+
+    def test_subsecao_herda_a_data_do_cabecalho_pai(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_SECAO_HERDADA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("— isenta: seção datada herdada (2026-11-24)", resultado.details[0])
+        self.assertNotIn("registro histórico", resultado.details[0])
+        self.assertIn("1 histórica(s)/planejada(s)", resultado.summary)
+
+    def test_recorte_com_cap_nn_ou_que_nao_conta(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_RECORTE_CAP)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões)", resultado.summary)
+
+    def test_data_na_frase_isenta_e_explica(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_DATA_NA_LINHA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("— isenta: data na frase (2026-11-24)", resultado.details[0])
+        self.assertNotIn("seção datada", resultado.details[0])
+        self.assertIn("1 histórica(s)/planejada(s)", resultado.summary)
+
+    def test_data_em_outra_frase_nao_isenta_numero_velho(self):
+        resultado = capacidades.run(Workspace(_repo(fixtures.CAPACIDADES_DATA_NAO_QUALIFICA)))
+        self.assertFalse(resultado.ok)
+        self.assertEqual(1, len(resultado.problems), resultado.problems)
+        self.assertTrue(any("cita 38" in problema for problema in resultado.problems), resultado.problems)
+        self.assertFalse(any("cita 23" in problema for problema in resultado.problems), resultado.problems)
+
+
+
+class HojeTests(unittest.TestCase):
+    def test_atos_de_hoje_divergente_reprova(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_ATOS_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("hoje 3 atos" in problema and "mede 2 atos" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_atos_de_hoje_correto_passa(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_ATOS_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("1 citação(ões) de `hoje` conferida(s)", resultado.summary)
+
+    def test_secao_datada_isenta_com_rastro(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_SECAO_DATADA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertTrue(
+            any("seção datada 2026-11-24" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+
+    def test_capacidades_de_hoje_divergente_reprova(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CAPACIDADES_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("hoje 14 de 39 capacidades" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_numero_sem_unidade_fica_fora(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_SEM_UNIDADE)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões) de `hoje` conferida(s)", resultado.summary)
+
+    def test_numero_sem_unidade_atribuido_pelo_dono_reprova(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTEXTO_DONO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("hoje 3 atos" in problema and "mede 2 atos" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_numero_sem_unidade_atribuido_pela_unidade_reprova(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTEXTO_UNIDADE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("hoje 3 atos" in problema for problema in resultado.problems), resultado.problems
+        )
+
+    def test_atribuicao_por_contexto_sai_em_details(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTEXTO_OK)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("1 por contexto", resultado.summary)
+        self.assertTrue(
+            any("contexto: unidade na cláusula" in detalhe for detalhe in resultado.details),
+            resultado.details,
+        )
+
+    def test_razao_de_outra_medida_fica_fora(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTEXTO_AMBIGUO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões) de `hoje` conferida(s)", resultado.summary)
+
+    def test_contagens_de_hoje_divergente_reprova(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_VELHO)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("hoje 3 arquivos" in problema and "mede 2 arquivos" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+        self.assertFalse(any("9 tabelas" in problema for problema in resultado.problems))
+
+    def test_fontes_de_hoje_exigem_censo_na_clausula(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_FONTES)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("diz `hoje 999 fontes`" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_paginas_do_site_de_hoje_reprovam(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_SITE)))
+        self.assertFalse(resultado.ok)
+        self.assertTrue(
+            any("diz `hoje 999 páginas do site`" in problema for problema in resultado.problems),
+            resultado.problems,
+        )
+
+    def test_serie_materializada_fica_fora_da_checklist(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_MATERIALIZADA)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões) de `hoje` conferida(s)", resultado.summary)
+
+    def test_unidade_generica_com_outra_contagem_vizinha_fica_fora(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_AMBIGUO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões) de `hoje` conferida(s)", resultado.summary)
+
+    def test_tabelas_de_outro_conjunto_ficam_fora(self):
+        resultado = hoje.run(Workspace(_repo(fixtures.HOJE_CONTAGENS_OUTRO_CONJUNTO)))
+        self.assertTrue(resultado.ok, resultado.problems)
+        self.assertIn("0 citação(ões) de `hoje` conferida(s)", resultado.summary)

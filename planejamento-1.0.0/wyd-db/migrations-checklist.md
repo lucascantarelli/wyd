@@ -119,7 +119,7 @@ item por item e com o formato da medição — está em `pedido-de-curadoria-dos
 | 17 | `0017-seed-item-catalog.md` | — | `bloqueada` | O DDL de `0014` fechou em 2026-11-20; as contagens são de 2026-11-08/15 e faltam ser recontadas na fonte (`plano-migrations.md` §4). |
 | 18 | `0018-seed-skill-catalog.md` | — | `bloqueada` | O DDL de `0015` fechou em 2026-11-20; falta a curadoria de classe e linhagem das skills, que é dado e não DDL (`plano-migrations.md` §4). |
 | 19 | `0019_content_world.md` | 13 | `concluída` | — (DDL de §5.21 aprovado em 2026-11-20; página escrita e conferida) |
-| 20 | `0020-seed-world.md` | — | `bloqueada` | O DDL de `0019` fechou em 2026-11-20; faltam as contagens de templates, NPCs, lojas, níveis e regiões verificadas na fonte (`plano-migrations.md` §4). |
+| 20 | `0020-seed-world.md` | — | `bloqueada` | O DDL de `0019` fechou em 2026-11-20; faltam as contagens de templates, NPCs, lojas, níveis e regiões verificadas na fonte (`plano-migrations.md` §4). A produção tem exceção datada (2026-11-27, `M34`) e as 4 cidades entram em `game.city` por este seed (`Q-M34-3`). |
 | 21 | `0021_content_rules.md` | 5 | `concluída` | — (DDL de §5.22 aprovado em 2026-11-20; página escrita e conferida) |
 | 22 | `0022_content_overrides.md` | 3 | `concluída` | — (DDL de §5.23 aprovado em 2026-11-21; página escrita e conferida) |
 | 23 | `0023-seed-rules.md` | — | `bloqueada` | O DDL de `0021` e o de `0022` fecharam (2026-11-20 e 2026-11-21); faltam os valores de refino, gemas, SANC e composição verificados na fonte (`plano-migrations.md` §4). |
@@ -149,7 +149,7 @@ O detalhe de cada decisão fica em `lacunas.md`; aqui está só o que **impede a
 | `M25` | **Fechada em 2026-11-20:** o dreno reivindica com `SELECT … FOR UPDATE SKIP LOCKED` em transação curta; `applied`/`failed` expurgadas 30 dias após `closed_at`, `pending` nunca. Nenhum arquivo trava por ela. | `0012` (fechada) | arquitetura + frente `wyd-server` |
 | `A19` | Loja e cash existem? Entra em `portal`, fica fora do schema, ou não existe. | `0011` | produto |
 | `A14` | Soft-delete de personagem derruba a sessão viva? | `0006` | arquitetura |
-| Dado de seed não verificado | Os 6 seeds são escritos à mão, com os valores conferidos no cliente 7662; ficam fora da onda A (`Q-M33-6`), não há gerador previsto e valor herdado não é verdade sem reconferência (`plano-migrations.md` §4). O que falta é dado, não código. | `0016`–`0018`, `0020`, `0023`, `0027` | arquitetura + curadoria de conteúdo |
+| Dado de seed não verificado | Os 6 seeds são escritos à mão, com os valores conferidos no cliente 7662; ficam fora da onda A (`Q-M33-6`), não há gerador previsto — **exceto a exceção pontual de 2026-11-27 (`M34`) para `0017`/`0020`, com script descartável** — e valor herdado não é verdade sem reconferência (`plano-migrations.md` §4). O que falta é dado, não código. | `0016`–`0018`, `0020`, `0023`, `0027` | arquitetura + curadoria de conteúdo |
 
 **Bloqueios que não impedem DDL** — citados aqui porque aparecem nas páginas, mas não mudam coluna,
 constraint nem índice: `B1` (provedor de e-mail: quando `0004`/`0005` passam a ser usadas de verdade),

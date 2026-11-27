@@ -12,7 +12,7 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy` (db/signer em Ubuntu; launcher em Windows), `unit` (db e signer em Ubuntu/Windows; launcher só em Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision`), `cobertura` (informativa), `gate-code`, `notificar falha` | `gate-code` |
+| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy+unit` no mesmo job por crate — db e launcher em Ubuntu, signer em Ubuntu e Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision` —, `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `notificar falha` | `gate-code` |
 | `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar falha` | `gate-db` |
 | `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar falha` | `gate-docs` |
 | `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
@@ -37,7 +37,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 ## 2. O que cada gate prova
 
-- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates e os contratos públicos de `migrate`/`provision` (`wyd-db --test contrato_api_migrate --test contrato_api_provision`); `wyd-db` e `wyd-ops-signer` são portáveis, enquanto `wyd-launcher` é um produto Windows (EXE + Tauri/NSIS) e só roda em `windows-latest`. Cobertura é informativa (`D-02 = B`) e sobe como `coverage-summary.txt` + `lcov.info` por 7 dias.
+- **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates e os contratos públicos de `migrate`/`provision` (`wyd-db --test contrato_api_migrate --test contrato_api_provision`); os três crates são portáveis — o núcleo do `wyd-launcher` é Rust puro, sem Tauri nem `cfg(windows)` —, e só o empacotamento NSIS futuro do launcher exigirá `windows-latest`. Cobertura é informativa em `wyd-db` (`D-02 = B`) e, desde 2026-11-27, bloqueante em `wyd-launcher` pelo piso de linha do plano do próprio crate; cada crate sobe `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
 - **`gate-docs`**: `wyd-docs/gate.sh` — roda primeiro os testes unitários dos verificadores e depois o pacote `python -m gate` (skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos). A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
 - **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`; `workflow-lint` roda actionlint 1.7.12 em imagem por digest.
@@ -47,11 +47,11 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 
 ```bash
 make gate        # mesmo gate do CI, dentro da imagem :gate (testes + gate full)
-make gate-fast   # checks nativos (skills, lacunas, contagens, censos), sem Docker/MkDocs
+make gate-fast   # checks nativos (layout, alvos, capacidades, skills, lacunas, contagens, censos, hoje), sem Docker/MkDocs
 make test-gate   # atalho isolado para os testes de fixture dos verificadores
 make fmt         # cargo fmt --check nos três crates
 make lint        # cargo clippy -D warnings nos três crates
-make test        # testes unitários (wyd-db --lib + contratos de migrate/provision; signer --locked; launcher só no Windows)
+make test        # testes unitários (wyd-db --lib + contratos de migrate/provision; signer e launcher --locked)
 
 make docs-up     # puxa a imagem publicada e sobe com --no-build em 127.0.0.1:8000
 make docs        # constrói da árvore de trabalho (dev, tag :dev)
@@ -129,7 +129,7 @@ Os composites de `.github/actions/` só instalam ferramentas e chamam esses arqu
 |---|---|---|
 | Runners padrão em repo público | gratuitos | todos os jobs |
 | Cache | 10 GB/repo, 7 dias por entrada | `rust-cache` por crate; pip via `setup-python`; Buildx `type=gha` com escopo `docs-image` |
-| Artefatos | 500 MB (Free), 90 dias padrão | cobertura: 2 arquivos, 7 dias |
+| Artefatos | 500 MB (Free), 90 dias padrão | cobertura: 2 arquivos por crate, 7 dias |
 | GHCR | imagem pública gratuita | `ghcr.io/lucascantarelli/wyd-docs` com SHA, `develop` e `latest` em `develop` |
 | CodeQL | incluído | default setup |
 

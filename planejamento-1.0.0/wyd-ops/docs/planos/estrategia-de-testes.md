@@ -29,7 +29,7 @@ Regra: teste de linha não substitui capacidade provada. A matriz de rastreabili
 
 | Sistema | Plano de teste | Estado medido |
 |---|---|---|
-| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 20 testes de sistema (13 schema + 7 porta); 14 de 39 capacidades cobertas |
+| `wyd-db` | `wyd-db/docs/guia-teste/` e `wyd-db/docs/planos/plano-de-testes.md` | 20 testes de sistema (13 schema + 7 porta) e 9 de contrato sem banco; **20 de 39** capacidades cobertas (2026-11-27) |
 | `wyd-ops` | `wyd-ops/docs/planos/plano-de-testes.md` | planejado; nenhum teste escrito |
 | demais 11 sistemas | `docs/planos/plano-de-testes.md` por sistema | planejado; 0 testes implementados |
 
@@ -56,18 +56,18 @@ Fonte: `wyd-ops/auditoria-de-organizacao.md` §2–§3.
 ## 6. Cobertura e gates
 
 - Cobertura mínima de 85% por sistema, medida no gate do sistema.
-- No `code.yml`, a cobertura é informativa até o sistema declarar o gate fechado (`D-02 = B`).
+- No `code.yml`, a cobertura de `wyd-db` é informativa até o sistema declarar o gate fechado (`D-02 = B`); o `wyd-launcher` já aplica o piso de 85% de linha do plano dele (`wyd-launcher/docs/planos/plano-de-testes.md` §Cobertura) desde 2026-11-27.
 - `cargo audit` e `cargo deny` são bloqueantes desde já.
 - Para Python do site (`mkdocs==2.0.dev6`), usar `pip-audit`/hash em item separado; não entra em `cargo audit`.
 - Gate de documentação (`docker compose --profile gate run --rm gate`) continua obrigatório e independente de cobertura.
-- Cobertura de linha não substitui capacidade provada: 25 de 39 capacidades do `wyd-db` ainda não têm teste executado.
+- Cobertura de linha não substitui capacidade provada: 19 de 39 capacidades do `wyd-db` ainda não têm teste executado (2026-11-27).
 
 ## 7. Integração com CI
 
 | Etapa | Onde | O que roda |
 |---|---|---|
 | PR | `docs.yml` | gate editorial e censos |
-| PR | `code.yml` | fmt, clippy, unitários, schema PG17, cobertura informativa, audit/deny |
+| PR | `code.yml` | fmt e `clippy+unit` por crate, cobertura (`wyd-db` informativa, `wyd-launcher` com o piso do plano do crate), audit/deny |
 | PR | `docs-image.yml` | build e fumaça da imagem do site quando o caminho for tocado |
 | sistema | gate do sistema (a fechar) | cobertura bloqueante, capacidades e rastreabilidade |
 | release | a definir | deploy em staging, rollback e smoke |
@@ -110,7 +110,7 @@ Fonte: `wyd-ops/docs/arquitetura/ia-e-skills.md`.
 
 1. **Escopo da cobertura bloqueante** — quando o `code.yml` deixa de ser informativo.
    - Opções: A) por sistema, quando declarar gate fechado; B) global, quando todos os sistemas tiverem gate; C) por crate, no primeiro crate.
-   - Recomendação: A, conforme `D-02 = B`.
+   - Recomendação: A, conforme `D-02 = B`; exceção já em vigor: `wyd-launcher` fecha o piso no próprio crate desde 2026-11-27.
 2. **Dono da fixture central** — quem mantém `tests/common/`.
    - Opções: A) sistema dono do domínio; B) `wyd-ops` como padrão transversal; C) biblioteca compartilhada em crate comum.
    - Recomendação: A para dado de domínio; B para padrão e convenção.

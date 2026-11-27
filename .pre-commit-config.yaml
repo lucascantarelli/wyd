@@ -1,0 +1,59 @@
+# Hooks locais baratos: pegam antes do commit o que o CI só pegaria depois.
+#
+# Clippy e testes NÃO entram aqui — são `make lint`/`make test` e o `code.yml`.
+# Um hook caro vira `git commit --no-verify` e aí não protege nada.
+#
+# Instalação, uma vez por clone: `pre-commit install` (instala `pre-commit` e
+# `pre-push`). Só arquivos rastreados pelo git entram: `deprecated/` e
+# `wyd-client/files/` são ignorados.
+#
+# Dono do gate: `wyd-docs/gate/cli.py`; dono do formato: o rustfmt de cada crate.
+# 3.2.0 é a primeira versão que aceita `stages: [pre-push]` com o nome do hook
+# git (antes era `push`) e é o piso do próprio pre-commit-hooks 5+; abaixo disso
+# a validação do arquivo inteiro falha.
+minimum_pre_commit_version: "3.2.0"
+default_install_hook_types: [pre-commit, pre-push]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # As fixtures do launcher são byte-exatas: hash de assinatura e de
+      # integridade são calculados sobre o arquivo. Um `\n` a mais reprova o
+      # teste sem nenhuma linha de código mudar.
+      - id: trailing-whitespace
+        # Dois espaços no fim da linha são quebra de linha no markdown.
+        args: [--markdown-linebreak-ext=md]
+        exclude: ^crates/wyd-launcher/tests/fixtures/
+      - id: end-of-file-fixer
+        exclude: ^crates/wyd-launcher/tests/fixtures/
+      - id: check-yaml
+      - id: check-json
+        # Os `.vscode/*.json` são JSONC (comentário e vírgula final): o parser
+        # estrito reprova, e o VS Code não lê o arquivo sem eles.
+        exclude: ^\.vscode/
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      # `cargo fmt` por crate, não `--all`: a raiz não tem workspace e cada
+      # `Cargo.toml` tem edition própria. O script recebe os arquivos alterados
+      # e formata só os crates donos deles.
+      - id: cargo-fmt
+        name: cargo fmt (crates alterados)
+        entry: bash wyd-ops/scripts/pre-commit/cargo-fmt-crates.sh
+        language: system
+        files: ^crates/[^/]+/.*\.rs$
+
+      # O gate rápido nativo (~13 s) no push, não a cada commit. O pre-commit
+      # guarda (stash) o que não está commitado antes de rodar: o gate vê a
+      # árvore do commit, não o rascunho — push de trabalho pela metade falha.
+      - id: gate-fast
+        name: make gate-fast
+        entry: make gate-fast
+        language: system
+        pass_filenames: false
+        # Sem arquivo alterado (push de tag, commit vazio) o hook rodaria vazio;
+        # o gate não depende de arquivo nenhum.
+        always_run: true
+        stages: [pre-push]

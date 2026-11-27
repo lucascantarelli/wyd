@@ -36,7 +36,7 @@
 
 | Sistema | Documentos | Estado | Evidência |
 |---|---:|---|---|
-| `wyd-db` | 348 | piloto parcial: 340 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados) e **28** `.sql` aplicados do zero em 2026-11-24, 37 páginas de `src/`, **13 de 13** em `tests/` (matriz `CAP-nn` de **39** capacidades, **14** cobertas), crate inicial `crates/wyd-db` com `dsn` e os alvos `sistema_pg` (13 cenários), `reversibilidade_pg` e `runner_pg` (7 casos), 0 em `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-24 |
+| `wyd-db` | 348 | piloto parcial: 340 páginas com cabeçalho, **28 de 34** migrations escritas (os 6 seeds seguem bloqueados) e **28** `.sql` aplicados do zero em 2026-11-24, 37 páginas de `src/`, **13 de 13** em `tests/` (matriz `CAP-nn` de **39** capacidades, **20** cobertas em 2026-11-27), crate inicial `crates/wyd-db` com `dsn` e os alvos `sistema_pg` (13 cenários), `reversibilidade_pg`, `runner_pg` (7 casos) e `contrato_migrations` (9 testes), 0 em `prompts/` e `skills/`; dicionário **completo**, **109 das 109** páginas de tabela | `find planejamento-1.0.0/wyd-db -name '*.md'` e `grep -rl '^> Pergunta:'`, 2026-11-24 |
 | `wyd-protocol` | 7 | 2º piloto aberto: plano diretor com teto de 131 páginas, 5 escritas, 20 lacunas (**18 decididas** — 17 em 2026-11-20 e `LPRT-09` em 2026-11-23; **2 abertas** por captura: `LPRT-03` e `LPRT-06`), nenhum ADR; série de entrega do crate `0.1.0` → `1.0.0` (§4.1) | `wyd-protocol-1.0.0.md` e `lacunas.md`, 2026-11-23 |
 | `wyd-docs` | 10 | plano diretor e lacunas + site MkDocs 2.0 implementado; 5 páginas em `docs/`; proposta do gate de aceite em 2026-11-23 | `find planejamento-1.0.0/wyd-docs -name '*.md'`, 2026-11-23 |
 | `wyd-portal` | 12 | planejado: dashboard, `lacunas.md`, plano de armaria e mercado e 8 páginas em `docs/` (11 de planejamento + o prompt); **33 `RF-POR`**, 10 `RNF-POR`, **0 lacunas abertas, 0 propostas e 9 fechadas** (`LAC-POR-09` fechou em 2026-11-23) | `wyd-portal/`; `lacunas.md` §1, 2026-11-23 |
@@ -98,7 +98,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | `crates/*` | 10 pastas; 3 com comportamento e 7 com esqueleto desde 2026-11-26, nenhuma só `.gitkeep` | `find crates` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
-| CI | 7 workflows (2026-11-26): `code` (fmt/clippy/unitários em matriz + cobertura informativa + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
+| CI | 7 workflows (2026-11-26): `code` (fmt e `clippy`+`unit` em matriz por crate + cobertura com piso bloqueante no launcher + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `gate/checks/links.py` e `gate/checks/contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos e 567 MB em `wyd-client/files/`, ignorado; `WYD.exe` com hash medido | `wyd-client/registro-do-cliente.md`, 2026-11-22 |
@@ -375,13 +375,13 @@ esta seção** — §7.5 cita, não repete.
 | `wyd-core` | 4 | 0 | 0 | 4 | 0 | idem |
 | `wyd-sim` | 4 | 0 | 0 | 4 | 0 | idem |
 | `wyd-server` | 5 | 0 | 0 | 5 | 0 | idem |
-| `wyd-db` | 38 | 0 | 0 | 35 | 3 | idem |
+| `wyd-db` | 39 | 0 | 0 | 36 | 3 | idem |
 | `wyd-admin` | 7 | 0 | 0 | 7 | 0 | `lacunas.md` (Fechadas; 7 `LAC-ADM` + 2 decisões sem ID) |
 | `wyd-portal` | 9 | 0 | 0 | 9 | 0 | `lacunas.md` §1 |
 | `wyd-launcher` | 4 | 0 | 0 | 4 | 0 | `lacunas.md` §1 |
 | `wyd-bots` | 4 | 1 | 0 | 3 | 0 | idem |
 | `wyd-docs` | 14 | 0 | 0 | 14 | 0 | idem |
-| **Total** | **120** | **8** | **0** | **109** | **3** | `*/lacunas.md` |
+| **Total** | **121** | **8** | **0** | **110** | **3** | `*/lacunas.md` |
 
 `LAC-POR-09` = A foi o delta `0 abertas / −1 proposta / +1 fechada`; `Q-NET-1` = A não alterou as
 contagens, e a execução de `LCLI-02` em 2026-11-25 fechou a linha com `0 abertas / −1 proposta /
@@ -755,7 +755,7 @@ arquivo.
 | `wyd-net` | buffer por conexão, classificação de erro e limites | codec falso + porta falsa | duas conexões sem vazamento de estado; flood contido | `bots` conectando | 0 testes; política de limites decidida (`Q-NET-1` = A), valores e código pendentes |
 | `wyd-core` | regra isolada com semente fixa | repositório falso, sem banco | tick completo determinístico | `bots` em fluxo | 0 testes |
 | `wyd-sim` | vetor de entrada e saída por fórmula | — | — | — | 0 vetores; versão decidida em `LSIM-02` e formato/local em `LSIM-03`, fixtures não implementadas |
-| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 20 testes de sistema verdes (13 `sistema_pg` + 7 `runner_pg`, 2026-11-27); `tests/` escrito (13 páginas, matriz `CAP-nn`), 14 de 39 capacidades cobertas |
+| `wyd-db` | função de migration, provision | Postgres real, não mock | aplicar do zero e reverter | `admin`/`portal` contra banco migrado | 20 testes de sistema verdes (13 `sistema_pg` + 7 `runner_pg`, 2026-11-27) e 9 de contrato sem banco (`contrato_migrations`); `tests/` escrito (13 páginas, matriz `CAP-nn`), **20 de 39** capacidades cobertas (2026-11-27) |
 | `wyd-server` | configuração e ciclo de vida | HTTP do controle: `200` com ack, `503` sem escrita | dois canais isolados | `bots` por canal | 0 testes |
 | `wyd-admin` | regra de custódia e permissão | HTTP de C4, 14 rotas | fluxo de staff | Playwright (obrigatório, `AGENTS.md` §8) | 0 testes |
 | `wyd-portal` | cálculo de preço e filtro | HTTP e leitura por view | fluxo de armaria e mercado | Playwright (obrigatório) | 0 testes |

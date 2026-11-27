@@ -585,6 +585,24 @@ def _checar_arquivo(
     return problemas, ok
 
 
+class Medidas(NamedTuple):
+    """O que a série conta, pelo contrato público: `hoje` compara sem copiar número."""
+
+    arquivos: int
+    tabelas: int
+    fontes: int
+    paginas_site: int
+
+
+def medidas(ws: Workspace) -> Medidas:
+    global _WS
+    _WS = ws
+    raiz = ws.root
+    arquivos, tabelas = medir_checklist(raiz)
+    censo, _ = medir_censo(raiz)
+    return Medidas(arquivos, tabelas, censo["fontes"], medir_paginas_site(raiz))
+
+
 def run(ws: Workspace) -> CheckResult:
     global _WS
     _WS = ws

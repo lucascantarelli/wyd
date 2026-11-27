@@ -18,7 +18,7 @@ os itens marcados `P` são critério para quando o alvo existir, não verde atua
 | 1 | escopo e issue | o PR diz qual issue/fase fecha e não mistura refatoração | muda arquivo fora do escopo ou não tem DoD |
 | 2 | formatação | `cargo fmt --check` (`P`) | diff de formato no PR |
 | 3 | lint | `cargo clippy --all-targets -- -D warnings` (`P`) | warning novo ou supressão sem justificativa |
-| 4 | teste | `cargo test -p wyd-db` (`P`) | teste falha, `#[ignore]` novo ou `SKIP` silencioso |
+| 4 | teste | `make test` (`P`): a `lib` e os dois contratos de API, sem banco | teste falha, `#[ignore]` novo ou `SKIP` silencioso |
 | 5 | contrato e sistema | os alvos de [`testes-de-contrato`](../guia-teste/testes-de-contrato.md) e de sistema (`P`) | invariante sem prova ou ciclo `up/down/up` sujo |
 | 6 | catálogo | regenerar o catálogo e conferir a contagem (`P`) | documento e série divergem |
 | 7 | página de migration | os dez itens de `migrations-checklist.md` §5 | falta `down`, coluna, invariante ou prova de execução |

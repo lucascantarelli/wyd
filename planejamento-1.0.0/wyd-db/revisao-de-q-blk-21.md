@@ -106,7 +106,8 @@ os **16** cenários sem prova.
 - **Efeito:** as 12 passaram a `**Estado:** aceito (2026-11-24)`; `tests/` tem **12 `aceito`** e **0
   `proposto`**. O sistema tinha **15** páginas `aceito` naquele momento (2 ADRs + `migrations/0002` + as 12).
 - **Censo:** os atos de aceite pendentes caíram em **12** (as 12 páginas de `tests/` saíram da fila) e o
-  valor vigente naquele momento era **205** (hoje **168**, após o aceite das 37 de `src/`): 141 `docs/` + 37 `src/` + 27 `migrations/` + **0** `tests/`. As **23** capacidades continuam **0 cobertas** — aceite de página não
+  valor vigente naquele momento era **205** (**168** em 2026-11-24, após o aceite das 37 de `src/`; hoje
+  **138**, `pendencias-de-fechamento.md` §6.6.22.1): 141 `docs/` + 37 `src/` + 27 `migrations/` + **0** `tests/`. As **23** capacidades continuam **0 cobertas** — aceite de página não
   cobre capacidade.
 - **O que a assinatura não fez:** nenhum `.rs` nasceu, nenhum teste rodou, `Q-BLK-18` e `Q-BLK-20` seguem
   abertas e nenhuma página fora de `tests/` mudou de estado.

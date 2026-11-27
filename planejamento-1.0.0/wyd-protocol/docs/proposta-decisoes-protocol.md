@@ -101,4 +101,3 @@ nas capturas B/C.
 | Pergunta | Lacuna | Resposta |
 |---|---|---|
 | `Q-PRT-1` | `LPRT-09` | A — build-alvo 7662 com versão e SHA-256 completos; outro build não suportado |
-

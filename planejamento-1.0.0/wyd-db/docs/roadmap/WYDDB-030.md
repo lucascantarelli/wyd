@@ -45,9 +45,9 @@ https://github.com/lucascantarelli/wyd/actions/runs/45911198818, commit
 `gate-db`, `gate-code` e `gate-docs` fecharam verdes no mesmo commit.
 
 `V` **(execução local, mesmo dia):** mesmo comando com `WYD_DB_TEST_URL` do papel `wyd_migrator` em
-`postgres:17` descartável, TCP em `127.0.0.1`: **7 passed; 0 failed; 0 ignored** (33,43 s; log
-`/tmp/wyd-runner-pg-wyddb030.log`). O local e o CI usam a mesma DSN e o mesmo papel; o CI é a prova
-registrada na issue.
+`postgres:17` descartável, TCP em `127.0.0.1`: **7 passed; 0 failed; 0 ignored** (33,43 s na execução
+local; a prova que fica registrada é o job `140219739708` do CI). O local e o CI usam a mesma DSN e o
+mesmo papel; o CI é a prova registrada na issue.
 
 | Critério | Cenário que prova | Resultado medido |
 |---|---|---|

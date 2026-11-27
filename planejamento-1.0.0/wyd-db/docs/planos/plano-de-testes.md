@@ -35,14 +35,14 @@ verde.
 | `sistema_stack_caps` | a matriz de capacidades e o anti-skip | sim | `tests/specs/capacidades.md` |
 
 Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; o `Cargo.toml` já declara `sistema_pg`, `reversibilidade_pg`,
-`runner_pg` e os dois contratos de API — dos cinco da tabela, só `sistema_pg` tem alvo implementado
-(2026-11-27). A coluna “precisa de banco” separa o que pode rodar sem PostgreSQL do que exige um banco
-descartável.
+`runner_pg`, `contrato_migrations` e os dois contratos de API — dos cinco da tabela, `sistema_pg` e
+`contrato_migrations` têm alvo implementado (2026-11-27). A coluna “precisa de banco” separa o que pode
+rodar sem PostgreSQL do que exige um banco descartável.
 
 ## 3. Matriz capacidade × alvo
 
 A matriz `CAP-nn → alvo → cenário → requisito` existe em `tests/specs/capacidades.md`, fora do site por
-não ser publicada: **39** capacidades, **7** alvos, **14** cobertas por teste executado. Ela não é copiada
+não ser publicada: **39** capacidades, **7** alvos, **20** cobertas por teste executado. Ela não é copiada
 nem substituída por uma tabela paralela aqui — esta página é dona da **estratégia**, a matriz é dona da
 **capacidade**. Cada capacidade nova entra na matriz e ganha alvo antes de o teste ser aceito. A regra de
 cobertura continua a de [`../guia-teste/gates-e-anti-skip.md`](../guia-teste/gates-e-anti-skip.md):
@@ -64,7 +64,8 @@ está em `src/provision/spec.md` §3, e o guia não a duplica.
 
 ## 5. Critério de saída da `1.0.0`
 
-1. `contrato_migrations` e `contrato_catalogo` passam na série viva.
+1. `contrato_migrations` **e** `contrato_catalogo` passam na série viva — hoje só o primeiro roda, e
+   `CAP-01` reprova na série viva com seis furos (`tests/alvos/contrato-migrations.md` §1).
 2. `sistema_pg` prova aplicar, reaplicar, detectar drift e desfazer até zero.
 3. `sistema_sessoes` prova a fronteira de escrita e a leitura por view.
 4. Nenhum `SKIP`, `#[ignore]` novo ou filtro silencioso no caminho de aceite.
@@ -86,7 +87,7 @@ plano **não** mede é cobertura por linha, tempo de execução ou custo por alv
 
 ## CI, cobertura e monitoramento
 
-- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --all -- --check`, `cargo clippy -p wyd-db --all-targets -- -D warnings`, `cargo test -p wyd-db --all-targets` e `cargo deny check`; o PR para `develop` e `main` só passa com os quatro verdes.
+- **CI:** o job `code` de `.github/workflows/code.yml` roda `cargo fmt --manifest-path crates/wyd-db/Cargo.toml -- --check`, `cargo clippy --manifest-path crates/wyd-db/Cargo.toml --all-targets -- -D warnings` e `cargo test --manifest-path crates/wyd-db/Cargo.toml --lib --test contrato_migrations --test contrato_api_migrate --test contrato_api_provision`; os três alvos PostgreSQL são do `ci-db.yml` e o `cargo deny check` é do `security.yml`. O PR para `develop` e `main` só passa com os gates verdes.
 - **Cobertura:** `cargo llvm-cov -p wyd-db --fail-under-lines 85` é o piso; a cobertura de linha não substitui os comportamentos listados acima e `#[ignore]` exige issue dona e prazo.
 - **Monitoramento:** Pool em uso, latência por consulta, conexões esperando, locks, tamanho e crescimento por tabela, além do ledger de migrations. Log sem DSN, SQL de jogador ou payload; alerta de pool esgotado e migration divergente.
 - **Critério verificável:** o comando de teste e o gate de documentação exit 0; nenhuma falha é mascarada por `| tail`, `--no-fail-fast` ou `SKIP` silencioso.

@@ -2,16 +2,16 @@
 > Público: QA / testador
 > Dono: equipe do `wyd-db`
 > Base: `../../docs/guia-teste/testes-de-contrato.md`; `../specs/capacidades.md` §2–§3; `../../src/migrate/spec.md` §2
-> Revisado em: 2026-11-24
+> Revisado em: 2026-11-27
 
-**Estado:** aceito (2026-11-24) — regras escritas; nenhum dos **dois alvos desta página** implementado
-(`contrato_migrations` e `contrato_catalogo`); os contratos de API `contrato_api_migrate` e
+**Estado:** aceito (2026-11-24), atualizado em 2026-11-27 — `contrato_migrations` implementado e verde
+(9 testes, sem banco); `contrato_catalogo` segue sem código. Os contratos de API `contrato_api_migrate` e
 `contrato_api_provision` estão em `crates/wyd-db/Cargo.toml` desde 2026-11-26.
 
 **Quatro níveis de afirmação convivem aqui:**
 
-- **`P`** — tudo o que a página diz sobre a suíte: as 8 regras valem para dois alvos que ainda não existem
-  em `crates/wyd-db/Cargo.toml`.
+- **`P`** — tudo o que a página diz sobre a suíte: as 8 regras valem para dois alvos, e só
+  `contrato_migrations` existe; `contrato_catalogo` não tem código.
 - **`H`** — dúvida aberta, dita e localizada em §4, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o arquivo ao lado.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
@@ -23,13 +23,14 @@ fixa o que **a suíte** não pode violar, e cada regra diz como a violação apa
 **Alvos escritos onde roda:** `contrato_migrations` (`CAP-01`–`CAP-07`) e `contrato_catalogo`
 (`CAP-08`), os dois sem banco ([../index.md](../index.md) §2).
 
+Cada regra abaixo é conferida no código de `crates/wyd-db/tests/contrato/contrato_migrations.rs`.
+
 ## 1. As regras
-**Sem arquivo no repositório:** `serie.rs` — caminho planejado (ou nome do legado citado como referência); nenhum desses arquivos está versionado hoje.
 
 | # | Regra | Violação aparece como |
 |---|---|---|
 | 1 | **não abre conexão** — nem para "conferir rápido" | o alvo roda sem banco; conexão é sinal de que o teste é de sistema |
-| 2 | **usa o mesmo parser do runner** (`serie.rs`), nunca um segundo | contrato e runner discordando sobre o mesmo arquivo |
+| 2 | **usa o mesmo parser do runner** (`wyd_db::migrate::migration::file::parse`), nunca um segundo | contrato e runner discordando sobre o mesmo arquivo |
 | 3 | **lê a série como texto**, arquivo por arquivo, na ordem do número | ordem dependente do sistema de arquivos |
 | 4 | **o caso que passa e o que falha rodam juntos**: série real + fixture com um defeito | fixture ruim passando = invariante não coberto |
 | 5 | **um defeito por fixture** | falha que não diz qual invariante quebrou |
