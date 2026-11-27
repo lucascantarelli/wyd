@@ -14,7 +14,8 @@ Não use para uma issue isolada: ela já cabe em `execution/implementar-issue`.
 
 ## Pré-requisitos
 
-- `roadmap/` e `fases.md` lidos (ordem, risco e regra de fatiamento são deles).
+- `planejamento-1.0.0/wyd-db/docs/roadmap/` e `docs/roadmap/fases.md` lidos (ordem, risco e regra de
+  fatiamento são deles).
 - Lista do que já existe: `ls` no diretório real, não a lembrança.
 
 ## Passos

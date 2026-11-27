@@ -14,16 +14,17 @@ Não use para semear conteúdo de release: isso é seed da série, com dado medi
 
 ## Pré-requisitos
 
-- `docs/guia-teste/` e `tests/dados-de-teste.md` (dono das fixtures).
-- PostgreSQL 17 de teste (`make db-up`) e `cargo test -p wyd-db` rodando.
+- `planejamento-1.0.0/wyd-db/docs/guia-teste/` e
+  `planejamento-1.0.0/wyd-db/tests/dados-de-teste.md` (dono das fixtures).
+- PostgreSQL 17 de teste (`make db-up`) e a série aplicada (`provar-schema`, passo 1).
 
 ## Passos
 
-1. **Use a factory existente.** Conta/personagem nascem de função com nome de teste, não de `INSERT`
-   com id fixo.
+1. **Use a factory existente** em `crates/wyd-db/tests/comum/`: conta/personagem nascem de função com
+   nome de teste, não de `INSERT` com id fixo.
 2. **Id só vem da factory** (sequência ou `RETURNING`); número literal em teste é proibido.
-3. **Cada teste cria o que usa e limpa o que criou** — transação com rollback ou `TRUNCATE` do schema
-   de conteúdo no início, nunca ordem implícita entre testes.
+3. **Cada teste cria o que usa e limpa o que criou** — transação com rollback ou limpeza explícita no
+   início, nunca ordem implícita entre testes.
 4. **Sem `sleep`.** Sincronize por estado observável (linha existe, revisão mudou), não por tempo.
 5. **Sem estado global mutável** entre testes: nada de singleton, `lazy_static` compartilhado ou
    variável de ambiente alterada no meio.
@@ -33,11 +34,14 @@ Não use para semear conteúdo de release: isso é seed da série, com dado medi
 ## Como verificar
 
 ```bash
-cargo test -p wyd-db -- --test-threads=1   # precisa passar igual
-cargo test -p wyd-db                       # e em paralelo
+# sem psql no host: o harness usa `docker exec` do container do `make db-up`
+WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) \
+WYD_DB_TEST_USER=postgres WYD_DB_TEST_DB=wyd \
+  cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
 ```
 
-Os dois modos verdes provam que não há dependência de ordem.
+Repita trocando `--test-threads=1` por `--test-threads=4`: os dois modos têm de passar, o que prova
+que não há dependência de ordem.
 
 ## Quando parar e perguntar
 

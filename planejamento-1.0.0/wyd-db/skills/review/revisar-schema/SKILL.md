@@ -14,9 +14,11 @@ Não use para revisar texto de planejamento: isso é `review/revisar-documentaca
 
 ## Pré-requisitos
 
-- `docs/arquitetura/padroes-postgres.md` (critério de tipo, índice e armadilha).
-- `docs/arquitetura/integridade-e-constraints.md` (política de FK, CHECK e unicidade).
-- O bloco `ddl-confirmado.md` §5.x do arquivo em revisão.
+- `planejamento-1.0.0/wyd-db/docs/arquitetura/padroes-postgres.md` (critério de tipo, índice e
+  armadilha).
+- `planejamento-1.0.0/wyd-db/docs/arquitetura/integridade-e-constraints.md` (política de FK, CHECK e
+  unicidade).
+- O bloco `planejamento-1.0.0/wyd-db/ddl-confirmado.md` §5.x do arquivo em revisão.
 
 ## Passos
 
