@@ -35,7 +35,7 @@ planejar antes de codar — e o `deprecated/` é o contraexemplo que ela evita.
 | série de `.sql` em `crates/wyd-db/migrations/`, aplicada do zero num PG17 em 2026-11-24 (contagem no panorama §1) | os seeds, bloqueados por curadoria de dado |
 | plano do `wyd-protocol` com lacunas e teto de páginas registrados | goldens de fio e payloads implementados |
 | planos do `wyd-admin` e do `wyd-portal` e propostas do `wyd-ops` | código de admin, portal e ops |
-| `docs.yml` faz build/verificação e publica Pages em `develop`; `code.yml` roda fmt, clippy, testes e cobertura (`wyd-launcher` bloqueante no piso de 85%, `wyd-db` informativa); `security.yml` roda audit/deny, dependency-review e actionlint; `code-stable.yml` é sinal diário não bloqueante | empacotamento NSIS do launcher |
+| `docs.yml` faz build/verificação e publica Pages em `develop`; `code.yml` roda fmt, clippy, testes e cobertura (`wyd-launcher` bloqueante no piso de 85%, `wyd-db` informativa); `security.yml` roda audit/deny, npm audit do portal, política de pin, dependency-review e actionlint; `code-stable.yml` é sinal diário não bloqueante | empacotamento NSIS do launcher |
 
 Números medidos em **2026-11-24** vivem em [`planejamento-1.0.0/wyd-1.0.0.md`](planejamento-1.0.0/wyd-1.0.0.md) §1,
 com comando e data. Este README não replica contagem: aponta o dono.

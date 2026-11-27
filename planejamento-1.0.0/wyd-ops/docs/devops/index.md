@@ -4,9 +4,9 @@
 > Público: Desenvolvimento, operação, arquitetura e agentes
 > Dono: `wyd-ops`
 > Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0012`
-> Revisado em: 2026-11-26
+> Revisado em: 2026-11-27
 
-**Estado:** aceito (2026-11-26) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
+**Estado:** aceito (2026-11-26; política de dependências e de pin medida em 2026-11-27) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
 
 ## 1. O que está no ar
 
@@ -16,7 +16,7 @@
 | `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar falha` | `gate-db` |
 | `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar falha` | `gate-docs` |
 | `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
-| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar falha` | `gate-security` |
+| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos` (action por SHA, imagem por digest), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar falha` | `gate-security` |
 | `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
 | `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
 | `release.yml` | tag `v*` | assina e publica manifesto | não |
@@ -40,7 +40,7 @@ Um check obrigatório filtrado por caminho fica em **Expected** em PR que não t
 - **`gate-code`**: formatação, lint `-D warnings`, testes unitários dos três crates e os contratos públicos de `migrate`/`provision` (`wyd-db --test contrato_api_migrate --test contrato_api_provision`); os três crates são portáveis — o núcleo do `wyd-launcher` é Rust puro, sem Tauri nem `cfg(windows)` —, e só o empacotamento NSIS futuro do launcher exigirá `windows-latest`. Cobertura é informativa em `wyd-db` (`D-02 = B`) e, desde 2026-11-27, bloqueante em `wyd-launcher` pelo piso de linha do plano do próprio crate; cada crate sobe `coverage-summary.txt` + `lcov.info` por 7 dias.
 - **`gate-db`**: os três alvos PostgreSQL. `schema` aplica a série e roda `sistema_pg`; `reversibility` prova `up → down → up`; `runner` prova a porta `PgAdapter` e o advisory lock com `wyd_migrator` LOGIN.
 - **`gate-docs`**: `wyd-docs/gate.sh` — roda primeiro os testes unitários dos verificadores e depois o pacote `python -m gate` (skills, evidência de lacunas, montagem, build MkDocs, links/âncoras/navegação, contagens e censos). A saída é um resumo por domínio; `--json` é o contrato do agente (ADR-OPS-0010).
-- **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; em PR, `dependency-review` falha em severidade `high`; `workflow-lint` roda actionlint 1.7.12 em imagem por digest.
+- **`gate-security`**: `cargo audit` e `cargo deny` em cada crate; `npm audit --omit=dev --audit-level=high` no lockfile do `wyd-portal` (o audit completo roda informativo); `pinos` roda `wyd-ops/scripts/ci/check-pins.sh` — action sem SHA de 40 hex ou imagem de terceiro sem `@sha256:` reprova; em PR, `dependency-review` falha em severidade `high`; `workflow-lint` roda actionlint 1.7.12 em imagem por digest.
 - CodeQL continua em **default setup** do GitHub (actions, JS/TS, Python, Rust); não há workflow CodeQL duplicado.
 
 ## 3. Como rodar local
@@ -118,6 +118,7 @@ No CI, `wyd-ops/scripts/ci/db-prepare.sh` cria os papéis e `wyd-ops/scripts/ci/
 | `wyd-docs/preparar.py` | Python | monta `.build/docs` e a navegação | árvore do repositório |
 | `wyd-ops/scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
 | `wyd-ops/scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
+| `wyd-ops/scripts/ci/check-pins.sh` | bash | política de pin: action por SHA de 40 hex, imagem de terceiro por digest | raiz; exit 0/1 |
 | `wyd-ops/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
 | `wyd-ops/tests/unitario/sync-issue-status.test.mjs` | Node | regras da transição de estado | `node --test wyd-ops/tests/unitario/` |
 
@@ -138,11 +139,38 @@ Não há `sccache`, registry pago, runner self-hosted nem action de cobertura pa
 ## 5. Segurança
 
 - Toda action é pinada por SHA; `sha_pinning_required=true` e `allowed_actions=selected` estão aplicados no repositório. A allowlist cobre GitHub, `Swatinem/rust-cache`, `taiki-e/install-action`, `dtolnay/rust-toolchain` e `docker/*`.
-- Dependabot semanal cobre `github-actions`, `cargo` (três crates), `pip`, `docker` (Dockerfile do site) e `docker-compose`; sem ele, o SHA congela o runtime (foi a causa do warning de Node 20).
+- Dependabot semanal cobre `github-actions`, `cargo` (três crates), `npm` (`/wyd-portal`), `pip`, `docker` (Dockerfile do site) e `docker-compose`; sem ele, o SHA congela o runtime (foi a causa do warning de Node 20).
+- Imagem de terceiro entra por tag **e** digest em Dockerfile, Compose e workflow; `check-pins.sh` reprova tag móvel. As imagens do próprio repositório (`wyd/*` e `ghcr.io/<dono>/wyd-docs`) ficam fora: a tag delas é contrato de publicação.
 - `GITHUB_TOKEN` começa em `contents: read`; `pages: write`, `packages: write` e `pull-requests: write` são concedidos só no job que precisa.
 - `checkout` usa `persist-credentials: false` onde o job não publica.
 - `SLACK_CI_WEBHOOK` é o secret opcional; os workflows o expõem como `SLACK_WEBHOOK_URL` para a action. Sem ele, o step de aviso é ignorado e o gate continua valendo.
 - Nenhum segredo é impresso; `WYD_LAUNCHER_SIGNING_KEY` continua restrito ao `release.yml`.
+
+### 5.1 Política de dependências e retenções (2026-11-27)
+
+Medição de 2026-11-27: API pública do crates.io para os crates, `npm view` e `npm audit` para o
+portal, `docker buildx imagetools inspect` para as bases e `rustup check` para a toolchain (que
+estava em 1.100.0 e tinha 1.100.1 disponível). A regra é subir só o que cabe no mesmo major; major
+com breaking fica retido, com o motivo escrito aqui e o caminho de saída.
+
+| Dependência | Declarado | Última stable | Decisão |
+|---|---|---|---|
+| toolchain Rust | 1.100.0 | 1.100.1 | **atualizada** (patch) |
+| `sha2` (`wyd-db`) | 0.11.1 | 0.11.2 | **atualizada** |
+| `regex` (`wyd-launcher`, dev) | 1.13.1 | 1.13.2 | **atualizada** |
+| `sqlx` (`wyd-db`) | 0.8.6 | 0.9.1 | retida: `0.9` é breaking e o adapter é a única fronteira com o banco; a troca exige re-provar a série e os três alvos PostgreSQL, então vai em issue própria |
+| `ed25519-dalek` (launcher e signer) | 2.2.0 | 3.0.0 | retida: `3.0` muda a API de assinatura e obriga a re-provar as fixtures byte-exatas e o manifesto assinado |
+| `sha2` (`wyd-launcher`) | 0.10.9 | 0.11.2 | retida: `0.11` quebra a API de digest usada no hash de integridade; sobe junto com a re-prova das fixtures |
+| `thiserror`, `tokio`, `tempfile`, `serde`, `serde_json` | — | iguais | nada a fazer |
+| `next`, `react`, `react-dom` (`wyd-portal`) | 16.4.6 / 19.3.1 | iguais | nada a fazer; `npm audit` = 0 vulnerabilidades |
+| `mkdocs` (`wyd-docs`) | 2.0.dev6 | pré-release | retido: o site é construído no 2.0 dev; Dependabot pip acompanha |
+| `postgres:17` | digest anterior | digest atual | **atualizado** (patch 17.x); provado nos alvos `pg/*` |
+| `python:3.15-slim` | digest anterior | digest atual | **atualizado**; provado pelo `make gate` completo |
+| `rust:1.100-slim-bookworm` | tag | digest | **pinado por digest**; a tag `1.100` acompanha a toolchain |
+| `debian:bookworm-slim` | tag | digest | **pinado por digest** |
+| `node:22-alpine` | tag | digest | **pinado por digest**; runtime do portal |
+
+Cada retenção tem motivo e saída declarados; nenhuma sobe só porque existe versão mais nova.
 
 ## 6. Regras de branch
 
@@ -180,7 +208,7 @@ estão em `github-mapping.md` §2.2 e `ADR-OPS-0009`; a regressão unitária rod
 |---|---|---|
 | **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM, tags por branch e rollback por SHA **feitos**; runtime nginx unprivileged pendente | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
 | **F3 — deploy** | contrato sobre Compose; workflow manual com `environment`; OIDC; smoke e rollback; **provedor de VPS a definir** | nenhum segredo de longa duração; deploy não roda sem alvo |
-| **F4 — observabilidade** | métricas de duração/fila/falha; relatório semanal; sentinelas de advisory e imagem | falha notifica em menos de 1 min; relatório semanal publicado |
+| **F4 — observabilidade** | métricas de duração/fila/falha; relatório semanal; sentinela de advisory **feita em 2026-11-27** (`security.yml` semanal com `notificar falha`); sentinela de imagem pendente | falha notifica em menos de 1 min; relatório semanal publicado |
 | **F5 — governança** | ruleset, allowlist e ADR-OPS-0012 **feitos**; CODEOWNERS, onboarding e revisão de ADRs pendentes | PR vermelho não mergeia; action fora da allowlist falha |
 
 F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do fornecedor de VPS, não de código.
