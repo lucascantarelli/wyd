@@ -17,7 +17,7 @@ inventa cobertura.
 | Sinal | Por que reprova | Correção |
 |---|---|---|
 | `#[ignore]` novo no caminho de aceite | o teste existe, mas não roda | remover o ignore ou justificar em issue separada, fora do aceite |
-| `SKIP`/`skip!` por env ausente | ausência de ambiente vira verde falso | falhar nomeando a variável (`WYD_DB_URL_TEST`) |
+| `SKIP`/`skip!` por env ausente | ausência de ambiente vira verde falso | falhar nomeando a variável (`WYD_DB_TEST_URL`) |
 | filtro que exclui o alvo | a suíte parece verde sem o cenário | rodar o alvo completo no aceite |
 | teste que só verifica `is_ok()` | não prova efeito nem erro esperado | verificar estado, código e mensagem |
 | golden gerado na hora | compara o código com ele mesmo | golden versionado e revisado |
@@ -32,7 +32,7 @@ O gate automático ainda não foi implementado. O desenho mínimo é:
 
 1. procurar `#[ignore]`, `SKIP`, `skip!` e retorno silencioso por ambiente nos alvos de aceite;
 2. rodar os alvos de contrato sem banco e falhar se algum for pulado;
-3. rodar os alvos de sistema com `WYD_DB_URL_TEST` e exigir que a variável exista;
+3. rodar os alvos de sistema com `WYD_DB_TEST_URL` e exigir que a variável exista;
 4. comparar a lista de alvos do `Cargo.toml` com a lista do plano de testes;
 5. falhar se uma capacidade `CAP-nn` não tiver alvo/cenário.
 

@@ -24,7 +24,7 @@ fica como se roda a camada de sistema.
 
 ## DSN de teste
 
-`WYD_DB_URL_TEST` conecta como `wyd_migrator` num banco descartável (`src/provision/spec.md` §3);
+`WYD_DB_TEST_URL` conecta como `wyd_migrator` num banco descartável (`src/provision/spec.md` §3);
 ausente, o teste falha nomeando a variável — nunca passa em silêncio. Ela não é lida por `spec.rs`
 nem por binário de produção: só pela suíte.
 

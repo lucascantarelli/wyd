@@ -40,7 +40,8 @@ código que produziu o valor (golden gerado na hora) também não prova nada.
 
 ## 3. Fixture e factory
 
-A suíte ainda não tem `tests/common/`, factories ou fixtures publicadas. O desenho mínimo é:
+A suíte tem o harness em `tests/comum/mod.rs` (não em `tests/common/`) e as fixtures de série em
+`tests/resources/`, mas nenhuma factory publicada. O desenho mínimo é:
 
 - **factory por agregado:** cria a linha mínima e devolve o identificador;
 - **fixture de conteúdo:** um catálogo pequeno, explícito, com versão própria;
@@ -48,7 +49,8 @@ A suíte ainda não tem `tests/common/`, factories ou fixtures publicadas. O des
 - **dado sensível:** fictício, sem PII real e sem segredo;
 - **concorrência:** duas conexões reais, sem `sleep` para “dar tempo”.
 
-Enquanto a suíte não existir, a issue de teste declara a dependência; não se cria fixture na página.
+Factory nasce com o primeiro teste que a exigir; a issue de teste declara a dependência e a página não
+inventa fixture.
 
 ## 4. Estrutura de um teste de contrato
 
@@ -59,12 +61,12 @@ then:  falha com o código e o arquivo esperados; a mensagem não é genérica
 ```
 
 O alvo de contrato lê a série como texto e não abre conexão. O teste de sistema usa
-`WYD_DB_URL_TEST`; se a variável falta, falha nomeando-a. O `#[ignore]` novo é reprovação, não
+`WYD_DB_TEST_URL`; se a variável falta, falha nomeando-a. O `#[ignore]` novo é reprovação, não
 solução.
 
 ## 5. O que esta página não cobre
 
-- **Lista de cenários por alvo:** é de `tests/alvos/` e ainda não existe.
+- **Lista de cenários por alvo:** é de `tests/alvos/`, com seis páginas desde 2026-11-27.
 - **Cobertura percentual:** a regra é por capacidade, não por linha.
 - **Tempo esperado e paralelismo:** não medidos; a página de sistema declara o limite quando houver.
 - **Dado de produção:** nunca entra em fixture; o catálogo de contas de teste depende de `M19`.

@@ -46,7 +46,7 @@ distintos, e juntá-los faria o teste atribuir ao staff uma ação que só `admi
 | 4 | conferir a contagem declarada no próprio seed | contagem igual à do arquivo |
 | 5 | rodar a suíte | alvos verdes; hoje os alvos são `P` |
 
-A DSN de provisionamento é `WYD_DB_URL_TEST` (`wyd_migrator`, banco descartável —
+A DSN de provisionamento é `WYD_DB_TEST_URL` (`wyd_migrator`, banco descartável —
 [`testes-de-sistema.md`](testes-de-sistema.md), seção “DSN de teste”). Recriar o banco entre execuções é o padrão, não a
 exceção.
 

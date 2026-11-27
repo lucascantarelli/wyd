@@ -25,7 +25,7 @@
 
 O alvo de sistema: **27** capacidades que só existem contra PostgreSQL 17 real — transação, `CHECK`,
 índice único parcial, FK, concorrência, ledger, pool, a série e as três medições de `RNF-DB-002`, `004` e `005`. Sem banco, ele **falha** nomeando
-`WYD_DB_URL_TEST`; nunca passa em silêncio.
+`WYD_DB_TEST_URL`; nunca passa em silêncio.
 
 ## 1. Capacidades cobertas
 
@@ -128,7 +128,7 @@ não limiar.
 |---|---|
 | PostgreSQL | **17**, mesma major da imagem de produção (`../../docs/guia-administrador/instalacao.md` §1) |
 | preparo | banco vazio → `provision` → série; nunca banco "já quente" |
-| DSN | `WYD_DB_URL_TEST` (papel `wyd_migrator`); ausente, falha nomeando a variável |
+| DSN | `WYD_DB_TEST_URL` (papel `wyd_migrator`); ausente, falha nomeando a variável |
 | paralelismo | uma base por binário; dentro do binário, chave própria por teste |
 | limpeza | o banco morre com a execução |
 

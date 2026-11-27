@@ -22,7 +22,7 @@ em runtime sem ninguém notar (`src/provision/spec.md` §3). Esta página lista 
 | `WYD_DB_URL_PORTAL` | DSN do papel `wyd_portal` | nenhum | sim, para o portal/BFF | portal |
 | `WYD_DB_URL_ADMIN` | DSN do papel `wyd_admin` (decisão `M27`) | nenhum | sim, quando o `wyd-admin` roda | serviço `wyd-admin` |
 | `WYD_DB_URL_READ` | DSN do papel `wyd_read` | nenhum | sim, para leitura operacional | operação/BI |
-| `WYD_DB_URL_TEST` | DSN do `wyd_migrator` em banco descartável | nenhum | sim, para a suíte de sistema | suíte de teste |
+| `WYD_DB_TEST_URL` | DSN do `wyd_migrator` em banco descartável | nenhum | sim, para a suíte de sistema | suíte de teste |
 
 > [!WARNING] A DSN do `wyd_admin` ainda não está na tabela do contrato
 > A decisão `M27` (2026-11-21) criou o papel `wyd_admin` com DSN própria, `WYD_DB_URL_ADMIN`,
@@ -109,5 +109,5 @@ não mudam por ambiente.
 - **A linha `WYD_DB_URL_ADMIN` no contrato:** está na decisão `M27`, não na tabela de §3; a
   divergência está declarada acima e não é corrigida por esta página.
 - **Instalação e ordem:** são de [`plano-de-implantacao.md`](../planos/plano-de-implantacao.md).
-- **Prova de conexão:** `WYD_DB_URL_TEST` e o roteiro de teste são de
+- **Prova de conexão:** `WYD_DB_TEST_URL` e o roteiro de teste são de
   [`testes-de-sistema.md`](../guia-teste/testes-de-sistema.md).

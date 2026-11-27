@@ -30,7 +30,7 @@ abrem conexão.
 | `qa_staff` | `moderator` | `WYD_DB_URL_ADMIN` | bloqueio com motivo, autor e instante (`CAP-20`) | `factory::pessoa` |
 | `qa_admin` | `admin` | `WYD_DB_URL_ADMIN` | concessão e papel de jogo, quando o alvo precisar | `factory::pessoa` |
 | `qa_leitura` | — (não é pessoa do jogo) | `WYD_DB_URL_READ` | leitura operacional e recusa de escrita | papel do provisionamento |
-| `qa_migrator` | — | `WYD_DB_URL_TEST` | aplicação da série no banco descartável | provisionamento |
+| `qa_migrator` | — | `WYD_DB_TEST_URL` | aplicação da série no banco descartável | provisionamento |
 
 As três primeiras são **pessoas** e têm `person.role`; as duas últimas são **papéis de banco** e não têm
 linha em `portal.person`. Quem entra sem credencial própria é o jogador de jogo

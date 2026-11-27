@@ -56,7 +56,9 @@ duração.
 
 ## 5. O que esta página não cobre
 
-- **Cenários de cada alvo:** pertencem a `tests/alvos/`, que ainda não existe.
-- **Fixtures e factories:** dependem do desenho da suíte; a página está bloqueada.
-- **Matriz de capacidades:** não existe; ver [`gates-e-anti-skip.md`](gates-e-anti-skip.md).
+- **Cenários de cada alvo:** são de `tests/alvos/`, com seis páginas de alvo desde 2026-11-27.
+- **Fixtures e factories:** são de [`fixtures-e-factories.md`](fixtures-e-factories.md) e do harness
+  `tests/comum/mod.rs`.
+- **Matriz de capacidades:** é de `tests/specs/capacidades.md`; o anti-skip está em
+  [`gates-e-anti-skip.md`](gates-e-anti-skip.md).
 - **Cobertura, tempo e paralelismo:** não medidos.

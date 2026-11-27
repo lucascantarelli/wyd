@@ -24,7 +24,7 @@ Implementar o gate anti-skip descrito em `gates-e-anti-skip.md`: varrer `#[ignor
 ## DoD
 
 - [ ] O gate reprova `#[ignore]` novo no caminho de aceite.
-- [ ] Ausência de `WYD_DB_URL_TEST` falha nomeando a variável; não pula.
+- [ ] Ausência de `WYD_DB_TEST_URL` falha nomeando a variável; não pula.
 - [ ] Um alvo sem capacidade e uma capacidade sem alvo reprovam.
 - [ ] O gate roda localmente sem CI real.
 

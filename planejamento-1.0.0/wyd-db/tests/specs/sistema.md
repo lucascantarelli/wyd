@@ -4,22 +4,25 @@
 > Base: `../../docs/guia-teste/testes-de-sistema.md`; `../specs/capacidades.md` §4–§6; `../fixtures-e-factories.md` §4
 > Revisado em: 2026-11-24
 
-**Estado:** aceito (2026-11-24) — regras escritas; **1 de 3** alvos de sistema implementado (`sistema_pg`, 13 cenários, 2026-11-24).
+**Estado:** aceito (2026-11-24) — regras escritas; **3 alvos de sistema implementados em 2026-11-27**: `sistema_pg`, `reversibilidade_pg` e `runner_pg` (`Cargo.toml`; [índice da suíte](../index.md) §2).
 
 **Quatro níveis de afirmação convivem aqui:**
 
-- **`P`** — tudo o que a página diz sobre a suíte: as 18 regras valem para três alvos que ainda não
-  existem em `crates/wyd-db/Cargo.toml`.
+- **`P`** — tudo o que a página diz sobre a suíte: as 18 regras valem para os alvos de sistema;
+  `sistema_sessoes` e `sistema_stack_caps` ainda não existem em `crates/wyd-db/Cargo.toml`.
 - **`H`** — dúvida aberta, dita e localizada em §6, com o dono que a fecha.
 - **`V`** — o que foi medido nesta árvore em 2026-11-24, com o arquivo ao lado.
 - **sem marca** — regra de projeto (`../../docs/convencoes.md`) e comportamento do PostgreSQL
   (`../../padrao-banco.md` §13).
 
-Regras de `sistema_pg`, `sistema_sessoes` e `sistema_stack_caps`. O guia diz por quê; esta página fixa o
-que a suíte faz em cada caso, e o que acontece quando alguém desvia.
+Regras de `sistema_pg`, `reversibilidade_pg`, `runner_pg`, `sistema_sessoes` e `sistema_stack_caps`. O
+guia diz por quê; esta página fixa o que a suíte faz em cada caso, e o que acontece quando alguém
+desvia.
 
-**Alvos escritos onde roda:** `sistema_pg` (`CAP-09`–`CAP-19` e `CAP-24`–`CAP-39`), `sistema_sessoes` (`CAP-20`–`CAP-21`) e
-`sistema_stack_caps` (`CAP-22`–`CAP-23`) — os três que abrem conexão ([../index.md](../index.md) §2).
+**Alvos escritos onde roda:** `sistema_pg` (`CAP-09`–`CAP-19` e `CAP-24`–`CAP-36`, `CAP-38`–`CAP-39`),
+`reversibilidade_pg` (`CAP-02`), `runner_pg` (`CAP-01`–`CAP-07` e `CAP-37`), `sistema_sessoes`
+(`CAP-20`–`CAP-21`) e `sistema_stack_caps` (`CAP-22`–`CAP-23`) — os cinco que abrem conexão
+([../index.md](../index.md) §2).
 
 ## 1. Preparo do banco
 
@@ -35,8 +38,8 @@ que a suíte faz em cada caso, e o que acontece quando alguém desvia.
 
 | # | Regra | Violação aparece como |
 |---|---|---|
-| 6 | `WYD_DB_URL_TEST` é a DSN do alvo (`wyd_migrator`) | papel errado esconde `permission denied` |
-| 7 | sem a variável, **falha nomeando** `WYD_DB_URL_TEST` | `skipped` verde no CI |
+| 6 | `WYD_DB_TEST_URL` é a DSN do alvo (`wyd_migrator`) | papel errado esconde `permission denied` |
+| 7 | sem a variável, **falha nomeando** `WYD_DB_TEST_URL` | `skipped` verde no CI |
 | 8 | teste de fronteira usa a DSN **do papel testado** | fronteira não exercitada |
 | 9 | nenhum binário lê `DATABASE_URL` | configuração fora da DSN por papel |
 
@@ -84,4 +87,5 @@ que a suíte faz em cada caso, e o que acontece quando alguém desvia.
 - **Não decide CI:** não existe página de CI em `docs/planos/` do `wyd-db`; o plano do projeto é
   `../../../wyd-ops/docs/devops/index.md` (`aceito`, 2026-11-26), e `docs/planos/plano-de-testes.md` §81
   anuncia a página local para depois do primeiro código.
-- **Não mede tempo:** nenhum alvo roda; tempo esperado entra com execução registrada.
+- **Não mede tempo:** o tempo entra com execução registrada (o `runner_pg` mediu 38,60 s em 2026-11-27);
+  esta página não fixa limiar.

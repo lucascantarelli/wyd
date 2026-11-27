@@ -58,7 +58,7 @@ segunda prova que o teste **reprova** — teste que só vê o caso bom não dist
 |---|---|
 | banco | **nenhum**; o alvo não abre conexão |
 | diretório | o da série viva, ou a fixture por `--dir`/`SERIE` |
-| `WYD_DB_URL_TEST` | **não** é lida por este alvo |
+| `WYD_DB_TEST_URL` | **não** é lida por este alvo |
 | arquivos | `resources/serie/valida/` e as sete `invalida/<defeito>/` existirem |
 
 ## 4. Como interpretar a falha

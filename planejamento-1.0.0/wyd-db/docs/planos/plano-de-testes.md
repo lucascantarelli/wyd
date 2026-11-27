@@ -34,13 +34,15 @@ verde.
 | `sistema_sessoes` | `permission denied` por papel e leitura cruzada só por view | sim | `guia-teste/testes-de-sistema.md` |
 | `sistema_stack_caps` | a matriz de capacidades e o anti-skip | sim | `tests/specs/capacidades.md` |
 
-Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; o `Cargo.toml` existe desde 2026-11-24 e ainda não declara esses alvos. A coluna
-“precisa de banco” separa o que pode rodar sem PostgreSQL do que exige um banco descartável.
+Os cinco nomes são os de `wyd-db-1.0.0.md` §6.17; o `Cargo.toml` já declara `sistema_pg`, `reversibilidade_pg`,
+`runner_pg` e os dois contratos de API — dos cinco da tabela, só `sistema_pg` tem alvo implementado
+(2026-11-27). A coluna “precisa de banco” separa o que pode rodar sem PostgreSQL do que exige um banco
+descartável.
 
 ## 3. Matriz capacidade × alvo
 
 A matriz `CAP-nn → alvo → cenário → requisito` existe em `tests/specs/capacidades.md`, fora do site por
-não ser publicada: **39** capacidades, **5** alvos, **0** cobertas por teste executado. Ela não é copiada
+não ser publicada: **39** capacidades, **7** alvos, **14** cobertas por teste executado. Ela não é copiada
 nem substituída por uma tabela paralela aqui — esta página é dona da **estratégia**, a matriz é dona da
 **capacidade**. Cada capacidade nova entra na matriz e ganha alvo antes de o teste ser aceito. A regra de
 cobertura continua a de [`../guia-teste/gates-e-anti-skip.md`](../guia-teste/gates-e-anti-skip.md):
@@ -51,7 +53,7 @@ nenhum teste sem capacidade, nenhuma capacidade sem teste.
 | Item | Regra |
 |---|---|
 | banco sem PostgreSQL | contrato lê a série como texto e não abre conexão |
-| banco real | PostgreSQL 17 descartável; DSN em `WYD_DB_URL_TEST` |
+| banco real | PostgreSQL 17 descartável; DSN em `WYD_DB_TEST_URL` |
 | isolamento | cada teste usa chave própria e limpa o que criou; nada de estado global |
 | dado de conteúdo | fixture explícita; seed de desenvolvimento não é dado de produção |
 | segredo | nenhum valor real em fixture, log ou snapshot |
