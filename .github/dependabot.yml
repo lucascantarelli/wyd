@@ -63,6 +63,16 @@ updates:
       cargo-wyd-launcher:
         patterns: ["*"]
 
+  - package-ecosystem: npm
+    directory: /wyd-portal
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      portal-npm:
+        patterns: ["*"]
+
   - package-ecosystem: pip
     directory: /wyd-docs
     schedule:
