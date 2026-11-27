@@ -66,6 +66,11 @@ caminhos e hashes, está em [`specs/inventario-da-arvore.md`](specs/inventario-d
 pedido ao titular está em [`specs/pedido-ao-titular.md`](specs/pedido-ao-titular.md) e **não foi enviado**.
 O registro de identidade e totais permanece em `registro-do-cliente.md` — esta página não repete os números.
 
+Os dois catálogos binários de item estão decodificados campo a campo: `ItemList.bin` (6.500 slots de
+140 B) e `Itemname.bin` (3.163 registros de 68 B) têm layout, codificação, domínio de valor e
+anomalias em [`specs/formato-itemlist-e-itemname.md`](specs/formato-itemlist-e-itemname.md). O que
+segue sem prova ali é a semântica dos enums do motor — `LCLI-06`.
+
 ## Limite desta documentação
 
 - Não afirma comportamento do jogo nem layout do fio: isso vem de captura, não de leitura de pasta.

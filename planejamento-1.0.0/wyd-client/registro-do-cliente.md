@@ -4,7 +4,7 @@
 > Público: pesquisa (RE), arquitetura e QA
 > Dono: equipe do `wyd-client`
 > Base: `LPRT-10` (processo de captura), `goldens/como-capturar.md` (procedimento)
-> Revisado em: 2026-11-26
+> Revisado em: 2026-11-27
 
 **Estado:** registro medido (`V`), 2026-11-22. Substitui qualquer estimativa anterior de tamanho,
 contagem ou build. **Não** é captura de protocolo: não há um byte de tráfego aqui.
@@ -237,3 +237,14 @@ sha256sum wyd-client/files/client.zip wyd-client/files/client/WYD.exe
 
 Se qualquer número divergir do §3–§5, este registro está vencido: a atualização é de quem mediu, com
 data nova — não se corrige número sem rodar o comando.
+
+## 9. `ItemList.bin` e `Itemname.bin`
+
+O layout dos dois arquivos está provado campo a campo, com todos os 140 B do registro do `ItemList` e
+os 68 B do `Itemname` atribuídos, em
+[`docs/specs/formato-itemlist-e-itemname.md`](docs/specs/formato-itemlist-e-itemname.md). A página traz
+as contagens, os domínios de valor, o charset e as 54 divergências entre os dois arquivos, cada uma com
+`V` e data. Este registro não repete número: cita.
+
+O que continua sem prova é a **semântica** de enums do motor (ids de efeito, bits de `pos`, `unique
+id`, `extra`, `grade`) — `LCLI-06`.
