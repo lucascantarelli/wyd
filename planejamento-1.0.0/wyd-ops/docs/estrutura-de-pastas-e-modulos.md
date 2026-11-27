@@ -161,13 +161,20 @@ própria que `componentes.md` não responda.
 - Todo `docs/index.md` tem um **Mapa de páginas** que torna alcançável cada página de `docs/`; página
   nova entra no mapa da pasta e no índice, ou o gate de órfãos falha.
 - Os quatro templates de `.github/ISSUE_TEMPLATE/` exigem `skill_principal` em lista fechada. A lista
-  tem nove skills: `auditar-planejamento`, `documentation-writer`, `finishing-a-development-branch`,
-  `frontend-design`, `github-actions-docs`, `planejar-sistema`, `python-testing-patterns`,
-  `skill-creator` e `writing-plans`. Skill complementar é opcional e usa a mesma lista. Dessas nove, **duas existem em disco** em
-  `.agents/skills/` (`planejar-sistema` e `auditar-planejamento`) e **sete são cloud skills do projeto**
-  (`documentation-writer`, `finishing-a-development-branch`, `frontend-design`, `github-actions-docs`,
-  `python-testing-patterns`, `skill-creator`, `writing-plans`): não têm `SKILL.md` no repositório e são
-  carregadas pelo ambiente do agente. Toda página de issue declara essa distinção no bloco de skills.
+  tem doze skills: `auditar-planejamento`, `documentation-writer`, `escrever-migration`,
+  `finishing-a-development-branch`, `frontend-design`, `github-actions-docs`, `implementar-issue`,
+  `planejar-sistema`, `python-testing-patterns`, `revisar-documentacao`, `skill-creator` e
+  `writing-plans`. Skill complementar é opcional e usa a mesma lista. Das doze, **duas existem em disco**
+  em `.agents/skills/` (`planejar-sistema` e `auditar-planejamento`); **sete são cloud skills do
+  projeto** (`documentation-writer`, `finishing-a-development-branch`, `frontend-design`,
+  `github-actions-docs`, `python-testing-patterns`, `skill-creator`, `writing-plans`), sem `SKILL.md` no
+  repositório; e **três são skills de sistema do `wyd-db`** (`escrever-migration`, `implementar-issue`,
+  `revisar-documentacao`), com `SKILL.md` em `planejamento-1.0.0/wyd-db/skills/` e cópia registrada como
+  cloud skill em 2026-11-27. Toda página de issue declara essa distinção no bloco de skills.
+- As outras cinco skills de `planejamento-1.0.0/wyd-db/skills/` (`levantar-requisito`, `planejar-onda`,
+  `revisar-schema`, `provar-schema`, `provisionar-dados-de-teste`) são lidas pelo caminho, não entram na
+  lista fechada: elas só valem dentro do `wyd-db`, e o roteador de `skills/README.md` diz quando usar
+  cada uma.
 - O gate confere a regra de dono com `wyd-docs/gate/checks/skills.py`: roadmap que nomeia a skill, citação
   que não resolve e página sem `**Dono do valor:**` reprovam com arquivo e linha.
 - **Fase, dependência, DoD e fora de escopo da fatia são da página da issue, não do roadmap.**
