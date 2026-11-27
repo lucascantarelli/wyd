@@ -14,7 +14,7 @@ Não use para revisar SQL: isso é `review/revisar-schema`.
 
 ## Pré-requisitos
 
-- `docs/convencoes.md` aberto (cabeçalho, marcas, o que reprova).
+- `planejamento-1.0.0/wyd-db/docs/convencoes.md` aberto (cabeçalho, marcas, o que reprova).
 - O dono do fato que a página descreve (DDL, `plano-migrations.md`, `lacunas.md`).
 
 ## Passos

@@ -14,7 +14,8 @@ Não use para requisito já numerado em `specs/`: ali o trabalho é implementar.
 
 ## Pré-requisitos
 
-- `specs/requisitos.md` aberto (numeração e formato correntes).
+- `planejamento-1.0.0/wyd-db/docs/specs/casos-de-uso.md` e `rastreabilidade.md` abertos: é ali que
+  `RF-DB`/`RN-DB` aparecem e são numerados.
 - A página de domínio de `docs/dicionario-dados/` que o requisito toca.
 
 ## Passos

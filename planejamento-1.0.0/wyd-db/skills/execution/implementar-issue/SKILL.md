@@ -48,7 +48,7 @@ recomendação, não código.
 | Alegação | Prova |
 |---|---|
 | código compila e passa | `cargo test -p <crate>` / `make gate-fast` |
-| série íntegra | `cargo test -p wyd-db` sem `NotContiguous` |
+| série íntegra | `WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1` sem `NotContiguous` |
 | merge feito | `git log --oneline -1` em `develop` |
 | árvore limpa | `git status --short --branch` só com `## develop...origin/develop` |
 | issue coerente | `gh issue view <n> --json labels,state` |

@@ -1,6 +1,6 @@
 ---
 name: provar-schema
-description: Prova que um arquivo da série do wyd-db faz o que a página diz, nas quatro camadas — estrutural, contrato, banco real e ciclo up/down/up. Use antes de fechar issue de migration, ao reproduzir falha de CI com Postgres 17, e quando for preciso saber se a série inteira sobe do zero.
+description: Prova que um arquivo da série do wyd-db faz o que a página diz, nas quatro camadas — estrutural, contrato, banco real e ciclo up/down/up — com PostgreSQL 17 local ou em container. Use antes de fechar issue de migration, ao reproduzir falha de CI com Postgres 17, e quando for preciso saber se a série inteira sobe do zero.
 ---
 
 # Provar schema
@@ -14,26 +14,54 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 
 ## Pré-requisitos
 
-- Docker disponível; `make db-up` sobe o serviço `db` (perfil `db` do Compose).
-- Série contígua em `crates/wyd-db/migrations/`.
-- Papéis de `db/roles.sql` criados no banco de teste (`wyd_owner`, `wyd_migrator`, `wyd_game`,
+- Docker disponível: `make db-up` sobe o serviço `db` (PostgreSQL 17, base `wyd`, `127.0.0.1:5432`,
+  `postgres`/`test`). `make db-down` derruba.
+- Papéis criados por `wyd-ops/scripts/ci/db-prepare.sh` (`wyd_owner`, `wyd_migrator`, `wyd_game`,
   `wyd_portal`, `wyd_admin`, `wyd_read`) — o preflight do runner recusa outro papel.
+- Série contígua em `crates/wyd-db/migrations/`.
 
 ## Passos
 
-1. **Camada estrutural** — o arquivo aplica num banco vazio, na ordem da série, sem `ERROR`:
+1. **Camada estrutural** — banco vazio, série aplicada em ordem, sem `ERROR`:
 
    ```bash
    make db-up
+   for r in wyd_owner wyd_migrator wyd_game wyd_portal wyd_admin wyd_read; do
+     docker compose exec -T db psql -U postgres -d wyd -qtAc \
+       "SELECT 1 FROM pg_roles WHERE rolname='$r'" | grep -q 1 ||
+       docker compose exec -T db psql -U postgres -d wyd -qc "CREATE ROLE $r NOLOGIN"
+   done
    for f in crates/wyd-db/migrations/*.sql; do
-     awk '/^-- migrate:up/{on=1;next} /^-- migrate:down/{on=0} on' "$f" \
-       | PGPASSWORD=test psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -X -q || break
+     awk '{l=$0; sub(sprintf("%c",13),"",l)}
+          l=="-- migrate:up"{u=1;d=1;next} l=="-- migrate:down"{d=0;next} d{print l}' "$f" |
+       docker compose exec -T db psql -U postgres -d wyd -v ON_ERROR_STOP=1 -X -q || break
    done
    ```
 
-2. **Camada de contrato** — o que a página promete existe e tem o tipo prometido:
-   `\d content.<tabela>`, contagem de índices, constraints com o nome do padrão.
-3. **Camada de banco real** — os testes de integração do crate rodam contra o PG17: `cargo test -p wyd-db`.
+   Com `psql` no host, use o caminho canônico:
+   `PGHOST=127.0.0.1 PGPORT=5432 PGUSER=postgres PGPASSWORD=test PGDATABASE=wyd bash wyd-ops/scripts/ci/apply-series.sh`.
+
+2. **Camada de contrato** — o que a página promete existe com o tipo prometido:
+   `docker compose exec -T db psql -U postgres -d wyd -c '\d content.<tabela>'`, contagem de índices e
+   constraints com o nome do padrão.
+3. **Camada de banco real** — os alvos de integração. O harness (`tests/comum/mod.rs`) usa
+   `psql` do PATH quando `WYD_DB_TEST_URL` existe (é o caminho do CI) e `docker exec` quando a
+   variável é `WYD_DB_TEST_CONTAINER` (é o caminho de quem não tem `psql`, como esta máquina):
+
+   ```bash
+   # local, sem psql instalado: usa o container do make db-up
+   WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) \
+   WYD_DB_TEST_USER=postgres WYD_DB_TEST_DB=wyd \
+     cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
+
+   # CI: psql instalado e service container exposto em TCP
+   WYD_DB_TEST_URL=postgres://postgres:test@127.0.0.1:5432/wyd \
+   WYD_DB_TEST_USER=postgres WYD_DB_TEST_DB=wyd \
+     cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
+   ```
+
+   O alvo `runner_pg` exige banco preparado com `db-prepare.sh migrator` (papel `wyd_migrator` com
+   LOGIN) e não aplica a série; `reversibilidade_pg` aplica e desfaz.
 4. **Camada de ciclo** — aplicar `down` e aplicar `up` de novo devolve o mesmo estado; se sobrar
    objeto, o `down` está incompleto.
 5. **Registre a evidência** na página (§ prova de execução) e no comentário da issue: comando, saída
@@ -43,9 +71,9 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 
 | Alegação | Prova |
 |---|---|
-| série sobe do zero | laço do passo 1 sem `ERROR` |
-| ordem aceita pelo runner | `cargo test -p wyd-db` sem `NotContiguous` |
-| `down` reverte | `to_regclass` nulo depois do `down` |
+| série sobe do zero | laço do passo 1 sem `ERROR` (28 arquivos hoje, 111 tabelas em `content`/`game`/`portal`/`ops`) |
+| ordem aceita pelo runner | `runner_pg` verde, sem `NotContiguous` |
+| `down` reverte | `reversibilidade_pg` verde; `to_regclass('content.<tabela>')` nulo depois do `down` |
 | nada quebrou no resto | `make gate-fast` |
 
 ## Quando parar e perguntar
@@ -56,7 +84,8 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 
 ## Armadilhas
 
-- **Provar com `psql -f` do arquivo inteiro**: os dois blocos rodam juntos e o `down` desfaz o teste.
-- **Teste de integração sem banco**: verde falso; a camada 3 exige PG17 de verdade.
+- **Rodar `psql -f` do arquivo inteiro**: os dois blocos rodam juntos e o `down` desfaz o teste.
+- **Rodar o alvo de integração sem `WYD_DB_TEST_URL` nem `WYD_DB_TEST_CONTAINER`**: o harness
+  aborta com "defina WYD_DB_TEST_URL … ou WYD_DB_TEST_CONTAINER".
 - **Concluir pelo `up`**: sem o ciclo, `down` quebrado passa.
 - **`make gate` completo em vez de `gate-fast`** a cada passo: use o curto no ciclo e o completo ao fim.
