@@ -73,9 +73,9 @@ Regras: no máximo uma label `estado/*`, aplicada em **uma** requisição `PUT /
 o script não reprocessa evento de label que ele mesmo gerou (`github-actions[bot]`), não regride
 `em-revisao` para `em-andamento` por evento repetido e decide sobre o estado lido da API, não sobre o
 payload do evento; `pull_request_target` não faz checkout do código do PR; sem `PROJECT_TOKEN`, o
-board fica manual e o log avisa. Issue fechada é terminal: label preservada e `Status` em Done, mesmo
-que a entrega não tenha passado por `Closes #N`. A decisão está em `ADR-OPS-0009`; a prova é
-`node --test wyd-ops/tests/unitario/`.
+board fica manual e o log avisa. A sequência não tem label de entrega — `Done` é `Status` do Project —,
+então issue fechada preserva a última label (no fluxo, `estado/em-revisao`) e mantém o `Status` em Done.
+A decisão está em `ADR-OPS-0009`, regras 10–12; a prova é `node --test wyd-ops/tests/unitario/`.
 
 ## 3. Branch
 
