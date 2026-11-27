@@ -30,7 +30,7 @@ description: Implementa ou ajusta o transporte do servidor WYD — aceitação d
 
 - Teste com servidor falso e cliente falso: pacote válido, pacote truncado, pacote acima do limite.
 - Queda de conexão no meio do pacote não vaza tarefa nem memória.
-- `cargo test -p wyd-net` verde.
+- `cargo test --manifest-path crates/wyd-net/Cargo.toml` verde (não há workspace na raiz).
 
 ## Quando parar e perguntar
 

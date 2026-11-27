@@ -28,9 +28,11 @@ description: Revisa PR que altera workflow, action composta, Compose ou imagem d
 ## Como verificar
 
 ```bash
-cd wyd-docs && py -3 -m gate fast --details
+gh run list --workflow=security.yml --limit 3     # actionlint roda no CI, job `actionlint`
 gh workflow view <arquivo> --yaml | head -40
 ```
+
+O `make gate-fast` **não** lê YAML de workflow: ele cobre layout, skills, lacunas, contagens e censos.
 
 ## Quando parar e perguntar
 

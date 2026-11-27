@@ -12,7 +12,8 @@ description: Revisa o site montado do WYD — link quebrado, página órfã, nav
 
 ## Pré-requisitos
 
-- Build local disponível (`make gate` usa a imagem `wyd-docs:gate`).
+- Build local disponível (`make gate` roda o serviço `gate` do Compose, imagem
+  `ghcr.io/lucascantarelli/wyd-docs:gate`).
 
 ## Passos
 

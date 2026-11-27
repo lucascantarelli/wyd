@@ -26,8 +26,8 @@ description: Implementa regra de domínio do WYD em código puro — sem I/O, se
 ## Como verificar
 
 ```bash
-cargo test -p wyd-core
-cargo clippy -p wyd-core -- -D warnings
+cargo test --manifest-path crates/wyd-core/Cargo.toml
+cargo clippy --manifest-path crates/wyd-core/Cargo.toml --all-targets -- -D warnings
 ```
 
 Teste de fronteira e teste de tabela verdes, sem `unwrap()` em caminho de produção.
