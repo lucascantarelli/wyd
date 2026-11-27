@@ -28,7 +28,7 @@ description: Implementa robô de carga do WYD contra ambiente de teste, com cont
 
 - Rodada curta contra servidor local gera relatório completo.
 - Aumentar bots aumenta carga de forma monotônica até o limite declarado.
-- `cargo test -p wyd-bots` verde.
+- `cargo test --manifest-path crates/wyd-bots/Cargo.toml` verde (sem workspace na raiz, `-p` não resolve).
 
 ## Quando parar e perguntar
 

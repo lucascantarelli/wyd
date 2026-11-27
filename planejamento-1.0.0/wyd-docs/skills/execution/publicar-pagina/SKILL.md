@@ -18,9 +18,11 @@ description: Publica ou move uma página do planejamento no site MkDocs do WYD, 
 ## Passos
 
 1. Confirme que a página é de **`docs/`**: `migrations/`, `skills/`, `tests/`, `prompts/` e `src/`
-   não são publicados (`D-6`).
+   não são publicados (`D-6`, decidida em `wyd-db-1.0.0.md`; a regra está em
+   `wyd-docs/docs/convencoes.md` §1).
 2. Inclua a página no **Mapa de páginas** de `docs/index.md` do sistema (ou da pasta) — página fora do
-   mapa é órfã.
+   mapa não é alcançável pela navegação, e **o gate não acusa isso**: ele verifica link, estado,
+   contagem e censo, não alcance a partir do mapa. Confira na navegação montada (§passo 5).
 3. Sistema novo só entra publicando se estiver em `SISTEMAS` de `preparar.py`; inclusão ali é decisão
    de arquitetura, não de documentação.
 4. Rode o build: `make gate` (ou `make gate-fast` no ciclo curto).
@@ -43,5 +45,6 @@ Gate verde prova build e link; ele **não** prova que o texto está correto.
 ## Armadilhas
 
 - **Link relativo que só funciona no GitHub** e quebra no MkDocs.
-- **Página em `docs/` sem entrada no mapa** — órfã silenciosa até o gate.
+- **Página em `docs/` sem entrada no mapa** — fica fora da navegação e nenhum check reprova: o gate
+  não detecta órfã, só link quebrado.
 - **Copiar página para dois sistemas**: um fato, um dono.

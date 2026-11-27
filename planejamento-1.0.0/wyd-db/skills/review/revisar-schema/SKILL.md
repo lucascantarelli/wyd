@@ -42,7 +42,7 @@ Não use para revisar texto de planejamento: isso é `review/revisar-documentaca
 ```bash
 make db-up
 # aplica a série até o arquivo e depois roda o down dele
-cargo test -p wyd-db
+cargo test --manifest-path crates/wyd-db/Cargo.toml
 make gate-fast
 ```
 

@@ -27,7 +27,7 @@ description: Implementa cenário de simulação do WYD reproduzível — seed fi
 
 - Rodar duas vezes com a mesma seed devolve o mesmo resultado (golden).
 - Trocar a seed muda o resultado, mas não a ordem de grandeza.
-- `cargo test -p wyd-sim` verde.
+- `cargo test --manifest-path crates/wyd-sim/Cargo.toml` verde (sem workspace na raiz).
 
 ## Quando parar e perguntar
 

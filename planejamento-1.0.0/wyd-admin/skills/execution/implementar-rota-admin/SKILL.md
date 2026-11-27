@@ -29,7 +29,8 @@ description: Implementa rota do backoffice WYD com autenticação, autorização
 
 - `401` sem sessão, `403` com papel errado, `200` com papel certo — os três casos testados.
 - Log de auditoria gerado na escrita, com alvo e autor.
-- `cargo test -p wyd-admin` verde.
+- `cargo test --manifest-path crates/wyd-admin/Cargo.toml` verde (não existe `Cargo.toml` de workspace na
+  raiz; `cargo test -p wyd-admin` falha).
 
 ## Quando parar e perguntar
 

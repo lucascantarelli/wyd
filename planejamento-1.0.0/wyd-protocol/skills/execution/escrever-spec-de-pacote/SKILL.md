@@ -28,7 +28,8 @@ description: Escreve a spec de um pacote do protocolo WYD com opcode, layout de 
 
 - O layout reproduz o tamanho do pacote capturado, byte a byte.
 - Decodificar a amostra devolve valores plausíveis para o domínio.
-- Página citada no índice e sem link quebrado (`make gate-fast`).
+- Página citada no índice e sem link quebrado (`make gate` ou `cd wyd-docs && py -3 -m gate full --details`;
+  o `gate-fast` não roda `links` nem monta o site).
 
 ## Quando parar e perguntar
 

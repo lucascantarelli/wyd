@@ -22,7 +22,8 @@ description: Atualiza o manifesto de patch do launcher WYD com caminho, papel, t
    documento dono.
 3. **Não versione binário**: o que entra no git é o manifesto e a medição, nunca o `.exe`/`.zip`.
 4. **Verifique pelo código**: o launcher compara tamanho e hash; teste com arquivo alterado deve falhar.
-5. **Build Windows-only**: `cargo test -p wyd-launcher` roda em `windows-latest` na matriz do CI.
+5. **Build Windows-only**: `cargo test --manifest-path crates/wyd-launcher/Cargo.toml` — a matriz do CI
+   roda esse crate só em `windows-latest`, e `cargo test -p wyd-launcher` não resolve sem workspace.
 
 ## Como verificar
 

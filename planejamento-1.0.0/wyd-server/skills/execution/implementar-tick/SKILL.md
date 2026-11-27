@@ -30,7 +30,8 @@ description: Implementa ou altera o laço de tick do servidor WYD respeitando a 
 
 - Teste de tick com fila falsa: passo não bloqueia e enfileira o esperado.
 - Shutdown no meio da fila não perde evento já aceito.
-- `cargo test -p wyd-server` verde; `GET /health` e `/ready` respondem 200 no processo de teste.
+- `cargo test --manifest-path crates/wyd-server/Cargo.toml` verde; `GET /health` e `/ready` respondem 200
+  no processo de teste.
 
 ## Quando parar e perguntar
 

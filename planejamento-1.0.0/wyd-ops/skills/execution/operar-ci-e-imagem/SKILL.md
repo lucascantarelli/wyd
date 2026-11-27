@@ -17,8 +17,9 @@ description: Mexe em workflow, action composta, imagem GHCR ou rollback do WYD s
 
 ## Passos
 
-1. **Um workflow por domínio**: `docs`, `code`, `ci-db`, `security`, `docs-image`, `code-stable`.
-   Não crie `full-workflow` de novo — foi removido em 2026-11-26.
+1. **Um workflow por domínio**: `docs`, `code`, `ci-db`, `security`, `docs-image`, `code-stable`, mais
+   `release` e `issue-status` (estado e labels). Não crie `full-workflow` de novo — foi removido em
+   2026-11-26.
 2. **Permissões mínimas** no topo (`permissions:`) e por job; nada de `write-all`.
 3. **Action fixada por SHA** com comentário da versão; action nova é decisão, não conveniência.
 4. **Gate em um ponto só**: job que precisa verificar usa `make gate-fast`/`make gate`, não comando
@@ -31,9 +32,10 @@ description: Mexe em workflow, action composta, imagem GHCR ou rollback do WYD s
 ## Como verificar
 
 ```bash
-make gate-fast                # inclui actionlint no security
+make gate-fast                                    # layout, skills, lacunas, contagens, censos — sem Docker
+gh run list --workflow=security.yml --limit 3     # actionlint roda aqui, no job `actionlint`
 gh run list --workflow=docs-image.yml --limit 3
-curl -sI http://127.0.0.1:8080/ | head -1   # após subir a tag
+curl -sI http://127.0.0.1:8080/ | head -1         # após subir a tag
 ```
 
 ## Quando parar e perguntar
