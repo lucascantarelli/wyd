@@ -370,7 +370,7 @@ esta seção** — §7.5 cita, não repete.
 | Sistema | Lacunas | Abertas | Propostas | Fechadas | Externas | Fonte |
 |---|---:|---:|---:|---:|---:|---|
 | `wyd-protocol` | 20 | 2 | 0 | 18 | 0 | `lacunas.md` §1 |
-| `wyd-client` | 6 | 3 | 0 | 3 | 0 | idem |
+| `wyd-client` | 7 | 4 | 0 | 3 | 0 | idem |
 | `wyd-net` | 4 | 1 | 0 | 3 | 0 | idem |
 | `wyd-core` | 4 | 0 | 0 | 4 | 0 | idem |
 | `wyd-sim` | 4 | 0 | 0 | 4 | 0 | idem |
@@ -381,7 +381,7 @@ esta seção** — §7.5 cita, não repete.
 | `wyd-launcher` | 4 | 0 | 0 | 4 | 0 | `lacunas.md` §1 |
 | `wyd-bots` | 4 | 1 | 0 | 3 | 0 | idem |
 | `wyd-docs` | 14 | 0 | 0 | 14 | 0 | idem |
-| **Total** | **119** | **7** | **0** | **109** | **3** | `*/lacunas.md` |
+| **Total** | **120** | **8** | **0** | **109** | **3** | `*/lacunas.md` |
 
 `LAC-POR-09` = A foi o delta `0 abertas / −1 proposta / +1 fechada`; `Q-NET-1` = A não alterou as
 contagens, e a execução de `LCLI-02` em 2026-11-25 fechou a linha com `0 abertas / −1 proposta /
