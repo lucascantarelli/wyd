@@ -17,7 +17,11 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 - Docker disponível: `make db-up` sobe o serviço `db` (PostgreSQL 17, base `wyd`, `127.0.0.1:5432`,
   `postgres`/`test`). `make db-down` derruba.
 - Papéis criados por `wyd-ops/scripts/ci/db-prepare.sh` (`wyd_owner`, `wyd_migrator`, `wyd_game`,
-  `wyd_portal`, `wyd_admin`, `wyd_read`) — o preflight do runner recusa outro papel.
+  `wyd_portal`, `wyd_admin`, `wyd_read`) — o preflight do runner recusa outro papel. Sem `psql` no
+  host o script não roda direto; o caminho que funciona é dentro do container:
+  `docker compose exec -T -e PGDATABASE=wyd -e PGUSER=postgres db bash -s -- nologin < wyd-ops/scripts/ci/db-prepare.sh`
+  (troque `nologin` por `migrator` para o `runner_pg`). Sem os papéis, o `up` do ciclo morre em
+  `role "wyd_owner" does not exist` (medido 2026-11-27).
 - Série contígua em `crates/wyd-db/migrations/`.
 
 ## Passos
@@ -60,8 +64,20 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
      cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1
    ```
 
-   O alvo `runner_pg` exige banco preparado com `db-prepare.sh migrator` (papel `wyd_migrator` com
-   LOGIN) e não aplica a série; `reversibilidade_pg` aplica e desfaz.
+   Os três alvos não têm o mesmo caminho de conexão. Medido em 2026-11-27 na base `wyd` do
+   `make db-up`:
+
+   | Alvo | Caminho aceito | Comando | Espera |
+   |---|---|---|---|
+   | `sistema_pg` | container ou URL | o do bloco acima | 13 cenários verdes |
+   | `reversibilidade_pg` | container ou URL | `WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) cargo test --manifest-path crates/wyd-db/Cargo.toml --test reversibilidade_pg -- --test-threads=1` | `3 passed` (~45 s) |
+   | `runner_pg` | **só URL** | `WYD_DB_TEST_URL=postgres://wyd_migrator:test@127.0.0.1:5432/wyd cargo test --manifest-path crates/wyd-db/Cargo.toml --test runner_pg -- --test-threads=1` | `7 passed` (~31 s) |
+
+   O `runner_pg` fala `sqlx` e lê **apenas** `WYD_DB_TEST_URL`; ele não aceita
+   `WYD_DB_TEST_CONTAINER`. Com só a variável de container, os 7 casos falham em 0,01 s com
+   "WYD_DB_TEST_URL não definida". Ele exige o banco preparado com `db-prepare.sh migrator` (papel
+   `wyd_migrator` com `LOGIN`) e não aplica a série; `reversibilidade_pg` aplica a série e desfaz, por
+   isso precisa dos papéis do bloco de pré-requisitos.
 4. **Camada de ciclo** — aplicar `down` e aplicar `up` de novo devolve o mesmo estado; se sobrar
    objeto, o `down` está incompleto.
 5. **Registre a evidência** na página (§ prova de execução) e no comentário da issue: comando, saída
@@ -72,8 +88,8 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 | Alegação | Prova |
 |---|---|
 | série sobe do zero | laço do passo 1 sem `ERROR` (28 arquivos hoje, 111 tabelas em `content`/`game`/`portal`/`ops`) |
-| ordem aceita pelo runner | `runner_pg` verde, sem `NotContiguous` |
-| `down` reverte | `reversibilidade_pg` verde; `to_regclass('content.<tabela>')` nulo depois do `down` |
+| ordem aceita pelo runner | `runner_pg` verde **por `WYD_DB_TEST_URL`** (7 casos, 31 s em 2026-11-27), sem `NotContiguous` |
+| `down` reverte | `reversibilidade_pg` verde (3 casos, 45 s em 2026-11-27); `to_regclass('content.<tabela>')` nulo depois do `down` |
 | nada quebrou no resto | `make gate-fast` |
 
 ## Quando parar e perguntar
@@ -86,6 +102,11 @@ Não use para testar comportamento de runtime (`game`/`portal`): ali a prova é 
 
 - **Rodar `psql -f` do arquivo inteiro**: os dois blocos rodam juntos e o `down` desfaz o teste.
 - **Rodar o alvo de integração sem `WYD_DB_TEST_URL` nem `WYD_DB_TEST_CONTAINER`**: o harness
-  aborta com "defina WYD_DB_TEST_URL … ou WYD_DB_TEST_CONTAINER".
+  aborta com "defina WYD_DB_TEST_URL … ou WYD_DB_TEST_CONTAINER" — vale para `sistema_pg` e
+  `reversibilidade_pg`, que usam o harness comum.
+- **Tentar `runner_pg` pelo container**: esse alvo não lê `WYD_DB_TEST_CONTAINER`; ele para em
+  "WYD_DB_TEST_URL não definida" e nenhum dos 7 casos roda, sem aviso de ambiente incompleto.
+- **Rodar `reversibilidade_pg` em banco sem os papéis**: o `up` morre em `role "wyd_owner" does not
+  exist`; rode `db-prepare.sh nologin` (dentro do container, se não houver `psql` no host) antes.
 - **Concluir pelo `up`**: sem o ciclo, `down` quebrado passa.
 - **`make gate` completo em vez de `gate-fast`** a cada passo: use o curto no ciclo e o completo ao fim.

@@ -75,8 +75,8 @@ própria (§4 de `plano-migrations.md`) e o arquivo não nasce sem medição.
 | Passo | Comando | Espera |
 |---|---|---|
 | série inteira aplica do zero | laço acima em banco vazio | nenhum `ERROR`; 28 arquivos hoje |
-| ordem aceita pelo runner | `WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1` | sem `NotContiguous` |
-| ciclo | aplicar `up`, depois `down`, depois `up` | volta ao mesmo estado (`reversibilidade_pg`) |
+| série contígua (o runner recusa buraco com `NotContiguous`) | `WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) cargo test --manifest-path crates/wyd-db/Cargo.toml --test sistema_pg -- --test-threads=1` | verde, sem `NotContiguous` |
+| ciclo | `WYD_DB_TEST_CONTAINER=$(docker compose ps -q db) cargo test --manifest-path crates/wyd-db/Cargo.toml --test reversibilidade_pg -- --test-threads=1` | `3 passed`: 1 ciclo real em PG17 + 2 conferências textuais |
 | página e árvore | `make gate-fast` | verde |
 
 ## Quando parar e perguntar
