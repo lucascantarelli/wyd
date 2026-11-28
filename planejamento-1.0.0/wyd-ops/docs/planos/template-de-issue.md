@@ -19,7 +19,8 @@ Vale para toda página `WYD*.md` de `planejamento-1.0.0/<sistema>/docs/roadmap/`
 Os arquivos de `.github/ISSUE_TEMPLATE/` são formulários de entrada do GitHub, não uma segunda
 especificação. Ao abrir uma issue já especificada, use o formulário do tipo (`tarefa.yml`,
 `decisao.yml`, `planejamento.yml` ou `bug.yml`) e linke a página dona; o formulário coleta o mesmo
-`skill_principal` e os `skills_complementares` deste padrão.
+`skill_principal` e os `skills_complementares` deste padrão, mais **MCP usado**, **integrações
+tocadas** (GitHub, Slack, GHCR) e **evidência de verificação** com link de run/artefato.
 
 ## 2. Esqueleto obrigatório
 
@@ -124,6 +125,13 @@ desta tabela ausente de um formulário também. Alterar a lista é alterar as du
    fatia ou o ID já registrado (`WYDDB-nnn` ou `ADM-nn`).
 7. **Sem cópia do padrão.** A página cita este template; não replica a explicação das skills.
 8. **Sem segredo ou dado de jogador.** A issue descreve tipo e lugar, nunca valor.
+9. **Formulário é entrada acionável.** Todo `.github/ISSUE_TEMPLATE/*.yml` declara `title:`,
+   `labels:` não vazio e os campos `skill_principal`, `mcp`, `integracoes` e `evidencia`; o gate
+   `skills` reprova formulário sem eles, porque issue sem skill, sem serviço tocado ou sem prova de
+   verificação não é executável.
+10. **Changelog segue o mesmo molde.** A entrada de changelog — tipo, área, breaking, PR, créditos e
+   prova — é a da §13.1 de `devops/index.md`; release publica com `gh release create --generate-notes`
+   e não inventa ferramenta nova.
 
 ## 5. Gate de verificação
 

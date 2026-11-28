@@ -40,6 +40,9 @@ SKILLS_OK = {
 Uma issue, uma página.
 """,
     ".github/ISSUE_TEMPLATE/tarefa.yml": """name: Tarefa
+description: fixture do gate
+title: "[tarefa] "
+labels: ["enhancement"]
 body:
   - type: dropdown
     id: skill_principal
@@ -49,6 +52,20 @@ body:
         - planejar-sistema
     validations:
       required: true
+  - type: dropdown
+    id: mcp
+    attributes:
+      options:
+        - nenhum
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      options:
+        - label: Nenhuma
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidência de verificação
 """,
     "planejamento-1.0.0/wyd-teste/docs/roadmap/roadmap.md": """# Roadmap
 
@@ -118,6 +135,9 @@ SKILLS_REPETE_FASE = {
 SKILLS_FORMULARIO_DIVERGENTE = {
     **SKILLS_OK,
     ".github/ISSUE_TEMPLATE/tarefa.yml": """name: Tarefa
+description: fixture divergente
+title: "[tarefa] "
+labels: ["enhancement"]
 body:
   - type: dropdown
     id: skill_principal
@@ -127,6 +147,20 @@ body:
         - skill-inventada
     validations:
       required: true
+  - type: dropdown
+    id: mcp
+    attributes:
+      options:
+        - nenhum
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      options:
+        - label: Nenhuma
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidência de verificação
 """,
 }
 

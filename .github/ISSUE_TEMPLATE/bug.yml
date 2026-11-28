@@ -1,13 +1,19 @@
-name: Defeito
-description: Algo no repositório está errado — documento, site, script de build ou (no futuro) código.
+name: 🐞 Defeito
+description: Algo no repositório está errado — documento, site, script de build ou código — com reprodução e evidência.
 title: "[defeito] "
-labels: []
+labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Antes de abrir:** defeito exige reprodução e evidência. Sem os dois, é dúvida — abra discussão, não defeito.
+        Nunca cole segredo, DSN, token, hash de jogador ou dado de cliente.
+
   - type: dropdown
     id: sistema
     attributes:
-      label: Sistema
-      description: Qual pasta de `planejamento-1.0.0/` ou projeto é dono do defeito?
+      label: Sistema / área (vira label `area/*`)
+      description: Qual sistema é dono do defeito? O workflow de metadados aplica a label `area/<sistema>`.
       options:
         - wyd-protocol
         - wyd-net
@@ -26,11 +32,24 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: gravidade
+    attributes:
+      label: Gravidade
+      description: Impacto real, não sensação. Bloqueia alguém hoje?
+      options:
+        - "🔴 Bloqueia — impede trabalho ou corrompe dado"
+        - "🟠 Alto — resultado errado com contorno caro"
+        - "🟡 Médio — resultado errado com contorno simples"
+        - "🔵 Baixo — ruído, texto, estilo"
+    validations:
+      required: true
+
   - type: textarea
     id: aconteceu
     attributes:
       label: O que aconteceu
-      description: Descreva o comportamento observado, com o caminho do arquivo ou a URL.
+      description: Comportamento observado, com caminho de arquivo, linha ou URL.
     validations:
       required: true
 
@@ -38,7 +57,7 @@ body:
     id: esperado
     attributes:
       label: O que era esperado
-      description: Aponte o documento dono ou a regra que o comportamento viola.
+      description: Aponte o documento dono ou a regra violada (AGENTS.md, convenções, ADR).
     validations:
       required: true
 
@@ -46,21 +65,45 @@ body:
     id: reproducao
     attributes:
       label: Como reproduzir
-      description: Comando exato, passos ou link. Sem passo não é defeito reproduzível.
+      description: Comando exato ou passos numerados. "Às vezes" não é reprodução.
       placeholder: |
         1. cd wyd-docs
-        2. python preparar.py
-        3. mkdocs build --dir .build/docs --output site
+        2. py -3 preparar.py
+        3. py -3 -m gate fast --root ..
     validations:
       required: true
 
   - type: textarea
     id: evidencia
     attributes:
-      label: Evidência
-      description: Saída do comando, trecho de arquivo com linha ou captura. Nada de segredo ou dado de jogador.
+      label: Evidência de verificação
+      description: Saída do comando, trecho com linha, link de run/artefato do CI ou captura. É o que o gate e a revisão leem.
+      placeholder: |
+        $ py -3 -m gate fast --root ..
+        gate: FAIL (fast, 12.3s)
+        layout FAIL: ...
+        Run: https://github.com/lucascantarelli/wyd/actions/runs/...
     validations:
       required: true
+
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto
+      description: Quem é afetado, o que fica bloqueado e o que piora se não for corrigido.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: riscos
+    attributes:
+      label: Riscos tocados
+      description: Marque o que a correção pode mexer.
+      options:
+        - label: "🔐 Segurança — credencial, permissão, dependência vulnerável (`risco/seguranca`)"
+        - label: "🗃️ Dados — migration, seed, dado real de jogador (`risco/dados`)"
+        - label: "🧩 Contrato entre sistemas — protocolo, schema, API"
+        - label: "📉 Regressão — comportamento hoje correto que pode quebrar"
 
   - type: dropdown
     id: marco
@@ -80,7 +123,7 @@ body:
     id: skill_principal
     attributes:
       label: Skill obrigatória para executar
-      description: Selecione a skill que o agente deve carregar antes de começar. A lista é fechada e conferida contra .agents/skills e as cloud skills do projeto.
+      description: A lista é fechada e conferida contra a §3 de planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md.
       options:
         - auditar-planejamento
         - documentation-writer
@@ -101,17 +144,44 @@ body:
     id: skills_complementares
     attributes:
       label: Skills complementares
-      description: Opcional. Liste outras skills da mesma lista fechada, uma por linha, e por que são necessárias.
-      placeholder: auditar-planejamento + documentation-writer
+      description: Opcional. Nomes da mesma lista fechada, um por linha, com o motivo.
+      placeholder: revisar-documentacao — conferir o cabeçalho da página dona
     validations:
       required: false
+
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: MCP usado na investigação
+      description: Servidor MCP que ajudou a achar ou provar o defeito.
+      options:
+        - nenhum
+        - sequential-thinking
+        - server-memory
+        - sequential-thinking + server-memory
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      label: Integrações tocadas
+      options:
+        - label: GitHub (issue, PR, run, release, milestone)
+        - label: Slack (`SLACK_CI_WEBHOOK`)
+        - label: GHCR / Docker (imagem)
+        - label: Nenhuma
 
   - type: checkboxes
     id: confirmacoes
     attributes:
       label: Antes de abrir
       options:
-        - label: Li o `AGENTS.md` e o sistema dono.
+        - label: Li o `AGENTS.md` e o documento do sistema dono.
+          required: true
+        - label: A reprodução e a evidência estão no corpo, não em anexo privado.
           required: true
         - label: Não incluí segredo, DSN, token ou dado de jogador.
+          required: true
+        - label: Procurei defeito igual aberto antes de criar outro.
           required: true

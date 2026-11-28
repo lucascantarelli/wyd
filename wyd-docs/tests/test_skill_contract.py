@@ -146,6 +146,36 @@ class ContratoDeSkillsTests(unittest.TestCase):
         for nome in sorted(skills.lista_fechada(Workspace(RAIZ), [])):
             self.assertIn(f"`{nome}`", texto)
 
+    def test_formulario_sem_campo_acionavel_reprova(self):
+        raiz = _arvore(
+            {
+                "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md": _template(
+                    "planejar-sistema"
+                ),
+                ".github/ISSUE_TEMPLATE/tarefa.yml": _formulario("planejar-sistema"),
+            }
+        )
+        problemas: list[str] = []
+        skills.lista_fechada(Workspace(raiz), problemas)
+        for campo in ("mcp", "integracoes", "evidencia"):
+            self.assertTrue(
+                any(f"`{campo}`" in p and "formulário sem o campo" in p for p in problemas),
+                problemas,
+            )
+
+    def test_formulario_sem_labels_reprova(self):
+        raiz = _arvore(
+            {
+                "planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md": _template(
+                    "planejar-sistema"
+                ),
+                ".github/ISSUE_TEMPLATE/tarefa.yml": _formulario("planejar-sistema"),
+            }
+        )
+        problemas: list[str] = []
+        skills.lista_fechada(Workspace(raiz), problemas)
+        self.assertTrue(any("`labels:`" in p for p in problemas), problemas)
+
     def test_pr_template_exige_registro_da_skill(self):
         texto = (RAIZ / ".github/pull_request_template.md").read_text(encoding="utf-8")
         self.assertIn("## Skills carregadas", texto)

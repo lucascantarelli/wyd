@@ -391,3 +391,32 @@ Decisão do dono: SemVer, com a tag como fonte da versão. Vale para tag, releas
   publica em tag e não há tag no repositório (`git tag --list 'v*'` vazio).
 - **Nada de versão dentro do código.** Não há `VERSION` nem workspace: enquanto isso, a tag é a única
   fonte e nenhum `Cargo.toml` é reescrito pelo CI.
+
+### 13.1 Entrada de changelog (modelo)
+
+A entrada descreve o que mudou para quem consome o projeto; ela não repete commit nem lista de arquivo.
+Mesmo molde dos outros templates: seção por tipo, área com dono, breaking explícito, PR, crédito e prova.
+
+```markdown
+## vX.Y.Z — AAAA-MM-DD
+
+### 💥 Breaking
+- **<área>** — <o que quebra e o que fazer> (#PR) — migração/rollback: <comando ou "não se aplica">
+
+### ✨ Novo
+- **<área>** — <comportamento observável> (#PR) — créditos: @autor
+
+### 🔧 Correções
+- **<área>** — <defeito e causa> (#PR)
+
+### 🧰 Interno (CI, docs, dependências)
+- **<área>** — <o que mudou no pipeline ou na doc> (#PR)
+
+### ✅ Prova
+- run: <link do run> · artefatos: `resultado-ci`, `cobertura-<crate>`
+- gate: `PASS (full, <duração>)`
+```
+
+Regras da entrada: **área** é a pasta dona (`wyd-db`, `wyd-docs`, `wyd-ops`, ...); **breaking** só com
+o que exige ação de quem consome; **créditos** citam o autor do PR, não o agente; **prova** aponta o run
+e o artefato que sustentam o texto. Sem seção vazia: tipo sem item não aparece.

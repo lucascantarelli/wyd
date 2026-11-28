@@ -1,12 +1,18 @@
-name: Tarefa
-description: Implementação ou trabalho com entregável e DoD verificável.
+name: 🛠️ Tarefa
+description: Implementação ou trabalho com entregável, DoD verificável, evidência, risco e skill obrigatória.
 title: "[tarefa] "
-labels: []
+labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Uma issue, um PR.** Se o escopo não cabe em um diff revisável, divida antes de começar.
+        O DoD é observável: comando, arquivo, status HTTP ou teste — "funciona" não é critério.
+
   - type: dropdown
     id: sistema
     attributes:
-      label: Sistema
+      label: Sistema / área (vira label `area/*`)
       options:
         - wyd-protocol
         - wyd-net
@@ -45,10 +51,23 @@ body:
     id: dod
     attributes:
       label: Definition of Done
-      description: Verificável, com comando ou arquivo. "Funciona" não é DoD.
+      description: Verificável, com comando ou arquivo.
       placeholder: |
-        - [ ] `make gate` ou `make gate-fast` sem problema
-        - [ ] página publicada em /sistemas/wyd-db/
+        - [ ] `make gate` verde
+        - [ ] `cargo test -p wyd-db --lib` verde
+        - [ ] página dona atualizada na mesma entrega
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidência de verificação
+      description: Como a revisão confere sem abrir o código — saída do comando, link do run e do artefato.
+      placeholder: |
+        gate: PASS (full, 42.7s)
+        run: https://github.com/lucascantarelli/wyd/actions/runs/...
+        artefato: resultado-ci / cobertura-wyd-launcher
     validations:
       required: true
 
@@ -68,6 +87,18 @@ body:
     validations:
       required: true
 
+  - type: checkboxes
+    id: riscos
+    attributes:
+      label: Riscos tocados
+      options:
+        - label: "🔐 Segurança — permissão, credencial, dependência (`risco/seguranca`)"
+        - label: "🗃️ Dados — migration, seed, dado de jogador (`risco/dados`)"
+        - label: "🧩 Contrato entre sistemas — protocolo, schema, API"
+        - label: "🚀 Operação — imagem, Compose, deploy, rollback"
+        - label: "📉 Regressão — comportamento hoje correto"
+        - label: "♻️ Refatoração sem mudança de comportamento"
+
   - type: dropdown
     id: marco
     attributes:
@@ -86,7 +117,7 @@ body:
     id: skill_principal
     attributes:
       label: Skill obrigatória para executar
-      description: Selecione a skill que o agente deve carregar antes de começar. A lista é fechada e conferida contra .agents/skills e as cloud skills do projeto.
+      description: A lista é fechada e conferida contra a §3 de planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md.
       options:
         - auditar-planejamento
         - documentation-writer
@@ -107,10 +138,32 @@ body:
     id: skills_complementares
     attributes:
       label: Skills complementares
-      description: Opcional. Liste outras skills da mesma lista fechada, uma por linha, e por que são necessárias.
-      placeholder: auditar-planejamento + documentation-writer
+      description: Opcional. Nomes da mesma lista fechada, um por linha, com o motivo.
+      placeholder: implementar-issue — executar de ponta a ponta; github-actions-docs — mexer no workflow
     validations:
       required: false
+
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: MCP usado na execução
+      options:
+        - nenhum
+        - sequential-thinking
+        - server-memory
+        - sequential-thinking + server-memory
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      label: Integrações tocadas
+      options:
+        - label: GitHub (issue, PR, run, release, milestone)
+        - label: Slack (`SLACK_CI_WEBHOOK`)
+        - label: GHCR / Docker (imagem)
+        - label: Nenhuma
 
   - type: checkboxes
     id: confirmacoes
@@ -120,4 +173,6 @@ body:
         - label: A página que descreve a tarefa está escrita e revisada.
           required: true
         - label: É uma issue por PR, sem refatoração fora do escopo.
+          required: true
+        - label: O DoD nomeia comando, arquivo ou teste para cada critério.
           required: true
