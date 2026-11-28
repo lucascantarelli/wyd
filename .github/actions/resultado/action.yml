@@ -80,6 +80,20 @@ runs:
         par="—"
         [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
 
+        # Cobertura: o job de cobertura publica um artefato por crate. A linha TOTAL do
+        # `cargo llvm-cov --summary-only` tem regiões, funções e linhas; o percentual de
+        # linhas é o 11º campo. Ausência de artefato não quebra o relatório.
+        cobertura=""
+        for crate in wyd-db wyd-launcher; do
+          if gh run download "$GITHUB_RUN_ID" -n "cobertura-${crate}" -D "$RUNNER_TEMP/cob-$crate" \
+               --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            pct=$(grep -E '^TOTAL' "$RUNNER_TEMP/cob-$crate/coverage-summary.txt" 2>/dev/null \
+                  | tail -n 1 | awk '{print $11}' | tr -d '%' || true)
+            [ -n "${pct:-}" ] && cobertura="${cobertura}${cobertura:+ · }${crate} ${pct}% linhas"
+          fi
+        done
+        printf '%s\n' "$cobertura" > "$RUNNER_TEMP/cobertura.txt"
+
         if [ "$falhas" -eq 0 ]; then selo="✅"; estado="sucesso"; else selo="❌"; estado="falha"; fi
         [ "$pulados" -gt 0 ] && [ "$falhas" -eq 0 ] && selo="✅"
 
@@ -99,6 +113,9 @@ runs:
           echo "| Paralelismo | ${par} |"
           if [ "$pendentes" -gt 0 ]; then
             echo "| Sem veredito na coleta | ${pendentes} (o próprio job de aviso) |"
+          fi
+          if [ -n "$cobertura" ]; then
+            echo "| Cobertura | ${cobertura} |"
           fi
           echo
           if [ "$total" -gt 0 ]; then
@@ -173,19 +190,9 @@ runs:
         lista_falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {printf "• %s — <%s|logs>\n", $3, $4}' "$duracao")
         lista_pulados=$(awk -F'\t' '$2 == "skipped" {printf "• %s\n", $3}' "$duracao" | head -n 6)
 
-        # Cobertura: o job de cobertura publica um artefato por crate; se existir, entra
-        # como contexto. Ausência não quebra o aviso.
-        cobertura=""
-        for crate in wyd-db wyd-launcher; do
-          if gh run download "$GITHUB_RUN_ID" -n "cobertura-${crate}" -D "$RUNNER_TEMP/cob-$crate" \
-               --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            linha=$(grep -E '^TOTAL' "$RUNNER_TEMP/cob-$crate/coverage-summary.txt" 2>/dev/null | tail -n 1 || true)
-            if [ -n "$linha" ]; then
-              pct=$(printf '%s' "$linha" | awk '{print $NF}' | tr -d '%')
-              cobertura="${cobertura}${cobertura:+ · }${crate} ${pct}% linhas"
-            fi
-          fi
-        done
+        # Cobertura vem do passo de resumo (artefato por crate), para os dois textos
+        # contarem a mesma coisa.
+        cobertura=$(cat "$RUNNER_TEMP/cobertura.txt" 2>/dev/null || true)
 
         link="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
         campo_ref="*Ref*\n\`${REF}\`"
