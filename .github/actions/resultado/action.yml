@@ -11,17 +11,14 @@ runs:
   steps:
     # A API é a única fonte de tempo por job e de link do log: `needs` não expõe nada
     # disso. Sem `actions: read` (ou com 403) o passo degrada em vez de derrubar o aviso.
-    - name: Coletar jobs e o run
+    - name: Coletar jobs do run
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         set -uo pipefail
         jobs="$RUNNER_TEMP/jobs.tsv"
-        run="$RUNNER_TEMP/run.tsv"
-        : > "$jobs"; : > "$run"
-        gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-          --jq '[.run_started_at, .updated_at, .html_url] | @tsv' > "$run" 2>/dev/null || true
+        : > "$jobs"
         if ! gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
               --jq '.jobs[] | [.name, (.conclusion // .status), (.started_at // ""), (.completed_at // ""), .html_url] | @tsv' \
               > "$jobs" 2>/dev/null; then
@@ -42,6 +39,10 @@ runs:
         resumo="$RUNNER_TEMP/resumo.md"
         : > "$duracao"
         pendentes=0
+        # Parede do run pelos próprios jobs: criação/fim do run na API vêm nulos em
+        # alguns eventos, e os jobs têm horário confiável.
+        inicio_min=""
+        fim_max=""
         while IFS=$'\t' read -r nome status inicio fim url; do
           [ -n "${nome:-}" ] || continue
           # Job sem conclusão é o próprio aviso, que ainda está rodando: não tem veredito.
@@ -53,8 +54,21 @@ runs:
           if [ -n "${inicio:-}" ] && [ -n "${fim:-}" ]; then
             d=$(( $(date -d "$fim" +%s) - $(date -d "$inicio" +%s) ))
           fi
+          if [ -n "${inicio:-}" ] && { [ -z "$inicio_min" ] || [ "$inicio" \< "$inicio_min" ]; }; then
+            inicio_min="$inicio"
+          fi
+          if [ -n "${fim:-}" ] && { [ -z "$fim_max" ] || [ "$fim" \> "$fim_max" ]; }; then
+            fim_max="$fim"
+          fi
           printf '%s\t%s\t%s\t%s\n' "$d" "$status" "$nome" "${url:--}" >> "$duracao"
         done < "$jobs"
+
+        parede=0
+        if [ -n "$inicio_min" ] && [ -n "$fim_max" ]; then
+          parede=$(( $(date -d "$fim_max" +%s) - $(date -d "$inicio_min" +%s) ))
+          [ "$parede" -lt 0 ] && parede=0
+        fi
+        printf '%s\n' "$parede" > "$RUNNER_TEMP/parede.txt"
 
         total=$(wc -l < "$duracao" | tr -d ' ')
         falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {n++} END {print n+0}' "$duracao")
@@ -62,13 +76,7 @@ runs:
         soma=$(awk -F'\t' '{s += $1} END {print s+0}' "$duracao")
         oks=$((total - falhas - pulados))
 
-        # Parede do run e paralelismo efetivo (soma / parede).
-        parede=0
-        if [ -s "$RUNNER_TEMP/run.tsv" ]; then
-          IFS=$'\t' read -r inicio_run fim_run < "$RUNNER_TEMP/run.tsv"
-          [ -n "${inicio_run:-}" ] && [ -n "${fim_run:-}" ] && \
-            parede=$(( $(date -d "$fim_run" +%s) - $(date -d "$inicio_run" +%s) ))
-        fi
+        # Paralelismo efetivo: soma dos jobs ÷ parede do run.
         par="—"
         [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
 
@@ -148,12 +156,8 @@ runs:
         pulados=$(awk -F'\t' '$2 == "skipped" {n++} END {print n+0}' "$duracao")
         oks=$((total - falhas - pulados))
         soma=$(awk -F'\t' '{s += $1} END {print s+0}' "$duracao")
-        parede=0
-        if [ -s "$RUNNER_TEMP/run.tsv" ]; then
-          IFS=$'\t' read -r ir fr < "$RUNNER_TEMP/run.tsv"
-          [ -n "${ir:-}" ] && [ -n "${fr:-}" ] && parede=$(( $(date -d "$fr" +%s) - $(date -d "$ir" +%s) ))
-        fi
-        par="—"; [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
+        parede=$(cat "$RUNNER_TEMP/parede.txt" 2>/dev/null || echo 0)
+        par="—"; [ "${parede:-0}" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
 
         dt() { printf '%dm %02ds' $(($1 / 60)) $(($1 % 60)); }
 
