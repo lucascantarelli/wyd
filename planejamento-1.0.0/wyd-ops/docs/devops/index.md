@@ -6,7 +6,7 @@
 > Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0012`
 > Revisado em: 2026-11-27
 
-**Estado:** aceito (2026-11-26; política de dependências e de pin medida em 2026-11-27) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
+**Estado:** aceito (2026-11-26; política de dependências e de pin medida em 2026-11-27; sentinelas agendadas fechadas em 2026-11-27) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F4 com as duas sentinelas agendadas no ar e métricas/relatório semanal pendentes; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
 
 ## 1. O que está no ar
 
@@ -20,6 +20,7 @@
 | `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
 | `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
 | `release.yml` | tag `v*` | assina e publica manifesto | não |
+| `images.yml` | schedule semanal (quarta) + dispatch | `frescor`: compara o digest pinado de cada base com o digest atual da tag via `check-image-freshness.sh`; `notificar falha` | não (sinal agendado, não check de PR) |
 
 `full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
 
@@ -119,6 +120,7 @@ No CI, `wyd-ops/scripts/ci/db-prepare.sh` cria os papéis e `wyd-ops/scripts/ci/
 | `wyd-ops/scripts/ci/db-prepare.sh` | bash | cria papéis do PostgreSQL de teste | URL/psql |
 | `wyd-ops/scripts/ci/apply-series.sh` | bash | aplica só os blocos `up` da série | URL/psql |
 | `wyd-ops/scripts/ci/check-pins.sh` | bash | política de pin: action por SHA de 40 hex, imagem de terceiro por digest | raiz; exit 0/1 |
+| `wyd-ops/scripts/ci/check-image-freshness.sh` | bash | frescor da base pinada: digest do arquivo contra o digest da tag no registro | raiz; exit 0/1 |
 | `wyd-ops/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
 | `wyd-ops/tests/unitario/sync-issue-status.test.mjs` | Node | regras da transição de estado | `node --test wyd-ops/tests/unitario/` |
 
@@ -172,6 +174,13 @@ com breaking fica retido, com o motivo escrito aqui e o caminho de saída.
 
 Cada retenção tem motivo e saída declarados; nenhuma sobe só porque existe versão mais nova.
 
+O digest pinado não se mantém atual sozinho: `check-pins.sh` prova que existe pin, e o
+`check-image-freshness.sh` prova que o pin ainda é o da tag. O primeiro é determinístico e roda em todo PR;
+o segundo depende de registro e roda no `images.yml` semanal, para não trazer rede ao gate de PR. CVE
+dentro da imagem base continua sem scanner: o repositório não tem Trivy nem outra ferramenta instalada,
+e a única menção é proposta em `proposta-gestao-github-e-ambientes.md`. Ligar um scanner exige
+decisão de allowlist de action, que é ato do dono.
+
 ## 6. Regras de branch
 
 A proteção de `develop` e `main` está aplicada e exige:
@@ -202,13 +211,27 @@ quando `PROJECT_TOKEN` existe. A tabela de eventos, as regras de não regressão
 estão em `github-mapping.md` §2.2 e `ADR-OPS-0009`; a regressão unitária roda com
 `node --test wyd-ops/tests/unitario/`.
 
+## 7.2 Sinais agendados
+
+Dois sinais rodam fora do PR, de propósito: o gate de PR não depende de rede nem de advisory que muda
+sem commit.
+
+| Sinal | Workflow e cadência | O que reprova | Aviso |
+|---|---|---|---|
+| Advisory, licença e pin | `security.yml`, segunda 06:00 UTC | `cargo audit`/`cargo deny`, `npm audit` do portal e `check-pins.sh` | `gate-security` → `notificar falha` |
+| Frescor de imagem base | `images.yml`, quarta 07:00 UTC | digest pinado diferente do digest da tag (`check-image-freshness.sh`) | `frescor` → `notificar falha` |
+| Toolchain futura | `code-stable.yml`, diário 07:00 UTC | suíte dos três crates com Rust `stable` | `stable` → `notificar falha` |
+
+Os três usam o mesmo runner padrão e o mesmo `SLACK_CI_WEBHOOK` opcional; sem o secret, o run fica
+vermelho do mesmo jeito e o aviso no Slack é ignorado. `workflow_dispatch` permite rodar cada um na hora.
+
 ## 8. O que falta (F2–F5)
 
 | Fase | Escopo | Critério de saída |
 |---|---|---|
 | **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM, tags por branch e rollback por SHA **feitos**; runtime nginx unprivileged pendente | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
 | **F3 — deploy** | contrato sobre Compose; workflow manual com `environment`; OIDC; smoke e rollback; **provedor de VPS a definir** | nenhum segredo de longa duração; deploy não roda sem alvo |
-| **F4 — observabilidade** | métricas de duração/fila/falha; relatório semanal; sentinela de advisory **feita em 2026-11-27** (`security.yml` semanal com `notificar falha`); sentinela de imagem pendente | falha notifica em menos de 1 min; relatório semanal publicado |
+| **F4 — observabilidade** | métricas de duração/fila/falha e relatório semanal pendentes; sentinela de advisory **feita em 2026-11-27** (`security.yml` semanal com `notificar falha`); sentinela de imagem **feita em 2026-11-27** (`images.yml` semanal com `check-image-freshness.sh`) | falha das duas sentinelas notifica em menos de 1 min; relatório semanal publicado |
 | **F5 — governança** | ruleset, allowlist e ADR-OPS-0012 **feitos**; CODEOWNERS, onboarding e revisão de ADRs pendentes | PR vermelho não mergeia; action fora da allowlist falha |
 
 F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do fornecedor de VPS, não de código.
