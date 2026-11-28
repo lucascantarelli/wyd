@@ -77,16 +77,24 @@ runs:
     # CVE da base (debian/node). O advisory das dependências já é coberto por
     # cargo-audit, cargo-deny e npm audit; aqui é o sistema operacional da imagem, e só
     # falha o que tem correção disponível — CVE sem patch não trava PR.
+    #
+    # Trivy pelo binário em imagem pinada por digest, não pela action: a allowlist de
+    # actions do repositório aceita só docker/*, dtolnay/*, Swatinem/* e taiki-e/*, e
+    # `aquasecurity/trivy-action` é recusada pelo GitHub. `--image-src docker` usa o
+    # daemon local, então não há pull de registro no meio do scan.
     - name: Vulnerabilidades da imagem
       if: inputs.cve == 'true'
-      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-      with:
-        image-ref: ${{ inputs.nome }}:${{ github.sha }}
-        vuln-type: os
-        severity: HIGH,CRITICAL
-        ignore-unfixed: true
-        exit-code: "1"
-        format: table
+      shell: bash
+      env:
+        NOME: ${{ inputs.nome }}
+      run: |
+        set -eu
+        docker run --rm \
+          --volume /var/run/docker.sock:/var/run/docker.sock \
+          aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb \
+          image --quiet --image-src docker \
+          --vuln-type os --severity HIGH,CRITICAL --ignore-unfixed \
+          --exit-code 1 "${NOME}:${GITHUB_SHA}"
 
     - name: Fumaça HTTP
       if: inputs.smoke-porta != ''
