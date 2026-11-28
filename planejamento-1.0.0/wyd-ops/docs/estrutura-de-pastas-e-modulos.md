@@ -35,7 +35,7 @@ está em §2.4 e o verificador em §6.
 ```text
 .
 ├── .agents/                       # README, prompts/ e skills/; memory/ é ignorado
-├── .github/                       # workflows/, actions/ e ISSUE_TEMPLATE/ (caminho fixo)
+├── .github/                       # workflows/, actions/, ISSUE_TEMPLATE/, CODEOWNERS (caminho fixo)
 ├── .vscode/                       # settings, launch, tasks e extensions (descoberta da IDE)
 ├── crates/<sistema>/              # crate Rust por sistema; 10 crates em 2026-11-26
 ├── planejamento-1.0.0/            # só documentação (panorama, status e 13 sistemas)

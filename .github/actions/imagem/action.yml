@@ -30,6 +30,10 @@ inputs:
     description: Caminho conferido na fumaça.
     required: false
     default: "/"
+  cve:
+    description: Roda o Trivy na imagem e falha em CVE corrigível HIGH/CRITICAL do sistema operacional.
+    required: false
+    default: "true"
 
 runs:
   using: composite
@@ -61,6 +65,29 @@ runs:
         provenance: ${{ inputs.publicar == 'true' }}
         sbom: ${{ inputs.publicar == 'true' }}
 
+    # Quando publica, a imagem foi para o registro e não ficou no runner; o pull deixa
+    # o Trivy e a fumaça usarem o daemon local, sem credencial de registro.
+    - name: Carregar a imagem no runner
+      if: inputs.publicar == 'true'
+      shell: bash
+      env:
+        NOME: ${{ inputs.nome }}
+      run: docker pull "${NOME}:${GITHUB_SHA}"
+
+    # CVE da base (debian/node). O advisory das dependências já é coberto por
+    # cargo-audit, cargo-deny e npm audit; aqui é o sistema operacional da imagem, e só
+    # falha o que tem correção disponível — CVE sem patch não trava PR.
+    - name: Vulnerabilidades da imagem
+      if: inputs.cve == 'true'
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        image-ref: ${{ inputs.nome }}:${{ github.sha }}
+        vuln-type: os
+        severity: HIGH,CRITICAL
+        ignore-unfixed: true
+        exit-code: "1"
+        format: table
+
     - name: Fumaça HTTP
       if: inputs.smoke-porta != ''
       shell: bash
@@ -72,9 +99,6 @@ runs:
       run: |
         set -eu
         ref="${NOME}:${GITHUB_SHA}"
-        if [ "$PUBLICAR" = "true" ]; then
-          docker pull "$ref"
-        fi
         docker run --detach --name imagem-smoke --publish "8123:${PORTA}" "$ref"
         codigo=0
         for _ in $(seq 1 30); do

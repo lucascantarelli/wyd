@@ -322,9 +322,8 @@ taxa de falha por run e o link direto para o run lento.
 
 ### 12.2 Viável e não feito
 
-1. **Tag de release com changelog.** Publicar imagem com a tag da versão e gerar changelog a partir das
-   issues da versão. Depende da política de versão: `0.1.0-rc.N` não existe no repositório e inventá-la
-   aqui seria decidir release pela porta do CI.
+Nada em aberto. O que restava da lista de 2026-11-27 foi fechado em 2026-11-28: tag de release e
+changelog (§13), scan de CVE na action `imagem` e CODEOWNERS em `.github/CODEOWNERS`.
 
 ### 12.3 Não viável como proposto
 
@@ -341,6 +340,23 @@ taxa de falha por run e o link direto para o run lento.
 
 ### 12.4 Pendente por decisão do dono
 
-Runtime nginx (F2), provedor de VPS e OIDC (F3), CODEOWNERS (F5), política de versão/release e scanner
-CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual; o dono decidiu em 2026-11-28 incluir os
-três últimos, e o desenho de cada um é pergunta aberta com recomendação (ver o corpo do PR #242).
+Runtime nginx (F2) e provedor de VPS/OIDC (F3): nenhum é bloqueio técnico do CI atual. Em 2026-11-28 o
+dono decidiu os três itens que faltavam — SemVer `vX.Y.Z[-rc.N]` (§13), CODEOWNERS com dono único
+(`.github/CODEOWNERS`) e Trivy na action `imagem` (sistema operacional da imagem, HIGH/CRITICAL com
+correção disponível, falha o job). F5 fecha com isso.
+
+## 13. Política de versionamento e release (2026-11-28)
+
+Decisão do dono: SemVer, com a tag como fonte da versão. Vale para tag, release e imagem.
+
+- **Formato.** `vX.Y.Z` para release e `vX.Y.Z-rc.N` para candidato; `0.y.z` até o `1.0.0`. A tag é
+  anotada e nasce em `main`, a branch de release (ADR-OPS-0012).
+- **Validação.** O job `release` confere o nome da tag contra `^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$`
+  antes de assinar o manifesto: tag fora do padrão é recusada, não vira release.
+- **Changelog.** As notas saem de `gh release create --generate-notes` (PRs mergeados desde a tag
+  anterior) e sobem junto do manifesto assinado, no mesmo job.
+- **Imagem.** `:sha` e `:dev` acompanham `develop`; `:latest` é exclusiva do site enquanto não existe
+  release. Imagem com a tag da versão entra quando a primeira tag `v*` for criada — hoje o CI não
+  publica em tag e não há tag no repositório (`git tag --list 'v*'` vazio).
+- **Nada de versão dentro do código.** Não há `VERSION` nem workspace: enquanto isso, a tag é a única
+  fonte e nenhum `Cargo.toml` é reescrito pelo CI.

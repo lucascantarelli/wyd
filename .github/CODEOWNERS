@@ -1,0 +1,5 @@
+# Dono do repositório (decisão de 2026-11-28): todo PR pede review automática do dono.
+# Regra única e explícita — sem time fictício e sem dono por pasta enquanto existe uma
+# pessoa só no projeto. Quando houver segundo mantenedor, a regra por sistema entra
+# abaixo desta linha (sintaxe do CODEOWNERS: `/caminho/ @usuario`).
+* @lucascantarelli
