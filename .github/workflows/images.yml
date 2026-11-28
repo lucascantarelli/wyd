@@ -1,0 +1,51 @@
+name: images
+
+# Sentinela de imagem-base. O `pinos` (security.yml) prova que todo Dockerfile usa
+# `tag@digest`; ele não prova que o digest continua sendo o da tag. Sem esta verificação,
+# `python:3.15-slim`, `postgres:17` e as demais bases envelhecem em silêncio — e o
+# Dependabot não alerta CVE em imagem de Dockerfile.
+#
+# É o único workflow que conversa com registro de imagem, por isso não roda em PR: o gate
+# de PR continua offline e determinístico. Falha aqui é sinal agendado, e o job
+# `notificar falha` usa o mesmo caminho dos outros workflows.
+
+on:
+  schedule:
+    # Quarta, 07:00 UTC: depois do advisory semanal de segunda e antes do fim da semana.
+    - cron: "0 7 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frescor:
+    name: frescor das imagens base
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Conferir digest pinado contra a tag
+        run: bash wyd-ops/scripts/ci/check-image-freshness.sh "$GITHUB_WORKSPACE"
+
+  notify:
+    name: notificar falha
+    if: always() && (failure() || cancelled())
+    needs: [frescor]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/notify-failure
+        with:
+          workflow: images
