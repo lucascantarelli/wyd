@@ -10,6 +10,9 @@ name: ci
 #
 # A agenda semanal roda o mesmo arquivo: o advisory envelhece sem commit, e o run
 # agendado reaproveita os mesmos gates em vez de duplicar jobs num segundo workflow.
+# Os jobs de imagem são a exceção: na agenda eles não buildam, porque build sem
+# publicação não prova nada do que a pessoa vai usar no dia seguinte — o fresco do
+# digest pinado é do `images.yml`.
 
 on:
   push:
@@ -270,28 +273,6 @@ jobs:
           cache-dependency-path: wyd-docs/requirements.txt
       - name: Gate do site (inclui testes dos verificadores)
         uses: ./.github/actions/docs-check
-      - name: Guardar artefato
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: wyd-docs/site
-
-  publicar:
-    name: publicar no GitHub Pages
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
-    needs: verificar
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
-      - name: Publicar
-        id: deploy
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   analise:
     name: audit e deny
@@ -408,6 +389,7 @@ jobs:
 
   imagem-docs:
     name: construir e publicar
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -432,6 +414,7 @@ jobs:
 
   imagem:
     name: ${{ matrix.nome }}
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -494,4 +477,3 @@ jobs:
       - uses: ./.github/actions/resultado
         with:
           workflow: ci
-          assunto: ${{ github.event.pull_request.title || github.event.head_commit.message }}
