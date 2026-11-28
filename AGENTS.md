@@ -208,6 +208,11 @@ escopo.
   YAML/JSON, marcador de conflito), `cargo fmt` só nos crates alterados e `make gate-fast` no
   `pre-push`; clippy e testes ficam no `make lint`/`make test` e no CI. Instalação, uma vez por
   clone: `pre-commit install`. Hook não substitui gate.
+- **Onde mora o quê.** Orquestração de CI (permissão, `if:`, env, ordem, artefato) em
+  `.github/workflows/` e `.github/actions/*/action.yml`; lógica, coleta de API e formato em
+  `wyd-ops/scripts/**/*.mjs`, com teste em `wyd-ops/tests/unitario/` (`node --test`); verificação de
+  documentação em `wyd-docs/gate/` (Python). Composite não duplica regra: chama o script e falha se
+  ele não existir.
 - **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (layout, alvos, skills, lacunas, contagens,
   censos, capacidades, hoje; não precisa de Docker/MkDocs), `make layout` para só a árvore e `make gate` para o
   caminho completo do CI/container (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato

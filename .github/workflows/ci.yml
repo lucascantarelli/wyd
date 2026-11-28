@@ -480,6 +480,9 @@ jobs:
     permissions:
       actions: read
       contents: read
+      # `closingIssuesReferences` é GraphQL: sem estas duas o script cai no corpo do PR.
+      issues: read
+      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
