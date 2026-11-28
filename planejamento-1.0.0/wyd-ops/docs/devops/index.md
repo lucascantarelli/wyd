@@ -4,7 +4,7 @@
 > Público: Desenvolvimento, operação, arquitetura e agentes
 > Dono: `wyd-ops`
 > Base: `.github/workflows/*`; `Makefile`; `docker-compose*.yml`; `wyd-docs/gate.sh`; ADRs `ADR-OPS-0003`–`0012`
-> Revisado em: 2026-11-27
+> Revisado em: 2026-11-28
 
 **Estado:** aceito (2026-11-26; política de dependências e de pin medida em 2026-11-27; sentinelas agendadas fechadas em 2026-11-27) — F0 + F1 implementados; F2 com imagem publicada, atestados e rollback reproduzido (runtime nginx ainda pendente); F3 pendente; F4 com as duas sentinelas agendadas no ar e métricas/relatório semanal pendentes; F5 com rulesets, allowlist e ADR-OPS-0012 aplicados. Nenhum deploy de produção existe. Esta página absorveu o antigo `plano-ci-real.md`, removido em 2026-11-26; a história não é mantida em paralelo.
 
@@ -195,12 +195,32 @@ A proteção de `develop` e `main` está aplicada e exige:
 ## 7. Notificação de falha
 
 O job `notificar resultado` roda com `if: always()` — em sucesso e em falha — e executa a action
-composta `.github/actions/resultado`:
+composta `.github/actions/resultado`, que faz três leituras e um aviso:
 
-1. lê os jobs do run pela API (`actions: read`) e monta uma tabela com status e tempo de cada job, a
-   soma dos jobs e run, commit, ref e evento, publicada em `$GITHUB_STEP_SUMMARY`;
-2. se `SLACK_WEBHOOK_URL` existir, posta o mesmo resumo com selo de sucesso/falha, os três jobs mais
-   lentos e um botão para o run.
+1. **Jobs** — lê os jobs do run pela API (`actions: read`) e calcula a parede (primeiro início → último
+   fim), a soma das durações, o paralelismo efetivo (soma ÷ parede) e a cobertura por crate, quando o
+   artefato `cobertura-*` existe;
+2. **DORA** — sem serviço externo, com três consultas: lead time (data do commit → agora), taxa de
+   falha e MTTR nos últimos 30 runs concluídos deste workflow na mesma branch, e runs verdes nos
+   últimos 7 dias. `failure` e `timed_out` contam como incidente; `cancelled` não. MTTR é o intervalo
+   entre a falha e o primeiro sucesso posterior, e a mensagem mostra a recuperação mais recente.
+   Qualquer 403 ou página vazia degrada o campo em `—`, nunca derruba o aviso;
+3. **Resumo** — tabela com run (número e tentativa), commit e assunto, ref, evento (com o número do
+   PR), ator, horário, parede, jobs, soma, paralelismo, os quatro campos DORA, jobs sem veredito e
+   cobertura; abaixo, um `<details>` com job, status, tempo e link do log, maior primeiro. Vai para
+   `$GITHUB_STEP_SUMMARY`, para o log do job e para o artefato `resultado-<workflow>`.
+
+No Slack o mesmo conteúdo vira Block Kit: cabeçalho com selo, resultado e branch; campos de ref,
+commit (com link), evento (com PR) e ator; campos de parede, jobs, soma e paralelismo; assunto do
+commit; os cinco jobs mais lentos (pulados ficam de fora) e as falhas com link do log de cada job; um
+segundo grupo de campos com lead time, taxa de falha, MTTR e entrega verde; e um contexto com run,
+tentativa, cobertura e horário, mais o botão para o run.
+
+Duas armadilhas que o passo evita: `"*Ref*\n"` em aspas duplas entrega barra invertida + `n`, e o Slack
+mostrava `*Ref*\n` literal em vez de quebrar linha — todo texto de bloco é montado com `printf`; e
+`&`, `<` e `>` do assunto do commit são escapados, porque são markup do Slack. Antes de postar, o
+passo valida o payload com `jq` (até 50 blocos, até 3000 caracteres por texto) e falha o job se ele
+for inválido. `DRY_RUN=1` imprime o payload validado em vez de postar, para depurar sem webhook.
 
 O job lê o secret `SLACK_CI_WEBHOOK` e o expõe como `SLACK_WEBHOOK_URL`. O secret é configurado em **Settings → Secrets and variables → Actions**. Sem ele, não há Slack, mas o run continua vermelho e o check bloqueia.
 
@@ -287,7 +307,7 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   API (`actions: read`) e monta uma vez o texto com veredito, run/commit/ref/evento, contagem de jobs,
   soma das durações e a tabela por job (maior primeiro). O texto vai para `$GITHUB_STEP_SUMMARY`, para
   o **log do job** e para o artefato `resultado-ci` — o summary não é legível pela API, log e artefato
-  são. No Slack vão o selo, os três jobs mais lentos e o botão para o run; o segredo
+  são. No Slack vão o selo, os cinco jobs mais lentos e o botão para o run; o segredo
   `SLACK_CI_WEBHOOK` existe no repositório (aparece mascarado no log) e o `curl --fail` do passo
   fecha com sucesso. Job sem conclusão na coleta (o próprio job de aviso) não entra no total nem no
   veredito.
@@ -328,6 +348,12 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   Slack usa Block Kit com cor por resultado (verde/vermelho), emojis e campos; a cobertura por crate
   entra quando o artefato `cobertura-*` existe. O resumo em Markdown tem tabela com link por job e vai
   para o summary, para o log e para o artefato `resultado-ci`.
+  Em 2026-11-28 o aviso ganhou **DORA** (lead time, taxa de falha, MTTR e entrega verde nos últimos
+  30 runs da branch), assunto do commit, número e tentativa do run e PR, e o `\n` literal que
+  aparecia nas mensagens do Slack foi trocado por `printf`; o payload passou a ser validado antes do
+  POST. Prova fora do CI no mesmo dia: a action extraída por `pyyaml` e executada em container com
+  `gh` falso, `jq 1.7.1` e fixtures — payload válido nos dois desfechos, `#2eb886` em sucesso e
+  `#cc0000` em falha, MTTR `20m 00s` sobre a fixture de 6 runs, job `skipped` fora da lista de lentos.
   Comprovação: run `46097685728` — artefato `resultado-ci` com `Parede 1m 21s`, `Jobs 33 (✅ 32 · ❌ 0 ·
   ⏭️ 1)`, `Soma 13m 24s`, `Paralelismo 9,9×` e `Cobertura wyd-db 67,77% · wyd-launcher 92,48%`; o passo
   do Slack logou `aviso montado: ✅ ci passou (33 jobs, parede 1m 21s, 0 falha(s))` e `aviso enviado ao

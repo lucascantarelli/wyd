@@ -1,5 +1,5 @@
 name: resultado
-description: Relatório único do run — veredito, parede, paralelismo, jobs com tempo e link, falhas, cobertura — no summary, no log, em artefato e no Slack. Serve para sucesso e falha.
+description: Relatório único do run — veredito, parede, paralelismo, jobs com tempo e link, falhas, DORA e cobertura — no summary, no log, em artefato e no Slack. Serve para sucesso e falha.
 
 inputs:
   workflow:
@@ -26,6 +26,78 @@ runs:
           : > "$jobs"
         fi
 
+    # DORA sem serviço externo: lead time (commit → agora), taxa de falha e MTTR nos
+    # últimos 30 runs concluídos deste workflow na mesma branch, e runs verdes em 7 dias.
+    # Toda leitura degrada em "—": API sem permissão não pode derrubar o aviso.
+    - name: Coletar métricas DORA
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -uo pipefail
+        dt() { s=${1:-0}; if [ "$s" -ge 60 ]; then printf '%dm %02ds' $((s / 60)) $((s % 60)); else printf '%ds' "$s"; fi; }
+
+        amostra=0; bad=0; ok7=0; mttr=-1
+        dora_lead="—"; dora_taxa="—"; dora_mttr="—"; dora_verde="—"; dora_assunto=""
+
+        commit_info=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}" \
+          --jq '.commit.committer.date + "\t" + (.commit.message | split("\n")[0])' 2>/dev/null || true)
+        if [ -n "${commit_info:-}" ]; then
+          data_commit=${commit_info%%$'\t'*}
+          dora_assunto=${commit_info#*$'\t'}
+          if segundos=$(date -d "$data_commit" +%s 2>/dev/null); then
+            lead=$(( $(date -u +%s) - segundos ))
+            # Relógio adiantado no commit (forks, máquina fora de hora) vira 0s, não "—".
+            [ "$lead" -lt 0 ] && lead=0
+            dora_lead="$(dt "$lead") · commit ${GITHUB_SHA:0:7}"
+          fi
+        fi
+
+        ref="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+        runs="$RUNNER_TEMP/dora-runs.json"
+        wid=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq .workflow_id 2>/dev/null || true)
+        if [ -n "${wid:-}" ] \
+           && gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${wid}/runs?branch=${ref}&status=completed&per_page=30" \
+                > "$runs" 2>/dev/null; then
+          if linha=$(jq -r '
+              [(.workflow_runs // [])[] | select(.conclusion != null) | {c: .conclusion, fim: .updated_at}]
+              | sort_by(.fim)
+              | . as $r
+              | ($r | length) as $n
+              | ([ $r[] | select(.c == "success" and ((.fim | fromdate?) // 0) > (now - 604800)) ] | length) as $ok7
+              | ([ range(0; $n) as $i
+                   | $r[$i] as $f
+                   | select($f.c == "failure" or $f.c == "timed_out")
+                   | ([ $r[$i + 1:][] | select(.c == "success") ][0]) as $s
+                   | select($s != null)
+                   | (($s.fim | fromdate?) - ($f.fim | fromdate?)) ] | last // -1) as $mttr
+              | [ $n,
+                  ($r | map(select(.c == "failure" or .c == "timed_out")) | length),
+                  $ok7,
+                  $mttr ] | @tsv' "$runs" 2>/dev/null); then
+            IFS=$'\t' read -r amostra bad ok7 mttr <<< "$linha"
+          fi
+        else
+          echo "::warning::não consegui ler os runs anteriores; DORA sai sem taxa e sem MTTR"
+        fi
+
+        case "${amostra:-0}" in
+          ''|0) ;;
+          *) dora_taxa=$(printf '%d de %d (%d%%)' "$bad" "$amostra" $(( bad * 100 / amostra ))) ;;
+        esac
+        [ "${mttr:--1}" -ge 0 ] 2>/dev/null && dora_mttr=$(printf '%s · última recuperação' "$(dt "$mttr")")
+        [ "${amostra:-0}" -gt 0 ] 2>/dev/null && dora_verde=$(printf '%s runs' "$ok7")
+
+        {
+          printf 'dora_amostra=%s\n' "${amostra:-0}"
+          printf 'dora_taxa=%s\n' "$dora_taxa"
+          printf 'dora_mttr=%s\n' "$dora_mttr"
+          printf 'dora_lead=%s\n' "$dora_lead"
+          printf 'dora_verde=%s\n' "$dora_verde"
+          printf 'dora_assunto=%s\n' "$dora_assunto"
+        } > "$RUNNER_TEMP/dora.env"
+        echo "DORA: lead ${dora_lead} · falhas ${dora_taxa} · MTTR ${dora_mttr} · verdes ${dora_verde}"
+
     - name: Resumo no run
       shell: bash
       env:
@@ -39,6 +111,9 @@ runs:
         resumo="$RUNNER_TEMP/resumo.md"
         : > "$duracao"
         pendentes=0
+        dt() { s=${1:-0}; if [ "$s" -ge 60 ]; then printf '%dm %02ds' $((s / 60)) $((s % 60)); else printf '%ds' "$s"; fi; }
+        # `dora.env` não é `source`-ado: assunto de commit pode ter `$` e crase.
+        dora() { grep -m1 "^$1=" "$RUNNER_TEMP/dora.env" 2>/dev/null | cut -d= -f2- || true; }
         # Parede do run pelos próprios jobs: criação/fim do run na API vêm nulos em
         # alguns eventos, e os jobs têm horário confiável.
         inicio_min=""
@@ -96,22 +171,36 @@ runs:
         printf '%s\n' "$cobertura" > "$RUNNER_TEMP/cobertura.txt"
 
         if [ "$falhas" -eq 0 ]; then selo="✅"; estado="sucesso"; else selo="❌"; estado="falha"; fi
-        [ "$pulados" -gt 0 ] && [ "$falhas" -eq 0 ] && selo="✅"
+
+        pr=""
+        case "${GITHUB_REF:-}" in
+          refs/pull/*) pr=" · PR #$(printf '%s' "${GITHUB_REF#refs/pull/}" | cut -d/ -f1)" ;;
+        esac
+        tentativa=""
+        [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] 2>/dev/null && tentativa=" (tentativa ${GITHUB_RUN_ATTEMPT})"
+        assunto=$(dora dora_assunto)
+        assunto=${assunto//|/\\|}
+        run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
         {
           echo "### ${selo} ${WORKFLOW} — ${estado}"
           echo
           echo "| Campo | Valor |"
           echo "|---|---|"
-          echo "| Run | [#${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) |"
-          echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
+          echo "| Run | [#${GITHUB_RUN_NUMBER}](${run_url})${tentativa} |"
+          echo "| Commit | \`${GITHUB_SHA:0:7}\`${assunto:+ — ${assunto}} |"
           echo "| Ref | \`${REF}\` |"
-          echo "| Evento | \`${GITHUB_EVENT_NAME}\` |"
+          echo "| Evento | \`${GITHUB_EVENT_NAME}\`${pr} |"
           echo "| Ator | \`${GITHUB_ACTOR}\` |"
-          echo "| Parede | $(printf '%dm %02ds' $((parede / 60)) $((parede % 60))) |"
+          echo "| Gerado em | $(date -u '+%Y-%m-%d %H:%M UTC') |"
+          echo "| Parede | $(dt "$parede") |"
           echo "| Jobs | ${total} (✅ ${oks} · ❌ ${falhas} · ⏭️ ${pulados}) |"
-          echo "| Soma dos jobs | $(printf '%dm %02ds' $((soma / 60)) $((soma % 60))) |"
+          echo "| Soma dos jobs | $(dt "$soma") |"
           echo "| Paralelismo | ${par} |"
+          echo "| Lead time | $(dora dora_lead) |"
+          echo "| Falhas (30 runs) | $(dora dora_taxa) |"
+          echo "| MTTR | $(dora dora_mttr) |"
+          echo "| Entrega verde (7 dias) | $(dora dora_verde) |"
           if [ "$pendentes" -gt 0 ]; then
             echo "| Sem veredito na coleta | ${pendentes} (o próprio job de aviso) |"
           fi
@@ -132,9 +221,9 @@ runs:
                 *) s="❌" ;;
               esac
               if [ "$url" = "-" ]; then
-                printf '| %s | %s %s | %ds | — |\n' "$nome" "$s" "$status" "$d"
+                printf '| %s | %s %s | %s | — |\n' "$nome" "$s" "$status" "$(dt "$d")"
               else
-                printf '| %s | %s %s | %ds | [log](%s) |\n' "$nome" "$s" "$status" "$d" "$url"
+                printf '| %s | %s %s | %s | [log](%s) |\n' "$nome" "$s" "$status" "$(dt "$d")" "$url"
               fi
             done
             echo
@@ -157,6 +246,9 @@ runs:
         if-no-files-found: warn
 
     # Sem webhook o passo não falha: o run já é o registro, o Slack é conveniência.
+    # Todo bloco com duas linhas usa `printf` de verdade: `"*Ref*\n"` em aspas duplas
+    # entrega barra invertida + n, e o Slack mostrava `*Ref*\n` em vez de quebrar linha.
+    # `DRY_RUN=1` imprime o payload validado em vez de postar (depuração local).
     - name: Aviso no Slack
       shell: bash
       env:
@@ -176,8 +268,11 @@ runs:
         soma=$(awk -F'\t' '{s += $1} END {print s+0}' "$duracao")
         parede=$(cat "$RUNNER_TEMP/parede.txt" 2>/dev/null || echo 0)
         par="—"; [ "${parede:-0}" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
-
-        dt() { printf '%dm %02ds' $(($1 / 60)) $(($1 % 60)); }
+        dt() { s=${1:-0}; if [ "$s" -ge 60 ]; then printf '%dm %02ds' $((s / 60)) $((s % 60)); else printf '%ds' "$s"; fi; }
+        dora() { grep -m1 "^$1=" "$RUNNER_TEMP/dora.env" 2>/dev/null | cut -d= -f2- || true; }
+        # `&`, `<` e `>` são markup do Slack: escapados para o texto do commit não quebrar.
+        esc() { printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'; }
+        campo() { printf '*%s*\n%s' "$1" "$2"; }
 
         if [ "$falhas" -gt 0 ]; then
           titulo="❌ ${WORKFLOW} falhou"
@@ -186,52 +281,114 @@ runs:
           titulo="✅ ${WORKFLOW} passou"
           cor="#2eb886"
         fi
+        [ -n "${REF:-}" ] && titulo="${titulo} · ${REF:0:60}"
+        pr=""
+        case "${GITHUB_REF:-}" in
+          refs/pull/*) pr=" · PR #$(printf '%s' "${GITHUB_REF#refs/pull/}" | cut -d/ -f1)" ;;
+        esac
 
-        lentos=$(sort -t $'\t' -k1 -rn "$duracao" | awk -F'\t' '{printf "• %s — %ds\n", $3, $1}' | head -n 5)
-        lista_falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {printf "• %s — <%s|logs>\n", $3, $4}' "$duracao")
-        lista_pulados=$(awk -F'\t' '$2 == "skipped" {printf "• %s\n", $3}' "$duracao" | head -n 6)
+        link_run="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        link_commit="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
 
-        # Cobertura vem do passo de resumo (artefato por crate), para os dois textos
-        # contarem a mesma coisa.
-        cobertura=$(cat "$RUNNER_TEMP/cobertura.txt" 2>/dev/null || true)
+        campo_ref=$(campo "Ref" "\`$(esc "$REF")\`")
+        campo_commit=$(campo "Commit" "<${link_commit}|\`${GITHUB_SHA:0:7}\`>")
+        campo_evento=$(campo "Evento" "\`${GITHUB_EVENT_NAME}\`${pr}")
+        campo_ator=$(campo "Ator" "\`$(esc "$GITHUB_ACTOR")\`")
+        metrica_parede=$(campo "⏱ Parede" "$(dt "$parede")")
+        metrica_jobs=$(campo "🧩 Jobs" "${total} · ✅ ${oks} · ❌ ${falhas} · ⏭️ ${pulados}")
+        metrica_soma=$(campo "Σ Soma dos jobs" "$(dt "$soma")")
+        metrica_par=$(campo "⚡ Paralelismo" "$par")
 
-        link="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-        campo_ref="*Ref*\n\`${REF}\`"
-        campo_commit="*Commit*\n\`${GITHUB_SHA:0:7}\`"
-        campo_evento="*Evento*\n\`${GITHUB_EVENT_NAME}\`"
-        campo_ator="*Ator*\n\`${GITHUB_ACTOR}\`"
-        metrica_parede="*⏱ Parede*\n$(dt "$parede")"
-        metrica_jobs="*🧩 Jobs*\n${total} · ✅ ${oks} · ❌ ${falhas} · ⏭️ ${pulados}"
-        metrica_soma="*Σ Soma dos jobs*\n$(dt "$soma")"
-        metrica_par="*⚡ Paralelismo*\n${par}"
-        bloco_lentos="*🐢 Mais lentos*\n${lentos:-—}"
+        assunto=$(dora dora_assunto)
+        # Texto puro, não link: o assunto pode conter `|`, que quebra `<url|texto>`.
+        bloco_assunto=""
+        [ -n "${assunto:-}" ] && bloco_assunto=$(printf '🗒 *Assunto do commit*\n%s' "$(esc "$assunto")")
+
+        # Job pulado não é gargalo: a lista de lentos ignora `skipped`.
+        lentos=$(awk -F'\t' '$2 != "skipped"' "$duracao" | sort -t $'\t' -k1 -rn | head -n 5 \
+          | while IFS=$'\t' read -r d status nome url; do
+              if [ "${url:--}" = "-" ]; then
+                printf '• %s — %s\n' "$(esc "$nome")" "$(dt "$d")"
+              else
+                printf '• <%s|%s> — %s\n' "$url" "$(esc "$nome")" "$(dt "$d")"
+              fi
+            done)
+        bloco_lentos=$(printf '🐢 *Mais lentos*\n%s' "${lentos:-—}")
+        lista_falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped"' "$duracao" \
+          | while IFS=$'\t' read -r d status nome url; do
+              if [ "${url:--}" = "-" ]; then
+                printf '• %s — `%s`\n' "$(esc "$nome")" "$status"
+              else
+                printf '• <%s|%s> — `%s`\n' "$url" "$(esc "$nome")" "$status"
+              fi
+            done)
         bloco_falhas=""
-        [ -n "$lista_falhas" ] && bloco_falhas="*❌ Falhas*\n${lista_falhas}"
+        [ -n "$lista_falhas" ] && bloco_falhas=$(printf '❌ *Falhas*\n%s' "$lista_falhas")
+        lista_pulados=$(awk -F'\t' '$2 == "skipped" {print $3}' "$duracao" | head -n 6 \
+          | while IFS= read -r nome; do printf '• %s\n' "$(esc "$nome")"; done)
         bloco_pulados=""
-        [ -n "$lista_pulados" ] && bloco_pulados="*⏭️ Pulados*\n${lista_pulados}"
-        bloco_cobertura=""
-        [ -n "$cobertura" ] && bloco_cobertura="🧪 Cobertura — ${cobertura}"
+        [ -n "$lista_pulados" ] && bloco_pulados=$(printf '⏭️ *Pulados*\n%s' "$lista_pulados")
+
+        campo_lead=$(campo "🧭 Lead time" "$(dora dora_lead)")
+        campo_taxa=$(campo "📉 Falhas em 30 runs" "$(dora dora_taxa)")
+        campo_mttr=$(campo "🛠 MTTR" "$(dora dora_mttr)")
+        campo_verde=$(campo "🚀 Entrega verde (7d)" "$(dora dora_verde)")
+
+        cobertura=$(cat "$RUNNER_TEMP/cobertura.txt" 2>/dev/null || true)
+        contexto=$(printf 'Run #%s · tentativa %s · %s · cobertura: %s · %s UTC' \
+          "$GITHUB_RUN_NUMBER" "${GITHUB_RUN_ATTEMPT:-1}" "$WORKFLOW" \
+          "${cobertura:-sem artefato}" "$(date -u '+%Y-%m-%d %H:%M')")
 
         payload=$(jq -n \
-          --arg cor "$cor" \
-          --arg titulo "$titulo" \
+          --arg cor "$cor" --arg titulo "$titulo" \
           --arg r "$campo_ref" --arg c "$campo_commit" --arg e "$campo_evento" --arg a "$campo_ator" \
           --arg p "$metrica_parede" --arg j "$metrica_jobs" --arg s "$metrica_soma" --arg par "$metrica_par" \
-          --arg lentos "$bloco_lentos" --arg falhas "$bloco_falhas" --arg pulados "$bloco_pulados" \
-          --arg cob "$bloco_cobertura" --arg link "$link" \
+          --arg assunto "$bloco_assunto" --arg lentos "$bloco_lentos" \
+          --arg falhas "$bloco_falhas" --arg pulados "$bloco_pulados" \
+          --arg lead "$campo_lead" --arg taxa "$campo_taxa" --arg mttr "$campo_mttr" --arg verde "$campo_verde" \
+          --arg contexto "$contexto" --arg link "$link_run" \
           '{attachments: [{color: $cor, blocks: (
             [{type:"header", text:{type:"plain_text", text:$titulo}},
-             {type:"section", fields:[{type:"mrkdwn",text:$r},{type:"mrkdwn",text:$c},{type:"mrkdwn",text:$e},{type:"mrkdwn",text:$a}]},
-             {type:"section", fields:[{type:"mrkdwn",text:$p},{type:"mrkdwn",text:$j},{type:"mrkdwn",text:$s},{type:"mrkdwn",text:$par}]},
-             {type:"section", text:{type:"mrkdwn", text:$lentos}}]
+             {type:"section", fields:[{type:"mrkdwn",text:$r},{type:"mrkdwn",text:$c},
+                                      {type:"mrkdwn",text:$e},{type:"mrkdwn",text:$a}]},
+             {type:"section", fields:[{type:"mrkdwn",text:$p},{type:"mrkdwn",text:$j},
+                                      {type:"mrkdwn",text:$s},{type:"mrkdwn",text:$par}]}]
+            + (if $assunto != "" then [{type:"section", text:{type:"mrkdwn", text:$assunto}}] else [] end)
+            + [{type:"divider"},
+               {type:"section", text:{type:"mrkdwn", text:$lentos}}]
             + (if $falhas != "" then [{type:"section", text:{type:"mrkdwn", text:$falhas}}] else [] end)
             + (if $pulados != "" then [{type:"section", text:{type:"mrkdwn", text:$pulados}}] else [] end)
-            + (if $cob != "" then [{type:"context", elements:[{type:"mrkdwn", text:$cob}]}] else [] end)
-            + [{type:"actions", elements:[
+            + [{type:"divider"},
+               {type:"section", fields:[{type:"mrkdwn",text:$lead},{type:"mrkdwn",text:$taxa},
+                                        {type:"mrkdwn",text:$mttr},{type:"mrkdwn",text:$verde}]},
+               {type:"context", elements:[{type:"mrkdwn", text:$contexto}]},
+               {type:"actions", elements:[
                  {type:"button", text:{type:"plain_text", text:"Abrir o run"}, url:$link, style:"primary"}]}]
           )}]}')
 
-        echo "aviso montado: ${titulo} (${total} jobs, parede $(dt "$parede"), ${falhas} falha(s))"
+        # Block Kit limita 50 blocos e 3000 caracteres por seção; o aviso nunca chega perto,
+        # mas payload inválido não pode ser postado em silêncio.
+        if ! blocos=$(printf '%s' "$payload" | jq -e '.attachments[0].blocks | length' 2>/dev/null); then
+          echo "::error::payload do Slack inválido; aviso não enviado"
+          printf '%s\n' "$payload"
+          exit 1
+        fi
+        if [ "${blocos:-0}" -gt 50 ]; then
+          echo "::error::payload com ${blocos} blocos (limite 50); aviso não enviado"
+          exit 1
+        fi
+        maiores=$(printf '%s' "$payload" | jq -r '[.attachments[0].blocks[] | (.text.text // "") | length] | max')
+        if [ "${maiores:-0}" -gt 3000 ]; then
+          echo "::error::bloco com ${maiores} caracteres (limite 3000); aviso não enviado"
+          exit 1
+        fi
+
+        echo "aviso montado: ${titulo} (${total} jobs, ${blocos} blocos, parede $(dt "$parede"), ${falhas} falha(s))"
+        if [ -n "${DRY_RUN:-}" ]; then
+          printf '%s\n' "$payload" | jq .
+          echo "DRY_RUN definido; payload validado e não enviado."
+          exit 0
+        fi
         curl --fail --silent --show-error \
           --request POST \
           --header 'Content-Type: application/json' \
