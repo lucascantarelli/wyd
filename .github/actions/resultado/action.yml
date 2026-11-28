@@ -51,6 +51,9 @@ runs:
         soma=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {s += $1} END {print s+0}' "$linhas")
         if [ "$falhas" -eq 0 ]; then selo="✅"; estado="sucesso"; else selo="❌"; estado="falha"; fi
 
+        # O texto é montado uma vez, em arquivo: vai para o summary, para o log (onde
+        # qualquer pessoa e qualquer agente leem sem API) e para o artefato do run.
+        resumo="$RUNNER_TEMP/resumo.md"
         {
           echo "### ${selo} ${WORKFLOW} — ${estado}"
           echo
@@ -80,7 +83,21 @@ runs:
             echo
             echo "</details>"
           fi
-        } >> "$GITHUB_STEP_SUMMARY"
+        } > "$resumo"
+
+        cat "$resumo" >> "$GITHUB_STEP_SUMMARY"
+        echo
+        echo "===== resumo do run ====="
+        cat "$resumo"
+
+    - name: Publicar o resumo como artefato
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: resultado-${{ inputs.workflow }}
+        path: ${{ runner.temp }}/resumo.md
+        retention-days: 7
+        if-no-files-found: warn
 
     - name: Aviso no Slack
       shell: bash
