@@ -12,17 +12,16 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy+unit` no mesmo job por crate — db e launcher em Ubuntu, signer em Ubuntu e Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision` —, `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `notificar resultado` | `gate-code` |
-| `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar resultado` | `gate-db` |
-| `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar resultado` | `gate-docs` |
-| `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
-| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos` (action por SHA, imagem por digest), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar resultado` | `gate-security` |
-| `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
-| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
-| `release.yml` | tag `v*` | assina e publica manifesto | não |
+| `ci.yml` | todo push/PR + agenda semanal (segunda, 06:00 UTC) | `fmt` (matriz 3 crates), `clippy+unit` (db e launcher em Ubuntu, signer em Ubuntu e Windows), `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `verificar` (`gate-docs`), `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos`, `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `imagem-docs`, `imagem` (matriz `wyd-server`, `wyd-admin`, `wyd-portal`), `notificar resultado` | `gate-code`, `gate-db`, `gate-docs`, `gate-security` |
+| `pages.yml` | push em `develop` + dispatch | `publicar`: `docs-check`, artefato do Pages e `deploy-pages` no ambiente `github-pages` | não (publicação, não gate) |
+| `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db`, `wyd-ops-signer` e `wyd-launcher` com Rust `stable`; sinal não bloqueante | não |
+| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/reaberto/sincronizado/editado/fechado; dispatch com `issue` ou `pr` | `sincronizar`: label `estado/*` + espelho no Project (exceção de `pull_request_target` escopada, ADR-OPS-0009/0012); `metadados`: `area/*` por caminho, `size/*` pelo diff e milestone herdado da issue fechada | não (automação, não gate) |
+| `release.yml` | tag `v*` + dispatch | assina e publica manifesto; fecha o marco da versão | não |
 | `images.yml` | schedule semanal (quarta) + dispatch | `frescor`: compara o digest pinado de cada base com o digest atual da tag via `check-image-freshness.sh`; `notificar resultado` | não (sinal agendado, não check de PR) |
 
-`full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
+Na agenda semanal do `ci.yml`, os jobs de imagem **não rodam** (`if: github.event_name != 'schedule'`): build
+sem publicação não antecipa nada, e o frescor do digest pinado é do `images.yml`. `full-workflow.yml` foi
+removido: era um stub com os mesmos gatilhos do CI real.
 
 ### Prova real do pacote 1A–11A (2026-11-26)
 
@@ -122,9 +121,23 @@ No CI, `wyd-ops/scripts/ci/db-prepare.sh` cria os papéis e `wyd-ops/scripts/ci/
 | `wyd-ops/scripts/ci/check-pins.sh` | bash | política de pin: action por SHA de 40 hex, imagem de terceiro por digest | raiz; exit 0/1 |
 | `wyd-ops/scripts/ci/check-image-freshness.sh` | bash | frescor da base pinada: digest do arquivo contra o digest da tag no registro | raiz; exit 0/1 |
 | `wyd-ops/scripts/sync-issue-status.mjs` | Node | labels e Project da issue | evento do GitHub |
+| `wyd-ops/scripts/notificacao/cli.mjs` | Node | entrada do relatório do run: coleta, modelo, resumo, artefato e Slack | `--run`, `--dry-run`; exit 0/1 |
+| `wyd-ops/scripts/notificacao/coleta.mjs` | Node | única camada que fala com a API, pelo `gh` autenticado | `GH_TOKEN` do job |
+| `wyd-ops/scripts/notificacao/modelo.mjs` | Node | cálculo puro: veredito, tempo de pipeline, consumo de runner, DORA | puro; sem rede |
+| `wyd-ops/scripts/notificacao/texto.mjs` | Node | Markdown do resumo e da linha do log | puro |
+| `wyd-ops/scripts/notificacao/slack.mjs` | Node | Block Kit, escape, fallback em Unicode e limites | puro; lança em payload inválido |
+| `wyd-ops/scripts/notificacao/workflow.mjs` | Node | motivo do job pulado, lido do `if:` do workflow | puro |
 | `wyd-ops/tests/unitario/sync-issue-status.test.mjs` | Node | regras da transição de estado | `node --test wyd-ops/tests/unitario/` |
+| `wyd-ops/tests/unitario/notificacao.test.mjs` | Node | modelo, render, escape e limites do Slack | `node --test wyd-ops/tests/unitario/` |
 
 Os composites de `.github/actions/` só instalam ferramentas e chamam esses arquivos; não duplicam regra. Um script novo fora deste mapa precisa de issue e dono.
+
+**Regra de dono.** Orquestração de CI — permissão, `if:`, env, ordem e upload de artefato — fica em
+`.github/workflows/` e `.github/actions/*/action.yml` (shell). Lógica, coleta de API e formato ficam em
+`wyd-ops/scripts/**/*.mjs`, com teste em `wyd-ops/tests/unitario/` (`node --test`). Verificação de
+documentação fica em `wyd-docs/gate/` (Python). A regra existe porque só o que é puro dá para provar
+sem rede: o aviso antigo tinha 150 linhas de bash que só passavam por `bash -n`, e foi assim que um
+`\n` literal e um `|` dentro de link chegaram ao canal.
 
 ## 4. Cache, artefatos e limites do plano gratuito
 
@@ -195,33 +208,69 @@ A proteção de `develop` e `main` está aplicada e exige:
 ## 7. Notificação de falha
 
 O job `notificar resultado` roda com `if: always()` — em sucesso e em falha — e executa a action
-composta `.github/actions/resultado`, que faz três leituras e um aviso:
+composta `.github/actions/resultado`, que é **cola fina**: confere se o script existe, roda
+`node wyd-ops/scripts/notificacao/cli.mjs` com `GH_TOKEN` e sobe o resumo como artefato. Sem o script o
+job falha com `::error::` em vez de seguir sem aviso. A lógica mora em `wyd-ops/scripts/notificacao/`,
+na tabela de scripts desta página, em quatro camadas:
 
-1. **Jobs** — lê os jobs do run pela API (`actions: read`) e calcula a parede (primeiro início → último
-   fim), a soma das durações, o paralelismo efetivo (soma ÷ parede) e a cobertura por crate, quando o
-   artefato `cobertura-*` existe;
-2. **DORA** — sem serviço externo, com três consultas: lead time (data do commit → agora), taxa de
-   falha e MTTR nos últimos 30 runs concluídos deste workflow na mesma branch, e runs verdes nos
-   últimos 7 dias. `failure` e `timed_out` contam como incidente; `cancelled` não. MTTR é o intervalo
-   entre a falha e o primeiro sucesso posterior, e a mensagem mostra a recuperação mais recente.
-   Qualquer 403 ou página vazia degrada o campo em `—`, nunca derruba o aviso;
-3. **Resumo** — tabela com run (número e tentativa), commit e assunto (título do PR quando o evento
-   tem PR; a mensagem do commit de merge não informa e fica de fora), ref, evento (com o número do
-   PR), ator, horário, parede, jobs, soma, paralelismo, os quatro campos DORA, jobs sem veredito e
-   cobertura; abaixo, um `<details>` com job, status, tempo e link do log, maior primeiro. Vai para
-   `$GITHUB_STEP_SUMMARY`, para o log do job e para o artefato `resultado-<workflow>`.
+1. `coleta.mjs` (impuro) — única camada que fala com a API, pelo `gh` já autenticado: run, jobs
+   paginados, commit, PR (título, head e corpo), `closingIssuesReferences` em GraphQL com plano B no
+   `Closes #N` do corpo, issue, amostra de runs da branch e cobertura por crate. Toda leitura que
+   falha vira `::warning::` e o campo fica ausente;
+2. `modelo.mjs` (puro) — calcula o veredito e **duas grandezas separadas**: *tempo de pipeline*
+   (relógio do run, primeiro job iniciado → último concluído, sem o job de aviso) e *consumo de
+   runner* (soma das durações dos jobs, com o paralelismo = consumo ÷ pipeline). A soma nunca é
+   apresentada como tempo do run: com 33 jobs em paralelo ela fica ~9× maior que o relógio;
+3. `texto.mjs` e `slack.mjs` (puros) — Markdown do summary e Block Kit, a partir do **mesmo modelo**.
+   O Slack escapa `&`, `<` e `>`, emite quebra de linha de verdade, leva o `text` de fallback com
+   Unicode (`✅`, nunca `:white_check_mark:`) e recusa payload fora dos limites do Block Kit (50
+   blocos, 3000 caracteres por texto, 150 no cabeçalho, 10 campos por seção);
+4. `cli.mjs` — junta tudo, escreve `$RUNNER_TEMP/resumo.md`, anexa em `$GITHUB_STEP_SUMMARY` e posta no
+   webhook quando `SLACK_WEBHOOK_URL` existe. `--run <id> --repo dono/nome --dry-run` reproduz o
+   relatório de um run real fora do Actions e imprime o payload validado sem postar.
 
-No Slack o mesmo conteúdo vira Block Kit: cabeçalho com selo, resultado e branch; campos de ref,
-commit (com link), evento (com PR) e ator; campos de parede, jobs, soma e paralelismo; assunto do
-commit; os cinco jobs mais lentos (pulados ficam de fora) e as falhas com link do log de cada job; um
-segundo grupo de campos com lead time, taxa de falha, MTTR e entrega verde; e um contexto com run,
-tentativa, cobertura e horário, mais o botão para o run.
+O resumo e o Slack são o **mesmo relatório**, com um título e subtítulos curtos, **sem numeração** — o
+mesmo padrão das páginas de documentação: título, `Resumo`, `Tempo`, `Entrega`, `Jobs` e `Ação`.
 
-Duas armadilhas que o passo evita: `"*Ref*\n"` em aspas duplas entrega barra invertida + `n`, e o Slack
-mostrava `*Ref*\n` literal em vez de quebrar linha — todo texto de bloco é montado com `printf`; e
-`&`, `<` e `>` do assunto do commit são escapados, porque são markup do Slack. Antes de postar, o
-passo valida o payload com `jq` (até 50 blocos, até 3000 caracteres por texto) e falha o job se ele
-for inválido. `DRY_RUN=1` imprime o payload validado em vez de postar, para depurar sem webhook.
+- **Resumo** — run e tentativa, evento e ator, PR, issue fechada (`closingIssuesReferences`), commit do
+  **head do PR** com autor e assunto (a mensagem do commit de merge não informa e fica de fora) e a
+  contagem de jobs, sem o job de aviso;
+- **Tempo** — tempo de pipeline, consumo de runner e paralelismo, cada um com a coluna "o que conta";
+- **Entrega** — lead time (proxy quando é `commit do PR → aviso`), falhas na amostra com o **N real**
+  devolvido pela branch (não um 30 fixo), MTTR (só `failure` e `timed_out` — `cancelled` não é incidente),
+  runs verdes dos últimos 7 dias (run concluído, não deploy) e cobertura por crate (`—` quando não há
+  artefato, e leitura quebrada não vira `0%`);
+- **Jobs** — a lista única por domínio, com tempo, link do log e o `if:` que pulou. No Slack o ✅ só
+  aparece em falha ou pulo: trinta e dois selos iguais escondem justamente o job que quebrou. O domínio
+  sai do prefixo do nome (`Código`, `Banco`, `Documentação`, `Segurança`, `Imagem`, `Publicação`, `Outros`);
+- **Ação** — o que fazer, sem repetir nome de job.
+
+O título é o `text` do webhook, e o Slack o mostra **acima** do anexo: por isso não existe bloco `header`
+com o mesmo texto e o `text` não repete contagem nem cobertura. Antes a mensagem abria com um resumo de
+quatro linhas e logo abaixo vinha o dashboard com os mesmos números — parecia notificação duplicada. A
+ref também fica só no título, não repetida como campo. O bloco de jobs é dividido pelo limite de 3000
+caracteres, não pelo domínio: a matriz `esqueleto` cresce e um domínio sozinho já chegou a 2.051
+caracteres.
+
+A regra **um job por canal** é testada: antes o mesmo job aparecia em "mais lentos", em "falhas" e em
+"pulados"; agora `node --test` conta as ocorrências do nome no Markdown e no payload do Slack e reprova
+quando aparece duas vezes.
+
+O `\n` literal que o bash produzia (`"*Ref*\n"` em aspas duplas entrega barra invertida + `n`) não
+existe mais: o texto é montado em template literal e o teste recusa barra invertida no texto do bloco.
+
+**Paridade com o aviso anterior (2026-11-28).** O mesmo run `46138711791` foi renderizado pelo aviso
+antigo (artefato `resultado-ci` do próprio run) e pelo CLI
+`node wyd-ops/scripts/notificacao/cli.mjs --run 46138711791 --repo lucascantarelli/wyd --dry-run`.
+Tempo de pipeline (`1m 26s`) e consumo (`13m 40s`) batem com o `Parede` e a `Σ Soma dos jobs` antigos:
+a diferença é de rótulo e de explicação, não de medição. O que mudou de fato: `Commit` passou do merge
+`1eab66b` para o head `f8e51d9`, agora com autor e assunto; `Lead time` passou a contar do commit do
+head e ficou marcado como proxy (a execução local às 11:25 UTC mediu `15m 44s`, contra `1m 36s` do
+merge — o valor cresce a cada minuto depois do run, e é isso que “proxy” avisa); a amostra foi de
+`2 de 16` para `2 de 17` e os verdes de `14` para `15` porque um run entrou na janela de 7 dias;
+`Cobertura` usa vírgula decimal; `Sem veredito na coleta` saiu da tabela e virou a coluna "o que
+conta" de `Jobs`; e o job pulado passou a dizer o `if:` que o pulou. `node --test
+wyd-ops/tests/unitario/` cobre modelo, render e limites do Slack com dado em memória.
 
 O job lê o secret `SLACK_CI_WEBHOOK` e o expõe como `SLACK_WEBHOOK_URL`. O secret é configurado em **Settings → Secrets and variables → Actions**. Sem ele, não há Slack, mas o run continua vermelho e o check bloqueia.
 
@@ -234,6 +283,19 @@ evento de label que ele mesmo gerou (autor `github-actions[bot]`) e espelha no c
 quando `PROJECT_TOKEN` existe. A tabela de eventos, as regras de não regressão e o que fazer sem o PAT
 estão em `github-mapping.md` §2.2 e `ADR-OPS-0009`; a regressão unitária roda com
 `node --test wyd-ops/tests/unitario/`.
+
+**Por que o job `metadados` não aplicou nada no PR #243 (2026-11-28).** Não foi permissão nem filtro de
+caminho, e o script não tinha defeito: desde 2025-12-08 o GitHub lê o **workflow de
+`pull_request_target` na branch padrão**, qualquer que seja a base do PR
+([changelog](https://github.blog/changelog/2025-11-07-actions-pull_request_target-and-environment-branch-protections-changes)).
+O `metadados` e o `sync-pr-metadata.mjs` só existiam em `chore/ci-centralizacao-proposta` (#242, não
+mesclado); `develop` não tinha nenhum dos dois. Prova: o run
+[`46140377316`](https://github.com/lucascantarelli/wyd/actions/runs/46140377316) tem **um** job,
+`sincronizar estado`, enquanto o `issue-status.yml` da base do PR já declarava `metadados`. O gatilho
+também prometia mais do que entregava: `synchronize` e `edited` não estavam em `types`, então push novo
+não recalculava tamanho nem herdava milestone, e PR aberto antes do job chegar à padrão não tinha como
+ser reprocessado. Correção: os dois tipos entraram em `types` e o `workflow_dispatch` ganhou `pr`, que
+reaplica rótulos em PR já aberto sem fechar e reabrir.
 
 ## 7.2 Sinais agendados
 
@@ -344,26 +406,15 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   `wyd-docs` foram reconstruídos e escaneados à mão: `0` HIGH/CRITICAL. Run de fecho: `46095134592`
   (33 jobs, ✅ sucesso, artefato `resultado-ci`).
 - **Aviso rico, no nível do `deprecated`.** O relatório traz veredito, ref/commit/ator, **parede** do
-  run (`run_started_at` → `updated_at`), jobs ok/falha/pulado, **soma dos jobs** e o **paralelismo
-  efetivo** (soma ÷ parede), os cinco mais lentos e a lista de falhas com link do log de cada job. O
+  run (`run_started_at` → `updated_at`), jobs ok/falha/pulado, **consumo de runner** e o
+  **paralelismo** (consumo ÷ tempo de pipeline), os cinco mais lentos e a lista de falhas com link do
+  log de cada job. O
   Slack usa Block Kit com cor por resultado (verde/vermelho), emojis e campos; a cobertura por crate
   entra quando o artefato `cobertura-*` existe. O resumo em Markdown tem tabela com link por job e vai
   para o summary, para o log e para o artefato `resultado-ci`.
-  Em 2026-11-28 o aviso ganhou **DORA** (lead time, taxa de falha, MTTR e entrega verde nos últimos
-  30 runs da branch), assunto do commit, número e tentativa do run e PR, e o `\n` literal que
-  aparecia nas mensagens do Slack foi trocado por `printf`; o payload passou a ser validado antes do
-  POST. Prova fora do CI no mesmo dia: a action extraída por `pyyaml` e executada em container com
-  `gh` falso, `jq 1.7.1` e fixtures — payload válido nos dois desfechos, `#2eb886` em sucesso e
-  `#cc0000` em falha, MTTR `20m 00s` sobre a fixture de 6 runs, job `skipped` fora da lista de lentos.
-  Prova no CI: run `46138205311` (commit `d5c84b43`) logou `DORA: lead 1m 44s · commit 00f24b7 ·
-  falhas 2 de 15 (13%) · MTTR 19m 19s · última recuperação · verdes 13 runs` e `aviso montado: ✅ ci
-  passou · chore/ci-centralizacao-proposta (33 jobs, 11 blocos, parede 1m 33s, 0 falha(s))`, seguido de
-  `aviso enviado ao Slack` — payload de 11 blocos aceito pelo `jq` e pelo webhook.
-  Comprovação: run `46097685728` — artefato `resultado-ci` com `Parede 1m 21s`, `Jobs 33 (✅ 32 · ❌ 0 ·
-  ⏭️ 1)`, `Soma 13m 24s`, `Paralelismo 9,9×` e `Cobertura wyd-db 67,77% · wyd-launcher 92,48%`; o passo
-  do Slack logou `aviso montado: ✅ ci passou (33 jobs, parede 1m 21s, 0 falha(s))` e `aviso enviado ao
-  Slack`. A parede é medida pelos jobs (primeiro início → último fim), porque `run_started_at` vem nulo
-  em `pull_request`.
+  Em 2026-11-28 a montagem saiu do bash para `wyd-ops/scripts/notificacao/` (`node --test` no lugar de
+  `bash -n`) e passou a separar **tempo de pipeline** de **consumo de runner**. O conteúdo de cada
+  campo, a paridade com o aviso anterior e a prova estão em §7 — esta lista não repete a medição.
 - **Metadados de PR e de marco, sem action de terceiro.** `wyd-ops/scripts/sync-pr-metadata.mjs` (job
   `metadados` do `issue-status`) aplica `area/*` por caminho, `size/*` pelo diff e herda o milestone da
   issue que o PR fecha; `wyd-ops/scripts/ci/fechar-milestone.sh` (job `marco` do `release`) fecha o
@@ -373,8 +424,15 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
 - **Custo aceito.** As imagens rodam em todo PR, sem filtro de caminho: Dockerfile quebrado só aparece
   quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
 - **Agenda.** `ci.yml` também roda semanalmente (segunda, 06:00 UTC): o advisory envelhece sem commit e
-  o run agendado reaproveita os mesmos gates. `code-stable` (diário, toolchain `stable`) e `images`
-  (frescor de digest, quarta) seguem workflows próprios, cada run com o seu aviso.
+  o run agendado reaproveita os mesmos gates, **menos os jobs de imagem** — `imagem-docs` e `imagem`
+  têm `if: github.event_name != 'schedule'`, porque build sem publicação não antecipa nada. `code-stable`
+  (diário, toolchain `stable`) e `images` (frescor de digest, quarta) seguem workflows próprios, cada run
+  com o seu aviso.
+- **Pages fora do pipeline de PR.** O job `publicar` saiu do `ci.yml` para o `pages.yml` (`on: push:
+  branches: [develop]` e `workflow_dispatch`). No `ci.yml` ele aparecia como `skipped` em **todo** PR, sem
+  provar nada; o `gate-docs` continua obrigatório no `ci.yml`. O gate roda de novo no `pages.yml` porque o
+  `deploy-pages` só aceita artefato do próprio run — `upload-pages-artifact` de outro workflow não é
+  consumível.
 
 O que isso dá de DORA sem serviço externo: duração por job e soma por run (lead time de integração),
 taxa de falha por run e o link direto para o run lento.

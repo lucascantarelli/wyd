@@ -60,7 +60,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Código Rust | 10 crates com `Cargo.toml` (2026-11-26): `wyd-db` (lib + 3 alvos PostgreSQL), `wyd-launcher` e `wyd-ops-signer` com comportamento; `wyd-protocol`, `wyd-net`, `wyd-core`, `wyd-sim`, `wyd-server`, `wyd-admin` e `wyd-bots` como **esqueleto** — módulos reservados do plano, sem comportamento de domínio, com `wyd-server` e `wyd-admin` expondo só `/health` e `/ready`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml` de workspace; `rust-toolchain.toml` (1.100.0) e `Makefile` existem; cada crate tem `Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; o inventário de issues, o board `WYD 1.0.0`, as views e os campos medidos estão em `planejamento-1.0.0/wyd-ops/docs/github-mapping.md` §7 |
-| CI | `.github/workflows/ci.yml` roda **um run por evento** com os estágios de código (fmt, clippy, teste, cobertura e `gate-code`), banco (`gate-db`), documentação (`gate-docs` e Pages em `develop`), segurança (audit/deny, `npm audit`, dependency-review, actionlint e `gate-security`) e imagem (matriz das quatro imagens), com um único job `notificar resultado` no fim; `code-stable.yml` (sinal diário com `stable`), `images.yml` (frescor de digest), `release.yml` e `issue-status.yml` são runs próprios. Estágios por `needs`, sete actions em `.github/actions/`, check obrigatório no `gate-*` e não na matriz. Estado real e o que falta em `planejamento-1.0.0/wyd-ops/docs/devops/index.md` |
+| CI | `.github/workflows/ci.yml` roda **um run por evento** com os estágios de código (fmt, clippy, teste, cobertura e `gate-code`), banco (`gate-db`), documentação (`gate-docs`), segurança (audit/deny, `npm audit`, dependency-review, actionlint e `gate-security`) e imagem (matriz das quatro imagens, fora da agenda semanal), com um único job `notificar resultado` no fim; `pages.yml` (GitHub Pages, só push de `develop` e dispatch), `code-stable.yml` (sinal diário com `stable`), `images.yml` (frescor de digest), `release.yml` e `issue-status.yml` são runs próprios. Estágios por `needs`, sete actions em `.github/actions/`, check obrigatório no `gate-*` e não na matriz. Estado real e o que falta em `planejamento-1.0.0/wyd-ops/docs/devops/index.md` |
 | Imagem e Compose | Primeira publicação real em **2026-11-26** pelo run `45827609542` (commit `0c4a612`): GHCR público `ghcr.io/lucascantarelli/wyd-docs` com `:SHA`, `:develop` e `:latest`, provenance SLSA v1 e SBOM SPDX; smoke HTTP 200 no CI. O Compose base **não** tem `build:`; `docker-compose.override.yml` traz `gate`/`db` e `docker-compose.dev.yml` é opt-in com `:dev`. `make rollback TAG=<sha>` foi exercitado contra `f271caa` e `0c4a612`, servindo HTTP 200 sem build. Runtime nginx definitivo e produção continuam pendentes; decisão e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
@@ -208,6 +208,11 @@ escopo.
   YAML/JSON, marcador de conflito), `cargo fmt` só nos crates alterados e `make gate-fast` no
   `pre-push`; clippy e testes ficam no `make lint`/`make test` e no CI. Instalação, uma vez por
   clone: `pre-commit install`. Hook não substitui gate.
+- **Onde mora o quê.** Orquestração de CI (permissão, `if:`, env, ordem, artefato) em
+  `.github/workflows/` e `.github/actions/*/action.yml`; lógica, coleta de API e formato em
+  `wyd-ops/scripts/**/*.mjs`, com teste em `wyd-ops/tests/unitario/` (`node --test`); verificação de
+  documentação em `wyd-docs/gate/` (Python). Composite não duplica regra: chama o script e falha se
+  ele não existir.
 - **Gate em um ponto só.** Use `make gate-fast` no ciclo curto (layout, alvos, skills, lacunas, contagens,
   censos, capacidades, hoje; não precisa de Docker/MkDocs), `make layout` para só a árvore e `make gate` para o
   caminho completo do CI/container (build, links e todos os domínios). `cd wyd-docs && python -m gate fast --json` é o contrato

@@ -114,7 +114,7 @@ crate com um binário. Sistema puro (`wyd-protocol`, `wyd-sim`) não cria `adapt
 |---|---|---|
 | plano, dashboard, lacuna, ADR, fatia | `planejamento-1.0.0/<sistema>/` | Markdown/TSV de planejamento; a raiz do planejamento só tem o panorama e o status. Dono: o sistema. |
 | evidência e captura | `planejamento-1.0.0/<sistema>/` (`inventario-*.tsv`, `docs/`); binário em `wyd-client/files/` | Evidência versionada é texto/tabela; binário capturado é ignorado e descrito por hash. Não vira script. Dono: o sistema que mede; captura do cliente em `wyd-client/`, análise de build/dependência em `wyd-ops/`. |
-| script de CI, banco ou issues | `wyd-ops/scripts/` (CI em `ci/`) | Só `wyd-ops`; a raiz não tem `scripts/`. Dono: `wyd-ops`. |
+| script de CI, banco ou issues | `wyd-ops/scripts/` (CI em `ci/`, relatório do run em `notificacao/`) | Só `wyd-ops`; a raiz não tem `scripts/`. Lógica e formato em `.mjs` com teste em `wyd-ops/tests/unitario/`; shell só orquestra. Dono: `wyd-ops`. |
 | política de dependência | `wyd-ops/deny.toml` | `cargo deny --config wyd-ops/deny.toml`; não fica na raiz. Dono: `wyd-ops`. |
 | config de IDE | `.vscode/` na raiz | `settings.json`, `launch.json`, `tasks.json` e `extensions.json`; descoberta da IDE. Dono: `wyd-ops` (experiência de desenvolvimento). |
 | Dockerfile de serviço | `wyd-ops/<serviço>.Dockerfile` | Quatro: docs, server, admin e portal; nenhum Dockerfile dentro de `wyd-*` ou crate. Dono: `wyd-ops`. |
