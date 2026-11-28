@@ -12,17 +12,16 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy+unit` no mesmo job por crate — db e launcher em Ubuntu, signer em Ubuntu e Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision` —, `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `notificar resultado` | `gate-code` |
-| `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar resultado` | `gate-db` |
-| `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar resultado` | `gate-docs` |
-| `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
-| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos` (action por SHA, imagem por digest), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar resultado` | `gate-security` |
-| `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
-| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
-| `release.yml` | tag `v*` | assina e publica manifesto | não |
+| `ci.yml` | todo push/PR + agenda semanal (segunda, 06:00 UTC) | `fmt` (matriz 3 crates), `clippy+unit` (db e launcher em Ubuntu, signer em Ubuntu e Windows), `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `verificar` (`gate-docs`), `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos`, `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `imagem-docs`, `imagem` (matriz `wyd-server`, `wyd-admin`, `wyd-portal`), `notificar resultado` | `gate-code`, `gate-db`, `gate-docs`, `gate-security` |
+| `pages.yml` | push em `develop` + dispatch | `publicar`: `docs-check`, artefato do Pages e `deploy-pages` no ambiente `github-pages` | não (publicação, não gate) |
+| `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db`, `wyd-ops-signer` e `wyd-launcher` com Rust `stable`; sinal não bloqueante | não |
+| `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/reaberto/sincronizado/editado/fechado; dispatch com `issue` ou `pr` | `sincronizar`: label `estado/*` + espelho no Project (exceção de `pull_request_target` escopada, ADR-OPS-0009/0012); `metadados`: `area/*` por caminho, `size/*` pelo diff e milestone herdado da issue fechada | não (automação, não gate) |
+| `release.yml` | tag `v*` + dispatch | assina e publica manifesto; fecha o marco da versão | não |
 | `images.yml` | schedule semanal (quarta) + dispatch | `frescor`: compara o digest pinado de cada base com o digest atual da tag via `check-image-freshness.sh`; `notificar resultado` | não (sinal agendado, não check de PR) |
 
-`full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
+Na agenda semanal do `ci.yml`, os jobs de imagem **não rodam** (`if: github.event_name != 'schedule'`): build
+sem publicação não antecipa nada, e o frescor do digest pinado é do `images.yml`. `full-workflow.yml` foi
+removido: era um stub com os mesmos gatilhos do CI real.
 
 ### Prova real do pacote 1A–11A (2026-11-26)
 
@@ -230,15 +229,25 @@ na tabela de scripts desta página, em quatro camadas:
    webhook quando `SLACK_WEBHOOK_URL` existe. `--run <id> --repo dono/nome --dry-run` reproduz o
    relatório de um run real fora do Actions e imprime o payload validado sem postar.
 
-O que o resumo mostra, com o dono de cada número: run (número e tentativa); commit do **head do PR**,
-com autor e assunto — a mensagem do commit de merge não informa e fica de fora; PR; issue fechada
-quando existe (`closingIssuesReferences`); ref, evento e ator; tempo de pipeline, consumo de runner e
-paralelismo, cada um com a coluna "o que conta"; jobs (sem o job de aviso); lead time (marcado como
-proxy quando é `commit do PR → aviso`); falhas na amostra com o **N real** devolvido pela branch, não
-um 30 fixo; MTTR (só `failure` e `timed_out` — `cancelled` não é incidente); runs verdes dos últimos 7
-dias (run concluído com sucesso, não deploy); cobertura por crate (`—` quando não há artefato, e
-leitura quebrada não vira `0%`); e o motivo de cada job pulado, lido do `if:` do próprio workflow.
-Abaixo, um `<details>` com todos os jobs, status, tempo e link do log, maior primeiro.
+O resumo e o Slack são o **mesmo dashboard em cinco seções**, na mesma ordem:
+
+1. **Resultado** — veredito, run e tentativa, commit do **head do PR** (com autor e assunto; a mensagem
+do commit de merge não informa e fica de fora), PR, issue fechada quando existe
+(`closingIssuesReferences`), ref, evento, ator e contagem de jobs (sem o job de aviso);
+2. **Tempo** — tempo de pipeline, consumo de runner e paralelismo, cada um com a coluna "o que conta";
+3. **Jobs por domínio** — a lista única: cada job aparece **uma vez**, com status, tempo, link do log e,
+quando pulado, o `if:` que o pulou. O domínio sai do prefixo do nome do job (`Código`, `Banco`,
+`Documentação`, `Segurança`, `Imagem`, `Publicação`, e `Outros` para nome desconhecido);
+4. **Entrega** — lead time (marcado como proxy quando é `commit do PR → aviso`), falhas na amostra com o
+**N real** devolvido pela branch (não um 30 fixo), MTTR (só `failure` e `timed_out` — `cancelled` não é
+incidente), runs verdes dos últimos 7 dias (run concluído com sucesso, não deploy) e cobertura por
+crate (`—` quando não há artefato, e leitura quebrada não vira `0%`);
+5. **Ação** — o que fazer com o que a seção 3 mostrou, sem repetir nome de job.
+
+A regra **um job por canal** é testada: antes o mesmo job aparecia em "mais lentos", em "falhas" e em
+"pulados"; agora `node --test` conta as ocorrências do nome no Markdown e no payload do Slack e reprova
+quando aparece duas vezes. O `text` de fallback (notificação do celular e cópia) leva contagem, não nome
+de job.
 
 O `\n` literal que o bash produzia (`"*Ref*\n"` em aspas duplas entrega barra invertida + `n`) não
 existe mais: o texto é montado em template literal e o teste recusa barra invertida no texto do bloco.
@@ -267,6 +276,19 @@ evento de label que ele mesmo gerou (autor `github-actions[bot]`) e espelha no c
 quando `PROJECT_TOKEN` existe. A tabela de eventos, as regras de não regressão e o que fazer sem o PAT
 estão em `github-mapping.md` §2.2 e `ADR-OPS-0009`; a regressão unitária roda com
 `node --test wyd-ops/tests/unitario/`.
+
+**Por que o job `metadados` não aplicou nada no PR #243 (2026-11-28).** Não foi permissão nem filtro de
+caminho, e o script não tinha defeito: desde 2025-12-08 o GitHub lê o **workflow de
+`pull_request_target` na branch padrão**, qualquer que seja a base do PR
+([changelog](https://github.blog/changelog/2025-11-07-actions-pull_request_target-and-environment-branch-protections-changes)).
+O `metadados` e o `sync-pr-metadata.mjs` só existiam em `chore/ci-centralizacao-proposta` (#242, não
+mesclado); `develop` não tinha nenhum dos dois. Prova: o run
+[`46140377316`](https://github.com/lucascantarelli/wyd/actions/runs/46140377316) tem **um** job,
+`sincronizar estado`, enquanto o `issue-status.yml` da base do PR já declarava `metadados`. O gatilho
+também prometia mais do que entregava: `synchronize` e `edited` não estavam em `types`, então push novo
+não recalculava tamanho nem herdava milestone, e PR aberto antes do job chegar à padrão não tinha como
+ser reprocessado. Correção: os dois tipos entraram em `types` e o `workflow_dispatch` ganhou `pr`, que
+reaplica rótulos em PR já aberto sem fechar e reabrir.
 
 ## 7.2 Sinais agendados
 
@@ -395,8 +417,15 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
 - **Custo aceito.** As imagens rodam em todo PR, sem filtro de caminho: Dockerfile quebrado só aparece
   quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
 - **Agenda.** `ci.yml` também roda semanalmente (segunda, 06:00 UTC): o advisory envelhece sem commit e
-  o run agendado reaproveita os mesmos gates. `code-stable` (diário, toolchain `stable`) e `images`
-  (frescor de digest, quarta) seguem workflows próprios, cada run com o seu aviso.
+  o run agendado reaproveita os mesmos gates, **menos os jobs de imagem** — `imagem-docs` e `imagem`
+  têm `if: github.event_name != 'schedule'`, porque build sem publicação não antecipa nada. `code-stable`
+  (diário, toolchain `stable`) e `images` (frescor de digest, quarta) seguem workflows próprios, cada run
+  com o seu aviso.
+- **Pages fora do pipeline de PR.** O job `publicar` saiu do `ci.yml` para o `pages.yml` (`on: push:
+  branches: [develop]` e `workflow_dispatch`). No `ci.yml` ele aparecia como `skipped` em **todo** PR, sem
+  provar nada; o `gate-docs` continua obrigatório no `ci.yml`. O gate roda de novo no `pages.yml` porque o
+  `deploy-pages` só aceita artefato do próprio run — `upload-pages-artifact` de outro workflow não é
+  consumível.
 
 O que isso dá de DORA sem serviço externo: duração por job e soma por run (lead time de integração),
 taxa de falha por run e o link direto para o run lento.

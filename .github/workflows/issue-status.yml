@@ -7,17 +7,29 @@ name: issue-status
 # `pull_request_target` é intencional: o job não faz checkout do código do PR,
 # só lê o evento e chama a API. Assim o token de escrita funciona também em PR
 # de fork, sem executar código não confiável.
+#
+# Consequência que já mordeu este arquivo: desde 2025-12-08 o GitHub lê o
+# workflow de `pull_request_target` **na branch padrão**, qualquer que seja a
+# base do PR. Job que só existe numa branch não roda em PR nenhum — ele precisa
+# estar em `develop` antes do primeiro PR que dependa dele.
 
 on:
   issues:
     types: [opened, labeled, unlabeled, closed, reopened]
   pull_request_target:
-    types: [opened, ready_for_review, closed, reopened]
+    # `synchronize` e `edited` estavam fora da lista, mas o script promete rodar
+    # neles: sem os dois, push novo não recalculava o rótulo de tamanho e corpo
+    # editado não herdava o milestone da issue fechada.
+    types: [opened, ready_for_review, reopened, synchronize, edited]
   workflow_dispatch:
     inputs:
       issue:
-        description: Número da issue para reaplicar a sequência
-        required: true
+        description: Número da issue para reaplicar a sequência (vazio = só metadados)
+        required: false
+        type: number
+      pr:
+        description: Número do PR para reaplicar rótulos, tamanho e milestone
+        required: false
         type: number
 
 permissions:
@@ -32,6 +44,9 @@ concurrency:
 jobs:
   sincronizar:
     name: sincronizar estado
+    # `workflow_dispatch` sem `issue` existe só para reaplicar metadados de PR:
+    # não é para mexer no estado de issue nenhuma.
+    if: github.event_name != 'workflow_dispatch' || inputs.issue > 0
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -51,9 +66,14 @@ jobs:
   # Metadados do PR: label de área por caminho, label de tamanho pelo diff e o
   # milestone herdado da issue que o PR fecha. Sem action de terceiro — a allowlist do
   # repositório só aceita docker/*, dtolnay/*, Swatinem/* e taiki-e/*.
+  #
+  # `pull_request_target` lê este arquivo na branch padrão, então o job passou a
+  # valer quando chegou em `develop`; até lá, PR aberto antes disso não recebe
+  # rótulo nenhum. O `workflow_dispatch` com `pr` é a saída para PR já aberto:
+  # um mantenedor reaplica sem fechar e reabrir.
   metadados:
     name: metadados do PR
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request_target' || inputs.pr > 0
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -61,13 +81,16 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+      # O script roda da branch padrão no evento e da ref escolhida no dispatch:
+      # dispatch exige permissão de escrita, e no PR de fork o token é de leitura,
+      # então o código desta branch nunca executa com token largo em evento de PR.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event.repository.default_branch }}
           persist-credentials: false
       - name: Rotular e vincular ao marco
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REPOSITORIO: ${{ github.repository }}
-          PR_NUMERO: ${{ github.event.pull_request.number }}
+          PR_NUMERO: ${{ github.event.pull_request.number || inputs.pr }}
         run: node wyd-ops/scripts/sync-pr-metadata.mjs
