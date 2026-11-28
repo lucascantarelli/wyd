@@ -42,6 +42,13 @@ RUN python preparar.py \
 # Só o site estático, sem pip, sem fontes e sem cache de build.
 FROM python:3.15-slim@sha256:08a4c22c92b79ec821a7ad49768480039ee5b7accac3955228e75366e30abc8e
 
+# A base pinada por digest ainda não traz os pacotes que o Debian já publicou com
+# correção; o upgrade aplica o que existe no arquivo, e o scan de CVE do CI (action
+# `imagem`, Trivy, HIGH/CRITICAL com correção) exige zero.
+RUN apt-get update \
+    && apt-get upgrade --yes \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN useradd --system --uid 10001 --no-create-home site
 
 COPY --from=build /app/wyd-docs/site /site
