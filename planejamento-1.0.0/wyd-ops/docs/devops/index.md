@@ -276,10 +276,17 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 a parte vi
 ### 12.1 Feito
 
 - **Um relatório por run, para sucesso e falha.** A action `.github/actions/resultado` substitui a
-  `notify-failure` nos oito workflows com aviso: lê os jobs pela API (`actions: read`), publica tabela
-  com tempo por job, soma dos jobs, run/commit/ref/evento em `$GITHUB_STEP_SUMMARY` e manda no Slack o
-  selo de sucesso ou falha, os três jobs mais lentos e o botão para o run. Sem `SLACK_CI_WEBHOOK` o
-  passo é ignorado e o run continua sendo o registro.
+  `notify-failure` nos oito workflows com aviso: lê os jobs pela API (`actions: read`) e monta uma vez o
+  texto com veredito, run/commit/ref/evento, contagem de jobs, soma das durações e a tabela por job
+  (maior primeiro). O texto vai para `$GITHUB_STEP_SUMMARY`, para o **log do job** e para o artefato
+  `resultado-<workflow>` — o summary não é legível pela API, log e artefato são. No Slack (quando há
+  webhook) vão o selo de sucesso ou falha, os três jobs mais lentos e o botão para o run. Job sem
+  conclusão na coleta (o próprio job de aviso) não entra no total nem no veredito, e o resumo informa
+  quantos ficaram sem veredito.
+  Comprovação: run `46090174166` (`pull_request`, commit `ca798ee`) — artefato `resultado-code` com
+  `### ✅ code — sucesso`, `| Jobs | 17 (✅ 17 · ❌ 0 · ⏭️ 0) |`, `| Soma dos jobs | 377s |` e a tabela
+  com `fmt / wyd-launcher / ubuntu-latest` 44 s no topo; o mesmo texto está no log do job de aviso e o
+  run tem **um** job `notificar resultado`.
 - **`gate-agregado`.** Os três laços de `gate-code`, `gate-db` e `gate-security` viraram
   `.github/actions/gate-agregado`, que recebe `nome=resultado` e, no `security`, ignora
   `dependency-review` fora de `pull_request` — o job que só existe em PR não reprova push nem agenda.
@@ -327,4 +334,6 @@ taxa de falha por run e o link direto para o run lento.
 ### 12.4 Pendente por decisão do dono
 
 Runtime nginx (F2), provedor de VPS e OIDC (F3), CODEOWNERS (F5), política de versão/release e scanner
-CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual.
+CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual. O aviso no Slack continua sem
+`SLACK_CI_WEBHOOK` no repositório: o passo é tolerante à ausência e não foi exercitado — o registro é o
+resumo do run (log e artefato).
