@@ -12,6 +12,10 @@
 //      10 campos por seção. Payload fora do limite é erro, não aviso torto.
 //   4. **fallback em Unicode.** O `text` da mensagem (o que aparece na
 //      notificação do celular e ao copiar) usa ✅ e ⏱, nunca `:white_check_mark:`.
+//   5. **um job por canal.** O dashboard repete a estrutura do resumo em cinco
+//      seções; cada job aparece uma vez só, na seção 3, com status, tempo, link
+//      do log ou o motivo do pulo. Nada de aparecer em "mais lentos" e "falhas"
+//      ao mesmo tempo.
 
 import { formatarDuracao, formatarPct } from "./texto.mjs";
 
@@ -20,6 +24,7 @@ export const LIMITES = { blocos: 50, texto: 3000, cabecalho: 150, campos: 10 };
 const SELO = { sucesso: "✅", falha: "❌" };
 const ESTADO = { sucesso: "passou", falha: "falhou" };
 const COR = { sucesso: "#2eb886", falha: "#cc0000" };
+const SELO_JOB = { success: "✅", skipped: "⏭️" };
 
 /** Escapa o que o Slack interpreta como markup. */
 export function escapar(texto) {
@@ -27,10 +32,6 @@ export function escapar(texto) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-}
-
-function campo(rotulo, valor) {
-  return { type: "mrkdwn", text: `*${rotulo}*\n${valor}` };
 }
 
 function secao(texto) {
@@ -46,16 +47,49 @@ function coberturaEmTexto(cobertura) {
   return cobertura.map((item) => `${item.crate} ${formatarPct(item.pct)}`).join(" · ");
 }
 
+function paralelismoEmTexto(valor) {
+  return valor === null ? "—" : `${String(valor).replace(".", ",")}×`;
+}
+
+function contagemDoGrupo(grupo) {
+  const partes = [`${grupo.jobs.length} job(s)`, formatarDuracao(grupo.segundos)];
+  if (grupo.ok) partes.push(`✅ ${grupo.ok}`);
+  if (grupo.falha) partes.push(`❌ ${grupo.falha}`);
+  if (grupo.pulado) partes.push(`⏭️ ${grupo.pulado}`);
+  return partes.join(" · ");
+}
+
+/** Seção 3: um bloco por domínio, com cada job em uma linha só. */
+function textoDoGrupo(grupo) {
+  const itens = grupo.jobs.map((job) => {
+    const nome = job.url && job.conclusao !== "skipped" ? `<${job.url}|${escapar(job.nome)}>` : escapar(job.nome);
+    if (job.conclusao === "skipped") {
+      return `• ${nome} — ⏭️ pulado${job.motivo ? ` por \`${escapar(job.motivo)}\`` : ""}`;
+    }
+    return `• ${nome} — ${formatarDuracao(job.segundos)} ${SELO_JOB[job.conclusao] ?? "❌"}`;
+  });
+  return `*${grupo.nome}* — ${contagemDoGrupo(grupo)}\n${itens.join("\n")}`;
+}
+
+function acaoEmTexto(jobs) {
+  if (jobs.falha) return `❌ *${jobs.falha} job(s) falharam* — abra o job marcado com ❌ na seção 3.`;
+  if (jobs.pulado) return `✅ *Nada a fazer.* ${jobs.pulado} job(s) pulado(s) por gatilho, com o motivo na seção 3.`;
+  return `✅ *Nada a fazer.* Todos os ${jobs.ok} jobs passaram.`;
+}
+
 /**
  * Texto de fallback: o que o Slack mostra fora do cliente rico (notificação,
  * cópia, busca). Sem códigos `:emoji:` — o Slack só os converte no render.
+ *
+ * Este texto é resumo, não dashboard: leva contagem, não o nome de cada job —
+ * senão a mesma falha apareceria duas vezes no mesmo canal.
  */
 export function textoDoAviso(modelo) {
   const { tempo, jobs, dora, run } = modelo;
   const linhas = [
     `${SELO[modelo.veredito]} ${modelo.workflow} ${ESTADO[modelo.veredito]}${run.ref ? ` · ${run.ref}` : ""}`,
     `Run #${run.numero ?? "?"} (tentativa ${run.tentativa}) · ${run.evento}${modelo.pr ? ` · PR #${modelo.pr.numero}` : ""}`,
-    `Tempo de pipeline ${formatarDuracao(tempo.pipelineSegundos)} · consumo de runner ${formatarDuracao(tempo.consumoSegundos)} (${jobs.total} jobs)`,
+    `Jobs ${jobs.total} (✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado}) · tempo de pipeline ${formatarDuracao(tempo.pipelineSegundos)} · consumo de runner ${formatarDuracao(tempo.consumoSegundos)}`,
   ];
   if (dora.amostra) {
     linhas.push(
@@ -67,7 +101,7 @@ export function textoDoAviso(modelo) {
 }
 
 /**
- * Payload completo do webhook.
+ * Payload completo do webhook: dashboard em cinco seções.
  *
  * @param {ReturnType<import("./modelo.mjs").montarModelo>} modelo
  */
@@ -78,104 +112,74 @@ export function payloadSlack(modelo) {
     LIMITES.cabecalho,
   );
 
+  // 1 · Resultado — identidade do run, sem nome de job.
+  const resultado = [];
+  if (pr) {
+    resultado.push(`🔗 *PR* <${pr.url}|#${pr.numero}>${pr.titulo ? ` — ${escapar(pr.titulo)}` : ""}`);
+  }
+  if (issue) {
+    const estado = issue.estado ? ` · \`${String(issue.estado).toLowerCase()}\`` : "";
+    resultado.push(
+      `🎯 *Issue* <${issue.url}|#${issue.numero}>${issue.titulo ? ` — ${escapar(issue.titulo)}` : ""}${estado}`,
+    );
+  }
+  if (commit) {
+    const assunto = commit.assunto ? ` — ${escapar(commit.assunto)}` : "";
+    const autor = commit.autor ? ` · \`${escapar(commit.autor)}\`` : "";
+    resultado.push(`📌 *Commit* <${commit.url}|${escapar((commit.sha ?? "").slice(0, 7))}>${assunto}${autor}`);
+  }
+  resultado.push(
+    `🌿 *Ref* \`${escapar(run.ref)}\` · *Evento* \`${escapar(run.evento)}\`${modelo.autorDoEvento ? ` · *Ator* \`${escapar(modelo.autorDoEvento)}\`` : ""}`,
+  );
+  resultado.push(`🧩 *Jobs* ${jobs.total} · ✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado}`);
+
   const blocos = [
     { type: "header", text: { type: "plain_text", text: titulo, emoji: true } },
-    {
-      type: "section",
-      fields: [
-        campo("Ref", `\`${escapar(run.ref)}\``),
-        campo("Commit", commit ? `<${commit.url}|${escapar((commit.sha ?? "").slice(0, 7))}>` : "—"),
-        campo("Evento", `\`${escapar(run.evento)}\``),
-        campo("Ator", modelo.autorDoEvento ? `\`${escapar(modelo.autorDoEvento)}\`` : "—"),
-      ],
-    },
-    {
-      type: "section",
-      fields: [
-        campo("⏱ Tempo de pipeline", formatarDuracao(tempo.pipelineSegundos)),
-        campo("🔋 Consumo de runner", formatarDuracao(tempo.consumoSegundos)),
-        campo(
-          "⚡ Paralelismo",
-          tempo.paralelismo === null ? "—" : `${String(tempo.paralelismo).replace(".", ",")}×`,
-        ),
-        campo("🧩 Jobs", `${jobs.total} · ✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado}`),
-      ],
-    },
+    secao(`*1 · Resultado*\n${resultado.join("\n")}`),
+    secao(
+      [
+        "*2 · Tempo*",
+        `⏱ *Tempo de pipeline* ${formatarDuracao(tempo.pipelineSegundos)} · 🔋 *Consumo de runner* ${formatarDuracao(tempo.consumoSegundos)} · ⚡ *Paralelismo* ${paralelismoEmTexto(tempo.paralelismo)}`,
+        "_Pipeline é o relógio do run; consumo é a soma das durações dos jobs. Não são a mesma grandeza._",
+      ].join("\n"),
+    ),
     {
       type: "context",
       elements: [
         {
           type: "mrkdwn",
-          text: `ℹ️ Tempo de pipeline é o relógio do run; consumo de runner é a soma das durações dos ${jobs.total} jobs (sem o job de aviso). Não são a mesma grandeza.`,
+          text: "*3 · Jobs por domínio* — cada job aparece uma vez; o job de aviso não entra, porque é ele que publica este aviso.",
         },
       ],
     },
   ];
 
-  const vinculos = [];
-  if (pr) {
-    vinculos.push(`🔗 *PR* <${pr.url}|#${pr.numero}>${pr.titulo ? ` — ${escapar(pr.titulo)}` : ""}`);
-  }
-  if (issue) {
-    const estado = issue.estado ? ` · \`${String(issue.estado).toLowerCase()}\`` : "";
-    vinculos.push(
-      `🎯 *Issue* <${issue.url}|#${issue.numero}>${issue.titulo ? ` — ${escapar(issue.titulo)}` : ""}${estado}`,
-    );
-  }
-  if (vinculos.length) blocos.push(secao(vinculos.join("\n")));
+  for (const grupo of jobs.grupos) blocos.push(secao(textoDoGrupo(grupo)));
+  if (!jobs.grupos.length) blocos.push(secao("*3 · Jobs por domínio*\n—"));
 
-  if (commit?.assunto && commit.autor) {
-    blocos.push(secao(`🗒 *Commit* de \`${escapar(commit.autor)}\`\n${escapar(commit.assunto)}`));
-  } else if (commit?.assunto) {
-    blocos.push(secao(`🗒 *Assunto do commit*\n${escapar(commit.assunto)}`));
-  }
-
-  blocos.push({ type: "divider" });
-
-  const lentos = jobs.lentos.length
-    ? jobs.lentos
-        .map((job) =>
-          job.url ? `• <${job.url}|${escapar(job.nome)}> — ${formatarDuracao(job.segundos)}` : `• ${escapar(job.nome)} — ${formatarDuracao(job.segundos)}`,
-        )
-        .join("\n")
-    : "—";
-  blocos.push(secao(`🐢 *Mais lentos*\n${lentos}`));
-
-  if (jobs.falhas.length) {
-    const falhas = jobs.falhas
-      .map((falha) => `• <${falha.url}|${escapar(falha.nome)}> — \`${falha.conclusao}\``)
-      .join("\n");
-    blocos.push(secao(`❌ *Falhas*\n${falhas}`));
-  }
-
-  if (jobs.pulados.length) {
-    const pulados = jobs.pulados
-      .map((pulado) => (pulado.motivo ? `• ${escapar(pulado.nome)} — pulado por \`${escapar(pulado.motivo)}\`` : `• ${escapar(pulado.nome)} — pulado`))
-      .join("\n");
-    blocos.push(secao(`⏭️ *Pulados*\n${pulados}`));
-  }
-
-  const camposDora = [];
+  // 4 · Entrega — DORA e cobertura, sem repetir job.
+  const entrega = ["*4 · Entrega (DORA)*"];
   if (dora.leadSegundos !== null) {
-    camposDora.push(
-      campo(
-        "🧭 Lead time",
-        `${formatarDuracao(dora.leadSegundos)} · \`${dora.leadCommit ?? "?"}\`${dora.leadProxy ? "\n_proxy: commit do PR → aviso_" : ""}`,
-      ),
+    entrega.push(
+      `🧭 *Lead time* ${formatarDuracao(dora.leadSegundos)} · \`${dora.leadCommit ?? "?"}\`${dora.leadProxy ? " _(proxy: commit do PR → aviso)_" : ""}`,
     );
   }
-  camposDora.push(campo("📉 Falhas na amostra", dora.amostra ? `${dora.falhas} de ${dora.amostra} (${pctSeguro(dora.taxa)})` : "—"));
-  camposDora.push(campo("🛠 MTTR", formatarDuracao(dora.mttrSegundos)));
-  camposDora.push(campo("🚀 Runs verdes (7d)", dora.amostra ? String(dora.verdes7) : "—"));
+  entrega.push(
+    `📉 *Falhas na amostra* ${dora.amostra ? `${dora.falhas} de ${dora.amostra} (${pctSeguro(dora.taxa)})` : "—"} · 🛠 *MTTR* ${formatarDuracao(dora.mttrSegundos)} · 🚀 *Runs verdes (7d)* ${dora.amostra ? dora.verdes7 : "—"}`,
+  );
+  entrega.push(`🧮 *Cobertura* ${coberturaEmTexto(cobertura)}`);
 
   blocos.push({ type: "divider" });
-  blocos.push({ type: "section", fields: camposDora });
+  blocos.push(secao(entrega.join("\n")));
+
+  // 5 · Ação — o que fazer, sem nomear job (a seção 3 é a dona do nome).
+  blocos.push(secao(`*5 · Ação*\n${acaoEmTexto(jobs)}`));
   blocos.push({
     type: "context",
     elements: [
       {
         type: "mrkdwn",
-        text: `Run #${run.numero ?? "?"} · tentativa ${run.tentativa} · ${modelo.workflow} · cobertura: ${coberturaEmTexto(cobertura)} · ${modelo.geradoEm.replace("T", " ").slice(0, 16)} UTC`,
+        text: `Run #${run.numero ?? "?"} · tentativa ${run.tentativa} · ${modelo.workflow}${dora.amostraEscopo === "padrão" ? ` · amostra: ${dora.amostraBranch}` : ""} · ${modelo.geradoEm.replace("T", " ").slice(0, 16)} UTC`,
       },
     ],
   });

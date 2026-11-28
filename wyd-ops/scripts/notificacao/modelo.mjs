@@ -15,6 +15,60 @@
 /** Nome do job que publica o próprio aviso: ele nunca entra no veredito. */
 export const JOB_DE_AVISO = "notificar resultado";
 
+/**
+ * Domínios do dashboard, na ordem em que aparecem — não é a ordem do run.
+ *
+ * O nome do job é a única chave que a API devolve (`jobs[].name`), então o
+ * domínio sai de prefixo; não existe mapa paralelo que envelheça quando um job
+ * nasce. Nome sem prefixo conhecido cai em `Outros`.
+ */
+export const DOMINIOS = [
+  { nome: "Código", prefixos: ["fmt /", "clippy+unit /", "esqueleto /", "cobertura", "gate-code"] },
+  { nome: "Banco", prefixos: ["pg /", "gate-db"] },
+  { nome: "Documentação", prefixos: ["gate-docs"] },
+  {
+    nome: "Segurança",
+    prefixos: [
+      "audit e deny",
+      "dependências do portal",
+      "política de pin",
+      "revisão de dependência",
+      "lint de workflows",
+      "gate-security",
+    ],
+  },
+  { nome: "Imagem", prefixos: ["construir e publicar", "wyd-server", "wyd-admin", "wyd-portal"] },
+  { nome: "Publicação", prefixos: ["publicar no GitHub Pages", "publicar site"] },
+];
+
+/** Domínio de um job pelo nome; `Outros` quando nenhum prefixo casa. */
+export function dominioDoJob(nome) {
+  const achado = DOMINIOS.find((dominio) =>
+    dominio.prefixos.some((prefixo) => String(nome ?? "").startsWith(prefixo)),
+  );
+  return achado ? achado.nome : "Outros";
+}
+
+/**
+ * Agrupa os jobs por domínio, mantendo a ordem de `DOMINIOS` e só os grupos que
+ * têm job. Job pulado entra igual: é a seção 3 que mostra o motivo.
+ */
+function agruparPorDominio(jobs) {
+  const mapa = new Map(DOMINIOS.map((dominio) => [dominio.nome, []]));
+  mapa.set("Outros", []);
+  for (const job of jobs) mapa.get(dominioDoJob(job.nome)).push(job);
+  return [...mapa.entries()]
+    .filter(([, lista]) => lista.length > 0)
+    .map(([nome, lista]) => ({
+      nome,
+      jobs: lista,
+      segundos: lista.reduce((soma, job) => soma + (job.segundos ?? 0), 0),
+      ok: lista.filter((job) => job.conclusao === "success").length,
+      falha: lista.filter((job) => job.conclusao && job.conclusao !== "success" && job.conclusao !== "skipped").length,
+      pulado: lista.filter((job) => job.conclusao === "skipped").length,
+    }));
+}
+
 const JANELA_VERDE_SEGUNDOS = 7 * 24 * 60 * 60;
 const CONCLUSAO_COM_FALHA = new Set(["failure", "timed_out"]);
 
@@ -74,17 +128,19 @@ export function montarModelo(dados, { agora = new Date(), jobDeAviso = JOB_DE_AV
   );
   const semVeredito = executados.filter((job) => !job.conclusao).length + doAviso.length;
 
-  // `todos` alimenta a tabela do resumo (job a job, maior primeiro); `lentos` é o
-  // recorte de cinco que cabe no Slack.
-  const ordenados = [...comTempo]
-    .sort((a, b) => b.segundos - a.segundos)
+  // `grupos` é a lista única do dashboard: cada job uma vez, com status, tempo,
+  // link do log e — quando pulado — o motivo. Ordenado do mais lento para o mais
+  // rápido dentro do domínio, para o topo de cada grupo já responder "o que pesou".
+  const detalhados = executados
     .map((job) => ({
       nome: job.nome,
-      segundos: job.segundos,
+      conclusao: job.conclusao ?? null,
+      segundos: duracaoSegundos(job.inicio, job.fim),
       url: job.url ?? null,
-      conclusao: job.conclusao,
-    }));
-  const lentos = ordenados.slice(0, 5);
+      motivo: job.motivo ?? null,
+    }))
+    .sort((a, b) => (b.segundos ?? -1) - (a.segundos ?? -1));
+  const grupos = agruparPorDominio(detalhados);
 
   const amostra = dados.amostra ?? [];
   const falhasNaAmostra = amostra.filter((r) => CONCLUSAO_COM_FALHA.has(r.conclusao)).length;
@@ -144,13 +200,13 @@ export function montarModelo(dados, { agora = new Date(), jobDeAviso = JOB_DE_AV
       falha: falhas.length,
       pulado: pulados.length,
       semVeredito,
-      todos: ordenados,
-      lentos,
+      grupos,
       falhas: falhas.map((job) => ({ nome: job.nome, conclusao: job.conclusao, url: job.url ?? null })),
-      pulados: pulados.map((job) => ({ nome: job.nome, motivo: job.motivo ?? null })),
     },
     dora: {
       amostra: amostra.length,
+      amostraBranch: dados.amostraBranch ?? run.ref ?? null,
+      amostraEscopo: dados.amostraEscopo ?? "branch",
       falhas: falhasNaAmostra,
       taxa,
       mttrSegundos,

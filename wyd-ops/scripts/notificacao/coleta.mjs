@@ -247,9 +247,28 @@ export function coletar({ repo, runId, workflow, workflowYaml = null, evento = n
   const shaDoCommit = pr?.headSha ?? run.sha;
   const commit = shaDoCommit ? tentar("commit", avisos, () => commitDo(repo, shaDoCommit)) : null;
 
-  const amostra = run.workflowId && run.ref
-    ? tentar("amostra de runs", avisos, () => amostraDaBranch(repo, run.workflowId, run.ref)) ?? []
-    : [];
+  // Amostra DORA: a branch do run primeiro. Branch recém-criada não tem run
+  // concluído, e aí a amostra vem da branch padrão — com o escopo declarado, para
+  // ninguém ler o número de `develop` como se fosse desta branch.
+  let amostra = [];
+  let amostraBranch = run.ref ?? "";
+  let amostraEscopo = "branch";
+  if (run.workflowId && run.ref) {
+    amostra = tentar("amostra de runs", avisos, () => amostraDaBranch(repo, run.workflowId, run.ref)) ?? [];
+    if (!amostra.length) {
+      const padrao = tentar("branch padrão", avisos, () => ghJson(["api", `repos/${repo}`]).default_branch);
+      if (padrao && padrao !== run.ref) {
+        const daPadrao = tentar("amostra da branch padrão", avisos, () =>
+          amostraDaBranch(repo, run.workflowId, padrao),
+        ) ?? [];
+        if (daPadrao.length) {
+          amostra = daPadrao;
+          amostraBranch = padrao;
+          amostraEscopo = "padrão";
+        }
+      }
+    }
+  }
 
   const destino = process.env.RUNNER_TEMP ?? process.cwd();
   const cobertura = baixarCobertura
@@ -264,6 +283,8 @@ export function coletar({ repo, runId, workflow, workflowYaml = null, evento = n
       issue,
       commit,
       amostra,
+      amostraBranch,
+      amostraEscopo,
       cobertura,
       workflow: workflow ?? run.workflowName ?? "",
       // Ator: quem disparou o evento; sem payload (execução local) o run traz o autor.

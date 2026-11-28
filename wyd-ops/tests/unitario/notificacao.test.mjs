@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { JOB_DE_AVISO, duracaoSegundos, montarModelo } from "../../scripts/notificacao/modelo.mjs";
+import { JOB_DE_AVISO, dominioDoJob, duracaoSegundos, montarModelo } from "../../scripts/notificacao/modelo.mjs";
 import { celula, formatarDuracao, linhaDoAviso, markdown } from "../../scripts/notificacao/texto.mjs";
 import { LIMITES, escapar, payloadSlack, textoDoAviso, validarPayload } from "../../scripts/notificacao/slack.mjs";
 import { motivoDoJob, motivosPulados } from "../../scripts/notificacao/workflow.mjs";
@@ -93,18 +93,54 @@ test("o job de aviso não entra na contagem nem no veredito", () => {
   assert.equal(m.veredito, "sucesso");
 });
 
-test("job pulado não aparece entre os mais lentos e traz o motivo", () => {
+test("job pulado aparece uma vez só, na seção 3, com o motivo", () => {
   const m = modelo();
-  assert.deepEqual(
-    m.jobs.lentos.map((l) => l.nome),
-    ["pg / runner", "wyd-portal", "pg / schema", "cobertura"],
+  const publicacao = m.jobs.grupos.find((grupo) => grupo.nome === "Publicação");
+  assert.deepEqual(publicacao.jobs.map((job) => job.nome), ["publicar no GitHub Pages"]);
+  assert.equal(publicacao.jobs[0].motivo, "github.event_name == 'push'");
+  assert.equal(publicacao.pulado, 1);
+  assert.match(markdown(m), /publicar no GitHub Pages \| ⏭️ skipped \| — \| pulado — `github\.event_name == 'push'`/);
+});
+
+test("domínios agrupam todos os jobs, na ordem do dashboard", () => {
+  const m = modelo();
+  assert.deepEqual(m.jobs.grupos.map((grupo) => grupo.nome), ["Código", "Banco", "Imagem", "Publicação"]);
+  assert.equal(
+    m.jobs.grupos.reduce((soma, grupo) => soma + grupo.jobs.length, 0),
+    m.jobs.total,
+    "nenhum job some e nenhum é contado duas vezes",
   );
-  // A tabela do resumo é completa; o recorte de cinco é só do Slack.
-  assert.equal(m.jobs.todos.length, 4);
-  assert.match(markdown(m), /\| cobertura \| ✅ success \| 20s \|/);
-  assert.deepEqual(m.jobs.pulados, [
-    { nome: "publicar no GitHub Pages", motivo: "github.event_name == 'push'" },
-  ]);
+  assert.equal(dominioDoJob("gate-security"), "Segurança");
+  assert.equal(dominioDoJob("construir e publicar"), "Imagem");
+  assert.equal(dominioDoJob("job desconhecido"), "Outros");
+});
+
+// Conta o nome no texto **visível**: o caminho do job aparece dentro da URL do log
+// (`/job/wyd-portal`), e isso não é o job sendo listado duas vezes.
+function ocorrencias(texto, agulha) {
+  return texto.replace(/https?:\/\/[^\s|)>]+/g, "").split(agulha).length - 1;
+}
+
+function textosDoSlack(payload) {
+  return payload.attachments[0].blocks
+    .flatMap((bloco) => [
+      bloco.text?.text,
+      ...(bloco.fields ?? []).map((campo) => campo.text),
+      ...(bloco.elements ?? []).map((elemento) => elemento.text ?? ""),
+    ])
+    .filter(Boolean)
+    .join("\n");
+}
+
+test("cada job aparece uma vez por canal", () => {
+  const m = modelo();
+  const nomes = ["pg / runner", "wyd-portal", "pg / schema", "cobertura", "publicar no GitHub Pages"];
+  const canais = { markdown: markdown(m), slack: textosDoSlack(payloadSlack(m)) };
+  for (const [canal, texto] of Object.entries(canais)) {
+    for (const nome of nomes) {
+      assert.equal(ocorrencias(texto, nome), 1, `${canal} repete \`${nome}\``);
+    }
+  }
 });
 
 test("falha muda o veredito e entra na lista de falhas", () => {
@@ -137,6 +173,12 @@ test("lead time de pull_request vem do commit do head e é marcado como proxy", 
   assert.equal(push.dora.leadProxy, false);
 });
 
+test("amostra da branch padrão é declarada, não confundida com a branch do run", () => {
+  const m = modelo({ amostraEscopo: "padrão", amostraBranch: "develop" });
+  assert.match(markdown(m), /runs concluídos deste workflow em `develop` \(esta branch não tem histórico\)/);
+  assert.match(JSON.stringify(payloadSlack(m)), /amostra: develop/);
+});
+
 test("cobertura 0 vira ausência, não 0%", () => {
   const m = modelo();
   assert.deepEqual(m.cobertura, [{ crate: "wyd-db", pct: 67.77 }]);
@@ -153,10 +195,10 @@ test("markdown nomeia as duas grandezas e diz que a soma não é tempo decorrido
   assert.match(texto, /\| Consumo de runner \(soma dos jobs\) \| 3m 26s \|/);
   assert.match(texto, /minuto de runner gasto, não tempo decorrido/);
   assert.match(texto, /\| Paralelismo \| 2,8× \|/);
-  assert.match(texto, /sem o job de aviso/);
+  assert.match(texto, /o job de aviso não entra, porque é ele que publica este relatório/);
   assert.match(texto, /\| Falhas na amostra \| 1 de 4 \(25%\) \|/);
   assert.match(texto, /commit do PR → aviso \(proxy\)/);
-  assert.match(texto, /qualquer run concluído com sucesso, não só deploy/);
+  assert.match(texto, /qualquer run concluído com sucesso na amostra, não só deploy/);
 });
 
 test("markdown mostra PR, issue e autor quando existem e omite quando não", () => {
@@ -184,28 +226,22 @@ test("linha do log resume pipeline e consumo", () => {
 });
 
 test("payload do Slack tem quebra de linha real, não barra invertida", () => {
-  const payload = payloadSlack(modelo());
-  const campos = payload.attachments[0].blocks[1].fields.map((f) => f.text);
-  assert.ok(campos.some((texto) => texto.startsWith("*Ref*\n`chore/ci-centralizacao-proposta`")));
-  assert.ok(
-    !campos.some((texto) => texto.includes("\\n")),
-    "o `\\n` literal era o defeito do aviso antigo",
-  );
+  const textos = textosDoSlack(payloadSlack(modelo()));
+  assert.match(textos, /\*1 · Resultado\*\n/);
+  assert.match(textos, /\*Ref\* `chore\/ci-centralizacao-proposta`/);
+  assert.ok(!textos.includes("\\n"), "o `\\n` literal era o defeito do aviso antigo");
 });
 
-test("payload do Slack escapa markup e mantém os dois tempos em campos distintos", () => {
+test("payload do Slack escapa markup e separa as duas grandezas de tempo", () => {
   const payload = payloadSlack(modelo({ commit: { ...dados().commit, assunto: "fix: A & B <c>" } }));
-  const blocos = payload.attachments[0].blocks;
-  const textos = JSON.stringify(blocos);
+  const textos = textosDoSlack(payload);
   assert.match(textos, /A &amp; B &lt;c&gt;/);
-  const metricas = blocos[2].fields.map((f) => f.text);
-  assert.match(metricas[0], /Tempo de pipeline\*\n1m 14s/);
-  assert.match(metricas[1], /Consumo de runner\*\n3m 26s/);
+  assert.match(textos, /\*Tempo de pipeline\* 1m 14s/);
+  assert.match(textos, /\*Consumo de runner\* 3m 26s/);
 });
 
 test("payload do Slack mostra PR, issue e motivo do job pulado", () => {
-  const payload = payloadSlack(modelo());
-  const textos = payload.attachments[0].blocks.map((b) => b.text?.text ?? "").join("\n");
+  const textos = textosDoSlack(payloadSlack(modelo()));
   assert.match(textos, /PR\* <https:\/\/exemplo\.test\/pr\/242\|#242>/);
   assert.match(textos, /Issue\* <https:\/\/exemplo\.test\/issue\/7\|#7>/);
   assert.match(textos, /pulado por `github\.event_name == 'push'`/);
@@ -215,8 +251,10 @@ test("fallback do Slack usa Unicode, nunca código :emoji:", () => {
   const texto = textoDoAviso(modelo());
   assert.match(texto, /^✅ ci passou/);
   assert.doesNotMatch(texto, /:[a-z_]+:/);
-  assert.match(texto, /Tempo de pipeline 1m 14s/);
+  assert.match(texto, /tempo de pipeline 1m 14s/);
   assert.match(texto, /consumo de runner 3m 26s/);
+  assert.match(texto, /Jobs 5 \(✅ 4 · ❌ 0 · ⏭️ 1\)/);
+  assert.doesNotMatch(texto, /pg \/ runner/, "o fallback conta, não lista job");
 });
 
 test("validador aceita o payload normal e recusa o que o Block Kit não aceita", () => {
@@ -228,7 +266,8 @@ test("validador aceita o payload normal e recusa o que o Block Kit não aceita",
   assert.throws(() => validarPayload(muitosBlocos), /limite 50/);
 
   const textao = structuredClone(payload);
-  textao.attachments[0].blocks[2].fields[0].text = "x".repeat(LIMITES.texto + 1);
+  const secaoLonga = textao.attachments[0].blocks.find((bloco) => bloco.type === "section" && bloco.text);
+  secaoLonga.text.text = "x".repeat(LIMITES.texto + 1);
   assert.throws(() => validarPayload(textao), /limite 3000/);
 
   const cabecalho = structuredClone(payload);

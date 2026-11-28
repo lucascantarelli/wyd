@@ -1,5 +1,17 @@
 // Render em Markdown do relatório — puro: recebe o modelo, devolve texto.
 // É o que vai para `$GITHUB_STEP_SUMMARY`, para o log do job e para o artefato.
+//
+// O resumo é o dashboard em cinco seções, na mesma ordem do Slack:
+//
+//   1. Resultado — quem rodou, para quê, com que veredito
+//   2. Tempo     — pipeline, consumo de runner e paralelismo, só números
+//   3. Jobs      — a lista completa, agrupada por domínio, **cada job uma vez**
+//   4. Entrega   — DORA e cobertura
+//   5. Ação      — o que fazer com o que a seção 3 mostrou
+//
+// A regra da seção 3 é a que mata a duplicidade: antes, o mesmo job aparecia em
+// "mais lentos", em "falhas" e em "pulados". Agora ele aparece uma vez, com o
+// status, o tempo e o motivo do pulo na própria linha.
 
 /** Duração legível: abaixo de um minuto em segundos, acima em `Xm YYs`. */
 export function formatarDuracao(segundos) {
@@ -22,6 +34,7 @@ export function celula(texto) {
 
 const SELO = { sucesso: "✅", falha: "❌" };
 const ESTADO = { sucesso: "sucesso", falha: "falha" };
+const SELO_JOB = { success: "✅", skipped: "⏭️" };
 
 function link(url, texto) {
   return url ? `[${texto}](${url})` : texto;
@@ -35,19 +48,52 @@ function linhaDeMetrica(rotulo, valor, significado) {
   return `| ${rotulo} | ${celula(valor)} | ${celula(significado)} |`;
 }
 
-function linhaDoJob(job) {
-  const selo = job.conclusao === "success" ? "✅" : job.conclusao === "skipped" ? "⏭️" : "❌";
-  const log = job.url ? `[log](${job.url})` : "—";
-  return `| ${celula(job.nome)} | ${selo} ${job.conclusao} | ${formatarDuracao(job.segundos)} | ${log} |`;
+function seloDoJob(job) {
+  return SELO_JOB[job.conclusao] ?? "❌";
 }
 
-function linhaDePulado(pulado) {
-  return pulado.motivo ? `${pulado.nome} — pulado por \`${pulado.motivo}\`` : `${pulado.nome} — pulado`;
+/** Linha única do job: status, tempo e — no pulo — o motivo, no lugar do log. */
+function linhaDoJob(job) {
+  const detalhe =
+    job.conclusao === "skipped"
+      ? job.motivo
+        ? `pulado — \`${job.motivo}\``
+        : "pulado"
+      : job.url
+        ? `[log](${job.url})`
+        : "—";
+  return `| ${celula(job.nome)} | ${seloDoJob(job)} ${job.conclusao ?? "—"} | ${formatarDuracao(job.segundos)} | ${celula(detalhe)} |`;
+}
+
+function contagemDoGrupo(grupo) {
+  const partes = [`${grupo.jobs.length} job(s)`, formatarDuracao(grupo.segundos)];
+  if (grupo.ok) partes.push(`✅ ${grupo.ok}`);
+  if (grupo.falha) partes.push(`❌ ${grupo.falha}`);
+  if (grupo.pulado) partes.push(`⏭️ ${grupo.pulado}`);
+  return partes.join(" · ");
+}
+
+function escopoDaAmostra(dora) {
+  if (dora.amostraEscopo === "padrão" && dora.amostraBranch) {
+    return `runs concluídos deste workflow em \`${dora.amostraBranch}\` (esta branch não tem histórico)`;
+  }
+  return "runs concluídos deste workflow na mesma branch";
 }
 
 function coberturaEmTexto(cobertura) {
   if (!cobertura.length) return "—";
   return cobertura.map((item) => `${item.crate} ${formatarPct(item.pct)}`).join(" · ");
+}
+
+function acaoEmTexto(jobs, run, opcoes) {
+  if (jobs.falha) {
+    const runLink = run.url || run.numero ? ` e o run inteiro em ${link(run.url, `#${run.numero ?? "?"}`)}` : "";
+    return `❌ **${jobs.falha} job(s) falharam.** Abra o \`log\` do job marcado com ❌ na seção 3${runLink}.`;
+  }
+  if (jobs.pulado) {
+    return `✅ **Nada a fazer.** ${jobs.pulado} job(s) pulado(s) por gatilho, com o motivo na seção 3.${opcoes?.extra ?? ""}`;
+  }
+  return `✅ **Nada a fazer.** Todos os ${jobs.ok} jobs passaram.${opcoes?.extra ?? ""}`;
 }
 
 /**
@@ -60,6 +106,10 @@ export function markdown(modelo) {
   const linhas = [];
 
   linhas.push(`### ${SELO[modelo.veredito]} ${modelo.workflow} — ${ESTADO[modelo.veredito]}`);
+  linhas.push("");
+
+  // 1 · Resultado
+  linhas.push("#### 1 · Resultado");
   linhas.push("");
   linhas.push("| Campo | Valor |");
   linhas.push("|---|---|");
@@ -81,9 +131,13 @@ export function markdown(modelo) {
   if (run.ref) linhas.push(linhaDoCampo("Ref", `\`${run.ref}\``));
   linhas.push(linhaDoCampo("Evento", `\`${run.evento}\``));
   if (modelo.autorDoEvento) linhas.push(linhaDoCampo("Ator", `\`${modelo.autorDoEvento}\``));
+  linhas.push(linhaDoCampo("Jobs", `${jobs.total} (✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado})`));
   linhas.push(linhaDoCampo("Gerado em", `${modelo.geradoEm.replace("T", " ").slice(0, 16)} UTC`));
   linhas.push("");
 
+  // 2 · Tempo
+  linhas.push("#### 2 · Tempo");
+  linhas.push("");
   linhas.push("| Métrica | Valor | O que conta |");
   linhas.push("|---|---|---|");
   linhas.push(
@@ -107,13 +161,27 @@ export function markdown(modelo) {
       "consumo de runner ÷ tempo de pipeline",
     ),
   );
-  linhas.push(
-    linhaDeMetrica(
-      "Jobs",
-      `${jobs.total} (✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado})`,
-      "sem o job de aviso, que publica este relatório",
-    ),
-  );
+  linhas.push("");
+
+  // 3 · Jobs — uma tabela por domínio, cada job uma única vez.
+  linhas.push("#### 3 · Jobs por domínio");
+  linhas.push("");
+  linhas.push("Cada job aparece uma vez; o job de aviso não entra, porque é ele que publica este relatório.");
+  linhas.push("");
+  for (const grupo of jobs.grupos) {
+    linhas.push(`**${celula(grupo.nome)}** — ${contagemDoGrupo(grupo)}`);
+    linhas.push("");
+    linhas.push("| Job | Status | Tempo | Log |");
+    linhas.push("|---|---|---|---|");
+    for (const job of grupo.jobs) linhas.push(linhaDoJob(job));
+    linhas.push("");
+  }
+
+  // 4 · Entrega
+  linhas.push("#### 4 · Entrega");
+  linhas.push("");
+  linhas.push("| Métrica | Valor | O que conta |");
+  linhas.push("|---|---|---|");
   if (dora.leadSegundos !== null) {
     const rotulo = dora.leadProxy ? "commit do PR → aviso (proxy)" : "commit → aviso";
     linhas.push(
@@ -124,7 +192,7 @@ export function markdown(modelo) {
     linhaDeMetrica(
       "Falhas na amostra",
       dora.amostra ? `${dora.falhas} de ${dora.amostra} (${formatarPct(dora.taxa)})` : "—",
-      "runs concluídos deste workflow na mesma branch",
+      escopoDaAmostra(dora),
     ),
   );
   linhas.push(
@@ -134,7 +202,7 @@ export function markdown(modelo) {
     linhaDeMetrica(
       "Runs verdes (7 dias)",
       dora.amostra ? String(dora.verdes7) : "—",
-      "qualquer run concluído com sucesso, não só deploy",
+      "qualquer run concluído com sucesso na amostra, não só deploy",
     ),
   );
   linhas.push(
@@ -142,29 +210,10 @@ export function markdown(modelo) {
   );
   linhas.push("");
 
-  if (jobs.pulados.length) {
-    linhas.push("**Pulados:**");
-    for (const pulado of jobs.pulados) linhas.push(`- ${linhaDePulado(pulado)}`);
-    linhas.push("");
-  }
-
-  if (jobs.falhas.length) {
-    linhas.push("**Falhas:**");
-    for (const falha of jobs.falhas) {
-      linhas.push(`- ${link(falha.url, falha.nome)} — \`${falha.conclusao}\``);
-    }
-    linhas.push("");
-  }
-
-  if (jobs.todos.length) {
-    linhas.push("<details><summary>Job, status, tempo e log (maior primeiro)</summary>");
-    linhas.push("");
-    linhas.push("| Job | Status | Tempo | Log |");
-    linhas.push("|---|---|---|---|");
-    for (const job of jobs.todos) linhas.push(linhaDoJob(job));
-    linhas.push("");
-    linhas.push("</details>");
-  }
+  // 5 · Ação
+  linhas.push("#### 5 · Ação");
+  linhas.push("");
+  linhas.push(acaoEmTexto(jobs, run));
 
   return `${linhas.join("\n").trimEnd()}\n`;
 }
