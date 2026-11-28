@@ -311,6 +311,17 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   Dockerfile nunca era exercitado. Em PR constrói e faz fumaça (`/health` nas duas sondas, `/` no
   portal); em push de `develop` publica `:sha` e `:dev`. `latest` segue exclusiva do site e **não há
   deploy em tag** (ADR-OPS-0012).
+- **Scan de CVE da imagem (Trivy).** Roda dentro da action `imagem`, na imagem recém-construída:
+  `--vuln-type os --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`, ou seja, falha o job só no
+  que tem correção disponível. Não é `aquasecurity/trivy-action`: a allowlist de actions do repositório
+  aceita só `docker/*`, `dtolnay/*`, `Swatinem/*` e `taiki-e/*`, então o binário roda pela imagem
+  `aquasec/trivy` pinada por digest, com `--image-src docker` (usa o daemon local, sem pull de
+  registro). O primeiro run (commit `2ae25e3`) encontrou CVE-2025-6020 (`libpam`, HIGH, correção em
+  `1.5.2-6+deb12u3`) em `wyd-server`/`wyd-admin` e CVE-2026-124851 (`libzstd1`) no site: o digest
+  pinado de `debian:bookworm-slim` não trazia o pacote já publicado no arquivo. O runtime das três
+  imagens aplica `apt-get update && apt-get upgrade` antes de copiar o binário, e `wyd-server` e
+  `wyd-docs` foram reconstruídos e escaneados à mão: `0` HIGH/CRITICAL. Run de fecho: `46095134592`
+  (33 jobs, ✅ sucesso, artefato `resultado-ci`).
 - **Custo aceito.** As imagens rodam em todo PR, sem filtro de caminho: Dockerfile quebrado só aparece
   quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
 - **Agenda.** `ci.yml` também roda semanalmente (segunda, 06:00 UTC): o advisory envelhece sem commit e
