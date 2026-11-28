@@ -53,8 +53,7 @@ jobs:
         run: cargo fmt --manifest-path crates/${{ matrix.crate }}/Cargo.toml -- --check
 
   # Lint e teste no mesmo job: o `target/` de um crate vale para os dois passos,
-  # então as dependências são compiladas uma vez (antes eram dois jobs e duas
-  # compilações do mesmo grafo).
+  # então as dependências são compiladas uma vez.
   verify:
     name: clippy+unit / ${{ matrix.crate }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -83,17 +82,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup-rust
+      - uses: ./.github/actions/testes-rust
         with:
           crate: ${{ matrix.crate }}
-      - name: Lint
-        run: cargo clippy --manifest-path crates/${{ matrix.crate }}/Cargo.toml --all-targets -- -D warnings
-      - name: Testes
-        run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }}
+          args: ${{ matrix.args }}
 
-  # Esqueleto dos sistemas que ainda não têm comportamento: fmt, clippy e teste de
-  # cada crate criado em 2026-11-26. Um job em matriz mantém a cobertura sem uma
-  # entrada por crate nas matrizes de `fmt` e `clippy+unit`.
+  # Esqueleto dos sistemas que ainda não têm comportamento. `fmt: true` porque este
+  # job é o único que cobre formatação desses crates.
   esqueleto:
     name: esqueleto / ${{ matrix.crate }}
     runs-on: ubuntu-latest
@@ -113,15 +108,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup-rust
+      - uses: ./.github/actions/testes-rust
         with:
           crate: ${{ matrix.crate }}
-      - name: Formatação
-        run: cargo fmt --manifest-path crates/${{ matrix.crate }}/Cargo.toml -- --check
-      - name: Lint
-        run: cargo clippy --manifest-path crates/${{ matrix.crate }}/Cargo.toml --all-targets -- -D warnings
-      - name: Testes
-        run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml --locked
+          args: --locked
+          fmt: "true"
 
   # `wyd-db` continua informativo (decisão D-02 = B); o `wyd-launcher` aplica o piso
   # de 85% de linha que o plano dele promete (wyd-launcher/docs/planos/plano-de-testes.md
@@ -176,22 +167,13 @@ jobs:
     needs: [fmt, verify, esqueleto, coverage]
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      FMT: ${{ needs.fmt.result }}
-      VERIFY: ${{ needs.verify.result }}
-      ESQUELETO: ${{ needs.esqueleto.result }}
-      COVERAGE: ${{ needs.coverage.result }}
     steps:
-      - name: Agregar os jobs
-        run: |
-          falhou=0
-          for resultado in "$FMT" "$VERIFY" "$ESQUELETO" "$COVERAGE"; do
-            if [ "$resultado" != "success" ]; then
-              echo "::error::job com resultado '$resultado'"
-              falhou=1
-            fi
-          done
-          exit "$falhou"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/gate-agregado
+        with:
+          jobs: fmt=${{ needs.fmt.result }} verify=${{ needs.verify.result }} esqueleto=${{ needs.esqueleto.result }} coverage=${{ needs.coverage.result }}
 
   notify:
     name: notificar resultado

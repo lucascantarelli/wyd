@@ -120,38 +120,17 @@ jobs:
     needs: [analise, portal, pinos, dependency-review, workflow-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      ANALISE: ${{ needs.analise.result }}
-      PORTAL: ${{ needs.portal.result }}
-      PINOS: ${{ needs.pinos.result }}
-      REVISAO: ${{ needs.dependency-review.result }}
-      WORKFLOW_LINT: ${{ needs.workflow-lint.result }}
-      EVENTO: ${{ github.event_name }}
     steps:
-      - name: Agregar os jobs
-        run: |
-          falhou=0
-          if [ "$ANALISE" != "success" ]; then
-            echo "::error::audit/deny terminou com '$ANALISE'"
-            falhou=1
-          fi
-          if [ "$PORTAL" != "success" ]; then
-            echo "::error::dependências do portal terminaram com '$PORTAL'"
-            falhou=1
-          fi
-          if [ "$PINOS" != "success" ]; then
-            echo "::error::política de pin terminou com '$PINOS'"
-            falhou=1
-          fi
-          if [ "$EVENTO" = "pull_request" ] && [ "$REVISAO" != "success" ]; then
-            echo "::error::revisão de dependência terminou com '$REVISAO'"
-            falhou=1
-          fi
-          if [ "$WORKFLOW_LINT" != "success" ]; then
-            echo "::error::lint de workflows terminou com '$WORKFLOW_LINT'"
-            falhou=1
-          fi
-          exit "$falhou"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # `dependency-review` só existe em pull_request: o agregado o ignora em push e
+      # em schedule, que é o comportamento que o laço antigo tinha à mão.
+      - uses: ./.github/actions/gate-agregado
+        with:
+          jobs: analise=${{ needs.analise.result }} portal=${{ needs.portal.result }} pinos=${{ needs.pinos.result }} dependency-review=${{ needs.dependency-review.result }} workflow-lint=${{ needs.workflow-lint.result }}
+          evento: ${{ github.event_name }}
+          condicional: dependency-review
 
   notify:
     name: notificar resultado

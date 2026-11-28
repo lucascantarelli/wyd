@@ -266,36 +266,48 @@ F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do f
 - Gate de sistema por crate além do que `gate-code`/`gate-db` já provam.
 - E2E de portal/launcher: não há aplicação executável que justifique o job hoje.
 
-## 12. Proposta de centralização do CI — veredito (2026-11-27)
+## 12. Proposta de centralização do CI — veredito (2026-11-28)
 
-Revisão das propostas de reorganização do CI, com veredito por item. Medição desta data: `code`
-103–138 s, `ci-db` 69–83 s, `security` 41–49 s, `docs` 29–44 s; três blocos `gate-*` com o mesmo laço
-de agregação; `CARGO_TERM_COLOR` e `RUST_BACKTRACE` repetidos em três workflows; sete jobs de aviso;
-três actions compostas.
+Revisão das propostas de reorganização do CI, com veredito por item. Medição de 2026-11-27: `code`
+103–138 s, `ci-db` 69–83 s, `security` 41–49 s, `docs` 29–44 s — o que estoura vem de `clippy+unit`
+Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 a parte viável migrou para
+`.github/actions/`, que agora tem sete actions usadas por dez workflows.
 
-### 12.1 Feito nesta rodada
+### 12.1 Feito
 
 - **Um relatório por run, para sucesso e falha.** A action `.github/actions/resultado` substitui a
-  `notify-failure` nos sete workflows: lê os jobs pela API (`actions: read`), publica tabela com tempo
-  por job, soma dos jobs, run/commit/ref/evento em `$GITHUB_STEP_SUMMARY` e manda no Slack o selo de
-  sucesso ou falha, os três jobs mais lentos e o botão para o run. Sem `SLACK_CI_WEBHOOK` o passo é
-  ignorado e o run continua sendo o registro.
-- **Formato do aviso em um lugar só.** Payload, tabela e cálculo de tempo saíram dos sete arquivos.
+  `notify-failure` nos oito workflows com aviso: lê os jobs pela API (`actions: read`), publica tabela
+  com tempo por job, soma dos jobs, run/commit/ref/evento em `$GITHUB_STEP_SUMMARY` e manda no Slack o
+  selo de sucesso ou falha, os três jobs mais lentos e o botão para o run. Sem `SLACK_CI_WEBHOOK` o
+  passo é ignorado e o run continua sendo o registro.
+- **`gate-agregado`.** Os três laços de `gate-code`, `gate-db` e `gate-security` viraram
+  `.github/actions/gate-agregado`, que recebe `nome=resultado` e, no `security`, ignora
+  `dependency-review` fora de `pull_request` — o job que só existe em PR não reprova push nem agenda.
+  O check obrigatório continua sendo o `gate-*`, nunca os jobs da matriz.
+- **`testes-rust`.** `.github/actions/testes-rust` (setup + `fmt` opcional + clippy com `-D warnings` +
+  test) atende `verify` e `esqueleto` do `code`; `args` e `fmt` vêm da matriz, então crate novo ou
+  alvo novo não copiam passos.
+- **`testes-pg`.** `.github/actions/testes-pg` prepara o `psql`, cria os papéis, aplica a série quando
+  pedida e roda o alvo. O service container `postgres:17` por digest continua no `ci-db`, o único lugar
+  que pode declará-lo.
+- **`imagem`.** `.github/actions/imagem` é buildx + cache GHA por escopo + login/push com
+  `GITHUB_TOKEN` + fumaça HTTP. `docs-image` migrou para ela com as mesmas tags (`sha`, `develop`,
+  `latest`); `imagens-servico` constrói em matriz `wyd-server`, `wyd-admin` e `wyd-portal`, que tinham
+  Dockerfile e nenhum workflow — o Dockerfile nunca era exercitado. Em PR constrói e faz fumaça
+  (`/health` nas duas sondas, `/` no portal); em push de `develop` publica `:sha` e `:dev`. `latest`
+  segue exclusiva do site e **não há deploy em tag** (ADR-OPS-0012).
+- **Custo aceito.** `imagens-servico` roda em todo PR, sem filtro de caminho: Dockerfile quebrado só
+  aparece quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
 
 O que isso dá de DORA sem serviço externo: duração por job e soma por run (lead time de integração),
 taxa de falha por run e o link direto para o run lento.
 
-### 12.2 Viável e não feito, em ordem
+### 12.2 Viável e não feito
 
-1. **Agregador único.** `code`, `ci-db` e `security` repetem o mesmo laço em `gate-*`; vira action
-   `gate-agregado` com entradas nomeadas.
-2. **Imagem.** `docs-image` é o único build; extrair `imagem-publicada` (buildx + cache + smoke + push)
-   prepara `wyd-server`, `wyd-admin` e `wyd-portal`, que têm Dockerfile e nenhum workflow.
-3. **Testes.** Action `testes-rust` (setup + clippy + test) e `testes-pg` — o service container fica no
-   workflow, a action faz papéis, série e alvo.
-4. **Tag de release.** Publicar imagem com a tag da versão sem tocar em `latest` e gerar changelog com
-   as issues da versão. Depende da política de versão (`0.1.0-rc.N` não existe no repositório).
-5. **`env` compartilhado.** O GitHub Actions não compartilha `env` entre workflows; a saída é reusable
+1. **Tag de release com changelog.** Publicar imagem com a tag da versão e gerar changelog a partir das
+   issues da versão. Depende da política de versão: `0.1.0-rc.N` não existe no repositório e inventá-la
+   aqui seria decidir release pela porta do CI.
+2. **`env` compartilhado.** O GitHub Actions não compartilha `env` entre workflows; a saída é reusable
    workflow (`workflow_call`) ou variável de repositório. Hoje são três linhas em três arquivos — o
    custo de migrar supera o ganho.
 

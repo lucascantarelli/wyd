@@ -1,8 +1,9 @@
 name: ci-db
 
 # Alvos PostgreSQL em matriz. Os três modos usam o mesmo `postgres:17` por digest como
-# service container e compartilham os scripts de preparação; o que muda é o papel,
-# a série aplicada e o alvo de teste.
+# service container; o que muda é o papel, a série aplicada e o alvo de teste, tudo
+# passado para a action `testes-pg`. O service container fica aqui, porque action
+# composta não declara `services`.
 
 on:
   push:
@@ -35,22 +36,22 @@ jobs:
       matrix:
         include:
           - mode: schema
-            test: sistema_pg
-            roles: nologin
-            series: true
-            user: postgres
+            alvo: sistema_pg
+            papeis: nologin
+            serie: true
+            usuario: postgres
             url: postgres://postgres:test@127.0.0.1:5432/wyd
           - mode: reversibility
-            test: reversibilidade_pg
-            roles: nologin
-            series: false
-            user: postgres
+            alvo: reversibilidade_pg
+            papeis: nologin
+            serie: false
+            usuario: postgres
             url: postgres://postgres:test@127.0.0.1:5432/wyd
           - mode: runner
-            test: runner_pg
-            roles: migrator
-            series: false
-            user: wyd_migrator
+            alvo: runner_pg
+            papeis: migrator
+            serie: false
+            usuario: wyd_migrator
             url: postgres://wyd_migrator:test@127.0.0.1:5432/wyd
     services:
       postgres:
@@ -72,34 +73,13 @@ jobs:
       - uses: ./.github/actions/setup-rust
         with:
           crate: wyd-db
-
-      - name: Garantir o psql no runner
-        run: |
-          if ! command -v psql >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install --yes --no-install-recommends postgresql-client
-          fi
-
-      # A criação sempre conecta como `postgres`; o papel de teste só é usado
-      # depois que existe.
-      - name: Criar papéis
-        env:
-          PGUSER: postgres
-        run: bash wyd-ops/scripts/ci/db-prepare.sh "${{ matrix.roles }}"
-
-      - name: Aplicar a série
-        if: matrix.series
-        env:
-          PGUSER: postgres
-        run: bash wyd-ops/scripts/ci/apply-series.sh "$GITHUB_WORKSPACE"
-
-      - name: Executar o alvo
-        env:
-          PGUSER: ${{ matrix.user }}
-          WYD_DB_TEST_URL: ${{ matrix.url }}
-          WYD_DB_TEST_USER: ${{ matrix.user }}
-          WYD_DB_TEST_DB: wyd
-        run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test ${{ matrix.test }} -- --test-threads=1
+      - uses: ./.github/actions/testes-pg
+        with:
+          alvo: ${{ matrix.alvo }}
+          url: ${{ matrix.url }}
+          papeis: ${{ matrix.papeis }}
+          serie: ${{ matrix.serie }}
+          usuario: ${{ matrix.usuario }}
 
   gate-db:
     name: gate-db
@@ -108,14 +88,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Agregar a matriz
-        env:
-          RESULTADO: ${{ needs.pg.result }}
-        run: |
-          if [ "$RESULTADO" != "success" ]; then
-            echo "::error::alvos PostgreSQL terminaram com '$RESULTADO'"
-            exit 1
-          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/gate-agregado
+        with:
+          jobs: pg=${{ needs.pg.result }}
 
   notify:
     name: notificar resultado
