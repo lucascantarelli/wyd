@@ -36,8 +36,15 @@ runs:
         origem="$RUNNER_TEMP/jobs.tsv"
         linhas="$RUNNER_TEMP/duracao.tsv"
         : > "$linhas"
+        pendentes=0
         while IFS=$'\t' read -r nome status inicio fim; do
           [ -n "${nome:-}" ] || continue
+          # Job sem conclusão é o próprio job de aviso, que ainda está rodando: não tem
+          # veredito para contar, então fica fora do total e do veredito.
+          case "$status" in
+            success|failure|cancelled|skipped|timed_out|neutral|action_required|stale) ;;
+            *) pendentes=$((pendentes + 1)); continue ;;
+          esac
           d="-"
           if [ -n "${inicio:-}" ] && [ -n "${fim:-}" ]; then
             d=$(( $(date -d "$fim" +%s) - $(date -d "$inicio" +%s) ))
@@ -65,6 +72,9 @@ runs:
           echo "| Evento | \`${GITHUB_EVENT_NAME}\` |"
           echo "| Jobs | ${total} (✅ $((total - falhas - pulados)) · ❌ ${falhas} · ⏭️ ${pulados}) |"
           echo "| Soma dos jobs | ${soma}s |"
+          if [ "$pendentes" -gt 0 ]; then
+            echo "| Sem veredito na coleta | ${pendentes} (o próprio job de aviso) |"
+          fi
           echo
           if [ "$total" -gt 0 ]; then
             echo "<details><summary>Job e tempo (maior primeiro)</summary>"
