@@ -5,6 +5,10 @@ inputs:
   workflow:
     description: Nome do workflow que gerou o run.
     required: true
+  assunto:
+    description: Assunto a exibir (título do PR ou mensagem do commit). Vazio usa a mensagem do commit pela API.
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -33,6 +37,7 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
+        ASSUNTO: ${{ inputs.assunto }}
       run: |
         set -uo pipefail
         dt() { s=${1:-0}; if [ "$s" -ge 60 ]; then printf '%dm %02ds' $((s / 60)) $((s % 60)); else printf '%ds' "$s"; fi; }
@@ -51,6 +56,10 @@ runs:
             [ "$lead" -lt 0 ] && lead=0
             dora_lead="$(dt "$lead") · commit ${GITHUB_SHA:0:7}"
           fi
+        fi
+        # Título do PR manda: a mensagem do commit de merge ("Merge abc into def") não informa.
+        if [ -n "${ASSUNTO:-}" ]; then
+          dora_assunto=$(printf '%s' "$ASSUNTO" | head -n 1)
         fi
 
         ref="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"

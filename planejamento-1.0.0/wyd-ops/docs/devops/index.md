@@ -205,7 +205,8 @@ composta `.github/actions/resultado`, que faz três leituras e um aviso:
    últimos 7 dias. `failure` e `timed_out` contam como incidente; `cancelled` não. MTTR é o intervalo
    entre a falha e o primeiro sucesso posterior, e a mensagem mostra a recuperação mais recente.
    Qualquer 403 ou página vazia degrada o campo em `—`, nunca derruba o aviso;
-3. **Resumo** — tabela com run (número e tentativa), commit e assunto, ref, evento (com o número do
+3. **Resumo** — tabela com run (número e tentativa), commit e assunto (título do PR quando o evento
+   tem PR; a mensagem do commit de merge não informa e fica de fora), ref, evento (com o número do
    PR), ator, horário, parede, jobs, soma, paralelismo, os quatro campos DORA, jobs sem veredito e
    cobertura; abaixo, um `<details>` com job, status, tempo e link do log, maior primeiro. Vai para
    `$GITHUB_STEP_SUMMARY`, para o log do job e para o artefato `resultado-<workflow>`.
@@ -354,6 +355,10 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   POST. Prova fora do CI no mesmo dia: a action extraída por `pyyaml` e executada em container com
   `gh` falso, `jq 1.7.1` e fixtures — payload válido nos dois desfechos, `#2eb886` em sucesso e
   `#cc0000` em falha, MTTR `20m 00s` sobre a fixture de 6 runs, job `skipped` fora da lista de lentos.
+  Prova no CI: run `46138205311` (commit `d5c84b43`) logou `DORA: lead 1m 44s · commit 00f24b7 ·
+  falhas 2 de 15 (13%) · MTTR 19m 19s · última recuperação · verdes 13 runs` e `aviso montado: ✅ ci
+  passou · chore/ci-centralizacao-proposta (33 jobs, 11 blocos, parede 1m 33s, 0 falha(s))`, seguido de
+  `aviso enviado ao Slack` — payload de 11 blocos aceito pelo `jq` e pelo webhook.
   Comprovação: run `46097685728` — artefato `resultado-ci` com `Parede 1m 21s`, `Jobs 33 (✅ 32 · ❌ 0 ·
   ⏭️ 1)`, `Soma 13m 24s`, `Paralelismo 9,9×` e `Cobertura wyd-db 67,77% · wyd-launcher 92,48%`; o passo
   do Slack logou `aviso montado: ✅ ci passou (33 jobs, parede 1m 21s, 0 falha(s))` e `aviso enviado ao

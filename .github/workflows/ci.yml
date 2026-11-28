@@ -491,3 +491,4 @@ jobs:
       - uses: ./.github/actions/resultado
         with:
           workflow: ci
+          assunto: ${{ github.event.pull_request.title || github.event.head_commit.message }}
