@@ -81,14 +81,15 @@ runs:
         [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
 
         # Cobertura: o job de cobertura publica um artefato por crate. A linha TOTAL do
-        # `cargo llvm-cov --summary-only` tem regiões, funções e linhas; o percentual de
-        # linhas é o 11º campo. Ausência de artefato não quebra o relatório.
+        # `cargo llvm-cov --summary-only` é TOTAL, contagem/miss/cobertura de regiões,
+        # funções, linhas e ramos — o percentual de linhas é o 10º campo. Ausência de
+        # artefato não quebra o relatório.
         cobertura=""
         for crate in wyd-db wyd-launcher; do
           if gh run download "$GITHUB_RUN_ID" -n "cobertura-${crate}" -D "$RUNNER_TEMP/cob-$crate" \
                --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             pct=$(grep -E '^TOTAL' "$RUNNER_TEMP/cob-$crate/coverage-summary.txt" 2>/dev/null \
-                  | tail -n 1 | awk '{print $11}' | tr -d '%' || true)
+                  | tail -n 1 | awk '{print $10}' | tr -d '%' || true)
             [ -n "${pct:-}" ] && cobertura="${cobertura}${cobertura:+ · }${crate} ${pct}% linhas"
           fi
         done
