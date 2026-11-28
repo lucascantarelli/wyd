@@ -13,6 +13,14 @@ COPY crates/wyd-server/src ./crates/wyd-server/src
 RUN cargo build --release --locked --manifest-path crates/wyd-server/Cargo.toml
 
 FROM debian:bookworm-slim@sha256:e67eeead736ff7bbe258ef088bff683635c561b1fcfefad0806c1df4ab49ce0e
+
+# A base pinada por digest ainda não traz os pacotes que o Debian já publicou com
+# correção; o upgrade aplica o que existe no arquivo, e o scan de CVE do CI (action
+# `imagem`, Trivy, HIGH/CRITICAL com correção) exige zero.
+RUN apt-get update \
+    && apt-get upgrade --yes \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN useradd --system --uid 10001 --no-create-home wyd
 COPY --from=build /src/crates/wyd-server/target/release/wyd-server /usr/local/bin/wyd-server
 USER wyd

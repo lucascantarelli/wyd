@@ -4,9 +4,12 @@
 > Público: Desenvolvimento, arquitetura e agentes
 > Dono: `wyd-ops` (organização) + arquitetura
 > Base: `AGENTS.md` §5, §7 e §9; `wyd-ops/docs/arquitetura/ia-e-skills.md`; `wyd-ops/docs/github-mapping.md`; `wyd-ops/docs/specs/requisitos.md`; `wyd-ops/auditoria-de-organizacao.md`
-> Revisado em: 2026-11-27
+> Revisado em: 2026-11-28
 
-**Estado:** proposto (2026-11-26; contrato de skills verificado). Planejamento; nenhuma skill ou integração de produção foi alterada. A verificação automatizada do contrato está em `wyd-docs/tests/test_skill_contract.py`.
+**Estado:** proposto (2026-11-26; contrato de skills verificado; guia de uso em 2026-11-28).
+Planejamento; nenhuma skill ou integração de produção foi alterada. A verificação automatizada do
+contrato está em `wyd-docs/tests/test_skill_contract.py`; o passo a passo de carga, uso e registro
+está em `ia-e-skills.md` §4.
 
 ## 1. Escopo e dono
 
@@ -31,7 +34,9 @@ As doze skills da lista fechada, com a mesma grafia do template:
 | `skill-creator` | conta do usuário (cloud skill) | criar, revisar ou medir skill | carga via `cloud_read_skill`; skill avaliada antes de entrar na lista |
 | `writing-plans` | conta do usuário (cloud skill) | tarefa multi-etapa antes de tocar código | carga via `cloud_read_skill`; plano com tarefas e verificação |
 
-Regra: o agente carrega a skill relevante **antes** de escrever, não depois. Issue templates têm campo "Skills que o agente deve carregar".
+Regra: o agente carrega a skill relevante **antes** de escrever, não depois. Issue templates têm campo
+"Skills que o agente deve carregar". Como carregar cada origem (disco ou cloud) e o que registrar no
+PR: `ia-e-skills.md` §4.1 e §4.4.
 
 ## 3. Matriz de skill-loading por trabalho
 
@@ -71,13 +76,14 @@ Servidor MCP não é integração: é ferramenta do agente, fora do repositório
 | `server-memory` | disponível no cliente; grafo local do mantenedor | rascunho de contexto entre sessões, nunca fonte de verdade |
 
 Quem não tem esses servidores roda `make gate` do mesmo jeito: nada no projeto depende deles.
-Inventário e regra de uso em `ia-e-skills.md` §3.
+Inventário e regra de uso em `ia-e-skills.md` §3; configuração do cliente, exemplo de chamada de cada
+servidor e formato do registro no PR em `ia-e-skills.md` §4.2–§4.4.
 
 ## 5. Verificação mínima
 
 | Item | Como verificar | Dono |
 |---|---|---|
-| skill carregada antes de escrever | revisão de fluxo e issue template | `wyd-ops` |
+| skill carregada antes de escrever | revisão de fluxo e issue template; passo a passo em `ia-e-skills.md` §4.1 | `wyd-ops` |
 | skill documentada | `ia-e-skills.md` e este documento | `wyd-ops` |
 | campo de skill-loading nos templates | gate `skills`: igualdade entre `template-de-issue.md` §3 e o campo `skill_principal` dos 4 formulários de `.github/ISSUE_TEMPLATE/` | `wyd-ops` |
 | integração registrada quando usada | `decisoes-registradas.md` | arquitetura |

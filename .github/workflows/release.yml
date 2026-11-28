@@ -43,6 +43,18 @@ jobs:
             exit 1
           fi
 
+      # A tag é a fonte da versão (devops/index.md §13): nome fora do padrão é recusado
+      # antes de assinar qualquer coisa.
+      - name: Conferir a tag contra a política de versionamento
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          set -eu
+          alvo="${GITHUB_REF_NAME}"
+          if ! printf '%s' "$alvo" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$'; then
+            echo "::error::tag '$alvo' fora da política: vX.Y.Z ou vX.Y.Z-rc.N (devops/index.md §13)"
+            exit 1
+          fi
+
       - name: Assinar o manifesto
         env:
           WYD_LAUNCHER_SIGNING_KEY: ${{ secrets.WYD_LAUNCHER_SIGNING_KEY }}
@@ -68,3 +80,22 @@ jobs:
       - name: Guardar os artefatos da execução manual
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: ls -l manifest.json manifest.json.sig
+
+  # Fecha o marco da versão e abre o seguinte. Candidato (`-rc.N`) não fecha nada: a
+  # release final é que encerra o marco (política em devops/index.md §13).
+  marco:
+    name: fechar milestone da versão
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Fechar o marco e abrir o próximo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash wyd-ops/scripts/ci/fechar-milestone.sh "${GITHUB_REF_NAME}"

@@ -289,9 +289,14 @@ def validar_caminho(rel: PurePosixPath) -> str | None:
             return None
         if rel.parts[1] == "ISSUE_TEMPLATE" and rel.suffix in {".yml", ".yaml"}:
             return None
-        if len(rel.parts) == 2 and rel.name in {"dependabot.yml", "pull_request_template.md"}:
+        if len(rel.parts) == 2 and rel.name in {
+            "dependabot.yml",
+            "pull_request_template.md",
+            # O GitHub só lê o CODEOWNERS em .github/, na raiz ou em docs/.
+            "CODEOWNERS",
+        }:
             return None
-        return "arquivo de .github/ fora de workflows/actions/ISSUE_TEMPLATE"
+        return "arquivo de .github/ fora de workflows/actions/ISSUE_TEMPLATE/CODEOWNERS"
 
     if top == ".vscode":
         if rel.suffix == ".json":

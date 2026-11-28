@@ -51,9 +51,12 @@ jobs:
   # O sinal diário só serve se alguém ficar sabendo: sem este job, a quebra
   # antecipada da próxima toolchain morre no run agendado.
   notify:
-    name: notificar falha
-    if: always() && (failure() || cancelled())
+    name: notificar resultado
+    if: always()
     needs: [stable]
+    permissions:
+      actions: read
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -62,6 +65,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/notify-failure
+      - uses: ./.github/actions/resultado
         with:
           workflow: code-stable

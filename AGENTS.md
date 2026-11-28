@@ -60,7 +60,7 @@ nunca como fato, e só vira regra depois de reverificado na fonte nova.
 | Código Rust | 10 crates com `Cargo.toml` (2026-11-26): `wyd-db` (lib + 3 alvos PostgreSQL), `wyd-launcher` e `wyd-ops-signer` com comportamento; `wyd-protocol`, `wyd-net`, `wyd-core`, `wyd-sim`, `wyd-server`, `wyd-admin` e `wyd-bots` como **esqueleto** — módulos reservados do plano, sem comportamento de domínio, com `wyd-server` e `wyd-admin` expondo só `/health` e `/ready`; `deprecated/crates/` segue **ignorado pelo git** (contagem em `planejamento-1.0.0/wyd-1.0.0.md` §1.4) |
 | Raiz | sem `Cargo.toml` de workspace; `rust-toolchain.toml` (1.100.0) e `Makefile` existem; cada crate tem `Cargo.toml` próprio |
 | GitHub | público, `develop` padrão, Projects habilitado; o inventário de issues, o board `WYD 1.0.0`, as views e os campos medidos estão em `planejamento-1.0.0/wyd-ops/docs/github-mapping.md` §7 |
-| CI | `.github/workflows/docs.yml` (gate `gate-docs` e Pages em `develop`), `code.yml` (fmt em matriz por crate e `clippy`+`unit` no mesmo job por crate, cobertura (informativa em `wyd-db`, bloqueante no `wyd-launcher`; a política e o piso são de `planejamento-1.0.0/wyd-ops/docs/planos/estrategia-de-testes.md` §6) e `gate-code`; os três crates são portáveis, só o empacotamento NSIS futuro do launcher exige Windows), `ci-db.yml` (matriz PG17 e `gate-db`), `security.yml` (audit/deny, dependency-review, actionlint e `gate-security`), `docs-image.yml` (Buildx/GHCR em `develop`) e `code-stable.yml` (sinal diário com Rust `stable`); `issue-status.yml` mantém labels e Project. `full-workflow.yml` foi removido em 2026-11-26. O estado real e o que falta estão em `planejamento-1.0.0/wyd-ops/docs/devops/index.md`; as contagens de teste e o limiar de cobertura têm dono em `estrategia-de-testes.md` §6–§7 |
+| CI | `.github/workflows/ci.yml` roda **um run por evento** com os estágios de código (fmt, clippy, teste, cobertura e `gate-code`), banco (`gate-db`), documentação (`gate-docs` e Pages em `develop`), segurança (audit/deny, `npm audit`, dependency-review, actionlint e `gate-security`) e imagem (matriz das quatro imagens), com um único job `notificar resultado` no fim; `code-stable.yml` (sinal diário com `stable`), `images.yml` (frescor de digest), `release.yml` e `issue-status.yml` são runs próprios. Estágios por `needs`, sete actions em `.github/actions/`, check obrigatório no `gate-*` e não na matriz. Estado real e o que falta em `planejamento-1.0.0/wyd-ops/docs/devops/index.md` |
 | Imagem e Compose | Primeira publicação real em **2026-11-26** pelo run `45827609542` (commit `0c4a612`): GHCR público `ghcr.io/lucascantarelli/wyd-docs` com `:SHA`, `:develop` e `:latest`, provenance SLSA v1 e SBOM SPDX; smoke HTTP 200 no CI. O Compose base **não** tem `build:`; `docker-compose.override.yml` traz `gate`/`db` e `docker-compose.dev.yml` é opt-in com `:dev`. `make rollback TAG=<sha>` foi exercitado contra `f271caa` e `0c4a612`, servindo HTTP 200 sem build. Runtime nginx definitivo e produção continuam pendentes; decisão e medição em `planejamento-1.0.0/wyd-ops/plano-imagem-e-compose-do-site.md` |
 | Cliente | `wyd-client/files/`, ignorado pelo git; contagem, tamanho e hash do binário medidos em `planejamento-1.0.0/wyd-client/registro-do-cliente.md` (2026-11-22) |
 
@@ -153,6 +153,25 @@ Página publicada no site passa também pelo gate de documentação. O comando �
 os passos equivalentes no host — os mesmos que o CI executa — estão em
 `planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §6 (Como verificar); esta etapa não
 repete o comando.
+
+### Etapa 2.1 — Skills, MCP e integrações (obrigatório)
+
+O agente carrega o que o projeto já definiu antes de escrever:
+
+1. **Skill da issue primeiro.** O `skill_principal` do formulário é o ponto de entrada; as skills do
+   projeto ficam em `.claude/skills`, `.agents/skills` ou `.freebuff/skills` e são lidas inteiras
+   (`SKILL.md` e os recursos que ele cita). Skill listada mas não carregada é defeito de execução.
+2. **MCP quando o trabalho é de raciocínio longo ou de memória.** `sequential-thinking` para plano com
+   muitas etapas e `server-memory` para o que precisa sobreviver à troca de sessão. Nenhum dos dois
+   substitui arquivo no repositório: decisão mora no planejamento, não na memória do servidor.
+3. **Integração em vez de cópia.** Issue, PR, release, milestone e mensagem passam pelas integrações
+   (GitHub, Slack) ou pelo `gh` já autenticado; o agente nunca cola conteúdo de issue à mão quando a
+   API responde.
+4. **Registro na entrega.** O PR registra skill, MCP e integração usados (seção própria do template);
+   sem esse registro a revisão não sabe se a regra foi aplicada.
+
+Não há gate que prove carga de skill — a prova é o registro no PR e o resultado no diff. Quem
+implementar essa checagem deve fazê-la em `wyd-docs/gate`, com o dono apontado na página do CI.
 
 ### Etapa 3 — Registrar decisão
 

@@ -1,0 +1,40 @@
+name: testes-rust
+description: Toolchain pinada, clippy com -D warnings e testes de um crate; fmt opcional para o job que já cobre formatação.
+
+inputs:
+  crate:
+    description: Crate sob crates/ (wyd-db, wyd-launcher, ...).
+    required: true
+  args:
+    description: Argumentos extras do cargo test (ex. --locked).
+    required: false
+    default: ""
+  fmt:
+    description: Roda também cargo fmt --check (use quando o job não tem passo de formatação).
+    required: false
+    default: "false"
+  toolchain:
+    description: Toolchain; o padrão acompanha rust-toolchain.toml.
+    required: false
+    default: "1.100.1"
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup-rust
+      with:
+        crate: ${{ inputs.crate }}
+        toolchain: ${{ inputs.toolchain }}
+
+    - name: Formatação
+      if: inputs.fmt == 'true'
+      shell: bash
+      run: cargo fmt --manifest-path crates/${{ inputs.crate }}/Cargo.toml -- --check
+
+    - name: Lint
+      shell: bash
+      run: cargo clippy --manifest-path crates/${{ inputs.crate }}/Cargo.toml --all-targets -- -D warnings
+
+    - name: Testes
+      shell: bash
+      run: cargo test --manifest-path crates/${{ inputs.crate }}/Cargo.toml ${{ inputs.args }}

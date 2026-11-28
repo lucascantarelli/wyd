@@ -1,4 +1,4 @@
-## Resumo
+## 📝 Resumo
 
 <!-- Duas a quatro linhas: o problema, a mudança e o resultado observável. -->
 
@@ -20,10 +20,12 @@ Closes #
 - [ ] Correção de bug ou regressão
 - [ ] Refatoração sem mudança de comportamento
 
-## Skills carregadas
+## Skills carregadas (e MCP/integrações)
 
 - **Skill obrigatória da issue:** <!-- copie o skill_principal da página/issue -->
 - **Complementares usadas:** <!-- ou "nenhuma" -->
+- **MCP usado:** <!-- ex.: sequential-thinking para o plano; server-memory para o contexto; ou "nenhum" -->
+- **Integrações usadas:** <!-- GitHub, Slack, ... ou "nenhuma" -->
 - **Como foi verificado:** <!-- ex.: cloud_read_skill antes do primeiro edit; SKILL.md relido -->
 
 ## Como foi provado
@@ -76,6 +78,18 @@ Closes #
 - [ ] Contagens têm fonte, comando e data; nenhuma foi copiada de outro documento.
 - [ ] Links relativos resolvem e o `gate-docs` passa.
 - [ ] ADR só foi criado se houver decisão registrada com "como verificar".
+
+## 📊 Métricas e observabilidade
+
+- **Cobertura antes → depois:** <!-- ex.: wyd-launcher 86,1% → 87,4% (piso 85%) -->
+- **Duração do run / job mais lento:** <!-- ex.: 2m10s / cobertura 41s -->
+- **Notificação:** <!-- o resumo do run (log + artefato resultado-ci) e o aviso no Slack saíram corretos? -->
+
+## 🏷 Projeto, marco e versão
+
+- **Marco (milestone):** <!-- herdado de Closes #N ou "não se aplica" -->
+- **Labels aplicadas pelo CI:** <!-- area/*, size/*, estado/* -->
+- **Afeta a versão?** <!-- não / entra em vX.Y.Z; ver §13 da página do CI -->
 
 ## Checklist do autor
 

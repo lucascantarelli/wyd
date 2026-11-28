@@ -1,0 +1,43 @@
+name: gate-agregado
+description: Falha se algum job da etapa não terminou em success; ignora job que só existe em pull_request.
+
+inputs:
+  jobs:
+    description: Pares nome=resultado separados por espaço, na ordem em que devem ser conferidos.
+    required: true
+  evento:
+    description: Valor de github.event_name, para saber se o job condicional existe neste run.
+    required: false
+    default: ""
+  condicional:
+    description: Nome do job que só roda em pull_request e por isso não pode reprovar push.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Agregar os jobs
+      shell: bash
+      env:
+        JOBS: ${{ inputs.jobs }}
+        EVENTO: ${{ inputs.evento }}
+        CONDICIONAL: ${{ inputs.condicional }}
+      run: |
+        set -uo pipefail
+        falhou=0
+        for par in $JOBS; do
+          nome="${par%%=*}"
+          valor="${par#*=}"
+          if [ -n "$CONDICIONAL" ] && [ "$nome" = "$CONDICIONAL" ] && [ "$EVENTO" != "pull_request" ]; then
+            echo "  ${nome}: ignorado (só existe em pull_request)"
+            continue
+          fi
+          if [ "$valor" != "success" ]; then
+            echo "::error::job '${nome}' terminou com '${valor}'"
+            falhou=1
+          else
+            echo "  ${nome}: ok"
+          fi
+        done
+        exit "$falhou"

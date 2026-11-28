@@ -1,0 +1,61 @@
+name: testes-pg
+description: Prepara o psql, cria os papéis, aplica a série quando pedida e roda um alvo PostgreSQL do wyd-db. O service container fica no workflow chamador.
+
+inputs:
+  alvo:
+    description: Nome do alvo de teste (sistema_pg, reversibilidade_pg, runner_pg).
+    required: true
+  url:
+    description: WYD_DB_TEST_URL do service container.
+    required: true
+  papeis:
+    description: Papéis a criar (nologin, migrator).
+    required: false
+    default: "nologin"
+  serie:
+    description: Aplica a série de migrations antes do alvo.
+    required: false
+    default: "false"
+  usuario:
+    description: Papel usado para conectar no alvo.
+    required: false
+    default: "postgres"
+  banco:
+    description: Nome do banco.
+    required: false
+    default: "wyd"
+
+runs:
+  using: composite
+  steps:
+    - name: Garantir o psql no runner
+      shell: bash
+      run: |
+        if ! command -v psql >/dev/null 2>&1; then
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends postgresql-client
+        fi
+
+    # A criação sempre conecta como `postgres`; o papel de teste só é usado
+    # depois que existe.
+    - name: Criar papéis
+      shell: bash
+      env:
+        PGUSER: postgres
+      run: bash wyd-ops/scripts/ci/db-prepare.sh "${{ inputs.papeis }}"
+
+    - name: Aplicar a série
+      if: inputs.serie == 'true'
+      shell: bash
+      env:
+        PGUSER: postgres
+      run: bash wyd-ops/scripts/ci/apply-series.sh "${{ github.workspace }}"
+
+    - name: Executar o alvo
+      shell: bash
+      env:
+        PGUSER: ${{ inputs.usuario }}
+        WYD_DB_TEST_URL: ${{ inputs.url }}
+        WYD_DB_TEST_USER: ${{ inputs.usuario }}
+        WYD_DB_TEST_DB: ${{ inputs.banco }}
+      run: cargo test --manifest-path crates/wyd-db/Cargo.toml --test ${{ inputs.alvo }} -- --test-threads=1

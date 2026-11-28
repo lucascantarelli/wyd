@@ -1,13 +1,19 @@
-name: Decisão
-description: Fechar uma lacuna registrada — com dono, opções, impacto e marco.
+name: 🧭 Decisão
+description: Fechar uma lacuna registrada — com dono, opções, impacto, risco e como verificar depois.
 title: "[decisão] "
-labels: []
+labels: ["estado/aguardando-decisao"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Decisão não se abre sem o registro.** A lacuna já existe no `lacunas.md` do sistema; esta issue
+        é o pedido de decisão. Decisão que muda schema, fronteira ou operação vira ADR com **como verificar**.
+
   - type: input
     id: lacuna
     attributes:
       label: ID da lacuna
-      description: O ID já registrado no `lacunas.md` do sistema. Lacuna não registrada se abre antes no arquivo.
+      description: ID já registrado no `lacunas.md` do sistema. Se não existe, abra o registro antes.
       placeholder: LPRT-04
     validations:
       required: true
@@ -15,7 +21,7 @@ body:
   - type: dropdown
     id: sistema
     attributes:
-      label: Sistema
+      label: Sistema / área (vira label `area/*`)
       description: Dono do registro de lacunas.
       options:
         - wyd-protocol
@@ -38,7 +44,7 @@ body:
     id: dono
     attributes:
       label: Quem decide
-      description: Papel, não nome de pessoa. "Arquitetura" hoje significa proposta técnica + aprovação do time.
+      description: Papel, não nome de pessoa. "Arquitetura" hoje significa proposta técnica + aprovação do dono.
       placeholder: arquitetura + frente wyd-net
     validations:
       required: true
@@ -47,7 +53,10 @@ body:
     id: opcoes
     attributes:
       label: Opções consideradas
-      description: Uma por linha, com o custo de cada uma. Decisão sem alternativa não é decisão.
+      description: Uma por linha, com custo e consequência. Decisão sem alternativa não é decisão.
+      placeholder: |
+        A) ... — custo ..., consequência ...
+        B) ... — custo ..., consequência ...
     validations:
       required: true
 
@@ -60,12 +69,27 @@ body:
       required: true
 
   - type: textarea
-    id: verificacao
+    id: evidencia
     attributes:
-      label: Como verificar depois
-      description: Comando, arquivo ou teste que prova que a decisão está aplicada. Sem isso vira ADR sem prova.
+      label: Evidência de verificação (como verificar depois)
+      description: Comando, arquivo ou teste que prova que a decisão foi aplicada. Sem isso é ADR sem prova.
+      placeholder: |
+        - [ ] `make gate` verde
+        - [ ] `crates/wyd-db/migrations/00XX_*.sql` aplica e reverte
+        - [ ] run/artefato: https://github.com/lucascantarelli/wyd/actions/runs/...
     validations:
       required: true
+
+  - type: checkboxes
+    id: riscos
+    attributes:
+      label: Riscos da decisão
+      options:
+        - label: "🔐 Segurança — permissão, credencial ou dependência (`risco/seguranca`)"
+        - label: "🗃️ Dados — schema, migration, dado existente (`risco/dados`)"
+        - label: "🧩 Fronteira entre sistemas — contrato muda de dono"
+        - label: "↩️ Reversão difícil — desfazer custa migração ou janela"
+        - label: "🚫 Bloqueia outro sistema até ser decidida"
 
   - type: dropdown
     id: marco
@@ -85,7 +109,7 @@ body:
     id: skill_principal
     attributes:
       label: Skill obrigatória para executar
-      description: Selecione a skill que o agente deve carregar antes de começar. A lista é fechada e conferida contra .agents/skills e as cloud skills do projeto.
+      description: A lista é fechada e conferida contra a §3 de planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md.
       options:
         - auditar-planejamento
         - documentation-writer
@@ -106,16 +130,40 @@ body:
     id: skills_complementares
     attributes:
       label: Skills complementares
-      description: Opcional. Liste outras skills da mesma lista fechada, uma por linha, e por que são necessárias.
-      placeholder: auditar-planejamento + documentation-writer
+      description: Opcional. Nomes da mesma lista fechada, um por linha, com o motivo.
+      placeholder: writing-plans — transformar a decisão em plano executável
     validations:
       required: false
+
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: MCP usado na análise
+      options:
+        - nenhum
+        - sequential-thinking
+        - server-memory
+        - sequential-thinking + server-memory
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      label: Integrações tocadas
+      options:
+        - label: GitHub (issue, PR, ADR, milestone)
+        - label: Slack (`SLACK_CI_WEBHOOK`)
+        - label: GHCR / Docker (imagem ou versão)
+        - label: Nenhuma
 
   - type: checkboxes
     id: confirmacoes
     attributes:
       label: Confirmações
       options:
+        - label: A lacuna está registrada e esta issue aponta o ID.
+          required: true
         - label: A decisão muda schema, fronteira ou operação? Se sim, o resultado vira ADR com "como verificar".
           required: false
         - label: Não estou fechando a lacuna sem o "sim" do dono nomeado.

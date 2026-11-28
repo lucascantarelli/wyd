@@ -1,12 +1,18 @@
-name: Planejamento
-description: Página ou documento novo em um sistema — com público, pergunta e fonte.
+name: 🗺️ Planejamento
+description: Página ou documento novo em um sistema — com público, pergunta, fonte e critério de aceite.
 title: "[planejamento] "
-labels: []
+labels: ["documentation"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Escrever antes de codar.** Nenhum arquivo de código nasce antes de a página que o descreve
+        estar `aceita`. A página cita o padrão (`wyd-db/docs/convencoes.md`) e não o recopia.
+
   - type: dropdown
     id: sistema
     attributes:
-      label: Sistema
+      label: Sistema / área (vira label `area/*`)
       description: Onde a página vai morar. O sistema dono escreve; o site apenas publica.
       options:
         - wyd-protocol
@@ -66,12 +72,26 @@ body:
       required: true
 
   - type: textarea
-    id: gate
+    id: evidencia
     attributes:
-      label: Como a página fecha
-      description: Checklist de aceite — cabeçalho, evidência, dono, revisão de quem não escreveu e build do site.
+      label: Evidência de verificação
+      description: Como o aceite é provado — gate, build do site, link de página publicada e, quando houver, run/artefato do CI.
+      placeholder: |
+        - [ ] `make gate-fast` verde
+        - [ ] página em /sistemas/wyd-db/...
+        - [ ] revisão de quem não escreveu
     validations:
       required: true
+
+  - type: checkboxes
+    id: riscos
+    attributes:
+      label: Riscos do documento
+      options:
+        - label: "🧪 Afirmação sem `V` — precisa de comando e data ou vira `H` com lacuna"
+        - label: "🔁 Duplicação de fato — número/regra que já tem dono em outra página"
+        - label: "🏗️ Muda fronteira de sistema — exige decisão registrada"
+        - label: "📉 Contagem que o gate confere — precisa de fonte, comando e data"
 
   - type: dropdown
     id: marco
@@ -91,7 +111,7 @@ body:
     id: skill_principal
     attributes:
       label: Skill obrigatória para executar
-      description: Selecione a skill que o agente deve carregar antes de começar. A lista é fechada e conferida contra .agents/skills e as cloud skills do projeto.
+      description: A lista é fechada e conferida contra a §3 de planejamento-1.0.0/wyd-ops/docs/planos/template-de-issue.md.
       options:
         - auditar-planejamento
         - documentation-writer
@@ -112,10 +132,32 @@ body:
     id: skills_complementares
     attributes:
       label: Skills complementares
-      description: Opcional. Liste outras skills da mesma lista fechada, uma por linha, e por que são necessárias.
-      placeholder: auditar-planejamento + documentation-writer
+      description: Opcional. Nomes da mesma lista fechada, um por linha, com o motivo.
+      placeholder: documentation-writer — reescrever a página; auditar-planejamento — revisar contagem
     validations:
       required: false
+
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: MCP usado na análise
+      options:
+        - nenhum
+        - sequential-thinking
+        - server-memory
+        - sequential-thinking + server-memory
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integracoes
+    attributes:
+      label: Integrações tocadas
+      options:
+        - label: GitHub (issue, PR, milestone)
+        - label: Site publicado (MkDocs / Pages)
+        - label: Slack (`SLACK_CI_WEBHOOK`)
+        - label: Nenhuma
 
   - type: checkboxes
     id: confirmacoes
@@ -125,4 +167,6 @@ body:
         - label: A página está prevista na árvore do plano diretor do sistema.
           required: true
         - label: O conteúdo não é cópia de `deprecated/`.
+          required: true
+        - label: Cada afirmação tem `V` (com data) ou `H` com o ID da lacuna.
           required: true

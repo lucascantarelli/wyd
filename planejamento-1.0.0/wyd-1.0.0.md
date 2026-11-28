@@ -98,7 +98,7 @@ corpo** em `docs/` (143 arquivos, incluindo os índices que já viraram página)
 | `crates/*` | 10 pastas; 3 com comportamento e 7 com esqueleto desde 2026-11-26, nenhuma só `.gitkeep` | `find crates` |
 | Código Rust real | `deprecated/` com 375 arquivos, **0 versionados** | `git ls-files deprecated` |
 | Raiz | sem `Cargo.toml`, `rust-toolchain.toml`, `Makefile` | `ls` |
-| CI | 7 workflows (2026-11-26): `code` (fmt e `clippy`+`unit` em matriz por crate + cobertura com piso bloqueante no launcher + `gate-code`), `ci-db` (matriz PG17 + `gate-db`), `docs` (`gate-docs` + Pages), `docs-image`, `security` (`gate-security`) e `release`; `issue-status` mantém labels/Project. O antigo `full-workflow` foi removido; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
+| CI | 5 workflows (2026-11-28): `ci` (um run por evento, com os estágios de código, banco, docs, segurança e imagem, os gates `gate-code`/`gate-db`/`gate-docs`/`gate-security` e um único `notificar resultado` no fim), `code-stable` (diário, toolchain `stable`), `images` (frescor de digest), `release` e `issue-status` (labels/Project). Sete actions em `.github/actions/`; estado real em `wyd-ops/docs/devops/index.md` | `.github/workflows/` |
 | Workflows de referência no legado | 3 (`ci`, `bench`, `release`) | `deprecated/.github/workflows/` |
 | Site de documentação | MkDocs 2.0 (`2.0.dev6`) + Python 3.15; **267 páginas montadas de 13 sistemas**; build, `gate/checks/links.py` e `gate/checks/contagens.py` verdes | `wyd-docs-1.0.0.md` §9.1; `wyd-docs/`, 2026-11-22 |
 | Cliente | 7.147 arquivos e 567 MB em `wyd-client/files/`, ignorado; `WYD.exe` com hash medido | `wyd-client/registro-do-cliente.md`, 2026-11-22 |

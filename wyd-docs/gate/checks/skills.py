@@ -81,6 +81,9 @@ SECAO_LISTA = "## 3. Skills"
 FIM_LISTA = "## 4."
 LINHA_LISTA = re.compile(r"^\|\s*`([^`]+)`\s*\|", re.M)
 CAMPO_SKILL = "id: skill_principal"
+# Campos que fazem o formulário ser entrada acionável, não texto solto: skill obrigatória,
+# MCP/serviços tocados, integrações e evidência de verificação.
+CAMPOS_ACIONAVEIS = ("skill_principal", "mcp", "integracoes", "evidencia")
 OPCAO = re.compile(r"^\s*-\s+(\S+)\s*$", re.M)
 # Fato com dono: (padrão que republica o valor, dono, motivo curto).
 FATOS_COM_DONO = [
@@ -177,6 +180,18 @@ def lista_fechada(ws: Workspace, problemas: list[str]) -> set[str]:
     for formulario in formularios:
         nome = ws.relative(formulario)
         conteudo = ws.read(formulario)
+        for campo in CAMPOS_ACIONAVEIS:
+            if f"id: {campo}" not in conteudo:
+                problemas.append(
+                    f"{nome}:1: formulário sem o campo `{campo}`; o padrão da §4 de {TEMPLATE} "
+                    "exige skill, MCP, integrações e evidência"
+                )
+        if not re.search(r"^labels:\s*\[.+\]\s*$", conteudo, re.M):
+            problemas.append(
+                f"{nome}:1: formulário sem `labels:` não vazio; a issue nasce sem tipo nem estado"
+            )
+        if not re.search(r"^title:\s*\S", conteudo, re.M):
+            problemas.append(f"{nome}:1: formulário sem `title:`; o padrão de nome se perde")
         if CAMPO_SKILL not in conteudo:
             problemas.append(f"{nome}:1: formulário sem o campo `skill_principal`")
             continue
