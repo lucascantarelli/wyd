@@ -328,6 +328,11 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   Slack usa Block Kit com cor por resultado (verde/vermelho), emojis e campos; a cobertura por crate
   entra quando o artefato `cobertura-*` existe. O resumo em Markdown tem tabela com link por job e vai
   para o summary, para o log e para o artefato `resultado-ci`.
+  Comprovação: run `46097685728` — artefato `resultado-ci` com `Parede 1m 21s`, `Jobs 33 (✅ 32 · ❌ 0 ·
+  ⏭️ 1)`, `Soma 13m 24s`, `Paralelismo 9,9×` e `Cobertura wyd-db 67,77% · wyd-launcher 92,48%`; o passo
+  do Slack logou `aviso montado: ✅ ci passou (33 jobs, parede 1m 21s, 0 falha(s))` e `aviso enviado ao
+  Slack`. A parede é medida pelos jobs (primeiro início → último fim), porque `run_started_at` vem nulo
+  em `pull_request`.
 - **Metadados de PR e de marco, sem action de terceiro.** `wyd-ops/scripts/sync-pr-metadata.mjs` (job
   `metadados` do `issue-status`) aplica `area/*` por caminho, `size/*` pelo diff e herda o milestone da
   issue que o PR fecha; `wyd-ops/scripts/ci/fechar-milestone.sh` (job `marco` do `release`) fecha o
