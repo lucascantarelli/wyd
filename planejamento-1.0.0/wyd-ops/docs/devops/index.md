@@ -270,41 +270,52 @@ F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do f
 
 Revisão das propostas de reorganização do CI, com veredito por item. Medição de 2026-11-27: `code`
 103–138 s, `ci-db` 69–83 s, `security` 41–49 s, `docs` 29–44 s — o que estoura vem de `clippy+unit`
-Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 a parte viável migrou para
-`.github/actions/`, que agora tem sete actions usadas por dez workflows.
+Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline virou **um arquivo**
+(`.github/workflows/ci.yml`), com sete actions em `.github/actions/` e **um** job de aviso por run.
 
 ### 12.1 Feito
 
-- **Um relatório por run, para sucesso e falha.** A action `.github/actions/resultado` substitui a
-  `notify-failure` nos oito workflows com aviso: lê os jobs pela API (`actions: read`) e monta uma vez o
-  texto com veredito, run/commit/ref/evento, contagem de jobs, soma das durações e a tabela por job
-  (maior primeiro). O texto vai para `$GITHUB_STEP_SUMMARY`, para o **log do job** e para o artefato
-  `resultado-<workflow>` — o summary não é legível pela API, log e artefato são. No Slack (quando há
-  webhook) vão o selo de sucesso ou falha, os três jobs mais lentos e o botão para o run. Job sem
-  conclusão na coleta (o próprio job de aviso) não entra no total nem no veredito, e o resumo informa
-  quantos ficaram sem veredito.
-  Comprovação: run `46090174166` (`pull_request`, commit `ca798ee`) — artefato `resultado-code` com
-  `### ✅ code — sucesso`, `| Jobs | 17 (✅ 17 · ❌ 0 · ⏭️ 0) |`, `| Soma dos jobs | 377s |` e a tabela
-  com `fmt / wyd-launcher / ubuntu-latest` 44 s no topo; o mesmo texto está no log do job de aviso e o
-  run tem **um** job `notificar resultado`.
+- **Um run por evento, um aviso no fim.** Todo o pipeline de PR/push está em `ci.yml`: código, banco,
+  documentação, segurança e imagem no mesmo run, ligados por `needs`, e o job `notificar` como último
+  estágio. Antes eram oito workflows, oito runs e oito avisos por push — o defeito era estrutural, não
+  de formato.
+- **Jobs planos, de propósito.** Chamar domínio como reusable workflow (`uses:`) renomeia o check para
+  `code / gate-code`, e o ruleset de `develop` exige `gate-code`, `gate-db`, `gate-docs` e
+  `gate-security` com o nome exato. Reusable serve para reaproveitar **passos** (as actions); para
+  preservar o nome do check obrigatório, os jobs moram no mesmo arquivo.
+- **Um relatório por run, para sucesso e falha.** A action `.github/actions/resultado` lê os jobs pela
+  API (`actions: read`) e monta uma vez o texto com veredito, run/commit/ref/evento, contagem de jobs,
+  soma das durações e a tabela por job (maior primeiro). O texto vai para `$GITHUB_STEP_SUMMARY`, para
+  o **log do job** e para o artefato `resultado-ci` — o summary não é legível pela API, log e artefato
+  são. No Slack vão o selo, os três jobs mais lentos e o botão para o run; o segredo
+  `SLACK_CI_WEBHOOK` existe no repositório (aparece mascarado no log) e o `curl --fail` do passo
+  fecha com sucesso. Job sem conclusão na coleta (o próprio job de aviso) não entra no total nem no
+  veredito.
+  Comprovação: run `46091921212` (`pull_request`, commit `6ced372`) — artefato `resultado-ci` com
+  `### ✅ ci — sucesso`, `| Jobs | 33 (✅ 32 · ❌ 0 · ⏭️ 1) |`, `| Soma dos jobs | 762s |`, e o run tem
+  **um** job `notificar resultado`; no PR, os checks `gate-code`, `gate-db`, `gate-docs` e
+  `gate-security` aparecem com o nome exigido pelo ruleset.
 - **`gate-agregado`.** Os três laços de `gate-code`, `gate-db` e `gate-security` viraram
   `.github/actions/gate-agregado`, que recebe `nome=resultado` e, no `security`, ignora
   `dependency-review` fora de `pull_request` — o job que só existe em PR não reprova push nem agenda.
   O check obrigatório continua sendo o `gate-*`, nunca os jobs da matriz.
 - **`testes-rust`.** `.github/actions/testes-rust` (setup + `fmt` opcional + clippy com `-D warnings` +
-  test) atende `verify` e `esqueleto` do `code`; `args` e `fmt` vêm da matriz, então crate novo ou
-  alvo novo não copiam passos.
+  test) atende `verify` e `esqueleto`; `args` e `fmt` vêm da matriz, então crate novo ou alvo novo não
+  copiam passos.
 - **`testes-pg`.** `.github/actions/testes-pg` prepara o `psql`, cria os papéis, aplica a série quando
-  pedida e roda o alvo. O service container `postgres:17` por digest continua no `ci-db`, o único lugar
-  que pode declará-lo.
+  pedida e roda o alvo. O service container `postgres:17` por digest continua no workflow, o único
+  lugar que pode declará-lo.
 - **`imagem`.** `.github/actions/imagem` é buildx + cache GHA por escopo + login/push com
-  `GITHUB_TOKEN` + fumaça HTTP. `docs-image` migrou para ela com as mesmas tags (`sha`, `develop`,
-  `latest`); `imagens-servico` constrói em matriz `wyd-server`, `wyd-admin` e `wyd-portal`, que tinham
-  Dockerfile e nenhum workflow — o Dockerfile nunca era exercitado. Em PR constrói e faz fumaça
-  (`/health` nas duas sondas, `/` no portal); em push de `develop` publica `:sha` e `:dev`. `latest`
-  segue exclusiva do site e **não há deploy em tag** (ADR-OPS-0012).
-- **Custo aceito.** `imagens-servico` roda em todo PR, sem filtro de caminho: Dockerfile quebrado só
-  aparece quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
+  `GITHUB_TOKEN` + fumaça HTTP. Os jobs `imagem-docs` e `imagem` (matriz `wyd-server`, `wyd-admin`,
+  `wyd-portal`) usam a mesma action; os três serviços tinham Dockerfile e nenhum workflow, então o
+  Dockerfile nunca era exercitado. Em PR constrói e faz fumaça (`/health` nas duas sondas, `/` no
+  portal); em push de `develop` publica `:sha` e `:dev`. `latest` segue exclusiva do site e **não há
+  deploy em tag** (ADR-OPS-0012).
+- **Custo aceito.** As imagens rodam em todo PR, sem filtro de caminho: Dockerfile quebrado só aparece
+  quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
+- **Agenda.** `ci.yml` também roda semanalmente (segunda, 06:00 UTC): o advisory envelhece sem commit e
+  o run agendado reaproveita os mesmos gates. `code-stable` (diário, toolchain `stable`) e `images`
+  (frescor de digest, quarta) seguem workflows próprios, cada run com o seu aviso.
 
 O que isso dá de DORA sem serviço externo: duração por job e soma por run (lead time de integração),
 taxa de falha por run e o link direto para o run lento.
@@ -314,9 +325,6 @@ taxa de falha por run e o link direto para o run lento.
 1. **Tag de release com changelog.** Publicar imagem com a tag da versão e gerar changelog a partir das
    issues da versão. Depende da política de versão: `0.1.0-rc.N` não existe no repositório e inventá-la
    aqui seria decidir release pela porta do CI.
-2. **`env` compartilhado.** O GitHub Actions não compartilha `env` entre workflows; a saída é reusable
-   workflow (`workflow_call`) ou variável de repositório. Hoje são três linhas em três arquivos — o
-   custo de migrar supera o ganho.
 
 ### 12.3 Não viável como proposto
 
@@ -334,6 +342,5 @@ taxa de falha por run e o link direto para o run lento.
 ### 12.4 Pendente por decisão do dono
 
 Runtime nginx (F2), provedor de VPS e OIDC (F3), CODEOWNERS (F5), política de versão/release e scanner
-CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual. O aviso no Slack continua sem
-`SLACK_CI_WEBHOOK` no repositório: o passo é tolerante à ausência e não foi exercitado — o registro é o
-resumo do run (log e artefato).
+CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual; o dono decidiu em 2026-11-28 incluir os
+três últimos, e o desenho de cada um é pergunta aberta com recomendação (ver o corpo do PR #242).
