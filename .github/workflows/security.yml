@@ -1,7 +1,7 @@
 name: security
 
-# Advisory, licença e dependência vulnerável. Roda em todo PR (é check
-# obrigatório) e semanalmente, porque o advisory envelhece sem commit.
+# Advisory, licença, dependência vulnerável e política de pin. Roda em todo PR
+# (é check obrigatório) e semanalmente, porque o advisory envelhece sem commit.
 
 on:
   push:
@@ -49,6 +49,39 @@ jobs:
             cargo deny --config wyd-ops/deny.toml --manifest-path "$manifest" check advisories bans licenses sources
           done
 
+  # O portal é Next.js com lockfile versionado e não passava por nenhum job: uma
+  # dependência vulnerável ali só apareceria na máquina de quem rodasse `npm audit`.
+  portal:
+    name: dependências do portal
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: wyd-portal
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Node do runner
+        run: node --version
+      - name: npm audit (produção)
+        run: npm audit --omit=dev --audit-level=high
+      - name: npm audit (completo, informativo)
+        run: npm audit --audit-level=high || true
+
+  # Regra que o actionlint não cobre: action por SHA de 40 hex e imagem de terceiro
+  # por digest. Roda em todo PR para não deixar passar referência móvel.
+  pinos:
+    name: política de pin
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Conferir actions e imagens
+        run: bash wyd-ops/scripts/ci/check-pins.sh "$GITHUB_WORKSPACE"
+
   dependency-review:
     name: revisão de dependência
     if: github.event_name == 'pull_request'
@@ -84,11 +117,13 @@ jobs:
   gate-security:
     name: gate-security
     if: always()
-    needs: [analise, dependency-review, workflow-lint]
+    needs: [analise, portal, pinos, dependency-review, workflow-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       ANALISE: ${{ needs.analise.result }}
+      PORTAL: ${{ needs.portal.result }}
+      PINOS: ${{ needs.pinos.result }}
       REVISAO: ${{ needs.dependency-review.result }}
       WORKFLOW_LINT: ${{ needs.workflow-lint.result }}
       EVENTO: ${{ github.event_name }}
@@ -98,6 +133,14 @@ jobs:
           falhou=0
           if [ "$ANALISE" != "success" ]; then
             echo "::error::audit/deny terminou com '$ANALISE'"
+            falhou=1
+          fi
+          if [ "$PORTAL" != "success" ]; then
+            echo "::error::dependências do portal terminaram com '$PORTAL'"
+            falhou=1
+          fi
+          if [ "$PINOS" != "success" ]; then
+            echo "::error::política de pin terminou com '$PINOS'"
             falhou=1
           fi
           if [ "$EVENTO" = "pull_request" ] && [ "$REVISAO" != "success" ]; then

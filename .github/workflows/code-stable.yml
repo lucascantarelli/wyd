@@ -33,6 +33,10 @@ jobs:
             args: --lib --test contrato_api_migrate --test contrato_api_provision
           - crate: wyd-ops-signer
             args: --locked
+          # O launcher tem comportamento e roda em Linux no `code.yml`; faltava no
+          # sinal diário, que só olhava os dois crates do banco e do assinador.
+          - crate: wyd-launcher
+            args: --locked
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -43,3 +47,21 @@ jobs:
           toolchain: stable
       - name: Testes com stable
         run: cargo test --manifest-path crates/${{ matrix.crate }}/Cargo.toml ${{ matrix.args }}
+
+  # O sinal diário só serve se alguém ficar sabendo: sem este job, a quebra
+  # antecipada da próxima toolchain morre no run agendado.
+  notify:
+    name: notificar falha
+    if: always() && (failure() || cancelled())
+    needs: [stable]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/notify-failure
+        with:
+          workflow: code-stable

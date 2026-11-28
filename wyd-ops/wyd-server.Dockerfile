@@ -6,13 +6,13 @@
 #
 #   docker build -f wyd-ops/wyd-server.Dockerfile -t wyd/server:dev .
 
-FROM rust:1.100-slim-bookworm AS build
+FROM rust:1.100-slim-bookworm@sha256:bb875b0f8ce726053e259034848c471840e96bfe591fd52556178ae9a05e6126 AS build
 WORKDIR /src
 COPY crates/wyd-server/Cargo.toml crates/wyd-server/Cargo.lock ./crates/wyd-server/
 COPY crates/wyd-server/src ./crates/wyd-server/src
 RUN cargo build --release --locked --manifest-path crates/wyd-server/Cargo.toml
 
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim@sha256:e67eeead736ff7bbe258ef088bff683635c561b1fcfefad0806c1df4ab49ce0e
 RUN useradd --system --uid 10001 --no-create-home wyd
 COPY --from=build /src/crates/wyd-server/target/release/wyd-server /usr/local/bin/wyd-server
 USER wyd

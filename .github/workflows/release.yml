@@ -3,6 +3,9 @@ name: release
 # Publica o manifesto do patch assinado. A chave privada vem do secret
 # `WYD_LAUNCHER_SIGNING_KEY` (64 hex minúsculos) e nunca é impressa; sem o secret, o job falha antes
 # de assinar qualquer coisa. O launcher verifica com a pública embutida (`LLCH-03`, ADR-LCH-0001).
+#
+# A toolchain entra pelo `setup-rust` como nos demais workflows: sem ele o job dependia do Rust
+# pré-instalado no runner e baixava a 1.100.0 do `rust-toolchain.toml` a cada execução, sem cache.
 
 on:
   push:
@@ -24,6 +27,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-rust
+        with:
+          crate: wyd-ops-signer
 
       - name: Conferir o secret da chave
         env:

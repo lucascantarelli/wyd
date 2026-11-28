@@ -21,7 +21,7 @@ thiserror = "2.0.21"
 
 [dev-dependencies]
 # Validação do schema publicado e ciclo completo de assinatura.
-regex = "1.13.1"
+regex = "1.13.2"
 wyd-ops-signer = { path = "../wyd-ops-signer", version = "0.0.0" }
 tempfile = "3.27.0"
 

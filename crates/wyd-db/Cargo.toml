@@ -33,7 +33,7 @@ name = "contrato_api_provision"
 path = "tests/contrato/contrato_api_provision.rs"
 
 [dependencies]
-sha2 = "0.11.1"
+sha2 = "0.11.2"
 sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }
 thiserror = "2.0.21"
 tokio = { version = "1.54.1", features = ["rt", "macros", "sync"] }

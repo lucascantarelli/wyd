@@ -14,7 +14,7 @@
 # --- estágio 0: dependências e fontes para o gate --------------------------
 # Alvo usado pelo serviço `gate` no Compose: contém ferramentas e fontes, sem montar o site.
 # Índice multi-arquitetura fixado por digest; Dependabot Docker atualiza a referência.
-FROM python:3.15-slim@sha256:63bb298d2b7b88f176f51b5189f54ce6535c997682ea70885d2132f5d473a8a5 AS gate
+FROM python:3.15-slim@sha256:08a4c22c92b79ec821a7ad49768480039ee5b7accac3955228e75366e30abc8e AS gate
 
 WORKDIR /app
 
@@ -40,7 +40,7 @@ RUN python preparar.py \
 
 # --- estágio 2: runtime -----------------------------------------------------
 # Só o site estático, sem pip, sem fontes e sem cache de build.
-FROM python:3.15-slim@sha256:63bb298d2b7b88f176f51b5189f54ce6535c997682ea70885d2132f5d473a8a5
+FROM python:3.15-slim@sha256:08a4c22c92b79ec821a7ad49768480039ee5b7accac3955228e75366e30abc8e
 
 RUN useradd --system --uid 10001 --no-create-home site
 
