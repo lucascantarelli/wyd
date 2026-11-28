@@ -229,25 +229,32 @@ na tabela de scripts desta página, em quatro camadas:
    webhook quando `SLACK_WEBHOOK_URL` existe. `--run <id> --repo dono/nome --dry-run` reproduz o
    relatório de um run real fora do Actions e imprime o payload validado sem postar.
 
-O resumo e o Slack são o **mesmo dashboard em cinco seções**, na mesma ordem:
+O resumo e o Slack são o **mesmo relatório**, com um título e subtítulos curtos, **sem numeração** — o
+mesmo padrão das páginas de documentação: título, `Resumo`, `Tempo`, `Entrega`, `Jobs` e `Ação`.
 
-1. **Resultado** — veredito, run e tentativa, commit do **head do PR** (com autor e assunto; a mensagem
-do commit de merge não informa e fica de fora), PR, issue fechada quando existe
-(`closingIssuesReferences`), ref, evento, ator e contagem de jobs (sem o job de aviso);
-2. **Tempo** — tempo de pipeline, consumo de runner e paralelismo, cada um com a coluna "o que conta";
-3. **Jobs por domínio** — a lista única: cada job aparece **uma vez**, com status, tempo, link do log e,
-quando pulado, o `if:` que o pulou. O domínio sai do prefixo do nome do job (`Código`, `Banco`,
-`Documentação`, `Segurança`, `Imagem`, `Publicação`, e `Outros` para nome desconhecido);
-4. **Entrega** — lead time (marcado como proxy quando é `commit do PR → aviso`), falhas na amostra com o
-**N real** devolvido pela branch (não um 30 fixo), MTTR (só `failure` e `timed_out` — `cancelled` não é
-incidente), runs verdes dos últimos 7 dias (run concluído com sucesso, não deploy) e cobertura por
-crate (`—` quando não há artefato, e leitura quebrada não vira `0%`);
-5. **Ação** — o que fazer com o que a seção 3 mostrou, sem repetir nome de job.
+- **Resumo** — run e tentativa, evento e ator, PR, issue fechada (`closingIssuesReferences`), commit do
+  **head do PR** com autor e assunto (a mensagem do commit de merge não informa e fica de fora) e a
+  contagem de jobs, sem o job de aviso;
+- **Tempo** — tempo de pipeline, consumo de runner e paralelismo, cada um com a coluna "o que conta";
+- **Entrega** — lead time (proxy quando é `commit do PR → aviso`), falhas na amostra com o **N real**
+  devolvido pela branch (não um 30 fixo), MTTR (só `failure` e `timed_out` — `cancelled` não é incidente),
+  runs verdes dos últimos 7 dias (run concluído, não deploy) e cobertura por crate (`—` quando não há
+  artefato, e leitura quebrada não vira `0%`);
+- **Jobs** — a lista única por domínio, com tempo, link do log e o `if:` que pulou. No Slack o ✅ só
+  aparece em falha ou pulo: trinta e dois selos iguais escondem justamente o job que quebrou. O domínio
+  sai do prefixo do nome (`Código`, `Banco`, `Documentação`, `Segurança`, `Imagem`, `Publicação`, `Outros`);
+- **Ação** — o que fazer, sem repetir nome de job.
+
+O título é o `text` do webhook, e o Slack o mostra **acima** do anexo: por isso não existe bloco `header`
+com o mesmo texto e o `text` não repete contagem nem cobertura. Antes a mensagem abria com um resumo de
+quatro linhas e logo abaixo vinha o dashboard com os mesmos números — parecia notificação duplicada. A
+ref também fica só no título, não repetida como campo. O bloco de jobs é dividido pelo limite de 3000
+caracteres, não pelo domínio: a matriz `esqueleto` cresce e um domínio sozinho já chegou a 2.051
+caracteres.
 
 A regra **um job por canal** é testada: antes o mesmo job aparecia em "mais lentos", em "falhas" e em
 "pulados"; agora `node --test` conta as ocorrências do nome no Markdown e no payload do Slack e reprova
-quando aparece duas vezes. O `text` de fallback (notificação do celular e cópia) leva contagem, não nome
-de job.
+quando aparece duas vezes.
 
 O `\n` literal que o bash produzia (`"*Ref*\n"` em aspas duplas entrega barra invertida + `n`) não
 existe mais: o texto é montado em template literal e o teste recusa barra invertida no texto do bloco.

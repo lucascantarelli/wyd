@@ -93,7 +93,7 @@ test("o job de aviso não entra na contagem nem no veredito", () => {
   assert.equal(m.veredito, "sucesso");
 });
 
-test("job pulado aparece uma vez só, na seção 3, com o motivo", () => {
+test("job pulado aparece uma vez só, na tabela de Jobs, com o motivo", () => {
   const m = modelo();
   const publicacao = m.jobs.grupos.find((grupo) => grupo.nome === "Publicação");
   assert.deepEqual(publicacao.jobs.map((job) => job.nome), ["publicar no GitHub Pages"]);
@@ -135,12 +135,25 @@ function textosDoSlack(payload) {
 test("cada job aparece uma vez por canal", () => {
   const m = modelo();
   const nomes = ["pg / runner", "wyd-portal", "pg / schema", "cobertura", "publicar no GitHub Pages"];
-  const canais = { markdown: markdown(m), slack: textosDoSlack(payloadSlack(m)) };
+  const payload = payloadSlack(m);
+  const canais = { markdown: markdown(m), slack: `${payload.text}\n${textosDoSlack(payload)}` };
   for (const [canal, texto] of Object.entries(canais)) {
     for (const nome of nomes) {
       assert.equal(ocorrencias(texto, nome), 1, `${canal} repete \`${nome}\``);
     }
+    assert.equal(ocorrencias(texto, "chore/ci-centralizacao-proposta"), 1, `${canal} repete a ref`);
   }
+});
+
+test("o Slack tem um título só, e ele é o `text` da mensagem", () => {
+  const payload = payloadSlack(modelo());
+  assert.equal(payload.text, "✅ ci passou · chore/ci-centralizacao-proposta");
+  assert.equal(
+    payload.attachments[0].blocks.filter((bloco) => bloco.type === "header").length,
+    0,
+    "`header` repetia o título acima do anexo",
+  );
+  assert.doesNotMatch(payload.text, /\n/, "o título é uma linha só");
 });
 
 test("falha muda o veredito e entra na lista de falhas", () => {
@@ -195,7 +208,7 @@ test("markdown nomeia as duas grandezas e diz que a soma não é tempo decorrido
   assert.match(texto, /\| Consumo de runner \(soma dos jobs\) \| 3m 26s \|/);
   assert.match(texto, /minuto de runner gasto, não tempo decorrido/);
   assert.match(texto, /\| Paralelismo \| 2,8× \|/);
-  assert.match(texto, /o job de aviso não entra, porque é ele que publica este relatório/);
+  assert.match(texto, /Cada job aparece uma vez; o job de aviso não entra\./);
   assert.match(texto, /\| Falhas na amostra \| 1 de 4 \(25%\) \|/);
   assert.match(texto, /commit do PR → aviso \(proxy\)/);
   assert.match(texto, /qualquer run concluído com sucesso na amostra, não só deploy/);
@@ -227,8 +240,8 @@ test("linha do log resume pipeline e consumo", () => {
 
 test("payload do Slack tem quebra de linha real, não barra invertida", () => {
   const textos = textosDoSlack(payloadSlack(modelo()));
-  assert.match(textos, /\*1 · Resultado\*\n/);
-  assert.match(textos, /\*Ref\* `chore\/ci-centralizacao-proposta`/);
+  assert.match(textos, /\*Resumo\*\n/);
+  assert.match(textos, /\*PR\* <https:\/\/exemplo\.test\/pr\/242\|#242>/);
   assert.ok(!textos.includes("\\n"), "o `\\n` literal era o defeito do aviso antigo");
 });
 
@@ -236,7 +249,7 @@ test("payload do Slack escapa markup e separa as duas grandezas de tempo", () =>
   const payload = payloadSlack(modelo({ commit: { ...dados().commit, assunto: "fix: A & B <c>" } }));
   const textos = textosDoSlack(payload);
   assert.match(textos, /A &amp; B &lt;c&gt;/);
-  assert.match(textos, /\*Tempo de pipeline\* 1m 14s/);
+  assert.match(textos, /\*Pipeline\* 1m 14s/);
   assert.match(textos, /\*Consumo de runner\* 3m 26s/);
 });
 
@@ -247,14 +260,15 @@ test("payload do Slack mostra PR, issue e motivo do job pulado", () => {
   assert.match(textos, /pulado por `github\.event_name == 'push'`/);
 });
 
-test("fallback do Slack usa Unicode, nunca código :emoji:", () => {
+test("título usa Unicode, nunca código :emoji:, e não repete número do dashboard", () => {
   const texto = textoDoAviso(modelo());
   assert.match(texto, /^✅ ci passou/);
   assert.doesNotMatch(texto, /:[a-z_]+:/);
-  assert.match(texto, /tempo de pipeline 1m 14s/);
-  assert.match(texto, /consumo de runner 3m 26s/);
-  assert.match(texto, /Jobs 5 \(✅ 4 · ❌ 0 · ⏭️ 1\)/);
-  assert.doesNotMatch(texto, /pg \/ runner/, "o fallback conta, não lista job");
+  assert.doesNotMatch(texto, /pg \/ runner/, "o título não lista job");
+  assert.doesNotMatch(texto, /Jobs|Cobertura|MTTR/, "o título não repete as seções");
+
+  const longo = modelo({ run: { ...dados().run, ref: "b".repeat(300) } });
+  assert.equal(textoDoAviso(longo).length, LIMITES.cabecalho, "título longo é cortado no limite, não estoura o payload");
 });
 
 test("validador aceita o payload normal e recusa o que o Block Kit não aceita", () => {
@@ -270,9 +284,9 @@ test("validador aceita o payload normal e recusa o que o Block Kit não aceita",
   secaoLonga.text.text = "x".repeat(LIMITES.texto + 1);
   assert.throws(() => validarPayload(textao), /limite 3000/);
 
-  const cabecalho = structuredClone(payload);
-  cabecalho.attachments[0].blocks[0].text.text = "x".repeat(LIMITES.cabecalho + 1);
-  assert.throws(() => validarPayload(cabecalho), /cabeçalho/);
+  const tituloLongo = structuredClone(payload);
+  tituloLongo.text = "x".repeat(LIMITES.cabecalho + 1);
+  assert.throws(() => validarPayload(tituloLongo), /título/);
 
   const semFallback = structuredClone(payload);
   delete semFallback.text;

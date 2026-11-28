@@ -1,17 +1,13 @@
 // Render em Markdown do relatório — puro: recebe o modelo, devolve texto.
 // É o que vai para `$GITHUB_STEP_SUMMARY`, para o log do job e para o artefato.
 //
-// O resumo é o dashboard em cinco seções, na mesma ordem do Slack:
+// O resumo segue o padrão das nossas páginas de documentação: título, subtítulos
+// curtos e tabela por assunto — nada de "1 ·", "2 ·". A ordem é a de leitura de
+// quem chega no run: Resumo, Tempo, Entrega, Jobs, Ação.
 //
-//   1. Resultado — quem rodou, para quê, com que veredito
-//   2. Tempo     — pipeline, consumo de runner e paralelismo, só números
-//   3. Jobs      — a lista completa, agrupada por domínio, **cada job uma vez**
-//   4. Entrega   — DORA e cobertura
-//   5. Ação      — o que fazer com o que a seção 3 mostrou
-//
-// A regra da seção 3 é a que mata a duplicidade: antes, o mesmo job aparecia em
-// "mais lentos", em "falhas" e em "pulados". Agora ele aparece uma vez, com o
-// status, o tempo e o motivo do pulo na própria linha.
+// A regra do bloco Jobs é a que mata a duplicidade: antes o mesmo job aparecia em
+// "mais lentos", em "falhas" e em "pulados". Agora ele aparece uma vez, na tabela
+// do seu domínio, com status, tempo e — quando pulado — o motivo.
 
 /** Duração legível: abaixo de um minuto em segundos, acima em `Xm YYs`. */
 export function formatarDuracao(segundos) {
@@ -48,6 +44,10 @@ function linhaDeMetrica(rotulo, valor, significado) {
   return `| ${rotulo} | ${celula(valor)} | ${celula(significado)} |`;
 }
 
+function pluralJobs(total) {
+  return total === 1 ? "1 job" : `${total} jobs`;
+}
+
 function seloDoJob(job) {
   return SELO_JOB[job.conclusao] ?? "❌";
 }
@@ -65,8 +65,8 @@ function linhaDoJob(job) {
   return `| ${celula(job.nome)} | ${seloDoJob(job)} ${job.conclusao ?? "—"} | ${formatarDuracao(job.segundos)} | ${celula(detalhe)} |`;
 }
 
-function contagemDoGrupo(grupo) {
-  const partes = [`${grupo.jobs.length} job(s)`, formatarDuracao(grupo.segundos)];
+function cabecalhoDoGrupo(grupo) {
+  const partes = [`${pluralJobs(grupo.jobs.length)}`, formatarDuracao(grupo.segundos)];
   if (grupo.ok) partes.push(`✅ ${grupo.ok}`);
   if (grupo.falha) partes.push(`❌ ${grupo.falha}`);
   if (grupo.pulado) partes.push(`⏭️ ${grupo.pulado}`);
@@ -85,15 +85,15 @@ function coberturaEmTexto(cobertura) {
   return cobertura.map((item) => `${item.crate} ${formatarPct(item.pct)}`).join(" · ");
 }
 
-function acaoEmTexto(jobs, run, opcoes) {
+function acaoEmTexto(jobs, run) {
   if (jobs.falha) {
-    const runLink = run.url || run.numero ? ` e o run inteiro em ${link(run.url, `#${run.numero ?? "?"}`)}` : "";
-    return `❌ **${jobs.falha} job(s) falharam.** Abra o \`log\` do job marcado com ❌ na seção 3${runLink}.`;
+    const runLink = run.url || run.numero ? ` e o run em ${link(run.url, `#${run.numero ?? "?"}`)}` : "";
+    return `❌ **${jobs.falha} job(s) falharam.** Abra o \`log\` do job marcado com ❌ em Jobs${runLink}.`;
   }
   if (jobs.pulado) {
-    return `✅ **Nada a fazer.** ${jobs.pulado} job(s) pulado(s) por gatilho, com o motivo na seção 3.${opcoes?.extra ?? ""}`;
+    return `✅ **Nada a fazer.** ${jobs.pulado} job(s) pulado(s) por gatilho, com o motivo na tabela de Jobs.`;
   }
-  return `✅ **Nada a fazer.** Todos os ${jobs.ok} jobs passaram.${opcoes?.extra ?? ""}`;
+  return `✅ **Nada a fazer.** Todos os ${jobs.ok} jobs passaram.`;
 }
 
 /**
@@ -105,11 +105,13 @@ export function markdown(modelo) {
   const { run, commit, pr, issue, tempo, jobs, dora, cobertura } = modelo;
   const linhas = [];
 
-  linhas.push(`### ${SELO[modelo.veredito]} ${modelo.workflow} — ${ESTADO[modelo.veredito]}`);
+  const nome = modelo.workflow ? `${modelo.workflow} — ` : "";
+  const referencia = run.ref ? ` · ${run.ref}` : "";
+  linhas.push(`### ${SELO[modelo.veredito]} ${nome}${ESTADO[modelo.veredito]}${referencia}`);
   linhas.push("");
 
-  // 1 · Resultado
-  linhas.push("#### 1 · Resultado");
+  // Resumo
+  linhas.push("#### Resumo");
   linhas.push("");
   linhas.push("| Campo | Valor |");
   linhas.push("|---|---|");
@@ -117,26 +119,27 @@ export function markdown(modelo) {
     const tentativa = run.tentativa > 1 ? ` (tentativa ${run.tentativa})` : "";
     linhas.push(linhaDoCampo("Run", `${link(run.url, `#${run.numero ?? "?"}`)}${tentativa}`));
   }
+  linhas.push(linhaDoCampo("Evento", `\`${run.evento}\``));
+  if (modelo.autorDoEvento) linhas.push(linhaDoCampo("Ator", `\`${modelo.autorDoEvento}\``));
+  // A ref está no título do relatório: repetir como campo era a mesma duplicidade do Slack.
+  if (pr) linhas.push(linhaDoCampo("PR", `${link(pr.url, `#${pr.numero}`)}${pr.titulo ? ` — ${pr.titulo}` : ""}`));
+  if (issue) {
+    const estado = issue.estado ? ` · \`${String(issue.estado).toLowerCase()}\`` : "";
+    linhas.push(linhaDoCampo("Issue", `${link(issue.url, `#${issue.numero}`)}${issue.titulo ? ` — ${issue.titulo}` : ""}${estado}`));
+  }
   if (commit) {
     linhas.push(
       linhaDoCampo("Commit", `\`${(commit.sha ?? "").slice(0, 7)}\`${commit.assunto ? ` — ${commit.assunto}` : ""}`),
     );
     if (commit.autor) linhas.push(linhaDoCampo("Autor do commit", `\`${commit.autor}\``));
   }
-  if (pr) linhas.push(linhaDoCampo("PR", `${link(pr.url, `#${pr.numero}`)}${pr.titulo ? ` — ${pr.titulo}` : ""}`));
-  if (issue) {
-    const estado = issue.estado ? ` · \`${String(issue.estado).toLowerCase()}\`` : "";
-    linhas.push(linhaDoCampo("Issue", `${link(issue.url, `#${issue.numero}`)}${issue.titulo ? ` — ${issue.titulo}` : ""}${estado}`));
-  }
-  if (run.ref) linhas.push(linhaDoCampo("Ref", `\`${run.ref}\``));
-  linhas.push(linhaDoCampo("Evento", `\`${run.evento}\``));
-  if (modelo.autorDoEvento) linhas.push(linhaDoCampo("Ator", `\`${modelo.autorDoEvento}\``));
-  linhas.push(linhaDoCampo("Jobs", `${jobs.total} (✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado})`));
-  linhas.push(linhaDoCampo("Gerado em", `${modelo.geradoEm.replace("T", " ").slice(0, 16)} UTC`));
+  linhas.push(
+    linhaDoCampo("Jobs", `${jobs.total} (✅ ${jobs.ok} · ❌ ${jobs.falha} · ⏭️ ${jobs.pulado})`),
+  );
   linhas.push("");
 
-  // 2 · Tempo
-  linhas.push("#### 2 · Tempo");
+  // Tempo
+  linhas.push("#### Tempo");
   linhas.push("");
   linhas.push("| Métrica | Valor | O que conta |");
   linhas.push("|---|---|---|");
@@ -163,22 +166,8 @@ export function markdown(modelo) {
   );
   linhas.push("");
 
-  // 3 · Jobs — uma tabela por domínio, cada job uma única vez.
-  linhas.push("#### 3 · Jobs por domínio");
-  linhas.push("");
-  linhas.push("Cada job aparece uma vez; o job de aviso não entra, porque é ele que publica este relatório.");
-  linhas.push("");
-  for (const grupo of jobs.grupos) {
-    linhas.push(`**${celula(grupo.nome)}** — ${contagemDoGrupo(grupo)}`);
-    linhas.push("");
-    linhas.push("| Job | Status | Tempo | Log |");
-    linhas.push("|---|---|---|---|");
-    for (const job of grupo.jobs) linhas.push(linhaDoJob(job));
-    linhas.push("");
-  }
-
-  // 4 · Entrega
-  linhas.push("#### 4 · Entrega");
+  // Entrega
+  linhas.push("#### Entrega");
   linhas.push("");
   linhas.push("| Métrica | Valor | O que conta |");
   linhas.push("|---|---|---|");
@@ -210,10 +199,26 @@ export function markdown(modelo) {
   );
   linhas.push("");
 
-  // 5 · Ação
-  linhas.push("#### 5 · Ação");
+  // Jobs — uma tabela por domínio, cada job uma única vez.
+  linhas.push("#### Jobs");
+  linhas.push("");
+  linhas.push("Cada job aparece uma vez; o job de aviso não entra.");
+  linhas.push("");
+  for (const grupo of jobs.grupos) {
+    linhas.push(`**${celula(grupo.nome)}** — ${cabecalhoDoGrupo(grupo)}`);
+    linhas.push("");
+    linhas.push("| Job | Status | Tempo | Log |");
+    linhas.push("|---|---|---|---|");
+    for (const job of grupo.jobs) linhas.push(linhaDoJob(job));
+    linhas.push("");
+  }
+
+  // Ação
+  linhas.push("#### Ação");
   linhas.push("");
   linhas.push(acaoEmTexto(jobs, run));
+  linhas.push("");
+  linhas.push(`_Gerado em ${modelo.geradoEm.replace("T", " ").slice(0, 16)} UTC._`);
 
   return `${linhas.join("\n").trimEnd()}\n`;
 }
@@ -228,5 +233,6 @@ export function linhaDoAviso(modelo) {
     `${jobs.falha} falha(s)`,
   ];
   if (dora.amostra) partes.push(`amostra ${dora.falhas}/${dora.amostra}`);
-  return `${SELO[modelo.veredito]} ${modelo.workflow} ${ESTADO[modelo.veredito]} · ${modelo.run.ref} (${partes.join(", ")})`;
+  const veredito = `${SELO[modelo.veredito]} ${[modelo.workflow, ESTADO[modelo.veredito]].filter(Boolean).join(" ")}`;
+  return `${veredito} · ${modelo.run.ref} (${partes.join(", ")})`;
 }
