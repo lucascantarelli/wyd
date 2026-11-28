@@ -101,12 +101,13 @@ jobs:
             exit 1
           fi
 
-  # A imagem é o que o `docker compose` consome: falha aqui não pode depender de
-  # alguém abrir a aba Actions. Mesmo aviso opcional dos outros workflows.
   notify:
-    name: notificar falha
-    if: always() && (failure() || cancelled())
+    name: notificar resultado
+    if: always()
     needs: [imagem]
+    permissions:
+      actions: read
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -115,6 +116,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/notify-failure
+      - uses: ./.github/actions/resultado
         with:
           workflow: docs-image

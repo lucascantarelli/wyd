@@ -1,0 +1,126 @@
+name: resultado
+description: Resumo do run (status, tempo por job, total e link) no summary e, se houver webhook, no Slack. Serve para sucesso e falha.
+
+inputs:
+  workflow:
+    description: Nome do workflow que gerou o run.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # A API de jobs é a única fonte de tempo por job: `needs` não expõe duração.
+    # Sem `actions: read` (ou com 403), o passo degrada para resumo sem tempos
+    # em vez de derrubar o aviso.
+    - name: Coletar jobs do run
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -uo pipefail
+        saida="$RUNNER_TEMP/jobs.tsv"
+        : > "$saida"
+        if ! gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
+              --jq '.jobs[] | [.name, (.conclusion // .status), (.started_at // ""), (.completed_at // "")] | @tsv' \
+              > "$saida" 2>/dev/null; then
+          echo "::warning::não consegui ler os jobs do run; o resumo sai sem tempos"
+          : > "$saida"
+        fi
+
+    - name: Resumo no run
+      shell: bash
+      env:
+        WORKFLOW: ${{ inputs.workflow }}
+      run: |
+        set -uo pipefail
+        origem="$RUNNER_TEMP/jobs.tsv"
+        linhas="$RUNNER_TEMP/duracao.tsv"
+        : > "$linhas"
+        while IFS=$'\t' read -r nome status inicio fim; do
+          [ -n "${nome:-}" ] || continue
+          d="-"
+          if [ -n "${inicio:-}" ] && [ -n "${fim:-}" ]; then
+            d=$(( $(date -d "$fim" +%s) - $(date -d "$inicio" +%s) ))
+          fi
+          printf '%s\t%s\t%s\n' "$d" "$status" "$nome" >> "$linhas"
+        done < "$origem"
+
+        total=$(wc -l < "$linhas" | tr -d ' ')
+        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" && $2 != "" {n++} END {print n+0}' "$linhas")
+        pulados=$(awk -F'\t' '$2 == "skipped" {n++} END {print n+0}' "$linhas")
+        soma=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {s += $1} END {print s+0}' "$linhas")
+        if [ "$falhas" -eq 0 ]; then selo="✅"; estado="sucesso"; else selo="❌"; estado="falha"; fi
+
+        {
+          echo "### ${selo} ${WORKFLOW} — ${estado}"
+          echo
+          echo "| Campo | Valor |"
+          echo "|---|---|"
+          echo "| Run | [#${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) |"
+          echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
+          echo "| Ref | \`${GITHUB_REF_NAME}\` |"
+          echo "| Evento | \`${GITHUB_EVENT_NAME}\` |"
+          echo "| Jobs | ${total} (✅ $((total - falhas - pulados)) · ❌ ${falhas} · ⏭️ ${pulados}) |"
+          echo "| Soma dos jobs | ${soma}s |"
+          echo
+          if [ "$total" -gt 0 ]; then
+            echo "<details><summary>Job e tempo (maior primeiro)</summary>"
+            echo
+            echo "| Job | Status | Tempo |"
+            echo "|---|---|---|"
+            sort -t $'\t' -k1 -rn "$linhas" | while IFS=$'\t' read -r d status nome; do
+              case "$status" in
+                success) selo_job="✅" ;;
+                skipped) selo_job="⏭️" ;;
+                cancelled) selo_job="⛔" ;;
+                *) selo_job="❌" ;;
+              esac
+              printf '| %s | %s %s | %ss |\n' "$nome" "$selo_job" "$status" "$d"
+            done
+            echo
+            echo "</details>"
+          fi
+        } >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Aviso no Slack
+      shell: bash
+      env:
+        WORKFLOW: ${{ inputs.workflow }}
+      # Sem webhook o passo não falha: o run já é o registro, o Slack é conveniência.
+      run: |
+        set -uo pipefail
+        if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+          echo "SLACK_WEBHOOK_URL ausente; aviso no Slack ignorado."
+          exit 0
+        fi
+        linhas="$RUNNER_TEMP/duracao.tsv"
+        total=$(wc -l < "$linhas" | tr -d ' ')
+        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" && $2 != "" {n++} END {print n+0}' "$linhas")
+        soma=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {s += $1} END {print s+0}' "$linhas")
+        lentos=$(sort -t $'\t' -k1 -rn "$linhas" | awk -F'\t' '$1 ~ /^[0-9]+$/ {printf "%s %ss\n", $3, $1}' | head -n 3 | paste -sd ' · ' - || true)
+
+        if [ "$falhas" -eq 0 ]; then
+          titulo="✅ ${WORKFLOW} passou"
+          cor="#2eb886"
+        else
+          titulo="❌ ${WORKFLOW} falhou (${falhas} de ${total} jobs)"
+          cor="#cc0000"
+        fi
+        link="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        detalhe="\`${GITHUB_REF_NAME}\` · \`${GITHUB_SHA:0:7}\` · ${GITHUB_EVENT_NAME} · soma ${soma}s"
+        [ -n "$lentos" ] && detalhe="${detalhe}\nmais lentos: ${lentos}"
+
+        payload=$(jq -n \
+          --arg titulo "$titulo" \
+          --arg detalhe "$detalhe" \
+          --arg link "$link" \
+          --arg cor "$cor" \
+          '{attachments: [{color: $cor, blocks: [
+            {type: "section", text: {type: "mrkdwn", text: ("*" + $titulo + "*\n" + $detalhe)}},
+            {type: "actions", elements: [{type: "button", text: {type: "plain_text", text: "Abrir o run"}, url: $link}]}
+          ]}]}')
+        curl --fail --silent --show-error \
+          --request POST \
+          --header 'Content-Type: application/json' \
+          --data "$payload" \
+          "$SLACK_WEBHOOK_URL"

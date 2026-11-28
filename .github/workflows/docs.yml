@@ -58,9 +58,12 @@ jobs:
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   notify:
-    name: notificar falha
-    if: always() && (failure() || cancelled())
+    name: notificar resultado
+    if: always()
     needs: [verificar, publicar]
+    permissions:
+      actions: read
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -69,6 +72,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/notify-failure
+      - uses: ./.github/actions/resultado
         with:
           workflow: docs
