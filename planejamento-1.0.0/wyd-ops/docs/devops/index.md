@@ -12,15 +12,15 @@
 
 | Workflow | Gatilho | Jobs | Check obrigatório |
 |---|---|---|---|
-| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy+unit` no mesmo job por crate — db e launcher em Ubuntu, signer em Ubuntu e Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision` —, `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `notificar falha` | `gate-code` |
-| `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar falha` | `gate-db` |
-| `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar falha` | `gate-docs` |
+| `code.yml` | todo push/PR em `develop`/`main` | `fmt` (matriz 3 crates), `clippy+unit` no mesmo job por crate — db e launcher em Ubuntu, signer em Ubuntu e Windows; `wyd-db` roda `--lib` + `--test contrato_api_migrate` + `--test contrato_api_provision` —, `cobertura` (matriz: `wyd-db` informativa, `wyd-launcher` com o piso de linha do plano do crate), `esqueleto`, `gate-code`, `notificar resultado` | `gate-code` |
+| `ci-db.yml` | todo push/PR em `develop`/`main` | `pg` (matriz `schema`, `reversibility`, `runner` com `postgres:17` por digest), `gate-db`, `notificar resultado` | `gate-db` |
+| `docs.yml` | todo push/PR em `develop` | `gate-docs`, `publicar` (Pages, só push de `develop`), `notificar resultado` | `gate-docs` |
 | `docs-image.yml` | caminhos de docs/imagem | Buildx + cache GHA, smoke HTTP 200, push GHCR (só `develop`) com provenance/SBOM | não (obrigatoriedade é decisão da F2) |
-| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos` (action por SHA, imagem por digest), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar falha` | `gate-security` |
+| `security.yml` | todo push/PR + schedule semanal | `analise` (audit/deny em cada crate), `portal` (npm audit do `wyd-portal`), `pinos` (action por SHA, imagem por digest), `dependency-review` (PR), `workflow-lint` (actionlint), `gate-security`, `notificar resultado` | `gate-security` |
 | `code-stable.yml` | schedule diário + dispatch | testes de `wyd-db` e `wyd-ops-signer` com Rust `stable`; sinal não bloqueante | não |
 | `issue-status.yml` | issue aberta/rotulada/fechada/reaberta; PR aberto/ready/mergeado/fechado | `sincronizar`: label `estado/*` + espelho no Project; exceção de `pull_request_target` escopada (ADR-OPS-0009/0012) | não (automação, não gate) |
 | `release.yml` | tag `v*` | assina e publica manifesto | não |
-| `images.yml` | schedule semanal (quarta) + dispatch | `frescor`: compara o digest pinado de cada base com o digest atual da tag via `check-image-freshness.sh`; `notificar falha` | não (sinal agendado, não check de PR) |
+| `images.yml` | schedule semanal (quarta) + dispatch | `frescor`: compara o digest pinado de cada base com o digest atual da tag via `check-image-freshness.sh`; `notificar resultado` | não (sinal agendado, não check de PR) |
 
 `full-workflow.yml` foi removido: era um stub com os mesmos gatilhos do CI real.
 
@@ -194,10 +194,13 @@ A proteção de `develop` e `main` está aplicada e exige:
 
 ## 7. Notificação de falha
 
-O job `notificar falha` roda com `if: always() && (failure() || cancelled())` e:
+O job `notificar resultado` roda com `if: always()` — em sucesso e em falha — e executa a action
+composta `.github/actions/resultado`:
 
-1. escreve um resumo com run, commit e ref em `$GITHUB_STEP_SUMMARY`;
-2. se `SLACK_WEBHOOK_URL` existir, posta uma mensagem curta via `curl` + `jq`.
+1. lê os jobs do run pela API (`actions: read`) e monta uma tabela com status e tempo de cada job, a
+   soma dos jobs e run, commit, ref e evento, publicada em `$GITHUB_STEP_SUMMARY`;
+2. se `SLACK_WEBHOOK_URL` existir, posta o mesmo resumo com selo de sucesso/falha, os três jobs mais
+   lentos e um botão para o run.
 
 O job lê o secret `SLACK_CI_WEBHOOK` e o expõe como `SLACK_WEBHOOK_URL`. O secret é configurado em **Settings → Secrets and variables → Actions**. Sem ele, não há Slack, mas o run continua vermelho e o check bloqueia.
 
@@ -218,9 +221,9 @@ sem commit.
 
 | Sinal | Workflow e cadência | O que reprova | Aviso |
 |---|---|---|---|
-| Advisory, licença e pin | `security.yml`, segunda 06:00 UTC | `cargo audit`/`cargo deny`, `npm audit` do portal e `check-pins.sh` | `gate-security` → `notificar falha` |
-| Frescor de imagem base | `images.yml`, quarta 07:00 UTC | digest pinado diferente do digest da tag (`check-image-freshness.sh`) | `frescor` → `notificar falha` |
-| Toolchain futura | `code-stable.yml`, diário 07:00 UTC | suíte dos três crates com Rust `stable` | `stable` → `notificar falha` |
+| Advisory, licença e pin | `security.yml`, segunda 06:00 UTC | `cargo audit`/`cargo deny`, `npm audit` do portal e `check-pins.sh` | `gate-security` → `notificar resultado` |
+| Frescor de imagem base | `images.yml`, quarta 07:00 UTC | digest pinado diferente do digest da tag (`check-image-freshness.sh`) | `frescor` → `notificar resultado` |
+| Toolchain futura | `code-stable.yml`, diário 07:00 UTC | suíte dos três crates com Rust `stable` | `stable` → `notificar resultado` |
 
 Os três usam o mesmo runner padrão e o mesmo `SLACK_CI_WEBHOOK` opcional; sem o secret, o run fica
 vermelho do mesmo jeito e o aviso no Slack é ignorado. `workflow_dispatch` permite rodar cada um na hora.
@@ -231,7 +234,7 @@ vermelho do mesmo jeito e o aviso no Slack é ignorado. `workflow_dispatch` perm
 |---|---|---|
 | **F2 — imagem** | Buildx + cache GHA, bases por digest, provenance/SBOM, tags por branch e rollback por SHA **feitos**; runtime nginx unprivileged pendente | PR constrói sem push; smoke 200; rollback por SHA reproduzido |
 | **F3 — deploy** | contrato sobre Compose; workflow manual com `environment`; OIDC; smoke e rollback; **provedor de VPS a definir** | nenhum segredo de longa duração; deploy não roda sem alvo |
-| **F4 — observabilidade** | métricas de duração/fila/falha e relatório semanal pendentes; sentinela de advisory **feita em 2026-11-27** (`security.yml` semanal com `notificar falha`); sentinela de imagem **feita em 2026-11-27** (`images.yml` semanal com `check-image-freshness.sh`) | falha das duas sentinelas notifica em menos de 1 min; relatório semanal publicado |
+| **F4 — observabilidade** | métricas de duração/fila/falha e relatório semanal pendentes; sentinela de advisory **feita em 2026-11-27** (`security.yml` semanal com `notificar resultado`); sentinela de imagem **feita em 2026-11-27** (`images.yml` semanal com `check-image-freshness.sh`) | falha das duas sentinelas notifica em menos de 1 min; relatório semanal publicado |
 | **F5 — governança** | ruleset, allowlist e ADR-OPS-0012 **feitos**; CODEOWNERS, onboarding e revisão de ADRs pendentes | PR vermelho não mergeia; action fora da allowlist falha |
 
 F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do fornecedor de VPS, não de código.
@@ -262,3 +265,54 @@ F2 depende de decisão sobre runtime (nginx) e de medir o build; F3 depende do f
 - Valores de segredo, DSN ou webhook.
 - Gate de sistema por crate além do que `gate-code`/`gate-db` já provam.
 - E2E de portal/launcher: não há aplicação executável que justifique o job hoje.
+
+## 12. Proposta de centralização do CI — veredito (2026-11-27)
+
+Revisão das propostas de reorganização do CI, com veredito por item. Medição desta data: `code`
+103–138 s, `ci-db` 69–83 s, `security` 41–49 s, `docs` 29–44 s; três blocos `gate-*` com o mesmo laço
+de agregação; `CARGO_TERM_COLOR` e `RUST_BACKTRACE` repetidos em três workflows; sete jobs de aviso;
+três actions compostas.
+
+### 12.1 Feito nesta rodada
+
+- **Um relatório por run, para sucesso e falha.** A action `.github/actions/resultado` substitui a
+  `notify-failure` nos sete workflows: lê os jobs pela API (`actions: read`), publica tabela com tempo
+  por job, soma dos jobs, run/commit/ref/evento em `$GITHUB_STEP_SUMMARY` e manda no Slack o selo de
+  sucesso ou falha, os três jobs mais lentos e o botão para o run. Sem `SLACK_CI_WEBHOOK` o passo é
+  ignorado e o run continua sendo o registro.
+- **Formato do aviso em um lugar só.** Payload, tabela e cálculo de tempo saíram dos sete arquivos.
+
+O que isso dá de DORA sem serviço externo: duração por job e soma por run (lead time de integração),
+taxa de falha por run e o link direto para o run lento.
+
+### 12.2 Viável e não feito, em ordem
+
+1. **Agregador único.** `code`, `ci-db` e `security` repetem o mesmo laço em `gate-*`; vira action
+   `gate-agregado` com entradas nomeadas.
+2. **Imagem.** `docs-image` é o único build; extrair `imagem-publicada` (buildx + cache + smoke + push)
+   prepara `wyd-server`, `wyd-admin` e `wyd-portal`, que têm Dockerfile e nenhum workflow.
+3. **Testes.** Action `testes-rust` (setup + clippy + test) e `testes-pg` — o service container fica no
+   workflow, a action faz papéis, série e alvo.
+4. **Tag de release.** Publicar imagem com a tag da versão sem tocar em `latest` e gerar changelog com
+   as issues da versão. Depende da política de versão (`0.1.0-rc.N` não existe no repositório).
+5. **`env` compartilhado.** O GitHub Actions não compartilha `env` entre workflows; a saída é reusable
+   workflow (`workflow_call`) ou variável de repositório. Hoje são três linhas em três arquivos — o
+   custo de migrar supera o ganho.
+
+### 12.3 Não viável como proposto
+
+- **Rodar só nos arquivos alterados com check obrigatório.** Filtro de caminho em workflow cujo check é
+  obrigatório deixa o check em `Pending` e trava o merge — o mesmo motivo da §1. Alternativa: manter o
+  check obrigatório e encurtar o job (cache, matriz, `fail-fast`), ou filtrar **dentro** do workflow e
+  manter um agregador sempre presente (o filtro externo exigiria action nova, sujeita à allowlist).
+- **Um workflow por estágio (lint, build, test).** Aumenta o fan-out de checks e a fila; legibilidade se
+  ganha com estágios **dentro** do workflow via `needs`, que é o que a §1 já faz por domínio.
+- **`master` como produção rodando tudo.** O padrão é `develop` e `main` está arquivada (ADR-OPS-0012);
+  trocar o modelo é decisão de arquitetura.
+- **Testes de performance.** Não há alvo nem harness; criar agora seria inventar escopo de jogo sem
+  página aceita.
+
+### 12.4 Pendente por decisão do dono
+
+Runtime nginx (F2), provedor de VPS e OIDC (F3), CODEOWNERS (F5), política de versão/release e scanner
+CVE de imagem base. Nenhum deles é bloqueio técnico do CI atual.
