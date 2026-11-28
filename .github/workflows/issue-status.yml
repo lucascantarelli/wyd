@@ -47,3 +47,27 @@ jobs:
           PROJECT_OWNER: ${{ github.repository_owner }}
           PROJECT_NUMBER: "10"
         run: node wyd-ops/scripts/sync-issue-status.mjs
+
+  # Metadados do PR: label de área por caminho, label de tamanho pelo diff e o
+  # milestone herdado da issue que o PR fecha. Sem action de terceiro — a allowlist do
+  # repositório só aceita docker/*, dtolnay/*, Swatinem/* e taiki-e/*.
+  metadados:
+    name: metadados do PR
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - name: Rotular e vincular ao marco
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORIO: ${{ github.repository }}
+          PR_NUMERO: ${{ github.event.pull_request.number }}
+        run: node wyd-ops/scripts/sync-pr-metadata.mjs

@@ -154,6 +154,25 @@ os passos equivalentes no host — os mesmos que o CI executa — estão em
 `planejamento-1.0.0/wyd-ops/docs/estrutura-de-pastas-e-modulos.md` §6 (Como verificar); esta etapa não
 repete o comando.
 
+### Etapa 2.1 — Skills, MCP e integrações (obrigatório)
+
+O agente carrega o que o projeto já definiu antes de escrever:
+
+1. **Skill da issue primeiro.** O `skill_principal` do formulário é o ponto de entrada; as skills do
+   projeto ficam em `.claude/skills`, `.agents/skills` ou `.freebuff/skills` e são lidas inteiras
+   (`SKILL.md` e os recursos que ele cita). Skill listada mas não carregada é defeito de execução.
+2. **MCP quando o trabalho é de raciocínio longo ou de memória.** `sequential-thinking` para plano com
+   muitas etapas e `server-memory` para o que precisa sobreviver à troca de sessão. Nenhum dos dois
+   substitui arquivo no repositório: decisão mora no planejamento, não na memória do servidor.
+3. **Integração em vez de cópia.** Issue, PR, release, milestone e mensagem passam pelas integrações
+   (GitHub, Slack) ou pelo `gh` já autenticado; o agente nunca cola conteúdo de issue à mão quando a
+   API responde.
+4. **Registro na entrega.** O PR registra skill, MCP e integração usados (seção própria do template);
+   sem esse registro a revisão não sabe se a regra foi aplicada.
+
+Não há gate que prove carga de skill — a prova é o registro no PR e o resultado no diff. Quem
+implementar essa checagem deve fazê-la em `wyd-docs/gate`, com o dono apontado na página do CI.
+
 ### Etapa 3 — Registrar decisão
 
 Decisão estrutural: proposta → aprovação do dono → ADR com contexto, decisão, consequências,

@@ -1,5 +1,5 @@
 name: resultado
-description: Resumo do run (status, tempo por job, total e link) no summary e, se houver webhook, no Slack. Serve para sucesso e falha.
+description: Relatório único do run — veredito, parede, paralelismo, jobs com tempo e link, falhas, cobertura — no summary, no log, em artefato e no Slack. Serve para sucesso e falha.
 
 inputs:
   workflow:
@@ -9,58 +9,72 @@ inputs:
 runs:
   using: composite
   steps:
-    # A API de jobs é a única fonte de tempo por job: `needs` não expõe duração.
-    # Sem `actions: read` (ou com 403), o passo degrada para resumo sem tempos
-    # em vez de derrubar o aviso.
-    - name: Coletar jobs do run
+    # A API é a única fonte de tempo por job e de link do log: `needs` não expõe nada
+    # disso. Sem `actions: read` (ou com 403) o passo degrada em vez de derrubar o aviso.
+    - name: Coletar jobs e o run
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         set -uo pipefail
-        saida="$RUNNER_TEMP/jobs.tsv"
-        : > "$saida"
+        jobs="$RUNNER_TEMP/jobs.tsv"
+        run="$RUNNER_TEMP/run.tsv"
+        : > "$jobs"; : > "$run"
+        gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+          --jq '[.run_started_at, .updated_at, .html_url] | @tsv' > "$run" 2>/dev/null || true
         if ! gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
-              --jq '.jobs[] | [.name, (.conclusion // .status), (.started_at // ""), (.completed_at // "")] | @tsv' \
-              > "$saida" 2>/dev/null; then
+              --jq '.jobs[] | [.name, (.conclusion // .status), (.started_at // ""), (.completed_at // ""), .html_url] | @tsv' \
+              > "$jobs" 2>/dev/null; then
           echo "::warning::não consegui ler os jobs do run; o resumo sai sem tempos"
-          : > "$saida"
+          : > "$jobs"
         fi
 
     - name: Resumo no run
       shell: bash
       env:
         WORKFLOW: ${{ inputs.workflow }}
+        GH_TOKEN: ${{ github.token }}
+        REF: ${{ github.head_ref || github.ref_name }}
       run: |
         set -uo pipefail
-        origem="$RUNNER_TEMP/jobs.tsv"
-        linhas="$RUNNER_TEMP/duracao.tsv"
-        : > "$linhas"
+        jobs="$RUNNER_TEMP/jobs.tsv"
+        duracao="$RUNNER_TEMP/duracao.tsv"
+        resumo="$RUNNER_TEMP/resumo.md"
+        : > "$duracao"
         pendentes=0
-        while IFS=$'\t' read -r nome status inicio fim; do
+        while IFS=$'\t' read -r nome status inicio fim url; do
           [ -n "${nome:-}" ] || continue
-          # Job sem conclusão é o próprio job de aviso, que ainda está rodando: não tem
-          # veredito para contar, então fica fora do total e do veredito.
+          # Job sem conclusão é o próprio aviso, que ainda está rodando: não tem veredito.
           case "$status" in
             success|failure|cancelled|skipped|timed_out|neutral|action_required|stale) ;;
             *) pendentes=$((pendentes + 1)); continue ;;
           esac
-          d="-"
+          d=0
           if [ -n "${inicio:-}" ] && [ -n "${fim:-}" ]; then
             d=$(( $(date -d "$fim" +%s) - $(date -d "$inicio" +%s) ))
           fi
-          printf '%s\t%s\t%s\n' "$d" "$status" "$nome" >> "$linhas"
-        done < "$origem"
+          printf '%s\t%s\t%s\t%s\n' "$d" "$status" "$nome" "${url:--}" >> "$duracao"
+        done < "$jobs"
 
-        total=$(wc -l < "$linhas" | tr -d ' ')
-        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" && $2 != "" {n++} END {print n+0}' "$linhas")
-        pulados=$(awk -F'\t' '$2 == "skipped" {n++} END {print n+0}' "$linhas")
-        soma=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {s += $1} END {print s+0}' "$linhas")
+        total=$(wc -l < "$duracao" | tr -d ' ')
+        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {n++} END {print n+0}' "$duracao")
+        pulados=$(awk -F'\t' '$2 == "skipped" {n++} END {print n+0}' "$duracao")
+        soma=$(awk -F'\t' '{s += $1} END {print s+0}' "$duracao")
+        oks=$((total - falhas - pulados))
+
+        # Parede do run e paralelismo efetivo (soma / parede).
+        parede=0
+        if [ -s "$RUNNER_TEMP/run.tsv" ]; then
+          IFS=$'\t' read -r inicio_run fim_run < "$RUNNER_TEMP/run.tsv"
+          [ -n "${inicio_run:-}" ] && [ -n "${fim_run:-}" ] && \
+            parede=$(( $(date -d "$fim_run" +%s) - $(date -d "$inicio_run" +%s) ))
+        fi
+        par="—"
+        [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
+
         if [ "$falhas" -eq 0 ]; then selo="✅"; estado="sucesso"; else selo="❌"; estado="falha"; fi
+        [ "$pulados" -gt 0 ] && [ "$falhas" -eq 0 ] && selo="✅"
 
-        # O texto é montado uma vez, em arquivo: vai para o summary, para o log (onde
-        # qualquer pessoa e qualquer agente leem sem API) e para o artefato do run.
-        resumo="$RUNNER_TEMP/resumo.md"
         {
           echo "### ${selo} ${WORKFLOW} — ${estado}"
           echo
@@ -68,27 +82,34 @@ runs:
           echo "|---|---|"
           echo "| Run | [#${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) |"
           echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
-          echo "| Ref | \`${GITHUB_REF_NAME}\` |"
+          echo "| Ref | \`${REF}\` |"
           echo "| Evento | \`${GITHUB_EVENT_NAME}\` |"
-          echo "| Jobs | ${total} (✅ $((total - falhas - pulados)) · ❌ ${falhas} · ⏭️ ${pulados}) |"
-          echo "| Soma dos jobs | ${soma}s |"
+          echo "| Ator | \`${GITHUB_ACTOR}\` |"
+          echo "| Parede | $(printf '%dm %02ds' $((parede / 60)) $((parede % 60))) |"
+          echo "| Jobs | ${total} (✅ ${oks} · ❌ ${falhas} · ⏭️ ${pulados}) |"
+          echo "| Soma dos jobs | $(printf '%dm %02ds' $((soma / 60)) $((soma % 60))) |"
+          echo "| Paralelismo | ${par} |"
           if [ "$pendentes" -gt 0 ]; then
             echo "| Sem veredito na coleta | ${pendentes} (o próprio job de aviso) |"
           fi
           echo
           if [ "$total" -gt 0 ]; then
-            echo "<details><summary>Job e tempo (maior primeiro)</summary>"
+            echo "<details><summary>Job, tempo e log (maior primeiro)</summary>"
             echo
-            echo "| Job | Status | Tempo |"
-            echo "|---|---|---|"
-            sort -t $'\t' -k1 -rn "$linhas" | while IFS=$'\t' read -r d status nome; do
+            echo "| Job | Status | Tempo | Log |"
+            echo "|---|---|---|---|"
+            sort -t $'\t' -k1 -rn "$duracao" | while IFS=$'\t' read -r d status nome url; do
               case "$status" in
-                success) selo_job="✅" ;;
-                skipped) selo_job="⏭️" ;;
-                cancelled) selo_job="⛔" ;;
-                *) selo_job="❌" ;;
+                success) s="✅" ;;
+                skipped) s="⏭️" ;;
+                cancelled) s="⛔" ;;
+                *) s="❌" ;;
               esac
-              printf '| %s | %s %s | %ss |\n' "$nome" "$selo_job" "$status" "$d"
+              if [ "$url" = "-" ]; then
+                printf '| %s | %s %s | %ds | — |\n' "$nome" "$s" "$status" "$d"
+              else
+                printf '| %s | %s %s | %ds | [log](%s) |\n' "$nome" "$s" "$status" "$d" "$url"
+              fi
             done
             echo
             echo "</details>"
@@ -106,48 +127,102 @@ runs:
       with:
         name: resultado-${{ inputs.workflow }}
         path: ${{ runner.temp }}/resumo.md
-        retention-days: 7
+        retention-days: 14
         if-no-files-found: warn
 
+    # Sem webhook o passo não falha: o run já é o registro, o Slack é conveniência.
     - name: Aviso no Slack
       shell: bash
       env:
         WORKFLOW: ${{ inputs.workflow }}
-      # Sem webhook o passo não falha: o run já é o registro, o Slack é conveniência.
+        REF: ${{ github.head_ref || github.ref_name }}
       run: |
         set -uo pipefail
         if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
           echo "SLACK_WEBHOOK_URL ausente; aviso no Slack ignorado."
           exit 0
         fi
-        linhas="$RUNNER_TEMP/duracao.tsv"
-        total=$(wc -l < "$linhas" | tr -d ' ')
-        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" && $2 != "" {n++} END {print n+0}' "$linhas")
-        soma=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {s += $1} END {print s+0}' "$linhas")
-        lentos=$(sort -t $'\t' -k1 -rn "$linhas" | awk -F'\t' '$1 ~ /^[0-9]+$/ {printf "%s %ss\n", $3, $1}' | head -n 3 | paste -sd ' · ' - || true)
+        duracao="$RUNNER_TEMP/duracao.tsv"
+        total=$(wc -l < "$duracao" | tr -d ' ')
+        falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {n++} END {print n+0}' "$duracao")
+        pulados=$(awk -F'\t' '$2 == "skipped" {n++} END {print n+0}' "$duracao")
+        oks=$((total - falhas - pulados))
+        soma=$(awk -F'\t' '{s += $1} END {print s+0}' "$duracao")
+        parede=0
+        if [ -s "$RUNNER_TEMP/run.tsv" ]; then
+          IFS=$'\t' read -r ir fr < "$RUNNER_TEMP/run.tsv"
+          [ -n "${ir:-}" ] && [ -n "${fr:-}" ] && parede=$(( $(date -d "$fr" +%s) - $(date -d "$ir" +%s) ))
+        fi
+        par="—"; [ "$parede" -gt 0 ] && par=$(awk -v s="$soma" -v p="$parede" 'BEGIN{printf "%.1f×", s/p}')
 
-        if [ "$falhas" -eq 0 ]; then
+        dt() { printf '%dm %02ds' $(($1 / 60)) $(($1 % 60)); }
+
+        if [ "$falhas" -gt 0 ]; then
+          titulo="❌ ${WORKFLOW} falhou"
+          cor="#cc0000"
+        else
           titulo="✅ ${WORKFLOW} passou"
           cor="#2eb886"
-        else
-          titulo="❌ ${WORKFLOW} falhou (${falhas} de ${total} jobs)"
-          cor="#cc0000"
         fi
+
+        lentos=$(sort -t $'\t' -k1 -rn "$duracao" | awk -F'\t' '{printf "• %s — %ds\n", $3, $1}' | head -n 5)
+        lista_falhas=$(awk -F'\t' '$2 != "success" && $2 != "skipped" {printf "• %s — <%s|logs>\n", $3, $4}' "$duracao")
+        lista_pulados=$(awk -F'\t' '$2 == "skipped" {printf "• %s\n", $3}' "$duracao" | head -n 6)
+
+        # Cobertura: o job de cobertura publica um artefato por crate; se existir, entra
+        # como contexto. Ausência não quebra o aviso.
+        cobertura=""
+        for crate in wyd-db wyd-launcher; do
+          if gh run download "$GITHUB_RUN_ID" -n "cobertura-${crate}" -D "$RUNNER_TEMP/cob-$crate" \
+               --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            linha=$(grep -E '^TOTAL' "$RUNNER_TEMP/cob-$crate/coverage-summary.txt" 2>/dev/null | tail -n 1 || true)
+            if [ -n "$linha" ]; then
+              pct=$(printf '%s' "$linha" | awk '{print $NF}' | tr -d '%')
+              cobertura="${cobertura}${cobertura:+ · }${crate} ${pct}% linhas"
+            fi
+          fi
+        done
+
         link="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-        detalhe="\`${GITHUB_REF_NAME}\` · \`${GITHUB_SHA:0:7}\` · ${GITHUB_EVENT_NAME} · soma ${soma}s"
-        [ -n "$lentos" ] && detalhe="${detalhe}\nmais lentos: ${lentos}"
+        campo_ref="*Ref*\n\`${REF}\`"
+        campo_commit="*Commit*\n\`${GITHUB_SHA:0:7}\`"
+        campo_evento="*Evento*\n\`${GITHUB_EVENT_NAME}\`"
+        campo_ator="*Ator*\n\`${GITHUB_ACTOR}\`"
+        metrica_parede="*⏱ Parede*\n$(dt "$parede")"
+        metrica_jobs="*🧩 Jobs*\n${total} · ✅ ${oks} · ❌ ${falhas} · ⏭️ ${pulados}"
+        metrica_soma="*Σ Soma dos jobs*\n$(dt "$soma")"
+        metrica_par="*⚡ Paralelismo*\n${par}"
+        bloco_lentos="*🐢 Mais lentos*\n${lentos:-—}"
+        bloco_falhas=""
+        [ -n "$lista_falhas" ] && bloco_falhas="*❌ Falhas*\n${lista_falhas}"
+        bloco_pulados=""
+        [ -n "$lista_pulados" ] && bloco_pulados="*⏭️ Pulados*\n${lista_pulados}"
+        bloco_cobertura=""
+        [ -n "$cobertura" ] && bloco_cobertura="🧪 Cobertura — ${cobertura}"
 
         payload=$(jq -n \
-          --arg titulo "$titulo" \
-          --arg detalhe "$detalhe" \
-          --arg link "$link" \
           --arg cor "$cor" \
-          '{attachments: [{color: $cor, blocks: [
-            {type: "section", text: {type: "mrkdwn", text: ("*" + $titulo + "*\n" + $detalhe)}},
-            {type: "actions", elements: [{type: "button", text: {type: "plain_text", text: "Abrir o run"}, url: $link}]}
-          ]}]}')
+          --arg titulo "$titulo" \
+          --arg r "$campo_ref" --arg c "$campo_commit" --arg e "$campo_evento" --arg a "$campo_ator" \
+          --arg p "$metrica_parede" --arg j "$metrica_jobs" --arg s "$metrica_soma" --arg par "$metrica_par" \
+          --arg lentos "$bloco_lentos" --arg falhas "$bloco_falhas" --arg pulados "$bloco_pulados" \
+          --arg cob "$bloco_cobertura" --arg link "$link" \
+          '{attachments: [{color: $cor, blocks: (
+            [{type:"header", text:{type:"plain_text", text:$titulo}},
+             {type:"section", fields:[{type:"mrkdwn",text:$r},{type:"mrkdwn",text:$c},{type:"mrkdwn",text:$e},{type:"mrkdwn",text:$a}]},
+             {type:"section", fields:[{type:"mrkdwn",text:$p},{type:"mrkdwn",text:$j},{type:"mrkdwn",text:$s},{type:"mrkdwn",text:$par}]},
+             {type:"section", text:{type:"mrkdwn", text:$lentos}}]
+            + (if $falhas != "" then [{type:"section", text:{type:"mrkdwn", text:$falhas}}] else [] end)
+            + (if $pulados != "" then [{type:"section", text:{type:"mrkdwn", text:$pulados}}] else [] end)
+            + (if $cob != "" then [{type:"context", elements:[{type:"mrkdwn", text:$cob}]}] else [] end)
+            + [{type:"actions", elements:[
+                 {type:"button", text:{type:"plain_text", text:"Abrir o run"}, url:$link, style:"primary"}]}]
+          )}]}')
+
+        echo "aviso montado: ${titulo} (${total} jobs, parede $(dt "$parede"), ${falhas} falha(s))"
         curl --fail --silent --show-error \
           --request POST \
           --header 'Content-Type: application/json' \
           --data "$payload" \
           "$SLACK_WEBHOOK_URL"
+        echo "aviso enviado ao Slack"

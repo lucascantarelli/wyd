@@ -322,6 +322,18 @@ Windows (53 s) e `cobertura` (41 s), não da estrutura. Em 2026-11-28 o pipeline
   imagens aplica `apt-get update && apt-get upgrade` antes de copiar o binário, e `wyd-server` e
   `wyd-docs` foram reconstruídos e escaneados à mão: `0` HIGH/CRITICAL. Run de fecho: `46095134592`
   (33 jobs, ✅ sucesso, artefato `resultado-ci`).
+- **Aviso rico, no nível do `deprecated`.** O relatório traz veredito, ref/commit/ator, **parede** do
+  run (`run_started_at` → `updated_at`), jobs ok/falha/pulado, **soma dos jobs** e o **paralelismo
+  efetivo** (soma ÷ parede), os cinco mais lentos e a lista de falhas com link do log de cada job. O
+  Slack usa Block Kit com cor por resultado (verde/vermelho), emojis e campos; a cobertura por crate
+  entra quando o artefato `cobertura-*` existe. O resumo em Markdown tem tabela com link por job e vai
+  para o summary, para o log e para o artefato `resultado-ci`.
+- **Metadados de PR e de marco, sem action de terceiro.** `wyd-ops/scripts/sync-pr-metadata.mjs` (job
+  `metadados` do `issue-status`) aplica `area/*` por caminho, `size/*` pelo diff e herda o milestone da
+  issue que o PR fecha; `wyd-ops/scripts/ci/fechar-milestone.sh` (job `marco` do `release`) fecha o
+  marco da versão final e abre o minor seguinte, ignorando `-rc.N`. Ambos usam `gh`/API com o
+  `GITHUB_TOKEN` do job, porque a allowlist de actions só aceita `docker/*`, `dtolnay/*`, `Swatinem/*`
+  e `taiki-e/*`.
 - **Custo aceito.** As imagens rodam em todo PR, sem filtro de caminho: Dockerfile quebrado só aparece
   quando alguém builda, e um build em matriz paralela custa menos que a imagem errada.
 - **Agenda.** `ci.yml` também roda semanalmente (segunda, 06:00 UTC): o advisory envelhece sem commit e
@@ -366,6 +378,9 @@ Decisão do dono: SemVer, com a tag como fonte da versão. Vale para tag, releas
   antes de assinar o manifesto: tag fora do padrão é recusada, não vira release.
 - **Changelog.** As notas saem de `gh release create --generate-notes` (PRs mergeados desde a tag
   anterior) e sobem junto do manifesto assinado, no mesmo job.
+- **Marco.** Release final fecha o milestone da versão (`X.Y.Z` ou `vX.Y.Z`) e abre o minor seguinte;
+  `-rc.N` não fecha nada. O job avisa quando o marco ainda tinha issue aberta e fecha assim mesmo — a
+  tag é a fonte da versão.
 - **Imagem.** `:sha` e `:dev` acompanham `develop`; `:latest` é exclusiva do site enquanto não existe
   release. Imagem com a tag da versão entra quando a primeira tag `v*` for criada — hoje o CI não
   publica em tag e não há tag no repositório (`git tag --list 'v*'` vazio).
