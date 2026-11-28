@@ -11,33 +11,11 @@ name: docs-image
 # A tag `latest` acompanha `develop`; no release 1.0.0 a política migra para `main`.
 
 on:
-  push:
-    branches: [develop]
-    paths:
-      - "planejamento-1.0.0/**"
-      - "wyd-docs/**"
-      - "wyd-ops/wyd-docs.Dockerfile"
-      - "docker-compose.yml"
-      - ".dockerignore"
-      - ".github/workflows/docs-image.yml"
-      - ".github/actions/imagem/**"
-  pull_request:
-    paths:
-      - "planejamento-1.0.0/**"
-      - "wyd-docs/**"
-      - "wyd-ops/wyd-docs.Dockerfile"
-      - "docker-compose.yml"
-      - ".dockerignore"
-      - ".github/workflows/docs-image.yml"
-      - ".github/actions/imagem/**"
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: docs-image-${{ github.ref }}
-  cancel-in-progress: true
 
 env:
   IMAGE: ghcr.io/${{ github.repository_owner }}/wyd-docs
@@ -67,22 +45,3 @@ jobs:
           cache-scope: docs-image
           smoke-porta: "8000"
           smoke-caminho: /
-
-  notify:
-    name: notificar resultado
-    if: always()
-    needs: [imagem]
-    permissions:
-      actions: read
-      contents: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/resultado
-        with:
-          workflow: docs-image

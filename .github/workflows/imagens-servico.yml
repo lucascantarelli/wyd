@@ -13,17 +13,11 @@ name: imagens-servico
 # matriz paralela; o benefício é o Dockerfile testado em todo commit.
 
 on:
-  push:
-    branches: [develop]
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: imagens-servico-${{ github.ref }}
-  cancel-in-progress: true
 
 env:
   REGISTRO: ghcr.io/${{ github.repository_owner }}
@@ -71,22 +65,3 @@ jobs:
           cache-scope: ${{ matrix.escopo }}
           smoke-porta: ${{ matrix.porta }}
           smoke-caminho: ${{ matrix.caminho }}
-
-  notify:
-    name: notificar resultado
-    if: always()
-    needs: [imagem]
-    permissions:
-      actions: read
-      contents: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/resultado
-        with:
-          workflow: imagens-servico

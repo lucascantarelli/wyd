@@ -4,19 +4,11 @@ name: security
 # (é check obrigatório) e semanalmente, porque o advisory envelhece sem commit.
 
 on:
-  push:
-    branches: [develop, main]
-  pull_request:
-  schedule:
-    - cron: "0 6 * * 1"
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: security-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   analise:
@@ -131,22 +123,3 @@ jobs:
           jobs: analise=${{ needs.analise.result }} portal=${{ needs.portal.result }} pinos=${{ needs.pinos.result }} dependency-review=${{ needs.dependency-review.result }} workflow-lint=${{ needs.workflow-lint.result }}
           evento: ${{ github.event_name }}
           condicional: dependency-review
-
-  notify:
-    name: notificar resultado
-    if: always()
-    needs: [gate-security]
-    permissions:
-      actions: read
-      contents: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/resultado
-        with:
-          workflow: security

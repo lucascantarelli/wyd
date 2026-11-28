@@ -1,0 +1,82 @@
+name: ci
+
+# Um run por evento, um aviso por run.
+#
+# Os domínios são reusable workflows (`workflow_call`): os jobs de todos eles caem no
+# mesmo run, então `notificar` é o último estágio e agrega a lista inteira de jobs pela
+# API. Antes cada domínio era um run próprio e o aviso saía uma vez por domínio — oito
+# notificações por push. Os nomes dos jobs de gate (`gate-code`, `gate-db`,
+# `gate-docs`, `gate-security`) não mudam, então a proteção de branch continua valendo.
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code:
+    name: code
+    uses: ./.github/workflows/code.yml
+
+  db:
+    name: ci-db
+    uses: ./.github/workflows/ci-db.yml
+
+  # `publicar` roda Pages em push de `develop`: o job declara `pages: write` e
+  # `id-token: write`, e o chamador precisa conceder o mesmo teto.
+  docs:
+    name: docs
+    uses: ./.github/workflows/docs.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+  # `dependency-review` comenta no PR: `pull-requests: write` vem do chamador.
+  security:
+    name: security
+    uses: ./.github/workflows/security.yml
+    permissions:
+      contents: read
+      pull-requests: write
+
+  imagem-docs:
+    name: docs-image
+    uses: ./.github/workflows/docs-image.yml
+    permissions:
+      contents: read
+      packages: write
+
+  imagens-servico:
+    name: imagens-servico
+    uses: ./.github/workflows/imagens-servico.yml
+    permissions:
+      contents: read
+      packages: write
+
+  notificar:
+    name: notificar resultado
+    if: always()
+    needs: [code, db, docs, security, imagem-docs, imagens-servico]
+    permissions:
+      actions: read
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/resultado
+        with:
+          workflow: ci

@@ -1,22 +1,11 @@
 name: docs
 
 on:
-  # Sem filtro de caminho: este check é obrigatório na proteção de branch e um
-  # check filtrado por caminho fica "Expected" em PR que não toca docs. O gate
-  # custa segundos; o bloqueio eterno custa mais.
-  push:
-    # O job `publicar` só roda em push de `develop`; o ambiente `github-pages`
-    # recusa outras refs. PR de feature continua verificando pelo evento `pull_request`.
-    branches: [develop]
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
-
-concurrency:
-  group: docs-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   verificar:
@@ -56,22 +45,3 @@ jobs:
       - name: Publicar
         id: deploy
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
-
-  notify:
-    name: notificar resultado
-    if: always()
-    needs: [verificar, publicar]
-    permissions:
-      actions: read
-      contents: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CI_WEBHOOK }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/resultado
-        with:
-          workflow: docs
